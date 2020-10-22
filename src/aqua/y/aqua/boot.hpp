@@ -39,7 +39,6 @@ namespace upsylon {
             pL(),
             dL(0),
             S(),
-            tS(),
             dS(0),
             pS(),
             keep()
@@ -90,7 +89,6 @@ namespace upsylon {
             const iMatrix pL;   //!< constraints to C      [MxNc]
             const Int     dL;   //!< scaling of pL
             const iMatrix S;    //!< supplementary matrix  [N*M]
-            const iMatrix tS;   //!< transposed S          [M*N]
             const Int     dS;   //!< scaling of pS
             const iMatrix pS;   //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
             

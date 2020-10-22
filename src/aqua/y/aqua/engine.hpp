@@ -84,12 +84,11 @@ namespace upsylon
 
             //! construct the integer projection matrix
             /**
-             compute Strn * adjoint(Span*Strn) * Span / Det,
+             compute Span' * adjoint(Span*Span') * Span / Det,
              simplified
              */
             static Int Project(iMatrix       &Proj,
                                const iMatrix &Span,
-                               const iMatrix &Strn,
                                const char    *when);
 
             //__________________________________________________________________

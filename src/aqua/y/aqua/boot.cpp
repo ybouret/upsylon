@@ -11,7 +11,6 @@ namespace upsylon {
             keep << aliasing::_(tR);
             keep << aliasing::_(pL);
             keep << aliasing::_(S);
-            keep << aliasing::_(tS);
             keep << aliasing::_(pS);
         }
 
@@ -126,13 +125,5 @@ namespace upsylon {
         }
     }
 
-}
-
-namespace upsylon {
-
-    namespace Aqua
-    {
-       
-    }
 }
 

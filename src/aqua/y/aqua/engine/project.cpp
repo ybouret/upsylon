@@ -1,8 +1,6 @@
 #include "y/aqua/engine.hpp"
-#include "y/mkl/tao.hpp"
-#include "y/mkl/kernel/adjoint.hpp"
 #include "y/exception.hpp"
-#include "y/mkl/simplify.hpp"
+#include "y/mkl/kernel/apk.hpp"
 
 namespace upsylon
 {
@@ -13,7 +11,6 @@ namespace upsylon
 
         Int Engine:: Project(iMatrix       &Proj,
                              const iMatrix &Span,
-                             const iMatrix &Strn,
                              const char    *when)
         {
             assert(when);
@@ -22,31 +19,37 @@ namespace upsylon
             const size_t m = Proj.rows;
             const size_t n = Span.rows;
 
-            Int     Det = 0;
-            iMatrix Adj(n,n);
-#if 0
+            apz         Det = 0;
             {
-                iMatrix Gram(n,n);
-                tao::gram(Gram,Span);
-                Det = ideterminant(Gram);
-                if(0==Det)
+                matrix<apz> P(m,m);
                 {
-                    throw exception("Aqua::Engine: invalid %s",when);
+                    // build the simplify adjoint of Gram's matrix
+                    matrix<apz> Adj(n,n);
+                    Det = apk::adjoint_gram(Adj,Span);
+
+                    std::cerr << "Span = " << Span << std::endl;
+                    std::cerr << "Adj  = " << Adj  << std::endl;
+                    std::cerr << "Det  = " << Det  << std::endl;
+
+                    if(0==Det)
+                    {
+                        throw exception("Aqua::Engine: invalid %s",when);
+                    }
+
+                    {
+                        matrix<apz> AdjSpan(n,m);
+                        tao::mmul(AdjSpan,Adj,Span);
+                        tao::mmul_ltrn(P,Span,AdjSpan);
+                    }
                 }
-                iadjoint(Adj,Gram);
-                (void) simplify<Int>::on(Adj,Det);
+                std::cerr << "P   = " << P   << std::endl;
+                std::cerr << "D   = " << Det << std::endl;
+                apk::simplify(P,Det,NULL);
+                std::cerr << "P1  = " << P   << std::endl;
+                std::cerr << "D1  = " << Det << std::endl;
+                apk::convert(Proj,P, "Aqua::Engine::Project(matrix)");
             }
-
-            {
-                iMatrix      AdjSpan(n,m);
-                tao::mmul(AdjSpan,Adj,Span);
-                (void) simplify<Int>::on(AdjSpan,Det);
-
-                tao::mmul(Proj,Strn,AdjSpan);
-                (void) simplify<Int>::on(Proj,Det);
-            }
-#endif
-            return Det;
+            return Det.cast_to<Int>( "Aqua::Engine::Project(determinant)" );
         }
     }
 

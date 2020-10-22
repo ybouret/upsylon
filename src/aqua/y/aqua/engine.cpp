@@ -145,9 +145,8 @@ namespace upsylon
 
                     //! compute tNu and pNu
                     aliasing::_(tNu).assign_transpose(Nu);
-                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, tNu, "chemical topology");
+                    aliasing::_(dNu) = Project( aliasing::_(pNu), Nu, "chemical topology");
                     
-
                 }
 
 

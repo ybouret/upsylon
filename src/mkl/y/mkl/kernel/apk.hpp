@@ -73,9 +73,9 @@ namespace upsylon
                 assert(A.rows==A.cols);
                 assert(M.rows==A.rows);
                 const size_t n = A.rows;
-                matrix<apz>  G(n,n); tao::gram(G,M);
-                apz          d = apk::determinant(G);
-                apk::adjoint(A,G);
+                matrix<apz>  G(n,n); tao::gram(G,M);  //std::cerr << "G=" << G << std::endl;
+                apz          d = apk::determinant(G); //std::cerr << "d=" << d << std::endl;
+                apk::adjoint(A,G);                    //std::cerr << "A=" << A << std::endl;
                 simplify(A,d,NULL);
                 return d;
             }

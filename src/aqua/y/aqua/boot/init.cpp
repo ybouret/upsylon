@@ -1,9 +1,7 @@
 #include "y/aqua/boot.hpp"
 #include "y/aqua/engine.hpp"
 #include "y/exception.hpp"
-#include "y/mkl/tao.hpp"
-#include "y/mkl/kernel/adjoint.hpp"
-#include "y/mkl/simplify.hpp"
+#include "y/mkl/kernel/apk.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 
 namespace upsylon
@@ -39,7 +37,6 @@ namespace upsylon
                 aliasing::_(tR). make(M,Nc);
                 aliasing::_(pL). make(M,Nc);
                 aliasing::_(S).  make(N,M);
-                aliasing::_(tS). make(M,N);
                 aliasing::_(pS). make(M,M);
 
                 //--------------------------------------------------------------
@@ -56,8 +53,27 @@ namespace upsylon
                 aliasing::_(tR).assign_transpose(R);
 
                 //--------------------------------------------------------------
-                // compute Lambda => C matrix, with scaling
+                // compute 'Lambda => C' matrix, with scaling
                 //--------------------------------------------------------------
+                {
+                    matrix<apz> aR2(Nc,Nc);
+                    apz         dR2 = apk::adjoint_gram(aR2,R);
+                    std::cerr << "aR2=" << aR2 << std::endl;
+                    std::cerr << "dR2=" << dR2 << std::endl;
+                    if(0==dR2)
+                    {
+                        throw exception("%ssingular set of constraints",fn);
+                    }
+                    matrix<apz> L2C(M,Nc);
+                    tao::mmul_ltrn(L2C,R,aR2);
+                    std::cerr << "L2C= " << L2C << std::endl;
+                    std::cerr << "R  = " << R << std::endl;
+                    apk::simplify(L2C,dR2,NULL);
+                    std::cerr << "pL= " << L2C << std::endl;
+                    std::cerr << "dL= " << dR2 << std::endl;
+                    exit(1);
+                }
+#if 0
                 {
                     iMatrix R2(Nc,Nc);
                     tao::gram(R2,R);
@@ -71,6 +87,7 @@ namespace upsylon
                     tao::mmul(aliasing::_(pL),tR,aR2);
                     (void) simplify<Int>::on( aliasing::_(pL), aliasing::_(dL) );
                 }
+#endif
 
                 //--------------------------------------------------------------
                 // find supplementary space
@@ -101,16 +118,17 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // compute projection matrix for balancing
                 //--------------------------------------------------------------
-                aliasing::_(tS).assign_transpose(S);
-                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,tS,"supplementary boot space");
+                aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
+
 
                 std::cerr << "R  = "  << R  << std::endl;
                 std::cerr << "pL = "  << pL << std::endl;
                 std::cerr << "dL = "  << dL << std::endl;
                 std::cerr << "S  = "  << S  << std::endl;
-                std::cerr << "pS = "  << S  << std::endl;
+                std::cerr << "pS = "  << pS << std::endl;
                 std::cerr << "dS = "  << dS << std::endl;
 
+                exit(1);
 
             }
             catch(...)
