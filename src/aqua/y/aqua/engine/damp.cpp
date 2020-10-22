@@ -17,10 +17,12 @@ namespace upsylon
             tao::mmul_rtrn(W,J,Nu);
             if(!LU::build(W))
             {
+                // singular composition
                 return false;
             }
             else
             {
+                // apply
                 tao::mul(xi,J,Cdmp);
                 tao::add(xi,Q);
                 LU::solve(W,xi);

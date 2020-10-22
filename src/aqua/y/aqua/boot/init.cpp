@@ -70,7 +70,7 @@ namespace upsylon
                     std::cerr << "Lproj = " << Lproj << std::endl;
                     std::cerr << "Lscal = " << Lscal << std::endl;
 
-                    // transert
+                    // transfert
                     apk::convert( aliasing::_(pL), Lproj, "Aqua::Boot::convert(<proj>)");
                     apk::convert( aliasing::_(dL), Lscal, "Aqua::Boot::convert(<scal>)");
                     std::cerr << "pL = " << pL << std::endl;
