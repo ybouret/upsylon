@@ -7,6 +7,7 @@
 #include "y/iterate/linked.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/sort/merge.hpp"
+#include "y/type/self-destruct.hpp"
 #include <cstring>
 
 namespace upsylon

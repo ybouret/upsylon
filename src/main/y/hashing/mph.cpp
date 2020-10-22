@@ -1,405 +1,45 @@
 #include "y/hashing/mph.hpp"
 #include "y/exception.hpp"
-#include "y/sort/merge.hpp"
-#include "y/comparison.hpp"
-#include "y/type/aliasing.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
+
     namespace hashing
     {
-        
-        mperf::node_type:: ~node_type() throw()
+        minimal_perfect:: ~minimal_perfect() throw()
         {
         }
-        
-        mperf::node_type:: node_type(const uint8_t c) throw() :
-        next(0),
-        prev(0),
-        hash(-1),
-        code(c),
-        chld(),
-        freq(1)
-        {
-        }
-        
-        void mperf::node_type:: viz( ios::ostream &fp ) const
-        {
-            fp.viz(this);
-            const char *shape = (hash>=0) ? "egg" : "box";
-            fp("[shape=%s,label=\"",shape);
-            if(code>=32&&code<127)
-            {
-                fp("%c",char(code));
-            }
-            else
-            {
-                fp("x%02x",unsigned(code));
-            }
-            if(freq>1)
-            {
-                fp("#%u", unsigned(freq) );
-            }
-            if(hash>=0)
-            {
-                fp("[%d]",int(hash));
-            }
-            fp << "\"];\n";
-            //int cnt = 0;
-            for(const node_type *node=chld.head;node;node=node->next)
-            {
-                node->viz(fp);
-                fp.viz(this); fp << " -> "; fp.viz(node);
-                //fp( "[label=\"%d\"]",++cnt);
-                fp << ";\n";
-            }
-        }
-        
-        static inline int __compare_mph_nodes(const mperf::node_type *lhs,
-                                              const mperf::node_type *rhs,
-                                              void *) throw()
-        {
-            const int ans = comparison::decreasing(lhs->freq,rhs->freq);
-            if(ans!=0)
-            {
-                return ans;
-            }
-            else
-            {
-                return comparison::increasing(lhs->code,rhs->code);
-            }
-        }
-        
-        void mperf::node_type:: optimize() throw()
-        {
-            
-            for(node_type *node = chld.head;node;node=node->next)
-            {
-                node->optimize();
-            }
-            
-            merging<node_type>::sort(chld, __compare_mph_nodes, 0);
-        }
-        
-        
-    }
-}
 
-#include <iostream>
-#include "y/ios/imstream.hpp"
-#include "y/type/block/zset.hpp"
+        minimal_perfect:: minimal_perfect() : minimal_perfect_tree()
+        {
+        }
 
-namespace upsylon
-{
-    namespace hashing
-    {
-        mperf:: ~mperf() throw()
+        void minimal_perfect::check(const_type h) const
         {
-            assert(root);
-            delete root;
-            root=0;
-            _bzset(entries);
+            if(invalid==h) throw exception("minimal perfect hashing: invalid key");
         }
         
-        mperf:: mperf() :
-        entries(0),
-        root( new node_type(0) ),
-        nodes(1)
+        minimal_perfect:: minimal_perfect(const minimal_perfect &other) : minimal_perfect_tree(other)
         {
         }
-        
-        mperf:: mperf( const char **words, const size_t count) :
-        entries(0),
-        root( new node_type(0) ),
-        nodes(1)
+
+        minimal_perfect:: minimal_perfect(const char **words, const unsigned count) :
+        minimal_perfect_tree()
         {
-            assert(!(words==NULL&&count>0));
-            for(size_t i=0;i<count;++i)
+            assert(words);
+            for(unsigned i=0;i<count;++i)
             {
                 const char *word = words[i];
-                insert( word,(int)i);
+                add(word,i);
             }
-            optimize();
         }
+
+
+
         
-        mperf:: mperf(const void *data,const size_t size) :
-        entries(0),
-        root( new node_type(0) ),
-        nodes( 1 )
-        {
-            static const char fn[] = "mperf(data,size) ";
-            assert( !(NULL==data&&size>0) );
-            if(size>0)
-            {
-                ios::imstream fp(data,size);
-                size_t        n = 0;
-                size_t        nr = 0;
-                if(!fp.query_upack(n,nr) ) throw exception("%smissing #entries",fn);
-                for(size_t i=0;i<n;++i)
-                {
-                    const string   word = string::read(fp,nr,fn);
-                    unsigned       code = 0; if( !fp.query_upack(code,nr) ) throw exception("%smissing '%s' code",fn,*word);
-                    insert( word, (int)code );
-                }
-            }
-            optimize();
-        }
-        
-        
-        void mperf:: insert(const void *data, const size_t size, const int h)
-        {
-            assert( ! ( (NULL==data) && (size>0) ) );
-            assert(h>=0);
-            if(h<0)   throw exception("mperf: invalid user's hash code=%d",h);
-            if(!size) return;
-            
-            //__________________________________________________________________
-            //
-            // initialize look up: start from root
-            //__________________________________________________________________
-            
-            const uint8_t *addr = static_cast<const uint8_t *>(data);
-            node_type     *curr = root;
-            
-            for(size_t i=size;i>0;--i)
-            {
-                const uint8_t  code  = *(addr++);
-                bool           found = false;
-                
-                //______________________________________________________________
-                //
-                // find which child to follow
-                //______________________________________________________________
-                node_type::list_type &chld = curr->chld;
-                for(node_type *node = chld.head;node;node=node->next)
-                {
-                    if(code==node->code)
-                    {
-                        found = true;
-                        curr  = node;
-                        ++(curr->freq);
-                        break;
-                    }
-                }
-                
-                if(!found)
-                {
-                    curr->chld.push_back(new node_type(code));
-                    curr = curr->chld.tail;
-                    ++ aliasing::_(nodes);
-                }
-            }
-            
-            //__________________________________________________________________
-            //
-            // current is the last visited node
-            //__________________________________________________________________
-            
-            assert(curr);
-            assert(curr!=root);
-            if(curr->hash>=0)
-                throw exception("mperf: multiple keys for required h=%d!",h);
-            (int &)(curr->hash) = h;
-            ++aliasing::_(entries);
-        }
-        
-        
-        void mperf:: release() throw()
-        {
-            assert(root);
-            root->chld.release();
-            root->freq=1;
-            aliasing::_(nodes)   = 1;
-            aliasing::_(entries) = 0;
-        }
-        
+
+
     }
+
 }
-
-
-namespace upsylon
-{
-    namespace hashing
-    {
-        
-        int mperf:: find(const void *data, const size_t size) const throw()
-        {
-            assert( ! ( (NULL==data) && (size>0) ) );
-            const uint8_t   *addr = static_cast<const uint8_t *>(data);
-            const node_type *curr = root;
-            for(size_t i=size;i>0;--i)
-            {
-                const uint8_t        code    = *(addr++);
-                bool                 found   = false;;
-                for(const node_type *node = curr->chld.head;node;node=node->next)
-                {
-                    if(code==node->code)
-                    {
-                        curr = node;
-                        found= true;
-                        break;
-                    }
-                }
-                
-                if(!found)
-                {
-                    return -1;
-                }
-            }
-            return curr->hash;
-        }
-        
-        int mperf:: hash(const void *data, const size_t size) const
-        {
-            const int h = find(data,size);
-            if(h<0) throw exception("mperf::hash(unregistered data)");
-            return h;
-        }
-        
-        
-        
-        int mperf:: find(const void *data) const throw()
-        {
-            if(data)
-            {
-                const uint8_t   *addr = static_cast<const uint8_t *>(data);
-                const node_type *curr = root;
-                while(true)
-                {
-                    const uint8_t        code    = *(addr++); if(code<=0) break;
-                    bool                 found   = false;;
-                    for(const node_type *node = curr->chld.head;node;node=node->next)
-                    {
-                        if(code==node->code)
-                        {
-                            curr = node;
-                            found= true;
-                            break;
-                        }
-                    }
-                    
-                    if(!found)
-                    {
-                        return -1;
-                    }
-                }
-                return curr->hash;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        
-    }
-}
-
-#include "y/ios/ocstream.hpp"
-#include "y/ios/tools/graphviz.hpp"
-
-namespace upsylon
-{
-    namespace hashing
-    {
-        
-        void mperf:: graphViz( const string &filename ) const
-        {
-            {
-                ios::ocstream fp(filename,false);
-                fp << "digraph G{\n";
-                root->viz(fp);
-                fp << "}\n";
-            }
-            
-            {
-                ios::GraphViz::Render(filename);
-            }
-            
-        }
-        
-        void mperf:: graphViz(const char *filename) const
-        {
-            const string _(filename); graphViz(_);
-        }
-        
-        static inline
-        string def2cpp( const string &def )
-        {
-            string ans(def.size(),as_capacity,false);
-            const size_t n = def.size();
-            for(size_t i=0;i<n;++i)
-            {
-                uint8_t C = uint8_t(def[i]);
-                if( ( C>='0'&&C<='9') ||
-                   ( C>='A'&&C<='Z') ||
-                   ( C>='a'&&C<='z') )
-                {
-                    ans += char(C);
-                }
-                else
-                {
-                    ans += '_';
-                }
-            }
-            return ans;
-        }
-        
-        void mperf::emit_defines(ios::ostream        &fp,
-                                 const array<string> &keywords,
-                                 const string        &prefix,
-                                 const size_t         offset)
-        {
-            const size_t count = keywords.size();
-            mperf        H;
-            size_t       max_len = 0;
-            for(size_t i=1;i<=count;++i)
-            {
-                const size_t tmp = keywords[i].length();
-                if(tmp>max_len) max_len = tmp;
-            }
-            
-            for(size_t i=1;i<=count;++i)
-            {
-                const string &kw = keywords[i];
-                const size_t  j  = i+offset;
-                H.insert(kw,(int)j);
-                const string def = prefix+kw;
-                const string ans = def2cpp(def);
-                fp << "#define " << ans;
-                for(size_t i=kw.size();i<=max_len;++i) fp << ' ';
-                fp(" 0x%08x\n", unsigned(j));
-            }
-            
-        }
-        
-    }
-    
-}
-
-#if 0
-#include "yocto/ios/imstream.hpp"
-#include "yocto/ios/net-string.hpp"
-
-namespace yocto
-{
-    namespace hashing
-    {
-        mperf:: mperf(const char *nsdb) :
-        root( new node_type(0) ),
-        nodes(1)
-        {
-            ios::imstream fp(nsdb,length_of(nsdb));
-            string        word;
-            int           indx=0;
-            while( ios::net_string::read(fp, word))
-            {
-                insert(word, indx);
-                ++indx;
-            }
-            optimize();
-        }
-        
-    }
-}
-#endif
-
