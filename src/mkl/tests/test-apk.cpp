@@ -41,13 +41,17 @@ namespace {
                         }
                     }
                 }
-#if 0
                 if(dM!=0)
                 {
-                    const apz r = apk::simplify(aM,dM);
+                    apz r = 0;
+                    apk::simplify(aM,dM,&r);
                     std::cerr << "rescaled by " << r << std::endl;
+                    if(r>1)
+                    {
+                        std::cerr << "aM=" << aM << std::endl;
+                        std::cerr << "dM=" << dM << std::endl;
+                    }
                 }
-#endif
             }
             M.Id();
             for(size_t i=n;i>0;--i)
@@ -79,7 +83,7 @@ namespace {
     {
         std::cerr << "gram/adjoint for <" << type_name_of<T>() << ">" << std::endl;
 
-        const size_t m = n + alea.leq(2);
+        const size_t m = n + alea.leq(5);
         matrix<T>    M(n,m);
         for(size_t i=1;i<=n;++i)
         {
@@ -94,7 +98,10 @@ namespace {
         apz         d = apk::adjoint_gram(A,M);
         std::cerr << "d=" << d << std::endl;
         std::cerr << "A=" << A << std::endl;
-        
+
+        matrix<int64_t> I(n,n);
+        apk::convert(I,A);
+        std::cerr << "I=" << I << std::endl;
 
     }
     
@@ -129,9 +136,9 @@ Y_UTEST(apk)
     SHOW_MOD(-3,-2);
     
     test_idet<int16_t>(6);
-    test_idet<int>(6);
+    test_idet<int>(8);
 
-    test_adjoint_gram<int>(4);
+    test_adjoint_gram<int>(6);
 
 }
 Y_UTEST_DONE()
