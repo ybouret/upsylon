@@ -11,7 +11,7 @@ test-diag-symm.cpp test-diag.cpp test-lu.cpp test-svd.cpp
 test-tridiag.cpp test-cyclic.cpp test-sparse.cpp
 test-gram-schmidt.cpp
 test-precond.cpp
-test-det.cpp
+test-apk.cpp
 )
 ADD_TEST(mkl:types    test-mkl types)
 ADD_TEST(mkl:adjoint  test-mkl adjoint)
@@ -26,7 +26,7 @@ ADD_TEST(mkl:sparse   test-mkl sparse)
 ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
 ADD_TEST(mkl:jacobian  test-mkl jacobian)
 ADD_TEST(mkl:precond   test-mkl precond)
-ADD_TEST(mkl:det       test-mkl det)
+ADD_TEST(mkl:apk       test-mkl apk)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
 test-ode-expl.cpp test-ode-impl.cpp)

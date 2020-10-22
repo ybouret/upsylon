@@ -169,7 +169,6 @@ namespace upsylon {
 
                     if(hi>0)
                     {
-                        const_type ref = abs_of(level);
                         for(type d=lo;d>1;--d)
                         {
                             if(0!=(ref%d)) continue; // ref is not divided

@@ -1,5 +1,4 @@
-#include "y/mkl/kernel/apz-det.hpp"
-#include "y/mkl/kernel/apz-adj.hpp"
+#include "y/mkl/kernel/apk.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/mkl/tao.hpp"
@@ -11,10 +10,10 @@ using namespace mkl;
 namespace {
     
     template <typename T>
-    static inline void test_idet()
+    static inline void test_idet(const size_t nmax)
     {
         std::cerr << "for <" << type_name_of<T>() << ">" << std::endl;
-        for(size_t n=1;n<=8;++n)
+        for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "\tn=" << n << std::endl;
             matrix<T>    M(n,n);
@@ -27,8 +26,8 @@ namespace {
                         M[i][j] = alea.range<T>(-10,10);
                     }
                 }
-                apz dM = apz_det(M);
-                apz_adj(aM,M);
+                apz dM = apk::determinant(M);
+                apk::adjoint(aM,M);
                 matrix<apz> P(n,n);
                 tao::mmul(P,aM,M);
                 for(size_t i=n;i>0;--i)
@@ -44,7 +43,7 @@ namespace {
                 }
                 if(dM!=0)
                 {
-                    const apz r = apz_rescale(aM,dM);
+                    const apz r = apk::simplify(aM,dM);
                     std::cerr << "rescaled by " << r << std::endl;
                 }
             }
@@ -55,13 +54,13 @@ namespace {
             }
             std::cerr << "M =" << M << std::endl;
             {
-                apz dM = apz_det(M);
-                apz_adj(aM,M);
+                apz dM = apk::determinant(M);
+                apk::adjoint(aM,M);
                 std::cerr << "aM=" << aM << std::endl;
                 std::cerr << "dM=" << dM << std::endl;
                 if(dM!=0)
                 {
-                    const apz r = apz_rescale(aM,dM);
+                    const apz r = apk::simplify(aM,dM);
                     std::cerr << "rescaled by " << r << std::endl;
                     std::cerr << "aM=" << aM << std::endl;
                     std::cerr << "dM=" << dM << std::endl;
@@ -69,7 +68,31 @@ namespace {
             }
         }
         
-        
+    }
+
+
+    template <typename T>
+    static inline void test_adjoint_gram(const size_t n)
+    {
+        std::cerr << "gram/adjoint for <" << type_name_of<T>() << ">" << std::endl;
+
+        const size_t m = n + alea.leq(2);
+        matrix<T>    M(n,m);
+        for(size_t i=1;i<=n;++i)
+        {
+            for(size_t j=1;j<=m;++j)
+            {
+                M[i][j] = alea.range<T>(-5,5);
+            }
+        }
+
+        std::cerr << "M=" << M << std::endl;
+        matrix<apz> A(n,n);
+        apz         d = apk::adjoint_gram(A,M);
+        std::cerr << "d=" << d << std::endl;
+        std::cerr << "A=" << A << std::endl;
+
+
     }
     
 }
@@ -92,7 +115,7 @@ namespace
 }
 
 
-Y_UTEST(det)
+Y_UTEST(apk)
 {
     
     SHOW_MOD(1,2);
@@ -102,9 +125,11 @@ Y_UTEST(det)
     SHOW_MOD(-1,-2);
     SHOW_MOD(-3,-2);
     
-    test_idet<int16_t>();
-    test_idet<int>();
-    
+    test_idet<int16_t>(6);
+    test_idet<int>(6);
+
+    test_adjoint_gram<int>(4);
+
 }
 Y_UTEST_DONE()
 

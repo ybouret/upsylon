@@ -214,7 +214,7 @@ namespace upsylon
                 const accessible<U>    &source = other[i];
                 for(size_t j=cols;j>0;--j)
                 {
-                    target[j] = static_cast<type>(source[j]);
+                    target[j] =  source[j];
                 }
             }
         }
@@ -230,7 +230,7 @@ namespace upsylon
                 addressable<type> &target = (*this)[i];
                 for(size_t j=cols;j>0;--j)
                 {
-                    target[j] = static_cast<type>(other[j][i]);
+                    target[j] =  other[j][i];
                 }
             }
         }
@@ -387,7 +387,7 @@ namespace upsylon
                     {
                         if(j!=J)
                         {
-                            self[ir][jr] = static_cast<const_type>(M[i][j]);
+                            self[ir][jr] =  M[i][j];
                             ++jr;
                         }
                     }
