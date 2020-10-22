@@ -8,6 +8,7 @@
 #include "y/ios/iosfwd.hpp"
 #include "y/strfwd.hpp"
 #include "y/type/args.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -57,6 +58,7 @@ namespace upsylon
             void   return_to(tree_list &pool)     throw(); //!< leaves and this to pool
             void   run(hashing::function &) const throw(); //!< in-order hashing of codes
             size_t children()               const throw(); //!< leaves.size
+            void   encode(addressable<uint8_t> &path) const throw(); //!< path[0..deep-1]
             
             //__________________________________________________________________
             //

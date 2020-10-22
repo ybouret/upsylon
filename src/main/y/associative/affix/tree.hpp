@@ -72,26 +72,18 @@ namespace upsylon
         //! copy
         inline affix_tree(const affix_tree &other) : affix(), dl(), dp()
         {
-            memory::cppblock<uint8_t> blk( other.max_depth() );
+            memory::cppblock<uint8_t> path( other.max_depth() );
             try
             {
                 for(const data_node *node=other.dl.head;node;node=node->next)
                 {
-
                     const tree_node *curr=node->hook;
-                    const size_t     clen=curr->deep;
-                    while(curr->parent)
+                    curr->encode(path);
+                    if( !insert_at(*path,curr->deep,node->data) )
                     {
-                        blk[curr->deep] = curr->code;
-                        curr=curr->parent;
-                    }
-
-                    if( !insert_at(*blk,clen,node->data) )
-                    {
-                        throw_multiple(node->hook);
+                        throw_multiple(curr);
                     }
                 }
-
             }
             catch(...)
             {

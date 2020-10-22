@@ -84,7 +84,18 @@ namespace upsylon
         pool.push_front(this);
     }
     
-    
+    void  affix:: tree_node:: encode( addressable<uint8_t> &path) const throw()
+    {
+        assert(path.size()>=deep);
+        const tree_node *curr = this;
+        while(curr->parent)
+        {
+            path[curr->deep] = curr->code;
+            curr=curr->parent;
+        }
+        
+    }
+
     
     
 }
