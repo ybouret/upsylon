@@ -3,6 +3,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/exception.hpp"
+#include <iostream>
 
 namespace upsylon
 {
