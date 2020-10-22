@@ -16,7 +16,12 @@ namespace upsylon
                           Engine              &engine)
         {
             assert(C.size()>=engine.M);
+
+            //------------------------------------------------------------------
+            //
             // build Cstar
+            //
+            //------------------------------------------------------------------
             const size_t   M  = engine.M;
             const size_t   Nc = size;
             vector<double> Cold(M,0);
@@ -32,19 +37,28 @@ namespace upsylon
             std::cerr << "Cstar =" << Cold  << std::endl;
             std::cerr << "R     =" << R << std::endl;
 
+            //------------------------------------------------------------------
+            //
             // initial balance
+            //
+            //------------------------------------------------------------------
             if( !engine.balance_(Cold, pS, dS) )
             {
                 throw exception("no possible initial balance");
             }
+
+            //------------------------------------------------------------------
+            //
             // initial equilibrium
+            //
+            //------------------------------------------------------------------
             std::cerr << "Cbal= " << Cold << std::endl;
             tao::set(Cnew,Cold);
             if(!engine.forward(Cnew))
             {
                 throw exception("no possible initial forward");
             }
-
+            
             std::cerr << "Cfwd= " << Cnew << std::endl;
 
             tao::mul(RC, R, Cnew);
