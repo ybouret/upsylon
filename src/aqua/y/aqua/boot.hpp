@@ -41,6 +41,8 @@ namespace upsylon {
             S(),
             pS(),
             dS(pS.r_aux1),
+            cycles(0),
+            verbose(0),
             keep()
             {
 
@@ -83,14 +85,16 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const string        name; //!< identifier
-            const iMatrix       R;    //!< constraint matrix     [NcxM]
-            const iMatrix       pL;   //!< constraints to C      [MxNc]
-            iAddressable       &dL;   //!< scaling of pL
-            const iMatrix       S;    //!< supplementary matrix  [N*M]
-            const iMatrix       pS;   //!< projection on S times dS: s* S'*inv(S*S')*S  [M*M]
-            iAddressable       &dS;   //!< scaling of pS         [N]
-
+            const string        name;    //!< identifier
+            const iMatrix       R;       //!< constraint matrix     [NcxM]
+            const iMatrix       pL;      //!< constraints to C      [MxNc]
+            iAddressable       &dL;      //!< scaling of pL
+            const iMatrix       S;       //!< supplementary matrix  [N*M]
+            const iMatrix       pS;      //!< projection on S times dS: s* S'*inv(S*S')*S  [M*M]
+            iAddressable       &dS;      //!< scaling of pS         [N]
+            size_t              cycles;  //!< last cycles
+            size_t              verbose; //!< if verbose
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;

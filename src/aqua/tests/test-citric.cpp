@@ -15,6 +15,7 @@ Y_UTEST(citric)
     double C0  = 0;
     if(argc>1)
     {
+        C0 = string_convert::to<double>(argv[1],"C0");
     }
 
     Library lib;
@@ -56,8 +57,14 @@ Y_UTEST(citric)
 
     Engine engine;
     engine.init(lib,eqs);
-    
+
+    engine.computeK(0);
+
+    boot.verbose = true;
     boot.init(lib,eqs);
+
+    vector<double> C(engine.M,0);
+    boot.find(C,engine);
 
 
 }

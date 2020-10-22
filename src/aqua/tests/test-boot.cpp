@@ -4,6 +4,7 @@
 #include "y/aqua/boot.hpp"
 #include "y/aqua/library.hpp"
 #include "y/utest/run.hpp"
+#include "y/string/convert.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -11,7 +12,10 @@ using namespace Aqua;
 Y_UTEST(boot)
 {
     double C0 = 1e-4;
-    
+    if(argc>1)
+    {
+        C0 = string_convert::to<double>(argv[1],"C0");
+    }
 
     Library lib;
 
@@ -62,6 +66,7 @@ Y_UTEST(boot)
 
     std::cerr << "boot=" << boot << std::endl;
 
+    boot.verbose = true;
 
     boot.init(lib,eqs);
     
