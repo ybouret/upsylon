@@ -48,6 +48,11 @@ namespace upsylon
                 std::cerr << "P1  = " << P   << std::endl;
                 std::cerr << "D1  = " << Det << std::endl;
                 apk::convert(Proj,P, "Aqua::Engine::Project(matrix)");
+                addressable<apz> &d = P.c_aux1;
+                apk::simplify(d,P,Det);
+                std::cerr << "d=" << d << std::endl;
+                std::cerr << "P=" << P << std::endl;
+                exit(1);
             }
             return Det.cast_to<Int>( "Aqua::Engine::Project(determinant)" );
         }

@@ -79,6 +79,16 @@ namespace upsylon
             simplify(data,den,ratio);
         }
 
+        void apk:: simplify(addressable<apz> &d, matrix<apz> &num, const apz &den)
+        {
+            assert(d.size()>=num.rows);
+            const size_t nr = num.rows;
+            for(size_t i=nr;i>0;--i)
+            {
+                simplify(num[i],d[i]=den,NULL);
+            }
+        }
+
     }
 
 }

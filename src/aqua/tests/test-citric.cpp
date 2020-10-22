@@ -53,11 +53,12 @@ Y_UTEST(citric)
 
     std::cerr << boot << std::endl;
 
-    boot.init(lib,eqs);
 
     Engine engine;
     engine.init(lib,eqs);
     
+    boot.init(lib,eqs);
+
 
 }
 Y_UTEST_DONE()

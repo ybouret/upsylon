@@ -66,6 +66,12 @@ namespace upsylon
             //! simplify full matrix
             static void simplify(matrix<apz> &num, apz &den, apz *ratio);
 
+            //! simplify by row
+            /**
+             compute and simplify dividers for each rows
+             */
+            static void simplify(addressable<apz> &d, matrix<apz> &num, const apz &den);
+
             //! simplified adjoint of gram matrix
             template <typename T> static inline
             apz adjoint_gram(matrix<apz> &A, const matrix<T> &M)
@@ -80,7 +86,7 @@ namespace upsylon
                 return d;
             }
 
-            //! convert
+            //! convert matrix
             template <typename T> static inline
             void convert(matrix<T> &target, const matrix<apz> &source, const char *when=0)
             {
@@ -91,6 +97,18 @@ namespace upsylon
                 {
                     --i;
                     tgt[i] = src[i].cast_to<T>(when);
+                }
+
+            }
+
+            //! convert linear stuff
+            template <typename T> static inline
+            void convert(addressable<T> &target, const accessible<apz> &source, const char *when=0)
+            {
+                assert( target.size() <= source.size() );
+                for(size_t i=target.size();i>0;--i)
+                {
+                    target[i] = source[i].cast_to<T>(when);
                 }
 
             }
