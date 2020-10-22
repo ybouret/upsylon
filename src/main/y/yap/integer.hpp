@@ -234,7 +234,10 @@ Y_APZ_OPERATOR(OP,CALL);
                 return ans;
             }
 
+            //! build a flag from signs
 #define Y_APZ_SIGNS(A,B) ( (A<<8) | B )
+
+            //! build flag from sign2byte
             static unsigned signs2flag(const unsigned l, const unsigned r) throw();
             
         private:

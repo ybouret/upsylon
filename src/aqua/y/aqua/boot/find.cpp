@@ -58,7 +58,7 @@ namespace upsylon
             {
                 throw exception("no possible initial forward");
             }
-            
+
             std::cerr << "Cfwd= " << Cnew << std::endl;
 
             tao::mul(RC, R, Cnew);

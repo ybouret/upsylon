@@ -30,6 +30,7 @@ namespace upsylon {
             //__________________________________________________________________
             virtual ~Boot() throw(); //!< cleanup
 
+            //! setup with an identifier
             template <typename ID> inline
             explicit Boot(const ID &id)  :
             Constraint::List(),

@@ -12,7 +12,12 @@ namespace upsylon
 
     namespace mkl
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! arbitrary precision kernel
+        //
+        //______________________________________________________________________
         struct apk
         {
             //! integer type determinant

@@ -41,10 +41,12 @@ namespace upsylon
         {
             return rtld::load(handle,symbol);
         }
-        
+
+        //! load a function
         template <typename CFUNCTION>
         struct hook
         {
+            //! load a C-style function 'id' from shared object
             template <typename ID> static inline
             CFUNCTION load(const dll &so, const ID &id) throw()
             {
@@ -55,10 +57,12 @@ namespace upsylon
                 return alias.proc;
             }
         };
-        
+
+        //! load data
         template <typename T>
         struct data
         {
+            //! load address of data 'id' from shared object
             template <typename ID> static inline
             T *load(const dll &so, const ID &id) throw()
             {
