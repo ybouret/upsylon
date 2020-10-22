@@ -15,6 +15,11 @@ namespace upsylon
     namespace yap
     {
 
+        unsigned integer::signs2flag(const unsigned l, const unsigned r) throw()
+        {
+            return Y_APZ_SIGNS(l,r);
+        }
+
         void integer:: cast_overflow(const char *which)
         {
             if(!which) which = "???";
@@ -131,11 +136,6 @@ namespace upsylon
             return *this;
         }
 
-        //======================================================================
-        //
-        // I/O
-        //
-        //======================================================================
         uint8_t integer:: sign2byte(const sign_type s) throw()
         {
             switch(s)
@@ -147,66 +147,8 @@ namespace upsylon
             return 0xff; // never get here
         }
 
+
         
-        const char integer:: CLASS_NAME[] = "apz";
-
-        const char *integer:: className() const throw() { return CLASS_NAME; }
-
-        size_t integer::serialize(ios::ostream &fp) const
-        {
-            switch(s)
-            {
-                case __zero: fp.write( sign2byte(s) ); return 1;
-                default:
-                    break;
-            }
-            fp.write( sign2byte(s) );
-            return 1 + n.serialize(fp);
-        }
-
-        integer integer::read(ios::istream &fp, size_t &delta, const char *which)
-        {
-            static const char fn[] = "integer::read";
-            assert(which);
-            delta=0;
-            uint8_t b = 0;
-            if( !fp.query( (char&)b ) )
-            {
-                throw exception("%s(missing sign byte for '%s')",fn,which);
-            }
-            switch(b)
-            {
-                case __z: delta=1; return integer();
-                    
-                case __p: {
-                    const natural _ = natural::read(fp, delta, which);
-                    ++delta;
-                    if(_<=0) throw exception("%s(invalid natural for positive '%s')",fn,which);
-                    return integer(__positive,_);
-                }
-                case __n: {
-                    const natural _ = natural::read(fp, delta, which);
-                    ++delta;
-                    if(_<=0) throw exception("%s(invalid natural for negative '%s')",fn,which);
-                    return integer(__negative,_);
-                }
-                default:
-                    break;
-            }
-            throw exception("%s(invalid sign byte for '%s')",fn,which);
-        }
-
-        //
-        std::ostream & operator<<( std::ostream &os, const integer &z)
-        {
-            switch(z.s)
-            {
-                case __zero:     os << '0'; break;
-                case __negative: os << '-' << z.n; break;
-                case __positive: os << z.n; break;
-            }
-            return os;
-        }
 
         //======================================================================
         //
@@ -274,18 +216,13 @@ namespace upsylon
         //
         //======================================================================
 
-#define Y_APZ_SIGNS(A,B) ( (A<<8) | B )
-        static unsigned signs2flag(const unsigned l, const unsigned r) throw()
-        {
-            return Y_APZ_SIGNS(l,r);
-        }
-
+      
 
         template <typename LHS, typename RHS> static inline
         int cmp_proto(const sign_type ls, const LHS &la,
                       const sign_type rs, const RHS &ra) throw()
         {
-            const unsigned flag = signs2flag( integer::sign2byte(ls), integer::sign2byte(rs) );
+            const unsigned flag = integer::signs2flag( integer::sign2byte(ls), integer::sign2byte(rs) );
             switch(flag)
             {
                     //----------------------------------------------------------
@@ -333,335 +270,6 @@ namespace upsylon
             const utype la = iabs_of(lhs);
             return cmp_proto(sign_of(lhs),la,rhs.s,rhs.n);
         }
-
-        //======================================================================
-        //
-        // addition
-        //
-        //======================================================================
-        template <typename LHS, typename RHS> static inline
-        integer add_proto(const sign_type ls, const LHS &la,
-                          const sign_type rs, const RHS &ra)
-        {
-            const unsigned flag = signs2flag( integer::sign2byte(ls), integer::sign2byte(rs) );
-            switch(flag)
-            {
-                    //----------------------------------------------------------
-                    // lhs<0
-                    //----------------------------------------------------------
-                case Y_APZ_SIGNS(integer::__n,integer::__n):
-                {
-                    const natural s = la+ra;
-                    return integer(__negative,s);
-                }
-                case Y_APZ_SIGNS(integer::__n,integer::__z):
-                {
-                    return integer(ls,la);
-                }
-                case Y_APZ_SIGNS(integer::__n,integer::__p):
-                {
-                    switch( natural::scmp(la,ra) )
-                    {
-                        case __negative: assert(la<ra); { const natural n=ra-la; return integer(__positive,n); }
-                        case __zero:     assert(la==ra);{                        return integer();             }
-                        case __positive: assert(ra<la); { const natural n=la-ra; return integer(__negative,n); }
-                    }
-                } break;
-
-                    //----------------------------------------------------------
-                    // lhs==0
-                    //----------------------------------------------------------
-                case Y_APZ_SIGNS(integer::__z,integer::__n): return  integer(rs,ra);
-                case Y_APZ_SIGNS(integer::__z,integer::__z): return  integer();
-                case Y_APZ_SIGNS(integer::__z,integer::__p): return  integer(rs,ra);
-
-                    //----------------------------------------------------------
-                    // lhs>0
-                    //----------------------------------------------------------
-                case Y_APZ_SIGNS(integer::__p,integer::__n):
-                {
-                    switch( natural::scmp(la,ra) )
-                    {
-                        case __negative: assert(la<ra); { const natural n=ra-la; return integer(__negative,n); }
-                        case __zero:     assert(la==ra); return integer();
-                        case __positive: assert(ra<la); { const natural n=la-ra; return integer(__positive,n); }
-                    }
-                } break;
-
-                case Y_APZ_SIGNS(integer::__p,integer::__z):
-                {
-                    return  integer(ls,la);
-                }
-                case Y_APZ_SIGNS(integer::__p,integer::__p):
-                {
-                    const natural s = la+ra;
-                    return integer(__positive,s);
-                }
-
-                default:
-                    break;
-            }
-            throw exception("yap::integer::add_proto(corrupted signs)");
-        }
-
-        integer integer:: add(const integer &lhs, const integer &rhs)
-        {
-            return add_proto(lhs.s,lhs.n,rhs.s,rhs.n);
-        }
-
-        integer integer::add(const integer &lhs, const itype rhs)
-        {
-            const utype ra = iabs_of(rhs);
-            return add_proto(lhs.s,lhs.n, sign_of(rhs),ra);
-        }
-
-        integer integer::add(const itype    lhs, const integer &rhs)
-        {
-            const utype la = iabs_of(lhs);
-            return add_proto(sign_of(lhs),la,rhs.s,rhs.n);
-        }
-
-
-        integer integer:: operator+() const
-        {
-            return integer(*this);
-        }
-
-        integer & integer:: operator++()
-        {
-            static const utype one = 1;
-            integer tmp = add_proto(s,n,__positive,one);
-            xch(tmp);
-            return *this;
-        }
-
-        integer  integer:: operator++(int)
-        {
-            static const utype one = 1;
-            const integer      ans(*this);
-            {
-                integer tmp = add_proto(s,n,__positive,one);
-                xch(tmp);
-            }
-            return ans;
-        }
-
-        //======================================================================
-        //
-        // subtraction
-        //
-        //======================================================================
-        integer integer:: sub(const integer &lhs, const integer &rhs)
-        {
-            return add_proto(lhs.s,lhs.n,opposite(rhs.s),rhs.n);
-        }
-
-        integer integer::sub(const integer &lhs, const itype rhs)
-        {
-            const utype ra = iabs_of(rhs);
-            return add_proto(lhs.s,lhs.n, opposite(sign_of(rhs)),ra);
-        }
-
-        integer integer::sub(const itype    lhs, const integer &rhs)
-        {
-            const utype la = iabs_of(lhs);
-            return add_proto(sign_of(lhs),la,opposite(rhs.s),rhs.n);
-        }
-
-
-        integer integer:: operator-() const
-        {
-            return integer(opposite(s),n);
-        }
-
-        integer & integer:: operator--()
-        {
-            static const utype one = 1;
-            integer tmp = add_proto(s,n,__negative,one);
-            xch(tmp);
-            return *this;
-        }
-
-        integer  integer:: operator--(int)
-        {
-            static const utype one = 1;
-            const integer      ans(*this);
-            {
-                integer tmp = add_proto(s,n,__negative,one);
-                xch(tmp);
-            }
-            return ans;
-        }
-
-
-        //======================================================================
-        //
-        // multiplication
-        //
-        //======================================================================
-        template <typename LHS, typename RHS> static inline
-        integer mul_proto(const sign_type ls, const LHS &la,
-                          const sign_type rs, const RHS &ra)
-        {
-            const sign_type ps = number::product(ls,rs);
-            switch(ps)
-            {
-                case __zero: return integer();
-                default: break;
-            }
-            const natural n = la*ra;
-            return integer(ps,n);
-        }
-
-        integer integer:: mul(const integer &lhs, const integer &rhs)
-        {
-            return mul_proto(lhs.s,lhs.n,rhs.s,rhs.n);
-        }
-
-        integer integer::mul(const integer &lhs, const itype rhs)
-        {
-            const utype ra = iabs_of(rhs);
-            return mul_proto(lhs.s,lhs.n, sign_of(rhs),ra);
-        }
-
-        integer integer::mul(const itype    lhs, const integer &rhs)
-        {
-            const utype la = iabs_of(lhs);
-            return mul_proto(sign_of(lhs),la,rhs.s,rhs.n);
-        }
-
-        integer integer:: mul_by(const natural &rhs) const
-        {
-            if(rhs<=0)
-            {
-                return integer();
-            }
-            else
-            {
-                switch(s)
-                {
-                    case __zero:     return integer();
-                    case __negative:
-                    case __positive: break;
-                }
-                assert(rhs>0);
-                assert(n>0);
-                const natural p = rhs*n;
-                return integer(s,p);
-            }
-        }
-
-        integer integer::square_of(const integer &x)
-        {
-            switch(x.s)
-            {
-                case __zero: break;
-                case __negative:
-                case __positive:
-                {
-                    const natural n2 = natural::square_of(x.n);
-                    return integer(__positive,n2);
-                }
-            }
-            return integer();
-        }
-
-        integer integer::abs_of(const integer &x)
-        {
-            switch(x.s)
-            {
-                case __zero: break;
-                case __negative:
-                case __positive:
-                {
-                    return integer(__positive,x.n);
-                }
-            }
-            return integer();
-        }
-
-        integer integer::sqrt_of(const integer &x)
-        {
-            switch(x.s)
-            {
-                case __zero: break;
-                case __negative: throw libc::exception(EDOM,"sqrt(negative integer)");
-                case __positive:
-                {
-                    const natural n = natural::sqrt_of(x.n);
-                    return integer(__positive,n);
-                }
-            }
-            return integer();
-        }
-
-
-
-
-        //======================================================================
-        //
-        // division
-        //
-        //======================================================================
-        template <typename LHS, typename RHS> static inline
-        integer div_proto(const sign_type ls, const LHS &la,
-                          const sign_type rs, const RHS &ra)
-        {
-            const natural n = la/ra;
-            return (n>0) ? integer(number::product(ls,rs),n) : integer();
-        }
-
-        integer integer:: divide(const integer &lhs, const integer &rhs)
-        {
-            return div_proto(lhs.s,lhs.n,rhs.s,rhs.n);
-        }
-
-        integer integer::divide(const integer &lhs, const itype rhs)
-        {
-            const utype ra = iabs_of(rhs);
-            return div_proto(lhs.s,lhs.n, sign_of(rhs),ra);
-        }
-
-        integer integer::divide(const itype    lhs, const integer &rhs)
-        {
-            const utype la = iabs_of(lhs);
-            return div_proto(sign_of(lhs),la,rhs.s,rhs.n);
-        }
-        
-        //======================================================================
-        //
-        // modulo
-        //
-        //======================================================================
-        template <typename LHS, typename RHS> static inline
-        integer mod_proto(const LHS &lhs, const RHS &rhs)
-        {
-            const integer q = lhs/rhs;
-            const integer qr = q*rhs;
-            return lhs-qr;
-        }
-        
-        integer integer:: modulo(const integer &lhs, const integer &rhs)
-        {
-            return mod_proto(lhs,rhs);
-            //return mod_proto(lhs.s,lhs.n,rhs.s,rhs.n);
-        }
-        
-        integer integer::modulo(const integer &lhs, const itype rhs)
-        {
-            return mod_proto(lhs,rhs);
-            //const utype ra = iabs_of(rhs);
-            //return mod_proto(lhs.s,lhs.n, sign_of(rhs),ra);
-        }
-        
-        integer integer::modulo(const itype    lhs, const integer &rhs)
-        {
-            return mod_proto(lhs,rhs);
-            //const utype la = iabs_of(lhs);
-            //return mod_proto(sign_of(lhs),la,rhs.s,rhs.n);
-        }
-        
-        
         
     }
 }

@@ -320,44 +320,6 @@ SET(counting_srcs ${counting_decl} ${counting_code})
 SOURCE_GROUP( counting FILES ${counting_srcs} )
 INSTALL( FILES ${counting_decl} DESTINATION include/y/counting )
 
-IF(FALSE)
-FILE(GLOB jargon_decl y/jargon/*.hpp)
-FILE(GLOB jargon_code y/jargon/*.cpp)
-SET(jargon_srcs ${jargon_decl} ${jargon_code})
-SOURCE_GROUP( jargon FILES ${jargon_srcs} )
-INSTALL( FILES ${jargon_decl} DESTINATION include/y/jargon )
-
-FILE(GLOB jargon_pattern_decl y/jargon/pattern/*.hpp)
-FILE(GLOB jargon_pattern_code y/jargon/pattern/*.cpp)
-SET(jargon_pattern_srcs ${jargon_pattern_decl} ${jargon_pattern_code})
-SOURCE_GROUP( jargon/pattern FILES ${jargon_pattern_srcs} )
-INSTALL( FILES ${jargon_pattern_decl} DESTINATION include/y/jargon/pattern )
-
-FILE(GLOB jargon_token_decl y/jargon/token/*.hpp)
-FILE(GLOB jargon_token_code y/jargon/token/*.cpp)
-SET(jargon_token_srcs ${jargon_token_decl} ${jargon_token_code})
-SOURCE_GROUP( jargon/token FILES ${jargon_token_srcs} )
-INSTALL( FILES ${jargon_token_decl} DESTINATION include/y/jargon/token )
-
-FILE(GLOB jargon_pattern_basic_decl y/jargon/pattern/basic/*.hpp)
-FILE(GLOB jargon_pattern_basic_code y/jargon/pattern/basic/*.cpp)
-SET(jargon_pattern_basic_srcs ${jargon_pattern_basic_decl} ${jargon_pattern_basic_code})
-SOURCE_GROUP( jargon/pattern/basic FILES ${jargon_pattern_basic_srcs} )
-INSTALL( FILES ${jargon_pattern_basic_decl} DESTINATION include/y/jargon/pattern/basic )
-
-FILE(GLOB jargon_pattern_logic_decl y/jargon/pattern/logic/*.hpp)
-FILE(GLOB jargon_pattern_logic_code y/jargon/pattern/logic/*.cpp)
-SET(jargon_pattern_logic_srcs ${jargon_pattern_logic_decl} ${jargon_pattern_logic_code})
-SOURCE_GROUP( jargon/pattern/logic FILES ${jargon_pattern_logic_srcs} )
-INSTALL( FILES ${jargon_pattern_logic_decl} DESTINATION include/y/jargon/pattern/logic )
-
-FILE(GLOB jargon_pattern_joker_decl y/jargon/pattern/joker/*.hpp)
-FILE(GLOB jargon_pattern_joker_code y/jargon/pattern/joker/*.cpp)
-SET(jargon_pattern_joker_srcs ${jargon_pattern_joker_decl} ${jargon_pattern_joker_code})
-SOURCE_GROUP( jargon/pattern/joker FILES ${jargon_pattern_joker_srcs} )
-INSTALL( FILES ${jargon_pattern_joker_decl} DESTINATION include/y/jargon/pattern/joker )
-ENDIF()
-
 FILE(GLOB tensor_decl y/tensor/*.hpp)
 FILE(GLOB tensor_code y/tensor/*.cpp)
 SET(tensor_srcs ${tensor_decl} ${tensor_code})
@@ -376,6 +338,11 @@ SET(yap_natural_srcs ${yap_natural_decl} ${yap_natural_code})
 SOURCE_GROUP( yap/natural FILES ${yap_natural_srcs} )
 INSTALL( FILES ${yap_natural_decl} DESTINATION include/y/yap/natural )
 
+FILE(GLOB yap_integer_decl y/yap/integer/*.hpp)
+FILE(GLOB yap_integer_code y/yap/integer/*.cpp)
+SET(yap_integer_srcs ${yap_integer_decl} ${yap_integer_code})
+SOURCE_GROUP( yap/integer FILES ${yap_integer_srcs} )
+INSTALL( FILES ${yap_integer_decl} DESTINATION include/y/yap/integer )
 
 FILE(GLOB yap_prime_decl y/yap/prime/*.hpp)
 FILE(GLOB yap_prime_code y/yap/prime/*.cpp)
@@ -464,7 +431,7 @@ ${jargon_pattern_basic_srcs}
 ${jargon_pattern_logic_srcs}
 ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
-${yap_srcs}  ${yap_natural_srcs} ${yap_prime_srcs}
+${yap_srcs}  ${yap_natural_srcs}  ${yap_integer_srcs} ${yap_prime_srcs}
 ${jive_srcs} ${jive_pattern_srcs} ${jive_pattern_basic_srcs} ${jive_pattern_logic_srcs} ${jive_pattern_joker_srcs}
 )
  

@@ -233,6 +233,9 @@ Y_APZ_OPERATOR(OP,CALL);
                 }
                 return ans;
             }
+
+#define Y_APZ_SIGNS(A,B) ( (A<<8) | B )
+            static unsigned signs2flag(const unsigned l, const unsigned r) throw();
             
         private:
             void update() throw();
