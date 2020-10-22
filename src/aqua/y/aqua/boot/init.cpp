@@ -31,15 +31,15 @@ namespace upsylon
                 }
 
                 //--------------------------------------------------------------
-                // allocated
+                // allocate memory
                 //--------------------------------------------------------------
                 aliasing::_(R).  make(Nc,M);
-                aliasing::_(pL). make(M,Nc);
+                aliasing::_(pL). make(M,Nc); assert(M==dL.size());
                 aliasing::_(S).  make(N,M);
-                aliasing::_(pS). make(M,M);
+                aliasing::_(pS). make(M,M);  assert(M==dS.size());
 
                 //--------------------------------------------------------------
-                // fill R
+                // fill R from constraints
                 //--------------------------------------------------------------
                 lib.buildIndices();
                 {
