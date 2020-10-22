@@ -26,7 +26,7 @@ namespace upsylon
         tNu(),
         Nu2(),
         pNu(),
-        dNu( pNu.c_aux1 ),
+        dNu( pNu.r_aux1 ),
         J(),
         W(),
         aM( 16 ),

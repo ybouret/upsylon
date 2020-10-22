@@ -59,7 +59,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // build individual scalings
                 //--------------------------------------------------------------
-                addressable<apz> &Scal = Proj.c_aux1;
+                addressable<apz> &Scal = Proj.r_aux1;
                 apk::simplify(Scal,Proj,Det);
                 std::cerr << "Scal=" << Scal << std::endl;
                 std::cerr << "Proj=" << Proj << std::endl;

@@ -11,13 +11,12 @@ namespace upsylon
 {
     namespace Aqua
     {
-        typedef arrays<double>                     Arrays;     //!< alias
-        typedef array<double>                      Array;      //!< alias
-        typedef lightweight_array<bool>            Booleans;   //!< alias
-        typedef vector<const Equilibrium::Pointer> EqVector;   //!< alias
+        typedef arrays<double>                     Arrays;       //!< alias
+        typedef array<double>                      Array;        //!< alias
+        typedef lightweight_array<bool>            Booleans;     //!< alias
+        typedef vector<const Equilibrium::Pointer> EqVector;     //!< alias
         class                                      Boot;         //!< forward
-        typedef addressable<Int>                   iAddressable; //!< alias
-        typedef accessible<Int>                    iAccessible;
+       
 
         //! solver
         class Engine
@@ -99,18 +98,18 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t      N;          //!< equilibria
-            const size_t      M;          //!< species
-            const size_t      Ma;         //!< active species
-            const size_t      Nc;         //!< parameters = M-N
-            const EqVector    equilibria; //!< validated equilibria [N]
-            const iMatrix     Nu;         //!< topology             [NxM]
-            const iMatrix     tNu;        //!< transposed           [MxN]
-            const iMatrix     Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
-            const iMatrix     pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
-            iAddressable     &dNu;        //!< pNu c_aux1           [M]
-            Matrix            J;          //!< Jacobian             [NxM]
-            Matrix            W;          //!< system matrix        [NxN]
+            const size_t        N;          //!< equilibria
+            const size_t        M;          //!< species
+            const size_t        Ma;         //!< active species
+            const size_t        Nc;         //!< parameters = M-N
+            const EqVector      equilibria; //!< validated equilibria [N]
+            const iMatrix       Nu;         //!< topology             [NxM]
+            const iMatrix       tNu;        //!< transposed           [MxN]
+            const iMatrix       Nu2;        //!< Nu*tNu, Gram matrix  [NxN]
+            const iMatrix       pNu;        //!< Nu'*adj(Nu2)*Nu      [MxM]
+            iAddressable       &dNu;        //!< pNu r_aux1           [M]
+            Matrix              J;          //!< Jacobian             [NxM]
+            Matrix              W;          //!< system matrix        [NxN]
 
 
 

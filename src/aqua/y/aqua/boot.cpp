@@ -8,7 +8,6 @@ namespace upsylon {
         void Boot:: setup() throw()
         {
             keep << aliasing::_(R);
-            keep << aliasing::_(tR);
             keep << aliasing::_(pL);
             keep << aliasing::_(S);
             keep << aliasing::_(pS);
@@ -21,8 +20,6 @@ namespace upsylon {
         void Boot:: quit() throw()
         {
             keep.release_all();
-            aliasing::_(dL) = 0;
-            aliasing::_(dS) = 0;
         }
 
         Constraint & Boot:: operator()( const double value )

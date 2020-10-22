@@ -34,7 +34,6 @@ namespace upsylon
                 // allocated
                 //--------------------------------------------------------------
                 aliasing::_(R).  make(Nc,M);
-                aliasing::_(tR). make(M,Nc);
                 aliasing::_(pL). make(M,Nc);
                 aliasing::_(S).  make(N,M);
                 aliasing::_(pS). make(M,M);
@@ -50,12 +49,12 @@ namespace upsylon
                         cc->fill( aliasing::_(R[i]) );
                     }
                 }
-                aliasing::_(tR).assign_transpose(R);
-
+                
                 //--------------------------------------------------------------
                 // compute 'Lambda => C' matrix, with scaling
                 //--------------------------------------------------------------
                 {
+                    // apk results
                     matrix<apz> aR2(Nc,Nc);
                     apz         dR2 = apk::adjoint_gram(aR2,R);
                     std::cerr << "aR2=" << aR2 << std::endl;
@@ -64,30 +63,20 @@ namespace upsylon
                     {
                         throw exception("%ssingular set of constraints",fn);
                     }
-                    matrix<apz> L2C(M,Nc);
-                    tao::mmul_ltrn(L2C,R,aR2);
-                    std::cerr << "L2C= " << L2C << std::endl;
-                    std::cerr << "R  = " << R << std::endl;
-                    apk::simplify(L2C,dR2,NULL);
-                    std::cerr << "pL= " << L2C << std::endl;
-                    std::cerr << "dL= " << dR2 << std::endl;
-                    exit(1);
+                    matrix<apz>       Lproj(M,Nc);
+                    addressable<apz> &Lscal = Lproj.r_aux1;
+                    tao::mmul_ltrn(Lproj,R,aR2);
+                    apk::simplify(Lscal,Lproj,dR2);
+                    std::cerr << "Lproj = " << Lproj << std::endl;
+                    std::cerr << "Lscal = " << Lscal << std::endl;
+
+                    // transert
+                    apk::convert( aliasing::_(pL), Lproj, "Aqua::Boot::convert(<proj>)");
+                    apk::convert( aliasing::_(dL), Lscal, "Aqua::Boot::convert(<scal>)");
+                    std::cerr << "pL = " << pL << std::endl;
+                    std::cerr << "dL = " << dL << std::endl;
                 }
-#if 0
-                {
-                    iMatrix R2(Nc,Nc);
-                    tao::gram(R2,R);
-                    aliasing::_(dL) = ideterminant(R2);
-                    if(0==dL)
-                    {
-                        throw exception("%ssingular set of constraints",fn);
-                    }
-                    iMatrix aR2(Nc,Nc);
-                    iadjoint(aR2,R2);
-                    tao::mmul(aliasing::_(pL),tR,aR2);
-                    (void) simplify<Int>::on( aliasing::_(pL), aliasing::_(dL) );
-                }
-#endif
+
 
                 //--------------------------------------------------------------
                 // find supplementary space
@@ -118,7 +107,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // compute projection matrix for balancing
                 //--------------------------------------------------------------
-                //aliasing::_(dS) = Engine::Project(aliasing::_(pS),S,"supplementary boot space");
+                Engine::Project(aliasing::_(pS), aliasing::_(dS), S,"supplementary boot space");
 
 
                 std::cerr << "R  = "  << R  << std::endl;
@@ -128,7 +117,6 @@ namespace upsylon
                 std::cerr << "pS = "  << pS << std::endl;
                 std::cerr << "dS = "  << dS << std::endl;
 
-                exit(1);
 
             }
             catch(...)

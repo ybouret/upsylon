@@ -35,12 +35,11 @@ namespace upsylon {
             Constraint::List(),
             name(id),
             R(),
-            tR(),
             pL(),
-            dL(0),
+            dL(pL.r_aux1),
             S(),
-            dS(0),
             pS(),
+            dS(pS.r_aux1),
             keep()
             {
 
@@ -83,15 +82,14 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const string  name; //!< identifier
-            const iMatrix R;    //!< constraint matrix     [NcxM]
-            const iMatrix tR;   //!< transposed R          [MxNc]
-            const iMatrix pL;   //!< constraints to C      [MxNc]
-            const Int     dL;   //!< scaling of pL
-            const iMatrix S;    //!< supplementary matrix  [N*M]
-            const Int     dS;   //!< scaling of pS
-            const iMatrix pS;   //!< projection on S times s: s* S'*inv(S*S')*S  [M*M]
-            
+            const string        name; //!< identifier
+            const iMatrix       R;    //!< constraint matrix     [NcxM]
+            const iMatrix       pL;   //!< constraints to C      [MxNc]
+            iAddressable       &dL;   //!< scaling of pL
+            const iMatrix       S;    //!< supplementary matrix  [N*M]
+            const iMatrix       pS;   //!< projection on S times dS: s* S'*inv(S*S')*S  [M*M]
+            iAddressable       &dS;   //!< scaling of pS         [N]
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
             core::temporary_acquire<4> keep;

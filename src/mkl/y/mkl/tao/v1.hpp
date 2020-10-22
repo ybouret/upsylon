@@ -205,6 +205,17 @@ void divset(TARGET &target, typename TARGET::param_type value)
     }
 }
 
+//! target ./= lhs
+template <typename TARGET, typename LHS> static inline
+void divall(TARGET &target, LHS &lhs )
+{
+    assert(target.size()<=lhs.size());
+    for(size_t i=target.size();i>0;--i)
+    {
+        target[i] /=  Y_TAO_CAST(TARGET,LHS,lhs[i]);
+    }
+}
+
 
 //! target = lhs + value * lhs, based on target.size()
 template <typename TARGET, typename LHS, typename RHS> static inline

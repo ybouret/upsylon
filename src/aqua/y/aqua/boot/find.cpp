@@ -27,19 +27,16 @@ namespace upsylon
 
             fill(Lambda);
             tao::mul(Cold,pL,Lambda);
-            tao::divset(Cold,dL);
+            tao::divall(Cold,dL);
             std::cerr << "Lambda=" << Lambda << std::endl;
             std::cerr << "Cstar =" << Cold  << std::endl;
             std::cerr << "R     =" << R << std::endl;
 
-            exit(1);
-#if 0
             // initial balance
             if( !engine.balance_(Cold, pS, dS) )
             {
                 throw exception("no possible initial balance");
             }
-#endif
             // initial equilibrium
             std::cerr << "Cbal= " << Cold << std::endl;
             tao::set(Cnew,Cold);
@@ -53,17 +50,15 @@ namespace upsylon
             tao::mul(RC, R, Cnew);
             tao::subp(RC,Lambda);
             tao::mul(Cprj,pL,RC);
-            tao::divset(Cprj,dL);
+            tao::divall(Cprj,dL);
             tao::add(Cnew,Cprj);
             std::cerr << "dC  = " << Cprj << std::endl;
             std::cerr << "Cnew= " << Cnew << std::endl;
-#if 0
             if( !engine.balance_(Cnew, pS, dS) )
             {
                 throw exception("no possible   balance");
             }
             std::cerr << "C   = " << Cnew << std::endl;
-#endif
         }
 
     }
