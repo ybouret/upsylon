@@ -61,14 +61,14 @@ namespace upsylon
             }
 
             //! simplify
-            static apz simplify(addressable<apz> &num, apz &den);
+            static void simplify(addressable<apz> &num, apz &den, apz *ratio);
 
             //! simplify full matrix
-            static apz simplify(matrix<apz> &num, apz &den);
+            static void simplify(matrix<apz> &num, apz &den, apz *ratio);
 
             //! simplified adjoint of gram matrix
             template <typename T> static inline
-            apz adjoint_gram(matrix<apz> &A, const matrix<T> &M, apz *r=0)
+            apz adjoint_gram(matrix<apz> &A, const matrix<T> &M)
             {
                 assert(A.rows==A.cols);
                 assert(M.rows==A.rows);
@@ -76,10 +76,7 @@ namespace upsylon
                 matrix<apz>  G(n,n); tao::gram(G,M);  std::cerr << "G=" << G << std::endl;
                 apz          d = apk::determinant(G); std::cerr << "d=" << d << std::endl;
                 apk::adjoint(A,G);                    std::cerr << "A=" << A << std::endl;
-                if(r)
-                    *r =   simplify(A,d);
-                else
-                    (void) simplify(A,d);
+                simplify(A,d,NULL);
                 return d;
             }
 

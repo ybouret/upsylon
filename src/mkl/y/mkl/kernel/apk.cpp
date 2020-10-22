@@ -4,6 +4,55 @@ namespace upsylon
 {
     namespace mkl
     {
+
+        namespace
+        {
+            class apn_ref : public object
+            {
+            public:
+                apn_ref    *next;
+                apn        &data;
+
+                inline explicit apn_ref(apn &r) throw() :
+                next(0),
+                data(r)
+                {
+                    assert(data>0);
+                }
+
+                inline virtual ~apn_ref() throw()
+                {
+                }
+
+                typedef core::pool_of_cpp<apn_ref> pool;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(apn_ref);
+            };
+        }
+
+        void apk:: simplify(addressable<apz> &num, apz &den, apz *ratio)
+        {
+            apn &ini = aliasing::_(den.n);
+            if(ini>0)
+            {
+                apn_ref::pool  positive;
+                positive.store( new apn_ref(ini) );
+                std::cerr << "store ini=" << ini << std::endl;
+                for(size_t i=num.size();i>0;--i)
+                {
+                    apn &ref = aliasing::_(num[i].n);
+                    if(ref>0)
+                    {
+                        positive.store( new apn_ref(ref) );
+                        std::cerr << "store ref=" << ref << std::endl;
+                    }
+                }
+
+            }
+
+        }
+
+#if 0
         apz apk:: simplify( addressable<apz> &num, apz &den )
         {
             apz        r      = 1;
@@ -70,11 +119,12 @@ namespace upsylon
             }
             return r;
         }
+#endif
 
-        apz apk::simplify(matrix<apz> &num, apz &den)
+        void apk::simplify(matrix<apz> &num, apz &den, apz *ratio)
         {
             lightweight_array<apz> data = num.as_array();
-            return simplify(data,den);
+            simplify(data,den,ratio);
         }
 
     }

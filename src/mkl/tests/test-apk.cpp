@@ -41,11 +41,13 @@ namespace {
                         }
                     }
                 }
+#if 0
                 if(dM!=0)
                 {
                     const apz r = apk::simplify(aM,dM);
                     std::cerr << "rescaled by " << r << std::endl;
                 }
+#endif
             }
             M.Id();
             for(size_t i=n;i>0;--i)
@@ -60,7 +62,8 @@ namespace {
                 std::cerr << "dM=" << dM << std::endl;
                 if(dM!=0)
                 {
-                    const apz r = apk::simplify(aM,dM);
+                    apz r = 0;
+                    apk::simplify(aM,dM,&r);
                     std::cerr << "rescaled by " << r << std::endl;
                     std::cerr << "aM=" << aM << std::endl;
                     std::cerr << "dM=" << dM << std::endl;
@@ -91,7 +94,7 @@ namespace {
         apz         d = apk::adjoint_gram(A,M);
         std::cerr << "d=" << d << std::endl;
         std::cerr << "A=" << A << std::endl;
-
+        
 
     }
     
