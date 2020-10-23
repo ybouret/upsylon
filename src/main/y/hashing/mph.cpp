@@ -28,18 +28,46 @@ namespace upsylon
         minimal_perfect_tree()
         {
             assert(words);
+            minimal_perfect &self = *this;
             for(unsigned i=0;i<count;++i)
             {
                 const char *word = words[i];
-                add(word,i);
+                self(word,i);
             }
         }
 
-
-
-        
+        void minimal_perfect:: found(const tree_node *node) const
+        {
+            assert(node);
+            exception excp;
+            node->format(excp);
+            excp.hdr("minimal_perfect: multiple ");
+            throw excp;
+        }
 
 
     }
 
+}
+
+#include "y/ios/ostream.hpp"
+#include "y/string.hpp"
+#include "y/memory/buffers.hpp"
+
+namespace upsylon
+{
+    namespace hashing
+    {
+        void minimal_perfect:: emit(ios::ostream &fp) const
+        {
+            const size_t              nmax = max_depth();
+            memory::cppblock<uint8_t> path( nmax );
+            for(const data_node *node=head();node;node=node->next)
+            {
+                const tree_node *curr=node->hook;
+                const size_t     clen=curr->encode(path);
+                
+            }
+        }
+    }
 }

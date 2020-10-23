@@ -16,7 +16,8 @@ namespace upsylon
     {
         class function; //!< forward declaration
     }
-    
+
+    class exception; //!< forward declaration
     
     //__________________________________________________________________________
     //
@@ -33,7 +34,8 @@ namespace upsylon
         //______________________________________________________________________
         class                                tree_node; //!< forward declaration
         typedef core::list_of_cpp<tree_node> tree_list; //!< alias
-        
+        typedef const tree_node             *tree_mark;    //!< alias
+
         //______________________________________________________________________
         //
         //! internal tree node
@@ -52,14 +54,15 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void   optimize()                     throw(); //!< locally optimize with univocal sorting
-            void   graphViz(ios::ostream &fp)       const; //!< for GraphViz
-            void   leaves_to(tree_list &pool)     throw(); //!< return leaves to pool
-            void   return_to(tree_list &pool)     throw(); //!< leaves and this to pool
-            void   run(hashing::function &) const throw(); //!< in-order hashing of codes
-            size_t children()               const throw(); //!< leaves.size
-            void   encode(addressable<uint8_t> &path) const throw(); //!< path[0..deep-1]
-            
+            void   optimize()                           throw(); //!< locally optimize with univocal sorting
+            void   graphViz(ios::ostream &)               const; //!< for GraphViz
+            void   leaves_to(tree_list &)               throw(); //!< return leaves to pool
+            void   return_to(tree_list &)               throw(); //!< leaves and this to pool
+            void   run(hashing::function &)       const throw(); //!< in-order hashing of codes
+            size_t children()                     const throw(); //!< leaves.size
+            size_t encode(addressable<uint8_t> &) const throw(); //!< path[0..deep-1]
+            void   format(exception &)            const throw(); //!< 'path'
+
             //__________________________________________________________________
             //
             // members
@@ -125,7 +128,8 @@ namespace upsylon
         template <typename ITERATOR> inline
         tree_node *grow(ITERATOR     curr,
                         size_t       size,
-                        void        *addr)
+                        void        *addr,
+                        tree_mark   *mark)
         {
             assert(addr!=NULL);
             assert(root!=NULL);
@@ -159,6 +163,7 @@ namespace upsylon
             FOUND:;
             }
             assert(node!=NULL);
+            if(mark) { *mark = node; }
             if(node->addr)
             {
                 //--------------------------------------------------------------

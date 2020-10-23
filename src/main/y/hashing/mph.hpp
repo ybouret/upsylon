@@ -46,10 +46,14 @@ namespace upsylon
             //__________________________________________________________________
             //! a new key/hash
             template <typename ID> inline
-            bool add(const ID &key, const_type h)
+            void operator()(const ID &key, const_type h)
             {
                 check(h);
-                return insert_by(key,h);
+                tree_mark mark=0;
+                if(!insert_by(key,h,&mark))
+                {
+                    found(mark);
+                }
             }
 
             //! get hash, invalid if not found
@@ -68,11 +72,14 @@ namespace upsylon
                 }
             }
 
+            //! emit defines
+            void emit( ios::ostream &fp ) const;
 
 
         private:
             Y_DISABLE_ASSIGN(minimal_perfect);
             void check(const_type) const;
+            void found(const tree_node *node) const;
         };
 
         //! macro for static arrays of strings

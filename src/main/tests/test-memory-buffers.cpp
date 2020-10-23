@@ -3,13 +3,14 @@
 
 using namespace upsylon;
 
+
 Y_UTEST(buffers)
 {
 
     for(size_t i=0;i<=1000;i+=1+alea.leq(100))
     {
         memory::cblock blk(i);
-        std::cerr << "query " << i << " => " << blk.length() << std::endl;
+        std::cerr << "query " << i << " => " << blk.length() << " => " << blk.count<int16_t>() << " int16_t " << std::endl;
 
         memory::cppblock<uint8_t> blk8(i);
         std::cerr << "query " << i << " => " << blk8.length() << " => " << blk8.size() << std::endl;

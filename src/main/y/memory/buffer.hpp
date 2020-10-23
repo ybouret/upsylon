@@ -27,7 +27,15 @@ namespace upsylon
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------
-            uint8_t             byte_at(size_t i) const throw();     //!< virtual never ending byte access
+            uint8_t               byte_at(size_t i) const throw();     //!< virtual never ending byte access
+
+            //! see as<T>
+            template <typename T> inline
+            const T *as() const throw() { return static_cast<const T *>( ro() ); }
+
+            //! count how many T are possible in this buffer
+            template <typename T> inline
+            size_t   count() const throw() { return length() / sizeof(T); }
 
         protected:
             explicit ro_buffer() throw();                            //!< constructor
@@ -48,6 +56,10 @@ namespace upsylon
             virtual ~rw_buffer() throw(); //!< destructor
             void *   rw()        throw(); //!< assuming writable area
             void     reverse()   throw(); //!< using mreverse
+
+            //! see as<T>
+            template <typename T> inline
+            T *as() throw() { return static_cast<T *>( rw() ); }
 
         protected:
             explicit rw_buffer() throw(); //!< constructor

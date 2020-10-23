@@ -43,10 +43,10 @@ namespace upsylon
             //! cleanup
             inline ~data_node() throw() {}
             
-            data_node *next; //!< for list
-            data_node *prev; //!< for list
-            tree_node *hook; //!< for linking
-            type       data; //!< effective data
+            data_node       *next; //!< for list
+            data_node       *prev; //!< for list
+            const tree_node *hook; //!< for linking
+            type             data; //!< effective data
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(data_node);
@@ -79,7 +79,7 @@ namespace upsylon
                 {
                     const tree_node *curr=node->hook;
                     curr->encode(path);
-                    if( !insert_at(*path,curr->deep,node->data) )
+                    if( !insert_at(*path,curr->deep,node->data,NULL) )
                     {
                         throw_multiple(curr);
                     }
@@ -119,12 +119,13 @@ namespace upsylon
         template <typename ITERATOR>
         bool insert_at(ITERATOR     iter,
                        const size_t size,
-                       param_type   args)
+                       param_type   args,
+                       tree_mark   *mark)
         {
             data_node *dnode = make_data_node(args);
             try
             {
-                tree_node *tnode = grow(iter,size,dnode);
+                tree_node *tnode = grow(iter,size,dnode,mark);
                 if(!tnode)
                 {
                     kill_data_node(dnode);
@@ -147,25 +148,28 @@ namespace upsylon
         //! insert using a block of memory
         inline bool insert_by(const void  *data,
                               const size_t size,
-                              param_type   args)
+                              param_type   args,
+                              tree_mark   *mark=0)
         {
             assert(!(NULL==data&&size>0));
-            return insert_at( static_cast<const char *>(data), size, args );
+            return insert_at( static_cast<const char *>(data), size, args, mark);
         }
 
 
         //! insert using text
         inline bool insert_by(const char  *text,
-                              param_type   args)
+                              param_type   args,
+                              tree_mark   *mark=0)
         {
-            return insert_by(text,text?strlen(text):0, args );
+            return insert_by(text,text?strlen(text):0, args, mark);
         }
 
         //! insert using text
         inline bool insert_by(const memory::ro_buffer &buff,
-                              param_type               args)
+                              param_type               args,
+                              tree_mark               *mark=0)
         {
-            return insert_by(buff.ro(),buff.length(),args);
+            return insert_by(buff.ro(),buff.length(),args,mark);
         }
 
 
@@ -347,6 +351,10 @@ namespace upsylon
         {
             merging<data_node>::sort(dl,call_compare<FUNC>,(void*)&func);
         }
+
+    protected:
+        //! manipulate data for derived class
+        const data_node * head() const throw() { return dl.head; }
 
     private:
         data_list   dl; //!< data list

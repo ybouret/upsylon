@@ -84,7 +84,7 @@ namespace upsylon
         pool.push_front(this);
     }
     
-    void  affix:: tree_node:: encode( addressable<uint8_t> &path) const throw()
+    size_t  affix:: tree_node:: encode( addressable<uint8_t> &path) const throw()
     {
         assert(path.size()>=deep);
         const tree_node *curr = this;
@@ -93,7 +93,7 @@ namespace upsylon
             path[curr->deep] = curr->code;
             curr=curr->parent;
         }
-        
+        return deep;
     }
 
     
@@ -331,16 +331,25 @@ namespace upsylon
 namespace upsylon
 {
 
-    void affix:: throw_multiple(const tree_node *node)
+    void affix::tree_node:: format(exception &excp) const throw()
     {
-        assert(node);
-        exception excp("'");
+        static const char quote[] = "'";
+        const tree_node *node = this;
+        excp << quote;
         while(node->parent)
         {
             excp.hdr( "%s", cchars::visible[node->code] );
             node=node->parent;
         }
-        excp.hdr("affix::multiple '");
+        excp.hdr(quote);
+    }
+
+    void affix:: throw_multiple(const tree_node *node)
+    {
+        assert(node);
+        exception excp;
+        node->format(excp);
+        excp.hdr("affix::multiple ");
         throw excp;
     }
 

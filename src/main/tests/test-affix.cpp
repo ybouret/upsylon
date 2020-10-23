@@ -24,7 +24,7 @@ namespace {
         template <typename ITERATOR>
         bool add(ITERATOR curr,const size_t size, void *addr)
         {
-            return grow(curr,size,addr);
+            return grow(curr,size,addr,NULL);
         }
 
         template <typename ITERATOR>

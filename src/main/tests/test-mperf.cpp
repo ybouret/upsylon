@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 
 using namespace upsylon;
@@ -38,9 +39,8 @@ Y_UTEST(mperf)
                 while( fp.gets(line) )
                 {
                     ++indx;
-                    H.add(line,indx);
+                    H(line,indx);
                     strings << line;
-                    //std::cerr << line << " -> " << indx << std::endl;
                 }
             }
             if(H.entries()<=30)
@@ -51,7 +51,13 @@ Y_UTEST(mperf)
             {
                 Y_ASSERT(i==H(strings[i]));
             }
+
+            {
+                ios::ocstream fp( ios::cstderr );
+                H.emit(fp);
+            }
         }
+
 
 
 
