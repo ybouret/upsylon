@@ -8,6 +8,12 @@ FILE(GLOB main_code y/aqua/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( aqua FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/aqua )
+
+FILE(GLOB equilibrium_decl y/aqua/equilibrium/*.hpp)
+FILE(GLOB equilibrium_code y/aqua/equilibrium/*.cpp)
+SET(equilibrium_srcs ${equilibrium_decl} ${equilibrium_code})
+SOURCE_GROUP( aqua/equilibrium FILES ${equilibrium_srcs} )
+INSTALL( FILES ${equilibrium_decl} DESTINATION include/y/aqua/equilibrium ) 
  
 FILE(GLOB engine_decl y/aqua/engine/*.hpp)
 FILE(GLOB engine_code y/aqua/engine/*.cpp)
@@ -23,6 +29,7 @@ INSTALL( FILES ${boot_decl} DESTINATION include/y/aqua/boot )
 
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
+${equilibrium_srcs}
 ${engine_srcs}
 ${boot_srcs}
 )

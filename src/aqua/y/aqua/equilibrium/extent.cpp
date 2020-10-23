@@ -1,6 +1,6 @@
 
 
-#include "y/aqua/extent.hpp"
+#include "y/aqua/equilibrium/extent.hpp"
 #include "y/sort/heap.hpp"
 #include "y/type/utils.hpp"
 

@@ -4,7 +4,7 @@
 #ifndef Y_AQUA_EXTENT_INCLUDED
 #define Y_AQUA_EXTENT_INCLUDED 1
 
-#include "y/aqua/component.hpp"
+#include "y/aqua/equilibrium/component.hpp"
 
 namespace upsylon {
 

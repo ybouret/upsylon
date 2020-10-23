@@ -1,5 +1,5 @@
 
-#include "y/aqua/component.hpp"
+#include "y/aqua/equilibrium/component.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon {
