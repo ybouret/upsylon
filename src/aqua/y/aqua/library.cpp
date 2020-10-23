@@ -41,7 +41,9 @@ namespace upsylon {
                 os << ios::align(sp.name,ios::align::left,maxNameSize);
                 os << ' ' << ':' << ' ';
                 os << std::setw(3) << sp.Z;
-                os << '}' << std::endl;
+                os << ' ' << '}';
+                os << ' ' << '@' << sp.indx;
+                os << std::endl;
             }
             os << '}';
             return os;
@@ -52,7 +54,7 @@ namespace upsylon {
             return lib.display(os);
         }
 
-        void Library:: buildIndices() throw()
+        void Library:: init() throw()
         {
             size_t i=0;
             for(iterator it=begin();it!=end();++it)

@@ -56,8 +56,8 @@ Y_UTEST(citric)
 
 
     Engine engine;
+    lib.init();
     engine.init(lib,eqs);
-
     engine.computeK(0);
 
     boot.verbose = true;

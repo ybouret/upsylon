@@ -12,8 +12,8 @@ namespace upsylon {
     {
        
 
-        Equilibrium:: ~Equilibrium() throw()
-        {}
+        Equilibrium:: ~Equilibrium() throw() {}
+
 
         void Equilibrium:: operator()(const Species &sp, const int nu)
         {
@@ -32,7 +32,8 @@ namespace upsylon {
             c = aliasing::_(components).push_back( new Component(sp,nu) );
             if(nu>0)
             {
-                try {
+                try
+                {
                     aliasing::_(products).push_back( new Component(sp,nu) );
                 }
                 catch(...) { delete aliasing::_(components).pop_back(); throw; }
@@ -52,11 +53,7 @@ namespace upsylon {
             assert(dp-dr==dn);
             maxCompSize = max_of(maxCompSize,sp.name.size());
 
-            for(Component *c=components.head;c;c=c->next)
-            {
-                aliasing::_(c->sp.indx) = 0;
-            }
-
+            
         }
 
         void Equilibrium:: display_list(std::ostream &os, const Components &l) const
@@ -142,6 +139,7 @@ namespace upsylon {
             }
             for(const Component *c=components.head;c;c=c->next)
             {
+                std::cerr << c->sp.name << " @" << c->sp.indx << std::endl;
                 assert(c->sp.indx>0);
                 assert(c->sp.indx<=nu.size());
                 nu[c->sp.indx] = c->nu;

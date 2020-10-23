@@ -196,7 +196,7 @@ test-pearson.cpp
 test-md.cpp)
 
 ADD_TEST(crypto:hashing     test-main hashing)
-ADD_TEST(crypto:mperf       test-main mperf)
+ADD_TEST(crypto:mperf       test-main mperf ${HERE}/ten.db)
 ADD_TEST(crypto:pearson     test-main pearson)
 ADD_TEST(crypto:hmac        test-main hmac)
 ADD_TEST(crypto:kr_sc       test-main kr_sc)

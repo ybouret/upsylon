@@ -40,8 +40,8 @@ namespace upsylon
             //
             // setup methods
             //__________________________________________________________________
-            void quit() throw();                            //!< release/clean all data
-            void init(Library &lib, const Equilibria &eqs); //!< setup
+            void quit() throw();                                  //!< release/clean all data
+            void init(const Library &lib, const Equilibria &eqs); //!< setup, library mut be init
 
             //__________________________________________________________________
             //

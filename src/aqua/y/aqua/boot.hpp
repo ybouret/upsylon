@@ -74,7 +74,7 @@ namespace upsylon {
 
             void  fill(addressable<double> &) const throw(); //!< fill a vector of Nc constraints
             void  quit() throw();                            //!< reset
-            void  init(Library &,const Equilibria &eqs);     //!< buildIndices for library and build matrices
+            void  init(const Library &,const Equilibria &);  //!< after lib and eqs init
             void  find(addressable<double> &, Engine & );    //!< solve
 
 

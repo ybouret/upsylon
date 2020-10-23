@@ -42,7 +42,7 @@ namespace upsylon {
 
             std::ostream        & display(std::ostream &) const;            //!< display
             friend std::ostream & operator<<(std::ostream&,const Library&); //!< display
-            void buildIndices() throw();                                    //!< build indices for species
+            void init() throw();                                            //!< build indices for species
             void show(std::ostream &, const accessible<double> &) const;    //!< readable concentrations
 
             const size_t maxNameSize; //!< for names alignment

@@ -35,8 +35,7 @@ namespace upsylon {
             //__________________________________________________________________
             explicit Component(const Species &, const int) throw(); //!< setup
             virtual ~Component() throw();                           //!< cleanup
-            Component(const Component &) throw();                   //!< copy
-
+            
             //__________________________________________________________________
             //
             // members
@@ -47,7 +46,7 @@ namespace upsylon {
             const size_t   pm1; //!< p-1
 
         private:
-            Y_DISABLE_ASSIGN(Component);
+            Y_DISABLE_COPY_AND_ASSIGN(Component);
         };
 
     }

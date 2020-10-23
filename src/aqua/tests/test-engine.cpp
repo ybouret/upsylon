@@ -18,6 +18,7 @@ Y_UTEST(engine)
         iterMax = string_convert::to<size_t>(argv[1],"iterMax");
     }
 
+    std::cerr << "-- building library" << std::endl;
     Library lib;
 
     Species &h   = lib("H+",1);
@@ -32,8 +33,10 @@ Y_UTEST(engine)
     Species &NH4 = lib("NH4+",1);
     Species &NH3 = lib("NH3",0);
 
+    lib.init();
     std::cerr << lib << std::endl;
 
+    std::cerr << "-- building equilibria" << std::endl;
     Equilibria eqs;
     {
         Equilibrium &water = eqs.constant("water",1e-14);
@@ -56,9 +59,9 @@ Y_UTEST(engine)
     }
 
 
-
     std::cerr << eqs << std::endl;
 
+    std::cerr << "-- start engine" << std::endl;
     Engine cs;
     cs.init(lib,eqs);
     cs.computeK(0);
@@ -103,14 +106,7 @@ Y_UTEST(engine)
             goto GENERATE;
 
 
-#if 0
-        for(size_t i=1;i<=cs.N;++i)
-        {
-            const Equilibrium &eq = *cs.equilibria[i];
-            const Extents      ex(eq,C,*cs.Caux);
-            std::cerr << ios::align(eq.name,ios::align::left,eqs.maxNameSize) << " => " << ex << std::endl;
-        }
-#endif
+
         if(cs.sweep(C))
         {
             //lib.show(std::cerr << "swp=",C);

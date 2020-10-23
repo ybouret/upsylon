@@ -29,6 +29,7 @@ Y_UTEST(boot)
     Species &Na = lib("Na+",1);  (void)Na;
     Species &Cl = lib("Cl-",-1); (void)Cl;
 
+    lib.init();
     std::cerr << lib << std::endl;
 
     Equilibria eqs;

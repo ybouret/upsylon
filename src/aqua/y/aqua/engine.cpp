@@ -84,13 +84,12 @@ namespace upsylon
 
        
 
-        void Engine:: init(Library &lib, const Equilibria &eqs)
+        void Engine:: init(const Library &lib, const Equilibria &eqs)
         {
             static const char fn[] = "Aqua::Engine::init: ";
             quit();
             try
             {
-                lib.buildIndices();
                 aliasing::_(M) = lib.entries();
                 aliasing::_(N) = eqs.entries();
                 if(N>M) throw exception("%stoo many equilibria",fn);

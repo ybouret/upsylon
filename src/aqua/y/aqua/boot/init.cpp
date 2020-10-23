@@ -12,7 +12,7 @@ namespace upsylon
 
         using namespace mkl;
 
-        void  Boot:: init(Library          &lib,
+        void  Boot:: init(const Library    &lib,
                           const Equilibria &eqs)
         {
             static const char fn[] = "Aqua::Boot::init: ";
@@ -41,7 +41,6 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // fill R from constraints
                 //--------------------------------------------------------------
-                lib.buildIndices();
                 {
                     size_t i=1;
                     for(const Constraint *cc=head;cc;cc=cc->next,++i)

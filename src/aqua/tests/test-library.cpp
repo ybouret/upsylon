@@ -15,6 +15,7 @@ Y_UTEST(library)
 
     (void)h;
     (void)w;
+    lib.init();
     std::cerr << lib << std::endl;
 
 }
