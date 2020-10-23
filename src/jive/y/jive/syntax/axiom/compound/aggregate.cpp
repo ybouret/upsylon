@@ -45,7 +45,7 @@ namespace upsylon
             Y_JIVE_AXIOM_ACCEPT_IMPL(Aggregate)
             {
                 Y_JIVE_PRINTLN("aggregate#" << size << ">");
-
+                typedef core::temporary_value<Observer::Whence> TemporaryWhence;
                 //--------------------------------------------------------------
                 //
                 // initialize scanning of children
@@ -77,9 +77,10 @@ namespace upsylon
                 for(const Axiom::Reference *ref=head;ref;ref=ref->next,++iref)
                 {
                     Y_JIVE_PRINTLN(iref << "/" << size);
-                    const Axiom      &axiom = **ref;
-                    Node             *sTree = 0;
-                    core::temporary_value<Observer::Whence> gKeep(guess.tested,whence);
+                    const Axiom          &axiom = **ref;
+                    Node                 *sTree = 0;
+                    const TemporaryWhence gKeep(guess.tested,whence);
+                    
                     if(axiom.accept(sTree,lexer,source,guess,deep))
                     {
                         if(sTree) chld.push_back(sTree);

@@ -26,19 +26,19 @@ namespace upsylon
             struct  Observer
             {
                 typedef const Aggregate *Whence;
-                const Lexeme    *lexeme;  //!< last accepted lexeme
-                Whence           parent;  //!< address of named aggregate
-                Whence           tested;  //!< currently tested
+                const Lexeme *lexeme;  //!< last accepted lexeme
+                Whence        parent;  //!< address of named aggregate
+                Whence        tested;  //!< currently tested
                 
                 //! update status
                 void  mind(const Lexeme *now) throw();
             };
 
             //! args for accept method
-#define Y_JIVE_AXIOM_ACCEPT_ARGS        XNode * & tree, Lexer &lexer, Source &source, Observer &guess, long depth
+#define Y_JIVE_AXIOM_ACCEPT_ARGS         XNode * & tree, Lexer &lexer, Source &source, Observer &guess, long depth
 
             //! accept declaration
-#define Y_JIVE_AXIOM_ACCEPT_DECL()      virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
+#define Y_JIVE_AXIOM_ACCEPT_DECL()       virtual bool  accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
 
             //! accept implemenation
 #define Y_JIVE_AXIOM_ACCEPT_IMPL(CLASS)  bool CLASS:: accept_(Y_JIVE_AXIOM_ACCEPT_ARGS) const
