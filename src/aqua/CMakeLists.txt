@@ -1,7 +1,7 @@
 PROJECT(y-aqua CXX)
 MESSAGE( STATUS "<Aqua>" )
 
-INCLUDE_DIRECTORIES(. ../main ../mkl )
+INCLUDE_DIRECTORIES(. ../main ../mkl ../lua++ ../ext )
 
 FILE(GLOB main_decl y/aqua/*.hpp)
 FILE(GLOB main_code y/aqua/*.cpp)
@@ -27,11 +27,19 @@ SET(boot_srcs ${boot_decl} ${boot_code})
 SOURCE_GROUP( aqua/boot FILES ${boot_srcs} )
 INSTALL( FILES ${boot_decl} DESTINATION include/y/aqua/boot )
 
+FILE(GLOB lua_decl y/aqua/lua/*.hpp)
+FILE(GLOB lua_code y/aqua/lua/*.cpp)
+SET(lua_srcs ${lua_decl} ${lua_code})
+SOURCE_GROUP( aqua/lua FILES ${lua_srcs} )
+INSTALL( FILES ${lua_decl} DESTINATION include/y/aqua/lua )
+
+
 ADD_LIBRARY(y-aqua STATIC 
 ${main_srcs}
 ${equilibrium_srcs}
 ${engine_srcs}
 ${boot_srcs}
+${lua_srcs}
 )
 INSTALL( TARGETS y-aqua ARCHIVE DESTINATION lib )
 
