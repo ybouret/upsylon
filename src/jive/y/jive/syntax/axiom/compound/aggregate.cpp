@@ -27,7 +27,7 @@ namespace upsylon
                     Y_JIVE_PRINTLN(refCount << "/" << size);
                     const Axiom &axiom = **ref;
                     Node        *sTree = 0;
-                    guess.current      = this;
+                    guess.tested       = this;
                     if(axiom.accept(sTree,lexer,source,guess,subDepth))
                     {
                         if(sTree) chld.push_back(sTree);
@@ -38,7 +38,7 @@ namespace upsylon
                         assert(0==sTree);
                         Y_JIVE_PRINTLN(refCount << "/" << size << " => rejected");
                         Node::ReturnTo(lexer,node.yield());
-                        guess.current = 0;
+                        guess.tested = 0;
                         return false;
                     }
                 }
@@ -48,7 +48,7 @@ namespace upsylon
                 {
                     Grow(tree,node.yield());
                 }
-                guess.current = 0;
+                guess.tested = 0;
                 return true;
             }
 

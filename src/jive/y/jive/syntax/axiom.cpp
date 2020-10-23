@@ -144,7 +144,7 @@ namespace upsylon
                 if( (NULL==lexeme) || (now->stamp>lexeme->stamp) )
                 {
                     lexeme=now;
-                    parent=current;
+                    parent=tested;
                 }
             }
 

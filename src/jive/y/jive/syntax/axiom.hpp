@@ -26,8 +26,9 @@ namespace upsylon
             struct  Observer
             {
                 const Lexeme    *lexeme;  //!< last accepted lexeme
-                const Aggregate *parent;  //!< address of aggregate
-                const Aggregate *current; //!< current
+                const Aggregate *parent;  //!< address of named aggregate
+                const Aggregate *tested;  //!< currently tested
+
                 //! update status
                 void  mind(const Lexeme *now) throw();
             };
