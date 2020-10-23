@@ -46,7 +46,11 @@ namespace upsylon
                           Lua::VM      &vm )
         {
 
+            //------------------------------------------------------------------
+            //
             // prepare lua
+            //
+            //------------------------------------------------------------------
             lua_State *L = **vm;
             lua_settop(L,0);
             const char *libName = *name;
@@ -57,7 +61,11 @@ namespace upsylon
                 throw exception("%s %s is <%s> instead of <table>",fn,*name,luaL_typename(L,-1));
             }
 
+            //------------------------------------------------------------------
+            //
             // parse all items
+            //
+            //------------------------------------------------------------------
             const int n = lua_rawlen(L,-1);
             for(int indx=1;indx<=n;++indx)
             {
@@ -69,13 +77,7 @@ namespace upsylon
                 __add_species(lib,libName,L,indx);
                 lua_pop(L,1);
             }
-
-
-            // and initialize for immediate use
-            lib.init();
-
-            std::cerr << lib << std::endl;
+            
         }
-
     }
 }

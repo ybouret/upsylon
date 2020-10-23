@@ -12,8 +12,11 @@ Y_UTEST(lua)
     {
         vm->doFile(argv[i]);
     }
-    Library lib;
-    __Lua::Load(lib,"lib",vm);
+
+    Library lib; __Lua::Load(lib,"lib",vm); std::cerr << lib << std::endl;
+    
+
+
     
 }
 Y_UTEST_DONE()
