@@ -1,7 +1,7 @@
 PROJECT(y-aqua CXX)
 MESSAGE( STATUS "<Aqua>" )
 
-INCLUDE_DIRECTORIES(. ../main ../mkl ../lua++ ../ext )
+INCLUDE_DIRECTORIES(. ../main ../mkl ../lua++ ../ext ../jive)
 
 FILE(GLOB main_decl y/aqua/*.hpp)
 FILE(GLOB main_code y/aqua/*.cpp)

@@ -9,17 +9,21 @@ namespace upsylon
         static const char fn[] = "__Lua.Load.Library";
 
         static inline
-        void __add_species(Library    &lib,
-                           const char *libName,
-                           lua_State  *L,
-                           const int   indx)
+        void __add(Library    &lib,
+                   const char *libName,
+                   lua_State  *L,
+                   const int   indx)
         {
             assert( LUA_TTABLE == lua_type(L,-1) );
 
             const int n = lua_rawlen(L,-1);
             if(n<2) throw exception("%s %s[%d] has not enough items (found %d)", fn, libName, indx, n);
 
+            //------------------------------------------------------------------
+            //
             // get species name
+            //
+            //------------------------------------------------------------------
             string name;
             {
                 lua_rawgeti(L,-1,1);
@@ -28,7 +32,11 @@ namespace upsylon
                 lua_pop(L,1);
             }
 
+            //------------------------------------------------------------------
+            //
             // get species charge
+            //
+            //------------------------------------------------------------------
             int Z=0;
             {
                 lua_rawgeti(L,-1,2);
@@ -58,7 +66,7 @@ namespace upsylon
             lua_getglobal(L,libName);
             if( !lua_istable(L,-1) )
             {
-                throw exception("%s %s is <%s> instead of <table>",fn,*name,luaL_typename(L,-1));
+                throw exception("%s %s is <%s> instead of <table>",fn,libName,luaL_typename(L,-1));
             }
 
             //------------------------------------------------------------------
@@ -74,10 +82,19 @@ namespace upsylon
                 {
                     throw exception("%s %s[%d] is not <table> but <%s>",fn,libName,indx,lua_typename(L,t));
                 }
-                __add_species(lib,libName,L,indx);
+                __add(lib,libName,L,indx);
                 lua_pop(L,1);
             }
             
         }
+
+        void __Lua:: Load(Library      &lib,
+                          const char  *name,
+                          Lua::VM      &vm)
+        {
+            const string _(name);
+            Load(lib,_,vm);
+        }
+
     }
 }

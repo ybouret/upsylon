@@ -77,6 +77,29 @@ namespace upsylon {
             os << '}' << std::endl;
         }
 
+        static const char fmt[] ="no Aqua::Libray[\"%s\"]";
+        
+        const Species & Library::  operator[](const string &id) const
+        {
+            const Species::Pointer *pps = search_by(id);
+            if(!pps)
+            {
+                throw exception(fmt,*id);
+            }
+            return **pps;
+        }
+
+        const Species & Library:: operator[](const char *id) const
+        {
+            const Species::Pointer *pps = search_by(id);
+            if(!pps)
+            {
+                throw exception(fmt,id);
+            }
+            return **pps;
+        }
+
+
 
 
     }

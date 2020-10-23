@@ -4,7 +4,7 @@ FILE(GLOB srcs test-*.cpp)
 FILE(GLOB data *.lua)
 
 ADD_EXECUTABLE(test-aqua main.cpp ${srcs} ${data})
-TARGET_LINK_Y(test-aqua aqua mkl lua++)
+TARGET_LINK_Y(test-aqua aqua mkl lua++ jive)
 
 SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 ENABLE_TESTING()

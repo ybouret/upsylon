@@ -213,10 +213,24 @@ Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,SUPPLY);                 \
                     return self.display(os);
                 }
 
-                //! wreapper
+                //! wrapper
                 friend inline ios::ostream & operator<<( ios::ostream &os, const list_ &self)
                 {
                     return self.display(os);
+                }
+
+                //! remove front
+                inline void remove_front() throw()
+                {
+                    static magazine &mgr = magazine::location();
+                    mgr.release(this->pop_front());
+                }
+
+                //! remove back
+                inline void remove_back() throw()
+                {
+                    static magazine &mgr = magazine::location();
+                    mgr.release(this->pop_back());
                 }
 
 
@@ -224,8 +238,7 @@ Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,SUPPLY);                 \
                 inline void clr() throw() {
                     while(this->size)
                     {
-                        static magazine &mgr = magazine::location();
-                        mgr.release(this->pop_back());
+                        remove_back();
                     }
                 }
             };
