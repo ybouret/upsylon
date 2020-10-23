@@ -4,7 +4,7 @@
 #ifndef Y_CORE_TEMPORARY_VALUE_INCLUDED
 #define Y_CORE_TEMPORARY_VALUE_INCLUDED 1
 
-#include "y/type/args.hpp"
+#include "y/os/platform.hpp"
 
 namespace upsylon {
 
@@ -18,11 +18,10 @@ namespace upsylon {
         class temporary_value
         {
         public:
-            Y_DECL_ARGS(T,type); //!< aliasses
 
             //! ref=source,sav=source
-            inline explicit temporary_value(type      &variable,
-                                            const_type replaced) :
+            inline explicit temporary_value(T      &variable,
+                                            T       replaced) :
             ref(variable),
             sav(ref)
             {
@@ -37,8 +36,8 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(temporary_value);
-            type      &ref;
-            const_type sav;
+            T &ref;
+            T  sav;
         };
     }
 }

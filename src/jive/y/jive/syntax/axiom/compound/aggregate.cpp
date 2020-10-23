@@ -1,6 +1,7 @@
 
 
 #include "y/jive/syntax/axiom/compound/aggregate.hpp"
+#include "y/core/temporary-value.hpp"
 
 namespace upsylon
 {
@@ -12,57 +13,98 @@ namespace upsylon
             {
             }
 
-            bool Aggregate:: named() const throw()
+            bool Aggregate:: persistent() const throw()
             {
                 switch (type)
                 {
                     case Standard:
                     case Variadic:
                         return true;
-                        
+
                     default:
                         break;
                 }
                 return false;
             }
 
+            bool Aggregate:: transitory() const throw()
+            {
+                switch (type)
+                {
+                    case Grouping:
+                        return true;
+
+                    default:
+                        break;
+                }
+                return false;
+            }
+
+
+
             Y_JIVE_AXIOM_ACCEPT_IMPL(Aggregate)
             {
                 Y_JIVE_PRINTLN("aggregate#" << size << ">");
 
+                //--------------------------------------------------------------
+                //
+                // initialize scanning of children
+                //
+                //--------------------------------------------------------------
                 Node::Pointer   node( Node::Acquire(*this) );
                 Node::List   &  chld = node->leaves();
-                
-                const long subDepth = depth+2;
-                size_t     refCount = 1;
-                ++depth;
-                for(const Axiom::Reference *ref=head;ref;ref=ref->next,++refCount)
+                const long      deep = depth+2;
+                size_t          iref = 1;
+
+                //--------------------------------------------------------------
+                //
+                // update observer
+                //
+                //--------------------------------------------------------------
+                Observer::Whence whence = this;
+                if( transitory() )
                 {
-                    Y_JIVE_PRINTLN(refCount << "/" << size);
-                    const Axiom &axiom = **ref;
-                    Node        *sTree = 0;
-                    guess.tested       = this;
-                    if(axiom.accept(sTree,lexer,source,guess,subDepth))
+                    whence = guess.tested;
+                }
+
+
+                //--------------------------------------------------------------
+                //
+                // start scanning
+                //
+                //--------------------------------------------------------------
+                ++depth;
+                for(const Axiom::Reference *ref=head;ref;ref=ref->next,++iref)
+                {
+                    Y_JIVE_PRINTLN(iref << "/" << size);
+                    const Axiom      &axiom = **ref;
+                    Node             *sTree = 0;
+                    core::temporary_value<Observer::Whence> gKeep(guess.tested,whence);
+                    if(axiom.accept(sTree,lexer,source,guess,deep))
                     {
                         if(sTree) chld.push_back(sTree);
-                        Y_JIVE_PRINTLN(refCount << "/" << size << " -> accepted");
+                        Y_JIVE_PRINTLN(iref << "/" << size << " -> accepted");
                     }
                     else
                     {
                         assert(0==sTree);
-                        Y_JIVE_PRINTLN(refCount << "/" << size << " => rejected");
+                        Y_JIVE_PRINTLN(iref << "/" << size << " => rejected");
                         Node::ReturnTo(lexer,node.yield());
-                        guess.tested = 0;
                         return false;
                     }
                 }
                 --depth;
+                //--------------------------------------------------------------
+                //
+                // end scanning
+                //
+                //--------------------------------------------------------------
+
                 Y_JIVE_PRINTLN("=> accepted #" << chld.size);
                 if(chld.size>0)
                 {
                     Grow(tree,node.yield());
                 }
-                guess.tested = 0;
                 return true;
             }
 

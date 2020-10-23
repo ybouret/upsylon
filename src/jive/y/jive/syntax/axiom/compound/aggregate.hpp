@@ -62,7 +62,8 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                bool       named() const throw();
+                bool persistent() const throw();
+                bool transitory() const throw();
 
                 //______________________________________________________________
                 //
