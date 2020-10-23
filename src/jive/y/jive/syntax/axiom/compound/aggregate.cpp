@@ -12,6 +12,20 @@ namespace upsylon
             {
             }
 
+            bool Aggregate:: named() const throw()
+            {
+                switch (type)
+                {
+                    case Standard:
+                    case Variadic:
+                        return true;
+                        
+                    default:
+                        break;
+                }
+                return false;
+            }
+
             Y_JIVE_AXIOM_ACCEPT_IMPL(Aggregate)
             {
                 Y_JIVE_PRINTLN("aggregate#" << size << ">");

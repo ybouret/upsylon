@@ -1,5 +1,5 @@
 #include "y/jive/syntax/grammar.hpp"
- #include "y/exception.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {

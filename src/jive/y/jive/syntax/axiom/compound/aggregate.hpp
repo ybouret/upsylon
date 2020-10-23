@@ -27,6 +27,10 @@ namespace upsylon
             class Aggregate : public Compound
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
                 static const uint32_t UUID = Y_FOURCC('A','G','G',' '); //!< UUID
 
                 //! behaviors
@@ -37,9 +41,11 @@ namespace upsylon
                     Grouping   //!< transient grouping
                 };
 
-                //! cleanup
-                virtual ~Aggregate() throw();
-                
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
                 //! setup
                 template <typename ID> inline
                 explicit Aggregate(const ID &i, const Type t) :
@@ -49,8 +55,21 @@ namespace upsylon
                     Y_JIVE_AXIOM(Aggregate);
                 }
 
-                const Type type; //!< the behavior
+                //! cleanup
+                virtual ~Aggregate() throw();
                 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                bool       named() const throw();
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Type type; //!< the behavior
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);
                 Y_JIVE_AXIOM_ACCEPT_DECL();
