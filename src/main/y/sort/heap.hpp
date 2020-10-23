@@ -83,7 +83,7 @@ namespace upsylon
     //__________________________________________________________________________
     template <typename T,typename FUNC>
     inline void hsort(addressable<T> &ra,
-                      FUNC           &compare )
+                      FUNC           &compare)
     {
         switch( ra.size() )
         {
@@ -130,7 +130,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename T, typename U, typename FUNC>
-    inline void hsort( addressable<T> &ra, addressable<U> &rb, FUNC &compare )
+    inline void hsort(addressable<T> &ra, addressable<U> &rb, FUNC &compare)
     {
         assert( ra.size() == rb.size() );
         const size_t n = ra.size();
