@@ -53,6 +53,7 @@ namespace upsylon
 #include "y/ios/ostream.hpp"
 #include "y/string.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
@@ -66,7 +67,12 @@ namespace upsylon
             {
                 const tree_node *curr=node->hook;
                 const size_t     clen=curr->encode(path);
-                
+                string           name( path.as<char>(), clen );
+                const_type       hash = node->data;
+
+                fp << "#define " << ios::align(name,ios::align::left,nmax) << ' ';
+                fp("0x%08X",hash);
+                fp << '\n';
             }
         }
     }
