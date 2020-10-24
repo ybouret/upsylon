@@ -51,7 +51,7 @@ namespace upsylon
                 {
                     exception excp;
                     excpLexeme(excp,lexeme,Terminal::Standard,true);
-                    excp.cat(" unregistered in %s",**name);
+                    excp.cat(" unregistered in %s grammar",**name);
                     throw excp;
                 }
                 else
@@ -107,7 +107,7 @@ namespace upsylon
                 {
 
                     assert(NULL==tree);
-                    throw exception("SYNTAX ERROR");
+                    processFailure(guess,lexer,source);
                     return NULL;
                 }
 
@@ -118,10 +118,8 @@ namespace upsylon
                                             Lexer          &lexer,
                                             Source         &source) const
             {
-                Node::Pointer xnode( tree );
+                Node::Pointer node( tree );
                 Y_JIVE_GRAMLN("success");
-                Y_JIVE_GRAMLN("tree    = " << (tree!=NULL) );
-                dispLexeme(name,"last",guess.lexeme);
                 if(guess.parent)
                 {
                     Y_JIVE_GRAMLN("hold    = " << guess.parent->name );
@@ -147,6 +145,7 @@ namespace upsylon
                         excp.cat(" is extraneous");
                         if(guess.lexeme)
                         {
+                            dispLexeme(name, "last",guess.lexeme);
                             const Lexeme &last = *guess.lexeme;
                             excp.cat(" after ");
                             excpLexeme(excp,last,lexemeType(last),false);
@@ -161,15 +160,47 @@ namespace upsylon
                     // success with no tree, invalid grammar
                     //
                     //----------------------------------------------------------
-
+                    
                     throw exception("NULL tree");
                 }
 
 
 
-                return Node::AST( xnode.yield() );
+                return Node::AST( node.yield() );
             }
 
+            
+            void Grammar:: processFailure(const Observer &guess, Lexer &lexer, Source &source) const
+            {
+                Y_JIVE_GRAMLN("failure");
+                const Lexeme    *last = guess.lexeme;
+                if(last)
+                {
+                    // something was accepted
+                    dispLexeme(name, "last",last);
+                    exception excp;
+                    excpLexeme(excp,*last,lexemeType(*last),true);
+                    excp.cat(" unfinished");
+                    const Aggregate *hold = guess.parent;
+                    if(hold)
+                    {
+                        excp.cat(" in <%s>", **(hold->name) );
+                    }
+                    else
+                    {
+                        excp.cat(" in unknown...");
+                    }
+                    throw excp;
+                }
+                else
+                {
+                    // nothing was accepted
+                    const Lexeme *next = lexer.next(source);
+                    dispLexeme(name, "next", next);
+                    
+                }
+                throw exception("Syntax Error");
+            }
         }
 
     }

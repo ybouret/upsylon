@@ -252,7 +252,8 @@ namespace upsylon
                 Axiom::Registry registry;
                 unsigned        indxAggregate;
                 unsigned        indxAlternate;
-                Node           *processSuccess(Node *, const Observer &, Lexer &, Source & ) const;
+                Node           *processSuccess(Node *, const Observer &, Lexer &, Source &) const;
+                void            processFailure(const Observer &, Lexer &, Source &) const;
             };
             
         }
