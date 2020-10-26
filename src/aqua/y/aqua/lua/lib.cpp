@@ -16,8 +16,8 @@ namespace upsylon
         {
             assert( LUA_TTABLE == lua_type(L,-1) );
 
-            const int n = lua_rawlen(L,-1);
-            if(n<2) throw exception("%s %s[%d] has not enough items (found %d)", fn, libName, indx, n);
+            const unsigned n = lua_rawlen(L,-1);
+            if(n<2) throw exception("%s %s[%d] has not enough items (found %u)", fn, libName, indx, n);
 
             //------------------------------------------------------------------
             //

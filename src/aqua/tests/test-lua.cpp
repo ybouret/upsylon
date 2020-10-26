@@ -54,7 +54,7 @@ Y_UTEST(lua)
 
         for(double V=0;V<=Vmax;V+=0.01)
         {
-            std::cerr << ".";
+            (std::cerr << ".").flush();
             const double Vtot = V0 + V;
             for(size_t j=M;j>0;--j)
             {
