@@ -13,9 +13,9 @@ Y_UTEST(lua)
         vm->doFile(argv[i]);
     }
 
-    Library    lib; __Lua::Load(lib,"lib",vm);     std::cerr << lib << std::endl;
-    Equilibria eqs; __Lua::Load(eqs,"eqs",lib,vm); std::cerr << eqs << std::endl;
-
+    Library    lib;        __Lua::Load(lib,"lib",vm);        std::cerr << lib << std::endl;
+    Equilibria eqs;        __Lua::Load(eqs,"eqs",lib,vm);    std::cerr << eqs << std::endl;
+    Boot       ini("ini"); __Lua::Load(ini,ini.name,lib,vm); std::cerr << ini << std::endl;
 
     
 }

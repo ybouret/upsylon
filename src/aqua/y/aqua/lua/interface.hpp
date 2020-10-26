@@ -5,6 +5,7 @@
 
 #include "y/aqua/library.hpp"
 #include "y/aqua/equilibria.hpp"
+#include "y/aqua/boot.hpp"
 #include "y/lua++/state.hpp"
 
 namespace upsylon
@@ -19,6 +20,8 @@ namespace upsylon
             static void Load(Equilibria &eqs, const string &name,  const Library &lib, Lua::VM &vm );
             static void Load(Equilibria &eqs, const char   *name,  const Library &lib, Lua::VM &vm );
 
+            static void Load(Boot &boot, const string & name, const Library &lib, Lua::VM &vm );
+            static void Load(Boot &boot, const char   * name, const Library &lib, Lua::VM &vm );
 
         };
     }

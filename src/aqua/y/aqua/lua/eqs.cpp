@@ -9,7 +9,7 @@ namespace upsylon
 
 
 
-        static const char fn[] = "__Lua.Load.Equilibria";
+        static const char fn[] = "Lua.Equilibria";
 
         static inline
         void __add(lua_State     *L,
