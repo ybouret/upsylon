@@ -141,11 +141,23 @@ namespace upsylon
                     return add( new Repeat(id,axiom,atLeast) );
                 }
 
+
+
+
                 //--------------------------------------------------------------
                 //! create an automatic repeat
                 //--------------------------------------------------------------
                 const Axiom & repeat(const Axiom &axiom, const size_t atLeast);
 
+                //--------------------------------------------------------------
+                //! create an zero or more
+                //--------------------------------------------------------------
+                const Axiom & zeroOrMore(const Axiom &);
+
+                //--------------------------------------------------------------
+                //! create an automatic one or more
+                //--------------------------------------------------------------
+                const Axiom & oneOrMore(const Axiom &);
 
                 //--------------------------------------------------------------
                 //! create a named option

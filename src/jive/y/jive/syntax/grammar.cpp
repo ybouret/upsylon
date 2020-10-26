@@ -48,6 +48,17 @@ namespace upsylon
 
 
 
+            const Axiom & Grammar:: zeroOrMore(const Axiom &axiom)
+            {
+                return repeat(axiom,0);
+            }
+
+            const Axiom & Grammar:: oneOrMore(const Axiom &axiom)
+            {
+                return repeat(axiom,1);
+            }
+
+
 
             const Axiom & Grammar:: repeat( const Axiom &axiom, const size_t atLeast)
             {

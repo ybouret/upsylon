@@ -31,7 +31,7 @@ namespace upsylon
             typedef Syntax::Terminal  Terminal;   //!< alias
             typedef Syntax::Aggregate Aggregate;  //!< alias
             typedef Syntax::Alternate Alternate;  //!< alias
-
+            typedef Syntax::Compound  Compound;   //!< alias
 
             //__________________________________________________________________
             //
