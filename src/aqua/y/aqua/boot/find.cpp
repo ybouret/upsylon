@@ -50,7 +50,6 @@ namespace upsylon
             // initial balance
             //
             //------------------------------------------------------------------
-            engine.balanceVerbose=true;
             if( !engine.balance_(Cnew, pS, dS) )
             {
                 throw exception("%s: no possible initial balance",*name);

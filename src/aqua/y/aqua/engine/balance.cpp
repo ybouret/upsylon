@@ -351,11 +351,15 @@ namespace upsylon
             else
             {
                 lightweight_array<double> Cpos(*Caux,npos);
-                hsort(Cpos,comparison::increasing<double>);
-                const size_t nmid = npos>>1;
-                const double Cmed = (0!= (npos&1) ) ? Cpos[1+nmid] : 0.5*(Cpos[nmid]+Cpos[1+nmid]);
-                const double Cmin = Cmed * numeric<double>::ftol;
-                Y_AQUA_PRINTLN("Cpos = " << Cpos << " #=" << npos << ", Cmed=" << Cmed << ", Cmin=" << Cmin);
+                hsort(Cpos,comparison::decreasing<double>);
+                double Cave = 0;
+                for(size_t j=npos;j>0;--j)
+                {
+                    Cave += Cpos[j];
+                }
+                Cave /= npos;
+                const double Cmin = Cave * numeric<double>::ftol;
+                Y_AQUA_PRINTLN("Cpos = " << Cpos << " #=" << npos << ", Cave=" << Cave << ", Cmin=" << Cmin);
                 for(size_t j=M;j>0;--j)
                 {
                     const double Cj = Ctry[j];

@@ -1,6 +1,8 @@
 #include "y/aqua/lua/interface.hpp"
 #include "y/aqua/engine.hpp"
 #include "y/utest/run.hpp"
+#include "y/fs/vfs.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace Aqua;
@@ -23,20 +25,54 @@ Y_UTEST(lua)
     cs.init(lib,eqs);
     ini.init(lib,eqs);
 
-    vector<double> C(lib.entries(),0);
+    const size_t   M = lib.entries();
+    vector<double> C0(M,0);
     cs.computeK(0);
-    ini.find(C,cs);
-    lib.show(std::cerr << "C=", C);
+    ini.find(C0,cs);
+    lib.show(std::cerr << "C0=", C0);
 
     Boot add("add");
     if( vm->exists(add.name) )
     {
-        add.verbose = true;
         __Lua::Load(add,add.name,lib,vm); std::cerr << add << std::endl;
         add.init(lib,eqs);
-        vector<double> Cb(lib.entries(),0);
+        vector<double> Cb(M,0);
         add.find(Cb,cs);
         lib.show(std::cerr << "Cb=", Cb);
+
+        const double   V0 = 10;
+        const double   Vmax = V0+V0;
+        vector<double> Cmix(M,0);
+
+        string   saveName = vfs::get_base_name(argv[1]);
+        vfs::change_extension(saveName, "dat");
+        std::cerr << "save to " << saveName  << std::endl;
+        ios::ocstream::overwrite(saveName);
+
+        const size_t iproton = lib["H+"].indx;
+
+
+        for(double V=0;V<=Vmax;V+=0.01)
+        {
+            std::cerr << ".";
+            const double Vtot = V0 + V;
+            for(size_t j=M;j>0;--j)
+            {
+                Cmix[j] = (C0[j] * V0 + Cb[j] * V)/Vtot;
+            }
+            if(!cs.forward(Cmix))
+            {
+                std::cerr << "couldn't mix@" << V << std::endl;
+            }
+            {
+                ios::ocstream fp(saveName,true);
+                fp("%g",V);
+                fp(" %g", -log10( Cmix[iproton]) );
+                fp << '\n';
+            }
+        }
+        std::cerr << std::endl;
+
     }
 
     
