@@ -139,7 +139,7 @@ namespace upsylon {
             }
             for(const Component *c=components.head;c;c=c->next)
             {
-                std::cerr << c->sp.name << " @" << c->sp.indx << std::endl;
+                //std::cerr << c->sp.name << " @" << c->sp.indx << std::endl;
                 assert(c->sp.indx>0);
                 assert(c->sp.indx<=nu.size());
                 nu[c->sp.indx] = c->nu;

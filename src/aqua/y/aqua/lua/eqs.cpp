@@ -1,36 +1,44 @@
 
 #include "y/aqua/lua/interface.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/jive/lexical/scanner.hpp"
-#include "y/jive/lexemes.hpp"
 
 namespace upsylon
 {
     namespace Aqua
     {
-        using namespace Jive;
-
-        class ComponentScanner : public Lexical::Scanner
-        {
-        public:
-            inline explicit ComponentScanner() : Lexical::Scanner("Aqua.Component.Scanner")
-            {
-                emit("sgn",  "[-+]");
-                emit("int",  "[:digit:]+");
-                emit("chr",  "[:alpha:]([[:word:]()\\[\\]])*");
-                drop("blank","[:blank:]");
-            }
-
-            inline virtual ~ComponentScanner() throw()
-            {
-            }
 
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(ComponentScanner);
-        };
 
         static const char fn[] = "__Lua.Load.Equilibria";
+
+        static inline
+        void __add(lua_State     *L,
+                   Equilibrium   &eq,
+                   const char    *ctx,
+                   const Library &lib)
+        {
+            if(!lua_istable(L,-1)) throw exception("%s is not a table",ctx);
+
+
+            // get nu
+            Int nu = 0;
+            {
+                lua_rawgeti(L,-1,1);
+                if( !lua_isinteger(L,-1))  throw exception("%s coefficient is not <integer> but <%s>", ctx, luaL_typename(L,-1));
+                nu = lua_tointeger(L,-1);
+                lua_pop(L,1);
+            }
+            
+            // get id
+            string id;
+            {
+                lua_rawgeti(L,-1,2);
+                if( !lua_isstring(L,-1) ) throw exception("%s identifier it not <string> but <%s>", ctx, luaL_typename(L,-1) );
+                id = lua_tostring(L,-1);
+                lua_pop(L,1);
+            }
+            eq(lib[id],nu);
+        }
 
         static inline
         void __add(Equilibria    &eqs,
@@ -57,7 +65,6 @@ namespace upsylon
                 name = lua_tostring(L,-1);
                 lua_pop(L,1);
             }
-            std::cerr << "name=" << name << std::endl;
             const char *eqName = *name;
 
             //------------------------------------------------------------------
@@ -80,89 +87,21 @@ namespace upsylon
                 lua_pop(L,1);
             }
 
-            ComponentScanner scan;
-
+            //------------------------------------------------------------------
+            //
+            // get equilibrium constant/type
+            //
+            //------------------------------------------------------------------
             for(int i=3,j=1;i<=n;++i,++j)
             {
                 lua_rawgeti(L,-1,i);
-                const string cname = vformat("component[%d]",j);
-                if(!lua_isstring(L,-1)) exception("%s %s.%s %s is not <string> but <%s>",fn,eqsName,eqName,*cname,luaL_typename(L,-1));
-                const string component = lua_tostring(L,-1);
-                lua_pop(L,1);
-                std::cerr << "component=" << component << std::endl;
-
-                Lexemes lexemes;
+                const string cname = vformat("%s %s.%s component[%d]",fn,eqsName,eqName,j);
+                // parse { nu, name }
                 {
-                    Source             source(Module::OpenData(cname,component));
-                    Lexical::Directive directive=0;
-                    {
-                        Lexeme *lx = 0;
-                        while( NULL != (lx=scan.probe(source,directive)))
-                        {
-                            lexemes.push_back( lx );
-                        }
-                    }
-
-                    if(lexemes.size<=0) throw exception("%s %s.%s empty %s",fn,eqsName,eqName,*cname);
-
-                    // check sign
-                    bool    neg = false;
-                    Lexeme *lex = lexemes.head;
-                    if(*(lex->label)=="sgn")
-                    {
-                        assert(1==lex->size);
-                        //std::cerr << "sgn=" << *lex << std::endl;
-                        switch(lexemes.head->head->code)
-                        {
-                            case '-': neg = true; break;
-                            default:
-                                break;
-                        }
-                        lex=lex->next;
-                    }
-
-                    // check factor
-                    if(!lex)
-                    {
-                        throw exception("%s %s.%s empty %s after sign",fn,eqsName,eqName,*cname);
-                    }
-                    Int fac = 1;
-                    if( *(lex->label)== "int")
-                    {
-                        //std::cerr << "int=" << *lex << std::endl;
-                        fac = 0;
-                        for(const Char *ch=lex->head;ch;ch=ch->next)
-                        {
-                            fac *= 10;
-                            fac += char(ch->code) - '0';
-                        }
-                        lex=lex->next;
-                    }
-                    if(!lex)
-                    {
-                        throw exception("%s %s.%s empty %s after factor",fn,eqsName,eqName,*cname);
-                    }
-                    if(neg) fac=-fac;
-                    //std::cerr << "fac=" << fac << std::endl;
-
-                    // build id
-                    string id;
-                    while(lex)
-                    {
-                        for(const Char *ch=lex->head;ch;ch=ch->next)
-                        {
-                            id += char(ch->code);
-                        }
-                        lex=lex->next;
-                    }
-                    //std::cerr << "id=" << id << std::endl;
-
-                    (*pEq)( lib[id], fac);
-
+                    __add(L,*pEq,*cname,lib);
                 }
-                
 
-
+                lua_pop(L,1);
             }
 
             //------------------------------------------------------------------
@@ -170,6 +109,7 @@ namespace upsylon
             // insert into database
             //
             //------------------------------------------------------------------
+            pEq->validate();
             (void) eqs( pEq.yield() );
 
 

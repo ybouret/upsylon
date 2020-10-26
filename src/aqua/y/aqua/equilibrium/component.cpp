@@ -18,7 +18,7 @@ namespace upsylon {
         p( abs_of(nu) ),
         pm1( p-1 )
         {
-            std::cerr << "+component " << sp.name << "@" << sp.indx << " : nu=" << nu << std::endl;
+            //std::cerr << "+component " << sp.name << " : nu=" << nu << std::endl;
         }
 
         
