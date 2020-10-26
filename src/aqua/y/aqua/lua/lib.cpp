@@ -16,8 +16,8 @@ namespace upsylon
         {
             assert( LUA_TTABLE == lua_type(L,-1) );
 
-            const unsigned n = lua_rawlen(L,-1);
-            if(n<2) throw exception("%s %s[%d] has not enough items (found %u)", fn, libName, indx, n);
+            const unsigned n = unsigned(lua_rawlen(L,-1));
+            if(n<2) throw exception("%s %s[%d] has not enough items (found %lu)", fn, libName, indx, n);
 
             //------------------------------------------------------------------
             //
@@ -41,7 +41,7 @@ namespace upsylon
             {
                 lua_rawgeti(L,-1,2);
                 if(!lua_isinteger(L,-1)) throw exception("%s %s[%d][2] is no <integer> but <%s>",fn,libName,indx,luaL_typename(L,-1));
-                Z = lua_tointeger(L,-1);
+                Z = int(lua_tointeger(L,-1));
                 lua_pop(L,1);
             }
 
@@ -74,8 +74,8 @@ namespace upsylon
             // parse all items
             //
             //------------------------------------------------------------------
-            const int n = lua_rawlen(L,-1);
-            for(int indx=1;indx<=n;++indx)
+            const unsigned n = unsigned(lua_rawlen(L,-1));
+            for(unsigned indx=1;indx<=n;++indx)
             {
                 const int t = lua_rawgeti(L,-1,indx);
                 if( LUA_TTABLE != t)
