@@ -56,8 +56,8 @@ namespace upsylon
                     // apk results
                     matrix<apz> aR2(Nc,Nc);
                     apz         dR2 = apk::adjoint_gram(aR2,R);
-                    std::cerr << "aR2=" << aR2 << std::endl;
-                    std::cerr << "dR2=" << dR2 << std::endl;
+                    //std::cerr << "aR2=" << aR2 << std::endl;
+                    //std::cerr << "dR2=" << dR2 << std::endl;
                     if(0==dR2)
                     {
                         throw exception("%ssingular set of constraints",fn);
@@ -66,8 +66,8 @@ namespace upsylon
                     addressable<apz> &Lscal = Lproj.r_aux1;
                     tao::mmul_ltrn(Lproj,R,aR2);
                     apk::simplify(Lscal,Lproj,dR2);
-                    std::cerr << "Lproj = " << Lproj << std::endl;
-                    std::cerr << "Lscal = " << Lscal << std::endl;
+                    //std::cerr << "Lproj = " << Lproj << std::endl;
+                    //std::cerr << "Lscal = " << Lscal << std::endl;
 
                     // transfert
                     apk::convert( aliasing::_(pL), Lproj, "Aqua::Boot::convert(<proj>)");
@@ -107,16 +107,7 @@ namespace upsylon
                 // compute projection matrix for balancing
                 //--------------------------------------------------------------
                 Engine::Project(aliasing::_(pS), aliasing::_(dS), S,"supplementary boot space");
-
-
-                std::cerr << "R  = "  << R  << std::endl;
-                std::cerr << "pL = "  << pL << std::endl;
-                std::cerr << "dL = "  << dL << std::endl;
-                std::cerr << "S  = "  << S  << std::endl;
-                std::cerr << "pS = "  << pS << std::endl;
-                std::cerr << "dS = "  << dS << std::endl;
-
-
+                
             }
             catch(...)
             {

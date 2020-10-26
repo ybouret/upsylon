@@ -30,9 +30,9 @@ namespace upsylon
                     matrix<apz> Adj(n,n);
                     Det = apk::adjoint_gram(Adj,span);
 
-                    std::cerr << "span = " << span << std::endl;
-                    std::cerr << "iAdj  = " << Adj  << std::endl;
-                    std::cerr << "iDet  = " << Det  << std::endl;
+                    //std::cerr << "span = " << span << std::endl;
+                    //std::cerr << "iAdj  = " << Adj  << std::endl;
+                    //std::cerr << "iDet  = " << Det  << std::endl;
 
                     if(0==Det)
                     {
@@ -53,8 +53,8 @@ namespace upsylon
                 // first simplification
                 //--------------------------------------------------------------
                 apk::simplify(Proj,Det,NULL);
-                std::cerr << "Proj  = " << Proj << std::endl;
-                std::cerr << "iDet  = " << Det  << std::endl;
+                //std::cerr << "Proj  = " << Proj << std::endl;
+                //std::cerr << "iDet  = " << Det  << std::endl;
 
                 //--------------------------------------------------------------
                 // build individual scalings
