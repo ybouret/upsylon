@@ -28,6 +28,17 @@ Y_UTEST(lua)
     ini.find(C,cs);
     lib.show(std::cerr << "C=", C);
 
+    Boot add("add");
+    if( vm->exists(add.name) )
+    {
+        add.verbose = true;
+        __Lua::Load(add,add.name,lib,vm); std::cerr << add << std::endl;
+        add.init(lib,eqs);
+        vector<double> Cb(lib.entries(),0);
+        add.find(Cb,cs);
+        lib.show(std::cerr << "Cb=", Cb);
+    }
+
     
 }
 Y_UTEST_DONE()

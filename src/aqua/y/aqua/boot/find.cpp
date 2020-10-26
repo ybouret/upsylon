@@ -40,6 +40,8 @@ namespace upsylon
             fill(Lambda);
             tao::mul(Cnew,pL,Lambda);
             tao::divall(Cnew,dL);
+            Y_AQUA_PRINTLN("R      = " << R);
+            Y_AQUA_PRINTLN("S      = " << S);
             Y_AQUA_PRINTLN("Lambda = " << Lambda);
             Y_AQUA_PRINTLN("Cstar  = " << Cnew  );
 
@@ -48,6 +50,7 @@ namespace upsylon
             // initial balance
             //
             //------------------------------------------------------------------
+            engine.balanceVerbose=true;
             if( !engine.balance_(Cnew, pS, dS) )
             {
                 throw exception("%s: no possible initial balance",*name);
