@@ -15,6 +15,11 @@ ADD_TEST(ed_snake  test-jive ed_snake)
 ADD_TEST(axiom     test-jive axiom)
 ADD_TEST(grammar   test-jive grammar)
 ADD_TEST(parser    test-jive parser)
+ADD_TEST(json1     test-jive parser ${HERE}/../../json/tests/sample1.js)
+ADD_TEST(json2     test-jive parser ${HERE}/../../json/tests/sample2.js)
+ADD_TEST(json3     test-jive parser ${HERE}/../../json/tests/sample3.js)
+ADD_TEST(json4     test-jive parser ${HERE}/../../json/tests/sample4.js)
+ADD_TEST(json5     test-jive parser ${HERE}/../../json/tests/db.js)
 
 ADD_CUSTOM_TARGET(utest-jive
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
