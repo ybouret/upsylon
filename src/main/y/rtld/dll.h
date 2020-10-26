@@ -16,7 +16,7 @@
 #if defined(Y_WIN)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#define Y_DLL_API  WINAPI
+#define Y_DLL_API 
 #define Y_EXPORT  __declspec(dllexport)
 #endif
 
