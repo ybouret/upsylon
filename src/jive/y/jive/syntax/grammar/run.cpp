@@ -25,7 +25,7 @@ namespace upsylon
                 const int    col  =   lexeme.column;
                 if(full)
                 {
-                    excp.cat("%s:%d%d: ",whom,line,col);
+                    excp.cat("%s:%d:%d: ",whom,line,col);
                 }
                 switch(type)
                 {
@@ -113,37 +113,7 @@ namespace upsylon
 
 
             
-            void Grammar:: processFailure(const Observer &guess, Lexer &lexer, Source &source) const
-            {
-                Y_JIVE_GRAMLN("failure");
-                const Lexeme    *last = guess.lexeme;
-                if(last)
-                {
-                    // something was accepted
-                    dispLexeme(name, "last",last);
-                    exception excp;
-                    excpLexeme(excp,*last,lexemeType(*last),true);
-                    excp.cat(" unfinished");
-                    const Aggregate *hold = guess.parent;
-                    if(hold)
-                    {
-                        excp.cat(" in <%s>", **(hold->name) );
-                    }
-                    else
-                    {
-                        excp.cat(" in unknown...");
-                    }
-                    throw excp;
-                }
-                else
-                {
-                    // nothing was accepted
-                    const Lexeme *next = lexer.next(source);
-                    dispLexeme(name, "next", next);
-                    
-                }
-                throw exception("Syntax Error");
-            }
+
         }
 
     }
@@ -216,16 +186,23 @@ namespace upsylon
                     exception excp;
                     if(last)
                     {
+                        //------------------------------------------------------
+                        // something was partially accepted
+                        //------------------------------------------------------
                         excpLexeme(excp, *last, lexemeType(*last),true);
                         excp.cat(" was accepted");
                     }
                     else
                     {
+                        //------------------------------------------------------
+                        // nothing was accepted, check if something
+                        // was recognized
+                        //------------------------------------------------------
                         const Lexeme *next = lexer.next(source);
                         if(next)
                         {
                             excpLexeme(excp,*next,lexemeType(*next),true);
-                            excp.cat(" was scanned");
+                            excp.cat(" was acknowledged");
                         }
                         else
                         {
@@ -246,4 +223,71 @@ namespace upsylon
     }
 
 }
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
+            void Grammar:: processFailure(const Observer &guess, Lexer &lexer, Source &source) const
+            {
+                Y_JIVE_GRAMLN("failure");
+                const Lexeme *last = guess.lexeme;
+                exception     excp;
+                if(last)
+                {
+                    //----------------------------------------------------------
+                    // something was accepted
+                    //----------------------------------------------------------
+                    dispLexeme(name, "last",last);
+                    excpLexeme(excp,*last,lexemeType(*last),true);
+                    const Aggregate *hold = guess.parent;
+                    if(hold)
+                    {
+                        excp.cat(" of <%s>",**(hold->name));
+                    }
+                    else
+                    {
+                        excp.cat(" of anonymous axiom");
+                    }
+                    const Lexeme *next = last->next;
+                    if(next)
+                    {
+                        excp.cat(" is followed by unexpected ");
+                        excpLexeme(excp,*next,lexemeType(*next),false);
+                    }
+                    else
+                    {
+                        excp.cat(" is unfinished");
+                    }
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    // nothing was accepted
+                    //----------------------------------------------------------
+                    const Lexeme *next = lexer.next(source);
+                    dispLexeme(name, "next", next);
+                    if(next)
+                    {
+                        excpLexeme(excp,*next,lexemeType(*next),true);
+                        excp.cat(" is unexpected here");
+                    }
+                    else
+                    {
+                        const Context &ctx = source.context();
+                        excp.cat("%s: unallowed empty source", **(ctx.tag) );
+                    }
+
+                }
+                excp.cat(" in %s",**name);
+                throw excp;
+            }
+        }
+
+    }
+
+}
+
 
