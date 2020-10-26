@@ -3,15 +3,14 @@
 #include "y/exception.hpp"
 #include "y/core/temporary-value.hpp"
 
+#define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
+
 namespace upsylon
 {
     namespace Jive
     {
         namespace Syntax
         {
-
-#define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
-
 
 
             static inline
@@ -87,7 +86,6 @@ namespace upsylon
                 // get root
                 //
                 //--------------------------------------------------------------
-
                 const Axiom *root = axioms.head;
                 if(!root) throw exception("%s has no root Axiom!",**name);
                 Y_JIVE_GRAMLN("root=<"<<root->name<<">");
@@ -105,7 +103,6 @@ namespace upsylon
                 }
                 else
                 {
-
                     assert(NULL==tree);
                     processFailure(guess,lexer,source);
                     return NULL;
@@ -113,61 +110,7 @@ namespace upsylon
 
             }
 
-            Node * Grammar:: processSuccess(Node           *tree,
-                                            const Observer &guess,
-                                            Lexer          &lexer,
-                                            Source         &source) const
-            {
-                Node::Pointer node( tree );
-                Y_JIVE_GRAMLN("success");
-                if(guess.parent)
-                {
-                    Y_JIVE_GRAMLN("hold    = " << guess.parent->name );
-                }
-                else
-                {
-                    Y_JIVE_GRAMLN("no parent!");
-                }
 
-                if(tree)
-                {
-                    //----------------------------------------------------------
-                    //
-                    // success with tree : check no extra lexeme!
-                    //
-                    //----------------------------------------------------------
-                    const Lexeme *next = lexer.next(source);
-                    if(next)
-                    {
-                        dispLexeme(name,"next",next);
-                        exception excp;
-                        excpLexeme(excp, *next, lexemeType(*next),true);
-                        excp.cat(" is extraneous");
-                        if(guess.lexeme)
-                        {
-                            dispLexeme(name, "last",guess.lexeme);
-                            const Lexeme &last = *guess.lexeme;
-                            excp.cat(" after ");
-                            excpLexeme(excp,last,lexemeType(last),false);
-                        }
-                        throw excp;
-                    }
-                }
-                else
-                {
-                    //----------------------------------------------------------
-                    //
-                    // success with no tree, invalid grammar
-                    //
-                    //----------------------------------------------------------
-                    
-                    throw exception("NULL tree");
-                }
-
-
-
-                return Node::AST( node.yield() );
-            }
 
             
             void Grammar:: processFailure(const Observer &guess, Lexer &lexer, Source &source) const
@@ -200,6 +143,103 @@ namespace upsylon
                     
                 }
                 throw exception("Syntax Error");
+            }
+        }
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Syntax
+        {
+            Node * Grammar:: processSuccess(Node           *tree,
+                                            const Observer &guess,
+                                            Lexer          &lexer,
+                                            Source         &source) const
+            {
+                Node::Pointer    node( tree );
+                const Lexeme    *last = guess.lexeme;
+                const Aggregate *hold = guess.parent;
+                Y_JIVE_GRAMLN("success");
+                dispLexeme(name,"last",last);
+                if(hold)
+                {
+                    Y_JIVE_GRAMLN("from <" << hold->name << ">");
+                }
+                else
+                {
+                    Y_JIVE_GRAMLN("from anonymous axiom");
+                }
+
+                if(tree)
+                {
+                    //----------------------------------------------------------
+                    //
+                    // success with tree : check no extra lexeme!
+                    //
+                    //----------------------------------------------------------
+                    const Lexeme *next = lexer.next(source);
+                    if(next)
+                    {
+                        dispLexeme(name,"next",next);
+                        exception excp;
+                        excpLexeme(excp, *next, lexemeType(*next),true);
+                        excp.cat(" is extraneous");
+                        if(last)
+                        {
+                            excp.cat(" after ");
+                            excpLexeme(excp,*last,lexemeType(*last),false);
+                            if(hold)
+                            {
+                                excp.cat(" of <%s>",**(hold->name));
+                            }
+                            else
+                            {
+                                excp.cat(" of anonymous axiom");
+                            }
+                        }
+                        excp.cat(" in %s",**name);
+                        throw excp;
+                    }
+                }
+                else
+                {
+                    //----------------------------------------------------------
+                    //
+                    // success with no tree, invalid grammar, try to guess
+                    //
+                    //----------------------------------------------------------
+                    exception excp;
+                    if(last)
+                    {
+                        excpLexeme(excp, *last, lexemeType(*last),true);
+                        excp.cat(" was accepted");
+                    }
+                    else
+                    {
+                        const Lexeme *next = lexer.next(source);
+                        if(next)
+                        {
+                            excpLexeme(excp,*next,lexemeType(*next),true);
+                            excp.cat(" was scanned");
+                        }
+                        else
+                        {
+                            const Context &ctx = source.context();
+                            excp.cat("%s: is empty", **(ctx.tag) );
+                        }
+                    }
+                    excp.cat(" => NULL tree in %s",**name);
+                    throw excp;
+                }
+
+
+
+                return Node::AST( node.yield() );
             }
         }
 
