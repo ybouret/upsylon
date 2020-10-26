@@ -5,29 +5,28 @@
 #include "y/os/setup.h"
 
 #if defined(__cplusplus)
-#define Y_DLL_EXTERN extern "C"
+#define Y_DLL_EXTERN() extern "C" {
+#define Y_DLL_FINISH() }
 #else
-#define Y_DLL_EXTERN
+#define Y_DLL_EXTERN()
+#define Y_DLL_FINISH()
 #endif
 
 
 #if defined(Y_WIN)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#define Y_DLL_API  __cdecl
-#define Y_DLL_SPEC __declspec(dllexport)
+#define Y_DLL_API  WINAPI
+#define Y_EXPORT  __declspec(dllexport)
 #endif
 
 #if defined(Y_BSD)
 #define Y_DLL_API
-#define Y_DLL_SPEC
+#define Y_EXPORT
 #endif
 
-//! export function
-#define Y_EXPORT Y_DLL_EXTERN Y_DLL_SPEC
 
-//! export data
-#define Y_SHARED Y_DLL_SPEC
+
 
 //______________________________________________________________________________
 //

@@ -25,11 +25,14 @@ static inline void leave()
 
 Y_DLL_SETUP(enter,leave);
 
-Y_EXPORT double Sin( double x )
+Y_DLL_EXTERN()
+
+Y_EXPORT double Y_DLL_API Sin( double x )
 {
     return sin(x);
 }
 
-extern "C" {
-    Y_SHARED int32_t Data = 0x1234;
-}
+Y_EXPORT int32_t Data = 0x1234;
+
+
+Y_DLL_FINISH()
