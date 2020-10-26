@@ -30,4 +30,4 @@ Y_EXPORT double Sin( double x )
     return sin(x);
 }
 
-Y_SHARED int32_t Data = 0x1234;
+extern "C" Y_SHARED int32_t Data = 0x1234;
