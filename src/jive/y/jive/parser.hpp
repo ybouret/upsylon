@@ -105,6 +105,15 @@ namespace upsylon
             //! parse using Grammar::run
             XNode *parse(Source &source,const size_t prefetch=0);
 
+            //! parse using Grammar::run
+            template <typename ID>
+            XNode *parseFile(const ID &fileName, const size_t prefetch=0)
+            {
+                Source source( Module::OpenFile(fileName) );
+                return parse(source,prefetch);
+
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
 

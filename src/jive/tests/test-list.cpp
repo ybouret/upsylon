@@ -32,7 +32,7 @@ namespace
             drop("blank","[:blank:]");
             endl("endl","[:endl:]");
 
-            graphViz("list.dot");
+            graphViz("list-grammar.dot");
         }
 
     private:
@@ -42,8 +42,14 @@ namespace
 
 Y_UTEST(list)
 {
+    Syntax::Axiom::Verbose = true;
     ListParser parser;
 
+    if(argc>1)
+    {
+        XNode::Pointer tree( parser.parseFile(argv[1]) );
+        tree->graphViz("list.dot");
+    }
 }
 Y_UTEST_DONE()
 

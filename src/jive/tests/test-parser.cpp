@@ -76,7 +76,6 @@ Y_UTEST(parser)
     if(argc>1)
     {
         Source         source( Module::OpenFile(argv[1]));
-        Syntax::Axiom::Verbose = true;
         XNode::Pointer xnode( json.parse(source) );
         if( xnode.is_empty() )
         {
