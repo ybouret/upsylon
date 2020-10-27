@@ -98,7 +98,6 @@ SOURCE_GROUP(mem FILES test-alloc.cpp
 test-object.cpp test-embed.cpp
 test-xslot.cpp test-ptr.cpp test-release.cpp 
 test-memory-marker.cpp
-test-memory-groove.cpp
 test-memory-joint-section.cpp
 test-memory-joint-ward.cpp
 test-memory-tight-chunk.cpp
@@ -124,7 +123,6 @@ ADD_TEST(mem:ptr           test-main ptr)
 ADD_TEST(mem:release       test-main release)
 ADD_TEST(mem:embed         test-main embed)
 ADD_TEST(mem:marker        test-main marker)
-ADD_TEST(mem:groove        test-main groove)
 ADD_TEST(mem:zblock        test-main zblock)
 ADD_TEST(mem:tight:chunk   test-main tight_chunk)
 ADD_TEST(mem:tight:arena   test-main tight_arena)
