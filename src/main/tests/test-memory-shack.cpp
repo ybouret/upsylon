@@ -1,6 +1,7 @@
 
 #include "y/memory/shack.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
 
 using namespace upsylon;
@@ -36,7 +37,7 @@ Y_UTEST(shack)
     Y_CHECK(S.is<string>());
     Y_CHECK(S.tell()==7);
 
-    
+    Y_UTEST_SIZEOF(memory::shack);
 
 }
 Y_UTEST_DONE()

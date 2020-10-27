@@ -15,6 +15,8 @@ namespace upsylon {
         class skimp
         {
         public:
+
+            //! function(target[i],source[i],parallel) i in [offset..length+offset]
             template <
             typename FUNCTION,
             typename TARGET,

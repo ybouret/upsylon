@@ -62,8 +62,8 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                bool persistent() const throw();
-                bool transitory() const throw();
+                bool persistent() const throw(); //!< Standard|Variadic
+                bool transitory() const throw(); //!< Grouping
 
                 //______________________________________________________________
                 //

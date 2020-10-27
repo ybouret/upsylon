@@ -12,16 +12,19 @@ namespace upsylon
 {
     namespace Aqua
     {
+
+        //! Lua interface functions
         struct __Lua
         {
-            static void Load(Library &lib, const string &name, Lua::VM &vm );
-            static void Load(Library &lib, const char   *name, Lua::VM &vm );
 
-            static void Load(Equilibria &eqs, const string &name,  const Library &lib, Lua::VM &vm );
-            static void Load(Equilibria &eqs, const char   *name,  const Library &lib, Lua::VM &vm );
+            static void Load(Library &lib, const string &name, Lua::VM &vm ); //!< load a library of species
+            static void Load(Library &lib, const char   *name, Lua::VM &vm ); //!< load a library of species, wrapper
 
-            static void Load(Boot &boot, const string & name, const Library &lib, Lua::VM &vm );
-            static void Load(Boot &boot, const char   * name, const Library &lib, Lua::VM &vm );
+            static void Load(Equilibria &eqs, const string &name,  const Library &lib, Lua::VM &vm ); //!< load equilibria
+            static void Load(Equilibria &eqs, const char   *name,  const Library &lib, Lua::VM &vm ); //!< load equilibria, wrapper
+
+            static void Load(Boot &boot, const string & name, const Library &lib, Lua::VM &vm ); //!< load boot conditions
+            static void Load(Boot &boot, const char   * name, const Library &lib, Lua::VM &vm ); //!< load boot concitions, wrapper
 
         };
     }

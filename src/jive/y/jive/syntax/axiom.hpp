@@ -25,10 +25,10 @@ namespace upsylon
             //! observer for error management
             struct  Observer
             {
-                typedef const Aggregate *Whence;
-                const Lexeme *lexeme;  //!< last accepted lexeme
-                Whence        parent;  //!< address of named aggregate
-                Whence        tested;  //!< currently tested
+                typedef const Aggregate *Whence; //!< alias
+                const Lexeme *lexeme;            //!< last accepted lexeme
+                Whence        parent;            //!< address of named aggregate
+                Whence        tested;            //!< currently tested
                 
                 //! update status
                 void  mind(const Lexeme *now) throw();

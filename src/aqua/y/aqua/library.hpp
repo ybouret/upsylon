@@ -47,8 +47,8 @@ namespace upsylon {
 
             const size_t maxNameSize; //!< for names alignment
 
-            const Species & operator[](const string &id) const;
-            const Species & operator[](const char   *id) const;
+            const Species & operator[](const string &id) const; //!< access by name
+            const Species & operator[](const char   *id) const; //!< access by name
 
 
 

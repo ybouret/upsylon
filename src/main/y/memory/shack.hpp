@@ -28,42 +28,43 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            typedef void (*erase)(void *);
+            typedef void (*erase)(void *); //!< delete ONE object at given address
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
 
-            explicit shack() throw();
-            virtual ~shack() throw();
+            explicit shack() throw(); //!< setup empty
+            virtual ~shack() throw(); //!< cleanup
 
             //__________________________________________________________________
             //
             // buffer interface
             //__________________________________________________________________
-            size_t      length() const throw();
-            const void *ro()     const throw();
+            size_t      length() const throw(); //!< block_size
+            const void *ro()     const throw(); //!< block_adrr
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            bool   is_anonymous() const throw(); //!< true is flat memory
-            bool   is_cplusplus() const throw(); //!< true if a C++ object is stored
-            bool   is_(const std::type_info &) const throw(); //!< true if labeled as...
-            size_t hold() const throw();
+            bool         is_anonymous() const throw(); //!< true is flat memory
+            bool         is_cplusplus() const throw(); //!< true if a C++ object is stored
+            bool         is_(const std::type_info &) const throw(); //!< true if labeled as...
+            void         acquire(size_t n);    //!< length() >= n
+            virtual void release() throw();    //!< kill() and release all
+            void         free() throw();       //!< kill() and zero()
+            size_t       tell() const throw(); //!< number of C++ obejct
 
-            void         acquire(size_t n); //!< length() >= n
-            virtual void release() throw(); //!< kill() and release all
-            void         free() throw();    //!< kill() and zero()
-
+            //! test types
             template <typename T>
             bool is() const throw()
             {
                 return is_( ops<T>::id() );
             }
 
+            //! make ONE object
             template <typename T> inline
             T &make()
             {
@@ -71,14 +72,14 @@ namespace upsylon {
                 return *(T *)block_addr;
             }
 
+            //! make n objects
             template <typename T> inline
             void make(const size_t n)
             {
                 ops<T>::make(*this,n);
             }
 
-            size_t tell() const throw(); //!< number of C++ obejct
-
+            //! cast with check
             template <typename T>
             T & _() throw()
             {
@@ -86,6 +87,7 @@ namespace upsylon {
                 return *(T*)block_addr;
             }
 
+            //! cast with check
             template <typename T>
             const T & _() const throw()
             {
@@ -93,6 +95,7 @@ namespace upsylon {
                 return *(const T *)block_addr;
             }
 
+            
 
 
         private:

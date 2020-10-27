@@ -9,7 +9,7 @@
 namespace upsylon
 {
 
-    typedef memory::shack parallel_cache;
+    typedef memory::shack parallel_cache; //!< local cache is necessary
 
     //__________________________________________________________________________
     //
