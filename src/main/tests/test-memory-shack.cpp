@@ -46,6 +46,17 @@ Y_UTEST(shack)
     support::fill1D( S.__<string>() );
     std::cerr << S.__<string>() << std::endl;
 
+    {
+        const string a = "hello";
+        S.build<string>(a);
+        std::cerr << S._<string>() << std::endl;
+    }
+
+    {
+        S.build<string>( "world" );
+        std::cerr << S._<string>() << std::endl;
+    }
+
 
 }
 Y_UTEST_DONE()

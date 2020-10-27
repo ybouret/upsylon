@@ -111,6 +111,14 @@ namespace upsylon {
                 assert(is<T>());
                 return *static_cast<const lightweight_array<T> *>( vaddr() );
             }
+
+            //! build from data
+            template <typename T, typename U>
+            T &build(const U &args)
+            {
+                ops<T>:: template build<U>(*this,args);
+                return *(T *)block_addr;
+            }
             
 
 
@@ -199,6 +207,14 @@ namespace upsylon {
                     {
                         self.free();
                     }
+                }
+
+                template <typename U>
+                static inline void build(shack &self, const U &args)
+                {
+                    self.acquire(sizeof(T));
+                    new (self.block_addr) T(args);
+                    hook(self,1);
                 }
 
             };
