@@ -2,7 +2,7 @@
 #define Y_AQUA_SPECIES_INCLUDED 1
 
 #include "y/string.hpp"
-#include "y/memory/groove.hpp"
+#include "y/memory/shack.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon {
@@ -11,7 +11,7 @@ namespace upsylon {
     {
         typedef object         Object;   //!< alias for base classes
         typedef counted        Counted;  //!< alias for base classes
-        typedef memory::groove Groove;   //!< alias for local storage
+        typedef memory::shack  Shack;    //!< alias for local storage
 
         //______________________________________________________________________
         //
@@ -52,7 +52,7 @@ namespace upsylon {
             const string name;  //!< global name
             const int    Z;     //!< formal charge
             const size_t indx;  //!< index
-            Groove       data;  //!< extra data
+            Shack        data;  //!< extra data
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
