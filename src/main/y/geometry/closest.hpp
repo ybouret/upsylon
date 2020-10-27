@@ -53,7 +53,7 @@ namespace upsylon {
                 memset(&opt,0,sizeof(info));
                 if(lhs.size>0&&rhs.size>0)
                 {
-                    loop.engine().acquire<info>(memory::storage::shared);
+                    //loop.engine().acquire<info>(memory::storage::shared);
 
                     struct Task
                     {

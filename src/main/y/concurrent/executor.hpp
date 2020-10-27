@@ -62,6 +62,7 @@ namespace upsylon
             //! access to individual context, CONST
             const parallel & operator[](const size_t) const throw();
 
+#if 0
             //__________________________________________________________________
             //
             // access to L1 cache(s)
@@ -238,6 +239,7 @@ namespace upsylon
                 }
                 return ans;
             }
+#endif
             
         protected:
             //! constructor

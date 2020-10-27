@@ -12,9 +12,7 @@ namespace
         template <typename T, typename U> static inline
         void add( T &tgt, const U &src, parallel &ctx, lockable & )
         {
-            Y_ASSERT( (*ctx).has_bytes_for<T>() );
             tgt += src;
-            (*ctx).get<T>() = tgt;
         }
 
     };
@@ -23,7 +21,6 @@ namespace
     template <typename T,typename U>
     void test_with( concurrent::for_each &loop )
     {
-        loop.engine().make<T>();
         for(size_t n=1;n<=128; n <<= 1)
         {
             vector<T> target(n,0);

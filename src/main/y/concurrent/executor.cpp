@@ -9,6 +9,7 @@ namespace upsylon
         executor:: ~executor() throw() {}
         executor::  executor() throw() {}
 
+#if 0
         void executor:: free() throw()
         {
             executor &self = *this;
@@ -40,7 +41,7 @@ namespace upsylon
             assert(context_index<num_threads());
             return *(aliasing::_( *this ).get_context(context_index));
         }
-        
+#endif
 
         parallel & executor:: operator[](const size_t context_index) throw()
         {
