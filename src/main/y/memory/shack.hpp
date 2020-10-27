@@ -78,7 +78,14 @@ namespace upsylon {
             }
 
             size_t tell() const throw(); //!< number of C++ obejct
-            
+
+            template <typename T>
+            T & _() throw()
+            {
+                assert( is<T>() );
+                return *(T*)block_addr;
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);

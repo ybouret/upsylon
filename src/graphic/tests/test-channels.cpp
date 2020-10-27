@@ -28,8 +28,9 @@ namespace {
 
     static inline float  fMove( const float f, parallel &ctx ) throw()
     {
-        assert( (*ctx).is_built_from( typeid(Rand) ) );
-        randomized::bits &ran = (*ctx).get<Rand>();
+        //assert( (*ctx).is_built_from( typeid(Rand) ) );
+        assert(ctx.is<Rand>());
+        randomized::bits &ran = ctx._<Rand>();
         return f * (1.0f - 0.2f * ran.to<float>() );
     }
 
@@ -104,7 +105,8 @@ Y_UTEST(channels)
         for(size_t i=0;i<par->number();++i)
         {
             parallel &ctx = par->engine()[i];
-            (*ctx).solo<Rand>(memory::storage::shared).reset( uint32_t(i) );
+            ctx.make<Rand>().reset( uint32_t(i) );
+            //(*ctx).solo<Rand>(memory::storage::shared).reset( uint32_t(i) );
         }
 
         Ops::RunWithContext(tiles, fStack[0], fStack[0], fMove );
