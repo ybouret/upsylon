@@ -50,10 +50,11 @@ namespace upsylon
             //__________________________________________________________________
             
             //! access to individual context
-            parallel & operator[](const size_t) throw();
+            parallel      & operator[](const size_t)        throw();
 
             //! access to individual context, CONST
             const parallel & operator[](const size_t) const throw();
+
 
             
         protected:
@@ -80,7 +81,7 @@ namespace upsylon
         private:
             parallel  context;
             virtual parallel & get_context(const size_t) throw();
-            
+
         public:
             fake_lock access; //!< shared access
 

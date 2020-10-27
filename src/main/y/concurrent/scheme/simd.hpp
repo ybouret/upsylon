@@ -33,8 +33,10 @@ namespace upsylon
             static  void call( void *, parallel &, lockable &) throw(); //! kernel for threads
             void loop(parallel &context) throw(); //! the SIMD loop, called
             threads      workers;
+
         public:
             mutex       &access; //!< shared access
+
         private:
             bool         done;
             size_t       ready;  //!< count who is ready

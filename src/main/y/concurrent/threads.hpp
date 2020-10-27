@@ -43,7 +43,6 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual void       run(kernel code, void *data);      //!< unleash threads
             virtual size_t     num_threads() const throw();       //!< access parallelism
-            virtual parallel & get_context(const size_t) throw(); //!< access contexts
 
             //------------------------------------------------------------------
             //
@@ -62,10 +61,11 @@ namespace upsylon {
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(threads);
-            static  void system_entry(void*) throw(); //!< for system call, call this->thread_entry()
-            void         thread_entry()      throw(); //!< parallel entry point
-            void         initialize();
-            
+            static void        system_entry(void*) throw();       //!< for system call, call this->thread_entry()
+            void               thread_entry()      throw();       //!< parallel entry point
+            void               initialize();                      //!< prepare
+            virtual parallel & get_context(const size_t) throw(); //!< access contexts
+
             __threads  engines;
             bool       halting;
             size_t     ready;
