@@ -22,7 +22,8 @@ namespace upsylon {
         count(0),
         width(0),
         clear(0),
-        label(0)
+        label(0),
+        vdata()
         {
         }
 
