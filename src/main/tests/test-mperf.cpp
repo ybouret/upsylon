@@ -43,7 +43,7 @@ Y_UTEST(mperf)
                     strings << line;
                 }
             }
-            if(H.entries()<=30)
+            if(H.tell()<=30)
             {
                 H.graphViz("mph.dot");
             }

@@ -56,7 +56,7 @@ namespace {
     static inline void build(Affix &atree, const accessible<string> &strings)
     {
         atree.clr();
-        std::cerr << "in_pool: " << std::setw(6) << atree.in_pool() << " ";
+        std::cerr << "cached: " << std::setw(6) << atree.cached() << " ";
         atree.limit(1024);
         size_t inserted = 0;
         for(size_t i=1;i<=strings.size();++i)
@@ -66,7 +66,7 @@ namespace {
             if(res) ++inserted;
         }
         std::cerr << "inserted=" << inserted;
-        Y_ASSERT(atree.entries()==inserted);
+        Y_ASSERT(atree.tell()==inserted);
         for(size_t i=strings.size();i>0;--i)
         {
             const string           &data = strings[i];
@@ -99,11 +99,11 @@ namespace {
             Y_ASSERT(md1==md2);
         }
 
-        const bool save = atree.entries() <= 30;
+        const bool save = atree.tell() <= 30;
         if(save) atree.graphViz("atree.dot");
 
 
-        Y_ASSERT(strings.size()==atree.entries());
+        Y_ASSERT(strings.size()==atree.tell());
         vector<size_t> indx(strings.size(),0);
         for(size_t i=strings.size();i>0;--i) indx[i] = i;
 
@@ -146,7 +146,7 @@ namespace {
             const be_key key( data );
             Y_ASSERT(atree.add((const char *)(key.ro()),key.length(),(void*)&data));
         }
-        if(atree.entries()<=30) atree.graphViz("addresses.dot");
+        if(atree.tell()<=30) atree.graphViz("addresses.dot");
     }
 
     static inline void high_level( vector<string> &strings )
@@ -162,8 +162,8 @@ namespace {
                 const string &data = strings[i];
                 if(tree.insert_by(data,data)) ++inserted;
             }
-            std::cerr << "#entries=" << tree.entries() << std::endl;
-            Y_ASSERT(inserted==tree.entries());
+            std::cerr << "#entries=" << tree.tell() << std::endl;
+            Y_ASSERT(inserted==tree.tell());
         }
         for(size_t i=strings.size();i>0;--i)
         {
@@ -197,7 +197,7 @@ namespace {
         }
         std::cerr << std::endl;
 
-        if(tree.entries()<=30)
+        if(tree.tell()<=30)
         {
             tree.graphViz("affix_tree.dot");
         }
@@ -211,7 +211,7 @@ namespace {
                 Y_ASSERT( tree.remove_by(data) );
             }
         }
-        Y_ASSERT(0==tree.entries());
+        Y_ASSERT(0==tree.tell());
     }
 
 }

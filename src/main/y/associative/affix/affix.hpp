@@ -108,8 +108,8 @@ namespace upsylon
         void        graphViz(const upsylon::string &)        const; //!< render
         void        graphViz(const char            *)        const; //!< render
         void        hash_with(hashing::function &)   const throw(); //!< H.set(); root->run(H)
-        size_t      entries()   const throw();                      //!< root->freq
-        size_t      in_pool()   const throw();                      //!< tree_pool.size
+        size_t      tell()      const throw();                      //!< root->freq
+        size_t      cached()    const throw();                      //!< tree_pool.size
         void        limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
         void        prune()           throw();                      //!< limit(0)
         void        extra(size_t);                                  //!< reserve extra tree nodes

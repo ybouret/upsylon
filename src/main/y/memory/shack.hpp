@@ -86,6 +86,14 @@ namespace upsylon {
                 return *(T*)block_addr;
             }
 
+            template <typename T>
+            const T & _() const throw()
+            {
+                assert( is<T>() );
+                return *(const T *)block_addr;
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);

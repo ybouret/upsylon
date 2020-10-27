@@ -118,12 +118,12 @@ namespace upsylon
         root = 0;
     }
     
-    size_t affix:: entries() const throw()
+    size_t affix:: tell() const throw()
     {
         return root->freq;
     }
     
-    size_t   affix:: in_pool() const throw()
+    size_t   affix:: cached() const throw()
     {
         return tree_pool.size;
     }
