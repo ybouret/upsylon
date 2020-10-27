@@ -1,6 +1,7 @@
 #include "y/jive/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/jive/lexical/plugin/single-line-comments.hpp"
+#include "y/jive/syntax/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -49,6 +50,10 @@ Y_UTEST(list)
     {
         XNode::Pointer tree( parser.parseFile(argv[1]) );
         tree->graphViz("list.dot");
+        Syntax::Analyzer analyzer( parser.name );
+        
+        analyzer.walk( tree.content() );
+
     }
 }
 Y_UTEST_DONE()

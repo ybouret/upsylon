@@ -5,6 +5,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/jive/common-regexp.hpp"
 #include "y/hashing/sha1.hpp"
+#include "y/jive/syntax/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Jive;
@@ -95,6 +96,8 @@ Y_UTEST(parser)
                 std::cerr << "rd=" << rd << std::endl;
                 Y_CHECK(md==rd);
             }
+            Syntax::Analyzer analyzer(json.name);
+            analyzer.walk(xnode.content());
         }
     }
 }
