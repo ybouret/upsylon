@@ -60,19 +60,33 @@ namespace upsylon {
                 assert(block_exp2<=max_exp2);
             }
 
+            bool vein:: zeroed(const ingot *res) const throw()
+            {
+                const uint8_t *ptr = aliasing::as<const uint8_t>(res);
+                for(size_t i=block_size;i>0;--i)
+                {
+                    if(0!=ptr[i]) return false;
+                }
+                return true;
+            }
+
+
             void * vein:: acquire()
             {
                 if(chest.size)
                 {
                     //----------------------------------------------------------
-                    // return an old stone
+                    // return an old ingot
                     //----------------------------------------------------------
-                    return chest.query();
+                    ingot *top = chest.query();
+                    memset(top,0,block_size);
+                    return top;
                 }
                 else
                 {
                     //----------------------------------------------------------
                     // create a new ingot
+                    //----------------------------------------------------------
                     return make();
                 }
             }

@@ -1,0 +1,132 @@
+
+//! \file
+
+#ifndef Y_MEMORY_SHACK_INCLUDED
+#define Y_MEMORY_SHACK_INCLUDED 1
+
+#include "y/type/args.hpp"
+#include "y/memory/buffer.hpp"
+#include "y/type/self-destruct.hpp"
+#include "y/type/releasable.hpp"
+#include <typeinfo>
+
+namespace upsylon {
+
+    namespace memory {
+
+        //______________________________________________________________________
+        //
+        //
+        //! flexible cache for one or more objects of SAME type
+        //
+        //______________________________________________________________________
+        class shack : public memory::rw_buffer, public releasable
+        {
+        public:
+
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef void (*erase)(void *);
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            explicit shack() throw();
+            virtual ~shack() throw();
+
+            //__________________________________________________________________
+            //
+            // buffer interface
+            //__________________________________________________________________
+            size_t      length() const throw();
+            const void *ro()     const throw();
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            bool is_anonymous() const throw(); //!< true is flat memory
+            bool is_cplusplus() const throw(); //!< true if a C++ object is stored
+            bool is_(const std::type_info &) const throw(); //!< true if labeled as...
+
+            void         acquire(size_t n); //!< length() >= n
+            virtual void release() throw(); //!< kill() and release all
+            void         free() throw();    //!< kill() and zero()
+
+            template <typename T>
+            bool is() const throw()
+            {
+                return is_( ops<T>::id() );
+            }
+
+            template <typename T> inline
+            T &make()
+            {
+                acquire(sizeof(T));
+                T *res = new (block_addr) T();
+                ops<T>::hook(*this,1);
+                return *res;
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(shack);
+            void kill() throw(); //!< kill objects
+            void zero() throw(); //!< set memory to zero
+
+            //__________________________________________________________________
+            //
+            // flat memory
+            //__________________________________________________________________
+            void            *block_addr;
+            size_t           block_size;
+            size_t           block_exp2;
+
+            //__________________________________________________________________
+            //
+            // C++ memory
+            //__________________________________________________________________
+            size_t                 count; //!< C++ objects
+            size_t                 width; //!< C++ object widht
+            erase                  clear; //!< delete one object
+            const std::type_info * label; //!< type recognition
+
+            template <typename T>
+            struct ops
+            {
+                Y_DECL_ARGS(T,type);
+
+                static inline
+                const std::type_info &id() throw()
+                {
+                    return  typeid(mutable_type);
+                }
+
+                static inline
+                void no(void *args) throw()
+                {
+                    assert(args);
+                    self_destruct( *static_cast<mutable_type *>(args) );
+                }
+
+                static inline void hook(shack &self, const size_t n)
+                {
+                    assert(n>0);
+                    assert(n*sizeof(T)<=self.block_size);
+                    self.count = n;
+                    self.width = sizeof(T);
+                    self.clear = no;
+                    self.label = &id();
+                }
+
+            };
+
+        };
+
+    }
+}
+
+#endif

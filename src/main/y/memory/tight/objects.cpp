@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cstdio>
 
-//#include <iostream>
+#include <iostream>
 
 namespace upsylon {
 
@@ -100,9 +100,11 @@ namespace upsylon {
                 Y_LOCK(Access);
                 if(block_exp2<vein::min_exp2)
                 {
+                    static const size_t one = 1;
                     arena **     ppA = &little[block_exp2];
-                    if(!(*ppA)) *ppA = &Blocks[size_t(1)<<block_exp2];
-                    return    (**ppA).acquire();
+                    if(!(*ppA)) *ppA = &Blocks[one<<block_exp2];
+                    arena       &a   = **ppA;  
+                    return a.acquire();
                 }
                 else
                 {

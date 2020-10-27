@@ -17,6 +17,20 @@ namespace upsylon
             return (i>=length()) ? 0 : *(static_cast<const uint8_t *>( ro() ) + i);
         }
 
+        bool ro_buffer:: is_zeroed() const throw()
+        {
+            const uint8_t *ptr = static_cast<const uint8_t *>( ro() );
+            const size_t   len = length();
+            for(size_t i=0;i<len;++i)
+            {
+                if( 0 != ptr[i] )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 }
 

@@ -81,6 +81,7 @@ namespace upsylon {
                 Y_DISABLE_COPY_AND_ASSIGN(vein);
                 void   free(ingot *) const throw(); //!< release uneeded ingot
                 ingot *make();
+                bool   zeroed(const ingot *) const throw();
             };
 
         }

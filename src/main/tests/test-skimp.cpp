@@ -10,7 +10,7 @@ namespace
     struct ops
     {
         template <typename T, typename U> static inline
-        void add( T &tgt, const U &src, parallel &ctx, lockable & )
+        void add( T &tgt, const U &src, parallel &, lockable & )
         {
             tgt += src;
         }

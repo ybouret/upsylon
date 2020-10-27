@@ -1,5 +1,3 @@
-
-
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/object.hpp"
 
@@ -32,7 +30,6 @@ namespace upsylon
         {
             Y_LOCK(access);
             release_block(p,n);
-
         }
     }
 

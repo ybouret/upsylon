@@ -37,6 +37,9 @@ namespace upsylon
             template <typename T> inline
             size_t   count() const throw() { return length() / sizeof(T); }
 
+            //! check all zero
+            bool is_zeroed() const throw();
+
         protected:
             explicit ro_buffer() throw();                            //!< constructor
 

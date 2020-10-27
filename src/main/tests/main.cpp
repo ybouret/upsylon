@@ -59,6 +59,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(tight_supply);
     Y_UTEST(magazine);
     Y_UTEST(buffers);
+    Y_UTEST(shack);
 
     Y_UTEST(joint_section);
     Y_UTEST(joint_ward);
@@ -214,7 +215,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(sparse_matrix);
 
     Y_UTEST(zfi);
-    Y_UTEST(closest);
 
     Y_UTEST(tensors);
 
