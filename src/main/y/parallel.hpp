@@ -24,8 +24,8 @@ namespace upsylon
         //
         // types and definition
         //______________________________________________________________________
-        typedef memory::groove cache_type; //!< cache for extra data
-        static const memory::storage::model L2model = memory::storage::shared; //!< inner cache
+        typedef memory::groove              cache_type; //!< cache for extra data
+        static const memory::storage::model cache_kind = memory::storage::shared; //!< inner cache
 
         //______________________________________________________________________
         //

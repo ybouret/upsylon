@@ -28,12 +28,6 @@ namespace upsylon
         public:
             //__________________________________________________________________
             //
-            // types and definitions
-            //__________________________________________________________________
-            typedef parallel::cache_type cache_type; //!< alias
-
-            //__________________________________________________________________
-            //
             //
             // virtual interface
             //
@@ -74,10 +68,10 @@ namespace upsylon
             //__________________________________________________________________
 
             //! access to individual cache
-            cache_type & operator()(const size_t) throw();
+            parallel::cache_type & operator()(const size_t) throw();
 
             //! access to individual cache, CONST
-            const cache_type & operator()(const size_t) const throw();
+            const parallel::cache_type & operator()(const size_t) const throw();
 
             //__________________________________________________________________
             //
@@ -97,25 +91,25 @@ namespace upsylon
 
             //! acquire L1 space for T for each engine
             template <typename T>
-            void acquire(const memory::storage::model which)
+            void acquire()
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).acquire(which, sizeof(T) );
+                    self(i).acquire(parallel::cache_kind,sizeof(T) );
                 }
             }
 
             //! reserve L1 space for n times T for each engine
             template <typename T>
-            void acquire(const memory::storage::model which, const size_t n)
+            void acquire(const size_t n)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).acquire(which,n*sizeof(T));
+                    self(i).acquire(parallel::cache_kind,n*sizeof(T));
                 }
             }
 
@@ -126,40 +120,39 @@ namespace upsylon
 
             //! build one T for each engine with default constructor
             template <typename T>
-            void make(const memory::storage::model which)
+            void make()
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                   self(i).make<T>(which);
+                   self(i).make<T>(parallel::cache_kind);
                 }
             }
 
             //! make one T for each engine from parameter
             template <typename T, typename U>
-            void make(const memory::storage::model which, const typename type_traits<U>::parameter_type argU)
+            void make(const typename type_traits<U>::parameter_type argU)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).make<T,U>(which,argU);
+                    self(i).make<T,U>(parallel::cache_kind,argU);
                 }
             }
 
 
             //! make one T for each engine from parameters
             template <typename T, typename U, typename V>
-            void make(const memory::storage::model                  which,
-                      const typename type_traits<U>::parameter_type argU,
+            void make(const typename type_traits<U>::parameter_type argU,
                       const typename type_traits<V>::parameter_type argV)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).make<T,U,V>(which,argU,argV);
+                    self(i).make<T,U,V>(parallel::cache_kind,argU,argV);
                 }
             }
 
@@ -170,13 +163,13 @@ namespace upsylon
 
             //! build n times  T for each engine with default constructor
             template <typename T>
-            void vmake(const memory::storage::model which, const size_t n)
+            void vmake(const size_t n)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).vmake<T>(which,n);
+                    self(i).vmake<T>(parallel::cache_kind,n);
                 }
             }
 
@@ -184,13 +177,13 @@ namespace upsylon
 
             //! make n time T for each engine from parameter
             template <typename T, typename U>
-            void vmake(const memory::storage::model which, const size_t n, const typename type_traits<U>::parameter_type argU)
+            void vmake(const size_t n, const typename type_traits<U>::parameter_type argU)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).vmake<T,U>(which,n,argU);
+                    self(i).vmake<T,U>(parallel::cache_kind,n,argU);
                 }
             }
 
@@ -201,25 +194,25 @@ namespace upsylon
 
             //! copy one object
             template <typename T>
-            void copy(const memory::storage::model which, const typename type_traits<T>::parameter_type args)
+            void copy(const typename type_traits<T>::parameter_type args)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).copy<T>(which,args);
+                    self(i).copy<T>(parallel::cache_kind,args);
                 }
             }
 
             //! repeat n copies
             template <typename T>
-            void vcopy(const memory::storage::model which, const size_t n, const typename type_traits<T>::parameter_type args)
+            void vcopy(const size_t n, const typename type_traits<T>::parameter_type args)
             {
                 executor     &self = *this;
                 const size_t  nthr = num_threads();
                 for(size_t i=0;i<nthr;++i)
                 {
-                    self(i).vcopy<T>(which,n,args);
+                    self(i).vcopy<T>(parallel::cache_kind,n,args);
                 }
             }
 

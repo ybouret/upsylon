@@ -118,6 +118,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(simd);
     Y_UTEST(server);
     Y_UTEST(servpi);
+    Y_UTEST(skimp);
 
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
