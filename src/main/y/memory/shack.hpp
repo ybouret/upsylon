@@ -8,6 +8,7 @@
 #include "y/memory/buffer.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/releasable.hpp"
+#include "y/sequence/array.hpp"
 #include <typeinfo>
 
 namespace upsylon {
@@ -119,6 +120,9 @@ namespace upsylon {
             size_t                 width; //!< C++ object widht
             erase                  clear; //!< delete one object
             const std::type_info * label; //!< type recognition
+
+
+
 
             template <typename T>
             struct ops

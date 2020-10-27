@@ -38,6 +38,10 @@ Y_UTEST(shack)
     Y_CHECK(S.tell()==7);
 
     Y_UTEST_SIZEOF(memory::shack);
+    Y_UTEST_SIZEOF(lightweight_array<int>);
+    Y_UTEST_SIZEOF(lightweight_array<string>);
+    Y_UTEST_SIZEOF(lightweight_array<char>);
+
 
 }
 Y_UTEST_DONE()
