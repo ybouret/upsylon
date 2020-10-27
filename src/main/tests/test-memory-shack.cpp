@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/string.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 
@@ -41,6 +42,9 @@ Y_UTEST(shack)
     Y_UTEST_SIZEOF(lightweight_array<int>);
     Y_UTEST_SIZEOF(lightweight_array<string>);
     Y_UTEST_SIZEOF(lightweight_array<char>);
+
+    support::fill1D( S.__<string>() );
+    std::cerr << S.__<string>() << std::endl;
 
 
 }

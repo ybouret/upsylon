@@ -42,6 +42,12 @@ namespace upsylon {
             return count;
         }
 
+
+        void * shack:: vaddr() const throw()
+        {
+            return (void *) aliasing::anonymous(&vdata);
+        }
+
         bool shack:: is_anonymous() const throw()
         {
             if(NULL==label)

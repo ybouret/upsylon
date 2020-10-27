@@ -81,28 +81,44 @@ namespace upsylon {
             }
 
             //! cast with check
-            template <typename T>
+            template <typename T> inline
             T & _() throw()
             {
                 assert( is<T>() );
                 return *(T*)block_addr;
             }
 
-            //! cast with check
-            template <typename T>
+            //! cast with check, const
+            template <typename T> inline
             const T & _() const throw()
             {
                 assert( is<T>() );
                 return *(const T *)block_addr;
             }
 
+            //! cast with check to array
+            template <typename T> inline
+            lightweight_array<T> & __() throw()
+            {
+                assert(is<T>());
+                return *static_cast<lightweight_array<T> *>( vaddr() );
+            }
+
+            //! cast with check to array, const
+            template <typename T> inline
+            const lightweight_array<T> & __() const throw()
+            {
+                assert(is<T>());
+                return *static_cast<const lightweight_array<T> *>( vaddr() );
+            }
             
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);
-            void kill() throw(); //!< kill objects
-            void zero() throw(); //!< set memory to zero
+            void kill()         throw(); //!< kill objects
+            void zero()         throw(); //!< set memory to zero
+            void *vaddr() const throw(); //!< &vdata
 
             //__________________________________________________________________
             //
@@ -120,7 +136,7 @@ namespace upsylon {
             size_t                 width; //!< C++ object widht
             erase                  clear; //!< delete one object
             const std::type_info * label; //!< type recognition
-
+            lightweight_array<int> vdata; //!< ABI for an array
 
 
 
@@ -128,6 +144,7 @@ namespace upsylon {
             struct ops
             {
                 Y_DECL_ARGS(T,type);
+                typedef lightweight_array<mutable_type> vtype;
 
                 static inline
                 const std::type_info &id() throw()
@@ -150,6 +167,7 @@ namespace upsylon {
                     self.width = sizeof(T);
                     self.clear = no;
                     self.label = &id();
+                    new ( self.vaddr() ) vtype( & self._<mutable_type>(), self.count );
                 }
 
                 static inline void make(shack &self, const size_t n)
