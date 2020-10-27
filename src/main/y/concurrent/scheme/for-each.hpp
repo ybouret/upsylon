@@ -28,15 +28,11 @@ namespace upsylon
             //! run kernel(s)
             virtual void   run( kernel , void * ) = 0;
 
-
             //! get underlying engine
             virtual executor       & engine() throw()          = 0;
 
-            //! get underlying engine, const
-            virtual const executor & engine() const throw()    = 0;
-
-            //! engine().num_threads()
-            size_t number() const throw();
+            //! direct access to engine size
+            size_t size() const throw();
 
         protected:
             //! constructor
@@ -53,17 +49,11 @@ namespace upsylon
         {
         public:
             virtual ~sequential_for() throw(); //!< destructor
-            explicit sequential_for() throw(); //!< destructor
+            explicit sequential_for() throw(); //!< setup
             
-            //! call the kernel on data
-            virtual void run( kernel , void * );
 
-
-            //! return the engine
-            virtual executor & engine() throw();
-
-            //! return the const engine
-            virtual const executor & engine() const throw();
+            virtual void       run( kernel , void * ); //!< call the kernel on data
+            virtual executor & engine() throw();       //!< return the engine
 
         private:
             sequential engine_;            

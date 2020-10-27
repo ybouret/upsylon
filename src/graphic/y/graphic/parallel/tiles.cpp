@@ -29,11 +29,11 @@ namespace upsylon {
 
         Tiles:: Tiles(const Area    &full,
                       const ForEach &devs ) :
-        Tiles_( devs->number() ),
+        Tiles_( devs->size() ),
         area(full),
         device(devs)
         {
-            assert( count == device->number() );
+            assert( count == device->size() );
 
             const Cores  cores = Tiling::ComputeCoresFor(area,count);
             const size_t ncpus = cores.prod();

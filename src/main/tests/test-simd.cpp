@@ -113,7 +113,7 @@ Y_UTEST(simd)
     const double speed_up = par_speed/seq_speed;
     std::cerr << std::endl;
     std::cerr << "\tSpeed Up  : " << speed_up << std::endl;
-    std::cerr << "\tEfficiency: " << par.engine()[0].efficiency(speed_up) << "%" << std::endl;
+    std::cerr << "\tEfficiency: " << par.engine()[1].efficiency(speed_up) << "%" << std::endl;
     std::cerr << std::endl;
 
     std::cerr << "-- end program -- " << std::endl;

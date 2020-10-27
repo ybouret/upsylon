@@ -23,12 +23,23 @@ namespace upsylon
             Y_MUTEX_PROBE(access,ready<=0);
         }
 
-        size_t     threads:: num_threads() const throw() { return engines.size(); }
+        size_t     threads:: size() const throw() { return engines.size(); }
 
-        parallel & threads:: get_context(const size_t context_index) throw()
+        parallel & threads:: operator[](const size_t indx) throw()
         {
-            return engines[context_index];
+            assert(indx>=1);
+            assert(indx<=size());
+            return shift[indx];
         }
+
+        const parallel & threads:: operator[](const size_t indx) const throw()
+        {
+            assert(indx>=1);
+            assert(indx<=size());
+            return shift[indx];
+        }
+
+
 
 #define Y_THREADS_CTOR(LAYOUT) \
 topology( LAYOUT ),            \
@@ -39,12 +50,14 @@ ready(0),                      \
 start(),                       \
 kproc(0),                      \
 kdata(0),                      \
+shift(0),                      \
 verbose(get_verbosity())
 
         threads:: threads() :
         Y_THREADS_CTOR( layout::create() ) 
         {
             initialize();
+            shift = &engines[0]-1;
         }
 
         void threads:: initialize()

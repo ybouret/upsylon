@@ -112,7 +112,7 @@ namespace upsylon
             //
             // wait for initial synchro
             //__________________________________________________________________
-            const size_t count = workers.num_threads();
+            const size_t count = workers.size();
             Y_MUTEX_PROBE(access,prepared>=count);
 
             if(verbose)
@@ -321,7 +321,7 @@ namespace upsylon
             {
                 std::cerr << "[nexus.loop@" << context.label << "]" << std::endl;
             }
-            const size_t count = workers.num_threads();
+            const size_t count = workers.size();
             assert(prepared<count);
             ++prepared;
             if(verbose&&prepared>=count)

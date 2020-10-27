@@ -41,8 +41,10 @@ namespace upsylon {
             // kernel executor interface
             //
             //------------------------------------------------------------------
-            virtual void       run(kernel code, void *data);      //!< unleash threads
-            virtual size_t     num_threads() const throw();       //!< access parallelism
+            virtual void            run(kernel code, void *data);             //!< unleash threads
+            virtual size_t          size()                    const throw();  //!< access parallelism
+            virtual parallel       & operator[](const size_t)       throw();  //!< access context in [1..size()]
+            virtual const parallel & operator[](const size_t) const throw();  //!< access context in [1..size()], const
 
             //------------------------------------------------------------------
             //
@@ -64,14 +66,14 @@ namespace upsylon {
             static void        system_entry(void*) throw();       //!< for system call, call this->thread_entry()
             void               thread_entry()      throw();       //!< parallel entry point
             void               initialize();                      //!< prepare
-            virtual parallel & get_context(const size_t) throw(); //!< access contexts
-
+            
             __threads  engines;
             bool       halting;
             size_t     ready;
             condition  start;
             kernel     kproc;
             void      *kdata;
+            thread    *shift; //!< for parallel[1..size]
 
         public:
             bool verbose; //!< verbose flag, mostly to debug

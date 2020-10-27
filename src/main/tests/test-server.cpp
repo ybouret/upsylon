@@ -186,7 +186,7 @@ Y_UTEST(servpi)
 
         const double par_pi = data2pi(target);
         std::cerr << "par_pi=" << par_pi << " in " << par_ell << " seconds" << std::endl;
-        std::cerr << "Efficiency: " << srv.engine()[0].efficiency(seq_ell/par_ell) << "%" << std::endl;
+        std::cerr << "Efficiency: " << srv.engine()[1].efficiency(seq_ell/par_ell) << "%" << std::endl;
     }
     
 }

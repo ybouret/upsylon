@@ -20,7 +20,7 @@ namespace upsylon
         verbose( workers.verbose )
         {
             workers.run(call,this);
-            const size_t count = workers.num_threads();
+            const size_t count = workers.size();
             Y_MUTEX_PROBE(access,ready>=count);
         }
 
@@ -35,11 +35,7 @@ namespace upsylon
         {
             return workers;
         }
-
-        const executor & simd:: engine() const throw()
-        {
-            return workers;
-        }
+        
 
 
         simd:: ~simd() throw()
@@ -49,7 +45,7 @@ namespace upsylon
             // will intercept all codes
             //__________________________________________________________________
             access.lock();
-            const size_t count = workers.num_threads();
+            const size_t count = workers.size();
             assert(ready>=count);
             done = true;
             access.unlock();
@@ -71,7 +67,7 @@ namespace upsylon
             // first initialization
             //
             //__________________________________________________________________
-            const size_t count   = workers.num_threads();
+            const size_t count   = workers.size();
 
             access.lock();
             assert(ready<count);
@@ -135,13 +131,13 @@ namespace upsylon
         {
             access.lock();
             assert(code);
-            assert(workers.num_threads()==ready);
+            assert(workers.size()==ready);
             kproc = code;
             kdata = data;
             ready = 0;
             cycle.broadcast();
             synch.wait(access);
-            assert(ready>=workers.num_threads());
+            assert(ready>=workers.size());
             access.unlock();
         }
 

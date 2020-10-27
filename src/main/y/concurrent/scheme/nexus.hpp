@@ -116,7 +116,7 @@ namespace upsylon {
             condition flushing;
             
             static void start(void *, parallel &, lockable &);
-            void loop( parallel &);
+            void loop(parallel &);
 
 
         public:

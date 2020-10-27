@@ -13,9 +13,9 @@ namespace upsylon
         {
         }
 
-        size_t for_each:: number() const throw()
+        size_t for_each:: size() const throw()
         {
-            return engine().num_threads();
+            return aliasing::_(*this).engine().size();
         }
 
 
@@ -45,7 +45,6 @@ namespace upsylon
 
         executor & sequential_for:: engine() throw() { return engine_; }
 
-        const executor & sequential_for:: engine() const throw() { return engine_; }
-
+        
     }
 }

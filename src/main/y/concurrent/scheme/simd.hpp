@@ -13,20 +13,10 @@ namespace upsylon
         class simd :  public for_each
         {
         public:
-            //! construct threads
-            explicit simd();
-            
-            //! destructor
-            virtual ~simd() throw();
-
-            //! for_each interface: execute multiple copy of the kernel
-            virtual void run( kernel code, void *data );
-
-            //! the underlying threads
-            virtual executor & engine() throw();
-
-            //!  the underlying threads, const
-            virtual const executor & engine() const throw();
+            explicit           simd();              //!< construct threads
+            virtual           ~simd() throw();      //!< destructor
+            virtual void       run(kernel, void *); //!<  execute multiple copy of the kernel
+            virtual executor & engine() throw();    //!< the underlying threads
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
