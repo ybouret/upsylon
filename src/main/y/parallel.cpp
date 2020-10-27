@@ -9,27 +9,18 @@ namespace upsylon
     parallel:: ~parallel() throw() { }
 
     parallel:: parallel() throw() :
-    L1(), size(1),rank(0),indx(1),label()
+    size(1),rank(0),indx(1),label()
     { __format(); }
 
     parallel:: parallel(const size_t sz, const size_t rk) throw() :
-    L1(), size(sz),rank(rk),indx(rk+1),label()
+    size(sz),rank(rk),indx(rk+1),label()
     {
         assert(size>0); assert(rank<size);
         __format();
     }
 
 
-    parallel::cache_type & parallel:: operator*() throw()
-    {
-        return L1;
-    }
 
-
-    const parallel::cache_type & parallel:: operator*() const throw()
-    {
-        return L1;
-    }
 
 
     double parallel:: efficiency(const double speed_up) const

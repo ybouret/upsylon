@@ -37,6 +37,10 @@ namespace upsylon {
             return block_addr;
         }
 
+        size_t shack:: tell() const throw()
+        {
+            return count;
+        }
 
         bool shack:: is_anonymous() const throw()
         {

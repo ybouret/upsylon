@@ -25,11 +25,18 @@ Y_UTEST(shack)
     S.release();
     S.acquire(1);
     Y_CHECK(S.is_anonymous());
-    S.make<string>();
+    Y_CHECK(S.tell()==0);
+    S.make<string>() = "hello";
     Y_CHECK(S.is_cplusplus());
     Y_CHECK(S.is<string>());
+    Y_CHECK(S.tell()==1);
 
+    S.make<string>(7);
+    Y_CHECK(S.is_cplusplus());
+    Y_CHECK(S.is<string>());
+    Y_CHECK(S.tell()==7);
 
+    
 
 }
 Y_UTEST_DONE()

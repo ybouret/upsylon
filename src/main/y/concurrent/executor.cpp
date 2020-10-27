@@ -9,40 +9,6 @@ namespace upsylon
         executor:: ~executor() throw() {}
         executor::  executor() throw() {}
 
-#if 0
-        void executor:: free() throw()
-        {
-            executor &self = *this;
-            size_t    i    = num_threads();
-            while(i-- > 0)
-            {
-                self(i).free();
-            }
-        }
-
-        void executor:: release() throw()
-        {
-            executor &self = *this;
-            size_t    i    = num_threads();
-            while(i-- > 0)
-            {
-                self(i).release();
-            }
-        }
-
-        parallel::cache_type & executor:: operator()(const size_t context_index) throw()
-        {
-            assert(context_index<num_threads());
-            return *get_context(context_index);
-        }
-
-        const parallel::cache_type & executor:: operator()(const size_t context_index) const throw()
-        {
-            assert(context_index<num_threads());
-            return *(aliasing::_( *this ).get_context(context_index));
-        }
-#endif
-
         parallel & executor:: operator[](const size_t context_index) throw()
         {
             assert(context_index<num_threads());

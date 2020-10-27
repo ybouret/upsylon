@@ -47,11 +47,12 @@ namespace upsylon {
 
             //__________________________________________________________________
             //
-            // C++
+            // methods
             //__________________________________________________________________
-            bool is_anonymous() const throw(); //!< true is flat memory
-            bool is_cplusplus() const throw(); //!< true if a C++ object is stored
-            bool is_(const std::type_info &) const throw(); //!< true if labeled as...
+            bool   is_anonymous() const throw(); //!< true is flat memory
+            bool   is_cplusplus() const throw(); //!< true if a C++ object is stored
+            bool   is_(const std::type_info &) const throw(); //!< true if labeled as...
+            size_t hold() const throw();
 
             void         acquire(size_t n); //!< length() >= n
             virtual void release() throw(); //!< kill() and release all
@@ -66,11 +67,18 @@ namespace upsylon {
             template <typename T> inline
             T &make()
             {
-                acquire(sizeof(T));
-                T *res = new (block_addr) T();
-                ops<T>::hook(*this,1);
-                return *res;
+                ops<T>::make(*this,1);
+                return *(T *)block_addr;
             }
+
+            template <typename T> inline
+            void make(const size_t n)
+            {
+                ops<T>::make(*this,n);
+            }
+
+            size_t tell() const throw(); //!< number of C++ obejct
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);
@@ -112,7 +120,7 @@ namespace upsylon {
                     self_destruct( *static_cast<mutable_type *>(args) );
                 }
 
-                static inline void hook(shack &self, const size_t n)
+                static inline void hook(shack &self, const size_t n) throw()
                 {
                     assert(n>0);
                     assert(n*sizeof(T)<=self.block_size);
@@ -120,6 +128,37 @@ namespace upsylon {
                     self.width = sizeof(T);
                     self.clear = no;
                     self.label = &id();
+                }
+
+                static inline void make(shack &self, const size_t n)
+                {
+                    if(n>0)
+                    {
+                        self.acquire(n*sizeof(T));
+                        mutable_type *addr = static_cast<mutable_type *>(self.block_addr);
+                        size_t        done = 0;
+                        try
+                        {
+                            while(done<n)
+                            {
+                                new (addr+done) T();
+                                ++done;
+                            }
+                        }
+                        catch(...)
+                        {
+                            while(done>0)
+                            {
+                                self_destruct(addr[--done]);
+                            }
+                            throw;
+                        }
+                        hook(self,n);
+                    }
+                    else
+                    {
+                        self.free();
+                    }
                 }
 
             };
