@@ -9,32 +9,34 @@ namespace upsylon
         executor:: ~executor() throw() {}
         executor::  executor() throw() {}
 
-#if 0
-        parallel & executor:: operator[](const size_t context_index) throw()
-        {
-            assert(context_index<num_threads());
-            return get_context(context_index);
-        }
-
-        const parallel & executor:: operator[](const size_t context_index) const throw()
-        {
-            assert(context_index<num_threads());
-            executor &self = aliasing::_( *this );
-            return    self.get_context(context_index);
-        }
-#endif
         
-#if 0
         void executor:: acquire(const size_t n)
         {
             executor     &self = *this;
-            const size_t  nthr = num_threads();
-            for(size_t i=0;i<nthr;++i)
+            const size_t  nthr = size();
+            for(size_t i=1;i<=nthr;++i)
             {
                 self[i].acquire(n);
             }
         }
-#endif
+
+        void executor:: free() throw()
+        {
+            executor &self = *this;
+            for(size_t i=size();i>0;--i)
+            {
+                self[i].free();
+            }
+        }
+
+        void executor:: release() throw()
+        {
+            executor &self = *this;
+            for(size_t i=size();i>0;--i)
+            {
+                self[i].release();
+            }
+        }
 
     }
 }
