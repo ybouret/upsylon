@@ -1,11 +1,11 @@
 #include "y/parallel.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 
 Y_UTEST(parallel)
 {
-
 
     for(size_t length=0;length<=10;++length)
     {
@@ -33,6 +33,7 @@ Y_UTEST(parallel)
             std::cerr << " => ";Y_CHECK(sum==length);
         }
     }
+    Y_UTEST_SIZEOF(parallel);
 
 }
 Y_UTEST_DONE()

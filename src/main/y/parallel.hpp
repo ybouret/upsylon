@@ -44,9 +44,7 @@ namespace upsylon
 
         //! get system ticks, thread-safe
         uint64_t     ticks(lockable &) const throw();
-
         
-
         //______________________________________________________________________
         //
         // members

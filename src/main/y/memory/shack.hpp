@@ -121,7 +121,6 @@ namespace upsylon {
             }
             
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);
             void kill()         throw(); //!< kill objects

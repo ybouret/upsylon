@@ -41,8 +41,6 @@ namespace upsylon
             //! number of underlying threads
             virtual size_t     num_threads()   const throw() = 0;
 
-            //! access to individual context in [0..num_threads-1]
-            virtual parallel & get_context(const size_t indx) throw() = 0;
 
             //__________________________________________________________________
             //
@@ -64,34 +62,24 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(executor);
+
+            //! access to individual context in [0..num_threads-1]
+            virtual parallel & get_context(const size_t indx) throw() = 0;
+
         };
 
         //! implements a sequential exectuor
         class sequential : public executor
         {
         public:
-            //! constructor
-            inline explicit sequential() throw() :
-            executor(),context(),access() {}
+            explicit sequential() throw();             //!< constructor
+            virtual ~sequential() throw();             //!< destructor
+            virtual void   run(kernel proc, void *);   //!< direct call
+            virtual size_t num_threads() const throw();//!< only one
 
-            //! destructor
-            inline virtual ~sequential() throw() {}
-
-            //! direct call
-            inline virtual void run( kernel proc, void *data )
-            {
-                assert(proc);
-                proc(data,context,access);
-            }
-
-            //! only one
-            inline virtual size_t num_threads() const throw() { return 1; }
-
-            //! context
-            inline virtual parallel & get_context(const size_t) throw() { return context; }
-            
         private:
             parallel  context;
+            virtual parallel & get_context(const size_t) throw();
             
         public:
             fake_lock access; //!< shared access

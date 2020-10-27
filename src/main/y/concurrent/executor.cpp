@@ -22,6 +22,32 @@ namespace upsylon
             return    self.get_context(context_index);
         }
 
-
     }
+}
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        sequential::sequential() throw() :
+        executor(),context(),access()
+        {}
+
+        sequential:: ~sequential() throw()
+        {
+        }
+
+        size_t sequential:: num_threads() const throw() { return 1; }
+
+
+        void sequential:: run( kernel proc, void *data )
+        {
+            assert(proc);
+            proc(data,context,access);
+        }
+
+        parallel & sequential:: get_context(const size_t) throw() { return context; }
+        
+    }
+
 }
