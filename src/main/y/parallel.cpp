@@ -19,7 +19,18 @@ namespace upsylon
         __format();
     }
 
-    
+
+    parallel::cache_type & parallel:: operator*() throw()
+    {
+        return L1;
+    }
+
+
+    const parallel::cache_type & parallel:: operator*() const throw()
+    {
+        return L1;
+    }
+
 
     double parallel:: efficiency(const double speed_up) const
     {

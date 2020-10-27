@@ -51,31 +51,19 @@ namespace upsylon
         //! get system ticks, thread-safe
         uint64_t     ticks(lockable &) const throw();
 
-        //______________________________________________________________________
-        //
-        // L1 cache
-        //______________________________________________________________________
+        //! get cache
+        cache_type       & operator*() throw();
 
-        //! forwarding call to L1 cache
-        template <typename T> T &       get()       throw() { return L1.get<T>(); }
+        //! get cache
+        const cache_type & operator*() const throw();
 
-        //! forwarding call to L1 cache
-        template <typename T> T &       get(const size_t indx)       throw() { return L1.get<T>(indx); }
-
-        //! forwarding call to L1 cache, const
-        template <typename T> const T & get() const throw() { return L1.get<T>(); }
-
-        //! forwarding call to L1 cache, const
-        template <typename T> const T & get(const size_t indx) const throw() { return L1.get<T>(indx); }
-
-
-
-        
         //______________________________________________________________________
         //
         // members
         //______________________________________________________________________
-        cache_type     L1;       //!< primary   cache for outer computations
+    private:
+        cache_type     L1;       //!< primary cache for outer computations
+    public:
         const size_t   size;     //!< the family size
         const size_t   rank;     //!< 0..size-1
         const size_t   indx;     //!< 1..size
