@@ -15,14 +15,15 @@ namespace upsylon
         public:
             explicit           simd();              //!< construct threads
             virtual           ~simd() throw();      //!< destructor
-            virtual void       run(kernel, void *); //!<  execute multiple copy of the kernel
-            virtual executor & engine() throw();    //!< the underlying threads
+            virtual void       run(kernel, void *); //!< execute multiple copy of the kernel
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simd);
-            static  void call( void *, parallel &, lockable &) throw(); //! kernel for threads
-            void loop(parallel &context) throw(); //! the SIMD loop, called
-            threads      workers;
+            static  void             call( void *, parallel &, lockable &) throw(); //! kernel for threads
+            virtual const executor & bulk() const throw();                          //!< the underlying threads
+            void                     loop(parallel &) throw();                      //! the SIMD loop, called
+
+            threads      workers; //!< the actual engine
 
         public:
             mutex       &access; //!< shared access

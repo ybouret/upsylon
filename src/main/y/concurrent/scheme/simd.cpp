@@ -31,7 +31,7 @@ namespace upsylon
         }
 
 
-        executor & simd:: engine() throw()
+        const executor & simd:: bulk() const throw()
         {
             return workers;
         }

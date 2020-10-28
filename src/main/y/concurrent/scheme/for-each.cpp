@@ -15,7 +15,7 @@ namespace upsylon
 
         size_t for_each:: size() const throw()
         {
-            return aliasing::_(*this).engine().size();
+            return (**this).size();
         }
 
 
@@ -43,7 +43,7 @@ namespace upsylon
             engine_.run(proc,data);
         }
 
-        executor & sequential_for:: engine() throw() { return engine_; }
+        const executor & sequential_for:: bulk() const throw() { return engine_; }
 
         
     }

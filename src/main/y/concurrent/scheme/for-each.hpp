@@ -5,6 +5,7 @@
 #include "y/concurrent/executor.hpp"
 #include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/type/gateway.hpp"
 
 namespace upsylon
 {
@@ -17,7 +18,7 @@ namespace upsylon
          The parallel context is provided to compute where to compute,
          and a lockable object is provided for synchronization.
          */
-        class for_each : public counted_object
+        class for_each : public counted_object, public gateway<executor>
         {
         public:
             typedef arc_ptr<for_each> pointer; //!< shared loop
@@ -27,10 +28,7 @@ namespace upsylon
 
             //! run kernel(s)
             virtual void   run( kernel , void * ) = 0;
-
-            //! get underlying engine
-            virtual executor       & engine() throw()          = 0;
-
+            
             //! direct access to engine size
             size_t size() const throw();
 
@@ -53,11 +51,12 @@ namespace upsylon
             
 
             virtual void       run( kernel , void * ); //!< call the kernel on data
-            virtual executor & engine() throw();       //!< return the engine
 
         private:
             sequential engine_;            
             Y_DISABLE_COPY_AND_ASSIGN(sequential_for);
+            virtual const executor & bulk() const throw();       //!< return the engine
+
         };
 
 
