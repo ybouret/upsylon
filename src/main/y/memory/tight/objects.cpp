@@ -121,7 +121,7 @@ namespace upsylon {
                 if(block_exp2<vein::min_exp2)
                 {
                     assert(NULL!=little[block_exp2]);
-                    assert( (1<<block_exp2) == little[block_exp2]->block_size );
+                    assert( (size_t(1)<<block_exp2 ) == little[block_exp2]->block_size );
                     little[block_exp2]->release(addr);
                 }
                 else
