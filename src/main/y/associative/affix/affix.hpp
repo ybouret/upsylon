@@ -34,7 +34,7 @@ namespace upsylon
         //______________________________________________________________________
         class                                tree_node; //!< forward declaration
         typedef core::list_of_cpp<tree_node> tree_list; //!< alias
-        typedef const tree_node             *tree_mark;    //!< alias
+        typedef const tree_node             *tree_mark; //!< alias
 
         //______________________________________________________________________
         //
