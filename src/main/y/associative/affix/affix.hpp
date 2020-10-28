@@ -105,9 +105,9 @@ namespace upsylon
             }
         }
 
-        void        graphViz(const upsylon::string &)        const; //!< render
-        void        graphViz(const char            *)        const; //!< render
-        void        hash_with(hashing::function &)   const throw(); //!< H.set(); root->run(H)
+        void        graphViz(const string &)       const;           //!< render
+        void        graphViz(const char   *)       const;           //!< render
+        void        hash_with(hashing::function &) const throw();   //!< H.set(); root->run(H)
         size_t      tell()      const throw();                      //!< root->freq
         size_t      cached()    const throw();                      //!< tree_pool.size
         void        limit(size_t)     throw();                      //!< sort and keep no more than nmax in pool
@@ -212,13 +212,13 @@ namespace upsylon
         }
 
 
-        void cut(tree_node *) throw(); //!< cut a used node
-        void reset()          throw(); //!< return all nodes (but root) to pool
-
+        void cut(tree_node *)  throw(); //!< cut a used node
+        void reset()           throw(); //!< return all nodes (but root) to pool
+        void xch(affix &other) throw(); //!< no-throw exchange
 
     private:
         tree_node *root;
-        tree_list  tree_pool;
+        tree_list  pool;
         tree_node *new_tree_node(tree_node *, const uint8_t);
         void       increase_path_to(tree_node *node) throw();
         Y_DISABLE_COPY_AND_ASSIGN(affix);

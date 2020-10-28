@@ -62,7 +62,14 @@ namespace upsylon
         //! setup
         inline explicit affix_tree() : affix(), dl(), dp()
         {}
-        
+
+        //! setup with some memory
+        inline explicit affix_tree(const size_t n, const as_capacity_t &) :
+        affix(), dl(), dp()
+        {
+            gain(n);
+        }
+
         //! cleanup
         inline virtual ~affix_tree() throw()
         {
@@ -90,6 +97,17 @@ namespace upsylon
                 ditch();
                 throw;
             }
+        }
+
+        //! assign
+        affix_tree & operator=( const affix_tree & other )
+        {
+            if(this!=&other)
+            {
+                affix_tree temp(other);
+                swap_with(temp);
+            }
+            return *this;
         }
 
         //______________________________________________________________________
@@ -184,7 +202,7 @@ namespace upsylon
                          const size_t size) throw()
         {
             tree_node *node = (tree_node *)find(iter,size);
-            if(node->addr)
+            if(node&&node->addr)
             {
                 return &( static_cast<data_node *>(node->addr)->data );
             }
@@ -226,7 +244,7 @@ namespace upsylon
                                const size_t size) const throw()
         {
             tree_node *node = (tree_node *)find(iter,size);
-            if(node->addr)
+            if(node&&node->addr)
             {
                 return &( static_cast<data_node *>(node->addr)->data );
             }
@@ -270,7 +288,7 @@ namespace upsylon
                        const size_t size) throw()
         {
             tree_node *node = (tree_node *)find(iter,size);
-            if(node->addr)
+            if(node && node->addr)
             {
                 kill_data_node( dl.unlink( static_cast<data_node *>(node->addr)) );
                 cut(node);
@@ -331,6 +349,15 @@ namespace upsylon
                 kill_data_node(dl.pop_back());
             }
         }
+
+        //! gain excess memory
+        inline void gain(size_t n)
+        {
+            while(n-- > 0)
+            {
+                dp.store( object::acquire1<data_node>() );
+            }
+        }
         
         //! release all possible memory
         inline void ditch() throw()
@@ -347,9 +374,17 @@ namespace upsylon
 
         //! sort content
         template <typename FUNC>
-        void sort_data_with(FUNC &func)
+        void sort_with(FUNC &func)
         {
             merging<data_node>::sort(dl,call_compare<FUNC>,(void*)&func);
+        }
+
+        //! no throw swap
+        inline void swap_with(affix_tree &other) throw()
+        {
+            xch(other);             // affix part
+            dl.swap_with(other.dl); // data part 1/2
+            dp.swap_with(other.dp); // data part 2/2
         }
 
     protected:
@@ -390,7 +425,6 @@ namespace upsylon
             return func(lhs->data,rhs->data);
         }
 
-        Y_DISABLE_ASSIGN(affix_tree);
 
     public:
         typedef iterate::linked<type,data_node,iterate::forward >            iterator;        //!< forward iterator

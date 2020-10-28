@@ -107,7 +107,7 @@ namespace upsylon
     
     affix:: affix() :
     root( new tree_node(0,0) ),
-    tree_pool()
+    pool()
     {
     }
     
@@ -125,30 +125,30 @@ namespace upsylon
     
     size_t   affix:: cached() const throw()
     {
-        return tree_pool.size;
+        return pool.size;
     }
     
     void affix:: extra(size_t n)
     {
         while(n-- > 0)
         {
-            tree_pool.push_back( new tree_node(0,0) );
+            pool.push_back( new tree_node(0,0) );
         }
     }
     
     void affix:: limit(size_t nmax) throw()
     {
-        if(nmax<=0 || nmax >= tree_pool.size )
+        if(nmax<=0 || nmax >= pool.size )
         {
-            tree_pool.release();
+            pool.release();
         }
         else
         {
-            merging<tree_node>::sort_by_increasing_address(tree_pool);
+            merging<tree_node>::sort_by_increasing_address(pool);
             while(nmax-- > 0)
             {
-                assert(tree_pool.size>0);
-                delete tree_pool.pop_back();
+                assert(pool.size>0);
+                delete pool.pop_back();
             }
         }
     }
@@ -159,9 +159,9 @@ namespace upsylon
     affix::tree_node * affix::new_tree_node(tree_node *parent, const uint8_t code)
     {
         assert(parent);
-        if(tree_pool.size)
+        if(pool.size)
         {
-            tree_node *node = tree_pool.pop_front();
+            tree_node *node         = pool.pop_front();
             node->parent            = parent;
             aliasing::_(node->code) = code;
             node->freq              = 0;
@@ -177,7 +177,7 @@ namespace upsylon
     
     void affix:: reset() throw()
     {
-        root->leaves_to(tree_pool);
+        root->leaves_to(pool);
         root->addr = 0;
         root->freq = 0;
         root->deep = 0;
@@ -220,7 +220,7 @@ namespace upsylon
                 assert(parent->leaves.owns(node));
                 if(frequency<=0)
                 {
-                    parent->leaves.unlink(node)->return_to(tree_pool);
+                    parent->leaves.unlink(node)->return_to(pool);
                 }
                 parent->optimize();
                 node=parent;
@@ -231,10 +231,13 @@ namespace upsylon
                 return;
             }
         }
-        
-        
     }
-    
+
+    void affix:: xch(affix &other) throw()
+    {
+        cswap(root,other.root);
+        pool.swap_with(other.pool);
+     }
     
     
 }

@@ -183,7 +183,7 @@ namespace {
             Y_CHECK(md_tree==md_temp);
         }
 
-        tree.sort_data_with( string::compare );
+        tree.sort_with( string::compare );
 
         size_t count=0;
         for(affix_tree<string>::iterator it=tree.begin();it!=tree.end();++it)
