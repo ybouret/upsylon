@@ -26,6 +26,10 @@ namespace upsylon
             class Terminal : public Axiom
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
 
                 //! type of terminal
                 enum Type
@@ -34,8 +38,14 @@ namespace upsylon
                     Univocal, //!< univocal (regular) expression
                     Division  //!< whatever, division only
                 };
+                
                 //! identifier
                 static const uint32_t UUID = TermUUID;
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
 
                 //! cleanup
                 virtual ~Terminal() throw();
@@ -50,12 +60,17 @@ namespace upsylon
                     Y_JIVE_AXIOM(Terminal);
                 }
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
                 Y_JIVE_AXIOM_ATTACH_DECL();
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 const Type type; //!< kind
-
-
-
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

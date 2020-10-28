@@ -19,16 +19,15 @@ namespace upsylon
             // helpers
             //
             //__________________________________________________________________
-
-            class Aggregate;
+            class Aggregate; //!< forward declaration
 
             //! observer for error management
             struct  Observer
             {
-                typedef const Aggregate *Whence; //!< alias
+                typedef const Aggregate *Holder; //!< alias
                 const Lexeme *lexeme;            //!< last accepted lexeme
-                Whence        parent;            //!< address of named aggregate
-                Whence        tested;            //!< currently tested
+                Holder        parent;            //!< address of named aggregate
+                Holder        tested;            //!< currently tested
                 
                 //! update status
                 void  mind(const Lexeme *now) throw();
