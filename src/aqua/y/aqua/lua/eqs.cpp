@@ -21,11 +21,11 @@ namespace upsylon
 
 
             // get nu
-            Int nu = 0;
+            int nu = 0;
             {
                 lua_rawgeti(L,-1,1);
                 if( !lua_isinteger(L,-1))  throw exception("%s coefficient is not <integer> but <%s>", ctx, luaL_typename(L,-1));
-                nu = lua_tointeger(L,-1);
+                nu = int(lua_tointeger(L,-1));
                 lua_pop(L,1);
             }
             
@@ -49,7 +49,7 @@ namespace upsylon
         {
             assert( LUA_TTABLE == lua_type(L,-1) );
 
-            const int n = lua_rawlen(L,-1);
+            const int n = int(lua_rawlen(L,-1));
             if(n<3) throw exception("%s %s[%d] has not enough items (found %d)", fn, eqsName, indx, n);
 
 
@@ -141,7 +141,7 @@ namespace upsylon
             // parse all items
             //
             //------------------------------------------------------------------
-            const int n = lua_rawlen(L,-1);
+            const int n = int(lua_rawlen(L,-1));
             for(int indx=1;indx<=n;++indx)
             {
                 const int t = lua_rawgeti(L,-1,indx);

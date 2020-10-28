@@ -29,7 +29,7 @@ namespace upsylon
 
         std::ostream & operator<<(std::ostream &os, const Constraint::Actor &a)
         {
-            const int coef = a.weight;
+            const Int coef = a.weight;
             switch(coef)
             {
                 case 1: os << '+'; break;
