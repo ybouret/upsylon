@@ -4,6 +4,7 @@
 
 #include "y/parallel.hpp"
 #include "y/concurrent/fake-lock.hpp"
+//#include "y/mkl/transform.hpp"
 
 namespace upsylon
 {
@@ -42,13 +43,20 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            // non-virtual interface
+            // flat memory per thread
             //
             //__________________________________________________________________
 
             void acquire(const size_t);   //!< acquire bytes for all contexts
             void free()    throw();       //!< for all contexts
             void release() throw();       //!< for all contexts
+
+            //__________________________________________________________________
+            //
+            //
+            // objects per threads
+            //
+            //__________________________________________________________________
 
             //! build ONE default T for each context
             template <typename T> inline
