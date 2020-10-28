@@ -1,11 +1,11 @@
-#include "y/associative/suffix/batch.hpp"
+#include "y/associative/affix/batch.hpp"
 #include "y/associative/set.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/intr.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/type/spec.hpp"
-#include "y/type/aliasing.hpp"
+//#include "y/type/aliasing.hpp"
 
 using namespace upsylon;
 
@@ -49,8 +49,8 @@ namespace {
         typedef typename Dummy::pointer Pointer;
         
         vector<KEY>               ok(nmax, as_capacity);
-        suffix_batch<KEY,Dummy>   st(nmax/4, as_capacity);
-        suffix_batch<KEY,Pointer> pst(nmax/4,as_capacity);
+        affix_batch<KEY,Dummy>    st(nmax/4, as_capacity);
+        affix_batch<KEY,Pointer>  pst(nmax/4,as_capacity);
         set<KEY,Dummy>            db(nmax/4, as_capacity);
         set<KEY,Pointer>          pdb(nmax/4,as_capacity);
         
@@ -118,11 +118,17 @@ namespace {
     
 }
 
+#include "y/string/convert.hpp"
 Y_UTEST(catalog)
 {
-    doTest<int>(1000);
-    doTest<const short>(1000);
-    doTest<const string>(1000);
+    size_t n = 1024;
+    if(argc>1)
+    {
+        n = string_convert::to<size_t>(argv[1],"n");
+    }
+    doTest<int>(n);
+    doTest<const short>(n);
+    doTest<const string>(n);
     
 }
 Y_UTEST_DONE()
