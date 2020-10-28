@@ -97,7 +97,7 @@ Y_UTEST(simd)
     double seq_speed = 0;
     {
         concurrent::sequential_for engine;
-        //engine.engine().acquire_all(10);
+        (*engine).acquire(10);
         wtime  chrono;
         size_t cycles=0;
         double ellapsed=0;
