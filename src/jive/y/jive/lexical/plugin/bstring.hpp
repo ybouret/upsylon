@@ -1,8 +1,9 @@
 
+
 //! \file
 
-#ifndef Y_JIVE_LEXICAL_PLUGIN_JSTRING_INCLUDED
-#define Y_JIVE_LEXICAL_PLUGIN_JSTRING_INCLUDED 1
+#ifndef Y_JIVE_LEXICAL_PLUGIN_BSTRING_INCLUDED
+#define Y_JIVE_LEXICAL_PLUGIN_BSTRING_INCLUDED 1
 
 #include "y/jive/lexical/plugin/string_.hpp"
 
@@ -15,28 +16,28 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! Jive String, betweeen double quotes
+            //! Bracket String, betweeen brackets
             //
             //__________________________________________________________________
-            class jString : public String_
+            class bString : public String_
             {
             public:
-                virtual ~jString() throw(); //!< cleanup
-                
+                virtual ~bString() throw(); //!< cleanup
+
                 //! setup
                 template <typename ID> inline
-                explicit jString(const ID &id, Queue &q) :
-                String_(id,dquote,dquote, q)
+                explicit bString(const ID &id, Queue &q) :
+                String_(id, '<' , '>', q)
                 {
                 }
-                
-                
+
+
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(jString);
+                Y_DISABLE_COPY_AND_ASSIGN(bString);
             };
 
         }
-        
+
     }
 }
 

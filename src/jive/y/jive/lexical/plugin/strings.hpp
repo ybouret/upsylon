@@ -5,6 +5,7 @@
 
 #include "y/jive/lexical/plugin/jstring.hpp"
 #include "y/jive/lexical/plugin/rstring.hpp"
+#include "y/jive/lexical/plugin/bstring.hpp"
 
 
 #endif

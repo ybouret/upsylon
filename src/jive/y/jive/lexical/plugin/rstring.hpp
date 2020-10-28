@@ -28,7 +28,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit rString(const ID &id, Queue &q) :
-                String_(id, '\'' , q)
+                String_(id,quote ,quote,q)
                 {
                 }
                 

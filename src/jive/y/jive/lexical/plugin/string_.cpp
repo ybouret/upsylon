@@ -9,6 +9,8 @@ namespace upsylon
     {
         namespace Lexical
         {
+            const char String_::  quote = '\'';
+            const char String_:: dquote = '\"';
 
             String_:: ~String_() throw()
             {
@@ -20,7 +22,11 @@ namespace upsylon
             {
                 back(delimiter,this,&String_::OnQuit);
                 discard("char", "[:core:]", this, &String_::OnCore);
+
+                // specific delimiter behavior
+
                 {
+                    // escaped delimiter => delimiter
                     const char rx[4] = { '\\', '\\', delimiter,0};
                     discard("dlm",rx,this, &String_::OnDelim);
                 }
@@ -31,6 +37,8 @@ namespace upsylon
                     default:
                         break;
                 }
+
+
                 discard("hexa",  "\\\\x[:xdigit:][:xdigit:]",   this, &String_::OnHexa);
                 discard("herr1", "\\\\x[^[:xdigit:]][^]?",      this, &String_::OnHerr);
                 discard("herr2", "\\\\x[:xdigit:][^[:xdigit:]]",this, &String_::OnHerr);

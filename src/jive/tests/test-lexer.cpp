@@ -46,6 +46,7 @@ namespace {
 
             call( plug<Lexical::jString>("jstring")   );
             call( plug<Lexical::rString>("rstring") );
+            call( plug<Lexical::bString>("bstring") );
 
 
             {

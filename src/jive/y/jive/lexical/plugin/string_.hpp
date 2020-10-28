@@ -22,15 +22,22 @@ namespace upsylon
             class String_ : public Plugin
             {
             public:
-                const char delimiter; //!< the delimiter
+                static const char quote;
+                static const char dquote;
+                
+                const char delimiter; //!< the (closing) delimiter
 
                 virtual ~String_() throw(); //!< cleanup
 
+            protected:
                 //! setup
                 template <typename ID>
-                explicit String_(const ID &id, const char C, Queue &q) :
-                Plugin(id,C,q,RejectEOS),
-                delimiter(C),
+                explicit String_(const ID  &id,
+                                 const char delimOpen,
+                                 const char delimClose,
+                                 Queue     &q) :
+                Plugin(id,delimOpen,q,RejectEOS),
+                delimiter(delimClose),
                 unit(NULL)
                 {
                     setup();
