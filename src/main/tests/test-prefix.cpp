@@ -18,8 +18,15 @@ namespace
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
             leaves.push_back( new node_type(0,CODE(i),0) );
+            leaves.tail->freq = 0;
         }
         root->optimize();
+        for(const node_type *node = leaves.head;node;node=node->next)
+        {
+            if(node->next)
+            {
+            }
+        }
     }
     
     template <typename T>
