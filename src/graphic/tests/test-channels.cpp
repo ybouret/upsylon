@@ -102,9 +102,9 @@ Y_UTEST(channels)
         proc.setRange( YUV::Vmin, YUV::Vmax);
         IMG.save("v.png", *fStack[2], proc, 0);
 
-        for(size_t i=1;i<=par->engine().size();++i)
+        for(size_t i=1;i<=par->size();++i)
         {
-            parallel &ctx = par->engine()[i];
+            parallel &ctx = (**par)[i];
             ctx.make<Rand>().reset( uint32_t(i) );
         }
 

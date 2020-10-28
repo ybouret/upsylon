@@ -121,7 +121,7 @@ namespace upsylon
             }
         }
 
-        executor & nexus:: engine() throw()
+        const executor & nexus:: bulk() const throw()
         {
             return workers;
         }

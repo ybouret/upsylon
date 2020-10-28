@@ -7,18 +7,24 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! base class to get read only and read/write instances
+    //
+    //__________________________________________________________________________
     template <typename T>
     class gateway
     {
     public:
-        Y_DECL_ARGS(T,type);
-        inline virtual ~gateway() throw() {}
+        Y_DECL_ARGS(T,type); //!< aliases
 
-        inline type       & operator*()       throw() { return (type&)bulk(); }
-        inline const_type & operator*() const throw() { return        bulk(); }
+        inline virtual     ~gateway()         throw() {}                         //!< cleanup
+        inline type       & operator*()       throw() { return (type&)bulk(); }  //!< r/w
+        inline const_type & operator*() const throw() { return        bulk(); }  //!< r/o
 
     protected:
-        inline explicit gateway() throw() {}
+        inline explicit     gateway() throw() {}  //!< setup
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(gateway);

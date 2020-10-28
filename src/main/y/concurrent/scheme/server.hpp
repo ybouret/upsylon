@@ -3,8 +3,8 @@
 #define Y_CONCURRENT_SERVER_INCLUDED 1
 
 #include "y/concurrent/executor.hpp"
+#include "y/type/gateway.hpp"
 #include "y/functor.hpp"
-#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -16,7 +16,7 @@ namespace upsylon
         typedef accessible<job_type>                   job_batch; //!< r/o jobs
 
         //! jobs server interface
-        class server
+        class server : public gateway<executor>
         {
         public:
             virtual ~server() throw(); //!< destructor
@@ -28,7 +28,6 @@ namespace upsylon
             //------------------------------------------------------------------
             virtual job_uuid   enqueue(const job_type &job)            = 0; //!< enqueue a job
             virtual void       flush()  throw()                        = 0; //!< wait for all enqueued jobs to complete
-            virtual executor & engine() throw()                        = 0; //!< get underlying engine
             virtual void       process(job_uuids &, const job_batch &) = 0; //!< for batch processing
 
             //------------------------------------------------------------------
@@ -71,11 +70,11 @@ namespace upsylon
 
             virtual job_uuid   enqueue(const job_type &);               //!< execute
             virtual void       flush() throw();                         //!< do nothing
-            virtual executor & engine() throw();                        //!< implementation
             virtual void       process(job_uuids &, const job_batch &); //!< batch
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sequential_server);
+            virtual const executor & bulk() const throw(); //!< implementation
             sequential impl;
         };
     }

@@ -86,7 +86,6 @@ namespace upsylon {
             //------------------------------------------------------------------
             virtual job_uuid   enqueue(const job_type &);                     //!< enqueue a job
             virtual void       flush()  throw();                              //!< wait for all enqueued jobs
-            virtual executor & engine() throw();                              //!< implementation
             virtual void       process(job_uuids &uuids, const job_batch &);  //!< batch
 
             //------------------------------------------------------------------
@@ -115,8 +114,9 @@ namespace upsylon {
             condition activity;
             condition flushing;
             
-            static void start(void *, parallel &, lockable &);
-            void loop(parallel &);
+            static void              start(void *, parallel &, lockable &); //!< entry point
+            void                     loop(parallel &);                      //!< called by start
+            virtual const executor & bulk() const throw();                  //!< implementation
 
 
         public:

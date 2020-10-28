@@ -36,7 +36,7 @@ namespace upsylon
 
         void sequential_server:: flush() throw() {}
 
-        executor & sequential_server:: engine() throw()
+        const executor & sequential_server:: bulk() const throw()
         {
             return impl;
         }
