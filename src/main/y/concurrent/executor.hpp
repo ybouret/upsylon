@@ -4,7 +4,6 @@
 
 #include "y/parallel.hpp"
 #include "y/concurrent/fake-lock.hpp"
-//#include "y/mkl/transform.hpp"
 
 namespace upsylon
 {
@@ -114,40 +113,8 @@ namespace upsylon
                 return    self[i]._<T>(j);
             }
 
-            //! get thread specific data
-            template <typename T>
-            struct dowload
-            {
-                //! first items with conversion
-                template <typename TARGET> inline
-                static void to(TARGET &target, const executor &source)
-                {
-                    const accessible<parallel> &self = source;
-                    for(size_t i=self.size();i>0;--i)
-                    {
-                        target[i] = self[i]._<T>();
-                    }
-                }
-            };
-
-            //! put thread specific data
-            template <typename T>
-            struct upload
-            {
-                //! first items with conversion
-                template <typename SOURCE> inline
-                static void to(executor &target, SOURCE &source)
-                {
-                    for(size_t i=target.size();i>0;--i)
-                    {
-                        target[i]._<T>() = source[i];
-                    }
-                }
-            };
-
             
 
-            
         protected:
             //! constructor
             explicit  executor() throw();

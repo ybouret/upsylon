@@ -40,6 +40,7 @@ namespace
 #include <cstring>
 #include "y/string/env.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/concurrent/exec-io.hpp"
 
 Y_UTEST(threads)
 {
@@ -60,20 +61,20 @@ Y_UTEST(threads)
         engine.run( protocol::call, &proto );
     }
 
-    engine.make<int>();
+    engine.make<int>(2);
     const size_t n = engine.size();
     for(size_t i=n;i>0;--i)
     {
         engine[i]._<int>() = int(i);
     }
 
-    vector<double> res(n,0);
-    concurrent::executor::dowload<int>::to(res,engine);
-    std::cerr << "res=" << res << std::endl;
+    concurrent::array_of<int>  arr (engine);
+    concurrent::xarray_of<int> arr1(engine,1);
+    concurrent::xarray_of<int> arr2(engine,2);
 
-    vector<int16_t> dat(n,1);
-    concurrent::executor::upload<int>::to(engine,dat);
-
+    std::cerr << "arr   = " << arr  << std::endl;
+    std::cerr << "arr1  = " << arr1 << std::endl;
+    std::cerr << "arr2  = " << arr2 << std::endl;
 
 
 }
