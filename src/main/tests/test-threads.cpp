@@ -39,6 +39,7 @@ namespace
             
 #include <cstring>
 #include "y/string/env.hpp"
+#include "y/sequence/vector.hpp"
 
 Y_UTEST(threads)
 {
@@ -58,6 +59,22 @@ Y_UTEST(threads)
         protocol proto;
         engine.run( protocol::call, &proto );
     }
+
+    engine.make<int>();
+    const size_t n = engine.size();
+    for(size_t i=n;i>0;--i)
+    {
+        engine[i]._<int>() = int(i);
+    }
+
+    vector<double> res(n,0);
+    concurrent::executor::dowload<int>::to(res,engine);
+    std::cerr << "res=" << res << std::endl;
+
+    vector<int16_t> dat(n,1);
+    concurrent::executor::upload<int>::to(engine,dat);
+
+
 
 }
 Y_UTEST_DONE()

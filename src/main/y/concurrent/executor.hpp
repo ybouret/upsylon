@@ -98,6 +98,54 @@ namespace upsylon
                 return self[indx]._<T>();
             }
 
+            //! access for multiple index
+            template <typename T>
+            T & _(const size_t i, const size_t j) throw()
+            {
+                executor &self = *this;
+                return    self[i]._<T>(j);
+            }
+
+            //! access for multiple index, const
+            template <typename T>
+            const T & _(const size_t i, const size_t j) const throw()
+            {
+                const accessible<parallel> &self = *this;
+                return    self[i]._<T>(j);
+            }
+
+            //! get thread specific data
+            template <typename T>
+            struct dowload
+            {
+                //! first items with conversion
+                template <typename TARGET> inline
+                static void to(TARGET &target, const executor &source)
+                {
+                    const accessible<parallel> &self = source;
+                    for(size_t i=self.size();i>0;--i)
+                    {
+                        target[i] = self[i]._<T>();
+                    }
+                }
+            };
+
+            //! put thread specific data
+            template <typename T>
+            struct upload
+            {
+                //! first items with conversion
+                template <typename SOURCE> inline
+                static void to(executor &target, SOURCE &source)
+                {
+                    for(size_t i=target.size();i>0;--i)
+                    {
+                        target[i]._<T>() = source[i];
+                    }
+                }
+            };
+
+            
 
             
         protected:
@@ -108,7 +156,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(executor);
         };
 
-        //! implements a sequential exectuor
+        //! implements a sequential executor
         class sequential : public executor
         {
         public:

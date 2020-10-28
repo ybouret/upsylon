@@ -96,6 +96,8 @@ namespace upsylon {
                 return *(const T *)block_addr;
             }
 
+
+
             //! cast with check to array
             template <typename T> inline
             lightweight_array<T> & __() throw()
@@ -110,6 +112,20 @@ namespace upsylon {
             {
                 assert(is<T>());
                 return *static_cast<const lightweight_array<T> *>( vaddr() );
+            }
+
+            //! direct access to multiple items
+            template <typename T> inline
+            T & _(const size_t j) throw()
+            {
+                return __<T>()[j];
+            }
+
+            //! direct access to multiple items
+            template <typename T> inline
+            const T & _(const size_t j) const throw()
+            {
+                return __<T>()[j];
             }
 
             //! build from data

@@ -47,7 +47,7 @@ namespace upsylon {
                 SOURCE         &source;
                 const INDEX    length;
                 const INDEX    offset;
-                inline proxy(const FUNCTION &f,
+                inline proxy(FUNCTION       &f,
                              TARGET         &t,
                              SOURCE         &s,
                              const INDEX    l,
