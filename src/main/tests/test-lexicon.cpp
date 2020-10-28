@@ -1,5 +1,5 @@
 #include "y/associative/map.hpp"
-#include "y/associative/suffix/table.hpp"
+#include "y/associative/affix/table.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
 #include "y/type/spec.hpp"
@@ -17,7 +17,7 @@ namespace {
                    const char            *usr)
     {
         assert(usr);
-        std::cerr << "lexicon<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">=" << usr << std::endl;
+        std::cerr << "lexicon<" << type_name_of<KEY>() << "," << type_name_of<T>() << "> = <" << usr << ">" << std::endl;
         // check
         Y_ASSERT(keys.size()==args.size());
         const size_t n = keys.size();
@@ -122,10 +122,10 @@ Y_UTEST(lexicon)
         }
     }
     map<string,string>           smap(n,as_capacity);
-    suffix_table<string,string>  stab(n,as_capacity);
+    affix_table<string,string>   stab(n,as_capacity);
     
     doLexicon(smap,strings,strings,"map");
-    doLexicon(stab,strings,strings,"suffix_table");
+    doLexicon(stab,strings,strings,"affix_table");
     
     
     

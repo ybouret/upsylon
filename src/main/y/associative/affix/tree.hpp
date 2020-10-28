@@ -147,12 +147,14 @@ namespace upsylon
                 if(!tnode)
                 {
                     kill_data_node(dnode);
+                    assert(dl.size==tell());
                     return false;
                 }
                 else
                 {
                     dl.push_back(dnode);
                     dnode->hook = tnode;
+                    assert(dl.size==tell());
                     return true;
                 }
             }
@@ -389,7 +391,9 @@ namespace upsylon
 
     protected:
         //! manipulate data for derived class
-        const data_node * head() const throw() { return dl.head; }
+        const data_node * head()    const throw() { return dl.head; }
+        size_t            dl_size() const throw() { return dl.size; }
+        size_t            dp_size() const throw() { return dp.size; }
 
     private:
         data_list   dl; //!< data list
