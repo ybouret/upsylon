@@ -7,6 +7,7 @@
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
+#include "y/memory/buffers.hpp"
 
 using namespace upsylon;
 
@@ -66,37 +67,58 @@ namespace
     {
         typedef prefix_stem<CODE,T>           stem_type;
         typedef typename stem_type::node_type node_type;
-
-        stem_type stem;
-        list<T>   data;
-
+        typedef vector<CODE> path_type;
+        
+        stem_type       stem;
+        list<T>         data;
+        list<path_type> paths;
         size_t count = 0;
-        for(size_t iter=8;iter>0;--iter)
+        for(size_t iter=80;iter>0;--iter)
         {
             vector<CODE> path;
             for(size_t i=1+alea.leq(4);i>0;--i)
             {
                 path << alea.range<CODE>('a','d');
             }
-            std::cerr << "path=" << path << std::endl;
+            std::cerr << "path=" << path;
             data << support::get<T>();
             node_type  *mark = 0;
             node_type  *node = stem.grow( path.begin(), path.size(), & data.back(), &mark);
             if(node)
             {
                 Y_ASSERT(mark==node);
-                std::cerr << "inserted" << std::endl;
+                std::cerr << " => " << data.back() << std::endl;
                 ++count;
                 Y_ASSERT(stem.tell()==count);
+                paths << path;
             }
             else
             {
-                std::cerr << "rejected" << std::endl;
+                std::cerr << " rejected" << std::endl;
+                data.pop_back();
             }
         }
-
         stem.get_root().graphViz("stem.dot");
-
+        std::cerr << "paths: " << paths << std::endl;
+        alea.shuffle( *paths );
+        while(paths.size())
+        {
+            const path_type &path = paths.back();
+            const node_type *node = stem.find( path.begin(), path.size() );
+            Y_ASSERT(node);
+            Y_ASSERT(node->addr);
+            Y_ASSERT(node->depth==path.size());
+            std::cerr << path << " => " << *(node->addr) << std::endl;
+            memory::cppblock<CODE> blk(node->depth);
+            node->encode(blk);
+            for(size_t i=1;i<=node->depth;++i)
+            {
+                Y_ASSERT(blk[i]==path[i]);
+            }
+            paths.pop_back();
+            stem.pull((node_type *)node);
+            Y_ASSERT(stem.tell()==paths.size());
+        }
     }
 
 }

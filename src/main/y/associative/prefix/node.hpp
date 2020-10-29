@@ -9,6 +9,7 @@
 #include "y/sort/merge.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon {
 
@@ -91,7 +92,19 @@ namespace upsylon {
 
         //! return leaves+this to pool
         inline void  return_to(pool_t &pool) throw() { leaves_to(pool); pool.push_front(this);                }
-
+        
+        inline size_t encode( addressable<CODE> &path ) const throw()
+        {
+            assert(path.size()>=depth);
+            const prefix_node *curr = this;
+            while(curr->parent)
+            {
+                path[curr->depth] = curr->code;
+                curr=curr->parent;
+            }
+            return depth;
+        }
+        
         //______________________________________________________________________
         //
         // members

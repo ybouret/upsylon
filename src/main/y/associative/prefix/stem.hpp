@@ -47,7 +47,7 @@ namespace upsylon {
         //! tell number of inserted items
         inline size_t tell() const throw() { assert(root); return root->frequency; }
 
-
+        //______________________________________________________________________
         //! grow current stem
         /**
          \param curr initial iterator, *curr must return a compatible type to CODE
@@ -55,6 +55,7 @@ namespace upsylon {
          \param addr address to insert. TODO: NULL => used
          \param mark inserted node or busy node at path
          */
+        //______________________________________________________________________
         template <typename ITERATOR>
         node_type *grow(ITERATOR    curr,
                         size_t      size,
@@ -111,13 +112,83 @@ namespace upsylon {
             }
         }
 
+        //______________________________________________________________________
+        //
+        //! search a node by path
+        /**
+         then node may be used or not!!
+         */
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        const node_type *find(ITERATOR     curr,
+                              size_t       size) const throw()
+        {
+            const node_type *node = root;
+            while(size-- > 0)
+            {
+                const CODE code = *(curr++);
+                for(node_type *chld=node->leaves.head;chld;chld=chld->next)
+                {
+                    if(code==chld->code)
+                    {
+                        node = chld;
+                        goto FOUND;
+                    }
+                }
+                return NULL;
+            FOUND:;
+                assert(node);
+            }
+            
+            assert(node);
+            return node;
+        }
 
+        //! pull a used node from the stem
+        inline void pull(node_type *node)  throw()
+        {
+            assert(node);
+            assert(node->used!=0);
+            
+            node->used = 0;
+            for(;;)
+            {
+                assert(node->frequency>0);
+                const size_t  frequency = --(node->frequency);
+                node_type    *parent    = node->parent;
+                if(parent)
+                {
+                    assert(parent->leaves.owns(node));
+                    if(frequency<=0)
+                    {
+                        parent->leaves.unlink(node)->return_to(pool);
+                    }
+                    parent->optimize();
+                    node=parent;
+                }
+                else
+                {
+                    assert(node==root);
+                    return;
+                }
+            }
+        }
+        
+        inline void reset() throw()
+        {
+            root->leaves_to(pool);
+            root->frequency = 0;
+            root->depth     = 0;
+            root->code      = 0;
+        }
+        
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;
         pool_type  pool;
 
+        //! create a new node or format a stored one
         node_type *new_node(node_type *parent, const CODE code)
         {
             assert(parent);
