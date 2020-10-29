@@ -1,7 +1,9 @@
+#include "y/associative/prefix/stem.hpp"
+
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/associative/prefix/stem.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -20,11 +22,11 @@ namespace
 
     }
 
-    template <typename CODE>
+    template <typename CODE, typename T>
     static inline void _disp()
     {
-        typedef prefix_node<CODE> node_type;
-        std::cerr << "node<" << type_name_of<CODE>() << "> :" << sizeof(node_type) << std::endl;
+        typedef prefix_node<CODE,T> node_type;
+        std::cerr << "node<" << type_name_of<CODE>() << "," << type_name_of<T>() << "> : " << sizeof(node_type) << std::endl;
 
 #if 0
         auto_ptr<node_type>            root( new node_type(0,0,0) );
@@ -45,6 +47,15 @@ namespace
 
     }
 
+    template <typename T>
+    static inline void disp()
+    {
+        _disp<uint8_t,T>();
+        _disp<uint16_t,T>();
+        _disp<uint32_t,T>();
+        _disp<uint64_t,T>();
+    }
+
 
 }
 
@@ -54,6 +65,10 @@ Y_UTEST(prefix)
     dispText<short>();
     dispText<int>();
     dispText<size_t>();
+
+    disp<null_type>();
+    disp<int>();
+
 }
 Y_UTEST_DONE()
 
