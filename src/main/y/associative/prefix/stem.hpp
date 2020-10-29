@@ -45,6 +45,7 @@ namespace upsylon {
         const ios::vizible & get_root() const throw() { assert(root); return *root; }
 
     private:
+        Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;
         pool_type  pool;
 
