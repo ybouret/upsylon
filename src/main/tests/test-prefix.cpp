@@ -1,7 +1,8 @@
-#include "y/associative/prefix/stump.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
+#if 0
+#include "y/associative/prefix/stump.hpp"
 
 using namespace upsylon;
 
@@ -41,17 +42,19 @@ namespace
     }
     
 }
+#endif
 
 Y_UTEST(prefix)
 {
-    
+
+#if 0
     disp<int8_t>();
     disp<int16_t>();
     disp<int32_t>();
     disp<int64_t>();
     
     disp<void *>();
-    
+#endif
     
 }
 Y_UTEST_DONE()
