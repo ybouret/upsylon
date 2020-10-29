@@ -182,7 +182,33 @@ namespace upsylon {
             root->code      = 0;
         }
         
-
+        //______________________________________________________________________
+        //
+        //
+        //______________________________________________________________________
+        inline size_t cache() const throw() { return pool.size; }
+        
+        inline void   extra(size_t n)
+        {
+            while(n-- > 0) pool.push_back( new node_type(0,0) );
+        }
+        
+        inline void   limit(const size_t n) throw()
+        {
+            if(n<=0)
+            {
+                pool.release();
+            }
+            else
+            {
+                merging<node_type>::sort_by_increasing_address(pool);
+                while(pool.size>n) delete pool.pop_back();
+            }
+        }
+        
+        inline void prune() throw() { limit(0); }
+        
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;
