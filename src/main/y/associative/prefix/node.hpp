@@ -7,11 +7,16 @@
 #include "y/associative/prefix/data.hpp"
 #include "y/object.hpp"
 #include "y/sort/merge.hpp"
+#include "y/ios/tools/vizible.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon {
 
     template <typename CODE, typename T>
-    class prefix_node : public object, public prefix_data<T>
+    class prefix_node :
+    public object,
+    public prefix_data<T>,
+    public ios::vizible
     {
     public:
         typedef prefix_data<T>                 data_t;
@@ -35,9 +40,9 @@ namespace upsylon {
         }
 
         //! initialize to a used node
-        inline explicit prefix_node(const prefix_node *p,
-                                    const CODE         c,
-                                    T                 *d) throw() :
+        inline explicit prefix_node(prefix_node *p,
+                                    const CODE   c,
+                                    T           *d) throw() :
         object(),
         data_t(d),
         code(c),
@@ -75,6 +80,8 @@ namespace upsylon {
             if(parent) deep = parent->deep + 1;
 
         }
+
+        //! compare by decreasing frequency then increasing code
         static inline int compare(const prefix_node *lhs,
                                   const prefix_node *rhs,
                                   void              *) throw()
@@ -98,6 +105,26 @@ namespace upsylon {
                     return comparison::increasing(lhs->code,rhs->code);
                 }
             }
+        }
+
+        virtual void vizCore(ios::ostream &fp) const
+        {
+            fp << "[label=\"";
+            fp << prefix_::code_to_text(code);
+            fp("#%lu [%lu]", (unsigned long)freq, (unsigned long)deep );
+            fp << "\",shape=box";
+            if(0!=this->used)
+            {
+                fp << ",style=filled";
+            }
+            fp << "]";
+            endl(fp);
+            for(const prefix_node *node=leaves.head;node;node=node->next)
+            {
+                node->vizSave(fp);
+                endl(this->vizJoin(fp,node));
+            }
+
         }
     };
     

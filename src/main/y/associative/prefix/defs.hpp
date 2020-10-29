@@ -4,6 +4,7 @@
 #define Y_PREFIX_DEFS_INCLUDED 1
 
 #include "y/os/platform.hpp"
+#include "y/ios/iosfwd.hpp"
 
 namespace upsylon {
 

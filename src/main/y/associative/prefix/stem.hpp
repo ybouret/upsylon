@@ -10,10 +10,12 @@ namespace upsylon {
     class prefix_stem
     {
     public:
-        typedef prefix_node<CODE,T> node_type;
+        typedef          prefix_node<CODE,T>         node_type;
+        typedef typename prefix_node<CODE,T>::pool_t pool_type;
 
         inline explicit prefix_stem() :
-        root( new node_type(0,0,NULL) )
+        root( new node_type(0,0,NULL) ),
+        pool()
         {
         }
 
@@ -22,8 +24,11 @@ namespace upsylon {
             
         }
 
+        const ios::vizible & get_root() const throw() { assert(root); return *root; }
+
     private:
         node_type *root;
+        pool_type  pool;
 
     };
 

@@ -23,28 +23,30 @@ namespace
     }
 
     template <typename CODE, typename T>
-    static inline void _disp()
+    static inline void _disp(const bool save=false)
     {
         typedef prefix_node<CODE,T> node_type;
         std::cerr << "node<" << type_name_of<CODE>() << "," << type_name_of<T>() << "> : " << sizeof(node_type) << std::endl;
 
-#if 0
         auto_ptr<node_type>            root( new node_type(0,0,0) );
-        typename node_type::list_type &leaves = root->leaves;
-        for(size_t i=1+alea.leq(100);i>0;--i)
+        typename node_type::list_t    &leaves = root->leaves;
+        for(size_t i=1+alea.leq(10);i>0;--i)
         {
             leaves.push_back( new node_type(0,CODE(i),0) );
-            leaves.tail->freq = 0;
+            leaves.tail->freq = alea.range<size_t>(1,1000);
         }
         root->optimize();
         for(const node_type *node = leaves.head;node;node=node->next)
         {
             if(node->next)
             {
+                Y_ASSERT(node->freq>=node->next->freq);
             }
         }
-#endif
-
+        if(save)
+        {
+            root->graphViz("node.dot",true);
+        }
     }
 
     template <typename T>
@@ -68,6 +70,8 @@ Y_UTEST(prefix)
 
     disp<null_type>();
     disp<int>();
+
+    _disp<uint8_t,null_type>(true);
 
 }
 Y_UTEST_DONE()

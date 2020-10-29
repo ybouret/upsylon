@@ -16,15 +16,12 @@ namespace upsylon {
 
         inline explicit prefix_data() throw()
         {
-            used = 1;
-            assert(NULL!=addr);
+            used = 0;
         }
 
         inline explicit prefix_data(T *p) throw()
         {
             addr = p;
-            assert(addr!=NULL);
-            assert(used!=0);
         }
 
         virtual ~prefix_data() throw()
