@@ -5,6 +5,8 @@
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
 #include "support.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace upsylon;
 
@@ -45,7 +47,7 @@ namespace
         }
         if(save)
         {
-            root->graphViz("node.dot",true);
+            root->graphViz("node.dot");
         }
     }
 
@@ -62,7 +64,38 @@ namespace
     template <typename CODE, typename T>
     void doStem()
     {
-        prefix_stem<CODE,T> stem;
+        typedef prefix_stem<CODE,T>           stem_type;
+        typedef typename stem_type::node_type node_type;
+
+        stem_type stem;
+        list<T>   data;
+
+        size_t count = 0;
+        for(size_t iter=8;iter>0;--iter)
+        {
+            vector<CODE> path;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                path << alea.range<CODE>('a','d');
+            }
+            std::cerr << "path=" << path << std::endl;
+            data << support::get<T>();
+            node_type  *mark = 0;
+            node_type  *node = stem.grow( path.begin(), path.size(), & data.back(), &mark);
+            if(node)
+            {
+                Y_ASSERT(mark==node);
+                std::cerr << "inserted" << std::endl;
+                ++count;
+                Y_ASSERT(stem.tell()==count);
+            }
+            else
+            {
+                std::cerr << "rejected" << std::endl;
+            }
+        }
+
+        stem.get_root().graphViz("stem.dot");
 
     }
 
@@ -80,7 +113,7 @@ Y_UTEST(prefix)
 
     _disp<uint8_t,null_type>(true);
 
-    doStem<int,null_type>();
+    doStem<uint16_t,int>();
 
 }
 Y_UTEST_DONE()

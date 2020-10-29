@@ -22,4 +22,18 @@ namespace upsylon
     {
         strcat(text,id);
     }
+
+    void prefix_:: cat(const uint8_t b[], const size_t n) throw()
+    {
+        assert(n>0);
+        const size_t top = n-1;
+        size_t i=0;
+        while(i<top&&b[i]<=0) ++i;
+        while(i<n)
+        {
+            cat( byte_to_text(b[i]));
+            ++i;
+        }
+
+    }
 }

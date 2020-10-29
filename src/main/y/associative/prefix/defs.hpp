@@ -4,7 +4,7 @@
 #define Y_PREFIX_DEFS_INCLUDED 1
 
 #include "y/os/platform.hpp"
-#include "y/ios/iosfwd.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon {
 
@@ -26,9 +26,9 @@ namespace upsylon {
             const union {
                 T       _;
                 uint8_t b[ sizeof(T) ];
-            } alias = { x };
+            } alias = { swap_be_as(x) };
             clr();
-            for(size_t i=0;i<sizeof(T);++i) cat( byte_to_text(alias.b[i]));
+            cat(alias.b,sizeof(T));
             return text;
         }
 
@@ -36,6 +36,7 @@ namespace upsylon {
         static char text[];
         static void clr() throw();
         static void cat(const char *) throw();
+        static void cat(const uint8_t b[], const size_t n) throw();
     };
 
 }
