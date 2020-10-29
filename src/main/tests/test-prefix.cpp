@@ -33,14 +33,14 @@ namespace
         for(size_t i=1+alea.leq(10);i>0;--i)
         {
             leaves.push_back( new node_type(0,CODE(i),0) );
-            leaves.tail->freq = alea.range<size_t>(1,1000);
+            leaves.tail->frequency = alea.range<size_t>(1,1000);
         }
         root->optimize();
         for(const node_type *node = leaves.head;node;node=node->next)
         {
             if(node->next)
             {
-                Y_ASSERT(node->freq>=node->next->freq);
+                Y_ASSERT(node->frequency>=node->next->frequency);
             }
         }
         if(save)
@@ -59,6 +59,13 @@ namespace
     }
 
 
+    template <typename CODE, typename T>
+    void doStem()
+    {
+        prefix_stem<CODE,T> stem;
+
+    }
+
 }
 
 Y_UTEST(prefix)
@@ -72,6 +79,8 @@ Y_UTEST(prefix)
     disp<int>();
 
     _disp<uint8_t,null_type>(true);
+
+    doStem<int,null_type>();
 
 }
 Y_UTEST_DONE()

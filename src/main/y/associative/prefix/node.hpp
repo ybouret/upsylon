@@ -12,6 +12,12 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! a node for stems
+    //
+    //__________________________________________________________________________
     template <typename CODE, typename T>
     class prefix_node :
     public object,
@@ -19,13 +25,23 @@ namespace upsylon {
     public ios::vizible
     {
     public:
-        typedef prefix_data<T>                 data_t;
-        typedef core::list_of<prefix_node>     list_t;
-        typedef core::list_of_cpp<prefix_node> pool_t;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef prefix_data<T>                 data_t; //!< alias
+        typedef core::list_of<prefix_node>     list_t; //!< low-level   list
+        typedef core::list_of_cpp<prefix_node> pool_t; //!< hight-level pool
 
-        //! initialize to a used node
-        inline explicit prefix_node(const prefix_node *p,
-                                    const CODE         c) throw() :
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+
+        //! initialize to a used=false
+        inline explicit prefix_node(prefix_node *p,
+                                    const CODE   c) throw() :
         object(),
         data_t(),
         code(c),
@@ -33,13 +49,13 @@ namespace upsylon {
         prev(0),
         parent(p),
         leaves(),
-        freq(0),
-        deep(0)
+        frequency(0),
+        depth(0)
         {
             initialize();
         }
 
-        //! initialize to a used node
+        //! initialize to a addr=d
         inline explicit prefix_node(prefix_node *p,
                                     const CODE   c,
                                     T           *d) throw() :
@@ -50,34 +66,51 @@ namespace upsylon {
         prev(0),
         parent(p),
         leaves(),
-        freq(0),
-        deep(0)
+        frequency(0),
+        depth(0)
         {
             initialize();
         }
 
+        //! cleanup
         inline virtual ~prefix_node() throw()
         {
             while(leaves.size) delete leaves.pop_back();
         }
 
-        CODE         code;
-        prefix_node *next;
-        prefix_node *prev;
-        prefix_node *parent;
-        list_t       leaves;
-        size_t       freq;
-        size_t       deep;
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
 
+        //! optimize to get a unique, fast tree
         inline void  optimize()              throw() { merging<prefix_node>::sort(leaves,compare,NULL); }
-        inline void  leaves_to(pool_t &pool) throw() { while(leaves.size) pool.push_front(leaves.pop_back()); }
-        inline void  return_to(pool_t &pool) throw() { leaves_to(pool);   pool.push_front(this);              }
+
+        //! return leaves to pool
+        inline void  leaves_to(pool_t &pool) throw() { while(leaves.size) leaves.pop_back()->return_to(pool); }
+
+        //! return leaves+this to pool
+        inline void  return_to(pool_t &pool) throw() { leaves_to(pool); pool.push_front(this);                }
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        CODE         code;      //!< the code inside the tree
+        prefix_node *next;      //!< for list
+        prefix_node *prev;      //!< for list
+        prefix_node *parent;    //!< for tree
+        list_t       leaves;    //!< low-level list of leaves
+        size_t       frequency; //!< current frequency
+        size_t       depth;     //!< current depth
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_node);
         void   initialize() throw()
         {
-            if(parent) deep = parent->deep + 1;
+            if(parent) depth = parent->depth + 1;
 
         }
 
@@ -86,8 +119,8 @@ namespace upsylon {
                                   const prefix_node *rhs,
                                   void              *) throw()
         {
-            const size_t lfreq = lhs->freq;
-            const size_t rfreq = rhs->freq;
+            const size_t lfreq = lhs->frequency;
+            const size_t rfreq = rhs->frequency;
             if(lfreq<rfreq)
             {
                 return 1;
@@ -111,7 +144,7 @@ namespace upsylon {
         {
             fp << "[label=\"";
             fp << prefix_::code_to_text(code);
-            fp("#%lu [%lu]", (unsigned long)freq, (unsigned long)deep );
+            fp("#%lu [%lu]", (unsigned long)frequency, (unsigned long)depth );
             fp << "\",shape=box";
             if(0!=this->used)
             {

@@ -392,7 +392,9 @@ namespace upsylon
     protected:
         //! manipulate data for derived class
         const data_node * head()    const throw() { return dl.head; }
+        //! ...
         size_t            dl_size() const throw() { return dl.size; }
+        //! ...
         size_t            dp_size() const throw() { return dp.size; }
 
     private:

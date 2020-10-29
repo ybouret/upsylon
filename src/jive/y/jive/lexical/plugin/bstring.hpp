@@ -27,7 +27,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit bString(const ID &id, Queue &q) :
-                String_(id, '<' , '>', q)
+                String_(id,bra,ket,q)
                 {
                 }
 

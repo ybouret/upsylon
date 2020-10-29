@@ -8,11 +8,19 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! operations for prefix objects
+    //
+    //__________________________________________________________________________
     struct prefix_
     {
     public:
+        //! byte to printable text
         static const char *byte_to_text(const uint8_t &) throw();
 
+        //! integral type to printable text: no thread-safe!
         template <typename T> static inline const char *code_to_text(const T &x) throw()
         {
             const union {

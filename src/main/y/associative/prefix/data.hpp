@@ -8,28 +8,36 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! variant data for nodes
+    //
+    //__________________________________________________________________________
     template <typename T>
     class prefix_data
     {
     public:
+        //! unsigned integral matching addresses
         typedef unsigned_int<sizeof(void*)>::type flag_t;
 
-        inline explicit prefix_data() throw()
+        //! set 'used=false'
+        inline explicit prefix_data() throw() { used = 0; }
+
+        //! set 'addr=ptr'
+        inline explicit prefix_data(T *ptr) throw()
         {
-            used = 0;
+            addr = ptr;
         }
 
-        inline explicit prefix_data(T *p) throw()
-        {
-            addr = p;
-        }
-
+        //! cleanup
         virtual ~prefix_data() throw()
         {
             used = 0;
             assert(NULL==addr);
         }
 
+        //! the data
         union
         {
             T      *addr;

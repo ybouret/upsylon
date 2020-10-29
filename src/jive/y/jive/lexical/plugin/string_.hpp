@@ -22,9 +22,11 @@ namespace upsylon
             class String_ : public Plugin
             {
             public:
-                static const char quote;
-                static const char dquote;
-                
+                static const char quote;  //!< single quote
+                static const char dquote; //!< double quote
+                static const char bra;    //!< '<'
+                static const char ket;    //!< '>'
+
                 const char delimiter; //!< the (closing) delimiter
 
                 virtual ~String_() throw(); //!< cleanup

@@ -6,24 +6,42 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! a stem is a basic dynamic tree
+    //
+    //__________________________________________________________________________
     template <typename CODE, typename T>
     class prefix_stem
     {
     public:
-        typedef          prefix_node<CODE,T>         node_type;
-        typedef typename prefix_node<CODE,T>::pool_t pool_type;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef          prefix_node<CODE,T>         node_type; //!< alias
+        typedef typename prefix_node<CODE,T>::pool_t pool_type; //!< alias
 
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        //! setup with root node
         inline explicit prefix_stem() :
-        root( new node_type(0,0,NULL) ),
-        pool()
+        root( new node_type(0,0) ), pool()
         {
         }
 
-        inline virtual ~prefix_stem() throw()
-        {
-            
-        }
+        //! cleanup
+        inline virtual ~prefix_stem() throw() { delete root; root=0; }
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! get vizible root
         const ios::vizible & get_root() const throw() { assert(root); return *root; }
 
     private:
