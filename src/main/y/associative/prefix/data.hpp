@@ -42,6 +42,12 @@ namespace upsylon {
             flag_t  used;
         };
 
+        static inline T * in_use_addr() throw()
+        {
+            union { flag_t _; T *res; } alias = { prefix_::in_use };
+            return alias.res;
+        }
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_data);
     };

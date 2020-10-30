@@ -22,7 +22,7 @@ namespace
             const T x = alea.full<T>();
             std::cerr << '\t' << prefix_::code_to_text(x) << std::endl;
         }
-
+        std::cerr << "in_use_addr: " << (void*) ( prefix_data<T>::in_use_addr() ) << std::endl;
     }
 
     template <typename CODE, typename T>

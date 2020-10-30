@@ -95,7 +95,7 @@ namespace upsylon {
             }
             assert(node!=NULL);
             *mark = node;
-            if(node->used)
+            if(0!=node->used)
             {
                 //--------------------------------------------------------------
                 // busy!
@@ -112,7 +112,21 @@ namespace upsylon {
                 return node;
             }
         }
-
+        
+        //______________________________________________________________________
+        //! grow current stem with a used node
+        /**
+         grow(curr,size,in_use_addr(),mark)
+         */
+        //______________________________________________________________________
+        template <typename ITERATOR>
+        node_type *grow(ITERATOR    curr,
+                        size_t      size,
+                        node_type **mark)
+        {
+            static T * _ = prefix_data<T>::in_use_addr();
+            return grow(curr,size,_,mark);
+        }
         //______________________________________________________________________
         //
         //! search a node by path
