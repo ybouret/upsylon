@@ -52,7 +52,7 @@ namespace upsylon {
         /**
          \param curr initial iterator, *curr must return a compatible type to CODE
          \param size size of path
-         \param addr address to insert. TODO: NULL => used
+         \param addr address to insert. TODO: NULL => used ?
          \param mark inserted node or busy node at path
          */
         //______________________________________________________________________
@@ -64,6 +64,7 @@ namespace upsylon {
         {
             assert(0==root->code);
             assert(0==root->depth);
+            assert(0!=mark);
             //------------------------------------------------------------------
             // start from root
             //------------------------------------------------------------------
@@ -93,7 +94,7 @@ namespace upsylon {
             FOUND:;
             }
             assert(node!=NULL);
-            if(mark) { *mark = node; }
+            *mark = node;
             if(node->used)
             {
                 //--------------------------------------------------------------
@@ -184,16 +185,20 @@ namespace upsylon {
         
         //______________________________________________________________________
         //
-        //
+        // cache control
         //______________________________________________________________________
-        inline size_t cache() const throw() { return pool.size; }
+       
+        //! number of nodes in cache
+        inline size_t cache_nodes() const throw() { return pool.size; }
         
-        inline void   extra(size_t n)
+        //!  grow cache with extra nodes
+        inline void   cache_extra(size_t n)
         {
             while(n-- > 0) pool.push_back( new node_type(0,0) );
         }
         
-        inline void   limit(const size_t n) throw()
+        //! limit cache size
+        inline void   cache_limit(const size_t n) throw()
         {
             if(n<=0)
             {
@@ -206,7 +211,8 @@ namespace upsylon {
             }
         }
         
-        inline void prune() throw() { limit(0); }
+        //! remove cache
+        inline void cache_prune() throw() { cache_limit(0); }
         
         
     private:

@@ -125,10 +125,7 @@ namespace
 
 Y_UTEST(prefix)
 {
-    dispText<char>();
-    dispText<short>();
-    dispText<int>();
-    dispText<size_t>();
+    
 
     disp<null_type>();
     disp<int>();
@@ -136,7 +133,11 @@ Y_UTEST(prefix)
     _disp<uint8_t,null_type>(true);
 
     doStem<uint16_t,int>();
-
+    
+    dispText<char>();
+    dispText<short>();
+    dispText<int>();
+    dispText<size_t>();
 }
 Y_UTEST_DONE()
 

@@ -5,6 +5,7 @@
 
 #include "y/os/platform.hpp"
 #include "y/os/endian.hpp"
+#include "y/type/ints.hpp"
 
 namespace upsylon {
 
@@ -17,6 +18,12 @@ namespace upsylon {
     struct prefix_
     {
     public:
+        //! unsigned integral matching addresses
+        typedef unsigned_int<sizeof(void*)>::type flag_t;
+        
+        //! value to set arbitrary used node
+        static const flag_t in_use = limit_of<flag_t>::maximum;
+        
         //! byte to printable text
         static const char *byte_to_text(const uint8_t &) throw();
 

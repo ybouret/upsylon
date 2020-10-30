@@ -4,7 +4,6 @@
 #define Y_PREFIX_DATA_INCLUDED 1
 
 #include "y/associative/prefix/defs.hpp"
-#include "y/type/ints.hpp"
 
 namespace upsylon {
 
@@ -18,9 +17,8 @@ namespace upsylon {
     class prefix_data
     {
     public:
-        //! unsigned integral matching addresses
-        typedef unsigned_int<sizeof(void*)>::type flag_t;
-
+        typedef prefix_::flag_t flag_t;
+        
         //! set 'used=false'
         inline explicit prefix_data() throw() { used = 0; }
 

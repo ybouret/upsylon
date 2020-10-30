@@ -105,6 +105,57 @@ namespace upsylon {
             return depth;
         }
         
+        static bool are_both_free(const prefix_node *lhs, const prefix_node *rhs) throw()
+        {
+            assert(lhs); assert(rhs);
+            return ((lhs->used==0) && (rhs->used==0));
+        }
+        
+        static bool are_both_used(const prefix_node *lhs, const prefix_node *rhs) throw()
+        {
+            assert(lhs); assert(rhs);
+            return ((lhs->used!=0) && (rhs->used!=0));
+        }
+        
+        static bool have_same_status(const prefix_node *lhs, const prefix_node *rhs) throw()
+        {
+            assert(lhs); assert(rhs);
+            return are_both_used(lhs,rhs) || area_both_free(lhs,rhs);
+        }
+        
+        static bool have_same_layout(const prefix_node *lhs, const prefix_node *rhs) throw()
+        {
+            assert(lhs); assert(rhs);
+            if( lhs->code==rhs->code && lhs->depth==rhs->depth && have_same_status(lhs,rhs) )
+            {
+                // same code, depth and status
+                const list_t &L  = lhs->leaves;
+                const list_t &R  = rhs->leaves;
+                if(L.size==R.size)
+                {
+                    for(const prefix_node *l=L.head, *r=R.head;l;l=l->next,r=r->next)
+                    {
+                        assert(l); assert(r);
+                        if( !area_same(lhs,rhs) )
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+                    // different child(ren)
+                    return false;
+                }
+            }
+            else
+            {
+                // code or depth are different
+                return false;
+            }
+        }
+        
         //______________________________________________________________________
         //
         // members
