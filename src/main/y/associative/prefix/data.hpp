@@ -17,23 +17,11 @@ namespace upsylon {
     class prefix_data
     {
     public:
-        typedef prefix_::flag_t flag_t;
+        typedef prefix_::flag_t flag_t; //!< alias
         
-        //! set 'used=false'
-        inline explicit prefix_data() throw() { used = 0; }
-
-        //! set 'addr=ptr'
-        inline explicit prefix_data(T *ptr) throw()
-        {
-            addr = ptr;
-        }
-
-        //! cleanup
-        virtual ~prefix_data() throw()
-        {
-            used = 0;
-            assert(NULL==addr);
-        }
+        inline explicit prefix_data()       throw() { used = 0;   } //!< set 'used=0'
+        inline explicit prefix_data(T *ptr) throw() { addr = ptr; } //!< set 'addr=ptr'
+        virtual        ~prefix_data() throw() { used = 0; assert(NULL==addr); } //!M cleanup
 
         //! the data
         union
@@ -42,6 +30,7 @@ namespace upsylon {
             flag_t  used;
         };
 
+        //! get a value to check in_use
         static inline T * in_use_addr() throw()
         {
             union { flag_t _; T *res; } alias = { prefix_::in_use };

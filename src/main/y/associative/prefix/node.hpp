@@ -93,6 +93,7 @@ namespace upsylon {
         //! return leaves+this to pool
         inline void  return_to(pool_t &pool) throw() { leaves_to(pool); pool.push_front(this);                }
         
+        //! build a path
         inline size_t encode( addressable<CODE> &path ) const throw()
         {
             assert(path.size()>=depth);
@@ -105,28 +106,33 @@ namespace upsylon {
             return depth;
         }
         
+        //! check if both are free
         static bool are_both_free(const prefix_node *lhs, const prefix_node *rhs) throw()
         {
             assert(lhs); assert(rhs);
             return ((lhs->used==0) && (rhs->used==0));
         }
         
+        //! check if both are used
         static bool are_both_used(const prefix_node *lhs, const prefix_node *rhs) throw()
         {
             assert(lhs); assert(rhs);
             return ((lhs->used!=0) && (rhs->used!=0));
         }
         
+        //! both free or both used
         static bool have_same_status(const prefix_node *lhs, const prefix_node *rhs) throw()
         {
             assert(lhs); assert(rhs);
-            return are_both_used(lhs,rhs) || area_both_free(lhs,rhs);
+            return are_both_used(lhs,rhs) || are_both_free(lhs,rhs);
         }
         
+        //! recursive check of same code,depths,status
         static bool have_same_layout(const prefix_node *lhs, const prefix_node *rhs) throw()
         {
-            assert(lhs); assert(rhs);
-            if( lhs->code==rhs->code && lhs->depth==rhs->depth && have_same_status(lhs,rhs) )
+            assert(lhs);
+            assert(rhs);
+            if( (lhs->code==rhs->code) && (lhs->depth==rhs->depth) && have_same_status(lhs,rhs) )
             {
                 // same code, depth and status
                 const list_t &L  = lhs->leaves;
@@ -136,7 +142,7 @@ namespace upsylon {
                     for(const prefix_node *l=L.head, *r=R.head;l;l=l->next,r=r->next)
                     {
                         assert(l); assert(r);
-                        if( !area_same(lhs,rhs) )
+                        if( !have_same_layout(l,r) )
                         {
                             return false;
                         }
@@ -151,9 +157,19 @@ namespace upsylon {
             }
             else
             {
-                // code or depth are different
+                // code,depth or status (is|are) different
                 return false;
             }
+        }
+        
+        //! duplicate status BUT code
+        void duplicate_status(const prefix_node *other) throw()
+        {
+            assert(other);
+            assert(other->code==code);
+            this->used = other->used;
+            frequency  = other->frequency;
+            depth      = other->depth;
         }
         
         //______________________________________________________________________

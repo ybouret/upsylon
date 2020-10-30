@@ -65,6 +65,7 @@ namespace
     template <typename CODE, typename T>
     void doStem()
     {
+        std::cerr << "-- stem<" << type_name_of<CODE>() << "," << type_name_of<T>() << ">" << std::endl;
         typedef prefix_stem<CODE,T>           stem_type;
         typedef typename stem_type::node_type node_type;
         typedef vector<CODE> path_type;
@@ -72,7 +73,9 @@ namespace
         stem_type       stem;
         list<T>         data;
         list<path_type> paths;
-        size_t count = 0;
+        size_t          count = 0;
+        
+        std::cerr << "building:[";
         for(size_t iter=80;iter>0;--iter)
         {
             vector<CODE> path;
@@ -80,27 +83,35 @@ namespace
             {
                 path << alea.range<CODE>('a','d');
             }
-            std::cerr << "path=" << path;
             data << support::get<T>();
             node_type  *mark = 0;
             node_type  *node = stem.grow( path.begin(), path.size(), & data.back(), &mark);
             if(node)
             {
                 Y_ASSERT(mark==node);
-                std::cerr << " => " << data.back() << std::endl;
+                std::cerr << "+";
                 ++count;
                 Y_ASSERT(stem.tell()==count);
                 paths << path;
             }
             else
             {
-                std::cerr << " rejected" << std::endl;
+                std::cerr << "-";
                 data.pop_back();
             }
         }
+        std::cerr << "]" << std::endl;
         stem.get_root().graphViz("stem.dot");
-        std::cerr << "paths: " << paths << std::endl;
+        Y_CHECK(count==stem.tell());
+        std::cerr << "duplicate" << std::endl;
+        {
+            stem_type stem2;
+            stem2.duplicate(stem);
+            Y_CHECK(stem2.similar_to(stem));
+        }
+        
         alea.shuffle( *paths );
+        std::cerr << "removing:[";
         while(paths.size())
         {
             const path_type &path = paths.back();
@@ -108,7 +119,6 @@ namespace
             Y_ASSERT(node);
             Y_ASSERT(node->addr);
             Y_ASSERT(node->depth==path.size());
-            std::cerr << path << " => " << *(node->addr) << std::endl;
             memory::cppblock<CODE> blk(node->depth);
             node->encode(blk);
             for(size_t i=1;i<=node->depth;++i)
@@ -118,7 +128,9 @@ namespace
             paths.pop_back();
             stem.pull((node_type *)node);
             Y_ASSERT(stem.tell()==paths.size());
+            std::cerr << "-";
         }
+        std::cerr << "]" << std::endl;
     }
 
 }
@@ -126,6 +138,10 @@ namespace
 Y_UTEST(prefix)
 {
     
+    dispText<char>();
+    dispText<short>();
+    dispText<int>();
+    dispText<size_t>();
 
     disp<null_type>();
     disp<int>();
@@ -133,11 +149,7 @@ Y_UTEST(prefix)
     _disp<uint8_t,null_type>(true);
 
     doStem<uint16_t,int>();
-    
-    dispText<char>();
-    dispText<short>();
-    dispText<int>();
-    dispText<size_t>();
+   
 }
 Y_UTEST_DONE()
 

@@ -46,7 +46,9 @@ namespace upsylon {
 
         //! tell number of inserted items
         inline size_t tell() const throw() { assert(root); return root->frequency; }
-
+        
+        
+        
         //______________________________________________________________________
         //! grow current stem
         /**
@@ -189,6 +191,7 @@ namespace upsylon {
             }
         }
         
+        //! return to single empty root, keep memory
         inline void reset() throw()
         {
             root->leaves_to(pool);
@@ -228,16 +231,35 @@ namespace upsylon {
         //! remove cache
         inline void cache_prune() throw() { cache_limit(0); }
         
+        //______________________________________________________________________
+        //
+        //! duplicate
+        //______________________________________________________________________
+        inline void duplicate(const prefix_stem &other)
+        {
+            node_type *temp = duplicate(NULL,other.root);
+            root->return_to(pool);
+            root = temp;
+            assert(node_type::have_same_layout(root,other.root));
+        }
+        
+        //______________________________________________________________________
+        //
+        //! check the graph is the same
+        //______________________________________________________________________
+        inline bool similar_to(const prefix_stem &other) const throw()
+        {
+            return node_type::have_same_layout(root,other.root);
+        }
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
-        node_type *root;
-        pool_type  pool;
+        node_type *root;   //!< root node
+        pool_type  pool;   //!< cached node
 
         //! create a new node or format a stored one
         node_type *new_node(node_type *parent, const CODE code)
         {
-            assert(parent);
             if(pool.size)
             {
                 node_type *node = pool.pop_front();
@@ -274,6 +296,25 @@ namespace upsylon {
                 }
             }
         }
+        
+        //! recursive layout duplication
+        node_type *duplicate(node_type *parent, const node_type *source)
+        {
+            assert(source);
+            node_type *node = new_node(parent,source->code);
+            node->duplicate_status(source);
+            try {
+                for(const node_type *child=source->leaves.head;child;child=child->next)
+                {
+                    node->leaves.push_back( duplicate(node,child) );
+                }
+            } catch(...) {
+                delete node;
+                throw;
+            }
+            return node;
+        }
+        
     };
 
 }
