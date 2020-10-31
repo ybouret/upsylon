@@ -28,11 +28,8 @@ namespace upsylon {
         // C++
         //______________________________________________________________________
         //! setup with root node
-        inline explicit prefix_stem() :
-        root( new node_type(0,0) ), pool()
-        {
-        }
-
+        inline explicit prefix_stem() : root( new node_type(0,0) ), pool() {}
+        
         //! cleanup
         inline virtual ~prefix_stem() throw() { delete root; root=0; }
 
@@ -161,6 +158,15 @@ namespace upsylon {
             return node;
         }
 
+        template <typename ITERATOR> inline
+        bool has(ITERATOR     curr,
+                 const size_t size) const throw()
+        {
+            const node_type *node = find(curr,size);
+            return node && node->used!=0;
+        }
+        
+        
         //! pull a used node from the stem
         inline void pull(node_type *node)  throw()
         {
@@ -250,6 +256,16 @@ namespace upsylon {
         inline bool similar_to(const prefix_stem &other) const throw()
         {
             return node_type::have_same_layout(root,other.root);
+        }
+        
+        //______________________________________________________________________
+        //
+        //! no-throw exchange
+        //______________________________________________________________________
+        inline void xch(prefix_stem &other) throw()
+        {
+            cswap(root,other.root);
+            pool.swap_with(other.pool);
         }
         
     private:
