@@ -1,4 +1,4 @@
-#include "y/associative/prefix/depot.hpp"
+#include "y/associative/prefix/strings.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -8,6 +8,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 
@@ -188,7 +189,6 @@ namespace
             Y_CHECK(stem2==stem);
         }
         
-#if 1
         alea.shuffle( *paths );
         std::cerr << "removing:[";
         while(paths.size())
@@ -200,9 +200,36 @@ namespace
             std::cerr << "-";
         }
         std::cerr << "]" << std::endl;
-#endif
     }
     
+    static inline
+    void doStrings(const char *fileName)
+    {
+        std::cerr << "-- strings" << std::endl;
+        prefix_strings db;
+        list<string>   ls(32000,as_capacity);
+        
+        std::cerr << "[";
+        {
+            ios::icstream fp(fileName);
+            string        line;
+            while(fp.gets(line))
+            {
+                if(db.insert(line))
+                {
+                    ls << line;
+                }
+                if( 0 == (ls.size()%1024) )
+                {
+                    (std::cerr << ".").flush();
+                }
+            }
+        
+        }
+        std::cerr << "]" << std::endl;
+        std::cerr << "#db=" << db.size() << "/" << ls.size() << std::endl;
+    }
+        
     
 }
 
@@ -228,6 +255,10 @@ Y_UTEST(prefix)
     doDepot<int16_t>();
     doDepot<int32_t>();
     doDepot<int64_t>();
+    if(argc>1)
+    {
+        doStrings(argv[1]);
+    }
 
 }
 Y_UTEST_DONE()
