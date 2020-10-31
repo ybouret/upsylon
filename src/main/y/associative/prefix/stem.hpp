@@ -110,7 +110,7 @@ namespace upsylon {
                 // assign address and optimize
                 //--------------------------------------------------------------
                 node->addr = addr;
-                increase_path_to(node);
+                update_path_to(node);
                 return node;
             }
         }
@@ -276,7 +276,7 @@ namespace upsylon {
             }
         }
 
-        void increase_path_to(node_type *node) throw()
+        void update_path_to(node_type *node) throw()
         {
             assert(node);
             for(;;)

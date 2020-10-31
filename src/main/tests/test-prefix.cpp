@@ -1,4 +1,4 @@
-#include "y/associative/prefix/stem.hpp"
+#include "y/associative/prefix/depot.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"

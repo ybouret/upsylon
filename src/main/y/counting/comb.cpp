@@ -44,6 +44,7 @@ namespace upsylon {
     {
         release_(comb,wlen);
         _bzset(n);
+        base=0;
     }
 
     std::ostream & combination:: show(std::ostream &os) const
