@@ -59,12 +59,17 @@ namespace upsylon {
         inline friend bool operator==(const prefix_depot &lhs,
                                       const prefix_depot &rhs) throw()
         {
-            return stem_type::have_same_layout(lhs.db,rhs.db);
+            return lhs.db.similar_to(rhs.db);
         }
         
         inline void swap_with(prefix_depot &other) throw()
         {
             db.xch(other.db);
+        }
+        
+        inline size_t size() const throw()
+        {
+            return db.tell();
         }
         
     private:

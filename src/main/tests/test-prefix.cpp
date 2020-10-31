@@ -133,6 +133,73 @@ namespace
         std::cerr << "]" << std::endl;
     }
 
+    template <typename CODE> static inline
+    void doDepot()
+    {
+        std::cerr << "-- depot<" << type_name_of<CODE>() << ">" << std::endl;
+        typedef prefix_depot<CODE>            stem_type;
+        //typedef typename stem_type::node_type node_type;
+        typedef vector<CODE>                  path_type;
+        
+        stem_type       stem;
+        list<path_type> paths;
+        size_t          count = 0;
+        
+        std::cerr << "building:[";
+        for(size_t iter=80;iter>0;--iter)
+        {
+            vector<CODE> path;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                path << alea.range<CODE>('a','d');
+            }
+            if(stem.insert(*path,path.size()))
+            {
+                std::cerr << "+";
+                ++count;
+                Y_ASSERT(stem.size()==count);
+                paths << path;
+            }
+            else
+            {
+                std::cerr << "-";
+            }
+        }
+        std::cerr << "]" << std::endl;
+        
+        //stem.get_root().graphViz("depot.dot");
+        std::cerr << "duplicate" << std::endl;
+        {
+            stem_type stem2(stem);
+            Y_CHECK(stem2==stem);
+        }
+        
+#if 0
+        alea.shuffle( *paths );
+        std::cerr << "removing:[";
+        while(paths.size())
+        {
+            const path_type &path = paths.back();
+            const node_type *node = stem.find( path.begin(), path.size() );
+            Y_ASSERT(node);
+            Y_ASSERT(node->addr);
+            Y_ASSERT(node->depth==path.size());
+            memory::cppblock<CODE> blk(node->depth);
+            node->encode(blk);
+            for(size_t i=1;i<=node->depth;++i)
+            {
+                Y_ASSERT(blk[i]==path[i]);
+            }
+            paths.pop_back();
+            stem.pull((node_type *)node);
+            Y_ASSERT(stem.tell()==paths.size());
+            std::cerr << "-";
+        }
+        std::cerr << "]" << std::endl;
+#endif
+    }
+    
+    
 }
 
 Y_UTEST(prefix)
@@ -149,7 +216,11 @@ Y_UTEST(prefix)
     _disp<uint8_t,null_type>(true);
 
     doStem<uint16_t,int>();
-   
+    doDepot<int8_t>();
+    doDepot<int16_t>();
+    doDepot<int32_t>();
+    doDepot<int64_t>();
+
 }
 Y_UTEST_DONE()
 
