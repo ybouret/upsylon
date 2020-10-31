@@ -10,17 +10,22 @@ namespace upsylon {
     //__________________________________________________________________________
     //
     //
-    //! depot to store keys, without any data
+    //! depot to store strings as keys, no data
     //
     //__________________________________________________________________________
-    
     class prefix_strings : public prefix_depot<char>
     {
     public:
+        typedef prefix_depot<char> depot_type;
+        
         explicit prefix_strings();
         virtual ~prefix_strings() throw();
         prefix_strings(const prefix_strings &);
-        prefix_strings & operator=(const prefix_strongs &);
+        prefix_strings & operator=(const prefix_strings &);
+        
+        bool insert(const char   *);
+        bool insert(const string &);
+        
     };
     
 }
