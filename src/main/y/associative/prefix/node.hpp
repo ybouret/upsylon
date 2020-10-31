@@ -33,7 +33,7 @@ namespace upsylon {
         typedef prefix_data<T>                 data_t; //!< alias
         typedef core::list_of<prefix_node>     list_t; //!< low-level   list
         typedef core::list_of_cpp<prefix_node> pool_t; //!< hight-level pool
-
+        typedef CODE                           code_t; //!< alias
 
         //______________________________________________________________________
         //

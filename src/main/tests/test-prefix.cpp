@@ -61,7 +61,16 @@ namespace
         _disp<uint64_t,T>();
     }
 
-
+    template <typename NODE> static inline
+    bool doSomething(const NODE *node, size_t &count)
+    {
+        ++count;
+        memory::cppblock<typename NODE::code_t> blk(node->depth);
+        node->encode(blk);
+        std::cerr << "node #" << count << " : " << blk << std::endl;
+        return true;
+    }
+    
     template <typename CODE, typename T>
     void doStem()
     {
@@ -110,6 +119,9 @@ namespace
             Y_CHECK(stem2.similar_to(stem));
         }
         
+        size_t total = 0;
+        stem.for_each(doSomething<node_type>,total);
+        
         alea.shuffle( *paths );
         std::cerr << "removing:[";
         while(paths.size())
@@ -133,6 +145,8 @@ namespace
         std::cerr << "]" << std::endl;
     }
 
+   
+    
     template <typename CODE> static inline
     void doDepot()
     {
@@ -159,6 +173,7 @@ namespace
                 ++count;
                 Y_ASSERT(stem.size()==count);
                 paths << path;
+                Y_ASSERT( stem.has( *path, path.size() ) );
             }
             else
             {
@@ -167,32 +182,21 @@ namespace
         }
         std::cerr << "]" << std::endl;
         
-        //stem.get_root().graphViz("depot.dot");
         std::cerr << "duplicate" << std::endl;
         {
             stem_type stem2(stem);
             Y_CHECK(stem2==stem);
         }
         
-#if 0
+#if 1
         alea.shuffle( *paths );
         std::cerr << "removing:[";
         while(paths.size())
         {
             const path_type &path = paths.back();
-            const node_type *node = stem.find( path.begin(), path.size() );
-            Y_ASSERT(node);
-            Y_ASSERT(node->addr);
-            Y_ASSERT(node->depth==path.size());
-            memory::cppblock<CODE> blk(node->depth);
-            node->encode(blk);
-            for(size_t i=1;i<=node->depth;++i)
-            {
-                Y_ASSERT(blk[i]==path[i]);
-            }
+            Y_ASSERT(stem.remove(*path,path.size()));
             paths.pop_back();
-            stem.pull((node_type *)node);
-            Y_ASSERT(stem.tell()==paths.size());
+            Y_ASSERT(stem.size()==paths.size());
             std::cerr << "-";
         }
         std::cerr << "]" << std::endl;
@@ -216,6 +220,10 @@ Y_UTEST(prefix)
     _disp<uint8_t,null_type>(true);
 
     doStem<uint16_t,int>();
+    doStem<uint32_t,unsigned>();
+
+    std::cerr << std::endl;
+    
     doDepot<int8_t>();
     doDepot<int16_t>();
     doDepot<int32_t>();

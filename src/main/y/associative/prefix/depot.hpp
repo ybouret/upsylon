@@ -56,6 +56,21 @@ namespace upsylon {
             return db.has(code,size);
         }
         
+        inline bool remove(const CODE *code, const size_t size) throw()
+        {
+            const node_type *node = db.find(code,size);
+            if(node&&node->used)
+            {
+                db.pull((node_type*)node);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        
         inline friend bool operator==(const prefix_depot &lhs,
                                       const prefix_depot &rhs) throw()
         {

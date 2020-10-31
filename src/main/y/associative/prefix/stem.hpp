@@ -5,7 +5,7 @@
 #include "y/associative/prefix/node.hpp"
 
 namespace upsylon {
-
+    
     //__________________________________________________________________________
     //
     //
@@ -22,7 +22,7 @@ namespace upsylon {
         //______________________________________________________________________
         typedef          prefix_node<CODE,T>         node_type; //!< alias
         typedef typename prefix_node<CODE,T>::pool_t pool_type; //!< alias
-
+        
         //______________________________________________________________________
         //
         // C++
@@ -32,15 +32,15 @@ namespace upsylon {
         
         //! cleanup
         inline virtual ~prefix_stem() throw() { delete root; root=0; }
-
+        
         //______________________________________________________________________
         //
         //  methods
         //______________________________________________________________________
-
+        
         //! get vizible root
         const ios::vizible & get_root() const throw() { assert(root); return *root; }
-
+        
         //! tell number of inserted items
         inline size_t tell() const throw() { assert(root); return root->frequency; }
         
@@ -157,7 +157,7 @@ namespace upsylon {
             assert(node);
             return node;
         }
-
+        
         template <typename ITERATOR> inline
         bool has(ITERATOR     curr,
                  const size_t size) const throw()
@@ -210,7 +210,7 @@ namespace upsylon {
         //
         // cache control
         //______________________________________________________________________
-       
+        
         //! number of nodes in cache
         inline size_t cache_nodes() const throw() { return pool.size; }
         
@@ -268,11 +268,34 @@ namespace upsylon {
             pool.swap_with(other.pool);
         }
         
+        //! func(node,args)
+        template <typename FUNC, typename U>
+        inline bool for_each(FUNC &func, U &args) const
+        {
+            return for_each(func,args,root);
+        }
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;   //!< root node
         pool_type  pool;   //!< cached node
-
+        
+        template <typename FUNC, typename U>
+        bool for_each(FUNC &func, U &args, const node_type *node) const
+        {
+            if(node->used)
+            {
+                if(!func(node,args)) return false;
+            }
+            
+            for(node=node->leaves.head;node;node=node->next)
+            {
+                if(!for_each(func,args,node) ) return false;
+            }
+            
+            return true;
+        }
+        
         //! create a new node or format a stored one
         node_type *new_node(node_type *parent, const CODE code)
         {
@@ -291,7 +314,7 @@ namespace upsylon {
                 return new node_type(parent,code);
             }
         }
-
+        
         void update_path_to(node_type *node) throw()
         {
             assert(node);
@@ -331,8 +354,10 @@ namespace upsylon {
             return node;
         }
         
+        
+        
     };
-
+    
 }
 
 #endif
