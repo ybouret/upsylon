@@ -59,8 +59,8 @@ namespace upsylon {
         //______________________________________________________________________
         
         //! insert
-        inline bool insert(const CODE  *code,
-                           const size_t size)
+        inline bool insert_path(const CODE  *code,
+                                const size_t size)
         {
             assert(!(NULL==code&&size>0));
             node_type *mark = 0;
@@ -68,6 +68,13 @@ namespace upsylon {
             return NULL!=node;
         }
         
+        //! insert assuming string like code
+        inline bool insert(const CODE *code)
+        {
+            return insert_path(code,codelen(code));
+        }
+        
+        //! insert using compatible sequence
         template <typename SEQUENCE>
         inline bool insert(SEQUENCE &seq)
         {
@@ -77,13 +84,26 @@ namespace upsylon {
         }
         
         //! test
-        inline bool  has(const CODE *code, const size_t size) const throw()
+        inline bool  has_path(const CODE *code, const size_t size) const throw()
         {
             return db.has(code,size);
         }
         
+        //! test assuming string like code
+        inline bool has(const CODE *code) const throw()
+        {
+            return has_path(code,codelen(code));
+        }
+        
+        //! test using compatible sequence
+        template <typename SEQUENCE>
+        inline bool has(SEQUENCE &seq) const throw()
+        {
+            return db.has(seq);
+        }
+        
         //! remove
-        inline bool remove(const CODE *code, const size_t size) throw()
+        inline bool remove_path(const CODE *code, const size_t size) throw()
         {
             const node_type *node = db.find(code,size);
             if(node&&node->used)
@@ -97,6 +117,30 @@ namespace upsylon {
             }
         }
         
+        //! remove assuming string like code
+        inline bool remove(const CODE *code) throw()
+        {
+            return remove(code,codelen(code));
+        }
+        
+        //! test using compatible sequence
+        template <typename SEQUENCE>
+        inline bool remove(SEQUENCE &seq) throw()
+        {
+            const node_type *node = db.find(seq);
+            if(node&&node->used)
+            {
+                db.pull((node_type*)node);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        
+        //! test equality
         inline bool eq(const prefix_depot &rhs) const throw()
         {
             return db.similar_to(rhs.db);
@@ -128,8 +172,24 @@ namespace upsylon {
             db.cache_prune();
         }
         
+        //! inline 'strlen' like implementation
+        static inline size_t codelen(const CODE *code) throw()
+        {
+            if(code)
+            {
+                const CODE *init = code;
+                while(*code!=0)  ++code;
+                return static_cast<size_t>(code-init);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
     private:
         stem_type db;
+       
     };
     
 }

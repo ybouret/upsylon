@@ -1,4 +1,4 @@
-#include "y/associative/prefix/strings.hpp"
+#include "y/associative/prefix/depot.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -168,13 +168,13 @@ namespace
             {
                 path << alea.range<CODE>('a','d');
             }
-            if(stem.insert(*path,path.size()))
+            if(stem.insert(path))
             {
                 std::cerr << "+";
                 ++count;
                 Y_ASSERT(stem.size()==count);
                 paths << path;
-                Y_ASSERT( stem.has( *path, path.size() ) );
+                Y_ASSERT( stem.has(path) );
             }
             else
             {
@@ -194,7 +194,8 @@ namespace
         while(paths.size())
         {
             const path_type &path = paths.back();
-            Y_ASSERT(stem.remove(*path,path.size()));
+            Y_ASSERT(stem.remove(path));
+            Y_ASSERT(!stem.has(path));
             paths.pop_back();
             Y_ASSERT(stem.size()==paths.size());
             std::cerr << "-";
@@ -206,8 +207,8 @@ namespace
     void doStrings(const char *fileName)
     {
         std::cerr << "-- strings" << std::endl;
-        prefix_strings db;
-        list<string>   ls(32000,as_capacity);
+        prefix_depot<char> db;
+        list<string>       ls(32000,as_capacity);
         
         std::cerr << "[";
         {
