@@ -30,6 +30,14 @@ Y_UTEST(comb)
                 }
                 std::cerr << " )";
                 std::cerr << std::endl;
+                {
+                    combination::const_iterator it = comb.begin();
+                    for(size_t i=0;i<comb.size();++i,++it)
+                    {
+                        Y_ASSERT(comb(i)==comb[i+1]-1);
+                        Y_ASSERT(comb[i+1]==*it);
+                    }
+                }
                 Comb.push_back_(comb);
             }
             std::cerr << "comb(" << n << "," << k << ")=" << comb.count << std::endl;

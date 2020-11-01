@@ -80,6 +80,16 @@ Y_UTEST(perm)
                 for(size_t i=0;i<n;++i) std::cerr << ' ' << perm(i) ;
                 std::cerr << " )" << std::endl;
                 Perm.push_back_(perm);
+                
+                {
+                    permutation::const_iterator it = perm.begin();
+                    for(size_t i=0;i<n;++i,++it)
+                    {
+                        Y_ASSERT(perm(i)==perm[i+1]-1);
+                        Y_ASSERT(perm[i+1]==*it);
+                    }
+                }
+                
             }
             std::cerr << "#perm(" << n << ")=" << perm.count << std::endl;
             std::cerr << "checking generated.." << std::endl;

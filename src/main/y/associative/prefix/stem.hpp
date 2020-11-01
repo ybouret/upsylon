@@ -250,9 +250,13 @@ namespace upsylon {
         inline void reset() throw()
         {
             root->leaves_to(pool);
-            root->frequency = 0;
-            root->depth     = 0;
-            root->code      = 0;
+            zroot();
+        }
+        
+        inline void ditch() throw()
+        {
+            while(root->leaves.size) delete root->leaves.pop_back();
+            zroot();
         }
         
         //______________________________________________________________________
@@ -328,6 +332,14 @@ namespace upsylon {
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;   //!< root node
         pool_type  pool;   //!< cached node
+        
+        void zroot() throw()
+        {
+            assert(0==root->leaves.size);
+            root->frequency = 0;
+            root->depth     = 0;
+            root->code      = 0;
+        }
         
         template <typename FUNC, typename U>
         bool for_each(FUNC &func, U &args, const node_type *node) const

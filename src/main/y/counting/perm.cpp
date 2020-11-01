@@ -59,6 +59,16 @@ namespace upsylon
 
     size_t permutation:: size() const throw() { return space; }
 
+    permutation::const_iterator permutation:: begin() const throw()
+    {
+        return const_iterator( &perm[1] );
+    }
+    
+    permutation::const_iterator permutation:: end() const throw()
+    {
+        return const_iterator( &perm[1]+space );
+    }
+    
     std::ostream & permutation:: show(std::ostream &os) const
     {
         return counting::display(os,perm,space);

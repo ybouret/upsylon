@@ -5,6 +5,7 @@
 
 #include "y/counting/counting.hpp"
 #include "y/sequence/addressable.hpp"
+#include "y/iterate/linear.hpp"
 
 namespace upsylon {
     
@@ -97,6 +98,10 @@ namespace upsylon {
         //! re-assign compatible state
         void reload( const permutation &p ) throw();
 
+        typedef iterate::linear<size_t,iterate::forward> const_iterator;
+        const_iterator begin() const throw();
+        const_iterator end()   const throw();
+        
     private:
         size_t       wlen;
         size_t      *perm; //!< [1:n]

@@ -4,7 +4,8 @@
 #define Y_COUNTING_COMB_INCLUDED 1
 
 #include "y/counting/counting.hpp"
-#include "y/sequence/accessible.hpp"
+#include "y/sequence/addressable.hpp"
+#include "y/iterate/linear.hpp"
 
 namespace upsylon
 {
@@ -86,7 +87,21 @@ namespace upsylon
             for(size_t i=0;i<space;++i) target[i] = source[ base[i] ];
         }
 
-
+        //! C++ style computation
+        template <typename T,typename U>
+        void make( addressable<T> &target, const accessible<U> &source ) const
+        {
+            assert( space <= target.size() );
+            assert( n     <= source.size() );
+            for(size_t i=space;i>0;--i)
+            {
+                target[i] = source[ comb[i] ];
+            }
+        }
+        
+        typedef iterate::linear<size_t,iterate::forward> const_iterator;
+        const_iterator begin() const throw();
+        const_iterator end()   const throw();
 
     private:
         const size_t nmk;  //!< n-k

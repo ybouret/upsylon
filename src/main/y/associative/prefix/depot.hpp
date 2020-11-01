@@ -172,6 +172,18 @@ namespace upsylon {
             db.cache_prune();
         }
         
+        //! free data
+        inline void free() throw()
+        {
+            db.reset();
+        }
+        
+        //! release data
+        inline void release() throw()
+        {
+            db.dicth();
+        }
+        
         //! inline 'strlen' like implementation
         static inline size_t codelen(const CODE *code) throw()
         {
@@ -185,6 +197,11 @@ namespace upsylon {
             {
                 return 0;
             }
+        }
+        
+        const ios::vizible &get_root() const throw()
+        {
+            return db.get_root();
         }
         
     private:

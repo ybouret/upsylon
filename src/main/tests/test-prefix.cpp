@@ -9,6 +9,8 @@
 #include "y/sequence/list.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/ios/icstream.hpp"
+#include "y/counting/comb.hpp"
+#include "y/counting/perm.hpp"
 
 using namespace upsylon;
 
@@ -231,6 +233,46 @@ namespace
         std::cerr << "#db=" << db.size() << "/" << ls.size() << std::endl;
     }
         
+    static inline void testComb()
+    {
+        std::cerr << "-- testing combinations" << std::endl;
+        prefix_depot<size_t> depo;
+        for(size_t n=1;n<=8;++n)
+        {
+            for(size_t k=1;k<=n;++k)
+            {
+                depo.free();
+                combination comb(n,k);
+                for( comb.boot(); comb.good(); comb.next() )
+                {
+                    Y_ASSERT(depo.insert(comb));
+                }
+                //const string fn = vformat("comb_%u_%u.dot", (unsigned)n, (unsigned)k );
+                //depo.get_root().graphViz(fn);
+            }
+        }
+    }
+    
+    static inline void testPerm()
+    {
+        std::cerr << "-- testing permutations" << std::endl;
+        prefix_depot<size_t> depo;
+        for(size_t n=1;n<=7;++n)
+        {
+            depo.free();
+            permutation perm(n);
+            for( perm.boot(); perm.good(); perm.next() )
+            {
+                Y_ASSERT(depo.insert(perm));
+            }
+            if(n<=5)
+            {
+                const string fn = vformat("perm%u.dot", (unsigned)n );
+                depo.get_root().graphViz(fn);
+            }
+        }
+    }
+    
     
 }
 
@@ -256,6 +298,14 @@ Y_UTEST(prefix)
     doDepot<int16_t>();
     doDepot<int32_t>();
     doDepot<int64_t>();
+    std::cerr << std::endl;
+    
+    testComb();
+    std::cerr << std::endl;
+    
+    testPerm();
+    std::cerr << std::endl;
+    
     if(argc>1)
     {
         doStrings(argv[1]);

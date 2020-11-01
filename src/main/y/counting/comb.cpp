@@ -37,6 +37,15 @@ namespace upsylon {
         }
     }
     
+    combination::const_iterator combination:: begin() const throw()
+    {
+        return const_iterator( &comb[1] );
+    }
+
+    combination::const_iterator combination:: end() const throw()
+    {
+        return const_iterator( &comb[1]+space );
+    }
 
     size_t combination:: size() const throw() { return space; }
 
