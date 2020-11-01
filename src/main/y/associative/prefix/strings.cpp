@@ -33,9 +33,8 @@ namespace upsylon
 
     bool prefix_strings:: insert(const string &s)
     {
-        return depot_type::insert(*s,s.size());
+        return depot_type::insert(s);
     }
-
     
 }
 

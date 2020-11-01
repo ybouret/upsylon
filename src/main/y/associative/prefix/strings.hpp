@@ -26,7 +26,7 @@ namespace upsylon {
         bool insert(const char   *);
         bool insert(const string &);
         bool has(const char   *) const throw();
-        bool has(const string &) const throw();
+        //bool has(const string &) const throw();
     };
     
 }
