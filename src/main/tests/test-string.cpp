@@ -30,6 +30,34 @@ namespace
         return comparison::increasing(lhs->s.size(),rhs->s.size());
     }
 
+    void testIter(string &s)
+    {
+        std::cerr << "-- iter " << std::endl;
+        for(string::iterator i=s.begin();i!=s.end();++i)
+        {
+            std::cerr << *i;
+        }
+        std::cerr << "/";
+        for(string::reverse_iterator i=s.rbegin();i!=s.rend();++i)
+        {
+            std::cerr << *i;
+        }
+        std::cerr << "/";
+        const string &c = s;
+        for(string::const_iterator i=c.begin();i!=c.end();++i)
+        {
+            std::cerr << *i;
+        }
+        std::cerr << "/";
+        for(string::const_reverse_iterator i=c.rbegin();i!=c.rend();++i)
+        {
+            std::cerr << *i;
+        }
+        
+        std::cerr << std::endl;
+        
+    }
+    
 }
 
 Y_UTEST(string)
@@ -156,6 +184,15 @@ Y_UTEST(string)
         string s = "aabcd";
         s.skip_with('a');
         std::cerr << s << std::endl;
+    }
+    
+    {
+        string s;
+        testIter(s);
+        s = "H";
+        testIter(s);
+        s = "Hello, World!";
+        testIter(s);
     }
     
 }

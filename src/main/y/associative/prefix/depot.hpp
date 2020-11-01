@@ -64,7 +64,15 @@ namespace upsylon {
         {
             assert(!(NULL==code&&size>0));
             node_type *mark = 0;
-            node_type *node = db.grow(code,size,&mark);
+            node_type *node = db.tick(code,size,&mark);
+            return NULL!=node;
+        }
+        
+        template <typename SEQUENCE>
+        inline bool insert(SEQUENCE &seq)
+        {
+            node_type *mark = 0;
+            node_type *node = db.tick(seq,&mark);
             return NULL!=node;
         }
         
@@ -89,11 +97,17 @@ namespace upsylon {
             }
         }
         
+        inline bool eq(const prefix_depot &rhs) const throw()
+        {
+            return db.similar_to(rhs.db);
+        }
+        
+        
         //! test equality
         inline friend bool operator==(const prefix_depot &lhs,
                                       const prefix_depot &rhs) throw()
         {
-            return lhs.db.similar_to(rhs.db);
+            return lhs.eq(rhs);
         }
         
         //! no-throw exchange

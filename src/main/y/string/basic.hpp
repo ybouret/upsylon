@@ -11,6 +11,7 @@
 #include "y/ios/serializable.hpp"
 #include "y/core/chainable.hpp"
 #include "y/os/oor.hpp"
+#include "y/iterate/linear.hpp"
 
 #include <cstring>
 #include <iosfwd>
@@ -556,7 +557,11 @@ Y_CORE_STRING_CMP(>)
                 return clean_with( &c, 1);
             }
 
-
+            //------------------------------------------------------------------
+            //
+            // back/front
+            //
+            //------------------------------------------------------------------
 
             //! back operator
             inline T &       back() throw()        { assert(size_>0); return addr_[size_-1]; }
@@ -570,6 +575,12 @@ Y_CORE_STRING_CMP(>)
             //! front, const
             inline const T & front() const throw() { assert(size_>0); return addr_[0]; }
 
+            //------------------------------------------------------------------
+            //
+            // serializable interface
+            //
+            //------------------------------------------------------------------
+            
             //! serializable className
             virtual const char * className() const throw();
 
@@ -579,18 +590,56 @@ Y_CORE_STRING_CMP(>)
             //! reload
             static string read(ios::istream &fp, size_t &shift, const char *which);
 
+        
+            //------------------------------------------------------------------
+            //
+            // chainable interface
+            //
+            //------------------------------------------------------------------
+          
+            //! use the add function
+            inline virtual size_t put( const T *p, const size_t n )
+            {
+                add(p,n);
+                return n;
+            }
+           
+            //------------------------------------------------------------------
+            //
+            // other methods
+            //
+            //------------------------------------------------------------------
+            
             //! compact in memory
             bool compact() throw();
 
             //! self key
             inline const string & key() const throw() { return *this; }
 
-            //! use the add function 
-            inline virtual size_t put( const T *p, const size_t n )
-            {
-                add(p,n);
-                return n;
-            }
+            //------------------------------------------------------------------
+            //
+            // iterators
+            //
+            //------------------------------------------------------------------
+            typedef iterate::linear<T,iterate::forward>        iterator;        //!< forward iterator
+            typedef iterate::linear<const T,iterate::forward>  const_iterator;  //!< forward iterator, const
+            
+            inline iterator begin() throw() { return iterator(addr_);             } //!< begin forward
+            inline iterator end()   throw() { return iterator(addr_+this->size_); } //!< end forward
+            
+            inline const_iterator begin() const throw() { return const_iterator(addr_);             } //!< begin forward const
+            inline const_iterator end()   const throw() { return const_iterator(addr_+this->size_); } //!< end forward const
+            
+            typedef iterate::linear<T,iterate::reverse>        reverse_iterator;        //!< reverse iterator
+            typedef iterate::linear<const T,iterate::reverse>  const_reverse_iterator;  //!< reverse iterator, const
+            
+            inline reverse_iterator rbegin() throw() { return reverse_iterator( &addr_[size_]-1 ); } //!< begin reverse
+            inline reverse_iterator rend()   throw() { return reverse_iterator(  addr_-1 );        } //!< end reverse
+            
+            inline const_reverse_iterator rbegin() const throw() { return const_reverse_iterator(&addr_[size_]-1); } //!< begin reverse const
+            inline const_reverse_iterator rend()   const throw() { return const_reverse_iterator( addr_-1);        } //!< end reverse const
+
+            
 
         private:
             T     *addr_;

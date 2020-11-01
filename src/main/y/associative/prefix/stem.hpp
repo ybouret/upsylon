@@ -112,6 +112,19 @@ namespace upsylon {
             }
         }
         
+        
+        //______________________________________________________________________
+        //
+        //! grow current stem using a sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        node_type *grow(SEQUENCE   &seq,
+                        T          *addr,
+                        node_type **mark)
+        {
+            return grow( seq.begin(), seq.size(), addr, mark);
+        }
+        
         //______________________________________________________________________
         //! grow current stem with a used node
         /**
@@ -119,13 +132,25 @@ namespace upsylon {
          */
         //______________________________________________________________________
         template <typename ITERATOR>
-        node_type *grow(ITERATOR    curr,
+        node_type *tick(ITERATOR    curr,
                         size_t      size,
                         node_type **mark)
         {
             static T * _ = prefix_data<T>::in_use_addr();
             return grow(curr,size,_,mark);
         }
+        
+        //______________________________________________________________________
+        //
+        //! tick using a sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        node_type *tick(SEQUENCE   &seq,
+                        node_type **mark)
+        {
+            return tick(seq.begin(),seq.size(),mark);
+        }
+        
         //______________________________________________________________________
         //
         //! search a node by path
@@ -158,12 +183,36 @@ namespace upsylon {
             return node;
         }
         
+        //______________________________________________________________________
+        //
+        //! search a node by sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        const node_type *find(SEQUENCE &seq) const throw()
+        {
+            return find(seq.begin(),seq.size());
+        }
+        
+        //______________________________________________________________________
+        //
+        //! search a used node by path
+        //______________________________________________________________________
         template <typename ITERATOR> inline
         bool has(ITERATOR     curr,
                  const size_t size) const throw()
         {
             const node_type *node = find(curr,size);
             return node && node->used!=0;
+        }
+        
+        //______________________________________________________________________
+        //
+        //! search a used node by sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        bool has(SEQUENCE &seq) const throw()
+        {
+            return has(seq.begin(),seq.size());
         }
         
         
