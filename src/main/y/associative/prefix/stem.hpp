@@ -20,6 +20,7 @@ namespace upsylon {
         //
         // types and definitions
         //______________________________________________________________________
+        Y_DECL_ARGS(T,type);
         typedef          prefix_node<CODE,T>         node_type; //!< alias
         typedef typename prefix_node<CODE,T>::pool_t pool_type; //!< alias
         
@@ -28,10 +29,10 @@ namespace upsylon {
         // C++
         //______________________________________________________________________
         //! setup with root node
-        inline explicit prefix_stem() : root( new node_type(0,0) ), pool() {}
+        inline explicit prefix_stem() : mark(0), root( new node_type(0,0) ), pool() {}
         
         //! cleanup
-        inline virtual ~prefix_stem() throw() { delete root; root=0; }
+        inline virtual ~prefix_stem() throw() { delete root; root=0; mark=0; }
         
         //______________________________________________________________________
         //
@@ -44,114 +45,6 @@ namespace upsylon {
         //! tell number of inserted items
         inline size_t tell() const throw() { assert(root); return root->frequency; }
         
-        
-        
-        //______________________________________________________________________
-        //! grow current stem
-        /**
-         \param curr initial iterator, *curr must return a compatible type to CODE
-         \param size size of path
-         \param addr address to insert. TODO: NULL => used ?
-         \param mark inserted node or busy node at path
-         */
-        //______________________________________________________________________
-        template <typename ITERATOR>
-        node_type *grow(ITERATOR    curr,
-                        size_t      size,
-                        T          *addr,
-                        node_type **mark)
-        {
-            assert(0==root->code);
-            assert(0==root->depth);
-            assert(0!=mark);
-            assert(addr!=NULL);
-            
-            //------------------------------------------------------------------
-            // start from root
-            //------------------------------------------------------------------
-            node_type *node = root;
-            while(size-- > 0)
-            {
-                //----------------------------------------------------------
-                // look for code
-                //----------------------------------------------------------
-                const CODE     code = *(curr++);
-                for(node_type *chld = node->leaves.head;chld;chld=chld->next)
-                {
-                    if(code==chld->code)
-                    {
-                        //------------------------------------------------------
-                        // take this path
-                        //------------------------------------------------------
-                        node = chld;
-                        goto FOUND;
-                    }
-                }
-                //--------------------------------------------------------------
-                // need a new leaf
-                //--------------------------------------------------------------
-                node = node->leaves.push_back( new_node(node,code) );
-                assert(false==node->used);
-            FOUND:;
-            }
-            assert(node!=NULL);
-            *mark = node;
-            if(0!=node->used)
-            {
-                //--------------------------------------------------------------
-                // busy!
-                //--------------------------------------------------------------
-                return NULL;
-            }
-            else
-            {
-                //--------------------------------------------------------------
-                // assign address and optimize
-                //--------------------------------------------------------------
-                node->addr = addr;
-                update_path_to(node);
-                return node;
-            }
-        }
-        
-        
-        //______________________________________________________________________
-        //
-        //! grow current stem using a sequence
-        //______________________________________________________________________
-        template <typename SEQUENCE> inline
-        node_type *grow(SEQUENCE   &seq,
-                        T          *addr,
-                        node_type **mark)
-        {
-            return grow( seq.begin(), seq.size(), addr, mark);
-        }
-        
-        //______________________________________________________________________
-        //! grow current stem with a used node
-        /**
-         grow(curr,size,in_use_addr(),mark)
-         */
-        //______________________________________________________________________
-        template <typename ITERATOR>
-        node_type *tick(ITERATOR    curr,
-                        size_t      size,
-                        node_type **mark)
-        {
-            static T * _ = prefix_data<T>::in_use_addr();
-            return grow(curr,size,_,mark);
-        }
-        
-        //______________________________________________________________________
-        //
-        //! tick using a sequence
-        //______________________________________________________________________
-        template <typename SEQUENCE> inline
-        node_type *tick(SEQUENCE   &seq,
-                        node_type **mark)
-        {
-            return tick(seq.begin(),seq.size(),mark);
-        }
         
         //______________________________________________________________________
         //
@@ -185,15 +78,6 @@ namespace upsylon {
             return node;
         }
         
-        //______________________________________________________________________
-        //
-        //! search a node by sequence
-        //______________________________________________________________________
-        template <typename SEQUENCE> inline
-        const node_type *find(SEQUENCE &seq) const throw()
-        {
-            return find(seq.begin(),seq.size());
-        }
         
         //______________________________________________________________________
         //
@@ -217,6 +101,226 @@ namespace upsylon {
             return has(seq.begin(),seq.size());
         }
         
+        //______________________________________________________________________
+        //
+        //! search a used node C-style array
+        //______________________________________________________________________
+        inline bool has(const CODE *code) const throw()
+        {
+            return has(code,codelen(code));
+        }
+        
+        
+       
+        
+        //______________________________________________________________________
+        //
+        // cache control
+        //______________________________________________________________________
+        
+        //! number of nodes in cache
+        inline size_t cache_nodes() const throw() { return pool.size; }
+        
+        //!  grow cache with extra nodes
+        inline void   cache_extra(size_t n)
+        {
+            while(n-- > 0) pool.push_back( new node_type(0,0) );
+        }
+        
+        //! limit cache size
+        inline void   cache_limit(const size_t n) throw()
+        {
+            if(n<=0)
+            {
+                pool.release();
+            }
+            else
+            {
+                merging<node_type>::sort_by_increasing_address(pool);
+                while(pool.size>n) delete pool.pop_back();
+            }
+        }
+        
+        //! remove cache
+        inline void cache_prune() throw() { cache_limit(0); }
+        
+        
+        
+        //______________________________________________________________________
+        //
+        //! check the graph is the same
+        //______________________________________________________________________
+        inline bool similar_to(const prefix_stem &other) const throw()
+        {
+            return node_type::have_same_layout(root,other.root);
+        }
+        
+        
+        
+        //______________________________________________________________________
+        //
+        //! func(node,args) on used nodes
+        //______________________________________________________________________
+        template <typename FUNC, typename U>
+        inline bool for_each(FUNC &func, U &args) const
+        {
+            return for_each(func,args,root);
+        }
+        
+        //______________________________________________________________________
+        //
+        //! inline 'strlen' like implementation
+        //______________________________________________________________________
+        static inline size_t codelen(const CODE *code) throw()
+        {
+            if(code)
+            {
+                const CODE *init = code;
+                while(*code!=0)  ++code;
+                return static_cast<size_t>(code-init);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
+        node_type *mark; //!< last reached position
+        
+    protected:
+        //______________________________________________________________________
+        //
+        //! duplicate
+        //______________________________________________________________________
+        inline void duplicate(const prefix_stem &other)
+        {
+            node_type *temp = duplicate(NULL,other.root);
+            root->return_to(pool);
+            root = temp;
+            assert(node_type::have_same_layout(root,other.root));
+        }
+        
+        //______________________________________________________________________
+        //! grow current stem
+        /**
+         \param curr initial iterator, *curr must return a compatible type to CODE
+         \param size size of path
+         \param addr address to insert. TODO: NULL => used ?
+         \param mark inserted node or busy node at path
+         */
+        //______________________________________________________________________
+        template <typename ITERATOR>
+        bool grow(ITERATOR    curr,
+                  size_t      size,
+                  type       *addr)
+        {
+            assert(0==root->code);
+            assert(0==root->depth);
+            assert(addr!=NULL);
+            
+            //------------------------------------------------------------------
+            // start from root
+            //------------------------------------------------------------------
+            node_type *node = root;
+            mark            = 0;
+            while(size-- > 0)
+            {
+                //----------------------------------------------------------
+                // look for code
+                //----------------------------------------------------------
+                const CODE     code = *(curr++);
+                for(node_type *chld = node->leaves.head;chld;chld=chld->next)
+                {
+                    if(code==chld->code)
+                    {
+                        //------------------------------------------------------
+                        // take this path
+                        //------------------------------------------------------
+                        node = chld;
+                        goto FOUND;
+                    }
+                }
+                //--------------------------------------------------------------
+                // need a new leaf
+                //--------------------------------------------------------------
+                node = node->leaves.push_back( new_node(node,code) );
+                assert(false==node->used);
+            FOUND:;
+            }
+            assert(node!=NULL);
+            mark = node;
+            if(0!=node->used)
+            {
+                //--------------------------------------------------------------
+                // busy!
+                //--------------------------------------------------------------
+                return false;
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                // assign address and optimize
+                //--------------------------------------------------------------
+                node->addr = addr;
+                update_path_to(node);
+                return true;
+            }
+        }
+        
+        
+        //______________________________________________________________________
+        //
+        //! grow current stem using a sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        bool grow(SEQUENCE   &seq,
+                  type       *addr)
+        {
+            return grow(seq.begin(),seq.size(),addr);
+        }
+        
+        //______________________________________________________________________
+        //
+        //! grow current stem using a C-style array
+        //______________________________________________________________________
+        inline bool grow(const CODE *code,
+                         T          *addr)
+        {
+            return grow(code,codelen(code),addr);
+        }
+        
+        //______________________________________________________________________
+        //! grow current stem with a used node
+        /**
+         grow(curr,size,in_use_addr(),mark)
+         */
+        //______________________________________________________________________
+        template <typename ITERATOR>
+        bool tick(ITERATOR    curr,
+                  size_t      size)
+        {
+            static T * _ = prefix_data<T>::in_use_addr();
+            return grow(curr,size,_);
+        }
+        
+        //______________________________________________________________________
+        //
+        //! tick using a sequence
+        //______________________________________________________________________
+        template <typename SEQUENCE> inline
+        bool tick(SEQUENCE   &seq)
+        {
+            return tick(seq.begin(),seq.size());
+        }
+        
+        //______________________________________________________________________
+        //
+        //! grow current stem using a C-style array
+        //______________________________________________________________________
+        inline bool tick(const CODE *code)
+        {
+            return tick(code,codelen(code));
+        }
         
         //! pull a used node from the stem
         inline void pull(node_type *node)  throw()
@@ -254,7 +358,7 @@ namespace upsylon {
             root->leaves_to(pool);
             zroot();
         }
-
+        
         //! release all possible memory
         inline void ditch() throw()
         {
@@ -264,101 +368,20 @@ namespace upsylon {
         
         //______________________________________________________________________
         //
-        // cache control
-        //______________________________________________________________________
-        
-        //! number of nodes in cache
-        inline size_t cache_nodes() const throw() { return pool.size; }
-        
-        //!  grow cache with extra nodes
-        inline void   cache_extra(size_t n)
-        {
-            while(n-- > 0) pool.push_back( new node_type(0,0) );
-        }
-        
-        //! limit cache size
-        inline void   cache_limit(const size_t n) throw()
-        {
-            if(n<=0)
-            {
-                pool.release();
-            }
-            else
-            {
-                merging<node_type>::sort_by_increasing_address(pool);
-                while(pool.size>n) delete pool.pop_back();
-            }
-        }
-        
-        //! remove cache
-        inline void cache_prune() throw() { cache_limit(0); }
-        
-
-        
-        //______________________________________________________________________
-        //
-        //! check the graph is the same
-        //______________________________________________________________________
-        inline bool similar_to(const prefix_stem &other) const throw()
-        {
-            return node_type::have_same_layout(root,other.root);
-        }
-        
-        //______________________________________________________________________
-        //
         //! no-throw exchange
         //______________________________________________________________________
         inline void xch(prefix_stem &other) throw()
         {
+            cswap(mark,other.mark);
             cswap(root,other.root);
             pool.swap_with(other.pool);
         }
-
-        //______________________________________________________________________
-        //
-        //! func(node,args) on used nodes
-        //______________________________________________________________________
-        template <typename FUNC, typename U>
-        inline bool for_each(FUNC &func, U &args) const
-        {
-            return for_each(func,args,root);
-        }
-
-        //______________________________________________________________________
-        //
-        //! inline 'strlen' like implementation
-        //______________________________________________________________________
-        static inline size_t codelen(const CODE *code) throw()
-        {
-            if(code)
-            {
-                const CODE *init = code;
-                while(*code!=0)  ++code;
-                return static_cast<size_t>(code-init);
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-    protected:
-        //______________________________________________________________________
-        //
-        //! duplicate
-        //______________________________________________________________________
-        inline void duplicate(const prefix_stem &other)
-        {
-            node_type *temp = duplicate(NULL,other.root);
-            root->return_to(pool);
-            root = temp;
-            assert(node_type::have_same_layout(root,other.root));
-        }
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;   //!< root node
         pool_type  pool;   //!< cached node
+        
         
         void zroot() throw()
         {

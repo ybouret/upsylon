@@ -75,11 +75,45 @@ namespace
         return true;
     }
     
+    
+    template <typename CODE, typename T>
+    class Stem  : public prefix_stem<CODE,T>
+    {
+    public:
+        typedef prefix_stem<CODE,T>           stem_type;
+        typedef typename stem_type::node_type node_type;
+        
+        explicit Stem() : stem_type() {}
+        
+        virtual ~Stem() throw() {}
+        
+        Stem(const Stem &stem ) : stem_type()
+        {
+            this->duplicate(stem);
+        }
+        
+        
+        template <typename SEQUENCE>
+        bool insert(SEQUENCE &seq, T *data)
+        {
+            return this->grow(seq,data);
+        }
+        
+        inline void remove(const node_type *node) throw()
+        {
+            this->pull( (node_type *)node );
+        }
+        
+        
+    private:
+        Y_DISABLE_ASSIGN(Stem);
+    };
+    
     template <typename CODE, typename T>
     void doStem()
     {
         std::cerr << "-- stem<" << type_name_of<CODE>() << "," << type_name_of<T>() << ">" << std::endl;
-        typedef prefix_stem<CODE,T>           stem_type;
+        typedef Stem<CODE,T>                  stem_type;
         typedef typename stem_type::node_type node_type;
         typedef vector<CODE> path_type;
         
@@ -97,11 +131,9 @@ namespace
                 path << alea.range<CODE>('a','d');
             }
             data << support::get<T>();
-            node_type  *mark = 0;
-            node_type  *node = stem.grow( path.begin(), path.size(), & data.back(), &mark);
-            if(node)
+            const bool ans = stem.insert(path, & data.back() );
+            if(ans)
             {
-                Y_ASSERT(mark==node);
                 std::cerr << "+";
                 ++count;
                 Y_ASSERT(stem.tell()==count);
@@ -116,11 +148,10 @@ namespace
         std::cerr << "]" << std::endl;
         stem.get_root().graphViz("stem.dot");
         Y_CHECK(count==stem.tell());
-#if 0
+#if 1
         std::cerr << "duplicate" << std::endl;
         {
-            stem_type stem2;
-            stem2.duplicate(stem);
+            stem_type stem2(stem);
             Y_CHECK(stem2.similar_to(stem));
         }
 #endif
@@ -143,7 +174,7 @@ namespace
                 Y_ASSERT(blk[i]==path[i]);
             }
             paths.pop_back();
-            stem.pull((node_type *)node);
+            stem.remove(node);
             Y_ASSERT(stem.tell()==paths.size());
             std::cerr << "-";
         }
@@ -176,7 +207,7 @@ namespace
             {
                 std::cerr << "+";
                 ++count;
-                Y_ASSERT(stem.size()==count);
+                Y_ASSERT(stem.tell()==count);
                 paths << path;
                 Y_ASSERT( stem.has(path) );
             }
@@ -279,7 +310,8 @@ namespace
     void testTree()
     {
         std::cerr << "-- tree<" << type_name_of<CODE>() << "," << type_name_of<T>() << ">" << std::endl;
-        prefix_tree<CODE,T> tree;
+       
+         prefix_tree<CODE,T> tree;
 
         typedef vector<CODE> key_type;
         list<key_type>       keys;
@@ -333,7 +365,7 @@ namespace
 
             std::cerr << "]" << std::endl;
         }
-
+        
     }
 
 }
@@ -371,6 +403,7 @@ Y_UTEST(prefix)
     testTree<char,string>();
     std::cerr << std::endl;
 
+#if 0
     {
         prefix_tree<char,int> tree;
         const string key1 = "hello";
@@ -383,10 +416,8 @@ Y_UTEST(prefix)
         Y_CHECK(tree.search(key1));
         Y_CHECK(tree.search(key2));
         Y_CHECK(tree.search("key"));
-        
-
-
     }
+#endif
 
     if(argc>1)
     {

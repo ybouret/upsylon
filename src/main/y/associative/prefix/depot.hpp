@@ -13,7 +13,7 @@ namespace upsylon {
     //
     //__________________________________________________________________________
     template <typename CODE>
-    class prefix_depot
+    class prefix_depot : public prefix_stem<CODE,null_type>
     {
     public:
         //______________________________________________________________________
@@ -29,7 +29,7 @@ namespace upsylon {
         //______________________________________________________________________
         
         //! setup
-        inline explicit prefix_depot() : db()
+        inline explicit prefix_depot() : stem_type()
         {
         }
         
@@ -39,10 +39,9 @@ namespace upsylon {
         }
     
         //! copy
-        inline prefix_depot(const prefix_depot &other) :
-        db()
+        inline prefix_depot(const prefix_depot &other) : stem_type()
         {
-            db.duplicate(other.db);
+            this->duplicate(other);
         }
         
         //! assign
@@ -53,62 +52,31 @@ namespace upsylon {
             return *this;
         }
         
-        //______________________________________________________________________
-        //
-        // methods
-        //______________________________________________________________________
-        
-        //! insert
-        inline bool insert_path(const CODE  *code,
-                                const size_t size)
+        template <typename ITERATOR> inline
+        bool insert(ITERATOR &curr, const size_t size)
         {
-            assert(!(NULL==code&&size>0));
-            node_type *mark = 0;
-            node_type *node = db.tick(code,size,&mark);
-            return NULL!=node;
+            return this->tick(curr,size);
         }
         
-        //! insert assuming string like code
+        template <typename SEQUENCE> inline
+        bool insert(SEQUENCE &seq)
+        {
+            return this->tick(seq);
+        }
+        
         inline bool insert(const CODE *code)
         {
-            return insert_path(code,stem_type::codelen(code));
+            return this->tick(code);
         }
         
-        //! insert using compatible sequence
-        template <typename SEQUENCE>
-        inline bool insert(SEQUENCE &seq)
-        {
-            node_type *mark = 0;
-            node_type *node = db.tick(seq,&mark);
-            return NULL!=node;
-        }
         
-        //! test
-        inline bool  has_path(const CODE *code, const size_t size) const throw()
+        template <typename ITERATOR> inline
+        bool remove(ITERATOR curr, const size_t size) throw()
         {
-            return db.has(code,size);
-        }
-        
-        //! test assuming string like code
-        inline bool has(const CODE *code) const throw()
-        {
-            return has_path(code,stem_type::codelen(code));
-        }
-        
-        //! test using compatible sequence
-        template <typename SEQUENCE>
-        inline bool has(SEQUENCE &seq) const throw()
-        {
-            return db.has(seq);
-        }
-        
-        //! remove
-        inline bool remove_path(const CODE *code, const size_t size) throw()
-        {
-            const node_type *node = db.find(code,size);
+            const node_type *node = this->find(curr,size);
             if(node&&node->used)
             {
-                db.pull((node_type*)node);
+                this->pull( (node_type*) node);
                 return true;
             }
             else
@@ -117,82 +85,48 @@ namespace upsylon {
             }
         }
         
-        //! remove assuming string like code
-        inline bool remove(const CODE *code) throw()
+        template <typename SEQUENCE> inline
+        bool remove(SEQUENCE &seq) throw()
+        {
+            return remove(seq.begin(),seq.size());
+        }
+        
+        inline bool remove(const CODE *code)
         {
             return remove(code,stem_type::codelen(code));
         }
         
-        //! test using compatible sequence
-        template <typename SEQUENCE>
-        inline bool remove(SEQUENCE &seq) throw()
+        inline size_t size() const throw()
         {
-            const node_type *node = db.find(seq);
-            if(node&&node->used)
-            {
-                db.pull((node_type*)node);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return this->tell();
         }
         
-        
-        //! test equality
-        inline bool eq(const prefix_depot &rhs) const throw()
+        inline void free() throw()
         {
-            return db.similar_to(rhs.db);
+            this->reset();
         }
         
+        inline void release() throw()
+        {
+            this->ditch();
+        }
         
         //! test equality
         inline friend bool operator==(const prefix_depot &lhs,
                                       const prefix_depot &rhs) throw()
         {
-            return lhs.eq(rhs);
+            return lhs.similar_to(rhs);
         }
         
         //! no-throw exchange
         inline void swap_with(prefix_depot &other) throw()
         {
-            db.xch(other.db);
+            xch(other);
         }
         
-        //! inserted items
-        inline size_t size() const throw()
-        {
-            return db.tell();
-        }
         
-        //! prune internal tree
-        inline void crop() throw()
-        {
-            db.cache_prune();
-        }
         
-        //! free data
-        inline void free() throw()
-        {
-            db.reset();
-        }
         
-        //! release data
-        inline void release() throw()
-        {
-            db.dicth();
-        }
-        
-
-        //! access root to draw graph
-        const ios::vizible &get_root() const throw()
-        {
-            return db.get_root();
-        }
-        
-    private:
-        stem_type db;
        
     };
     
