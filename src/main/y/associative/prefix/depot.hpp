@@ -198,7 +198,8 @@ namespace upsylon {
                 return 0;
             }
         }
-        
+
+        //! access root to draw graph
         const ios::vizible &get_root() const throw()
         {
             return db.get_root();

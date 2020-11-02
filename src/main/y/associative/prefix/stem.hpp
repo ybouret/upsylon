@@ -252,7 +252,8 @@ namespace upsylon {
             root->leaves_to(pool);
             zroot();
         }
-        
+
+        //! release all possible memory
         inline void ditch() throw()
         {
             while(root->leaves.size) delete root->leaves.pop_back();

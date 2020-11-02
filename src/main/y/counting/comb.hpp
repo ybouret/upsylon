@@ -99,9 +99,9 @@ namespace upsylon
             }
         }
         
-        typedef iterate::linear<size_t,iterate::forward> const_iterator;
-        const_iterator begin() const throw();
-        const_iterator end()   const throw();
+        typedef iterate::linear<size_t,iterate::forward> const_iterator; //!< iterator
+        const_iterator begin() const throw();                            //!< begin
+        const_iterator end()   const throw();                            //!< end
 
     private:
         const size_t nmk;  //!< n-k
