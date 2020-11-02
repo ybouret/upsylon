@@ -8,7 +8,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/associative/suffix/store.hpp"
+#include "y/associative/prefix/depot.hpp"
 
 using namespace upsylon;
 
@@ -33,7 +33,7 @@ Y_UTEST(scrabble)
             output.adjust(width,empty);
         }
 
-        suffix_store<char> db;
+        prefix_depot<char> db;
 
         // loop over word sizes
         size_t total = 0;
@@ -54,7 +54,7 @@ Y_UTEST(scrabble)
                 for(perm.boot();perm.good();perm.next())
                 {
                     perm.apply(*guess);
-                    if( db.insert(*guess,w) )
+                    if( db.insert(guess) )
                     {
                         words << guess;
                         ++total;
@@ -74,14 +74,14 @@ Y_UTEST(scrabble)
             std::cerr << "loading " << fn << "[";
             ios::icstream fp(argv[2]);
             
-            suffix_store<char> dict;
+            prefix_depot<char> dict;
             {
                 string line;
                 size_t count = 0;
                 while( fp.gets(line) )
                 {
                     line.clean_with(" \t\r\n");
-                    (void) dict.insert(*line,line.size());
+                    (void) dict.insert(line);
                     if(++count>=1000)
                     {
                         count=0;
@@ -90,7 +90,7 @@ Y_UTEST(scrabble)
                 }
             } std::cerr << "]" << std::endl;
 
-            std::cerr << "Testing against |dict|=" << dict.entries << " [#nodes=" << dict.nodes << "]" << std::endl;
+            std::cerr << "Testing against |dict|=" << dict.size() << std::endl; // << " [#nodes=" << dict.nodes << "]" << std::endl;
             total=0;
             for(size_t w=1;w<=width;++w)
             {
@@ -99,7 +99,7 @@ Y_UTEST(scrabble)
                 for( list<string>::const_iterator i=L.begin();i!=L.end();++i)
                 {
                     const string &word = *i; assert(word.size()==w);
-                    if(dict.has(*word,w))
+                    if(dict.has(word))
                     {
                         ++total;
                         std::cerr << " '" << word << "'";
