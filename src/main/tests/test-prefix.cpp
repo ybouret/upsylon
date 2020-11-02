@@ -149,7 +149,7 @@ namespace
         std::cerr << "]" << std::endl;
     }
 
-   
+
     
     template <typename CODE> static inline
     void doDepot()
@@ -228,12 +228,12 @@ namespace
                     (std::cerr << ".").flush();
                 }
             }
-        
+
         }
         std::cerr << "]" << std::endl;
         std::cerr << "#db=" << db.size() << "/" << ls.size() << std::endl;
     }
-        
+
     static inline void testComb()
     {
         std::cerr << "-- testing combinations" << std::endl;
@@ -282,29 +282,46 @@ namespace
 
         typedef vector<CODE> key_type;
         list<key_type>       keys;
-        std::cerr << "insert: [";
-        for(size_t iter=0;iter<64;++iter)
+
+        for(size_t cycle=1;cycle<=8;++cycle)
         {
-            const size_t n = 1+alea.leq(4);
-            key_type     key(n,as_capacity);
-            for(size_t i=n;i>0;--i)
+            std::cerr << "insert: [";
+            for(size_t iter=0;iter<64;++iter)
             {
-                key << alea.range<CODE>('a','d');
+                const size_t n = 1+alea.leq(4);
+                key_type     key(n,as_capacity);
+                for(size_t i=n;i>0;--i)
+                {
+                    key << alea.range<CODE>('a','d');
+                }
+                const T tmp = support::get<T>();
+                if( tree.insert(key,tmp) )
+                {
+                    std::cerr << "+";
+                    keys << key;
+                }
+                else
+                {
+                    std::cerr << "-";
+                }
             }
-            const T tmp = support::get<T>();
-            if( tree.insert(key,tmp) )
+            std::cerr << "]" << std::endl;
+
+            std::cerr << "remove: [";
+
+            alea.shuffle( *keys );
+            while( keys.size() )
             {
-                std::cerr << "+";
-                keys << key;
-            }
-            else
-            {
+                const key_type &key = keys.back();
+                Y_ASSERT(tree.search(key));
+                Y_ASSERT(tree.remove(key));
+                keys.pop_back();
+                Y_ASSERT(keys.size()==tree.size());
                 std::cerr << "-";
             }
+
+            std::cerr << "]" << std::endl;
         }
-        std::cerr << "]" << std::endl;
-
-
 
     }
 
