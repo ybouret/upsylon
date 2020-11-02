@@ -1,4 +1,5 @@
 #include "y/associative/prefix/depot.hpp"
+#include "y/associative/prefix/tree.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -265,7 +266,7 @@ namespace
             {
                 Y_ASSERT(depo.insert(perm));
             }
-            if(n<=5)
+            if(n<=4)
             {
                 const string fn = vformat("perm%u.dot", (unsigned)n );
                 depo.get_root().graphViz(fn);
@@ -273,7 +274,40 @@ namespace
         }
     }
     
-    
+    template <typename CODE, typename T>
+    void testTree()
+    {
+        std::cerr << "-- tree<" << type_name_of<CODE>() << "," << type_name_of<T>() << ">" << std::endl;
+        prefix_tree<CODE,T> tree;
+
+        typedef vector<CODE> key_type;
+        list<key_type>       keys;
+        std::cerr << "insert: [";
+        for(size_t iter=0;iter<64;++iter)
+        {
+            const size_t n = 1+alea.leq(4);
+            key_type     key(n,as_capacity);
+            for(size_t i=n;i>0;--i)
+            {
+                key << alea.range<CODE>('a','d');
+            }
+            const T tmp = support::get<T>();
+            if( tree.insert(key,tmp) )
+            {
+                std::cerr << "+";
+                keys << key;
+            }
+            else
+            {
+                std::cerr << "-";
+            }
+        }
+        std::cerr << "]" << std::endl;
+
+
+
+    }
+
 }
 
 Y_UTEST(prefix)
@@ -305,7 +339,10 @@ Y_UTEST(prefix)
     
     testPerm();
     std::cerr << std::endl;
-    
+
+    testTree<char,string>();
+    std::cerr << std::endl;
+
     if(argc>1)
     {
         doStrings(argv[1]);

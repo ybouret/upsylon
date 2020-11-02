@@ -64,6 +64,8 @@ namespace upsylon {
             assert(0==root->code);
             assert(0==root->depth);
             assert(0!=mark);
+            assert(addr!=NULL);
+            
             //------------------------------------------------------------------
             // start from root
             //------------------------------------------------------------------
@@ -321,8 +323,11 @@ namespace upsylon {
             cswap(root,other.root);
             pool.swap_with(other.pool);
         }
-        
-        //! func(node,args)
+
+        //______________________________________________________________________
+        //
+        //! func(node,args) on used nodes
+        //______________________________________________________________________
         template <typename FUNC, typename U>
         inline bool for_each(FUNC &func, U &args) const
         {
