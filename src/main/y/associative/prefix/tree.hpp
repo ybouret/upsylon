@@ -307,24 +307,26 @@ namespace upsylon {
         }
 
 
-
+        //! get root to draw graph
         const ios::vizible &get_root() const throw()
         {
             return db.get_root();
         }
 
+        //! sort data
         template <typename FUNC>
         inline void sort(FUNC &func)
         {
             merging<data_node>::sort(dl,call<FUNC>, (void *) &func);
         }
 
+        //! helper to iteratre
         inline const data_node *head() const throw()
         {
             return dl.head;
         }
 
-
+        //! get max depth
         inline size_t max_depth() const throw()
         {
             size_t ans = 0;
@@ -336,6 +338,7 @@ namespace upsylon {
             return ans;
         }
 
+        //! no-throw swap
         inline void swap_with(prefix_tree &other) throw()
         {
             cswap(mk,other.mk);

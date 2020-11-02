@@ -39,6 +39,7 @@ namespace upsylon {
             return text;
         }
 
+        //! throw exception for error in copy constructors
         static void throw_unexpected_multiple_path();
 
     private:
