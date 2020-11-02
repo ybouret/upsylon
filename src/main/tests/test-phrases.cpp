@@ -3,7 +3,7 @@
 #include "y/counting/parts.hpp"
 #include "y/counting/permutations.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/associative/suffix/store.hpp"
+#include "y/associative/prefix/depot.hpp"
 #include "y/fs/disk/istream.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -34,11 +34,11 @@ Y_UTEST(phrases)
         const size_t letters  = alphabet.size();
         if(letters>0)
         {
-            suffix_store<char> db;
-            suffix_store<char> phrases;
+            prefix_depot<char> db;
+            prefix_depot<char> phrases;
             if(argc>2)
             {
-                const string            fn = argv[2];
+                const string            fn  = argv[2];
                 ios::shared_disk_buffer buf = new ios::disk_buffer<>(BUFSIZ);
                 ios::readable_disk_file raw(fn);
                 ios::disk_istream       fp(raw,buf);
@@ -49,10 +49,10 @@ Y_UTEST(phrases)
                     const size_t len = line.size();
                     if(len>0)
                     {
-                        (void) db.insert(*line,len);
+                        (void) db.insert(line);
                     }
                 }
-                std::cerr << "|db| = " << db.entries << std::endl;
+                std::cerr << "|db| = " << db.size() << std::endl;
             }
 
             // prepare all different readings
@@ -93,7 +93,7 @@ Y_UTEST(phrases)
                             {
                                 word += *(p++);
                             }
-                            if(db.entries && !db.has(*word,n) ) continue;
+                            if(db.size() && !db.has(word) ) continue;
                             if(n==1)
                             {
                                 if(!accept_single(word[0])) continue;
@@ -102,7 +102,7 @@ Y_UTEST(phrases)
                             if(i<num_lengths) phrase += ' ';
                         }
                         phrase.clean_with(' ');
-                        if(phrase.size()>0 && phrases.insert(*phrase,phrase.size()) )
+                        if(phrase.size()>0 && phrases.insert(phrase) )
                         {
                             std::cerr << '[' << phrase << ']' << std::endl;
                         }
