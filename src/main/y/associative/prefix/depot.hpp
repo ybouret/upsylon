@@ -71,7 +71,7 @@ namespace upsylon {
         //! insert assuming string like code
         inline bool insert(const CODE *code)
         {
-            return insert_path(code,codelen(code));
+            return insert_path(code,stem_type::codelen(code));
         }
         
         //! insert using compatible sequence
@@ -92,7 +92,7 @@ namespace upsylon {
         //! test assuming string like code
         inline bool has(const CODE *code) const throw()
         {
-            return has_path(code,codelen(code));
+            return has_path(code,stem_type::codelen(code));
         }
         
         //! test using compatible sequence
@@ -120,7 +120,7 @@ namespace upsylon {
         //! remove assuming string like code
         inline bool remove(const CODE *code) throw()
         {
-            return remove(code,codelen(code));
+            return remove(code,stem_type::codelen(code));
         }
         
         //! test using compatible sequence
@@ -184,20 +184,6 @@ namespace upsylon {
             db.dicth();
         }
         
-        //! inline 'strlen' like implementation
-        static inline size_t codelen(const CODE *code) throw()
-        {
-            if(code)
-            {
-                const CODE *init = code;
-                while(*code!=0)  ++code;
-                return static_cast<size_t>(code-init);
-            }
-            else
-            {
-                return 0;
-            }
-        }
 
         //! access root to draw graph
         const ios::vizible &get_root() const throw()

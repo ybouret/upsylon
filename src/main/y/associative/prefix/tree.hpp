@@ -5,6 +5,7 @@
 
 #include "y/associative/prefix/stem.hpp"
 #include "y/container/container.hpp"
+#include "y/memory/buffers.hpp"
 
 namespace upsylon {
 
@@ -51,9 +52,13 @@ namespace upsylon {
         typedef core::list_of<data_node> data_list; //!< alias
         typedef core::pool_of<data_node> data_pool; //!< alias
 
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
 
         //! setup
-        inline explicit prefix_tree() : dl(), dp(), db()
+        inline explicit prefix_tree() : mk(0), dl(), dp(), db()
         {
         }
 
@@ -63,23 +68,58 @@ namespace upsylon {
             release();
         }
 
+        //! copy
+        inline prefix_tree(const prefix_tree &other) :
+        collection(),
+        container(),
+        mk(0),
+        dl(),
+        dp(),
+        db()
+        {
+            memory::cppblock<CODE> path(other.max_depth());
+            for(const data_node *node=other.dl.head;node;node=node->next)
+            {
+                const size_t depth = node->hook->encode(path);
+                if(!insert(*path,depth,node->data))
+                {
+                    prefix_::throw_unexpected_multiple_path();
+                }
+            }
+        }
+
+        //! assign
+        inline prefix_tree & operator=(const prefix_tree &other)
+        {
+            prefix_tree temp(other);
+            swap_with(temp);
+            return *this;
+        }
+
+
+        //----------------------------------------------------------------------
+        //
+        // insertion API
+        //
+        //----------------------------------------------------------------------
+
         //! insertion by path
         template <typename ITERATOR>
-        bool insert(ITERATOR     curr,
+        inline bool insert(ITERATOR     curr,
                     const size_t size,
-                    param_type  &args)
+                    const_type  &args)
         {
+            mk              = 0;
             data_node *node = make_node(args);
             try {
-                node_type *mark = 0;
-                if(!db.grow(curr,size,node,&mark))
+                if(!db.grow(curr,size,node,&mk))
                 {
                     kill_node(node);
                     return false;
                 }
                 else
                 {
-                    dl.push_back(node)->hook = mark;
+                    dl.push_back(node)->hook = mk;
                     assert(db.tell()==dl.size);
                     return true;
                 }
@@ -93,14 +133,28 @@ namespace upsylon {
 
         //! insertion by sequence
         template <typename SEQUENCE>
-        bool insert(SEQUENCE &seq,param_type &args)
+        inline bool insert(SEQUENCE   &seq,
+                    param_type &args)
         {
-            return insert( seq.begin(), seq.size(), args);
+            return insert(seq.begin(),seq.size(),args);
         }
+
+        //! insert by C-style array
+        inline bool insert(const CODE *code, param_type args)
+        {
+            return insert(code,stem_type::codelen(code),args);
+        }
+
+
+        //----------------------------------------------------------------------
+        //
+        // const search API
+        //
+        //----------------------------------------------------------------------
 
         //! search by path
         template <typename ITERATOR>
-        const_type *search(ITERATOR curr, const size_t size) const throw()
+        inline const_type *search(ITERATOR curr, const size_t size) const throw()
         {
             const node_type *node = db.find(curr,size);
             if(node&&node->addr)
@@ -116,14 +170,27 @@ namespace upsylon {
 
         //! search by sequence
         template <typename SEQUENCE>
-        const_type *search(SEQUENCE &seq) const throw()
+        inline const_type *search(SEQUENCE &seq) const throw()
         {
             return search( seq.begin(), seq.size() );
         }
 
+        //! search by C-style array
+        template <typename SEQUENCE>
+        inline const_type *search(const CODE *code) const throw()
+        {
+            return search(code,stem_type::codelen(code));
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // mutable search API
+        //
+        //----------------------------------------------------------------------
+
         //! search by path
         template <typename ITERATOR>
-        type *search(ITERATOR curr, const size_t size) throw()
+        inline type *search(ITERATOR curr, const size_t size) throw()
         {
             const prefix_tree &self = *this;
             return (type *) ( self.search(curr,size) );
@@ -131,14 +198,26 @@ namespace upsylon {
 
         //! search by sequence
         template <typename SEQUENCE>
-        type *search(SEQUENCE &seq) throw()
+        inline type *search(SEQUENCE &seq) throw()
         {
             return search( seq.begin(), seq.size() );
         }
 
+        //! search by C-style
+        inline type *search(const CODE *code) throw()
+        {
+            return search(code,stem_type::codelen(code));
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // remove API
+        //
+        //----------------------------------------------------------------------
+
         //! remove by path
         template <typename ITERATOR>
-        bool remove(ITERATOR curr, const size_t size) throw()
+        inline bool remove(ITERATOR curr, const size_t size) throw()
         {
             const node_type *node = db.find(curr,size);
             if(node&&node->addr)
@@ -150,17 +229,28 @@ namespace upsylon {
             }
             else
             {
-                return false;;
+                return false;
             }
         }
 
         //! remove by sequence
         template <typename SEQUENCE>
-        bool remove(SEQUENCE &seq) throw()
+        inline bool remove(SEQUENCE &seq) throw()
         {
             return remove(seq.begin(),seq.size());
         }
 
+        //! remove by C-style array
+        inline bool remove(const CODE *code) throw()
+        {
+            return remove(code,stem_type::codelen(code));
+        }
+
+        //----------------------------------------------------------------------
+        //
+        // other
+        //
+        //----------------------------------------------------------------------
 
         //! remove all extra memory
         inline void trim() throw()
@@ -210,17 +300,55 @@ namespace upsylon {
             return dl.size+dp.size;
         }
 
+        //! reserve extra data nodes
         inline virtual void reserve(size_t n)
         {
             while(n-- > 0) dp.store( object::acquire1<data_node>() );
         }
 
 
+
+        const ios::vizible &get_root() const throw()
+        {
+            return db.get_root();
+        }
+
+        template <typename FUNC>
+        inline void sort(FUNC &func)
+        {
+            merging<data_node>::sort(dl,call<FUNC>, (void *) &func);
+        }
+
+        inline const data_node *head() const throw()
+        {
+            return dl.head;
+        }
+
+
+        inline size_t max_depth() const throw()
+        {
+            size_t ans = 0;
+            for(const data_node *node=dl.head;node;node=node->next)
+            {
+                const size_t tmp = node->hook->depth;
+                if(tmp>ans)  ans = tmp;
+            }
+            return ans;
+        }
+
+        inline void swap_with(prefix_tree &other) throw()
+        {
+            cswap(mk,other.mk);
+            dl.swap_with(other.dl);
+            dp.swap_with(other.dp);
+            db.xch(other.db);
+        }
+
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(prefix_tree);
-        data_list dl; //!< list of hooked, live data nodes
-        data_pool dp; //!< pool of zombie data nodes
-        stem_type db; //!< the database
+        node_type *mk;  //!< last mark on insert
+        data_list  dl;  //!< list of hooked, live data nodes
+        data_pool  dp;  //!< pool of zombie data nodes
+        stem_type  db;  //!< the database
 
         void empty_pool() throw()
         {
@@ -230,7 +358,6 @@ namespace upsylon {
                 object::release1(node);
             }
         }
-
 
         data_node *make_node(const_type &args)
         {
@@ -251,6 +378,14 @@ namespace upsylon {
             assert(node); assert(0==node->next); assert(0==node->prev);
             self_destruct(*node);
             dp.store(node);
+        }
+
+        template <typename FUNC>
+        static inline int call(const data_node *lhs, const data_node *rhs, void *args) throw()
+        {
+            assert(args);
+            FUNC &func = *(FUNC *)args;
+            return func(lhs->data,rhs->data);
         }
 
     };

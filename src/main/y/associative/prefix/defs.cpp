@@ -2,6 +2,8 @@
 
 #include "y/associative/prefix/defs.hpp"
 #include "y/code/utils.hpp"
+#include "y/exceptions.hpp"
+
 #include <cstring>
 
 namespace upsylon
@@ -36,4 +38,10 @@ namespace upsylon
         }
 
     }
+
+    void prefix_:: throw_unexpected_multiple_path()
+    {
+        throw exception("unexpectped multiple prefix path");
+    }
+
 }

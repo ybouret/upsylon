@@ -282,7 +282,6 @@ namespace
 
         typedef vector<CODE> key_type;
         list<key_type>       keys;
-
         for(size_t cycle=1;cycle<=8;++cycle)
         {
             std::cerr << "insert: [";
@@ -306,6 +305,17 @@ namespace
                 }
             }
             std::cerr << "]" << std::endl;
+
+            std::cerr << "copy..." << std::endl;
+            {
+                prefix_tree<CODE,T> tree2( tree );
+                Y_ASSERT(tree2.size()==tree.size());
+                tree2.release();
+                tree2 = tree;
+                Y_ASSERT(tree2.size()==tree.size());
+            }
+
+            tree.sort( comparison::increasing<T> );
 
             std::cerr << "remove: [";
 
@@ -359,6 +369,23 @@ Y_UTEST(prefix)
 
     testTree<char,string>();
     std::cerr << std::endl;
+
+    {
+        prefix_tree<char,int> tree;
+        const string key1 = "hello";
+        Y_CHECK(tree.insert(key1,1));
+        const char *key2 = "world";
+        Y_CHECK(tree.insert(key2,2));
+        Y_CHECK(tree.insert("key",3));
+        tree.get_root().graphViz("tree3.dot");
+
+        Y_CHECK(tree.search(key1));
+        Y_CHECK(tree.search(key2));
+        Y_CHECK(tree.search("key"));
+        
+
+
+    }
 
     if(argc>1)
     {

@@ -39,6 +39,8 @@ namespace upsylon {
             return text;
         }
 
+        static void throw_unexpected_multiple_path();
+
     private:
         static char text[];
         static void clr() throw();

@@ -333,7 +333,26 @@ namespace upsylon {
         {
             return for_each(func,args,root);
         }
-        
+
+        //______________________________________________________________________
+        //
+        //! inline 'strlen' like implementation
+        //______________________________________________________________________
+        static inline size_t codelen(const CODE *code) throw()
+        {
+            if(code)
+            {
+                const CODE *init = code;
+                while(*code!=0)  ++code;
+                return static_cast<size_t>(code-init);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);
         node_type *root;   //!< root node
