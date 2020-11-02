@@ -4,6 +4,7 @@
 #define Y_PREFIX_TREE_INCLUDED 1
 
 #include "y/associative/prefix/stem.hpp"
+#include "y/container/container.hpp"
 
 namespace upsylon {
 
@@ -14,7 +15,7 @@ namespace upsylon {
     //
     //__________________________________________________________________________
     template <typename CODE, typename T>
-    class prefix_tree
+    class prefix_tree : public container
     {
     public:
         //______________________________________________________________________
@@ -35,6 +36,7 @@ namespace upsylon {
         public:
             //! setup to functional node
             inline  data_node(const_type &args) : next(0), prev(0), hook(0), data(args) {}
+
             //! cleanup
             inline ~data_node() throw() { hook=0; }
 
@@ -159,6 +161,7 @@ namespace upsylon {
             return remove(seq.begin(),seq.size());
         }
 
+
         //! remove all extra memory
         inline void trim() throw()
         {
@@ -166,8 +169,10 @@ namespace upsylon {
             empty_pool();
         }
 
+
+
         //! clean with memory keeping
-        inline void free() throw()
+        inline virtual void free() throw()
         {
             db.reset();
             while(dl.size)
@@ -177,7 +182,7 @@ namespace upsylon {
         }
 
         //! release all possible memory
-        inline void release() throw()
+        inline virtual void release() throw()
         {
             db.ditch();
             empty_pool(); assert(0==dp.size);
@@ -194,11 +199,22 @@ namespace upsylon {
 
 
         //! number of items
-        inline size_t size() const throw()
+        inline virtual size_t size() const throw()
         {
             return dl.size;
         }
-        
+
+        //! capacity
+        inline virtual size_t capacity() const throw()
+        {
+            return dl.size+dp.size;
+        }
+
+        inline virtual void reserve(size_t n)
+        {
+            while(n-- > 0) dp.store( object::acquire1<data_node>() );
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_tree);
