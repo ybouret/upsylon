@@ -52,24 +52,28 @@ namespace upsylon {
             return *this;
         }
         
+        //! insert 'used' using path
         template <typename ITERATOR> inline
         bool insert(ITERATOR &curr, const size_t size)
         {
             return this->tick(curr,size);
         }
         
+        //! insert 'used' using sequence
         template <typename SEQUENCE> inline
         bool insert(SEQUENCE &seq)
         {
             return this->tick(seq);
         }
         
+        //! insert 'used' using C-style array
         inline bool insert(const CODE *code)
         {
             return this->tick(code);
         }
         
         
+        //! remove value at path
         template <typename ITERATOR> inline
         bool remove(ITERATOR curr, const size_t size) throw()
         {
@@ -85,27 +89,32 @@ namespace upsylon {
             }
         }
         
+        //! remove value using sequnece
         template <typename SEQUENCE> inline
         bool remove(SEQUENCE &seq) throw()
         {
             return remove(seq.begin(),seq.size());
         }
         
+        //! remove value using C-style array
         inline bool remove(const CODE *code)
         {
             return remove(code,stem_type::codelen(code));
         }
         
+        //! content
         inline size_t size() const throw()
         {
             return this->tell();
         }
         
+        //! clear structure, keep memory
         inline void free() throw()
         {
             this->reset();
         }
         
+        //! clear structure, ditch memory
         inline void release() throw()
         {
             this->ditch();

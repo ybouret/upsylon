@@ -9,7 +9,12 @@
 
 namespace upsylon {
     
-    
+    //__________________________________________________________________________
+    //
+    //
+    //! node holding actual data for a stem
+    //
+    //__________________________________________________________________________
     template <typename CODE, typename T>
     class prefix_data_node
     {
@@ -19,6 +24,7 @@ namespace upsylon {
         typedef prefix_stem<CODE,data_node>   stem_type; //!< alias
         typedef typename stem_type::node_type node_type; //!< alias
         
+        //! setup
         inline prefix_data_node(const_type &args) : next(0), prev(0), hook(0), data(args) {}
         
         //! cleanup
