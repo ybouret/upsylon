@@ -144,8 +144,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(stree);
-    Y_UTEST(store);
-    Y_UTEST(store_perf);
     Y_UTEST(lexicon);
     Y_UTEST(catalog);
     Y_UTEST(ledger);
