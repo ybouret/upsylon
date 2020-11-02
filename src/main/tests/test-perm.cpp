@@ -195,11 +195,19 @@ Y_UTEST(permutations)
         permutations<long>   lperm( iperm );
         std::cerr << "for " << data << " => " << perms.count << std::endl;
         std::cerr << "ini " << (accessible<char>&)perms << std::endl;
+        string      out_s = data;
+        vector<int> out_v(data.size(),0);
         for( perms.boot(); perms.good(); perms.next() )
         {
             std::cerr << "perm=" << (counting&)(*perms) << " => " << (accessible<char>&)perms << "  \r";
             const permutations<int64_t> uperm( perms );
             Y_ASSERT(perms.has_same_state_than(uperm));
+            perms.apply(*out_s);
+            perms.make(out_v);
+            for(size_t j=perms.size();j>0;--j)
+            {
+                Y_ASSERT(int(out_s[j-1])==out_v[j]);
+            }
         }
         std::cerr << std::endl;
     }

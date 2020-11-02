@@ -5,7 +5,7 @@
 #include <cerrno>
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/associative/suffix/store.hpp"
+#include "y/associative/prefix/depot.hpp"
 
 namespace upsylon {
 
@@ -117,13 +117,15 @@ namespace upsylon {
                 assert(i==space+1);
                 assert(size_t(value)==groups.size());
             }
-            const probe_t        *key = &target[1];
+
             {
                 //--------------------------------------------------------------
-                // initialize store
+                // initialize depot
                 //--------------------------------------------------------------
-                suffix_store<probe_t> store;
-                if(!store.insert(key,space)) throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
+                prefix_depot<probe_t> store;
+                if(!store.insert(target))
+                    throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
+
 
                 //--------------------------------------------------------------
                 // loop over permutations
@@ -134,8 +136,7 @@ namespace upsylon {
                 for(;p.good();p.next())
                 {
                     p.make(target,source);
-
-                    if(store.insert(key,space))
+                    if(store.insert(target))
                     {
                         //------------------------------------------------------
                         // a new key
@@ -146,7 +147,6 @@ namespace upsylon {
                         assert(ok<count);
                         aliasing::_(shift[++ok]) = delta;
                     }
-
                 }
                 assert(count==ok);
             }

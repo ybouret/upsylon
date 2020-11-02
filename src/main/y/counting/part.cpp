@@ -98,7 +98,6 @@ namespace upsylon {
         assert(m<=n);
 
 
-#if 1
         apn nconf = 1;
 
         // compute all possible choices
@@ -135,7 +134,6 @@ namespace upsylon {
             }
         }
         return nconf;
-#endif
     }
 
     size_t integer_partition:: configs(const counting::with_sz_t &)    const

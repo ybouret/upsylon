@@ -223,6 +223,17 @@ accessible<T>(), target(0), source(0), groups(0), wksp(0), wlen(0)
             }
         }
 
+        //! C++ style copy
+        template <typename U>
+        inline void make(addressable<U> &sample) const throw()
+        {
+            assert(sample.size()>=space);
+            for(size_t j=space;j>0;--j)
+            {
+                sample[j] = target[j];
+            }
+        }
+
         //! reloading
         template <typename U>
         inline void reload( const permutations<U> &other ) throw()
