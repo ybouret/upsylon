@@ -293,17 +293,7 @@ namespace upsylon {
         //! remove cache
         inline void cache_prune() throw() { cache_limit(0); }
         
-        //______________________________________________________________________
-        //
-        //! duplicate
-        //______________________________________________________________________
-        inline void duplicate(const prefix_stem &other)
-        {
-            node_type *temp = duplicate(NULL,other.root);
-            root->return_to(pool);
-            root = temp;
-            assert(node_type::have_same_layout(root,other.root));
-        }
+
         
         //______________________________________________________________________
         //
@@ -352,6 +342,18 @@ namespace upsylon {
             }
         }
 
+    protected:
+        //______________________________________________________________________
+        //
+        //! duplicate
+        //______________________________________________________________________
+        inline void duplicate(const prefix_stem &other)
+        {
+            node_type *temp = duplicate(NULL,other.root);
+            root->return_to(pool);
+            root = temp;
+            assert(node_type::have_same_layout(root,other.root));
+        }
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_stem);

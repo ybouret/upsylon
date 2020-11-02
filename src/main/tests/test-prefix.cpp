@@ -116,13 +116,14 @@ namespace
         std::cerr << "]" << std::endl;
         stem.get_root().graphViz("stem.dot");
         Y_CHECK(count==stem.tell());
+#if 0
         std::cerr << "duplicate" << std::endl;
         {
             stem_type stem2;
             stem2.duplicate(stem);
             Y_CHECK(stem2.similar_to(stem));
         }
-        
+#endif
         size_t total = 0;
         stem.for_each(doSomething<node_type>,total);
         
