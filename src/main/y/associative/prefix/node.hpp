@@ -94,26 +94,28 @@ namespace upsylon {
         inline void  return_to(pool_t &pool) throw() { leaves_to(pool); pool.push_front(this);                }
         
         //! build a path [1..depth]
-        inline size_t encode( addressable<CODE> &path ) const throw()
+        template <typename TARGET>
+        inline size_t encode( addressable<TARGET> &path ) const throw()
         {
             assert(path.size()>=depth);
             const prefix_node *curr = this;
             while(curr->parent)
             {
-                path[curr->depth] = curr->code;
+                path[curr->depth] = TARGET(curr->code);
                 curr=curr->parent;
             }
             return depth;
         }
 
         //! build C-style path
-        inline size_t encode(CODE *path) const throw()
+        template <typename TARGET>
+        inline size_t encode(TARGET *path) const throw()
         {
             const prefix_node *curr = this;
             path += depth;
             while(curr->parent)
             {
-                *(--path) = curr->code;
+                *(--path) = TARGET(curr->code);
                 curr=curr->parent;
             }
             return depth;
