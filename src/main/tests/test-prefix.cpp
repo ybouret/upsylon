@@ -342,10 +342,10 @@ namespace
             std::cerr << "copy..." << std::endl;
             {
                 prefix_tree<CODE,T> tree2( tree );
-                Y_ASSERT(tree2.size()==tree.size());
-                tree2.release();
+                Y_ASSERT(tree2.tell()==tree.tell());
+                tree2.ditch();
                 tree2 = tree;
-                Y_ASSERT(tree2.size()==tree.size());
+                Y_ASSERT(tree2.tell()==tree.tell());
             }
 
             tree.sort( comparison::increasing<T> );
@@ -359,7 +359,7 @@ namespace
                 Y_ASSERT(tree.search(key));
                 Y_ASSERT(tree.remove(key));
                 keys.pop_back();
-                Y_ASSERT(keys.size()==tree.size());
+                Y_ASSERT(keys.size()==tree.tell());
                 std::cerr << "-";
             }
 

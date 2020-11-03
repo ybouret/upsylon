@@ -20,7 +20,7 @@ namespace upsylon {
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);
+        Y_DECL_ARGS(T,type);                                    //!< aliases
         typedef          prefix_node<CODE,T>         node_type; //!< alias
         typedef typename prefix_node<CODE,T>::pool_t pool_type; //!< alias
         
@@ -110,9 +110,7 @@ namespace upsylon {
             return has(code,codelen(code));
         }
         
-        
-       
-        
+
         //______________________________________________________________________
         //
         // cache control
@@ -122,8 +120,7 @@ namespace upsylon {
         inline size_t cache_nodes() const throw() { return pool.size; }
         
         //!  grow cache with extra nodes
-        inline void   cache_extra(size_t n)
-        {
+        inline void   cache_extra(size_t n) {
             while(n-- > 0) pool.push_back( new node_type(0,0) );
         }
         
@@ -206,7 +203,6 @@ namespace upsylon {
          \param curr initial iterator, *curr must return a compatible type to CODE
          \param size size of path
          \param addr address to insert. TODO: NULL => used ?
-         \param mark inserted node or busy node at path
          */
         //______________________________________________________________________
         template <typename ITERATOR>
@@ -353,14 +349,14 @@ namespace upsylon {
         }
         
         //! return to single empty root, keep memory
-        inline void reset() throw()
+        inline void free_() throw()
         {
             root->leaves_to(pool);
             zroot();
         }
         
         //! release all possible memory
-        inline void ditch() throw()
+        inline void release_() throw()
         {
             while(root->leaves.size) delete root->leaves.pop_back();
             zroot();

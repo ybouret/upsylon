@@ -4,7 +4,6 @@
 #define Y_PREFIX_TREE_INCLUDED 1
 
 #include "y/associative/prefix/stem.hpp"
-#include "y/container/container.hpp"
 #include "y/memory/buffers.hpp"
 
 namespace upsylon {
@@ -46,7 +45,7 @@ namespace upsylon {
     //
     //__________________________________________________________________________
     template <typename CODE, typename T>
-    class prefix_tree : public container, public prefix_stem<CODE, prefix_data_node<CODE,T> >
+    class prefix_tree :   public prefix_stem<CODE, prefix_data_node<CODE,T> >
     {
     public:
         //______________________________________________________________________
@@ -66,20 +65,14 @@ namespace upsylon {
         //______________________________________________________________________
         
         //! setup
-        inline explicit prefix_tree() : dl(), dp()
-        {
-        }
+        inline explicit prefix_tree() : stem_type(), dl(), dp() {}
         
         //! cleanup
-        inline virtual ~prefix_tree() throw()
-        {
-            release();
-        }
+        inline virtual ~prefix_tree() throw() { ditch(); }
         
         //! copy
         inline prefix_tree(const prefix_tree &other) :
-        collection(),
-        container(),
+        stem_type(),
         dl(),
         dp()
         {
@@ -269,9 +262,9 @@ namespace upsylon {
         
         
         //! clean with memory keeping
-        inline virtual void free() throw()
+        inline void erase() throw()
         {
-            this->reset();
+            this->free_();
             while(dl.size)
             {
                 kill_node(dl.pop_back());
@@ -279,9 +272,9 @@ namespace upsylon {
         }
         
         //! release all possible memory
-        inline virtual void release() throw()
+        inline void ditch() throw()
         {
-            this->ditch();
+            this->release_();
             empty_pool(); assert(0==dp.size);
             while(dl.size)
             {
@@ -295,25 +288,21 @@ namespace upsylon {
         }
         
         
-        //! number of items
-        inline virtual size_t size() const throw()
-        {
-            assert(this->tell()==dl.size);
-            return this->tell();
-        }
         
-        //! capacity
-        inline virtual size_t capacity() const throw()
-        {
-            return dl.size+dp.size;
-        }
+
         
-        //! reserve extra data nodes
-        inline virtual void reserve(size_t n)
+        //! gain extra data nodes
+        inline virtual void gain(size_t n)
         {
             while(n-- > 0) dp.store( object::acquire1<data_node>() );
         }
-        
+
+
+        //! pool size
+        size_t pool_size() const throw()
+        {
+            return dp.size();
+        }
         
         
         //! sort data
@@ -348,11 +337,14 @@ namespace upsylon {
             dp.swap_with(other.dp);
             this->xch(other);
         }
-        
-    private:
+
+
+
+    protected:
         data_list  dl;  //!< list of hooked, live data nodes
         data_pool  dp;  //!< pool of zombie data nodes
-        
+
+    private:
         void empty_pool() throw()
         {
             while(dp.size)

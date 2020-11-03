@@ -51,7 +51,12 @@ namespace upsylon {
             swap_with(temp);
             return *this;
         }
-        
+
+        //______________________________________________________________________
+        //
+        // management
+        //______________________________________________________________________
+
         //! insert 'used' using path
         template <typename ITERATOR> inline
         bool insert(ITERATOR &curr, const size_t size)
@@ -111,13 +116,13 @@ namespace upsylon {
         //! clear structure, keep memory
         inline void free() throw()
         {
-            this->reset();
+            this->free_();
         }
         
         //! clear structure, ditch memory
         inline void release() throw()
         {
-            this->ditch();
+            this->release_();
         }
         
         //! test equality

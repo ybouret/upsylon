@@ -93,7 +93,7 @@ namespace upsylon {
         //! return leaves+this to pool
         inline void  return_to(pool_t &pool) throw() { leaves_to(pool); pool.push_front(this);                }
         
-        //! build a path
+        //! build a path [1..depth]
         inline size_t encode( addressable<CODE> &path ) const throw()
         {
             assert(path.size()>=depth);
@@ -105,7 +105,20 @@ namespace upsylon {
             }
             return depth;
         }
-        
+
+        //! build C-style path
+        inline size_t encode(CODE *path) const throw()
+        {
+            const prefix_node *curr = this;
+            path += depth;
+            while(curr->parent)
+            {
+                *(--path) = curr->code;
+                curr=curr->parent;
+            }
+            return depth;
+        }
+
         //! check if both are free
         static bool are_both_free(const prefix_node *lhs, const prefix_node *rhs) throw()
         {
