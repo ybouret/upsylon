@@ -1,5 +1,6 @@
 #include "y/associative/prefix/depot.hpp"
 #include "y/associative/prefix/tree.hpp"
+#include "y/associative/prefix/node-to-string.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -148,13 +149,11 @@ namespace
         std::cerr << "]" << std::endl;
         stem.get_root().graphViz("stem.dot");
         Y_CHECK(count==stem.tell());
-#if 1
         std::cerr << "duplicate" << std::endl;
         {
             stem_type stem2(stem);
             Y_CHECK(stem2.similar_to(stem));
         }
-#endif
         size_t total = 0;
         stem.for_each(doSomething<node_type>,total);
         
@@ -181,7 +180,16 @@ namespace
         std::cerr << "]" << std::endl;
     }
 
-
+    template <typename ITERATOR>
+    static inline void showPaths(ITERATOR curr, size_t size)
+    {
+        while(size-- > 0 )
+        {
+            const string s = prefix_node_to_string( curr._().hook );
+            std::cerr << "-> <" << s << ">" << std::endl;
+            ++curr;
+        }
+    }
     
     template <typename CODE> static inline
     void doDepot()
@@ -408,19 +416,22 @@ Y_UTEST(prefix)
     testTree<char,string>();
     std::cerr << std::endl;
 
-#if 0
+#if 1
     {
         prefix_tree<char,int> tree;
         const string key1 = "hello";
-        Y_CHECK(tree.insert(key1,1));
+        Y_CHECK(tree.insert_by(key1,1));
         const char *key2 = "world";
-        Y_CHECK(tree.insert(key2,2));
-        Y_CHECK(tree.insert("key",3));
+        Y_CHECK(tree.insert_by(key2,2));
+        Y_CHECK(tree.insert_by("key",3));
         tree.get_root().graphViz("tree3.dot");
+        
+        showPaths(tree.begin(),tree.tell());
 
-        Y_CHECK(tree.search(key1));
-        Y_CHECK(tree.search(key2));
-        Y_CHECK(tree.search("key"));
+        
+        Y_CHECK(tree.search_by(key1));
+        Y_CHECK(tree.search_by(key2));
+        Y_CHECK(tree.search_by("key"));
     }
 #endif
 
