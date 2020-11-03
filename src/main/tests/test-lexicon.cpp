@@ -1,5 +1,5 @@
 #include "y/associative/map.hpp"
-#include "y/associative/affix/table.hpp"
+#include "y/associative/prefix/table.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
 #include "y/type/spec.hpp"
@@ -121,11 +121,11 @@ Y_UTEST(lexicon)
             }
         }
     }
-    map<string,string>           smap(n,as_capacity);
-    affix_table<string,string>   stab(n,as_capacity);
+    map<string,string>            smap(n,as_capacity);
+    prefix_table<string,string>   stab(n,as_capacity);
     
     doLexicon(smap,strings,strings,"map");
-    doLexicon(stab,strings,strings,"affix_table");
+    doLexicon(stab,strings,strings,"prefix_table");
     
     
     

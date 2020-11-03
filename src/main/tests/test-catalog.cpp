@@ -95,6 +95,15 @@ namespace {
             no << ok.back();
             ok.pop_back();
         }
+
+        std::cerr << "\ttesting copy" << std::endl;
+        {
+            prefix_batch<KEY,Dummy>   st2(st);
+            prefix_batch<KEY,Pointer> pst2(pst);
+            set<KEY,Dummy>            db2(db);
+            set<KEY,Pointer>          pdb2(pdb);
+        }
+
         
         std::cerr << "\ttesting remove" << std::endl;
 
