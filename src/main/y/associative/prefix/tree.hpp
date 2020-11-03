@@ -80,7 +80,7 @@ namespace upsylon {
             for(const data_node *node=other.dl.head;node;node=node->next)
             {
                 const size_t depth = node->hook->encode(path);
-                if(!insert(*path,depth,node->data))
+                if(!insert_by(*path,depth,node->data))
                 {
                     prefix_::throw_unexpected_multiple_path();
                 }
@@ -104,9 +104,9 @@ namespace upsylon {
         
         //! insertion by path
         template <typename ITERATOR>
-        inline bool insert(ITERATOR     curr,
-                           const size_t size,
-                           const_type  &args)
+        inline bool insert_by(ITERATOR     curr,
+                              const size_t size,
+                              const_type  &args)
         {
             data_node *node = make_node(args);
             try
@@ -133,16 +133,16 @@ namespace upsylon {
         
         //! insertion by sequence
         template <typename SEQUENCE>
-        inline bool insert(SEQUENCE   &seq,
-                           param_type &args)
+        inline bool insert_by(SEQUENCE   &seq,
+                              param_type &args)
         {
-            return insert(seq.begin(),seq.size(),args);
+            return insert_by(seq.begin(),seq.size(),args);
         }
         
         //! insert by C-style array
-        inline bool insert(const CODE *code, param_type args)
+        inline bool insert_by(const CODE *code, param_type args)
         {
-            return insert(code,stem_type::codelen(code),args);
+            return insert_by(code,stem_type::codelen(code),args);
         }
         
         
@@ -154,7 +154,7 @@ namespace upsylon {
         
         //! search by path
         template <typename ITERATOR>
-        inline const_type *search(ITERATOR curr, const size_t size) const throw()
+        inline const_type *search_by(ITERATOR curr, const size_t size) const throw()
         {
             const node_type *node = this->find(curr,size);
             if(node&&node->addr)
@@ -170,16 +170,16 @@ namespace upsylon {
         
         //! search by sequence
         template <typename SEQUENCE>
-        inline const_type *search(SEQUENCE &seq) const throw()
+        inline const_type *search_by(SEQUENCE &seq) const throw()
         {
-            return search( seq.begin(), seq.size() );
+            return search_by( seq.begin(), seq.size() );
         }
         
         //! search by C-style array
         template <typename SEQUENCE>
-        inline const_type *search(const CODE *code) const throw()
+        inline const_type *search_by(const CODE *code) const throw()
         {
-            return search(code,stem_type::codelen(code));
+            return search_by(code,stem_type::codelen(code));
         }
         
         //----------------------------------------------------------------------
@@ -190,23 +190,23 @@ namespace upsylon {
         
         //! search by path
         template <typename ITERATOR>
-        inline type *search(ITERATOR curr, const size_t size) throw()
+        inline type *search_by(ITERATOR curr, const size_t size) throw()
         {
             const prefix_tree &self = *this;
-            return (type *) ( self.search(curr,size) );
+            return (type *) ( self.search_by(curr,size) );
         }
         
         //! search by sequence
         template <typename SEQUENCE>
-        inline type *search(SEQUENCE &seq) throw()
+        inline type *search_by(SEQUENCE &seq) throw()
         {
-            return search( seq.begin(), seq.size() );
+            return search_by( seq.begin(), seq.size() );
         }
         
         //! search by C-style
-        inline type *search(const CODE *code) throw()
+        inline type *search_by(const CODE *code) throw()
         {
-            return search(code,stem_type::codelen(code));
+            return search_by(code,stem_type::codelen(code));
         }
         
         //----------------------------------------------------------------------
@@ -217,7 +217,7 @@ namespace upsylon {
         
         //! remove by path
         template <typename ITERATOR>
-        inline bool remove(ITERATOR curr, const size_t size) throw()
+        inline bool remove_by(ITERATOR curr, const size_t size) throw()
         {
             const node_type *node = this->find(curr,size);
             if(node&&node->addr)
@@ -235,15 +235,15 @@ namespace upsylon {
         
         //! remove by sequence
         template <typename SEQUENCE>
-        inline bool remove(SEQUENCE &seq) throw()
+        inline bool remove_by(SEQUENCE &seq) throw()
         {
-            return remove(seq.begin(),seq.size());
+            return remove_by(seq.begin(),seq.size());
         }
         
         //! remove by C-style array
-        inline bool remove(const CODE *code) throw()
+        inline bool remove_by(const CODE *code) throw()
         {
-            return remove(code,stem_type::codelen(code));
+            return remove_by(code,stem_type::codelen(code));
         }
         
         //----------------------------------------------------------------------

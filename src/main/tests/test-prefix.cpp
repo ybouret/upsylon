@@ -310,8 +310,8 @@ namespace
     void testTree()
     {
         std::cerr << "-- tree<" << type_name_of<CODE>() << "," << type_name_of<T>() << ">" << std::endl;
-       
-         prefix_tree<CODE,T> tree;
+
+        prefix_tree<CODE,T> tree;
 
         typedef vector<CODE> key_type;
         list<key_type>       keys;
@@ -327,7 +327,7 @@ namespace
                     key << alea.range<CODE>('a','d');
                 }
                 const T tmp = support::get<T>();
-                if( tree.insert(key,tmp) )
+                if( tree.insert_by(key,tmp) )
                 {
                     std::cerr << "+";
                     keys << key;
@@ -356,8 +356,13 @@ namespace
             while( keys.size() )
             {
                 const key_type &key = keys.back();
-                Y_ASSERT(tree.search(key));
-                Y_ASSERT(tree.remove(key));
+                Y_ASSERT(tree.search_by(key));
+                Y_ASSERT(tree.remove_by(key));
+                {
+                    const prefix_tree<CODE,T> &ctree = tree;
+                    Y_ASSERT(!ctree.search_by(key));
+                }
+
                 keys.pop_back();
                 Y_ASSERT(keys.size()==tree.tell());
                 std::cerr << "-";
