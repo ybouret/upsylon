@@ -1,23 +1,26 @@
 #include "y/ios/conveyors.hpp"
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/prefix/table.hpp"
 #include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
-#include "y/type/block/zset.hpp"
+//#include "y/type/block/zset.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/xbe-key.hpp"
 #include "y/exception.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
     Y_SINGLETON_IMPL_WITH(0,ios::conveyors);
 
 
-    namespace ios {
+    namespace ios
+    {
     
-        namespace {
-            
-            typedef suffix_tree<conveyors::convoy> db_type;
+        namespace
+        {
+            typedef xbe_key<uint8_t>                       db_key;
+            typedef prefix_table<db_key,conveyors::convoy> db_type;
             static uint64_t wksp[ Y_U64_FOR_ITEM(db_type) ];
             
             static inline db_type & __db() throw()
@@ -31,12 +34,13 @@ namespace upsylon {
         conveyors:: ~conveyors() throw()
         {
             self_destruct( __db() );
+            memset(wksp,0,sizeof(wksp));
         }
         
         
         conveyors:: conveyors()
         {
-            Y_BZSET_STATIC(wksp);
+            memset(wksp,0,sizeof(wksp));
             new ( aliasing::anonymous(wksp) ) db_type();
         }
         
@@ -63,7 +67,7 @@ namespace upsylon {
             static db_type &db   = __db();
             const  db_key   key(t,w);
             
-            if(!db.insert_by(key,c))
+            if(!db.insert(key,c))
             {
                 const type_spec &ts = type_spec::declare(t);
                 throw exception("ios::conveyors(multiple type <%s>", *ts.name());
@@ -79,7 +83,7 @@ namespace upsylon {
             Y_LOCK(access);
             static db_type &db   = __db();
             const  db_key   key(t,w);
-            const  convoy  *ppC  = db.search_by(key);
+            const  convoy  *ppC  = db.search(key);
             if(ppC)
             {
                 return & (**ppC);
@@ -110,7 +114,7 @@ namespace upsylon {
         {
             Y_LOCK(access);
             static const db_type &db   = __db();
-            std::cerr << "<ios::conveyors count=" << db.entries() << ">" << std::endl;
+            std::cerr << "<ios::conveyors count=" << db.size() << ">" << std::endl;
             for( db_type::const_iterator it=db.begin();it!=db.end();++it)
             {
                 std::cerr << "\t" << *it << std::endl;
@@ -130,7 +134,7 @@ namespace upsylon {
         {
             Y_LOCK(access);
             static db_type &db   = __db();
-            db.sort_with(compare_by_names);
+            db.sort(compare_by_names);
         }
         
     }
