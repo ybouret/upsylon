@@ -38,7 +38,7 @@ namespace {
         
         const string nn = name;
         const string fn = "ledger_" + nn + ".dot";
-        std::cerr << "\t"; L.graphViz(fn);
+        std::cerr << "\t"; L.get_root().graphViz(fn);
         
         std::cerr << "\tsearching..." << std::endl;
         for(size_t i=source.size();i>0;--i)
@@ -62,7 +62,7 @@ namespace {
             const BEaddress &addr = *it;
             std::cerr << "\t\t" << *(addr.as<T>()) << std::endl;
         }
-        L.sort_with( compare_stub<T> );
+        L.sort( compare_stub<T> );
         std::cerr << "\t-- sorted  :" << std::endl;
         for( typename ledger_of<T>::iterator it=L.begin();it!=L.end();++it)
         {

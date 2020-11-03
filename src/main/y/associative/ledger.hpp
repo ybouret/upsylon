@@ -3,22 +3,22 @@
 #ifndef Y_LEDGER_INCLUDED
 #define Y_LEDGER_INCLUDED 1
 
-#include "y/associative/affix/tree.hpp"
+#include "y/associative/prefix/tree.hpp"
 #include "y/os/be-address.hpp"
 
 namespace upsylon {
     
     
     //! a ledger of addresses
-    class ledger : public affix_tree<BEaddress>
+    class ledger : public prefix_tree<char,BEaddress>
     {
     public:
         //______________________________________________________________________
         //
         // types and definition
         //______________________________________________________________________
-        typedef BEaddress             addr_type; //!< any address
-        typedef affix_tree<addr_type> base_type; //!< alias
+        typedef BEaddress                   addr_type; //!< any address
+        typedef prefix_tree<char,addr_type> base_type; //!< alias
          
         //______________________________________________________________________
         //
@@ -55,14 +55,14 @@ namespace upsylon {
         inline bool insert(const T &args)
         {
             const addr_type addr = args;
-            return this->insert_by(&addr.data,addr.size,addr);
+            return this->insert_by((const char *)&addr.data,addr.size,addr);
         }
         
         //! search
         inline bool search(const T &args) const throw()
         {
             const addr_type addr = args;
-            return NULL != this->search_by(&addr.data,addr.size);
+            return NULL != this->search_by((const char *)&addr.data,addr.size);
         }
         
         //! secure
@@ -75,7 +75,7 @@ namespace upsylon {
         inline void remove(const T &args) throw()
         {
             const addr_type addr = args;
-            (void) this->remove_by(&addr.data,addr.size);
+            (void) this->remove_by((const char *)&addr.data,addr.size);
 
         }
         

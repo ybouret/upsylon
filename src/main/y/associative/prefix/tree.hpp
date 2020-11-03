@@ -6,6 +6,7 @@
 #include "y/associative/prefix/stem.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon {
     
@@ -69,7 +70,8 @@ namespace upsylon {
         inline explicit prefix_tree() : stem_type(), dl(), dp() {}
 
         //! setup with some capacity
-        inline explicit prefix_tree(const size_t n, const as_capacity_t &) : stem_type(), dl(), dp()
+        inline explicit prefix_tree(const size_t n, const as_capacity_t &) :
+        stem_type(), dl(), dp()
         {
             gain(n);
         }
@@ -296,9 +298,6 @@ namespace upsylon {
         }
         
         
-        
-
-        
         //! gain extra data nodes
         inline virtual void gain(size_t n)
         {
@@ -346,7 +345,14 @@ namespace upsylon {
             this->xch(other);
         }
 
+        typedef iterate::linked<type,data_node,iterate::forward>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const data_node,iterate::forward> const_iterator;  //!< forward const iterator
 
+        iterator begin() throw() { return iterator( dl.head ); } //!< begin forward
+        iterator end()   throw() { return iterator(0);            } //!< end forward
+
+        const_iterator begin() const throw()   { return const_iterator( dl.head ); } //!< begin forward const
+        const_iterator end()   const throw()   { return const_iterator(0);         } //!< end forward const
 
     protected:
         data_list  dl;  //!< list of hooked, live data nodes

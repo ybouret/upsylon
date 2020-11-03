@@ -19,7 +19,10 @@ namespace upsylon
             inline static const_type & get(const NODE *node) throw() { assert(node); return node->data; }
         };
 
+        //______________________________________________________________________
+        //
         //! linked iterator
+        //______________________________________________________________________
         template <
         typename  T,
         typename  NODE,
@@ -28,7 +31,16 @@ namespace upsylon
         class linked
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
             Y_DECL_ARGS(T,type); //!< aliases
+            typedef NODE                                     node_type;
+            typedef typename type_traits<NODE>::mutable_type mutable_node;
+            typedef const mutable_node                       const_node;
+
+
             //! ctor
             inline  linked(NODE *n) throw() : node(n) {}
             //! dtor
@@ -162,6 +174,11 @@ namespace upsylon
                 assert(node); return & access::get(node);
             }
 
+            //! get node
+            inline node_type  & _() throw() { assert(node); return *node; }
+
+            //! get node, const
+            inline const_node & _() const throw() { assert(node); return *node; }
 
         private:
             NODE *node;
