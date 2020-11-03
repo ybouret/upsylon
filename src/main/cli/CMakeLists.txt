@@ -34,7 +34,7 @@ IF(NOT MSVC)
 ENDIF()
 
 IF(Y_DARWIN)
-CLI(y_port_required)
+#CLI(y_port_required)
 #CLI(get-kde-wallpapers)
 ENDIF()
 
