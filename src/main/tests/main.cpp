@@ -146,7 +146,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(lexicon);
     Y_UTEST(catalog);
     Y_UTEST(ledger);
-    Y_UTEST(affix);
     Y_UTEST(prefix);
     
     Y_UTEST(fft);
