@@ -2,7 +2,7 @@
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
-#include "y/associative/prefix/tree.hpp"
+#include "y/associative/prefix/locker.hpp"
 
 namespace upsylon
 {
@@ -10,7 +10,7 @@ namespace upsylon
     namespace hashing
     {
         //! base class
-        typedef prefix_tree<char,unsigned> minimal_perfect_tree;
+        typedef prefix_locker<unsigned> minimal_perfect_tree;
 
         //______________________________________________________________________
         //
@@ -50,7 +50,7 @@ namespace upsylon
             void operator()(const ID &key, const_type h)
             {
                 check(h);
-                if(!insert_by(key,h))
+                if(!insert(key,h))
                 {
                     found(this->mark);
                 }
@@ -60,7 +60,7 @@ namespace upsylon
             template <typename ID> inline
             type operator()(const ID &key)
             {
-                const_type *ptr = search_by(key);
+                const_type *ptr = search(key);
                 if(ptr)
                 {
                     assert(invalid!=*ptr);

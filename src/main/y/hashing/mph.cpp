@@ -20,7 +20,9 @@ namespace upsylon
             if(invalid==h) throw exception("minimal perfect hashing: invalid key");
         }
         
-        minimal_perfect:: minimal_perfect(const minimal_perfect &other) : minimal_perfect_tree(other)
+        minimal_perfect:: minimal_perfect(const minimal_perfect &other) :
+        collection(),
+        minimal_perfect_tree(other)
         {
         }
 

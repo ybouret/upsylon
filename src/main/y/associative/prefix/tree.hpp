@@ -144,7 +144,7 @@ namespace upsylon {
         //! insertion by sequence
         template <typename SEQUENCE>
         inline bool insert_by(SEQUENCE   &seq,
-                              param_type &args)
+                              param_type  args)
         {
             return insert_by(seq.begin(),seq.size(),args);
         }
@@ -349,7 +349,7 @@ namespace upsylon {
         typedef iterate::linked<const_type,const data_node,iterate::forward> const_iterator;  //!< forward const iterator
 
         iterator begin() throw() { return iterator( dl.head ); } //!< begin forward
-        iterator end()   throw() { return iterator(0);            } //!< end forward
+        iterator end()   throw() { return iterator(0);         } //!< end forward
 
         const_iterator begin() const throw()   { return const_iterator( dl.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);         } //!< end forward const

@@ -1,5 +1,5 @@
 #include "y/associative/prefix/depot.hpp"
-#include "y/associative/prefix/tree.hpp"
+#include "y/associative/prefix/locker.hpp"
 #include "y/associative/prefix/node-to-string.hpp"
 
 #include "y/utest/run.hpp"
@@ -380,6 +380,49 @@ namespace
         }
         
     }
+    
+    template <typename T>
+    void testLocker()
+    {
+        std::cerr << "-- locker<" << type_name_of<T>() << ">" << std::endl;
+
+        prefix_locker<T> db1,db2,db3;
+        list<string>     keys;
+        
+        for(size_t iter=0;iter<80;++iter)
+        {
+            const string key = support::get<string>();
+            const T      tmp = support::get<T>();
+            if(db1.insert(key,tmp))
+            {
+                Y_ASSERT(db2.insert(*key,tmp));
+                Y_ASSERT(db3.insert(*key,key.size(),tmp));
+                keys << key;
+            }
+        }
+        
+        alea.shuffle(*keys);
+        
+        while(keys.size())
+        {
+            const string &key = keys.back();
+            Y_ASSERT(db1.search(key));
+            Y_ASSERT(db2.search(*key));
+            Y_ASSERT(db3.search(*key,key.size()));
+            
+            Y_ASSERT(db1.remove(key));
+            Y_ASSERT(db2.remove(*key));
+            Y_ASSERT(db3.remove(*key,key.size()));
+            
+            Y_ASSERT(!db1.search(key));
+            Y_ASSERT(!db2.search(*key));
+            Y_ASSERT(!db2.search(*key,key.size()));
+            
+            keys.pop_back();
+        }
+        
+        
+    }
 
 }
 
@@ -416,7 +459,6 @@ Y_UTEST(prefix)
     testTree<char,string>();
     std::cerr << std::endl;
 
-#if 1
     {
         prefix_tree<char,int> tree;
         const string key1 = "hello";
@@ -433,8 +475,12 @@ Y_UTEST(prefix)
         Y_CHECK(tree.search_by(key2));
         Y_CHECK(tree.search_by("key"));
     }
-#endif
-
+    
+    {
+        testLocker<int>();
+        testLocker<string>();
+    }
+    
     if(argc>1)
     {
         doStrings(argv[1]);

@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_PREFIX_BATCH_INCLUDED
-#define Y_PRFIX_BATCH_INCLUDED 1
+#define Y_PREFIX_BATCH_INCLUDED 1
 
 #include "y/associative/prefix/tree.hpp"
 #include "y/associative/catalog.hpp"
