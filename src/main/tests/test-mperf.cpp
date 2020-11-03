@@ -22,7 +22,7 @@ Y_UTEST(mperf)
 
     {
         hashing::minimal_perfect H( Y_MPH_WORDS(words) );
-        H.graphViz("words-mph.dot");
+        H.get_root().graphViz("words-mph.dot");
     }
 
 
@@ -45,7 +45,7 @@ Y_UTEST(mperf)
             }
             if(H.tell()<=30)
             {
-                H.graphViz("mph.dot");
+                H.get_root().graphViz("mph.dot");
             }
             for(size_t i=strings.size();i>0;--i)
             {

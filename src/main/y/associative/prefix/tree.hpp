@@ -5,6 +5,7 @@
 
 #include "y/associative/prefix/stem.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon {
     

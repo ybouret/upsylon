@@ -2,7 +2,7 @@
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
-#include "y/associative/affix/tree.hpp"
+#include "y/associative/prefix/tree.hpp"
 
 namespace upsylon
 {
@@ -10,7 +10,7 @@ namespace upsylon
     namespace hashing
     {
         //! base class
-        typedef affix_tree<unsigned> minimal_perfect_tree;
+        typedef prefix_tree<char,unsigned> minimal_perfect_tree;
 
         //______________________________________________________________________
         //
@@ -29,6 +29,7 @@ namespace upsylon
             // types and definition
             //__________________________________________________________________
             static const_type invalid = limit_of<const_type>::maximum; //!< unallowed key
+            typedef minimal_perfect_tree::node_type node_type;
 
             //__________________________________________________________________
             //
@@ -49,10 +50,9 @@ namespace upsylon
             void operator()(const ID &key, const_type h)
             {
                 check(h);
-                tree_mark mark=0;
-                if(!insert_by(key,h,&mark))
+                if(!insert_by(key,h))
                 {
-                    found(mark);
+                    found(this->mark);
                 }
             }
 
@@ -79,7 +79,7 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(minimal_perfect);
             void check(const_type) const;
-            void found(const tree_node *node) const;
+            void found(const node_type *node) const;
         };
 
         //! macro for static arrays of strings

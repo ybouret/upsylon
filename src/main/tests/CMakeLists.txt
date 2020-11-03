@@ -272,7 +272,6 @@ ADD_TEST(data:tensors     test-main tensors)
 
 SOURCE_GROUP(associative FILES
 test-associative.cpp test-set.cpp test-map.cpp
-test-suffix-tree.cpp 
 test-lexicon.cpp
 test-catalog.cpp
 test-ledger.cpp
@@ -282,12 +281,11 @@ test-prefix.cpp
 ADD_TEST(associative:types   test-main associative)
 ADD_TEST(associative:set     test-main set)
 ADD_TEST(associative:map     test-main map)
-ADD_TEST(associative:stree   test-main stree ${HERE}/words.db)
 ADD_TEST(associative:lexicon test-main lexicon)
 ADD_TEST(associative:catalog test-main catalog)
 ADD_TEST(associative:ledger  test-main ledger)
 ADD_TEST(associative:affix   test-main affix ${HERE}/ten.db)
-ADD_TEST(associative:prefix  test-main prefix)
+ADD_TEST(associative:prefix  test-main prefix ${HERE}/ten.db)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)
 ADD_TEST(sparse:array  test-main sparse_array)

@@ -10,6 +10,7 @@
 #include "y/ios/tools/vizible.hpp"
 #include "y/ios/ostream.hpp"
 #include "y/sequence/addressable.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon {
 
@@ -119,6 +120,17 @@ namespace upsylon {
                 curr=curr->parent;
             }
             return depth;
+        }
+
+        //! format exception
+        inline void format(exception &excp) const throw()
+        {
+            const prefix_node *curr = this;
+            while(curr->parent)
+            {
+                excp.hdr("%s",prefix_::code_to_text(code));
+                curr=curr->parent;
+            }
         }
 
         //! check if both are free

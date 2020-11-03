@@ -36,7 +36,7 @@ namespace upsylon
             }
         }
 
-        void minimal_perfect:: found(const tree_node *node) const
+        void minimal_perfect:: found(const node_type *node) const
         {
             assert(node);
             exception excp;
@@ -61,13 +61,13 @@ namespace upsylon
     {
         void minimal_perfect:: emit(ios::ostream &fp) const
         {
-            const size_t              nmax = max_depth();
-            memory::cppblock<uint8_t> path( nmax );
+            const size_t           nmax = max_depth();
+            memory::cppblock<char> path( nmax );
             for(const data_node *node=head();node;node=node->next)
             {
-                const tree_node *curr=node->hook;
+                const node_type *curr=node->hook;
                 const size_t     clen=curr->encode(path);
-                string           name( path.as<char>(), clen );
+                string           name( *path, clen );
                 const_type       hash = node->data;
 
                 fp << "#define " << ios::align(name,ios::align::left,nmax) << ' ';
