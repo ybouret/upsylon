@@ -1,11 +1,10 @@
-#include "y/associative/affix/batch.hpp"
+#include "y/associative/prefix/batch.hpp"
 #include "y/associative/set.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/intr.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/type/spec.hpp"
-//#include "y/type/aliasing.hpp"
 
 using namespace upsylon;
 
@@ -49,8 +48,8 @@ namespace {
         typedef typename Dummy::pointer Pointer;
         
         vector<KEY>               ok(nmax, as_capacity);
-        affix_batch<KEY,Dummy>    st(nmax/4, as_capacity);
-        affix_batch<KEY,Pointer>  pst(nmax/4,as_capacity);
+        prefix_batch<KEY,Dummy>   st(nmax/4, as_capacity);
+        prefix_batch<KEY,Pointer> pst(nmax/4,as_capacity);
         set<KEY,Dummy>            db(nmax/4, as_capacity);
         set<KEY,Pointer>          pdb(nmax/4,as_capacity);
         

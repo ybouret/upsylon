@@ -20,10 +20,11 @@ namespace upsylon {
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);                                    //!< aliases
-        typedef          prefix_node<CODE,T>         node_type; //!< alias
-        typedef typename prefix_node<CODE,T>::pool_t pool_type; //!< alias
-        
+        Y_DECL_ARGS(T,type);                                        //!< aliases
+        typedef          prefix_node<CODE,T>             node_type; //!< alias
+        typedef typename prefix_node<CODE,T>::pool_t     pool_type; //!< alias
+        typedef typename type_traits<CODE>::mutable_type code_type; //!< alias
+
         //______________________________________________________________________
         //
         // C++

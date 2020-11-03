@@ -66,7 +66,14 @@ namespace upsylon {
         
         //! setup
         inline explicit prefix_tree() : stem_type(), dl(), dp() {}
-        
+
+        //! setup with some capacity
+        inline explicit prefix_tree(const size_t n, const as_capacity_t &) : stem_type(), dl(), dp()
+        {
+            gain(n);
+        }
+
+
         //! cleanup
         inline virtual ~prefix_tree() throw() { ditch(); }
         
