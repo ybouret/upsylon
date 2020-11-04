@@ -2,7 +2,7 @@
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
-#include "y/associative/prefix/locker.hpp"
+#include "y/associative/prefix/storage.hpp"
 
 namespace upsylon
 {
@@ -10,7 +10,7 @@ namespace upsylon
     namespace hashing
     {
         //! base class
-        typedef prefix_locker<unsigned> minimal_perfect_tree;
+        typedef prefix_storage<unsigned> minimal_perfect_tree;
 
         //______________________________________________________________________
         //

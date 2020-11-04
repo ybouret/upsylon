@@ -1,7 +1,7 @@
 
 //! \file
-#ifndef Y_PREFIX_LOCKER_INCLUDED
-#define Y_PREFIX_LOCKER_INCLUDED 1
+#ifndef Y_PREFIX_STORAGE_INCLUDED
+#define Y_PREFIX_STORAGE_INCLUDED 1
 
 #include "y/associative/prefix/tree.hpp"
 #include "y/container/container.hpp"
@@ -12,39 +12,53 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! anonymous locker
+    //! anonymous storage
     //
     //__________________________________________________________________________
     template <typename T>
-    class prefix_locker : public container, public prefix_tree<char,T>
+    class prefix_storage : public container, public prefix_tree<char,T>
     {
     public:
+        //______________________________________________________________________
+        //
         // types and defintions
+        //______________________________________________________________________
         typedef prefix_tree<char,T> tree_type; //!< alias
         Y_DECL_ARGS(T,type);                   //!< aliases
 
+        //______________________________________________________________________
+        //
         // C++
-        inline explicit prefix_locker() : tree_type() {}
-        inline virtual ~prefix_locker() throw() {}
-        inline  prefix_locker(const prefix_locker &other) :
+        //______________________________________________________________________
+        inline explicit prefix_storage() : tree_type() {}
+        inline virtual ~prefix_storage() throw() {}
+        inline  prefix_storage(const prefix_storage &other) :
         collection(),
         container(),
         tree_type(other) {}
         
-        inline prefix_locker & operator=( const prefix_locker &other )
+        inline prefix_storage & operator=( const prefix_storage &other )
         {
             tree_type &self = *this;
             self            = other;
             return *this;
         }
-        
+
+        //______________________________________________________________________
+        //
         // container interface
+        //______________________________________________________________________
         inline virtual size_t size()     const throw() { return this->dl.size; }
         inline virtual size_t capacity() const throw() { return this->dl.size + this->dp.size; }
         inline virtual void free()             throw() { this->erase(); }
         inline virtual void release()          throw() { this->ditch(); }
         inline virtual void reserve(const size_t n) { this->gain(n); }
-        
+
+        //______________________________________________________________________
+        //
+        // insert
+        //______________________________________________________________________
+
         //! generic insertion
         inline bool insert(const void *buf, const size_t len, param_type args)
         {
@@ -63,7 +77,11 @@ namespace upsylon
         {
             return this->insert_by( static_cast<const char *>(buffer.ro()), buffer.length(), args);
         }
-        
+
+        //______________________________________________________________________
+        //
+        // search
+        //______________________________________________________________________
         inline const_type *search(const void *buf, const size_t len) const throw()
         {
             assert(!(NULL==buf&&len>0));
@@ -79,7 +97,12 @@ namespace upsylon
         {
             return this->search_by(static_cast<const char *>(buffer.ro()), buffer.length());
         }
-        
+
+        //______________________________________________________________________
+        //
+        // remove
+        //______________________________________________________________________
+
         inline bool remove(const void *buf, const size_t len)   throw()
         {
             assert(!(NULL==buf&&len>0));

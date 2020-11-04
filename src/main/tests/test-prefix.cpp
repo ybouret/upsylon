@@ -1,5 +1,5 @@
 #include "y/associative/prefix/depot.hpp"
-#include "y/associative/prefix/locker.hpp"
+#include "y/associative/prefix/storage.hpp"
 #include "y/associative/prefix/node-to-string.hpp"
 
 #include "y/utest/run.hpp"
@@ -382,12 +382,12 @@ namespace
     }
     
     template <typename T>
-    void testLocker()
+    void testStorage()
     {
-        std::cerr << "-- locker<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-- storage<" << type_name_of<T>() << ">" << std::endl;
 
-        prefix_locker<T> db1,db2,db3;
-        list<string>     keys;
+        prefix_storage<T> db1,db2,db3;
+        list<string>      keys;
         
         for(size_t iter=0;iter<80;++iter)
         {
@@ -477,8 +477,9 @@ Y_UTEST(prefix)
     }
     
     {
-        testLocker<int>();
-        testLocker<string>();
+        testStorage<int>();
+        testStorage<string>();
+        testStorage<apq>();
     }
     
     if(argc>1)

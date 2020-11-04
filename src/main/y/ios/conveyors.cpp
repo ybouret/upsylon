@@ -1,9 +1,8 @@
 #include "y/ios/conveyors.hpp"
-#include "y/associative/prefix/table.hpp"
+#include "y/associative/prefix/storage.hpp"
 #include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
-//#include "y/type/block/zset.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/xbe-key.hpp"
 #include "y/exception.hpp"
@@ -19,8 +18,8 @@ namespace upsylon
     
         namespace
         {
-            typedef xbe_key<uint8_t>                       db_key;
-            typedef prefix_table<db_key,conveyors::convoy> db_type;
+            typedef xbe_key<uint8_t>                  db_key;
+            typedef prefix_storage<conveyors::convoy> db_type;
             static uint64_t wksp[ Y_U64_FOR_ITEM(db_type) ];
             
             static inline db_type & __db() throw()
