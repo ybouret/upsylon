@@ -48,7 +48,18 @@ namespace upsylon
         }
     }
 
-    
+    void hash_slots:: to(hash_slots &hs) throw()
+    {
+        for(size_t i=0;i<slots;++i)
+        {
+            slot_type &s = slot[i];
+            while(s.size)
+            {
+                node_type *node = s.pop_back();
+                hs[node->hkey].push_front(node);
+            }
+        }
+    }
 
     hash_slots::slot_type  &  hash_slots:: operator[](const size_t hkey) throw()
     {

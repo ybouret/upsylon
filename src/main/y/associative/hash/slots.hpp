@@ -19,10 +19,11 @@ namespace upsylon
         typedef hash_meta_node node_type;
         typedef hash_meta_list slot_type;
 
-        virtual ~hash_slots() throw(); //!< cleanup and release memory
-        explicit hash_slots(const size_t n);
+        virtual ~hash_slots() throw();       //!< cleanup and release memory
+        explicit hash_slots(const size_t n); //!< setup for required n slots
 
-        void     to(slot_type &repo) throw();
+        void     to(slot_type  &repo) throw(); //!< all nodes to repo
+        void     to(hash_slots &hs)   throw(); //!< all nodes to other
 
         slot_type       & operator[](const size_t hkey) throw();
         const slot_type & operator[](const size_t hkey) const throw();

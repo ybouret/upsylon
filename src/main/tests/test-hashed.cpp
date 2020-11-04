@@ -33,6 +33,8 @@ namespace
             }
 
             hs.dump();
+
+            
             hs.to(pool);
         }
         catch(...)
