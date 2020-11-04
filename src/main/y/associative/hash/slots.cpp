@@ -48,11 +48,7 @@ namespace upsylon
         }
     }
 
-    void hash_slots:: load(hash_meta_node *node) throw()
-    {
-        assert(node);
-        slot[node->hkey&smask].push_front(node);
-    }
+    
 
     hash_slots::slot_type  &  hash_slots:: operator[](const size_t hkey) throw()
     {
@@ -64,4 +60,31 @@ namespace upsylon
         return slot[hkey&smask];
     }
 
+
+
 }
+
+#include <iostream>
+#include <iomanip>
+
+namespace upsylon
+{
+    void hash_slots:: dump() const
+    {
+        std::cerr << std::hex;
+        std::cerr << "<hash_slots>" << std::endl;
+        for(size_t i=0;i<slots;++i)
+        {
+            std::cerr << "[" << std::setw(4) << i << "] :";
+            for(const node_type *node=slot[i].head;node;node=node->next)
+            {
+                std::cerr << " " << node->hkey;
+            }
+            std::cerr << std::endl;
+        }
+
+        std::cerr << "<hash_slots/>" << std::endl;
+        std::cerr << std::dec;
+    }
+}
+

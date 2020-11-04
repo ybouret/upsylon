@@ -24,9 +24,10 @@ namespace upsylon
 
         void     to(slot_type &repo) throw();
 
-        void              load(hash_meta_node *node) throw();
         slot_type       & operator[](const size_t hkey) throw();
         const slot_type & operator[](const size_t hkey) const throw();
+
+        void dump() const;
 
     private:
         slot_type   *slot;

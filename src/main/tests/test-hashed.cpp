@@ -26,12 +26,13 @@ namespace
         try {
             int data = 1;
 
-            for(size_t i=1+alea.leq(1000);i>0;--i)
+            for(size_t i=1+alea.leq(100);i>0;--i)
             {
-                const size_t    hkey = alea.full<size_t>();
-                hs.load( pool.query(hkey,&data) );
+                const size_t    hkey = alea.full<uint16_t>();
+                hs[hkey].push_front( pool.query(hkey,&data) );
             }
 
+            hs.dump();
             hs.to(pool);
         }
         catch(...)
@@ -50,7 +51,7 @@ namespace
 Y_UTEST(hashed)
 {
     doHashSlots(0);
-    for(size_t n=1;n<=4096;n<<=1)
+    for(size_t n=1;n<=16;n<<=1)
     {
         doHashSlots(n);
     }
