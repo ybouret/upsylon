@@ -111,7 +111,7 @@ namespace upsylon {
             for(const data_node *node=other.dl.head;node;node=node->next)
             {
                 const size_t depth = node->hook->encode(path);
-                if(!insert_by(*path,depth,node->data))
+                if(!__insert(*path,depth,node->data))
                 {
                     prefix_::throw_unexpected_multiple_path();
                 }
@@ -135,9 +135,9 @@ namespace upsylon {
         
         //! insertion by path
         template <typename ITERATOR>
-        inline bool insert_by(ITERATOR     curr,
-                              const size_t size,
-                              const_type  &args)
+        inline bool __insert(ITERATOR     curr,
+                             const size_t size,
+                             const_type  &args)
         {
             data_node *node = make_node(args);
             try
@@ -164,19 +164,18 @@ namespace upsylon {
         
         //! insertion by sequence
         template <typename SEQUENCE>
-        inline bool insert_by(SEQUENCE   &seq,
-                              param_type  args)
+        inline bool __insert(SEQUENCE    &seq,
+                             const_type  &args)
         {
-            return insert_by(seq.begin(),seq.size(),args);
+            return __insert(seq.begin(),seq.size(),args);
         }
-        
+
         //! insert by C-style array
-        inline bool insert_by(const CODE *code, param_type args)
+        inline bool __insert(const CODE *code, param_type args)
         {
-            return insert_by(code,stem_type::codelen(code),args);
+            return __insert(code,stem_type::codelen(code),args);
         }
-        
-        
+
         //----------------------------------------------------------------------
         //
         // const search API
@@ -207,38 +206,11 @@ namespace upsylon {
         }
         
         //! search by C-style array
-        template <typename SEQUENCE>
         inline const_type *search_by(const CODE *code) const throw()
         {
             return search_by(code,stem_type::codelen(code));
         }
-        
-        //----------------------------------------------------------------------
-        //
-        // mutable search API
-        //
-        //----------------------------------------------------------------------
-        
-        //! search by path
-        template <typename ITERATOR>
-        inline type *search_by(ITERATOR curr, const size_t size) throw()
-        {
-            const prefix_tree &self = *this;
-            return (type *) ( self.search_by(curr,size) );
-        }
-        
-        //! search by sequence
-        template <typename SEQUENCE>
-        inline type *search_by(SEQUENCE &seq) throw()
-        {
-            return search_by( seq.begin(), seq.size() );
-        }
-        
-        //! search by C-style
-        inline type *search_by(const CODE *code) throw()
-        {
-            return search_by(code,stem_type::codelen(code));
-        }
+
         
         //----------------------------------------------------------------------
         //

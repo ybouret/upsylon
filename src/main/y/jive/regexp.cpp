@@ -5,6 +5,7 @@
 
 #include "y/ptr/auto.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -321,7 +322,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 //
                                 //----------------------------------------------
                                 if(!dict) throw exception("%sno dictionary for alias '%s' in '%s'",fn,*ctx,expr);
-                                const Pattern *alias = dict->search(ctx);
+                                const Pattern *alias = dict->query(ctx);
                                 if(!alias)  throw exception("%sno entry '%s' in dictionary for '%s'",fn,*ctx,expr);
                                 p.push_back( alias->clone() );
                             }

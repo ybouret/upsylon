@@ -4,7 +4,7 @@
 #define Y_JIVE_PATTERN_DICT_INCLUDED 1
 
 #include "y/jive/regexp.hpp"
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/prefix/storage.hpp"
 
 namespace upsylon {
 
@@ -16,7 +16,7 @@ namespace upsylon {
         //! base class for dictionary
         //
         //______________________________________________________________________
-        typedef suffix_tree<const Motif> DictionaryType;
+        typedef prefix_storage<const Motif> DictionaryType;
 
         //______________________________________________________________________
         //
@@ -41,18 +41,18 @@ namespace upsylon {
 
             //! generic secured insertion of a new pattern
             template <typename NAME> inline
-            bool insert(const NAME &id, Pattern *p)
+            bool store(const NAME &id, Pattern *p)
             {
                 assert(p);
                 const Motif m(p);
-                return insert_by(id,m);
+                return insert(id,m);
             }
 
             //! search const pattern
             template <typename NAME> inline
-            const Pattern *search(const NAME &id) const throw()
+            const Pattern *query(const NAME &id) const throw()
             {
-                const Motif *pMotif = search_by(id);
+                const Motif *pMotif = search(id);
                 return pMotif ? & (**pMotif) : NULL;
             }
 

@@ -63,19 +63,19 @@ namespace upsylon
         inline bool insert(const void *buf, const size_t len, param_type args)
         {
             assert(!(NULL==buf&&len>0));
-            return this->insert_by((const char *)buf,len,args);
+            return this->__insert((const char *)buf,len,args);
         }
         
         //! insertion by text
         inline bool insert(const char *text, param_type args)
         {
-            return this->insert_by(text,tree_type::codelen(text),args);
+            return this->__insert(text,tree_type::codelen(text),args);
         }
         
         //! insertion by buffer
         inline bool insert(const memory::ro_buffer &buffer, param_type &args)
         {
-            return this->insert_by( static_cast<const char *>(buffer.ro()), buffer.length(), args);
+            return this->__insert( static_cast<const char *>(buffer.ro()), buffer.length(), args);
         }
 
         //______________________________________________________________________

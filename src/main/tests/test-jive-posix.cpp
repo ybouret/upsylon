@@ -23,7 +23,7 @@ namespace {
         Leading fc;
         p->start(fc);
         std::cerr << "first chars: " << fc << std::endl;
-        if( !dict.insert_by(id,p) )
+        if( !dict.insert(id,p) )
         {
             throw exception("multiple <%s> in dict", *id);
         }

@@ -17,7 +17,7 @@ namespace upsylon {
 
         Lexer:: ~Lexer() throw()
         {
-            db.release_all();
+            db.release();
             if(refcount()>0)
             {
                 (void) liberate();
@@ -38,7 +38,7 @@ namespace upsylon {
             const Scanner::Pointer self = this;
             try
             {
-                if( !db.insert_by( *label, self) )
+                if( !db.insert( *label, self) )
                 {
                     throw exception("[%s] unexpected initialize failure", **label);
                 }
@@ -54,7 +54,7 @@ namespace upsylon {
         Lexical::Scanner & Lexer:: newScanner( const Tag &t )
         {
             Scanner::Pointer handle = new Scanner(t);
-            if(!db.insert_by(*(handle->label),handle))
+            if(!db.insert(*(handle->label),handle))
             {
                 throw exception("[%s] multiple scanners [%s]", **label, **(handle->label));
             }
@@ -65,7 +65,7 @@ namespace upsylon {
         void Lexer:: jmp(const Tag &target)
         {
             assert(scan);
-            const Scanner::Pointer *ppScan = db.search_by(*target);
+            const Scanner::Pointer *ppScan = db.search(*target);
             if(!ppScan)
             {
                 throw exception("[%s] no [%s] to go to from [%s]",**label, **target, **(scan->label) );
@@ -173,21 +173,21 @@ namespace upsylon {
             const Scanner::Pointer theScanner = plg;
             const string          &name       = *(plg->label);
 
-            if( !ex.insert_by(name,thePlugin))
+            if( !ex.insert(name,thePlugin))
             {
                 throw exception("[%s] multiple plugin [%s]", **label, *name);
             }
 
             try
             {
-                if( !db.insert_by(name,theScanner))
+                if( !db.insert(name,theScanner))
                 {
                     throw exception("[%s] plugin [%s] collides with scanner", **label, *name);
                 }
             }
             catch(...)
             {
-                ex.no(name);
+                (void)ex.remove(name);
                 throw;
             }
         }

@@ -62,7 +62,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // insert into database
                     //----------------------------------------------------------
-                    if(!aliasing::_(hoard).insert_by(ruleName,r))
+                    if(!aliasing::_(hoard).insert(ruleName,r))
                     {
                         throw exception("Jive::Lexical::Scanner(multiple rule <%s>)", *ruleName);
                     }
@@ -103,7 +103,7 @@ namespace upsylon {
                 }
                 catch(...)
                 {
-                    aliasing::_(hoard).remove_by(ruleName);
+                    aliasing::_(hoard).remove(ruleName);
                     delete aliasing::_(rules).pop_back();
                     table.remove(r);
                     throw;

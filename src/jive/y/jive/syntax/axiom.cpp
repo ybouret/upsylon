@@ -22,7 +22,8 @@ namespace upsylon
             {
                 return r.display(os);
             }
-            
+
+#if 0
             namespace {
 
                 struct AxiomRegistryDisplay
@@ -41,11 +42,11 @@ namespace upsylon
                     }
                 };
             }
-
+#endif
             std::ostream & Axiom:: Registry:: display(std::ostream &os) const
             {
-                AxiomRegistryDisplay cb = { &os, 0, entries() };
-                for_each(cb);
+                //AxiomRegistryDisplay cb = { &os, 0, entries() };
+                //for_each(cb);
                 return os;
             }
 
@@ -57,7 +58,7 @@ namespace upsylon
                 Axiom * const *ppA = search_by( key );
                 if(!ppA)
                 {
-                    if(!insert_by(key,&axiom))
+                    if(!insert(key,&axiom))
                     {
                         throw exception("%sunexpected failure to record <%s> for %s",fn,*key,*who);
                     }
@@ -169,7 +170,7 @@ namespace upsylon
             bool Axiom:: new_in(Axiom::Registry &db) const
             {
                 Axiom &impl = aliasing::_(*this);
-                return db.insert_by(*name,&impl);
+                return db.insert(*name,&impl);
             }
 
 

@@ -16,8 +16,9 @@ namespace upsylon
             {
                 assert(axiom!=NULL);
                 axioms.push_back(axiom);
-                try {
-                    if(!registry.insert_by(*(axiom->name),axiom))
+                try
+                {
+                    if(!registry.insert(*(axiom->name),axiom))
                     {
                         throw exception("%s: multiple [%s]",**name, **(axiom->name));
                     }

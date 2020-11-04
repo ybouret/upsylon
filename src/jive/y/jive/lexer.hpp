@@ -29,10 +29,10 @@ namespace upsylon {
             //
             // types and definitions
             //__________________________________________________________________
-            typedef Lexical::Scanner              Scanner;      //!< alias
-            typedef suffix_tree<Scanner::Pointer> ScannerTree;  //!< alias
-            typedef Lexical::Plugin               Plugin;       //!< alias
-            typedef suffix_tree<Plugin::Pointer>  PluginTree;   //!< alias
+            typedef Lexical::Scanner                 Scanner;      //!< alias
+            typedef prefix_storage<Scanner::Pointer> ScannerTree;  //!< alias
+            typedef Lexical::Plugin                  Plugin;       //!< alias
+            typedef prefix_storage<Plugin::Pointer>  PluginTree;   //!< alias
 
             typedef Scanner                      *HScan;        //!< alias for history
             typedef list<HScan>                   History;      //!< history type
@@ -104,14 +104,14 @@ namespace upsylon {
             template <typename ID>
             bool hasPlugin(const ID &id) const throw()
             {
-                return NULL != ex.search_by(id);
+                return NULL != ex.search(id);
             }
 
             //! get a plugin by ID
             template <typename ID>
             Plugin &getPlugin(const ID &id)
             {
-                const Plugin::Pointer *ppPlugin = ex.search_by(id);
+                const Plugin::Pointer *ppPlugin = ex.search(id);
                 if(!ppPlugin) noPlugin(id);
                 return (Plugin&)(**ppPlugin);
             }

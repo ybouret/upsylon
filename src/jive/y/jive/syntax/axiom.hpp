@@ -64,7 +64,7 @@ namespace upsylon
                 static const char     Prefix[];                      //!< "[JIVE] "
                 typedef core::list_of_cpp<Axiom>     List;           //!< alias
                 typedef Axiom                       *Pointer;        //!< alias
-                typedef suffix_tree<Pointer>         RegistryType;   //!< alias
+                typedef prefix_storage<Pointer>      RegistryType;   //!< alias
                 typedef ref_node<const Axiom>        Reference;      //!< alias
                 typedef core::list_of_cpp<Reference> Manifest;       //!< alias
 

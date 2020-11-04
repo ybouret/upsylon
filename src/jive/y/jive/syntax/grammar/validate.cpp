@@ -2,6 +2,7 @@
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
 #include "y/ios/align.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -39,7 +40,7 @@ namespace upsylon
                 // checking database
                 //
                 //--------------------------------------------------------------
-                const size_t nr = db.entries();
+                const size_t nr = db.size();
                 if(nr<na)
                 {
                     const size_t bad = na-nr;

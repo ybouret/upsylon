@@ -335,7 +335,7 @@ namespace
                     key << alea.range<CODE>('a','d');
                 }
                 const T tmp = support::get<T>();
-                if( tree.insert_by(key,tmp) )
+                if( tree.__insert(key,tmp) )
                 {
                     std::cerr << "+";
                     keys << key;
@@ -462,10 +462,10 @@ Y_UTEST(prefix)
     {
         prefix_tree<char,int> tree;
         const string key1 = "hello";
-        Y_CHECK(tree.insert_by(key1,1));
+        Y_CHECK(tree.__insert(key1,1));
         const char *key2 = "world";
-        Y_CHECK(tree.insert_by(key2,2));
-        Y_CHECK(tree.insert_by("key",3));
+        Y_CHECK(tree.__insert(key2,2));
+        Y_CHECK(tree.__insert("key",3));
         tree.get_root().graphViz("tree3.dot");
         
         showPaths(tree.begin(),tree.tell());

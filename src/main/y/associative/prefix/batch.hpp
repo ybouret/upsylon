@@ -120,7 +120,7 @@ namespace upsylon {
         {
             static const int2type<ro_buffer_key> kind = {};
             const_key_type & key = args.key();
-            return this->insert_by(__addr_of(key,kind),__size_of(key,kind),args);
+            return this->__insert(__addr_of(key,kind),__size_of(key,kind),args);
         }
         
         

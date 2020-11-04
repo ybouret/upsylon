@@ -36,7 +36,7 @@ namespace upsylon {
             {
                 const string *p = new string(buffer,buflen);
                 const Tag     t(p);
-                if(!insert_by(buffer,buflen,t))
+                if(!insert(buffer,buflen,t))
                 {
                     throw exception("Jive::Tags(unexpected failure for '%s')", **p);
                 }

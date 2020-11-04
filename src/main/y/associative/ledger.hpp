@@ -55,7 +55,7 @@ namespace upsylon {
         inline bool insert(const T &args)
         {
             const addr_type addr = args;
-            return this->insert_by((const char *)&addr.data,addr.size,addr);
+            return this->__insert((const char *)&addr.data,addr.size,addr);
         }
         
         //! search
