@@ -57,13 +57,13 @@ namespace upsylon {
         //! get size
         inline virtual size_t size() const throw()
         {
-            return this->dl.size;
+            return this->tell();
         }
         
         //! get capacity
         inline virtual size_t capacity() const throw()
         {
-            return this->dl.size+this->dp.size;
+            return this->tell()+this->fund();
         }
         
         //! free

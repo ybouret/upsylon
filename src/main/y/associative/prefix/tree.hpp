@@ -64,7 +64,7 @@ namespace upsylon {
     //__________________________________________________________________________
     //
     //
-    //! a basic tree of data
+    //! a basic tree of data, attaching data to leaves
     //
     //__________________________________________________________________________
     template <typename CODE, typename T>
@@ -261,9 +261,7 @@ namespace upsylon {
             this->cache_prune();
             empty_pool();
         }
-        
-        
-        
+
         //! clean with memory keeping
         inline void erase() throw()
         {
@@ -299,10 +297,7 @@ namespace upsylon {
 
 
         //! pool size
-        size_t pool_size() const throw()
-        {
-            return dp.size();
-        }
+        size_t fund() const throw() { return dp.size; }
         
         
         //! sort data
@@ -346,12 +341,11 @@ namespace upsylon {
 
         const_iterator begin() const throw()   { return const_iterator( dl.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);         } //!< end forward const
-
-    protected:
+        
+    private:
         data_list  dl;  //!< list of hooked, live data nodes
         data_pool  dp;  //!< pool of zombie data nodes
 
-    private:
         void empty_pool() throw()
         {
             while(dp.size)

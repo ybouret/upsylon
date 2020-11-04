@@ -54,8 +54,8 @@ namespace upsylon
         //
         // container interface
         //______________________________________________________________________
-        inline virtual size_t size()     const throw() { return this->dl.size; }
-        inline virtual size_t capacity() const throw() { return this->dl.size + this->dp.size; }
+        inline virtual size_t size()     const throw() { return this->tell(); }
+        inline virtual size_t capacity() const throw() { return this->tell() + this->fund(); }
         inline virtual void free()             throw() { this->erase(); }
         inline virtual void release()          throw() { this->ditch(); }
         inline virtual void reserve(const size_t n) { this->gain(n); }
