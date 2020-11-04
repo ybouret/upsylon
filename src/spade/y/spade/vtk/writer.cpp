@@ -117,14 +117,14 @@ namespace upsylon {
         {
             const type_spec &t = type_spec_for(tid); //std::cerr << "getWriter<" << t.name() << ">" << std::endl;
             const be_key     k = t;
-            const INative   *n = natives.search_by(k);
+            const INative   *n = natives.search(k);
             if(n)
             {
                 return **n;
             }
             else
             {
-                const IWriter *w = writers.search_by(k);
+                const IWriter *w = writers.search(k);
                 if(!w)
                 {
                     throw exception("%s no <%s>",fn,*t.name());
@@ -137,7 +137,7 @@ namespace upsylon {
         {
             const type_spec &t = type_spec_for(tid);
             const be_key     k = t;
-            if( !writers.insert_by(k,w) )
+            if( !writers.insert(k,w) )
             {
                 throw exception("%smultiple <%s>", fn, *t.name());
             }

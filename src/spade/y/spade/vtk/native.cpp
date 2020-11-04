@@ -64,9 +64,9 @@ namespace upsylon {
 #define Y_VTK_NATIVE(TYPE,CAST,FMT) do {       \
 const type_spec &t = type_spec_of<TYPE>();     \
 const be_key     k = t;                        \
-if(!natives.search_by(k)) {                    \
+if(!natives.search(k))    {                    \
 const INative w = new _Native<TYPE,CAST>(FMT); \
-if(!natives.insert_by(k,w)) \
+if(!natives.insert(k,w))                       \
 throw exception("%sunexpected failure for <%s>",fn, *t.name());\
 }\
 } while(false)
@@ -109,7 +109,7 @@ throw exception("%sunexpected failure for <%s>",fn, *t.name());\
         {
             const type_spec &t = type_spec_for(tid);
             const be_key     k = t;
-            const INative   *h = natives.search_by(k);
+            const INative   *h = natives.search(k);
             if(!h) throw exception("%sno <%s>",fn, *t.name());
             return **h;
         }
