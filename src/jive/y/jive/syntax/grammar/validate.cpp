@@ -58,7 +58,7 @@ namespace upsylon
                         // check peers
                         for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                         {
-                            Axiom * const *ppA = db.search_by(*(axiom->name));
+                            Axiom * const *ppA = db.search(*(axiom->name));
                             if(!ppA)        throw exception("%s unregistered <%s>!!!",**name, **(axiom->name) );
                             if(*ppA!=axiom) throw exception("%s mismatch  <%s>!!!",**name, **(axiom->name) );
                         }

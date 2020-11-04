@@ -55,7 +55,7 @@ namespace upsylon
                 static const char fn[] = "Axiom::Registry: ";
 
                 const string  &key = *axiom.name;
-                Axiom * const *ppA = search_by( key );
+                Axiom * const *ppA = search( key );
                 if(!ppA)
                 {
                     if(!insert(key,&axiom))

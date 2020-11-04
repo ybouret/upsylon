@@ -8,7 +8,8 @@
 #include "y/string.hpp"
 
 namespace upsylon {
-    
+
+    //! convert node path to string
     template <typename T> inline
     string prefix_node_to_string(const prefix_node<char,T> *node)
     {

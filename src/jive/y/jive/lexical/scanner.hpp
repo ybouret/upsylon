@@ -265,7 +265,7 @@ namespace upsylon
                 template <typename ID>
                 const Rule * queryRule(const ID &id)
                 {
-                    const Rule **ppR = hoard.search_by(id);
+                    const Rule **ppR = hoard.search(id);
                     return ppR ? *ppR : NULL;
                 }
 

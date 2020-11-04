@@ -185,7 +185,7 @@ namespace
     {
         while(size-- > 0 )
         {
-            const string s = prefix_node_to_string( curr._().hook );
+            const string s = prefix_node_to_string( curr.get().hook );
             std::cerr << "-> <" << s << ">" << std::endl;
             ++curr;
         }
@@ -196,7 +196,6 @@ namespace
     {
         std::cerr << "-- depot<" << type_name_of<CODE>() << ">" << std::endl;
         typedef prefix_depot<CODE>            stem_type;
-        //typedef typename stem_type::node_type node_type;
         typedef vector<CODE>                  path_type;
         
         stem_type       stem;
@@ -364,11 +363,11 @@ namespace
             while( keys.size() )
             {
                 const key_type &key = keys.back();
-                Y_ASSERT(tree.search_by(key));
-                Y_ASSERT(tree.remove_by(key));
+                Y_ASSERT(tree.__search(key));
+                Y_ASSERT(tree.__remove(key));
                 {
                     const prefix_tree<CODE,T> &ctree = tree;
-                    Y_ASSERT(!ctree.search_by(key));
+                    Y_ASSERT(!ctree.__search(key));
                 }
 
                 keys.pop_back();
@@ -471,9 +470,9 @@ Y_UTEST(prefix)
         showPaths(tree.begin(),tree.tell());
 
         
-        Y_CHECK(tree.search_by(key1));
-        Y_CHECK(tree.search_by(key2));
-        Y_CHECK(tree.search_by("key"));
+        Y_CHECK(tree.__search(key1));
+        Y_CHECK(tree.__search(key2));
+        Y_CHECK(tree.__search("key"));
     }
     
     {

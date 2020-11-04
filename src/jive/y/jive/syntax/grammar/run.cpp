@@ -45,7 +45,7 @@ namespace upsylon
             Terminal::Type Grammar:: lexemeType(const Lexeme &lexeme) const
             {
                 const string   &key = *lexeme.label;
-                Axiom * const * ppA = registry.search_by(key);
+                Axiom * const * ppA = registry.search(key);
                 if(!ppA)
                 {
                     exception excp;

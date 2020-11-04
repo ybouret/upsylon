@@ -29,7 +29,7 @@ namespace upsylon
             // types and definition
             //__________________________________________________________________
             static const_type invalid = limit_of<const_type>::maximum; //!< unallowed key
-            typedef minimal_perfect_tree::node_type node_type;
+            typedef minimal_perfect_tree::node_type   node_type;       //!< alias
 
             //__________________________________________________________________
             //

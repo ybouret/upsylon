@@ -75,7 +75,7 @@ namespace upsylon
                 template <typename ID> inline
                 const Axiom *query( const ID &id ) const throw()
                 {
-                    const Axiom::Pointer *_ = registry.search_by(id);
+                    const Axiom::Pointer *_ = registry.search(id);
                     return _ ? *_ : NULL;
                 }
 

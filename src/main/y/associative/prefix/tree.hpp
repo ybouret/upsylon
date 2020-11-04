@@ -184,7 +184,7 @@ namespace upsylon {
         
         //! search by path
         template <typename ITERATOR>
-        inline const_type *search_by(ITERATOR curr, const size_t size) const throw()
+        inline const_type *__search(ITERATOR curr, const size_t size) const throw()
         {
             const node_type *node = this->find(curr,size);
             if(node&&node->addr)
@@ -200,15 +200,15 @@ namespace upsylon {
         
         //! search by sequence
         template <typename SEQUENCE>
-        inline const_type *search_by(SEQUENCE &seq) const throw()
+        inline const_type *__search(SEQUENCE &seq) const throw()
         {
-            return search_by( seq.begin(), seq.size() );
+            return __search( seq.begin(), seq.size() );
         }
         
         //! search by C-style array
-        inline const_type *search_by(const CODE *code) const throw()
+        inline const_type *__search(const CODE *code) const throw()
         {
-            return search_by(code,stem_type::codelen(code));
+            return __search(code,stem_type::codelen(code));
         }
 
         
@@ -220,7 +220,7 @@ namespace upsylon {
         
         //! remove by path
         template <typename ITERATOR>
-        inline bool remove_by(ITERATOR curr, const size_t size) throw()
+        inline bool __remove(ITERATOR curr, const size_t size) throw()
         {
             const node_type *node = this->find(curr,size);
             if(node&&node->addr)
@@ -238,15 +238,15 @@ namespace upsylon {
         
         //! remove by sequence
         template <typename SEQUENCE>
-        inline bool remove_by(SEQUENCE &seq) throw()
+        inline bool __remove(SEQUENCE &seq) throw()
         {
-            return remove_by(seq.begin(),seq.size());
+            return __remove(seq.begin(),seq.size());
         }
         
         //! remove by C-style array
-        inline bool remove_by(const CODE *code) throw()
+        inline bool __remove(const CODE *code) throw()
         {
-            return remove_by(code,stem_type::codelen(code));
+            return __remove(code,stem_type::codelen(code));
         }
         
         //----------------------------------------------------------------------

@@ -62,7 +62,7 @@ namespace upsylon {
         inline bool search(const T &args) const throw()
         {
             const addr_type addr = args;
-            return NULL != this->search_by((const char *)&addr.data,addr.size);
+            return NULL != this->__search((const char *)&addr.data,addr.size);
         }
         
         //! secure
@@ -75,7 +75,7 @@ namespace upsylon {
         inline void remove(const T &args) throw()
         {
             const addr_type addr = args;
-            (void) this->remove_by((const char *)&addr.data,addr.size);
+            (void) this->__remove((const char *)&addr.data,addr.size);
 
         }
         

@@ -30,13 +30,19 @@ namespace upsylon
         //
         // C++
         //______________________________________________________________________
+        //! setup
         inline explicit prefix_storage() : tree_type() {}
+
+        //! cleanup
         inline virtual ~prefix_storage() throw() {}
-        inline  prefix_storage(const prefix_storage &other) :
+
+        //! copy
+        inline prefix_storage(const prefix_storage &other) :
         collection(),
         container(),
         tree_type(other) {}
-        
+
+        //! assign
         inline prefix_storage & operator=( const prefix_storage &other )
         {
             tree_type &self = *this;
@@ -82,20 +88,23 @@ namespace upsylon
         //
         // search
         //______________________________________________________________________
+        //! search by binary path
         inline const_type *search(const void *buf, const size_t len) const throw()
         {
             assert(!(NULL==buf&&len>0));
-            return this->search_by((const char*)buf,len);
+            return this->__search((const char*)buf,len);
         }
-        
+
+        //! search by C-style text
         inline const_type *search(const char *text) const throw()
         {
-            return this->search_by(text,tree_type::codelen(text));
+            return this->__search(text,tree_type::codelen(text));
         }
-        
+
+        //! search with memory buffer
         inline const_type *search(const memory::ro_buffer &buffer) const throw()
         {
-            return this->search_by(static_cast<const char *>(buffer.ro()), buffer.length());
+            return this->__search(static_cast<const char *>(buffer.ro()), buffer.length());
         }
 
         //______________________________________________________________________
@@ -103,20 +112,23 @@ namespace upsylon
         // remove
         //______________________________________________________________________
 
+        //! remove using binary path
         inline bool remove(const void *buf, const size_t len)   throw()
         {
             assert(!(NULL==buf&&len>0));
-            return this->remove_by((const char*)buf,len);
+            return this->__remove((const char*)buf,len);
         }
-        
+
+        //! remove using C-style text
         inline bool remove(const char *text)   throw()
         {
-            return this->remove_by(text,tree_type::codelen(text));
+            return this->__remove(text,tree_type::codelen(text));
         }
-        
+
+        //! remove using memory buffer
         inline bool remove(const memory::ro_buffer &buffer)   throw()
         {
-            return this->remove_by(static_cast<const char *>(buffer.ro()), buffer.length());
+            return this->__remove(static_cast<const char *>(buffer.ro()), buffer.length());
         }
         
         

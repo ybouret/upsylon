@@ -35,10 +35,10 @@ namespace upsylon
             //
             // types and definition
             //__________________________________________________________________
-            Y_DECL_ARGS(T,type); //!< aliases
-            typedef NODE                                     node_type;
-            typedef typename type_traits<NODE>::mutable_type mutable_node;
-            typedef const mutable_node                       const_node;
+            Y_DECL_ARGS(T,type);                                              //!< aliases
+            typedef NODE                                     node_type;       //!< alias
+            typedef typename type_traits<NODE>::mutable_type mutable_node;    //!< alias
+            typedef const mutable_node                       const_node;      //!< alias
 
 
             //! ctor
@@ -175,10 +175,10 @@ namespace upsylon
             }
 
             //! get node
-            inline node_type  & _() throw() { assert(node); return *node; }
+            inline node_type  & get() throw() { assert(node); return *node; }
 
             //! get node, const
-            inline const_node & _() const throw() { assert(node); return *node; }
+            inline const_node & get() const throw() { assert(node); return *node; }
 
         private:
             NODE *node;
