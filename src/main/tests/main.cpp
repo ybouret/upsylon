@@ -147,6 +147,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(catalog);
     Y_UTEST(ledger);
     Y_UTEST(prefix);
+    Y_UTEST(hashed);
     
     Y_UTEST(fft);
     Y_UTEST(network_sort);

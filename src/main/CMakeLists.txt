@@ -137,6 +137,12 @@ SET(associative_prefix_srcs ${associative_prefix_decl} ${associative_prefix_code
 SOURCE_GROUP( associative/prefix FILES ${associative_prefix_srcs} )
 INSTALL( FILES ${associative_prefix_decl} DESTINATION include/y/associative/prefix )
 
+FILE(GLOB associative_hash_decl   y/associative/hash/*.hpp)
+FILE(GLOB associative_hash_code y/associative/hash/*.cpp)
+SET(associative_hash_srcs ${associative_hash_decl} ${associative_hash_code})
+SOURCE_GROUP( associative/hash FILES ${associative_hash_srcs} )
+INSTALL( FILES ${associative_hash_decl} DESTINATION include/y/associative/hash )
+
 FILE(GLOB hashing_decl y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
 SET(hashing_srcs ${hashing_decl} ${hashing_code})
@@ -394,7 +400,7 @@ ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
-${associative_srcs} ${associative_prefix_srcs}
+${associative_srcs} ${associative_prefix_srcs} ${associative_hash_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
