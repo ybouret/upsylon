@@ -5,6 +5,7 @@
 
 #include "y/jive/context.hpp"
 #include "y/memory/magazine.hpp"
+#include "y/core/inode.hpp"
 
 namespace upsylon {
 

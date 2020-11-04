@@ -5,6 +5,7 @@
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/associative/prefix/node-to-string.hpp"
 
 namespace upsylon {
 
@@ -26,7 +27,7 @@ namespace upsylon {
         {
             Y_LOCK(access);
             assert(!(NULL==buffer&&buflen>0));
-            const Tag *tag = look_for(buffer,buflen);
+            const Tag *tag = search(buffer,buflen);
             if( tag )
             {
                 return & **tag;
@@ -70,28 +71,25 @@ namespace upsylon {
             return get( &C, 1 );
         }
 
-        static inline
-        bool DisplayCallback(const suffix_path &path,
-                             const Tag         &tag)
-        {
-            const size_t len = Tags::location().maxLength;
-            std::cerr << '\t' << '<' << tag << '>' << ' ';
-            for(size_t i=tag->size();i<len;++i) std::cerr << ' ';
-            std::cerr << '(';
-            for(suffix_path::const_iterator i=path.begin();i!=path.end();++i)
-            {
-                std::cerr << cchars::visible[*i];
-            }
-            std::cerr << ')' << std::endl;
-            return true;
-        }
-
+        
         void Tags:: Display()
         {
             static const Tags  &tree = Tags::instance();
             Y_LOCK(tree.access);
-            std::cerr << "<Jive::Tags count=\"" << tree.entries() << "\">" << std::endl;
-            tree.for_each(DisplayCallback);
+            std::cerr << "<Jive::Tags count=\"" << tree.size() << "\">" << std::endl;
+
+            const size_t len = tree.maxLength;
+            for(const data_node *node=tree.head();node;node=node->next)
+            {
+                const Tag &tag = **node;
+                std::cerr << '\t' << '<' << tag << '>' << ' ';
+                for(size_t i=tag->size();i<len;++i) std::cerr << ' ';
+                std::cerr << '(';
+                const string path = prefix_node_to_string(node->hook);
+                std::cerr << path;
+                std::cerr << ')' << std::endl;
+            }
+
             std::cerr << "<Jive::Tags/>" << std::endl;
         }
 
@@ -99,7 +97,7 @@ namespace upsylon {
         {
             static Tags  &tree = Tags::instance();
             Y_LOCK(tree.access);
-            tree.release_all();
+            tree.release();
         }
 
     }

@@ -1,5 +1,6 @@
 #include "y/jive/pattern/basic/range.hpp"
 #include "y/information/entropy.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 

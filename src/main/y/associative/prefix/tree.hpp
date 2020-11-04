@@ -20,22 +20,43 @@ namespace upsylon {
     class prefix_data_node
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         Y_DECL_ARGS(T,type);                             //!< aliases
         typedef prefix_data_node<CODE,T>      data_node; //!< alias
         typedef prefix_stem<CODE,data_node>   stem_type; //!< alias
         typedef typename stem_type::node_type node_type; //!< alias
-        
+
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         //! setup
         inline prefix_data_node(const_type &args) : next(0), prev(0), hook(0), data(args) {}
         
         //! cleanup
         inline ~prefix_data_node() throw() { hook=0; }
-        
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        inline type       & operator*()       throw() { return data; } //!< access
+        inline const_type & operator*() const throw() { return data; } //!< access
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
         data_node *next; //!< for list/pool
         data_node *prev; //!< for list
         node_type *hook; //!< to internal leaf
         type       data; //!< actual data
-        
+
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(prefix_data_node);
     };

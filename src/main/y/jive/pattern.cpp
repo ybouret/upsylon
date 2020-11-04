@@ -4,6 +4,7 @@
 #include "y/ios/ostream.hpp"
 #include "y/information/entropy.hpp"
 #include "y/ios/osstream.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 

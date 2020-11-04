@@ -4,6 +4,7 @@
 #define Y_JIVE_PATTERN_MATCHING_INCLUDED 1
 
 #include "y/jive/regexp.hpp"
+#include "y/container/sequence.hpp"
 
 namespace upsylon
 {

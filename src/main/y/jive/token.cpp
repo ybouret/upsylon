@@ -1,6 +1,7 @@
 
 #include "y/jive/token.hpp"
 #include "y/exception.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 

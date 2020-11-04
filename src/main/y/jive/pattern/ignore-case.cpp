@@ -3,6 +3,7 @@
 #include "y/jive/pattern/all.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 

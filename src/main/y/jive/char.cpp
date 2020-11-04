@@ -1,6 +1,7 @@
 #include "y/jive/char.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon {
 
