@@ -2,7 +2,7 @@
 #ifndef Y_HASHED_SLOTS_INCLUDED
 #define Y_HASHED_SLOTS_INCLUDED 1
 
-#include "y/core/list.hpp"
+#include "y/associative/hash/meta-pool.hpp"
 
 namespace upsylon
 {
@@ -10,84 +10,37 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! base class for hash_slots: metric and memory
+    //! slots for hash meta nodes
     //
     //__________________________________________________________________________
-    class hash_slots_
+    class hash_slots
     {
     public:
-        virtual ~hash_slots_() throw(); //!< cleanup and release memory
+        typedef hash_meta_node node_type;
+        typedef hash_meta_list slot_type;
 
-        const size_t slots;             //!< number of slots, a power of two
-        const size_t smask;             //!< mask for access = slots-1
-        const size_t block_exp2;        //!< ilog2(slots*slot_size)
+        virtual ~hash_slots() throw(); //!< cleanup and release memory
+        explicit hash_slots(const size_t n);
 
-    protected:
-        void        *block_addr;   //!< address of first slot
+        void     to(slot_type &repo) throw();
 
-        //! compute metrics and acquire memory
-        explicit hash_slots_(const size_t n,
-                             const size_t slot_size);
+        void              load(hash_meta_node *node) throw();
+        slot_type       & operator[](const size_t hkey) throw();
+        const slot_type & operator[](const size_t hkey) const throw();
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(hash_slots_);
-    };
-
-
-    //__________________________________________________________________________
-    //
-    //
-    //! hash slots for a given NODE
-    //
-    //__________________________________________________________________________
-    template <typename NODE>
-    class hash_slots : public hash_slots_
-    {
+        slot_type   *slot;
     public:
-        //______________________________________________________________________
-        //
-        // types and definition
-        //______________________________________________________________________
-        typedef core::list_of<NODE> slot_type;                     //!< alias
-        static const size_t         slot_size = sizeof(slot_type); //!< alias
-
-
-        //______________________________________________________________________
-        //
-        // C++
-        //______________________________________________________________________
-
-        //! setup
-        explicit hash_slots(const size_t n) :
-        hash_slots_(n,slot_size),
-        slot( static_cast<slot_type *>(block_addr) )
-        {
-            for(size_t i=0;i<slots;++i)
-            {
-                new (slot+i) slot_type();
-            }
-        }
-
-        //! cleanup
-        inline virtual ~hash_slots() throw()
-        {
-            for(size_t i=0;i<slots;++i)
-            {
-                slot[i].~slot_type();
-            }
-            slot = 0;
-        }
-
-        //______________________________________________________________________
-        //
-        // members
-        //______________________________________________________________________
+        const size_t slots;        //!< number of slots, a power of two
+        const size_t smask;        //!< mask for access = slots-1
+        const size_t sexp2;        //!< ilog2(slots*sizeof(slot_type))
         
-        slot_type    *slot; //!< slots[0..slots-1]
-
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_slots);
     };
+
+
+
 
 }
 

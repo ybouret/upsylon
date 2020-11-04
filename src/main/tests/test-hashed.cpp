@@ -7,27 +7,41 @@ using namespace upsylon;
 namespace
 {
 
-    struct dummy {
-        dummy *next;
-        dummy *prev;
-    };
 
     static inline
     void doHashSlots(const size_t n)
     {
-
-
         static const size_t one = 1;
-        hash_slots<dummy> hs(n);
-        const size_t required  = hs.slots * hs.slot_size;
-        const size_t allocated = one << hs.block_exp2;
+        hash_slots          hs(n);
+        const size_t required  = hs.slots * sizeof(hash_meta_list);
+        const size_t allocated = one << hs.sexp2;
         std::cerr << "n=" << n << std::endl;
-        std::cerr << "\tslot_size = " << hs.slot_size << std::endl;
         std::cerr << "\tslots     = " << hs.slots << std::endl;
         std::cerr << "\tsmask     = " << hs.smask << std::endl;
-        std::cerr << "\texp2      = " << hs.block_exp2 << std::endl;
+        std::cerr << "\tsexp2     = " << hs.sexp2 << std::endl;
         std::cerr << "\tbytes     = " << allocated << "/" << required << std::endl;
         Y_CHECK( allocated >= required );
+
+        hash_meta_pool pool;
+        try {
+            int data = 1;
+
+            for(size_t i=1+alea.leq(1000);i>0;--i)
+            {
+                const size_t    hkey = alea.full<size_t>();
+                hs.load( pool.query(hkey,&data) );
+            }
+
+            hs.to(pool);
+        }
+        catch(...)
+        {
+            hs.to(pool);
+            throw;
+        }
+
+        pool.sort();
+        std::cerr << "pool.size=" << pool.size << std::endl;
         std::cerr << std::endl;
     }
 

@@ -8,26 +8,60 @@
 namespace upsylon
 {
 
-    hash_slots_::~hash_slots_() throw()
+    hash_slots::~hash_slots() throw()
     {
-        object::dyadic_release(block_addr,block_exp2);
-        block_addr = 0;
+        // cleanup (will check empty slots)
+        for(size_t i=0;i<slots;++i) slot[i].~slot_type();
+
+        object::dyadic_release(slot,sexp2);
+        slot = 0;
         _bzset(slots);
         _bzset(smask);
-        _bzset(block_exp2);
+        _bzset(sexp2);
     }
 
-    hash_slots_:: hash_slots_(const size_t n, const size_t slot_size) :
+    hash_slots:: hash_slots(const size_t n) :
+    slot(0),
     slots(0),
     smask(0),
-    block_exp2(0),
-    block_addr(0)
+    sexp2(0)
     {
         static const size_t min_size = 4;
-        const        size_t max_size = base2<size_t>::max_power_of_two / slot_size;
-        aliasing::_(slots)      = next_power_of_two( clamp(min_size,n,max_size) );
-        aliasing::_(smask)      = slots-1;
-        aliasing::_(block_exp2) = base2<size_t>::log2_of( next_power_of_two(slots*slot_size) );
-        block_addr = object::dyadic_acquire(block_exp2);
+        const        size_t max_size = base2<size_t>::max_power_of_two / sizeof(slot_type);
+
+        aliasing::_(slots) = next_power_of_two( clamp(min_size,n,max_size) );
+        aliasing::_(smask) = slots-1;
+        aliasing::_(sexp2) = base2<size_t>::log2_of( next_power_of_two(slots*sizeof(slot_type)) );
+        slot               = static_cast<slot_type *>( object::dyadic_acquire(sexp2) );
+
+        // finalize
+        for(size_t i=0;i<slots;++i) new ( &slot[i] ) slot_type();
+
     }
+
+    void hash_slots:: to(slot_type &repo) throw()
+    {
+        for(size_t i=0;i<slots;++i)
+        {
+            repo.merge_front(slot[i]);
+            assert(0==slot[i].size);
+        }
+    }
+
+    void hash_slots:: load(hash_meta_node *node) throw()
+    {
+        assert(node);
+        slot[node->hkey&smask].push_front(node);
+    }
+
+    hash_slots::slot_type  &  hash_slots:: operator[](const size_t hkey) throw()
+    {
+        return slot[hkey&smask];
+    }
+
+    const hash_slots::slot_type  &  hash_slots:: operator[](const size_t hkey) const throw()
+    {
+        return slot[hkey&smask];
+    }
+
 }
