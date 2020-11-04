@@ -1,7 +1,7 @@
 
 
 #include "y/jive/pattern/posix.hpp"
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/prefix/storage.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -14,7 +14,7 @@ namespace upsylon {
 
             class PosixDB :
             public singleton<PosixDB>,
-            public suffix_tree<creator>
+            public prefix_storage<creator>
             {
             public:
 
@@ -24,7 +24,7 @@ namespace upsylon {
                 inline void record(const char *name, creator proc)
                 {
                     assert(proc);
-                    if(!insert_by(name, length_of(name),proc))
+                    if(!insert(name,proc))
                     {
                         throw exception("Jive::PosixDB multiple name");
                     }
@@ -66,14 +66,14 @@ namespace upsylon {
         {
             static const PosixDB &db = PosixDB::instance();
             Y_LOCK(db.access);
-            return db.search_by(id);
+            return db.search(id);
         }
 
         bool posix:: exists(const char *id) throw()
         {
             static const PosixDB &db = PosixDB::instance();
             Y_LOCK(db.access);
-            return db.search_by(id);
+            return db.search(id);
         }
 
 
@@ -81,7 +81,7 @@ namespace upsylon {
         {
             static const PosixDB &db = PosixDB::instance();
             Y_LOCK(db.access);
-            const creator *proc = db.search_by(id);
+            const creator *proc = db.search(id);
             if(!proc) throw exception("no posix::%s", *id);
             assert(*proc);
             return (*proc)();
@@ -103,7 +103,7 @@ namespace upsylon {
         {
             static const PosixDB &db = PosixDB::instance();
             Y_LOCK(db.access);
-            const creator *proc = db.search_by(id);
+            const creator *proc = db.search(id);
             if(!proc)
             {
                 return NULL;
