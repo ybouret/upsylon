@@ -6,7 +6,8 @@
 
 namespace upsylon
 {
-    
+    typedef prefix_storage<mpi::data_type> mpi_data_type_db;
+
     mpi:: data_type:: data_type(const MPI_Datatype value, const unsigned bytes) throw() :
     uuid(value),
     size(bytes)
@@ -26,24 +27,24 @@ namespace upsylon
     }
     
     template <typename T>
-    static inline void __register(suffix_tree<mpi::data_type> &db,
-                                  const MPI_Datatype           dt)
+    static inline void __register(mpi_data_type_db  &db,
+                                  const MPI_Datatype dt)
     {
         const be_key         key = typeid(T);
         const mpi::data_type mdt(dt,sizeof(T));
-        (void) db.insert_by(key,mdt);
+        (void) db.insert(key,mdt);
     }
  
-#define Y_MPI_FIND(type) do { \
-const be_key          key = typeid(type);\
-const mpi::data_type *ptr = db.search_by(key);\
-assert(ptr);\
-if(sz==ptr->size) return ptr->uuid;\
+#define Y_MPI_FIND(type) do {                \
+const be_key          key = typeid(type);    \
+const mpi::data_type *ptr = db.search(key);  \
+assert(ptr);                                 \
+if(sz==ptr->size) return ptr->uuid;          \
 } while(false)
 
     static inline
-    MPI_Datatype __ifind(const suffix_tree<mpi::data_type> &db,
-                         const unsigned                     sz)
+    MPI_Datatype __ifind(const mpi_data_type_db &db,
+                         const unsigned          sz)
     {
         Y_MPI_FIND(char);
         Y_MPI_FIND(short);
@@ -55,8 +56,8 @@ if(sz==ptr->size) return ptr->uuid;\
     }
     
     static inline
-    MPI_Datatype __ufind(const suffix_tree<mpi::data_type> &db,
-                         const unsigned                     sz)
+    MPI_Datatype __ufind(const mpi_data_type_db &db,
+                         const unsigned          sz)
     {
         Y_MPI_FIND(unsigned char);
         Y_MPI_FIND(unsigned short);
@@ -151,10 +152,26 @@ assert( sizeof(type) == data_type_for<type>().size );\
     const mpi::data_type &mpi:: data_type_for( const std::type_info &tid ) const
     {
         const be_key     key = tid;
-        const data_type *ptr = types.search_by(key);
+        const data_type *ptr = types.search(key);
         if(!ptr) throw upsylon::exception("missing mpi::data_type for <%s>", tid.name() );
         return *ptr;
     }
-    
+
+    void mpi:: display_data_types() const
+    {
+        for(const prefix_storage<data_type>::data_node *node=types.head();node;node=node->next)
+        {
+            union {
+                unsigned_int<sizeof(void*)>::type info;
+                void                             *addr;
+            } alias = { 0 };
+
+            node->hook->encode( (char *)&alias.info );
+            alias.info = swap_be(alias.info);
+            const std::type_info &tid = *static_cast<const std::type_info *>(alias.addr);
+            fprintf(stderr,"\t'%s'\n", tid.name() );
+        }
+    }
+
 }
 

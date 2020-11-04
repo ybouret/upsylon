@@ -96,7 +96,15 @@ Y_UTEST(init)
 
     Y_MPI_HEAD( std::cerr << "Will Execute Node Code" << std::endl; std::cerr.flush() );
     Y_MPI_NODE( std::cerr << "Now Sequential @" << MPI.nodeName  << std::endl; std::cerr.flush() );
-    
+
+    MPI.Printf0(stderr,"<data_types>\n");
+    if(MPI.head)
+    {
+
+        MPI.display_data_types();
+    }
+    MPI.Printf0(stderr,"<data_types/>\n");
+
 }
 Y_UTEST_DONE()
 

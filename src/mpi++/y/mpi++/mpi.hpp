@@ -7,7 +7,7 @@
 #include "y/string.hpp"
 #include "y/exception.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/associative/suffix/tree.hpp"
+#include "y/associative/prefix/storage.hpp"
 #include "y/ios/cfile.hpp"
 
 #include <cstdio>
@@ -249,10 +249,7 @@ namespace upsylon
         {
             Send(&args,1,dest);
         }
-        
-        //! Send one datum
-        
-        
+
         //! portable send size
         void SendSize(const size_t   args,
                       const int      dest) const;
@@ -508,7 +505,10 @@ namespace upsylon
         //! wrapper to get a data_type
         template <typename T> inline
         const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
-        
+
+        //! info only
+        void display_data_types() const;
+
         //! print only on head node
         void Printf0(FILE *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
         
@@ -542,7 +542,7 @@ namespace upsylon
         void build_data_types(); //!< build the database of primary types
       
         
-        suffix_tree<data_type> types; //!< persistent database of types+sizes
+        prefix_storage<data_type> types; //!< persistent database of types+sizes
         
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)
