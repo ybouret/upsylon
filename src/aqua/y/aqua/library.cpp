@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
         Library:: Library() :
-        upsylon::suffix_tree<Species::Pointer>(),
+        prefix_storage<Species::Pointer>(),
         maxNameSize(0)
         {
         }
@@ -23,7 +23,7 @@ namespace upsylon {
 
         Species & Library:: create(const Species::Pointer &sp)
         {
-            if(!insert_by(sp->name,sp))
+            if(!insert(sp->name,sp))
             {
                 throw exception("Aqua::Library: multiple species '%s'", *(sp->name) );
             }
@@ -81,7 +81,7 @@ namespace upsylon {
         
         const Species & Library::  operator[](const string &id) const
         {
-            const Species::Pointer *pps = search_by(id);
+            const Species::Pointer *pps = search(id);
             if(!pps)
             {
                 throw exception(fmt,*id);
@@ -91,7 +91,7 @@ namespace upsylon {
 
         const Species & Library:: operator[](const char *id) const
         {
-            const Species::Pointer *pps = search_by(id);
+            const Species::Pointer *pps = search(id);
             if(!pps)
             {
                 throw exception(fmt,id);

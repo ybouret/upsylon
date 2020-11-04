@@ -90,8 +90,8 @@ namespace upsylon
             quit();
             try
             {
-                aliasing::_(M) = lib.entries();
-                aliasing::_(N) = eqs.entries();
+                aliasing::_(M) = lib.size();
+                aliasing::_(N) = eqs.size();
                 if(N>M) throw exception("%stoo many equilibria",fn);
                 aliasing::_(Nc) = M-N;
 

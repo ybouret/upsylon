@@ -72,7 +72,7 @@ Y_UTEST(boot)
     boot.init(lib,eqs);
     
     
-    vector<double> C(lib.entries()+2,0);
+    vector<double> C(lib.size()+2,0);
     lib.show(std::cerr,C);
 
     Engine engine;

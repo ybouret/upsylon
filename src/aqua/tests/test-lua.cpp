@@ -25,7 +25,7 @@ Y_UTEST(lua)
     cs.init(lib,eqs);
     ini.init(lib,eqs);
 
-    const size_t   M = lib.entries();
+    const size_t   M = lib.size();
     vector<double> C0(M,0);
     cs.computeK(0);
     ini.find(C0,cs);

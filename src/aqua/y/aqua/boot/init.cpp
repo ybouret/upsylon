@@ -22,8 +22,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // parameters for R
                 //--------------------------------------------------------------
-                const size_t M  = lib.entries();
-                const size_t N  = eqs.entries();
+                const size_t M  = lib.size();
+                const size_t N  = eqs.size();
                 const size_t Nc = size;
                 if(N+Nc!=M)
                 {

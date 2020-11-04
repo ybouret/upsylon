@@ -13,7 +13,7 @@ namespace upsylon {
         }
 
         Equilibria:: Equilibria() :
-        upsylon::suffix_tree<Equilibrium::Pointer>(),
+        prefix_storage<Equilibrium::Pointer>(),
         maxNameSize(0)
         {}
 
@@ -21,7 +21,7 @@ namespace upsylon {
         {
             assert(eq);
             const Equilibrium::Pointer p(eq);
-            if(!insert_by(p->name,p))
+            if(!insert(p->name,p))
             {
                 throw exception("multiple equilibrium <%s>",*(p->name));
             }
