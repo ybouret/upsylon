@@ -197,15 +197,6 @@ namespace upsylon
             }
         }
 
-        //! duplicate status BUT code
-        void duplicate_status(const suffix_node *other) throw()
-        {
-            assert(other);
-            assert(other->code==code);
-            this->used = other->used;
-            frequency  = other->frequency;
-            depth      = other->depth;
-        }
         
 
         //______________________________________________________________________

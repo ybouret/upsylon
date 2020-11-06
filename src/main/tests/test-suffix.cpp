@@ -1,7 +1,9 @@
-#include "y/suffix/node.hpp"
+#include "y/suffix/tree.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 
 using namespace upsylon;
 namespace
@@ -29,13 +31,63 @@ namespace
         }
         alea.shuffle(pool);
     }
+
+    template <typename CODE>
+    void testTree()
+    {
+        const string &tid = type_name_of<CODE>();
+        std::cerr << "-- suffix_tree<" << tid << ">" << std::endl;
+        suffix_tree<CODE>    tree1;
+        suffix_tree<CODE>    tree2;
+        typedef vector<CODE> key_type;
+        list<key_type> keys;
+        void          *addr = suffix::in_use();
+        std::cerr << "[";
+        for(size_t iter=0;iter<16;++iter)
+        {
+            key_type key;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                key << alea.range<CODE>('a','d');
+            }
+            if( tree1.grow( *key, key.size(), addr) )
+            {
+                keys << key;
+                Y_ASSERT(tree2.grow(key,addr));
+                Y_ASSERT(tree1==tree2);
+                std::cerr << "+";
+            }
+            else
+            {
+                Y_ASSERT(!tree2.grow(key,addr));
+                Y_ASSERT(tree1==tree2);
+                std::cerr << "-";
+            }
+            Y_ASSERT(keys.size()==tree1.root->frequency);
+        }
+        std::cerr << "]" << std::endl;
+        Y_ASSERT(keys.size()==tree1.root->frequency);
+        {
+            const string fileName = "tree-" + tid + ".dot";
+            tree1.root->graphViz(fileName);
+        }
+    }
 }
+
+
 Y_UTEST(suffix)
 {
     dispNode<uint8_t>();
     dispNode<uint16_t>();
     dispNode<uint32_t>();
     dispNode<uint64_t>();
+    std::cerr << std::endl;
+
+    testTree<uint8_t>();
+    testTree<uint16_t>();
+    testTree<uint32_t>();
+    testTree<uint64_t>();
+
 
 }
 Y_UTEST_DONE()
