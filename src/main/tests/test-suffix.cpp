@@ -76,7 +76,10 @@ namespace
         Y_ASSERT(keys.size()==tree2.root->frequency);
         {
             const string fileName = "tree-" + tid + ".dot";
-            tree1.root->graphViz(fileName);
+            if(false)
+            {
+                tree1.root->graphViz(fileName);
+            }
         }
 
         tree2.erase();
@@ -112,6 +115,19 @@ namespace
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
 
+
+        alea.shuffle(*keys);
+        std::cerr << "[";
+        for( typename list<key_type>::iterator it=keys.begin();it!=keys.end();++it)
+        {
+            const key_type &key = *it;
+            Y_ASSERT( tree1.pull_by(*key,key.size() ) );
+            Y_ASSERT( tree2.pull_by(key) );
+            Y_ASSERT( tree3.pull_at(key) );
+
+            std::cerr << "-";
+        }
+        std::cerr << "]" << std::endl;
 
         
     }

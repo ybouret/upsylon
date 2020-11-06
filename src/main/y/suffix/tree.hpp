@@ -230,7 +230,56 @@ namespace upsylon
             return node;
         }
 
-        
+
+        //! pluck a used node from the stem
+        inline void pluck(tree_node *node)  throw()
+        {
+            assert(node);
+            assert(node->used!=0);
+
+            node->used = 0;
+            for(;;)
+            {
+                assert(node->frequency>0);
+                const size_t  frequency = --(node->frequency);
+                tree_node    *parent    = node->parent;
+                if(parent)
+                {
+                    assert(parent->leaves.owns(node));
+                    if(frequency<=0)
+                    {
+                        parent->leaves.unlink(node)->return_to(pool);
+                    }
+                    parent->optimize();
+                    node=parent;
+                }
+                else
+                {
+                    assert(node==root);
+                    return;
+                }
+            }
+        }
+
+        template <typename ITERATOR>
+        void *pull_by(ITERATOR     iter,
+                      const size_t size) throw()
+        {
+            return cut( find_by(iter,size) );
+        }
+
+        template <typename SEQUENCE>
+        void *pull_by(SEQUENCE &seq) throw()
+        {
+            return cut( find_by(seq) );
+        }
+
+        template <typename U>
+        void *pull_at(const accessible<U> &path) throw()
+        {
+            return cut( find_at(path) );
+        }
+
 
 
         inline void erase() throw()
@@ -304,7 +353,21 @@ namespace upsylon
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_tree);
 
-        void zroot() throw()
+        inline void *cut(const tree_node *node) throw()
+        {
+            if(node&&node->used)
+            {
+                void *addr = node->addr;
+                pluck( (tree_node *)node );
+                return addr;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+        inline void zroot() throw()
         {
             assert(0==root->leaves.size);
             aliasing::_(root->frequency) = 0;
