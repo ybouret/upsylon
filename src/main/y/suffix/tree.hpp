@@ -31,8 +31,9 @@ namespace upsylon
             *(tree_node **)&root = 0;
         }
 
+        inline void sort_pool() throw() { merging<tree_node>::sort_by_increasing_address(pool);   }
 
-        inline void sort_pool() throw() { merging<tree_node>::sort_by_increasing_address(pool); }
+        inline void load_pool(size_t n) { while(n-- > 0 ) pool.push_back( new tree_node(0,0,0) ); }
 
         template <typename ITERATOR>
         bool grow(ITERATOR curr,
@@ -218,7 +219,6 @@ namespace upsylon
         tree_pool               pool;
 
         
-
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_tree);
