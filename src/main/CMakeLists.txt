@@ -125,6 +125,13 @@ SET(ordered_srcs ${ordered_decl} ${ordered_code})
 SOURCE_GROUP( ordered FILES ${ordered_srcs} )
 INSTALL( FILES ${ordered_decl} DESTINATION include/y/ordered )
 
+FILE(GLOB suffix_decl   y/suffix/*.hpp)
+FILE(GLOB suffix_code y/suffix/*.cpp)
+SET(suffix_srcs ${suffix_decl} ${suffix_code})
+SOURCE_GROUP( suffix FILES ${suffix_srcs} )
+INSTALL( FILES ${suffix_decl} DESTINATION include/y/suffix )
+ 
+
 FILE(GLOB associative_decl   y/associative/*.hpp)
 FILE(GLOB associative_code y/associative/*.cpp)
 SET(associative_srcs ${associative_decl} ${associative_code})
@@ -400,6 +407,7 @@ ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
+${suffix_srcs}
 ${associative_srcs} ${associative_prefix_srcs} ${associative_hash_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
