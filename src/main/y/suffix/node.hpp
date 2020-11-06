@@ -59,8 +59,13 @@ namespace upsylon
             while(leaves.size) delete leaves.pop_back();
         }
 
-        inline
-        static suffix_node *make(pool_t &pool,suffix_node *parent,const CODE c, void *a)
+        //______________________________________________________________________
+        //
+        // helpers
+        //______________________________________________________________________
+
+        //! make a node within a tree using pool
+        inline static suffix_node *make(pool_t &pool,suffix_node *parent,const CODE c, void *a)
         {
             assert(parent);
             if(pool.size)
@@ -78,10 +83,6 @@ namespace upsylon
                 return new suffix_node(parent,c,a);
             }
         }
-
-
-
-
 
         //______________________________________________________________________
         //

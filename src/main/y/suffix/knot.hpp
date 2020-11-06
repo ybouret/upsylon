@@ -3,12 +3,14 @@
 #ifndef Y_SUFFIX_KNOT_INCLUDED
 #define Y_SUFFIX_KNOT_INCLUDED 1
 
-#include "y/suffix/node.hpp"
+#include "y/core/list.hpp"
 #include "y/type/self-destruct.hpp"
+#include "y/type/args.hpp"
+#include "y/object.hpp"
 
 namespace upsylon
 {
-
+    
     template <typename T>
     class suffix_knot
     {
@@ -36,6 +38,11 @@ namespace upsylon
             inline explicit list_type() throw() : list_() {}
             inline virtual ~list_type() throw()
             {
+                release();
+            }
+            
+            inline void release() throw()
+            {
                 while(this->size)
                 {
                     suffix_knot *knot = this->pop_back();
@@ -43,6 +50,7 @@ namespace upsylon
                     object::release1(knot);
                 }
             }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(list_type);
         };
@@ -53,6 +61,11 @@ namespace upsylon
         public:
             inline explicit pool_type() throw() : list_() {}
             inline virtual ~pool_type() throw()
+            {
+                release();
+            }
+            
+            inline void release() throw()
             {
                 while(this->size)
                 {
@@ -88,10 +101,10 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pool_type);
-
+            
         };
         
-       
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_knot);
     };

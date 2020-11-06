@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_SUFFIX_DEFS_INCLUDED
@@ -18,8 +17,16 @@ namespace upsylon
     struct suffix
     {
     public:
-
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         typedef unsigned_int<sizeof(void*)>::type flag_t;           //!< alias
+       
+        //______________________________________________________________________
+        //
+        // helperss
+        //______________________________________________________________________
         static  void *                            in_use() throw(); //!< invalid utility address
 
         //! byte to printable text

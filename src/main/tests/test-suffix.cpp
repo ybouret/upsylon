@@ -1,4 +1,3 @@
-#include "y/suffix/tree.hpp"
 #include "y/suffix/graph.hpp"
 
 #include "y/utest/run.hpp"
@@ -160,11 +159,27 @@ namespace
             kl.push_back( kp.query(tmp) );
         }
         std::cerr << "|_ #kl=" << kl.size << " #kp=" << kp.size << std::endl;
-
-
+        
+    }
+    
+    template <typename CODE, typename T> static inline
+    void testGraph()
+    {
+        std::cerr << "-- suffix_graph<" << type_name_of<CODE>() << "," << type_name_of<T>()  << ">" << std::endl;
+        
+        suffix_graph<CODE,T,object> graph;
+        
+        
     }
  
-    
+    template <typename T> static inline
+    void testGraphs()
+    {
+        testGraph<uint8_t, T>();
+        testGraph<uint16_t,T>();
+        testGraph<uint32_t,T>();
+        testGraph<uint64_t,T>();
+    }
     
 }
 
@@ -181,13 +196,16 @@ Y_UTEST(suffix)
     testTree<uint16_t>();
     testTree<uint32_t>();
     testTree<uint64_t>();
-
+    std::cerr << std::endl;
+    
     testKnot<uint8_t>();
     testKnot<uint16_t>();
     testKnot<uint32_t>();
     testKnot<uint64_t>();
     testKnot<string>();
+    std::cerr << std::endl;
 
+    testGraphs<int>();
     
 }
 Y_UTEST_DONE()
