@@ -78,6 +78,7 @@ namespace
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
         tree2.ditch();
+        tree2.load_pool(1000);
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
 
