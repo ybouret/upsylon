@@ -36,9 +36,9 @@ namespace upsylon
         inline void load_pool(size_t n) { while(n-- > 0 ) pool.push_back( new tree_node(0,0,0) ); }
 
         template <typename ITERATOR>
-        bool grow(ITERATOR curr,
-                  size_t   size,
-                  void    *addr)
+        bool grow_by(ITERATOR curr,
+                     size_t   size,
+                     void    *addr)
         {
             assert(0==root->code);
             assert(0==root->depth);
@@ -93,8 +93,15 @@ namespace upsylon
             }
         }
 
+        template <typename SEQUENCE> inline
+        bool grow_by( SEQUENCE &seq, void *addr)
+        {
+            return grow_by( seq.begin(), seq.size(), addr);
+        }
+
+
         template <typename U> inline
-        bool grow(const accessible<U> &path, void *addr)
+        bool grow_at(const accessible<U> &path, void *addr)
         {
             assert(0==root->code);
             assert(0==root->depth);
@@ -150,6 +157,80 @@ namespace upsylon
                 return true;
             }
         }
+
+
+        //______________________________________________________________________
+        //
+        //! search a node by path
+        /**
+         the node may be used or not!!
+         */
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        const tree_node *find_by(ITERATOR     curr,
+                                 size_t       size) const throw()
+        {
+            const tree_node *node = root;
+            while(size-- > 0)
+            {
+                const CODE code = *(curr++);
+                for(tree_node *chld=node->leaves.head;chld;chld=chld->next)
+                {
+                    if(code==chld->code)
+                    {
+                        node = chld;
+                        goto FOUND;
+                    }
+                }
+                return NULL;
+            FOUND:;
+                assert(node);
+            }
+
+            assert(node);
+            return node;
+        }
+
+        template <typename SEQUENCE> inline
+        const tree_node *find_by(SEQUENCE &seq) const throw()
+        {
+            return find_by(seq.begin(),seq.size());
+        }
+
+        //______________________________________________________________________
+        //
+        //! search a node by path
+        /**
+         the node may be used or not!!
+         */
+        //______________________________________________________________________
+        template <typename U> inline
+        const tree_node *find_at(const accessible<U> &path) const throw()
+        {
+
+            const tree_node *node = root;
+            size_t           size = path.size();
+            size_t           indx = 0;
+            while(size-- > 0 )
+            {
+                const CODE code = path[++indx];
+                for(tree_node *chld=node->leaves.head;chld;chld=chld->next)
+                {
+                    if(code==chld->code)
+                    {
+                        node = chld;
+                        goto FOUND;
+                    }
+                }
+                return NULL;
+            FOUND:;
+                assert(node);
+            }
+            assert(node);
+            return node;
+        }
+
+        
 
 
         inline void erase() throw()

@@ -60,11 +60,12 @@ namespace upsylon
         inline
         static suffix_node *make(pool_t &pool,suffix_node *parent,const CODE c, void *a)
         {
+            assert(parent);
             if(pool.size)
             {
                 suffix_node *node = pool.pop_front();
                 node->parent      = parent;
-                node->depth       = parent ? parent->depth+1 : 0;
+                node->depth       = parent->depth+1;
                 node->frequency   = 0;
                 node->code        = c;
                 node->addr        = a;

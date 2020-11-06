@@ -40,6 +40,7 @@ namespace
         std::cerr << "-- suffix_tree<" << tid << ">" << std::endl;
         suffix_tree<CODE>    tree1;
         suffix_tree<CODE>    tree2;
+        suffix_tree<CODE>    tree3;
         typedef vector<CODE> key_type;
         list<key_type> keys;
         void          *addr = suffix::in_use();
@@ -51,17 +52,21 @@ namespace
             {
                 key << alea.range<CODE>('a','d');
             }
-            if( tree1.grow( *key, key.size(), addr) )
+            if( tree1.grow_by( *key, key.size(), addr) )
             {
                 keys << key;
-                Y_ASSERT(tree2.grow(key,addr));
+                Y_ASSERT(tree2.grow_at(key,addr));
+                Y_ASSERT(tree3.grow_by(key,addr));
                 Y_ASSERT(tree1==tree2);
+                Y_ASSERT(tree1==tree3);
                 std::cerr << "+";
             }
             else
             {
-                Y_ASSERT(!tree2.grow(key,addr));
+                Y_ASSERT(!tree2.grow_at(key,addr));
+                Y_ASSERT(!tree3.grow_by(key,addr));
                 Y_ASSERT(tree1==tree2);
+                Y_ASSERT(tree1==tree3);
                 std::cerr << "-";
             }
             Y_ASSERT(keys.size()==tree1.root->frequency);
@@ -77,11 +82,38 @@ namespace
         tree2.erase();
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
+
+        alea.shuffle(*keys);
+        std::cerr << "[";
+        for( typename list<key_type>::iterator it=keys.begin();it!=keys.end();++it)
+        {
+            const key_type &key = *it;
+            {
+                const suffix_node<CODE> *node = tree1.find_by(*key,key.size());
+                Y_ASSERT(node&&node->used);
+            }
+            {
+                const suffix_node<CODE> *node = tree2.find_at(key);
+                Y_ASSERT(node&&node->used);
+            }
+
+            {
+                const suffix_node<CODE> *node = tree3.find_by(key);
+                Y_ASSERT(node&&node->used);
+            }
+
+            std::cerr << "*" ;
+        }
+        std::cerr << "]" << std::endl;
+
+
         tree2.ditch();
         tree2.load_pool(1000);
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
 
+
+        
     }
 }
 
