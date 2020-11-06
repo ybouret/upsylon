@@ -13,7 +13,7 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! tree operations on anonymous user's data
+    //! low level tree operations on anonymous user's data
     //
     //__________________________________________________________________________
     template <typename CODE>
@@ -60,7 +60,7 @@ namespace upsylon
         //
         //! grow tree by range
         //______________________________________________________________________
-        template <typename ITERATOR>
+        template <typename ITERATOR> inline
         bool grow_by(ITERATOR curr,
                      size_t   size,
                      void    *addr)
@@ -321,8 +321,6 @@ namespace upsylon
         {
             return cut( find_at(path) );
         }
-
-
 
         //! erase content, keep memory
         inline void erase() throw()

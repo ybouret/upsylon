@@ -11,14 +11,16 @@ namespace upsylon
 
     //__________________________________________________________________________
     //
+    //
     //! utilities for suffix classes
+    //
     //__________________________________________________________________________
     struct suffix
     {
     public:
 
-        typedef unsigned_int<sizeof(void*)>::type flag_t;
-        static  void *                            in_use() throw();
+        typedef unsigned_int<sizeof(void*)>::type flag_t;           //!< alias
+        static  void *                            in_use() throw(); //!< invalid utility address
 
         //! byte to printable text
         static const char *byte_to_text(const uint8_t &) throw();
