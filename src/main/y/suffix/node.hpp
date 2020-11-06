@@ -23,11 +23,7 @@ namespace upsylon
         typedef core::list_of_cpp<suffix_node> pool_t;
 
 
-        union
-        {
-            CODE         code;
-            uint8_t     priv;
-        };
+
         suffix_node *next;
         suffix_node *prev;
         suffix_node *parent;
@@ -39,7 +35,7 @@ namespace upsylon
         list_t leaves;
         size_t frequency;
         size_t depth;
-
+        CODE   code;
 
         inline explicit suffix_node(const suffix_node *p, const CODE c, void *a) throw() :
         object(), ios::vizible(),
@@ -48,9 +44,9 @@ namespace upsylon
         parent(p),
         leaves(),
         frequency(0),
-        depth(parent?parent->depth+1:0)
+        depth(parent?parent->depth+1:0),
+        code(c)
         {
-            code = c;
             addr = a;
         }
 
