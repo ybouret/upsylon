@@ -10,7 +10,12 @@ namespace
     void dispNode()
     {
         std::cerr << "-- suffix_node<" << type_name_of<CODE>() << ">" << std::endl;
-        typedef suffix_node<CODE> node_type;
+        typedef suffix_node<CODE>  node_type;
+        typename node_type::pool_t pool;
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            pool.push_back( new node_type(0,0,0) );
+        }
         Y_UTEST_SIZEOF(node_type);
     }
 }

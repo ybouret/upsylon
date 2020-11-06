@@ -4,7 +4,7 @@
 #ifndef Y_SUFFIX_DEFS_INCLUDED
 #define Y_SUFFIX_DEFS_INCLUDED 1
 
-#include "y/type/ints.hpp"
+#include "y/os/endian.hpp"
 
 namespace upsylon
 {

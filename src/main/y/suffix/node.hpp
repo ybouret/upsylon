@@ -18,12 +18,16 @@ namespace upsylon
     template <typename CODE>
     class suffix_node : public object , public ios::vizible
     {
+    public:
         typedef suffix::flag_t                 flag_t;
         typedef core::list_of<suffix_node>     list_t;
         typedef core::list_of_cpp<suffix_node> pool_t;
 
 
-
+        union {
+            CODE     code;
+            flag_t   priv;
+        };
         suffix_node *next;
         suffix_node *prev;
         suffix_node *parent;
@@ -35,18 +39,17 @@ namespace upsylon
         list_t leaves;
         size_t frequency;
         size_t depth;
-        CODE   code;
 
-        inline explicit suffix_node(const suffix_node *p, const CODE c, void *a) throw() :
+        inline explicit suffix_node(suffix_node *p, const CODE c, void *a) throw() :
         object(), ios::vizible(),
         next(0),
         prev(0),
         parent(p),
         leaves(),
         frequency(0),
-        depth(parent?parent->depth+1:0),
-        code(c)
+        depth(parent?parent->depth+1:0)
         {
+            code = c;
             addr = a;
         }
 
