@@ -1,4 +1,6 @@
 #include "y/suffix/tree.hpp"
+#include "y/suffix/knot.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
@@ -128,8 +130,6 @@ namespace
             std::cerr << "-";
         }
         std::cerr << "]" << std::endl;
-
-        
     }
 }
 
@@ -147,6 +147,7 @@ Y_UTEST(suffix)
     testTree<uint32_t>();
     testTree<uint64_t>();
 
+    
 
 }
 Y_UTEST_DONE()
