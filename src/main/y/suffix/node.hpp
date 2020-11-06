@@ -206,7 +206,7 @@ namespace upsylon
             frequency  = other->frequency;
             depth      = other->depth;
         }
-
+        
 
         //______________________________________________________________________
         //
