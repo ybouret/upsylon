@@ -1,11 +1,12 @@
 #include "y/suffix/tree.hpp"
-#include "y/suffix/knot.hpp"
+#include "y/suffix/graph.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 namespace
@@ -131,6 +132,40 @@ namespace
         }
         std::cerr << "]" << std::endl;
     }
+    
+    template <typename T> static inline
+    void testKnot()
+    {
+        typedef  suffix_knot<T>           knot_type;
+        typedef typename  knot_type::list_type list_type;
+        typedef typename  knot_type::pool_type pool_type;
+        std::cerr << "-- suffix_knot<" << type_name_of<T>() << "> : " << sizeof(knot_type) << std::endl;
+        
+        list_type kl;
+        pool_type kp;
+        
+        kp.cache( 1 + alea.leq(100) );
+        std::cerr << "|_ #kl=" << kl.size << " #kp=" << kp.size << std::endl;
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            const T tmp = support::get<T>();
+            kl.push_back( kp.query(tmp) );
+        }
+        std::cerr << "|_ #kl=" << kl.size << " #kp=" << kp.size << std::endl;
+        kp.store(kl);
+        std::cerr << "|_ #kl=" << kl.size << " #kp=" << kp.size << std::endl;
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            const T tmp = support::get<T>();
+            kl.push_back( kp.query(tmp) );
+        }
+        std::cerr << "|_ #kl=" << kl.size << " #kp=" << kp.size << std::endl;
+
+
+    }
+ 
+    
+    
 }
 
 
@@ -147,8 +182,13 @@ Y_UTEST(suffix)
     testTree<uint32_t>();
     testTree<uint64_t>();
 
-    
+    testKnot<uint8_t>();
+    testKnot<uint16_t>();
+    testKnot<uint32_t>();
+    testKnot<uint64_t>();
+    testKnot<string>();
 
+    
 }
 Y_UTEST_DONE()
 
