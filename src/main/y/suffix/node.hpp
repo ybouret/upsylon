@@ -17,7 +17,9 @@ namespace upsylon
 
     //__________________________________________________________________________
     //
+    //
     //! fully qualified, dynamic suffix tree node
+    //
     //__________________________________________________________________________
     template <typename CODE>
     class suffix_node : public object , public ios::vizible
@@ -27,9 +29,9 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        typedef suffix::flag_t                 flag_t;
-        typedef core::list_of<suffix_node>     list_t;
-        typedef core::list_of_cpp<suffix_node> pool_t;
+        typedef suffix::flag_t                 flag_t; //!< alias
+        typedef core::list_of<suffix_node>     list_t; //!< raw list
+        typedef core::list_of_cpp<suffix_node> pool_t; //!< full list for cache
 
 
         //______________________________________________________________________
