@@ -5,6 +5,7 @@
 #define Y_SUFFIX_TREE_INCLUDED 1
 
 #include "y/suffix/node.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -67,7 +68,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // need a new leaf
                 //--------------------------------------------------------------
-                node = node->new_free_child(pool,code);
+                node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
                 assert(false==node->used);
             FOUND:;
             }
@@ -125,7 +126,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // need a new leaf
                 //--------------------------------------------------------------
-                node = node->new_free_child(pool,code);
+                node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
                 assert(false==node->used);
             FOUND:;
             }
@@ -152,14 +153,14 @@ namespace upsylon
 
         inline void erase() throw()
         {
-            root->leaves_to(pool);
+            ((tree_node *)root)->leaves_to(pool);
             zroot();
         }
 
         inline void ditch() throw()
         {
             pool.release();
-            while(root->leaves.size) delete root->leaves.pop_back();
+            while(root->leaves.size) delete aliasing::_(root->leaves).pop_back();
             zroot();
         }
 
@@ -173,11 +174,11 @@ namespace upsylon
             {
                 for(const tree_node *node=other.root->leaves.head;node;node=node->next)
                 {
-                    root->leaves.push_back( duplicate(root,node) );
+                    aliasing::_(root->leaves).push_back( duplicate((tree_node*)root,node) );
                 }
-                root->depth     = other.root->depth;
-                root->code      = other.root->code;
-                root->frequency = other.root->frequency;
+                aliasing::_(root->depth)     = other.root->depth;
+                aliasing::_(root->code )     = other.root->code;
+                aliasing::_(root->frequency) = other.root->frequency;
             }
             catch(...)
             {
@@ -225,9 +226,9 @@ namespace upsylon
         void zroot() throw()
         {
             assert(0==root->leaves.size);
-            root->frequency = 0;
-            root->depth     = 0;
-            root->code      = 0;
+            aliasing::_(root->frequency) = 0;
+            aliasing::_(root->depth)     = 0;
+            aliasing::_(root->code)      = 0;
         }
 
         void update_path_to(tree_node *node) throw()
@@ -256,7 +257,7 @@ namespace upsylon
         {
             assert(source);
             assert(parent);
-            tree_node *node = parent->new_free_child(pool,source->code);
+            tree_node *node = tree_node::make(pool,parent,source->code,source->addr);
             assert(node->depth=source->depth);
             assert(node->code==source->code);
             node->frequency  = source->frequency;

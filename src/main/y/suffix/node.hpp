@@ -57,34 +57,26 @@ namespace upsylon
             while(leaves.size) delete leaves.pop_back();
         }
 
-        inline suffix_node *new_child(pool_t &pool, const CODE c, void *a)
+        inline
+        static suffix_node *make(pool_t &pool,suffix_node *parent,const CODE c, void *a)
         {
             if(pool.size)
             {
                 suffix_node *node = pool.pop_front();
-                node->parent      = this;
-                node->depth       = depth+1;
+                node->parent      = parent;
+                node->depth       = parent ? parent->depth+1 : 0;
                 node->frequency   = 0;
                 node->code        = c;
                 node->addr        = a;
-                return leaves.push_back(node);
+                return node;
             }
             else
             {
-                return leaves.push_back( new suffix_node(this,c,a) );
+                return new suffix_node(parent,c,a);
             }
         }
 
-        inline suffix_node *new_free_child(pool_t &pool, const CODE c)
-        {
-            return new_child(pool,c,NULL);
-        }
 
-        inline suffix_node *new_used_child(pool_t &pool, const CODE c)
-        {
-            static void * _ = suffix::in_use();
-            return new_child(pool,c,_);
-        }
 
 
 

@@ -14,7 +14,6 @@ namespace
         typedef suffix_node<CODE>  node_type;
         std::cerr << "-- suffix_node<" << type_name_of<CODE>() << "> \t: " << sizeof(node_type) << std::endl;
         auto_ptr<node_type>        root( new node_type(0,0,0) );
-        typename node_type::pool_t pool;
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
             root->leaves.push_back( new node_type(0,CODE(i),0) );
@@ -26,10 +25,12 @@ namespace
 
             for(size_t j=1+alea.leq(10);j>0;--j)
             {
-                node->new_free_child(pool,CODE(j));
+                node->leaves.push_back( new node_type(0,CODE(i),0) );
             }
         }
-        alea.shuffle(pool);
+        typename node_type::pool_t pool;
+        root->return_to(pool);
+        root.dismiss();
     }
 
     template <typename CODE>
@@ -43,7 +44,7 @@ namespace
         list<key_type> keys;
         void          *addr = suffix::in_use();
         std::cerr << "[";
-        for(size_t iter=0;iter<16;++iter)
+        for(size_t iter=0;iter<32;++iter)
         {
             key_type key;
             for(size_t i=1+alea.leq(4);i>0;--i)
@@ -67,10 +68,19 @@ namespace
         }
         std::cerr << "]" << std::endl;
         Y_ASSERT(keys.size()==tree1.root->frequency);
+        Y_ASSERT(keys.size()==tree2.root->frequency);
         {
             const string fileName = "tree-" + tid + ".dot";
             tree1.root->graphViz(fileName);
         }
+
+        tree2.erase();
+        tree2.clone(tree1);
+        Y_ASSERT(tree1==tree2);
+        tree2.ditch();
+        tree2.clone(tree1);
+        Y_ASSERT(tree1==tree2);
+
     }
 }
 
