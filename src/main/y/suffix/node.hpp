@@ -21,7 +21,11 @@ namespace upsylon
     struct suffix_node
     {
         typedef suffix::flag_t flag_t;
-        CODE         code;
+        union
+        {
+            CODE         code;
+            uint64_t     _u64;
+        };
         suffix_node *next;
         suffix_node *prev;
         suffix_node *parent;
