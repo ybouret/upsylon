@@ -14,8 +14,13 @@ namespace
         typename node_type::pool_t pool;
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
-            pool.push_back( new node_type(0,0,0) );
+            pool.push_back( new node_type(0,CODE(i),0) );
+            if(alea.choice())
+            {
+                pool.tail->addr = suffix::in_use();
+            }
         }
+        alea.shuffle(pool);
         Y_UTEST_SIZEOF(node_type);
     }
 }
