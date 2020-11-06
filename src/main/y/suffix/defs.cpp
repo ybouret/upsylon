@@ -10,7 +10,7 @@ namespace upsylon
         static const union {
             flag_t f;
             void  *p;
-        } alias = { unsigned_int<flag_size>::maximum };
+        } alias = { unsigned_int<sizeof(void*)>::maximum };
         return alias.p;
     }
 

@@ -15,31 +15,29 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
+    //! fully qualified, dynamic suffix tree node
+    //__________________________________________________________________________
     template <typename CODE>
     class suffix_node : public object , public ios::vizible
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         typedef suffix::flag_t                 flag_t;
         typedef core::list_of<suffix_node>     list_t;
         typedef core::list_of_cpp<suffix_node> pool_t;
 
 
-        union {
-            CODE     code;
-            flag_t   priv;
-        };
-        suffix_node *next;
-        suffix_node *prev;
-        suffix_node *parent;
-        union
-        {
-            flag_t used;
-            void  *addr;
-        };
-        list_t leaves;
-        size_t frequency;
-        size_t depth;
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
 
+        //! setup
         inline explicit suffix_node(suffix_node *p, const CODE c, void *a) throw() :
         object(), ios::vizible(),
         next(0),
@@ -53,7 +51,42 @@ namespace upsylon
             addr = a;
         }
 
-        inline virtual ~suffix_node() throw() { while(leaves.size) delete leaves.pop_back(); }
+        //! cleanup
+        inline virtual ~suffix_node() throw()
+        {
+            while(leaves.size) delete leaves.pop_back();
+        }
+
+        inline suffix_node *new_child(pool_t &pool, const CODE c, void *a)
+        {
+            if(pool.size)
+            {
+                suffix_node *node = pool.pop_front();
+                node->parent      = this;
+                node->depth       = depth+1;
+                node->frequency   = 0;
+                node->code        = c;
+                node->addr        = a;
+                return leaves.push_back(node);
+            }
+            else
+            {
+                return leaves.push_back( new suffix_node(this,c,a) );
+            }
+        }
+
+        inline suffix_node *new_free_child(pool_t &pool, const CODE c)
+        {
+            return new_child(pool,c,NULL);
+        }
+
+        inline suffix_node *new_used_child(pool_t &pool, const CODE c)
+        {
+            static void * _ = suffix::in_use();
+            return new_child(pool,c,_);
+        }
+
+
 
         //______________________________________________________________________
         //
@@ -173,6 +206,27 @@ namespace upsylon
             frequency  = other->frequency;
             depth      = other->depth;
         }
+
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        union {
+            CODE     code; //!< actual code
+            flag_t   priv; //!< alignment
+        };
+        suffix_node *next;   //!< for list/pool
+        suffix_node *prev;   //!< for list
+        suffix_node *parent; //!< for tree
+        union
+        {
+            flag_t used;     //!< used!=0 <=> addr!=0
+            void  *addr;     //!< NULL, effective of in_use()
+        };
+        list_t leaves;       //!< child(ren)
+        size_t frequency;    //!< current frequency
+        size_t depth;        //!< current depth
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_node);
