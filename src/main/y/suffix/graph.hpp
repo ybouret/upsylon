@@ -10,6 +10,12 @@
 namespace upsylon
 {
     
+    //__________________________________________________________________________
+    //
+    //
+    //! compound class to build suffix classes
+    //
+    //__________________________________________________________________________
     template <
     typename CODE,
     typename T,
@@ -17,26 +23,50 @@ namespace upsylon
     class suffix_graph : public BASE_CLASS
     {
     public:
-        Y_DECL_ARGS(T,type);
-        typedef suffix_tree<CODE> tree_type;
-        typedef suffix_node<CODE> tree_node;
-        typedef suffix_knot<T>    data_node;
-        typedef typename data_node::list_type data_list;
-        typedef typename data_node::pool_type data_pool;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        Y_DECL_ARGS(T,type);                              //!< aliases
+        typedef suffix_tree<CODE>             tree_type;  //!< alias
+        typedef suffix_node<CODE>             tree_node;  //!< alias
+        typedef suffix_knot<T>                data_node;  //!< alias
+        typedef typename data_node::list_type data_list;  //!< alias
+        typedef typename data_node::pool_type data_pool;  //!< alias
         
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         
+        //! setup
         inline explicit       suffix_graph() : dlist(), htree(), dpool() {}
+        
+        //! cleanup
         inline virtual       ~suffix_graph() throw() {}
         
+        //______________________________________________________________________
+        //
+        // container interface if necessary
+        //______________________________________________________________________
+
+        //! number of objects
         inline virtual size_t size()     const throw() { return dlist.size; }
+        
+        //! capacity
         inline virtual size_t capacity() const throw() { return dlist.size + dpool.size; }
+        
+        //! preload cache
         inline virtual void   reserve(const size_t n) { dpool.cache(n); }
+        
+        //! remove objects, keep memory
         inline virtual void   free() throw()
         {
             dpool.store(dlist);
             htree.erase();
         }
         
+        //! release all possible memory
         inline virtual void release() throw()
         {
             dpool.release();

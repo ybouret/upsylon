@@ -10,37 +10,63 @@
 
 namespace upsylon
 {
-    
+    //__________________________________________________________________________
+    //
+    //
+    //! terminal knots for a graph
+    //
+    //__________________________________________________________________________
     template <typename T>
     class suffix_knot
     {
     public:
-        typedef core::list_of<suffix_knot> list_;
-        Y_DECL_ARGS(T,type);
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef core::list_of<suffix_knot> list_; //!< alias
+        Y_DECL_ARGS(T,type);                      //!< aliasies
         
-        
-        inline type       & operator*() throw() { return data; }
-        inline const_type & operator*() const throw() { return data; }
-        
-        
-        suffix_knot *next;
-        suffix_knot *prev;
-        void        *hook;
-        type         data;
-        
+        //______________________________________________________________________
+        //
+        // C+
+        //______________________________________________________________________
+        //! setup empty
         inline  suffix_knot(const_type &args) : next(0), prev(0), hook(0), data(args) {}
+        //! cleanup
         inline ~suffix_knot() throw() { assert(0==next); assert(0==prev); }
         
+        //! access
+        inline type       & operator*() throw()       { return data; }
+        //! const access
+        inline const_type & operator*() const throw() { return data; }
+        
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        suffix_knot *next; //!< for list
+        suffix_knot *prev; //!< for list
+        void        *hook; //!< for tree
+        type         data; //!< actual data
+      
+        //______________________________________________________________________
+        //
         //! list of alive knots
+        //______________________________________________________________________
         class list_type : public list_
         {
         public:
+            //! setup
             inline explicit list_type() throw() : list_() {}
+            
+            //! cleanup
             inline virtual ~list_type() throw()
             {
                 release();
             }
             
+            //! destruct and release nodes
             inline void release() throw()
             {
                 while(this->size)
@@ -55,16 +81,23 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(list_type);
         };
         
+        //______________________________________________________________________
+        //
         //! pool of zombie nodes
+        //______________________________________________________________________
         class pool_type : public list_
         {
         public:
+            //! setup
             inline explicit pool_type() throw() : list_() {}
+            
+            //! cleanup
             inline virtual ~pool_type() throw()
             {
                 release();
             }
             
+            //! release zombie nodes
             inline void release() throw()
             {
                 while(this->size)
@@ -74,8 +107,10 @@ namespace upsylon
                 }
             }
             
+            //! load zombie nodes
             inline void cache(size_t n) { while(n-- > 0) this->push_back( object::acquire1<suffix_knot>() ); }
             
+            //! destruct and load knot
             inline void store(suffix_knot *knot) throw()
             {
                 assert(knot);
@@ -83,11 +118,13 @@ namespace upsylon
                 this->push_front(knot);
             }
             
+            //! destruct all list
             inline void store(list_type &l) throw()
             {
                 while(l.size) store( l.pop_back() );
             }
             
+            //! query a zombie and make it alive with args
             inline suffix_knot *query(const_type &args)
             {
                 suffix_knot *knot = (this->size>0) ? this->pop_front() : object::acquire1<suffix_knot>();
