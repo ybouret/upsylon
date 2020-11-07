@@ -54,19 +54,19 @@ namespace
             {
                 key << alea.range<CODE>('a','d');
             }
-            if( tree1.grow_by( *key, key.size(), addr) )
+            if( tree1.insert_by( *key, key.size(), addr) )
             {
                 keys << key;
-                Y_ASSERT(tree2.grow_at(key,addr));
-                Y_ASSERT(tree3.grow_by(key,addr));
+                Y_ASSERT(tree2.insert_by(key,addr));
+                Y_ASSERT(tree3.insert_at(key,addr));
                 Y_ASSERT(tree1==tree2);
                 Y_ASSERT(tree1==tree3);
                 std::cerr << "+";
             }
             else
             {
-                Y_ASSERT(!tree2.grow_at(key,addr));
-                Y_ASSERT(!tree3.grow_by(key,addr));
+                Y_ASSERT(!tree2.insert_by(key,addr));
+                Y_ASSERT(!tree3.insert_at(key,addr));
                 Y_ASSERT(tree1==tree2);
                 Y_ASSERT(tree1==tree3);
                 std::cerr << "-";
@@ -167,9 +167,66 @@ namespace
     {
         std::cerr << "-- suffix_graph<" << type_name_of<CODE>() << "," << type_name_of<T>()  << ">" << std::endl;
         
-        suffix_graph<CODE,T,object> graph;
+        suffix_graph<CODE,T,container> g1,g2,g3;
         
+        typedef vector<CODE> key_type;
+        list<key_type>       keys;
         
+        std::cerr << "insert: [";
+        for(size_t iter=0;iter<64;++iter)
+        {
+            key_type key;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                key << alea.range<CODE>('a','d');
+            }
+            
+            const T tmp = support::get<T>();
+            if(g1.insert_by(*key, key.size(), tmp))
+            {
+                Y_ASSERT(g2.insert_by(key,tmp));
+                Y_ASSERT(g3.insert_at(key,tmp));
+                keys << key;
+                std::cerr << "+";
+            }
+            else
+            {
+                std::cerr << "-";
+            }
+        }
+        std::cerr << "]" << std::endl;
+        
+        std::cerr << "search: [";
+        alea.shuffle(*keys);
+        for(typename list<key_type>::iterator it=keys.begin();it!=keys.end();++it)
+        {
+            const key_type &key = *it;
+            Y_ASSERT(g1.search_by(*key,key.size()));
+            Y_ASSERT(g2.search_by(key));
+            Y_ASSERT(g2.search_at(key));
+
+            std::cerr << "*";
+        }
+        std::cerr << "]" << std::endl;
+
+        std::cerr << "remove: [";
+        alea.shuffle(*keys);
+        while(keys.size())
+        {
+            const key_type &key = keys.back();
+            Y_ASSERT(g1.remove_by(*key,key.size()));
+            Y_ASSERT(g2.remove_by(key));
+            Y_ASSERT(g3.remove_at(key));
+
+            Y_ASSERT(!g1.search_by(*key,key.size()));
+            Y_ASSERT(!g2.search_by(key));
+            Y_ASSERT(!g2.search_at(key));
+            
+            keys.pop_back();
+            std::cerr << "-";
+        }
+        std::cerr << "]" << std::endl;
+
     }
  
     template <typename T> static inline
@@ -206,7 +263,8 @@ Y_UTEST(suffix)
     std::cerr << std::endl;
 
     testGraphs<int>();
-    
+    testGraphs<string>();
+
 }
 Y_UTEST_DONE()
 

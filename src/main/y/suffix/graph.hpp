@@ -74,12 +74,145 @@ namespace upsylon
             htree.ditch();
         }
         
+        //______________________________________________________________________
+        //
+        // lower level functions
+        //______________________________________________________________________
+      
+        //! no-throw swap
+        inline void swap_with(suffix_graph &g) throw()
+        {
+            dpool.swap_with(g.dpool);
+            dlist.swap_with(g.dlist);
+            htree.swap_with(g.htree);
+        }
+        
+        //______________________________________________________________________
+        //
+        // low-level insert
+        //______________________________________________________________________
+        
+#define Y_SUFFIX_GRAPH_INSERT(CALL) \
+data_node *node = dpool.query(args); \
+try { return htree.CALL ? on_success(node) : on_failure(node); } \
+catch(...) { dpool.store(node); throw; }
+        
+        template <typename ITERATOR> inline
+        bool insert_by(ITERATOR     curr,
+                       const size_t size,
+                       param_type   args)
+        {
+            Y_SUFFIX_GRAPH_INSERT(insert_by(curr,size,node))
+        }
+        
+        template <typename SEQUENCE> inline
+        bool insert_by(SEQUENCE &seq, param_type args)
+        {
+            Y_SUFFIX_GRAPH_INSERT(insert_by(seq,node))
+        }
+        
+        template <typename U> inline
+        bool insert_at(const accessible<U> &path, param_type args)
+        {
+            Y_SUFFIX_GRAPH_INSERT(insert_at(path,node))
+        }
+        
+        //______________________________________________________________________
+        //
+        // low-level search
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        const_type *search_by(ITERATOR     curr,
+                              const size_t size) const throw()
+        {
+            return data_from( htree.find_by(curr,size) );
+        }
+        
+        template <typename SEQUENCE> inline
+        const_type *search_by(SEQUENCE &seq) const throw()
+        {
+            return data_from( htree.find_by(seq) );
+        }
+        template <typename U> inline
+        const_type *search_at(const accessible<U> &path) const throw()
+        {
+            return data_from( htree.find_at(path) );
+        }
+        
+        //______________________________________________________________________
+        //
+        // low-level remove
+        //______________________________________________________________________
+        template <typename ITERATOR> inline
+        bool remove_by(ITERATOR     curr,
+                       const size_t size) throw()
+        {
+            return try_remove( htree.pull_by(curr,size) );
+        }
+        
+        template <typename SEQUENCE> inline
+        bool remove_by(SEQUENCE &seq) throw()
+        {
+            return try_remove( htree.pull_by(seq) );
+        }
+        
+        template <typename U> inline
+        bool remove_at(const accessible<U> &path) throw()
+        {
+            return try_remove( htree.pull_at(path) );
+        }
+        
     private:
+        Y_DISABLE_COPY_AND_ASSIGN(suffix_graph);
+
         data_list dlist;
         tree_type htree;
         data_pool dpool;
         
-        Y_DISABLE_COPY_AND_ASSIGN(suffix_graph);
+        inline bool try_remove(void *addr) throw()
+        {
+            if(addr)
+            {
+                dpool.store( dlist.unlink( static_cast<data_node *>(addr) ) );
+                assert(htree.size()==dlist.size);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        static inline type *data_from(const tree_node *node) throw()
+        {
+            if(node&&node->addr)
+            {
+                void *addr = (void *)(node->addr);
+                return & static_cast<data_node *>(addr)->data;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+        
+        
+        inline bool on_failure(data_node *node) throw()
+        {
+            assert(node);
+            dpool.store(node);
+            assert(dlist.size==htree.size());
+            return false;
+        }
+        
+        inline bool on_success(data_node *node) throw()
+        {
+            assert(node);
+            assert(htree.mark);
+            dlist.push_back(node)->hook = htree.mark;
+            assert(dlist.size==htree.size());
+            return true;
+        }
+        
     };
     
 }

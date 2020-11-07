@@ -9,7 +9,7 @@
 
 namespace upsylon
 {
-
+    
     //__________________________________________________________________________
     //
     //
@@ -26,7 +26,7 @@ namespace upsylon
         //______________________________________________________________________
         typedef suffix_node<CODE>          tree_node; //!< alias
         typedef typename tree_node::pool_t tree_pool; //!< alias
-
+        
         //______________________________________________________________________
         //
         // C++
@@ -37,38 +37,38 @@ namespace upsylon
         pool()
         {
         }
-
+        
         inline virtual ~suffix_tree() throw()
         {
             assert(root);
             delete (tree_node *)root;
             *(tree_node **)&root = 0;
         }
-
+        
         //______________________________________________________________________
         //
         // cache operations
         //______________________________________________________________________
-
+        
         //! sort cache
         inline void cache_sort() throw() { merging<tree_node>::sort_by_increasing_address(pool);   }
-
+        
         //!  load empty nodes
         inline void cache_load(size_t n) { while(n-- > 0 ) pool.push_back( new tree_node(0,0,0) ); }
-
+        
         //______________________________________________________________________
         //
         //! grow tree by range
         //______________________________________________________________________
         template <typename ITERATOR> inline
-        bool grow_by(ITERATOR curr,
-                     size_t   size,
-                     void    *addr)
+        bool insert_by(ITERATOR curr,
+                       size_t   size,
+                       void    *addr)
         {
             assert(0==root->code);
             assert(0==root->depth);
             assert(addr!=NULL);
-
+            
             //------------------------------------------------------------------
             // start from root
             //------------------------------------------------------------------
@@ -117,28 +117,28 @@ namespace upsylon
                 return true;
             }
         }
-
+        
         //______________________________________________________________________
         //
         //! grow tree by sequence
         //______________________________________________________________________
         template <typename SEQUENCE> inline
-        bool grow_by( SEQUENCE &seq, void *addr)
+        bool insert_by( SEQUENCE &seq, void *addr)
         {
-            return grow_by( seq.begin(), seq.size(), addr);
+            return insert_by( seq.begin(), seq.size(), addr);
         }
-
+        
         //______________________________________________________________________
         //
         //! grow tree by accessible
         //______________________________________________________________________
         template <typename U> inline
-        bool grow_at(const accessible<U> &path, void *addr)
+        bool insert_at(const accessible<U> &path, void *addr)
         {
             assert(0==root->code);
             assert(0==root->depth);
             assert(addr!=NULL);
-
+            
             //------------------------------------------------------------------
             // start from root
             //------------------------------------------------------------------
@@ -189,8 +189,8 @@ namespace upsylon
                 return true;
             }
         }
-
-
+        
+        
         //______________________________________________________________________
         //
         //! search a node by range, result may be used or not!
@@ -215,11 +215,11 @@ namespace upsylon
             FOUND:;
                 assert(node);
             }
-
+            
             assert(node);
             return node;
         }
-
+        
         //______________________________________________________________________
         //
         //! search a node by sequence, result may be used or not
@@ -229,7 +229,7 @@ namespace upsylon
         {
             return find_by(seq.begin(),seq.size());
         }
-
+        
         //______________________________________________________________________
         //
         //! search a node by path, result may be used or not
@@ -237,7 +237,7 @@ namespace upsylon
         template <typename U> inline
         const tree_node *find_at(const accessible<U> &path) const throw()
         {
-
+            
             const tree_node *node = root;
             size_t           size = path.size();
             size_t           indx = 0;
@@ -259,14 +259,14 @@ namespace upsylon
             assert(node);
             return node;
         }
-
-
+        
+        
         //! pluck a used node from the stem
         inline void pluck(tree_node *node)  throw()
         {
             assert(node);
             assert(node->used!=0);
-
+            
             node->used = 0;
             for(;;)
             {
@@ -290,7 +290,7 @@ namespace upsylon
                 }
             }
         }
-
+        
         //______________________________________________________________________
         //
         //! try to find and pluck using a range
@@ -301,7 +301,7 @@ namespace upsylon
         {
             return cut( find_by(iter,size) );
         }
-
+        
         //______________________________________________________________________
         //
         //! try to find and pluck using a sequence
@@ -311,7 +311,7 @@ namespace upsylon
         {
             return cut( find_by(seq) );
         }
-
+        
         //______________________________________________________________________
         //
         //! try to find and pluck using a path
@@ -321,14 +321,14 @@ namespace upsylon
         {
             return cut( find_at(path) );
         }
-
+        
         //! erase content, keep memory
         inline void erase() throw()
         {
             ((tree_node *)root)->leaves_to(pool);
             zroot();
         }
-
+        
         //! erase content, release all possible memory
         inline void ditch() throw()
         {
@@ -336,7 +336,7 @@ namespace upsylon
             while(root->leaves.size) delete aliasing::_(root->leaves).pop_back();
             zroot();
         }
-
+        
         //! clone another tree, this must be empty
         inline void clone(const suffix_tree &other)
         {
@@ -360,7 +360,7 @@ namespace upsylon
                 throw;
             }
         }
-
+        
         //! no-throw swap
         void swap_with(suffix_tree &other) throw()
         {
@@ -368,7 +368,7 @@ namespace upsylon
             _cswap(mark,other.mark);
             pool.swap_with(other.pool);
         }
-
+        
         //! check same layout=topology
         static inline
         bool have_same_layout(const suffix_tree &lhs,
@@ -376,29 +376,31 @@ namespace upsylon
         {
             return tree_node::have_same_layout(lhs.root,rhs.root);
         }
-
+        
         //! check layouts
         inline friend bool operator==(const suffix_tree &lhs, const suffix_tree &rhs) throw()
         {
             return suffix_tree::have_same_layout(lhs,rhs);
         }
-
+        
         //! check layouts
         inline friend bool operator!=(const suffix_tree &lhs, const suffix_tree &rhs) throw()
         {
             return !suffix_tree::have_same_layout(lhs,rhs);
         }
-
-
+        
+        //! get number of entries
+        inline size_t size() const throw() { return root->frequency; }
+        
         const tree_node * const root; //!< tree root
         tree_node              *mark; //!< last grow mark
         tree_pool               pool; //!< cache
-
         
-
+        
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(suffix_tree);
-
+        
         inline void *cut(const tree_node *node) throw()
         {
             if(node&&node->used)
@@ -412,7 +414,7 @@ namespace upsylon
                 return NULL;
             }
         }
-
+        
         inline void zroot() throw()
         {
             assert(0==root->leaves.size);
@@ -420,7 +422,7 @@ namespace upsylon
             aliasing::_(root->depth)     = 0;
             aliasing::_(root->code)      = 0;
         }
-
+        
         void update_path_to(tree_node *node) throw()
         {
             assert(node);
@@ -441,7 +443,7 @@ namespace upsylon
                 }
             }
         }
-
+        
         //! recursive layout duplication
         tree_node *duplicate(tree_node *parent, const tree_node *source)
         {
@@ -462,9 +464,9 @@ namespace upsylon
             }
             return node;
         }
-
+        
     };
-
+    
 }
 
 #endif
