@@ -9,16 +9,17 @@
 namespace upsylon
 {
 
+    //! meta node
     class hash_meta_node
     {
     public:
-        hash_meta_node *next;
-        hash_meta_node *prev;
-        size_t          hkey;
-        void           *addr;
+        hash_meta_node *next; //!< for list
+        hash_meta_node *prev; //!< for list
+        size_t          hkey; //!< code
+        void           *addr; //!< data address
 
-        static hash_meta_node *acquire();
-        static void            release(hash_meta_node *) throw();
+        static hash_meta_node *acquire(); //!< create
+        static void            release(hash_meta_node *) throw(); //!< release
 
     private:
         hash_meta_node() throw();

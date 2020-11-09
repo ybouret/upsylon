@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    hash_meta_pool:: hash_meta_pool() throw() : hash_meta_list()
+     hash_meta_pool:: hash_meta_pool() throw() : hash_meta_list()
     {
 
     }
@@ -35,6 +35,5 @@ namespace upsylon
     {
         merging<hash_meta_node>::sort_by_increasing_address(*this);
     }
-
-
+    
 }

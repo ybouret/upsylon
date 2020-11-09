@@ -16,8 +16,8 @@ namespace upsylon
     class hash_slots
     {
     public:
-        typedef hash_meta_node node_type;
-        typedef hash_meta_list slot_type;
+        typedef hash_meta_node node_type; //!< alias
+        typedef hash_meta_list slot_type; //!< alias
 
         virtual ~hash_slots() throw();       //!< cleanup and release memory
         explicit hash_slots(const size_t n); //!< setup for required n slots
@@ -25,10 +25,10 @@ namespace upsylon
         void     to(slot_type  &repo) throw(); //!< all nodes to repo
         void     to(hash_slots &hs)   throw(); //!< all nodes to other
 
-        slot_type       & operator[](const size_t hkey) throw();
-        const slot_type & operator[](const size_t hkey) const throw();
+        slot_type       & operator[](const size_t hkey) throw();       //!< access
+        const slot_type & operator[](const size_t hkey) const throw(); //!< access
 
-        void dump() const;
+        void dump() const; //!< output
 
     private:
         slot_type   *slot;

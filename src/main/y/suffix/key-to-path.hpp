@@ -9,6 +9,12 @@
 
 namespace upsylon
 {
+    //______________________________________________________________________
+    //
+    //
+    //! helper to convert integral types or ro_buffers to paths
+    //
+    //______________________________________________________________________
     template <typename KEY>
     struct key_to_path
     {

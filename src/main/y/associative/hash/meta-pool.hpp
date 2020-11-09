@@ -8,25 +8,24 @@
 
 namespace upsylon
 {
-    typedef core::list_of<hash_meta_node> hash_meta_list;
+    typedef core::list_of<hash_meta_node> hash_meta_list; //!< forward
 
-
+    //! meta pool
     class hash_meta_pool : public hash_meta_list
     {
     public:
-        explicit hash_meta_pool() throw();
-        virtual ~hash_meta_pool() throw();
+        explicit hash_meta_pool() throw(); //!< setup
+        virtual ~hash_meta_pool() throw(); //!< cleanup
 
-        hash_meta_node *query(const size_t hkey, void *addr);
-        void            store(hash_meta_node *node) throw();
+        hash_meta_node *query(const size_t hkey, void *addr); //!< query
+        void            store(hash_meta_node *node) throw();  //!< store
 
-        void sort() throw();
+        void sort() throw(); //!< by increasing addresses
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_meta_pool);
 
     };
-
 
 }
 

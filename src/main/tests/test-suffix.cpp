@@ -1,5 +1,6 @@
 
 #include "y/suffix/key-to-path.hpp"
+#include "y/suffix/manifest.hpp"
 
 #include "y/suffix/graph.hpp"
 
@@ -10,6 +11,10 @@
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
 #include "support.hpp"
+
+#include "y/counting/comb.hpp"
+#include "y/counting/perm.hpp"
+#include "y/container/matrix.hpp"
 
 using namespace upsylon;
 namespace
@@ -253,6 +258,77 @@ namespace
             const size_t n   = key_to_path<KEY>::size_of(tmp);
             std::cerr << tmp << " -> @" << (void*)k << " +" << n << std::endl;
         }
+        std::cerr << std::endl;
+    }
+
+
+    typedef suffix_manifest<size_t,object> db_type;
+
+    template <typename COUNTING>
+    void testCouting(COUNTING &c, db_type &db1, db_type &db2)
+    {
+        db1.free();
+        db2.free();
+        for(c.boot();c.good();c.next())
+        {
+            Y_ASSERT(db1.insert_at(c));
+            Y_ASSERT(db2.insert_by(&c[1],c.size()));
+            Y_ASSERT(db1==db2);
+        }
+        db2.free();
+        {
+            const db_type db3(db1);
+            Y_ASSERT(db3==db1);
+            db2 = db3;
+        }
+        Y_ASSERT(db2==db1);
+        for(c.boot();c.good();c.next())
+        {
+            Y_ASSERT(db1.search_at(c));
+            Y_ASSERT(db2.search_by(&c[1],c.size()));
+        }
+
+        matrix<size_t> frame(c.count,c.space);
+        counting::fill_frame(frame,c);
+        vector<size_t> indx(c.count,0);
+        for(size_t i=1;i<=c.count;++i) indx[i] = i;
+
+        alea.shuffle(*indx,indx.size());
+        for(size_t i=indx.size();i>0;--i)
+        {
+            const size_t j = indx[i];
+            Y_ASSERT(db1.remove_at(frame[j]));
+            Y_ASSERT(db2.remove_by( *frame[j], frame[j].size() ));
+
+            Y_ASSERT(db1==db2);
+            Y_ASSERT(!db1.search_at(frame[j]));
+            Y_ASSERT(!db2.search_by( *frame[j], frame[j].size() ));
+        }
+    }
+
+    static inline void testManifest()
+    {
+        std::cerr << "-- suffix_manifest" << std::endl;
+        {
+            db_type db1;
+            db_type db2;
+            std::cerr << "\tcomb" << std::endl;
+            for(size_t n=1;n<=12;++n)
+            {
+                for(size_t k=1;k<=n;++k)
+                {
+                    combination comb(n,k);
+                    testCouting(comb,db1,db2);
+                }
+            }
+
+            std::cerr << "\tperm" << std::endl;
+            for(size_t n=1;n<=6;++n)
+            {
+                permutation perm(n);
+                testCouting(perm,db1,db2);
+            }
+        }
     }
     
 }
@@ -285,6 +361,7 @@ Y_UTEST(suffix)
     testKeys<int>();
     testKeys<string>();
 
+    testManifest();
 
 }
 Y_UTEST_DONE()

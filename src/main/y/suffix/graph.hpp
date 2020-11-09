@@ -91,12 +91,14 @@ namespace upsylon
         //
         // low-level insert
         //______________________________________________________________________
-        
+
+        //! calling htree methods
 #define Y_SUFFIX_GRAPH_INSERT(CALL) \
 data_node *node = dpool.query(args); \
 try { return htree.CALL ? on_success(node) : on_failure(node); } \
 catch(...) { dpool.store(node); throw; }
-        
+
+        //! insert data by range
         template <typename ITERATOR> inline
         bool insert_by(ITERATOR     curr,
                        const size_t size,
@@ -104,13 +106,15 @@ catch(...) { dpool.store(node); throw; }
         {
             Y_SUFFIX_GRAPH_INSERT(insert_by(curr,size,node))
         }
-        
+
+        //! insert data by sequence
         template <typename SEQUENCE> inline
         bool insert_by(SEQUENCE &seq, param_type args)
         {
             Y_SUFFIX_GRAPH_INSERT(insert_by(seq,node))
         }
-        
+
+        //! insert data by path
         template <typename U> inline
         bool insert_at(const accessible<U> &path, param_type args)
         {
@@ -121,18 +125,23 @@ catch(...) { dpool.store(node); throw; }
         //
         // low-level search
         //______________________________________________________________________
+
+        //! search data by range
         template <typename ITERATOR> inline
         const_type *search_by(ITERATOR     curr,
                               const size_t size) const throw()
         {
             return data_from( htree.find_by(curr,size) );
         }
-        
+
+        //! search data by sequence
         template <typename SEQUENCE> inline
         const_type *search_by(SEQUENCE &seq) const throw()
         {
             return data_from( htree.find_by(seq) );
         }
+
+        //! search data by path
         template <typename U> inline
         const_type *search_at(const accessible<U> &path) const throw()
         {
@@ -143,19 +152,23 @@ catch(...) { dpool.store(node); throw; }
         //
         // low-level remove
         //______________________________________________________________________
+
+        //! remove data by range
         template <typename ITERATOR> inline
         bool remove_by(ITERATOR     curr,
                        const size_t size) throw()
         {
             return try_remove( htree.pull_by(curr,size) );
         }
-        
+
+        //! remove data by sequence
         template <typename SEQUENCE> inline
         bool remove_by(SEQUENCE &seq) throw()
         {
             return try_remove( htree.pull_by(seq) );
         }
-        
+
+        //! remove data by path
         template <typename U> inline
         bool remove_at(const accessible<U> &path) throw()
         {
