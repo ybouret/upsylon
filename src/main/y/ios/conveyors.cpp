@@ -1,5 +1,5 @@
 #include "y/ios/conveyors.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 #include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
@@ -19,7 +19,7 @@ namespace upsylon
         namespace
         {
             typedef xbe_key<uint8_t>                  db_key;
-            typedef prefix_storage<conveyors::convoy> db_type;
+            typedef suffix_storage<conveyors::convoy> db_type;
             static uint64_t wksp[ Y_U64_FOR_ITEM(db_type) ];
             
             static inline db_type & __db() throw()
@@ -133,7 +133,7 @@ namespace upsylon
         {
             Y_LOCK(access);
             static db_type &db   = __db();
-            db.sort(compare_by_names);
+            db.sort_with(compare_by_names);
         }
         
     }
