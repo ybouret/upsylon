@@ -4,7 +4,7 @@
 
 #include "y/spade/mesh/rectilinear.hpp"
 #include "y/spade/mesh/curvilinear.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon {
     
@@ -557,8 +557,8 @@ namespace upsylon {
             virtual ~vtk() throw();
             Y_DISABLE_COPY_AND_ASSIGN(vtk);
             
-            prefix_storage<INative> natives;
-            prefix_storage<IWriter> writers;
+            suffix_storage<INative> natives;
+            suffix_storage<IWriter> writers;
             
             void registerNatives();
             void registerWriters();
