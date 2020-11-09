@@ -5,7 +5,7 @@
 #include <cerrno>
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/suffix/manifest.hpp"
+#include "y/suffix/inventory.hpp"
 
 namespace upsylon {
 
@@ -122,8 +122,8 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // initialize depot
                 //--------------------------------------------------------------
-                suffix_manifest<probe_t> store;
-                if(!store.insert_at(target))
+                suffix_inventory<probe_t> store;
+                if(!store.insert(target))
                     throw libc::exception(EINVAL,"%s: unexpected first sample insertion failure",fn);
 
 
@@ -136,7 +136,7 @@ namespace upsylon {
                 for(;p.good();p.next())
                 {
                     p.make(target,source);
-                    if(store.insert_at(target))
+                    if(store.insert(target))
                     {
                         //------------------------------------------------------
                         // a new key

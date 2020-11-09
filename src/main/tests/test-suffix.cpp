@@ -3,6 +3,7 @@
 #include "y/suffix/strings.hpp"
 
 #include "y/suffix/storage.hpp"
+#include "y/suffix/inventory.hpp"
 
 
 #include "y/utest/run.hpp"
@@ -380,6 +381,32 @@ namespace
         alea.shuffle(*keys);
         std::cerr << std::endl;
     }
+    
+    template <typename CODE>
+    static inline void testInventory()
+    {
+        std::cerr << "-- prefix_inventory<" << type_name_of<CODE>() << ">" << std::endl;
+        
+        suffix_inventory<CODE> db1,db2;
+        typedef vector<CODE>   key_type;
+        list<key_type>         keys;
+        for(size_t iter=0;iter<64;++iter)
+        {
+            key_type key;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                key << alea.range<CODE>('a','d');
+            }
+            if( db1.insert(key) )
+            {
+                Y_ASSERT(db2.insert(key));
+                keys << key;
+            }
+        }
+        Y_CHECK(db1==db2);
+
+        std::cerr << std::endl;
+    }
 
     
     template <typename T> static inline
@@ -456,9 +483,15 @@ Y_UTEST(suffix)
     testKeys<string>();
 
     testManifest();
-
-    testStorage<unsigned>();
     
+    testStorage<unsigned>();
+    testStorage<string>();
+    
+    testInventory<uint8_t>();
+    testInventory<uint16_t>();
+    testInventory<uint32_t>();
+    testInventory<uint64_t>();
+
     if(argc>1)
     {
         testStrings(argv[1]);
