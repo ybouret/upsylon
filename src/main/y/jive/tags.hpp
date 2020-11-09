@@ -5,7 +5,7 @@
 #define Y_JIVE_TAGS_INCLUDED 1
 
 #include "y/jive/types.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon {
 
@@ -17,7 +17,7 @@ namespace upsylon {
         //! base type for Tags
         //
         //______________________________________________________________________
-        typedef prefix_storage<Tag> TagsTree;
+        typedef suffix_storage<Tag> TagsTree;
 
         //______________________________________________________________________
         //

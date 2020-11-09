@@ -10,8 +10,7 @@
 namespace upsylon {
 
     //! convert node path to string
-    template <typename T> inline
-    string suffix_node_to_string(const prefix_node<char,T> *node)
+    string suffix_node_to_string(const suffix_node<char> *node)
     {
         assert(node);
         string s(node->depth,as_capacity,true); assert(s.size()==node->depth);

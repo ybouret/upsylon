@@ -45,7 +45,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
-                typedef prefix_storage<Rule*>    RulesDB; //!< rules database
+                typedef suffix_storage<Rule*>    RulesDB; //!< rules database
                 typedef arc_ptr<Scanner>         Pointer; //!< for lexer
                 
                 //! what happens when End of Stream if met during a call

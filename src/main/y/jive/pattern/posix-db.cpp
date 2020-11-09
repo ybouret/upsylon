@@ -1,7 +1,7 @@
 
 
 #include "y/jive/pattern/posix.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -14,7 +14,7 @@ namespace upsylon {
 
             class PosixDB :
             public singleton<PosixDB>,
-            public prefix_storage<creator>
+            public suffix_storage<creator>
             {
             public:
 

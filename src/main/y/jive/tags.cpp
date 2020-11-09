@@ -5,7 +5,7 @@
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/associative/prefix/node-to-string.hpp"
+#include "y/suffix/node-to-string.hpp"
 
 namespace upsylon {
 
@@ -27,7 +27,7 @@ namespace upsylon {
         {
             Y_LOCK(access);
             assert(!(NULL==buffer&&buflen>0));
-            const Tag *tag = search(buffer,buflen);
+            const Tag *tag = search_by(buffer,buflen);
             if( tag )
             {
                 return & **tag;
@@ -36,7 +36,7 @@ namespace upsylon {
             {
                 const string *p = new string(buffer,buflen);
                 const Tag     t(p);
-                if(!insert(buffer,buflen,t))
+                if(!insert_by(buffer,buflen,t))
                 {
                     throw exception("Jive::Tags(unexpected failure for '%s')", **p);
                 }
@@ -85,7 +85,7 @@ namespace upsylon {
                 std::cerr << '\t' << '<' << tag << '>' << ' ';
                 for(size_t i=tag->size();i<len;++i) std::cerr << ' ';
                 std::cerr << '(';
-                const string path = prefix_node_to_string(node->hook);
+                const string path = suffix_node_to_string( static_cast<const tree_node *>(node->hook) );
                 std::cerr << path;
                 std::cerr << ')' << std::endl;
             }
