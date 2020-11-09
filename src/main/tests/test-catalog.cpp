@@ -1,4 +1,4 @@
-#include "y/associative/prefix/batch.hpp"
+#include "y/suffix/batch.hpp"
 #include "y/associative/set.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/intr.hpp"
@@ -48,8 +48,8 @@ namespace {
         typedef typename Dummy::pointer Pointer;
         
         vector<KEY>               ok(nmax, as_capacity);
-        prefix_batch<KEY,Dummy>   st(nmax/4, as_capacity);
-        prefix_batch<KEY,Pointer> pst(nmax/4,as_capacity);
+        suffix_batch<KEY,Dummy>   st(nmax/4, as_capacity);
+        suffix_batch<KEY,Pointer> pst(nmax/4,as_capacity);
         set<KEY,Dummy>            db(nmax/4, as_capacity);
         set<KEY,Pointer>          pdb(nmax/4,as_capacity);
         
@@ -98,8 +98,8 @@ namespace {
 
         std::cerr << "\ttesting copy" << std::endl;
         {
-            prefix_batch<KEY,Dummy>   st2(st);
-            prefix_batch<KEY,Pointer> pst2(pst);
+            suffix_batch<KEY,Dummy>   st2(st);
+            suffix_batch<KEY,Pointer> pst2(pst);
             set<KEY,Dummy>            db2(db);
             set<KEY,Pointer>          pdb2(pdb);
         }

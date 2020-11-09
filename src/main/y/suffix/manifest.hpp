@@ -51,6 +51,13 @@ namespace upsylon
         //
         // methods
         //______________________________________________________________________
+        //! load extra nodes
+        virtual void reserve(size_t n)
+        {
+            tree.cache_load(n);
+        }
+
+
         //! no-throw swap
         inline void swap_with(suffix_manifest &other) throw()
         {

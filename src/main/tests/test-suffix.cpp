@@ -1,6 +1,6 @@
 
 #include "y/suffix/key-to-path.hpp"
-#include "y/suffix/manifest.hpp"
+#include "y/suffix/strings.hpp"
 
 #include "y/suffix/graph.hpp"
 
@@ -15,6 +15,8 @@
 #include "y/counting/comb.hpp"
 #include "y/counting/perm.hpp"
 #include "y/container/matrix.hpp"
+
+#include "y/ios/icstream.hpp"
 
 using namespace upsylon;
 namespace
@@ -175,8 +177,10 @@ namespace
     void testGraph()
     {
         std::cerr << "-- suffix_graph<" << type_name_of<CODE>() << "," << type_name_of<T>()  << ">" << std::endl;
-        
-        suffix_graph<CODE,T,container> g1,g2,g3;
+
+        typedef suffix_graph<CODE,T,object> graph_type;
+
+        graph_type g1,g2,g3;
         
         typedef vector<CODE> key_type;
         list<key_type>       keys;
@@ -217,6 +221,15 @@ namespace
             std::cerr << "*";
         }
         std::cerr << "]" << std::endl;
+
+        {
+            graph_type gg(g1);
+            Y_ASSERT( gg.has_same_layout_than(g1) );
+            gg.free();
+            gg = g1;
+            Y_ASSERT( g1.has_same_layout_than(gg) );
+
+        }
 
         std::cerr << "remove: [";
         alea.shuffle(*keys);
@@ -329,7 +342,46 @@ namespace
                 testCouting(perm,db1,db2);
             }
         }
+        std::cerr << std::endl;
+
     }
+
+    static inline void testStrings(const char *fn)
+    {
+        const string fileName = fn;
+        std::cerr << "-- suffix_strings(" << fileName << ")" << std::endl;
+        suffix_strings<object> db1,db2,db3;
+        size_t nr = 100000;
+        db1.reserve(nr);
+        db2.reserve(nr);
+        db3.reserve(nr);
+
+        {
+            ios::icstream fp(fileName);
+            string line;
+            std::cerr << "[";
+            int count = 0;
+            while(fp.gets(line))
+            {
+                if(0==(count++%1000))
+                {
+                    std::cerr << ".";
+                }
+                if(db1.insert(line))
+                {
+                    Y_ASSERT(db2.insert(*line,line.size()));
+                    Y_ASSERT(db3.insert(*line));
+                }
+            }
+            Y_ASSERT(db1==db2);
+            Y_ASSERT(db1==db3);
+            std::cerr << "]" << std::endl;
+        }
+        std::cerr << std::endl;
+    }
+
+
+
     
 }
 
@@ -363,6 +415,11 @@ Y_UTEST(suffix)
 
     testManifest();
 
+    
+    if(argc>1)
+    {
+        testStrings(argv[1]);
+    }
 }
 Y_UTEST_DONE()
 

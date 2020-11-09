@@ -6,6 +6,7 @@
 #include "y/suffix/knot.hpp"
 #include "y/suffix/tree.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/memory/buffers.hpp"
 
 namespace upsylon
 {
@@ -40,10 +41,38 @@ namespace upsylon
         //______________________________________________________________________
         
         //! setup
-        inline explicit       suffix_graph() : dlist(), htree(), dpool() {}
-        
+        inline explicit       suffix_graph() : BASE_CLASS(), dlist(), htree(), dpool() {}
+
+        //! setup with capacity
+        inline explicit suffix_graph(const size_t n, const as_capacity_t &) :
+        BASE_CLASS(), dlist(), htree(), dpool()
+        {
+            dpool.cache(n);
+        }
+
+        //! copy
+        inline suffix_graph(const suffix_graph &other) : BASE_CLASS(), dlist(), htree(), dpool()
+        {
+            const size_t           nmax = other.max_depth();
+            memory::cppblock<CODE> blk(nmax);
+
+            for(const data_node *node=other.dlist.head;node;node=node->next)
+            {
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
+                this->insert_by(*blk,len,node->data);
+            }
+        }
+
+        //! assign by copy/swap
+        inline suffix_graph & operator=( const suffix_graph &other )
+        {
+            suffix_graph temp(other);
+            swap_with(temp);
+            return *this;
+        }
+
         //! cleanup
-        inline virtual       ~suffix_graph() throw() {}
+        inline virtual ~suffix_graph() throw() {}
         
         //______________________________________________________________________
         //
@@ -78,7 +107,27 @@ namespace upsylon
         //
         // lower level functions
         //______________________________________________________________________
-      
+
+        //! same layout indepently of data
+        inline bool has_same_layout_than(const suffix_graph &rhs) const throw()
+        {
+            return tree_type::have_same_layout(htree,rhs.htree);
+        }
+
+        //! maximum depth
+        inline size_t max_depth() const throw()
+        {
+            size_t ans = 0;
+            for(const data_node *node=dlist.head;node;node=node->next)
+            {
+                assert(node->hook);
+                const size_t depth = static_cast<const tree_node *>(node->hook)->depth;
+                if(depth>ans) ans = depth;
+            }
+            return ans;
+        }
+
+
         //! no-throw swap
         inline void swap_with(suffix_graph &g) throw()
         {
@@ -176,8 +225,6 @@ catch(...) { dpool.store(node); throw; }
         }
         
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(suffix_graph);
-
         data_list dlist;
         tree_type htree;
         data_pool dpool;
