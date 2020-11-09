@@ -30,9 +30,9 @@ namespace upsylon {
             // types and definitions
             //__________________________________________________________________
             typedef Lexical::Scanner                 Scanner;      //!< alias
-            typedef prefix_storage<Scanner::Pointer> ScannerTree;  //!< alias
+            typedef suffix_storage<Scanner::Pointer> ScannerTree;  //!< alias
             typedef Lexical::Plugin                  Plugin;       //!< alias
-            typedef prefix_storage<Plugin::Pointer>  PluginTree;   //!< alias
+            typedef suffix_storage<Plugin::Pointer>  PluginTree;   //!< alias
 
             typedef Scanner                      *HScan;        //!< alias for history
             typedef list<HScan>                   History;      //!< history type

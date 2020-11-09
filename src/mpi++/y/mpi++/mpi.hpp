@@ -7,7 +7,7 @@
 #include "y/string.hpp"
 #include "y/exception.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 #include "y/ios/cfile.hpp"
 
 #include <cstdio>
@@ -542,7 +542,7 @@ namespace upsylon
         void build_data_types(); //!< build the database of primary types
       
         
-        prefix_storage<data_type> types; //!< persistent database of types+sizes
+        suffix_storage<data_type> types; //!< persistent database of types+sizes
         
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)

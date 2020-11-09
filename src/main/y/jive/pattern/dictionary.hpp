@@ -4,7 +4,7 @@
 #define Y_JIVE_PATTERN_DICT_INCLUDED 1
 
 #include "y/jive/regexp.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon {
 
@@ -16,7 +16,7 @@ namespace upsylon {
         //! base class for dictionary
         //
         //______________________________________________________________________
-        typedef prefix_storage<const Motif> DictionaryType;
+        typedef suffix_storage<const Motif> DictionaryType;
 
         //______________________________________________________________________
         //

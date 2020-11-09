@@ -6,7 +6,7 @@
 
 namespace upsylon
 {
-    typedef prefix_storage<mpi::data_type> mpi_data_type_db;
+    typedef suffix_storage<mpi::data_type> mpi_data_type_db;
 
     mpi:: data_type:: data_type(const MPI_Datatype value, const unsigned bytes) throw() :
     uuid(value),
@@ -159,14 +159,13 @@ assert( sizeof(type) == data_type_for<type>().size );\
 
     void mpi:: display_data_types() const
     {
-        for(const prefix_storage<data_type>::data_node *node=types.head();node;node=node->next)
+        for(  suffix_storage<data_type>::const_iterator it=types.begin();it!=types.end();++it)
         {
             union {
                 unsigned_int<sizeof(void*)>::type info;
                 void                             *addr;
             } alias = { 0 };
-
-            node->hook->encode( (char *)&alias.info );
+            static_cast<suffix_storage<data_type>::tree_node *>(it.get().hook)->encode( (char *)&alias.info );
             alias.info = swap_be(alias.info);
             const std::type_info &tid = *static_cast<const std::type_info *>(alias.addr);
             fprintf(stderr,"\t'%s'\n", tid.name() );
