@@ -25,11 +25,11 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);
-        Y_DECL_ARGS(KEY,key_type);
-        typedef key_to_path<KEY>                key_get;
-        typedef lexicon<KEY,T>                  base_class;
-        typedef suffix_graph<char,T,base_class> graph_type;
+        Y_DECL_ARGS(T,type);                                  //!< aliases
+        Y_DECL_ARGS(KEY,key_type);                            //!< aliases
+        typedef key_to_path<KEY>                key_get;      //!< alias
+        typedef lexicon<KEY,T>                  base_class;   //!< alias
+        typedef suffix_graph<char,T,base_class> graph_type;   //!< alias
 
         //______________________________________________________________________
         //

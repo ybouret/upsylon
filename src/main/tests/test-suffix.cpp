@@ -350,7 +350,7 @@ namespace
     {
         const string fileName = fn;
         std::cerr << "-- suffix_strings(" << fileName << ")" << std::endl;
-        suffix_strings<suffix_collection> db1,db2,db3;
+        suffix_strings<> db1,db2,db3;
         size_t nr = 10000;
         db1.reserve(nr);
         db2.reserve(nr);
@@ -421,6 +421,8 @@ Y_UTEST(suffix)
     {
         testStrings(argv[1]);
     }
+
+
 }
 Y_UTEST_DONE()
 

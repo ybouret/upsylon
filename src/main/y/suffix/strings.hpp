@@ -16,7 +16,7 @@ namespace upsylon
     //! specific manifest for strings
     //
     //__________________________________________________________________________
-    template <typename BASE_CLASS>
+    template <typename BASE_CLASS=suffix_collection>
     class suffix_strings : public suffix_manifest<char,BASE_CLASS>
     {
     public:
