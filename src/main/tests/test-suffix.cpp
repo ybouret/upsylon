@@ -350,11 +350,11 @@ namespace
     {
         const string fileName = fn;
         std::cerr << "-- suffix_strings(" << fileName << ")" << std::endl;
-        suffix_strings<> db1,db2,db3;
+        suffix_strings<> db1,db2;
         size_t nr = 10000;
         db1.reserve(nr);
         db2.reserve(nr);
-        db3.reserve(nr);
+        list<string> keys;
         std::cerr << "reading..." << std::endl;
         {
             ios::icstream fp(fileName);
@@ -370,14 +370,14 @@ namespace
                 }
                 if(db1.insert(line))
                 {
-                    Y_ASSERT(db2.insert(*line,line.size()));
-                    Y_ASSERT(db3.insert(*line));
+                    Y_ASSERT(db2.insert(*line));
+                    keys << line;
                 }
             }
             Y_ASSERT(db1==db2);
-            Y_ASSERT(db1==db3);
             std::cerr << "]" << std::endl;
         }
+        alea.shuffle(*keys);
         std::cerr << std::endl;
     }
 
