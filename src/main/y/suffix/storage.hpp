@@ -4,7 +4,7 @@
 #define Y_SUFFIX_STORAGE_INCLUDED 1
 
 #include "y/suffix/graph.hpp"
-#include "y/string.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -45,7 +45,7 @@ namespace upsylon
 
         //! copy
         inline suffix_storage(const suffix_storage &other) :
-        graph_type(other)
+        collection(), graph_type(other)
         {
             
         }
@@ -57,40 +57,40 @@ namespace upsylon
             return *this;
         }
 
-        //! insert by string
-        inline bool insert(const string &key, param_type args)
+        //! insert by buffer
+        inline bool insert(const memory::ro_buffer &key, param_type args)
         {
-            return this->insert_by(*key,key.size(),args);
+            return this->insert_by(key.as<char>(),key.length(),args);
         }
 
         //! insert by text
         inline bool insert(const char *key, param_type args)
         {
-            return this->insert_by(key,length_of(key),args);
+            return this->insert_by(key,key?strlen(key):0,args);
         }
 
         //! search by string
-        inline const_type *search(const string &key) const throw()
+        inline const_type *search(const memory::ro_buffer &key) const throw()
         {
-            return this->search_by(*key,key.size());
+            return this->search_by(key.as<char>(),key.length());
         }
 
         //! search by text
         inline const_type *search(const char *key) const throw()
         {
-            return this->search_by(key,length_of(key));
+            return this->search_by(key,key?strlen(key):0);
         }
 
         //! remove by string
-        inline bool remove(const string &key) throw()
+        inline bool remove(const memory::ro_buffer &key) throw()
         {
-            return this->remove_by(*key,key.size());
+            return this->remove_by(key.as<char>(),key.length());
         }
 
         //! remove by text
         inline bool remove(const char *key) throw()
         {
-            return this->remove_by(key,length_of(key));
+            return this->remove_by(key,key?strlen(key):0);
         }
 
     };
