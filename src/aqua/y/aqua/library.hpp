@@ -4,7 +4,7 @@
 #define Y_AQUA_LIBRARY_INCLUDED 1
 
 #include "y/aqua/species.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon {
 
@@ -17,7 +17,7 @@ namespace upsylon {
         //! a library of species
         //
         //______________________________________________________________________
-        class Library : public prefix_storage<Species::Pointer>
+        class Library : public suffix_storage<Species::Pointer>
         {
         public:
             //__________________________________________________________________

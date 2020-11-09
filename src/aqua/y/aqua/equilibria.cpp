@@ -13,7 +13,7 @@ namespace upsylon {
         }
 
         Equilibria:: Equilibria() :
-        prefix_storage<Equilibrium::Pointer>(),
+        suffix_storage<Equilibrium::Pointer>(),
         maxNameSize(0)
         {}
 

@@ -6,7 +6,7 @@
 
 #include "y/aqua/equilibrium.hpp"
 #include "y/aqua/types.hpp"
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon {
 
@@ -20,7 +20,7 @@ namespace upsylon {
         //! a database of equilibria
         //
         //______________________________________________________________________
-        class Equilibria : public prefix_storage<Equilibrium::Pointer>
+        class Equilibria : public suffix_storage<Equilibrium::Pointer>
         {
         public:
             //__________________________________________________________________

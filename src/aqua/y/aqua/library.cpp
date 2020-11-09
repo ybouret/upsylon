@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
         Library:: Library() :
-        prefix_storage<Species::Pointer>(),
+        suffix_storage<Species::Pointer>(),
         maxNameSize(0)
         {
         }
