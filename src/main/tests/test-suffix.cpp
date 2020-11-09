@@ -2,7 +2,7 @@
 #include "y/suffix/key-to-path.hpp"
 #include "y/suffix/strings.hpp"
 
-#include "y/suffix/graph.hpp"
+#include "y/suffix/storage.hpp"
 
 
 #include "y/utest/run.hpp"
@@ -381,6 +381,47 @@ namespace
         std::cerr << std::endl;
     }
 
+    
+    template <typename T> static inline
+    void testStorage() 
+    {
+        std::cerr << "-- prefix_storage<" << type_name_of<T>() << ">" << std::endl;
+        suffix_storage<T,suffix_collection> a1,a2;
+        suffix_storage<T,container>         b1,b2;
+
+        list<string> keys;
+        std::cerr << "[";
+        for(size_t iter=0;iter<64;++iter)
+        {
+            string key;
+            for(size_t i=1+alea.leq(4);i>0;--i)
+            {
+                key << alea.range<char>('a','d');
+            }
+            const T tmp = support::get<T>();
+            if(a1.insert(key,tmp))
+            {
+                Y_ASSERT(a2.insert(*key,tmp));
+                Y_ASSERT(b1.insert(key,tmp));
+                Y_ASSERT(b2.insert(*key,tmp));
+                std::cerr << "+";
+            }
+            else
+            {
+                std::cerr << "-";
+            }
+        }
+        std::cerr << "]" << std::endl;
+        Y_CHECK(a1.has_same_layout_than(a2));
+        Y_CHECK(b1.has_same_layout_than(b2));
+
+        a2.sort_with( comparison::increasing<T> );
+        a1.sort_with( comparison::decreasing<T> );
+        Y_CHECK(a1.has_same_layout_than(a2));
+
+        std::cerr << std::endl;
+
+    }
 
 
     
@@ -416,6 +457,7 @@ Y_UTEST(suffix)
 
     testManifest();
 
+    testStorage<unsigned>();
     
     if(argc>1)
     {

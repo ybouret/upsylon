@@ -8,6 +8,7 @@
 #include "y/suffix/collection.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/memory/buffers.hpp"
+#include "y/iterate/linked.hpp"
 
 namespace upsylon
 {
@@ -224,12 +225,39 @@ catch(...) { dpool.store(node); throw; }
         {
             return try_remove( htree.pull_at(path) );
         }
-        
+
+        //______________________________________________________________________
+        //
+        // sorting data
+        //______________________________________________________________________
+        template <typename FUNC>
+        void sort_with( FUNC &func )
+        {
+            merging<data_node>::sort(dlist,compare_with<FUNC>,(void*)&func);
+        }
+
+        typedef iterate::linked<type,data_node,iterate::forward>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const data_node,iterate::forward> const_iterator;  //!< forward const iterator
+
+        iterator begin() throw() { return iterator( dlist.head ); } //!< begin forward
+        iterator end()   throw() { return iterator(0);            } //!< end forward
+
+        const_iterator begin() const throw()   { return const_iterator( dlist.head ); } //!< begin forward const
+        const_iterator end()   const throw()   { return const_iterator(0);            } //!< end forward const
+
     private:
         data_list dlist;
         tree_type htree;
         data_pool dpool;
-        
+
+        template <typename FUNC> static inline
+        int compare_with( const data_node *lhs, const data_node *rhs, void *args)
+        {
+            assert(lhs); assert(rhs); assert(args);
+            FUNC &func = *(FUNC*)args;
+            return func(lhs->data,rhs->data);
+        }
+
         inline bool try_remove(void *addr) throw()
         {
             if(addr)
