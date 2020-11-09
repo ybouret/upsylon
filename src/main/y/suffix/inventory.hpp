@@ -23,6 +23,16 @@ namespace upsylon
         
         inline explicit suffix_inventory() : manifest_type() {}
         inline virtual ~suffix_inventory() throw() {}
+        inline suffix_inventory(const suffix_inventory &other) :
+        collection(), manifest_type(other)
+        {
+        }
+        
+        inline suffix_inventory & operator=( const suffix_inventory &other)
+        {
+            manifest_type &self = *this; self = other;
+            return *this;
+        }
         
         inline bool insert(const accessible<CODE> &path)
         {

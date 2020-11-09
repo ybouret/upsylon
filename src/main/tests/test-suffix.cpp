@@ -404,7 +404,15 @@ namespace
             }
         }
         Y_CHECK(db1==db2);
-
+        {
+            suffix_inventory<CODE> db3(db1);
+            Y_CHECK(db3==db1);
+            db3.release();
+            Y_ASSERT(db3!=db1);
+            db3 = db1;
+            Y_CHECK(db1==db3);
+        }
+        
         std::cerr << std::endl;
     }
 
