@@ -67,7 +67,7 @@ namespace upsylon
             memory::cppblock<char> path( nmax );
             for(const data_node *node=head();node;node=node->next)
             {
-                const node_type *curr=node->hook;
+                const tree_node *curr=static_cast<const tree_node *>(node->hook);
                 const size_t     clen=curr->encode(path);
                 string           name( *path, clen );
                 const_type       hash = node->data;

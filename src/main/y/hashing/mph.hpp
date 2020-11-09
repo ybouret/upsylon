@@ -2,7 +2,7 @@
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
-#include "y/associative/prefix/storage.hpp"
+#include "y/suffix/storage.hpp"
 
 namespace upsylon
 {
@@ -10,7 +10,7 @@ namespace upsylon
     namespace hashing
     {
         //! base class
-        typedef prefix_storage<unsigned> minimal_perfect_tree;
+        typedef suffix_storage<unsigned> minimal_perfect_tree;
 
         //______________________________________________________________________
         //
@@ -29,7 +29,7 @@ namespace upsylon
             // types and definition
             //__________________________________________________________________
             static const_type invalid = limit_of<const_type>::maximum; //!< unallowed key
-            typedef minimal_perfect_tree::node_type   node_type;       //!< alias
+            typedef minimal_perfect_tree::tree_node         node_type; //!< alias
 
             //__________________________________________________________________
             //
@@ -52,7 +52,7 @@ namespace upsylon
                 check(h);
                 if(!insert(key,h))
                 {
-                    found(this->mark);
+                    found(this->mark());
                 }
             }
 

@@ -129,6 +129,8 @@ namespace upsylon
             return ans;
         }
 
+        //! get last insertion trial
+        const tree_node *mark() const throw() { return htree.mark; }
 
         //! no-throw swap
         inline void swap_with(suffix_graph &g) throw()
@@ -230,11 +232,18 @@ catch(...) { dpool.store(node); throw; }
         //
         // sorting data
         //______________________________________________________________________
+
+        //! wrapper to sort data with func
         template <typename FUNC>
         void sort_with( FUNC &func )
         {
             merging<data_node>::sort(dlist,compare_with<FUNC>,(void*)&func);
         }
+
+        //______________________________________________________________________
+        //
+        // iterators
+        //______________________________________________________________________
 
         typedef iterate::linked<type,data_node,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const data_node,iterate::forward> const_iterator;  //!< forward const iterator
@@ -244,6 +253,16 @@ catch(...) { dpool.store(node); throw; }
 
         const_iterator begin() const throw()   { return const_iterator( dlist.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);            } //!< end forward const
+
+        //______________________________________________________________________
+        //
+        //! accessing root
+        //______________________________________________________________________
+        const tree_node &get_root() const throw() { return *htree.root; }
+
+    protected:
+        //! direct protected access to head for internal faster scan
+        inline const data_node *head() const throw() { return dlist.head; }
 
     private:
         data_list dlist;
