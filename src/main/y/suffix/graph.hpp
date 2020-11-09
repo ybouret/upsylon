@@ -5,12 +5,14 @@
 
 #include "y/suffix/knot.hpp"
 #include "y/suffix/tree.hpp"
+#include "y/suffix/collection.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/memory/buffers.hpp"
 
 namespace upsylon
 {
-    
+
+ 
     //__________________________________________________________________________
     //
     //
@@ -20,7 +22,7 @@ namespace upsylon
     template <
     typename CODE,
     typename T,
-    typename BASE_CLASS>
+    typename BASE_CLASS = suffix_collection>
     class suffix_graph : public BASE_CLASS
     {
     public:
@@ -39,19 +41,17 @@ namespace upsylon
         //
         // C++
         //______________________________________________________________________
-        
         //! setup
         inline explicit       suffix_graph() : BASE_CLASS(), dlist(), htree(), dpool() {}
 
         //! setup with capacity
-        inline explicit suffix_graph(const size_t n, const as_capacity_t &) :
-        BASE_CLASS(), dlist(), htree(), dpool()
+        inline explicit suffix_graph(const size_t n, const as_capacity_t &) : BASE_CLASS(), dlist(), htree(), dpool()
         {
             dpool.cache(n);
         }
 
         //! copy
-        inline suffix_graph(const suffix_graph &other) : BASE_CLASS(), dlist(), htree(), dpool()
+        inline suffix_graph(const suffix_graph &other) : collection(), BASE_CLASS(), dlist(), htree(), dpool()
         {
             const size_t           nmax = other.max_depth();
             memory::cppblock<CODE> blk(nmax);
@@ -61,6 +61,7 @@ namespace upsylon
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
                 this->insert_by(*blk,len,node->data);
             }
+            assert(this->has_same_layout_than(other));
         }
 
         //! assign by copy/swap

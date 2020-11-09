@@ -44,7 +44,8 @@ namespace upsylon
         //! cleanup
         inline virtual ~suffix_batch() throw() {}
 
-        inline suffix_batch(const suffix_batch &other) : graph_type(other)
+        //! copy
+        inline suffix_batch(const suffix_batch &other) : collection(), graph_type(other)
         {
         }
         

@@ -4,6 +4,7 @@
 #define Y_SUFFIX_MANIFEST_INCLUDED 1
 
 #include "y/suffix/tree.hpp"
+#include "y/suffix/collection.hpp"
 
 namespace upsylon
 {
@@ -14,7 +15,7 @@ namespace upsylon
     //! simple manifest of CODE sequences
     //
     //__________________________________________________________________________
-    template <typename CODE, typename BASE_CLASS>
+    template <typename CODE, typename BASE_CLASS = suffix_collection>
     class suffix_manifest : public BASE_CLASS
     {
     public:
@@ -34,7 +35,7 @@ namespace upsylon
         inline virtual ~suffix_manifest() throw() {}                //!< cleanup
 
         //! copy by tree cloning
-        inline suffix_manifest(const suffix_manifest &other) : BASE_CLASS(), tree()
+        inline suffix_manifest(const suffix_manifest &other) : collection(), BASE_CLASS(), tree()
         {
             tree.clone(other.tree);
         }

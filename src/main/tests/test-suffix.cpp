@@ -178,7 +178,7 @@ namespace
     {
         std::cerr << "-- suffix_graph<" << type_name_of<CODE>() << "," << type_name_of<T>()  << ">" << std::endl;
 
-        typedef suffix_graph<CODE,T,object> graph_type;
+        typedef suffix_graph<CODE,T> graph_type;
 
         graph_type g1,g2,g3;
         
@@ -275,7 +275,7 @@ namespace
     }
 
 
-    typedef suffix_manifest<size_t,object> db_type;
+    typedef suffix_manifest<size_t> db_type;
 
     template <typename COUNTING>
     void testCouting(COUNTING &c, db_type &db1, db_type &db2)
@@ -350,19 +350,20 @@ namespace
     {
         const string fileName = fn;
         std::cerr << "-- suffix_strings(" << fileName << ")" << std::endl;
-        suffix_strings<object> db1,db2,db3;
-        size_t nr = 100000;
+        suffix_strings<suffix_collection> db1,db2,db3;
+        size_t nr = 10000;
         db1.reserve(nr);
         db2.reserve(nr);
         db3.reserve(nr);
-
+        std::cerr << "reading..." << std::endl;
         {
             ios::icstream fp(fileName);
-            string line;
+            string        line;
             std::cerr << "[";
             int count = 0;
             while(fp.gets(line))
             {
+                //(std::cerr << line << '/').flush();
                 if(0==(count++%1000))
                 {
                     std::cerr << ".";
