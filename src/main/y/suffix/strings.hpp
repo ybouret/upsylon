@@ -48,15 +48,11 @@ namespace upsylon
         //! buffer insertion
         inline bool insert(const memory::ro_buffer &key) { return this->insert_by(key.as<char>(),key.length()); }
 
-        
-
         //! text insertion
         inline bool insert(const char *key) { return this->insert_by(key,key?strlen(key):0); }
 
-
         //! string search
         inline bool search(const memory::ro_buffer &key) const throw() { return this->search_by(key.as<char>(),key.length()); }
-
        
         //! text search
         inline bool search(const char *key) const throw()

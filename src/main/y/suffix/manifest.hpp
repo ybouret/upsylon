@@ -123,7 +123,8 @@ namespace upsylon
             static void *used = suffix::in_use();
             return tree.insert_at(path,used);
         }
-
+        
+        
         //______________________________________________________________________
         //
         // search
@@ -151,7 +152,8 @@ namespace upsylon
         {
             return is_used( tree.find_at(path) );
         }
-
+        
+        
         //______________________________________________________________________
         //
         // remove
@@ -177,6 +179,7 @@ namespace upsylon
         {
             return NULL != tree.pull_at(path);
         }
+        
         
 
     private:

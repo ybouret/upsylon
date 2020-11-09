@@ -3,7 +3,7 @@
 #include "y/counting/parts.hpp"
 #include "y/counting/permutations.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/associative/prefix/depot.hpp"
+#include "y/suffix/strings.hpp"
 #include "y/fs/disk/istream.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -34,8 +34,8 @@ Y_UTEST(phrases)
         const size_t letters  = alphabet.size();
         if(letters>0)
         {
-            prefix_depot<char> db;
-            prefix_depot<char> phrases;
+            suffix_strings<> db;
+            suffix_strings<> phrases;
             if(argc>2)
             {
                 const string            fn  = argv[2];
@@ -93,7 +93,7 @@ Y_UTEST(phrases)
                             {
                                 word += *(p++);
                             }
-                            if(db.size() && !db.has(word) ) continue;
+                            if(db.size() && !db.search(word) ) continue;
                             if(n==1)
                             {
                                 if(!accept_single(word[0])) continue;
