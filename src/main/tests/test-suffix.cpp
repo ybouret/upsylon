@@ -1,4 +1,8 @@
+
+#include "y/suffix/key-to-path.hpp"
+
 #include "y/suffix/graph.hpp"
+
 
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
@@ -237,6 +241,19 @@ namespace
         testGraph<uint32_t,T>();
         testGraph<uint64_t,T>();
     }
+
+    template <typename KEY>
+    static inline void testKeys()
+    {
+        std::cerr << "-- key_to_path<" << type_name_of<KEY>() << ">" << std::endl;
+        for(size_t iter=0;iter<8;++iter)
+        {
+            const KEY    tmp = support::get<KEY>();
+            const char  *k   = key_to_path<KEY>::addr_of(tmp);
+            const size_t n   = key_to_path<KEY>::size_of(tmp);
+            std::cerr << tmp << " -> @" << (void*)k << " +" << n << std::endl;
+        }
+    }
     
 }
 
@@ -264,6 +281,10 @@ Y_UTEST(suffix)
 
     testGraphs<int>();
     testGraphs<string>();
+
+    testKeys<int>();
+    testKeys<string>();
+
 
 }
 Y_UTEST_DONE()
