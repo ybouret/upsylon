@@ -5,7 +5,7 @@
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/suffix/node-to-string.hpp"
+#include "y/suffix/node-to.hpp"
 
 namespace upsylon {
 
@@ -85,7 +85,7 @@ namespace upsylon {
                 std::cerr << '\t' << '<' << tag << '>' << ' ';
                 for(size_t i=tag->size();i<len;++i) std::cerr << ' ';
                 std::cerr << '(';
-                const string path = suffix_node_to_string( static_cast<const tree_node *>(node->hook) );
+                const string path = suffix_node_::to_string( static_cast<const tree_node *>(node->hook) );
                 std::cerr << path;
                 std::cerr << ')' << std::endl;
             }

@@ -2,6 +2,8 @@
 #include "y/mpi++/mpi.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/associative/be-key.hpp"
+#include "y/suffix/node-to.hpp"
+
 #include <typeinfo>
 
 namespace upsylon
@@ -159,15 +161,11 @@ assert( sizeof(type) == data_type_for<type>().size );\
 
     void mpi:: display_data_types() const
     {
-        for(  suffix_storage<data_type>::const_iterator it=types.begin();it!=types.end();++it)
+        for( suffix_storage<data_type>::const_iterator it=types.begin();it!=types.end();++it)
         {
-            union {
-                unsigned_int<sizeof(void*)>::type info;
-                void                             *addr;
-            } alias = { 0 };
-            static_cast<suffix_storage<data_type>::tree_node *>(it.get().hook)->encode( (char *)&alias.info );
-            alias.info = swap_be(alias.info);
-            const std::type_info &tid = *static_cast<const std::type_info *>(alias.addr);
+
+            const void           *ptr = suffix_node_::to_address( static_cast<suffix_storage<data_type>::tree_node *>(it.get().hook) );
+            const std::type_info &tid = *static_cast<const std::type_info *>(ptr);
             fprintf(stderr,"\t'%s'\n", tid.name() );
         }
     }
