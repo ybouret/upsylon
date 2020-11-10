@@ -14,7 +14,7 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! catalog<KEY,TYPE> interface
+    //! lexicon<KEY,TYPE> interface
     //
     //__________________________________________________________________________
     template <typename KEY, typename T>

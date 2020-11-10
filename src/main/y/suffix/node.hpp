@@ -65,7 +65,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! make a node within a tree using pool
-        inline static suffix_node *make(pool_t &pool,suffix_node *parent,const CODE c, void *a)
+        inline static suffix_node *make(pool_t &pool, suffix_node *parent, const CODE c, void *a)
         {
             assert(parent);
             if(pool.size)

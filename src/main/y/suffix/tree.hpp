@@ -260,8 +260,10 @@ namespace upsylon
             return node;
         }
         
-        
+        //______________________________________________________________________
+        //
         //! pluck a used node from the stem
+        //______________________________________________________________________
         inline void pluck(tree_node *node)  throw()
         {
             assert(node);

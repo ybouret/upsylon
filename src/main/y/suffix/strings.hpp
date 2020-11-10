@@ -60,10 +60,9 @@ namespace upsylon
             return this->search_by(key,key?strlen(key):0);
         }
 
-        //! string removal
+        //! buffer removal
         inline bool remove(const memory::ro_buffer &key)  throw() { return this->remove_by(key.as<char>(),key.length()); }
 
-        
         //! text removal
         inline bool remove(const char *key) throw()
         {
