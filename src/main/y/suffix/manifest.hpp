@@ -12,7 +12,12 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! simple manifest of CODE sequences
+    //! simple manifest of CODE sequences, no assiocated data
+    /**
+     will derived:
+     - suffix_strings for string/buffer manifests.
+     - suffix_inventory for accessible keys
+     */
     //
     //__________________________________________________________________________
     template <typename CODE, typename BASE_CLASS = suffix_collection>

@@ -18,6 +18,14 @@ namespace upsylon
     //
     //
     //! compound class to build suffix classes
+    /**
+     handle a list of data matching an internal suffix_tree.
+     derived class:
+     - suffix_storage for strings/buffer keys
+     - suffix_batch for catalog interface
+     - suffix_table for lexicon interface
+     - ledger to store addresses
+     */
     //
     //__________________________________________________________________________
     template <
