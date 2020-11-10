@@ -25,9 +25,9 @@ namespace upsylon
        
         //______________________________________________________________________
         //
-        // helperss
+        // helpers
         //______________________________________________________________________
-        static  void *                            in_use() throw(); //!< invalid utility address
+        static  void * in_use() throw(); //!< invalid utility address
 
         //! byte to printable text
         static const char *byte_to_text(const uint8_t &) throw();

@@ -8,7 +8,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/associative/prefix/depot.hpp"
+#include "y/suffix/strings.hpp"
 
 using namespace upsylon;
 
@@ -33,7 +33,7 @@ Y_UTEST(scrabble)
             output.adjust(width,empty);
         }
 
-        prefix_depot<char> db;
+        suffix_strings<> db;
 
         // loop over word sizes
         size_t total = 0;
@@ -74,7 +74,7 @@ Y_UTEST(scrabble)
             std::cerr << "loading " << fn << "[";
             ios::icstream fp(argv[2]);
             
-            prefix_depot<char> dict;
+            suffix_strings<>  dict;
             {
                 string line;
                 size_t count = 0;
@@ -99,7 +99,7 @@ Y_UTEST(scrabble)
                 for( list<string>::const_iterator i=L.begin();i!=L.end();++i)
                 {
                     const string &word = *i; assert(word.size()==w);
-                    if(dict.has(word))
+                    if(dict.search(word))
                     {
                         ++total;
                         std::cerr << " '" << word << "'";

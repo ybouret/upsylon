@@ -3,84 +3,63 @@
 #ifndef Y_LEDGER_INCLUDED
 #define Y_LEDGER_INCLUDED 1
 
-#include "y/associative/prefix/tree.hpp"
+#include "y/suffix/graph.hpp"
 #include "y/os/be-address.hpp"
 
 namespace upsylon {
     
-    
-    //! a ledger of addresses
-    class ledger : public prefix_tree<char,BEaddress>
-    {
-    public:
-        //______________________________________________________________________
-        //
-        // types and definition
-        //______________________________________________________________________
-        typedef BEaddress                   addr_type; //!< any address
-        typedef prefix_tree<char,addr_type> base_type; //!< alias
-         
-        //______________________________________________________________________
-        //
-        // C++
-        //______________________________________________________________________
-        virtual ~ledger() throw();             //!< cleanup
-        explicit ledger();                     //!< setup
-        ledger(const ledger &);                //!< copy
-        ledger & operator=(const ledger &);    //!< copy/swap
-        
-    };
-    
+
+
+
     //! ledger of specific address
     template <typename T>
-    class ledger_of : public ledger
+    class ledger_of : public suffix_graph<char,BEaddress>
     {
     public:
+        typedef suffix_graph<char,BEaddress> ledger_type;
+
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
-        inline explicit ledger_of() : ledger() {}              //!< setup
-        inline virtual ~ledger_of() throw()    {}              //!< cleanup
-        inline ledger_of(const ledger_of &_) : ledger(_) {}    //!< copy
+        inline explicit ledger_of() : ledger_type() {}              //!< setup
+        inline virtual ~ledger_of() throw()         {}              //!< cleanup
+        inline ledger_of(const ledger_of &_) : ledger_type(_) {}    //!< copy
       
         //! assign
         inline ledger_of & operator=( const ledger_of &_ )
         {
-            { ledger &self = *this; self=_; }
+            { ledger_type &self = *this; self=_; }
             return *this;
         }
-        
-        //! insert
+
         inline bool insert(const T &args)
         {
-            const addr_type addr = args;
-            return this->__insert((const char *)&addr.data,addr.size,addr);
+            const BEaddress addr = args;
+            return this->insert_by( (const char *) & (addr.data), addr.size, args );
+        }
+
+        void secure(const T &args)
+        {
+            (void) insert(args);
         }
         
         //! search
         inline bool search(const T &args) const throw()
         {
-            const addr_type addr = args;
-            return NULL != this->__search((const char *)&addr.data,addr.size);
-        }
-        
-        //! secure
-        inline void secure(const T &args)
-        {
-            (void) insert(args);
+            const BEaddress addr = args;
+            return this->search_by( (const char *) & (addr.data), addr.size);
         }
         
         //! remove
         inline void remove(const T &args) throw()
         {
-            const addr_type addr = args;
-            (void) this->__remove((const char *)&addr.data,addr.size);
-
+            const BEaddress addr = args;
+            (void) this->remove_by((const char *) & (addr.data), addr.size);
         }
-        
+
     };
-    
+
 }
 
 #endif

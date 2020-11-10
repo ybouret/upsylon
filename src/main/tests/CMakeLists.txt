@@ -275,7 +275,6 @@ test-associative.cpp test-set.cpp test-map.cpp
 test-lexicon.cpp
 test-catalog.cpp
 test-ledger.cpp
-test-prefix.cpp
 test-suffix.cpp
 test-hashed.cpp
 )
@@ -285,8 +284,7 @@ ADD_TEST(associative:map     test-main map)
 ADD_TEST(associative:lexicon test-main lexicon)
 ADD_TEST(associative:catalog test-main catalog)
 ADD_TEST(associative:ledger  test-main ledger)
-ADD_TEST(associative:prefix  test-main prefix ${HERE}/ten.db)
-ADD_TEST(associative:suffix  test-main suffix)
+ADD_TEST(associative:suffix  test-main suffix ${HERE}/words.db)
 ADD_TEST(associative:hashed  test-main hashed)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)

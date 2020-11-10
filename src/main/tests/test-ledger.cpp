@@ -46,7 +46,7 @@ namespace {
             Y_ASSERT( L.search( source[i]) );
         }
         
-        L.ditch();
+        L.release();
         
         std::cerr << "\tsecuring..." << std::endl;
         for(size_t i=source.size();i>0;--i)
@@ -62,7 +62,7 @@ namespace {
             const BEaddress &addr = *it;
             std::cerr << "\t\t" << *(addr.as<T>()) << std::endl;
         }
-        L.sort( compare_stub<T> );
+        L.sort_with( compare_stub<T> );
         std::cerr << "\t-- sorted  :" << std::endl;
         for( typename ledger_of<T>::iterator it=L.begin();it!=L.end();++it)
         {
