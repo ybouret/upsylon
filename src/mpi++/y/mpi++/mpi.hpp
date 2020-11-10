@@ -63,6 +63,8 @@ namespace upsylon
         class data_type
         {
         public:
+            typedef suffix_storage<data_type> store;
+
             //__________________________________________________________________
             //
             // C++
@@ -542,7 +544,7 @@ namespace upsylon
         void build_data_types(); //!< build the database of primary types
       
         
-        suffix_storage<data_type> types; //!< persistent database of types+sizes
+        data_type::store types; //!< persistent database of types+sizes
         
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)

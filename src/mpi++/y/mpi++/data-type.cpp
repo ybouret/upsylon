@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    typedef suffix_storage<mpi::data_type> mpi_data_type_db;
+    typedef  mpi::data_type::store mpi_data_type_db;
 
     mpi:: data_type:: data_type(const MPI_Datatype value, const unsigned bytes) throw() :
     uuid(value),
