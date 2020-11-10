@@ -9,6 +9,7 @@
 
 namespace upsylon {
 
+    //! decoding nodes paths
     struct suffix_node_
     {
         //! encode to a string with length=node->depth

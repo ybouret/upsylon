@@ -63,7 +63,7 @@ namespace upsylon
         class data_type
         {
         public:
-            typedef suffix_storage<data_type> store;
+            typedef suffix_storage<data_type> store; //!< alias
 
             //__________________________________________________________________
             //

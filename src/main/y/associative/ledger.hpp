@@ -16,7 +16,7 @@ namespace upsylon {
     class ledger_of : public suffix_graph<char,BEaddress>
     {
     public:
-        typedef suffix_graph<char,BEaddress> ledger_type;
+        typedef suffix_graph<char,BEaddress> ledger_type; //!< alias
 
         //______________________________________________________________________
         //
@@ -33,25 +33,27 @@ namespace upsylon {
             return *this;
         }
 
+        //! insert object by its address
         inline bool insert(const T &args)
         {
             const BEaddress addr = args;
             return this->insert_by( (const char *) & (addr.data), addr.size, args );
         }
 
+        //! secure object by its address
         void secure(const T &args)
         {
             (void) insert(args);
         }
         
-        //! search
+        //! search object by its address
         inline bool search(const T &args) const throw()
         {
             const BEaddress addr = args;
             return this->search_by( (const char *) & (addr.data), addr.size);
         }
         
-        //! remove
+        //! remove object bny its address
         inline void remove(const T &args) throw()
         {
             const BEaddress addr = args;
