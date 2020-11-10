@@ -13,5 +13,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(types);
     Y_UTEST(parser);
     Y_UTEST(list);
+    Y_UTEST(dialect);
 }
 Y_UTEST_EXEC()
