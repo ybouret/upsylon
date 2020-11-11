@@ -33,9 +33,8 @@ namespace upsylon {
             typedef suffix_storage<Scanner::Pointer> ScannerTree;  //!< alias
             typedef Lexical::Plugin                  Plugin;       //!< alias
             typedef suffix_storage<Plugin::Pointer>  PluginTree;   //!< alias
-
-            typedef Scanner                      *HScan;        //!< alias for history
-            typedef list<HScan>                   History;      //!< history type
+            typedef Scanner                         *HScan;        //!< alias for history
+            typedef list<HScan>                      History;      //!< history type
 
             //__________________________________________________________________
             //
@@ -116,7 +115,15 @@ namespace upsylon {
                 return (Plugin&)(**ppPlugin);
             }
 
-          
+            //! get a scanner by ID
+            template <typename ID>
+            const Scanner & operator[](const ID &id)
+            {
+                const Scanner::Pointer **ppScan = db.search(id);
+                if(!ppScan) noScanner(id);
+                
+            }
+            
             //__________________________________________________________________
             //
             // I/O methods
@@ -145,6 +152,9 @@ namespace upsylon {
             virtual void push(Lexeme *) throw();
             void         noPlugin(const string &s) const;
             void         noPlugin(const char   *s) const;
+            void         noScanner(const string &s) const;
+            void         noScanner(const char   *s) const;
+
         public:
             Dictionary   dictionary; //!< shared dictionary for all scanners
         };

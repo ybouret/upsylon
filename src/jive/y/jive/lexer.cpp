@@ -197,12 +197,26 @@ namespace upsylon {
             noPlugin(*s);
         }
 
+       
+        static const char nil[] = "nil";
+        
         void Lexer:: noPlugin(const char   *s) const
         {
-            assert(s);
+            if(!s) s=nil;
             throw exception("[%s] no plugin <%s>", **label, s);
         }
 
+        void Lexer:: noScanner(const string &s) const
+        {
+            noScanner(*s);
+        }
+        
+        void Lexer:: noScanner(const char *s) const
+        {
+            if(!s) s=nil;
+            throw exception("[%s] no scanner <%s>", **label, s);
+        }
+        
         const Lexeme * Lexer:: next(Source &source)
         {
             Lexeme *lexeme = get(source);

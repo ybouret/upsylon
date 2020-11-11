@@ -13,10 +13,19 @@ namespace upsylon
 
         namespace Dialect
         {
+            //__________________________________________________________________
+            //
+            //
+            //! build grammar to achive parser
+            //
+            //__________________________________________________________________
             class Parser : public Jive::Parser
             {
             public:
+                //! setup grammar
                 explicit Parser();
+                
+                //! cleanup
                 virtual ~Parser() throw();
 
             private:

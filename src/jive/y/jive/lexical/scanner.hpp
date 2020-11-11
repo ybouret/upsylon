@@ -16,9 +16,9 @@ namespace upsylon
     {
         namespace Lexical
         {
-
+            
             class Plugin; //!< forward declaration
-
+            
             //__________________________________________________________________
             //
             //! directive for Lexer during probe
@@ -27,9 +27,9 @@ namespace upsylon
              triggered
              */
             //__________________________________________________________________
-
+            
             typedef const ControlEvent *Directive;
-
+            
             //__________________________________________________________________
             //
             //
@@ -54,19 +54,19 @@ namespace upsylon
                     RejectEOS, //!< will fail (and this is the default behavior!)
                     AcceptEOS  //!< ok, may stop
                 };
-
+                
                 //! return text
                 static const char *AtEOSText(const AtEOS) throw();
-
+                
                 //--------------------------------------------------------------
                 //
                 // C++
                 //
                 //--------------------------------------------------------------
-
+                
                 //! cleanup
                 virtual ~Scanner() throw();
-
+                
                 //! setup using Tags
                 template <typename ID> inline
                 explicit Scanner(const ID &id, const AtEOS which=AcceptEOS) :
@@ -81,14 +81,14 @@ namespace upsylon
                 dict(0)
                 {
                 }
-
-
+                
+                
                 //--------------------------------------------------------------
                 //
                 // methods
                 //
                 //--------------------------------------------------------------
-
+                
                 //! rule full registration
                 /**
                  - r is added to internal rules
@@ -96,11 +96,11 @@ namespace upsylon
                  - r is scattered into the table for all its first chars
                  */
                 const Rule & add(Rule *r);
-
-
+                
+                
                 const string & key()    const throw();  //!< get key for pointer
                 const char   * getEOS() const throw();  //!< named atEOS
-
+                
                 //--------------------------------------------------------------
                 //
                 // members
@@ -108,8 +108,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Tag    label; //!< label for this rule
                 const AtEOS  atEOS; //!< what happens if EOS is met
-
-
+                
+                
                 //--------------------------------------------------------------
                 //
                 // scanner construction
@@ -117,7 +117,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 void          nothing(const Token &) const throw();  //!< ...
                 void          newLine(const Token &) throw();        //!< send newLine to current source
-
+                
                 //------------------------------------------------------------------
                 //
                 //
@@ -125,8 +125,8 @@ namespace upsylon
                 //
                 //
                 //------------------------------------------------------------------
-
-
+                
+                
                 //! build a forwarding regular event
                 /**
                  - action is taken
@@ -145,8 +145,8 @@ namespace upsylon
                 {
                     return regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnForward>(anyLabel,anyRegExp,hObject,hMethod);
                 }
-
-
+                
+                
                 //! build a discarding regular event
                 /**
                  - action is taken
@@ -165,28 +165,28 @@ namespace upsylon
                 {
                     return regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(anyLabel,anyRegExp,hObject,hMethod);
                 }
-
+                
                 //! default emit
                 template <typename LABEL, typename REGEXP>
                 const Rule & emit(const LABEL  &label, const REGEXP &regexp)
                 {
                     return forward(label,regexp,this,&Scanner::nothing);
                 }
-
+                
                 //! default drop
                 template <typename LABEL, typename REGEXP>
                 const Rule & drop(const LABEL  &label, const REGEXP &regexp)
                 {
                     return discard(label,regexp,this,&Scanner::nothing);
                 }
-
+                
                 //! default endl
                 template <typename LABEL, typename REGEXP>
                 const Rule &endl(const LABEL &label, const REGEXP &regexp)
                 {
                     return discard(label,regexp,this,&Scanner::newLine);
                 }
-
+                
                 //------------------------------------------------------------------
                 //
                 //
@@ -194,8 +194,8 @@ namespace upsylon
                 //
                 //
                 //------------------------------------------------------------------
-
-
+                
+                
                 //! build a call event
                 /**
                  - action is taken
@@ -214,7 +214,7 @@ namespace upsylon
                 {
                     return leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnCall>(target,regexp,hObject,hMethod);
                 }
-
+                
                 //! build a jump event
                 /**
                  - action is taken
@@ -233,7 +233,7 @@ namespace upsylon
                 {
                     return leap<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnJump>(target,regexp,hObject,hMethod);
                 }
-
+                
                 //! build a back event
                 /**
                  - action is taken
@@ -257,20 +257,35 @@ namespace upsylon
                     const Event::Handle ruleEvent = new OnBack(ruleAction,label);
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
-
+                
                 //! create the call to a plugin with its Initialize method
                 const Rule &call(Plugin &);
-
+                
                 //! query rule by name
                 template <typename ID>
                 const Rule * queryRule(const ID &id)
                 {
-                    const Rule **ppR = hoard.search(id);
+                    Rule * const *ppR = hoard.search(id);
                     return ppR ? *ppR : NULL;
                 }
-
-
-                //------------------------------------------------------------------
+                
+                //! query pattern by name
+                template <typename ID>
+                const Pattern * queryPattern(const ID &id)
+                {
+                    Rule * const *ppR = hoard.search(id);
+                    if(ppR)
+                    {
+                        return & (* (**ppR).motif );
+                    }
+                    else
+                    {
+                        return NULL;
+                    }
+                }
+                
+                
+                //--------------------------------------------------------------
                 //
                 //! the flex-like probing function
                 //
@@ -280,20 +295,20 @@ namespace upsylon
                  -- if Directive==NULL, EOF
                  -- otherwise follow directive!
                  */
-                //------------------------------------------------------------------
+                //--------------------------------------------------------------
                 Unit *probe(Source &, Directive &);
-
-
-
+                
+                
+                
                 const Rules   rules; //!< list of rules
                 const RulesDB hoard; //!< database of rules
                 const Leading intro; //!< all possible first chars
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Scanner);
                 Scatter       table;  //!< table of rules
-
-
+                
+                
                 // create a regular rule
                 template <
                 typename LABEL,
@@ -314,7 +329,7 @@ namespace upsylon
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
-
+                
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -333,11 +348,11 @@ namespace upsylon
                     const Event::Handle  ruleEvent = new LEAP(ruleAction,ruleLabel);
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
-
+                
                 Unit     *endOfStream(const Source &) const;
                 Unit     *tokenToUnit(Token  &, const Tag &) const;
                 exception syntaxError(Source &) const;
-
+                
             protected:
                 Source                  *origin; //!< currently processed source
             public:
@@ -346,7 +361,7 @@ namespace upsylon
             };
         }
     }
-
+    
 }
 
 #endif

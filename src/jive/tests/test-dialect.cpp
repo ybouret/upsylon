@@ -13,7 +13,9 @@ Y_UTEST(dialect)
     vfs &fs = local_fs::instance();
     fs.try_remove_file("dialect.dot");
     fs.try_remove_file("dialect.png");
-
+    
+    Tags::Display();
+    std::cerr << dialect.getRegistry() << std::endl;
     if(argc>1)
     {
         XNode::Pointer ast( dialect.parseFile(argv[1]) );

@@ -5,30 +5,77 @@
 
 namespace upsylon
 {
-
+    
     namespace Jive
     {
-
+        
         namespace Dialect
         {
             Parser:: ~Parser() throw()
             {
             }
-
+            
 #define HEAD_RX "[_[:alpha:]]"
 #define TAIL_RX "[:word:]*"
 #define RULE_RX HEAD_RX TAIL_RX
-
+            
             Parser:: Parser() : Jive::Parser("Dialect")
             {
-
-                Aggregate   &GrammarNameDecl = agg("GrammarNameDecl");
-                const Axiom &Stop            = division(';');
-                GrammarNameDecl << terminal("GrammarName", "[.]" RULE_RX );
-                GrammarNameDecl << Stop;
-
-
-
+                //--------------------------------------------------------------
+                //
+                // top level`
+                //
+                //--------------------------------------------------------------
+                
+                Aggregate &DIALECT = grp("Dialect");
+                
+                //--------------------------------------------------------------
+                //
+                // common terminals
+                //
+                //--------------------------------------------------------------
+                const Axiom &STOP            = division(';');
+                const Axiom &COLON           = division(':');
+                const Axiom &BSTRING         = plugin<Lexical::bString>("bstring");
+                const Axiom &JSTRING         = plugin<Lexical::jString>("jstring");
+                const Axiom &RSTRING         = plugin<Lexical::rString>("rstring");
+                const Axiom &STRING          = (alt("string") << JSTRING << RSTRING);
+                
+                //--------------------------------------------------------------
+                //
+                // grammar name declaration
+                //
+                //--------------------------------------------------------------
+                {
+                    Aggregate   &GRAMMAR = grp("GrammarDecl");
+                    GRAMMAR << terminal("Grammar", "[.]" RULE_RX ) << STOP;
+                    DIALECT <<  GRAMMAR;
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // Dialect Statements
+                //
+                //--------------------------------------------------------------
+                Alternate &STATEMENT = alt("STATEMENT");
+                DIALECT << repeat(STATEMENT,0);
+                
+                //--------------------------------------------------------------
+                //
+                // plugins
+                //
+                //--------------------------------------------------------------
+                {
+                    Aggregate &PLUGIN = agg("Plugin");
+                    PLUGIN << terminal("PluginName", "@" RULE_RX) << COLON
+                    << BSTRING
+                    << ( repeat("PluginArgs",STRING,0) )
+                    << STOP;
+                    STATEMENT << PLUGIN;
+                }
+                
+                
+                
                 //--------------------------------------------------------------
                 //
                 // comments
@@ -36,7 +83,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 call( plug<Lexical::SingleLineComments>("comment","//"));
                 call( plug<Lexical::MultiLinesComments>("comments","/\\*","\\*/"));
-
+                
                 //--------------------------------------------------------------
                 //
                 // lexical only
@@ -44,13 +91,13 @@ namespace upsylon
                 //--------------------------------------------------------------
                 endl("endl","[:endl:]");
                 drop("blank","[:blank:]");
-
-                validate();
+                
                 graphViz("dialect-grammar.dot");
+                validate();
                 
             }
         }
     }
-
+    
 }
 

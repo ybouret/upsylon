@@ -135,6 +135,10 @@ namespace upsylon
                 return ans;
             }
 
+            const Axiom::Registry & Grammar:: getRegistry() const
+            {
+                return registry;
+            }
         }
         
     }

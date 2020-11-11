@@ -23,30 +23,13 @@ namespace upsylon
                 return r.display(os);
             }
 
-#if 0
-            namespace {
-
-                struct AxiomRegistryDisplay
-                {
-                    std::ostream *dest;
-                    size_t        indx;
-                    size_t        size;
-                    inline bool operator()(const suffix_path    &,
-                                           const Axiom::Pointer &ptr)
-                    {
-                        std::ostream &os = *dest;
-                        ++indx;
-                        os << ptr->name;
-                        if(indx<size) os << ';';
-                        return true;
-                    }
-                };
-            }
-#endif
             std::ostream & Axiom:: Registry:: display(std::ostream &os) const
             {
-                //AxiomRegistryDisplay cb = { &os, 0, entries() };
-                //for_each(cb);
+                for(const_iterator it=begin();it!=end();++it)
+                {
+                    const Axiom &axiom = **it;
+                    os << '<' << axiom.name << '>' << '/';
+                }
                 return os;
             }
 

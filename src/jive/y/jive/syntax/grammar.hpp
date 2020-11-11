@@ -185,7 +185,7 @@ namespace upsylon
 
 
                 //--------------------------------------------------------------
-                //! create a variadic aggregate
+                //! create a variadic aggregate, vanish iff one child only
                 //--------------------------------------------------------------
                 template <typename ID>
                 Aggregate & var(const ID &id)
@@ -251,6 +251,9 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Terminal::Type lexemeType(const Lexeme &lexeme) const;
 
+                const Axiom::Registry & getRegistry() const;
+                const Axiom::List     & getList() const;
+                
                 //______________________________________________________________
                 //
                 // members

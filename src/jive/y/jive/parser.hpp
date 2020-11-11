@@ -32,7 +32,9 @@ namespace upsylon
             typedef Syntax::Aggregate Aggregate;  //!< alias
             typedef Syntax::Alternate Alternate;  //!< alias
             typedef Syntax::Compound  Compound;   //!< alias
-
+            typedef Syntax::Repeat    Repeat;     //!< alias
+            typedef Syntax::Option    Option;     //!< alias
+            
             //__________________________________________________________________
             //
             // C++
