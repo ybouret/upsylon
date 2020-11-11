@@ -6,3 +6,4 @@
 
 .sample; // grammar name
 
+@string :

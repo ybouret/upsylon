@@ -10,6 +10,8 @@ Y_UTEST(dialect)
 {
     Dialect::Parser dialect;
 
+    Syntax::Axiom::Verbose = true;
+    
     vfs &fs = local_fs::instance();
     fs.try_remove_file("dialect.dot");
     fs.try_remove_file("dialect.png");

@@ -47,7 +47,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 {
-                    Aggregate   &GRAMMAR = grp("GrammarDecl");
+                    Aggregate   &GRAMMAR = grp("Grammar_");
                     GRAMMAR << terminal("Grammar", "[.]" RULE_RX ) << STOP;
                     DIALECT <<  GRAMMAR;
                 }
@@ -57,8 +57,8 @@ namespace upsylon
                 // Dialect Statements
                 //
                 //--------------------------------------------------------------
-                Alternate &STATEMENT = alt("STATEMENT");
-                DIALECT << repeat(STATEMENT,0);
+                Alternate &CODE = alt("Code");
+                DIALECT << repeat(CODE,0);
                 
                 //--------------------------------------------------------------
                 //
@@ -71,7 +71,7 @@ namespace upsylon
                     << BSTRING
                     << ( repeat("PluginArgs",STRING,0) )
                     << STOP;
-                    STATEMENT << PLUGIN;
+                    CODE << PLUGIN;
                 }
                 
                 
