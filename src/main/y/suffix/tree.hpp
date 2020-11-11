@@ -33,6 +33,7 @@ namespace upsylon
         //______________________________________________________________________
         inline explicit suffix_tree() :
         root( new tree_node(0,0,0) ),
+        load(1),
         mark(0),
         pool()
         {
@@ -43,6 +44,7 @@ namespace upsylon
             assert(root);
             delete (tree_node *)root;
             *(tree_node **)&root = 0;
+            aliasing::_(load)    = 0;
         }
         
         //______________________________________________________________________
@@ -95,6 +97,7 @@ namespace upsylon
                 // need a new leaf
                 //--------------------------------------------------------------
                 node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
+                ++aliasing::_(load);
                 assert(false==node->used);
             FOUND:;
             }
@@ -167,6 +170,7 @@ namespace upsylon
                 // need a new leaf
                 //--------------------------------------------------------------
                 node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
+                ++aliasing::_(load);
                 assert(false==node->used);
             FOUND:;
             }
@@ -262,7 +266,7 @@ namespace upsylon
         
         //______________________________________________________________________
         //
-        //! pluck a used node from the stem
+        //! pluck a used node from the tree
         //______________________________________________________________________
         inline void pluck(tree_node *node)  throw()
         {
@@ -281,6 +285,7 @@ namespace upsylon
                     if(frequency<=0)
                     {
                         parent->leaves.unlink(node)->return_to(pool);
+                        --aliasing::_(load);
                     }
                     parent->optimize();
                     node=parent;
@@ -395,6 +400,7 @@ namespace upsylon
         inline size_t size() const throw() { return root->frequency; }
         
         const tree_node * const root; //!< tree root
+        const size_t            load; //!< total nodes
         tree_node              *mark; //!< last grow mark
         tree_pool               pool; //!< cache
         
@@ -423,6 +429,7 @@ namespace upsylon
             aliasing::_(root->frequency) = 0;
             aliasing::_(root->depth)     = 0;
             aliasing::_(root->code)      = 0;
+            aliasing::_(load)            = 1;
         }
         
         void update_path_to(tree_node *node) throw()

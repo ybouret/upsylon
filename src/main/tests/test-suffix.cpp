@@ -86,6 +86,8 @@ namespace
             Y_ASSERT(keys.size()==tree1.root->frequency);
         }
         std::cerr << "]" << std::endl;
+        std::cerr << "tree1.load=" << tree1.load << std::endl;
+        std::cerr << "tree2.load=" << tree2.load << std::endl;
         Y_ASSERT(keys.size()==tree1.root->frequency);
         Y_ASSERT(keys.size()==tree2.root->frequency);
         {
