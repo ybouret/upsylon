@@ -1,6 +1,6 @@
 
 FILE(GLOB test_srcs test-*.cpp)
-ADD_EXECUTABLE(test-jive main.cpp ${test_srcs})
+ADD_EXECUTABLE(test-jive main.cpp ${test_srcs} sample.g)
 TARGET_LINK_Y(test-jive jive)
 
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
