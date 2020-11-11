@@ -158,7 +158,7 @@ namespace upsylon
                         excp.cat(" is extraneous");
                         if(last)
                         {
-                            excp.cat(" after ");
+                            excp.cat(" with ");
                             excpLexeme(excp,*last,lexemeType(*last),false);
                             if(hold)
                             {

@@ -6,4 +6,5 @@
 
 .sample; // grammar name
 
-@string :
+@string : <jstring>;
+@string : <string_> "'" '\'';

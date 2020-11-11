@@ -13,7 +13,7 @@ namespace upsylon
             const char String_:: quote  = '\'';
             const char String_:: dquote = '\"';
             const char String_:: bra    = '<';
-            const char String_:: ket    = '<';
+            const char String_:: ket    = '>';
 
             String_:: ~String_() throw()
             {
