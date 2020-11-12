@@ -37,21 +37,43 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 
 
 \section{Balancing active concentrations}
-We define $\mathbb{A}_j=1$ for and active species, $\mathbb{A}_j=0$ otherwise.
-We define the balance indicator:
+
+We define the active indicator of species $j$ in equilibrium $i$ by:
+
 \begin{equation}
-	\mathbb{B}(\vec{C}) = \sum_j \mathbb{A}_j \max(-C_j,0)
+	 \bm{A}_{ij} = \delta_{\nu_{ij} \not= 0}
 \end{equation}
-with $\mathbb{B}(\vec{C})=0$ for any valid set of concentration, otherwise $\mathbb{B}(\vec{C})>0$.
-We compute:
+Then we define the balance indicator for equilibrium $i$ by:
 \begin{equation}
-	\partial_{\vec{C}} \mathbb{B} =
+	 B_i(\vec{C}) = \sum_j  \bm{A}_{ij} \max(-C_j,0)
+\end{equation}
+and the global balance is reached when:
+\begin{equation}
+	\vec{ {B}} = \vec{0} = \bm{A} 
 	\begin{pmatrix}
 	\vdots\\
-	-\mathbb{A}_j \mathcal{H}(-C_j)\\
+	\max(-C_j,0)\\
 	\vdots
 	\end{pmatrix}
 \end{equation}
+ 
+\begin{equation}
+	\partial_{C_j} B_i = -\bm{A}_{ij} \mathcal{H}(-C_j)
+\end{equation}
+ 
+\begin{equation}
+	\left<\partial_{\vec{C}} B_i\right| =
+	\left<
+ 		\begin{array}{ccc}
+	 	\cdots &  	 -\bm{A}_{ij} \mathcal{H}(-C_j) & \cdots\\
+		\end{array}
+	\right|
+\end{equation}
+
+\begin{equation}
+	\left(\partial_{\vec{C}}\vec{B}\right)_{ij} =  - \bm{A}_{ij} \mathcal{H}(-C_j)
+\end{equation}
+ 
 
  
 \end{document}
