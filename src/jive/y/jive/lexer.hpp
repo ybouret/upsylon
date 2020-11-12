@@ -119,9 +119,9 @@ namespace upsylon {
             template <typename ID>
             const Scanner & operator[](const ID &id)
             {
-                const Scanner::Pointer **ppScan = db.search(id);
+                const Scanner::Pointer *ppScan = db.search(id);
                 if(!ppScan) noScanner(id);
-                
+                return **ppScan;
             }
             
             //__________________________________________________________________
