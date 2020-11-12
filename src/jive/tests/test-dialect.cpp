@@ -16,7 +16,7 @@ Y_UTEST(dialect)
     fs.try_remove_file("dialect.dot");
     fs.try_remove_file("dialect.png");
     
-    Tags::Display();
+    //Tags::Display();
     std::cerr << dialect.getRegistry() << std::endl;
     if(argc>1)
     {

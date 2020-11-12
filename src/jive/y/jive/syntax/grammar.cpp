@@ -84,7 +84,7 @@ namespace upsylon
             Aggregate & Grammar:: grp()
             {
                 const string    id = vformat("agg%c%u",BuiltIn,indxAggregate);
-                Aggregate      &ax = agg(id);
+                Aggregate      &ax = grp(id);
                 ++indxAggregate;
                 return ax;
             }
