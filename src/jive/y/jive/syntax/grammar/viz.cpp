@@ -15,12 +15,12 @@ namespace upsylon
                 switch(axiom.uuid)
                 {
                     case Terminal::UUID: {
-                        const char *style = "solid";
+                        const char *style = "bold,filled";
                         switch(axiom.as<Terminal>().type)
                         {
                             case Terminal::Standard: break;
-                            case Terminal::Univocal: style="solid,rounded"; break;
-                            case Terminal::Division: style="solid,dashed";  break;
+                            case Terminal::Univocal: style="bold,filled,rounded"; break;
+                            case Terminal::Division: style="bold,filled,dashed";  break;
                         }
                         fp << "[label=\"" << axiom.gvName() << "\",shape=box,style=\"" << style << "\"]";
                     } break;
@@ -39,9 +39,9 @@ namespace upsylon
                         fp << "[label=\"" << aid << "\",shape=house,style=\"";
                         switch(cmp.type)
                         {
-                            case Aggregate::Standard: fp << "solid";         break;
-                            case Aggregate::Variadic: fp << "solid,rounded"; break;
-                            case Aggregate::Grouping: fp << "solid,dashed";  break;
+                            case Aggregate::Standard: fp << "bold,filled";         break;
+                            case Aggregate::Variadic: fp << "bold,filled,rounded"; break;
+                            case Aggregate::Grouping: fp << "solid";               break;
                         }
                         fp << "\"]";
                     } break;
