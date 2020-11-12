@@ -16,7 +16,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! build grammar to achive parser
+            //! build grammar to achieve parser
             //
             //__________________________________________________________________
             class Parser : public Jive::Parser

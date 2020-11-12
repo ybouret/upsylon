@@ -30,7 +30,7 @@ namespace upsylon
                     } break;
 
                     case Option::UUID: {
-                        fp << "[label=\"" << axiom.gvName() << "\",shape=triangle]";
+                        fp << "[label=\"" << axiom.gvName() << "\",shape=diamond]";
                     } break;
 
                     case Aggregate::UUID: {
@@ -49,7 +49,7 @@ namespace upsylon
                     case Alternate::UUID: {
                         const Compound &cmp = axiom.as<Alternate>();
                         const string    aid = cmp.gvName();
-                        fp << "[label=\"" << aid << "\",shape=egg]";
+                        fp << "[label=\"" << aid << "\",shape=folder]";
                     } break;
 
                     default:

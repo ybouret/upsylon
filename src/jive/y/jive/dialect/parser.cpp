@@ -26,18 +26,48 @@ namespace upsylon
                 // top level
                 //
                 //--------------------------------------------------------------
-                Aggregate &DIALECT = agg("Dialect");
-
-                const Axiom &END   = division(';');
-                //const Axiom &NAME  = terminal("Name", NAME_RX);
-
+                Aggregate   &DIALECT = agg("Dialect");
+                const Axiom &END     = division(';');
+                const Axiom &SEP     = division(':');
+                const Axiom &BSTRING = plugin<Lexical::bString>("bString");
+                const Axiom &JSTRING = plugin<Lexical::jString>("jString");
+                const Axiom &RSTRING = plugin<Lexical::rString>("rString");
+                const Axiom &STRING  = (alt("String") << JSTRING << RSTRING);
+                
                 //--------------------------------------------------------------
                 //
                 // Grammar Name
                 //
                 //--------------------------------------------------------------
-                DIALECT << ( grp() <<  terminal("Grammar", "\\." NAME_RX) << END );
+                DIALECT << ( grp("GrammarDecl") <<  terminal("Grammar", "\\." NAME_RX) << END );
 
+                Alternate &STATEMENT = alt("Statement");
+                DIALECT << repeat(STATEMENT,0);
+                
+                
+                //--------------------------------------------------------------
+                //
+                // Plugin with args
+                //
+                //--------------------------------------------------------------
+                {
+                    Aggregate &PluginDecl = agg("Plugin");
+                    PluginDecl << terminal("PluginName", "@" NAME_RX) << SEP << BSTRING;
+                    PluginDecl << repeat("PluginArgs",STRING,0);
+                    PluginDecl << END;
+                    STATEMENT << PluginDecl;
+                }
+                
+                //--------------------------------------------------------------
+                //
+                // include
+                //
+                //--------------------------------------------------------------
+                {
+                    Aggregate &IncludeDecl = agg("Include");
+                    IncludeDecl << division("#include") << ( alt("IncludeName") << BSTRING << JSTRING );
+                    STATEMENT << IncludeDecl;
+                }
                 
                 //--------------------------------------------------------------
                 //
