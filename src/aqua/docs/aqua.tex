@@ -53,28 +53,7 @@ We compute:
 	\end{pmatrix}
 \end{equation}
 
-Starting from $\vec{\xi}=\vec{0}$, we want to minimize
-\begin{equation}
-	\mathcal{L}(\vec{\xi}) = \dfrac{1}{2} \trn{\vec{\xi}} \bm{W} \vec{\xi} + \lambda \mathbb{B}(\vec{C}+\trn{\bm{\nu}} \vec{\xi})
-\end{equation}
-with $\bm{W}=\bm{I}_N$ to minimize $\vec{\xi}$ or $\bm{W}=\bm{\nu}\trn{\bm{\nu}}$ 
-to minimize $\trn{\bm{\nu}} \vec{\xi}$.
-\begin{equation}
-\begin{array}{rcl}
-	\partial_{\vec{\xi}} \mathcal{L} & = & \bm{W} \vec{\xi} + \lambda \bm{\nu} \partial_{\vec{C}} \mathbb{B} \\
-	\partial_\lambda \mathcal{L} & = & \mathbb{B}(\vec{C})\\
-\end{array}
-\end{equation}
-
-The descent step is
-\begin{equation}
-	\vec{\sigma} = 
-	\begin{pmatrix}
-	-\bm{W} \vec{\xi} - \lambda \bm{\nu} \partial_{\vec{C}} \mathbb{B} \\
-	-\mathbb{B}\\
-	\end{pmatrix}
-\end{equation}
-
+ 
 \end{document}
 
 Let us balance a set of invalid concentrations starting from $\vec{C}$.
