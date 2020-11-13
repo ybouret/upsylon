@@ -97,8 +97,13 @@ namespace upsylon
         
         //! erase, ditch memory
         inline virtual void   release()    throw() { tree.ditch(); }
-        
-        
+
+        //! total number of nodes
+        inline size_t nodes() const throw() { return tree.nodes(); }
+
+        //! nodes in tree
+        inline size_t load() const throw() { return tree.load; }
+
         //______________________________________________________________________
         //
         // insertion

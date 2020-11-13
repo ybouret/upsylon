@@ -112,7 +112,13 @@ namespace upsylon
             dlist.release();
             htree.ditch();
         }
-        
+
+        //! total number of nodes
+        inline size_t nodes() const throw() { return htree.nodes(); }
+
+        //! nodes in tree
+        inline size_t load() const throw() { return htree.load; }
+
         //______________________________________________________________________
         //
         // lower level functions

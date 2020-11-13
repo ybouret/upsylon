@@ -98,7 +98,11 @@ namespace
             }
         }
 
-        tree2.erase();
+        {
+            const size_t old_nodes = tree2.nodes();
+            tree2.erase();
+            Y_ASSERT(old_nodes==tree2.nodes());
+        }
         tree2.clone(tree1);
         Y_ASSERT(tree1==tree2);
 

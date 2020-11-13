@@ -398,7 +398,14 @@ namespace upsylon
         
         //! get number of entries
         inline size_t size() const throw() { return root->frequency; }
-        
+
+        //! get total number of nodes
+        inline size_t nodes() const throw() { return load+pool.size; }
+
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
         const tree_node * const root; //!< tree root
         const size_t            load; //!< total nodes
         tree_node              *mark; //!< last grow mark
