@@ -59,6 +59,7 @@ Y_UTEST(citric)
     lib.init();
     engine.init(lib,eqs);
     engine.computeK(0);
+    std::cerr << "Nu=" << engine.Nu << std::endl;
 
     boot.verbose = true;
     boot.init(lib,eqs);
