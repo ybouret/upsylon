@@ -16,7 +16,13 @@ namespace
         inline P() : Parser( "P" )
         {
 
-            terminal("ID", "[:word:]+");
+            const Axiom &ID  = terminal("ID",  "[:alpha:][:word:]*");
+            (void)ID;
+#if 0
+            const Axiom &INT = terminal("INT", "[:digit:]+");
+
+            setRoot( choice(ID,INT) );
+#endif
 
             // lexical only
             drop("blank","[:blank:]");
@@ -37,10 +43,12 @@ namespace
 
 Y_UTEST(perr)
 {
+    Syntax::Axiom::Verbose = true;
     P parser;
     if(argc>1)
     {
         XNode::Pointer ast( parser.parseFile(argv[1]) );
+        ast->graphViz("ptree.dot");
     }
 }
 Y_UTEST_DONE()
