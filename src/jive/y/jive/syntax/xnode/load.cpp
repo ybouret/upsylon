@@ -9,13 +9,14 @@ namespace upsylon
         namespace  Syntax
         {
             
-            Node * Node:: Load(Source &source, const Grammar &grammar)
+            Node * Node:: Load(Source        &source,
+                               const Grammar &grammar)
             {
 
                 //--------------------------------------------------------------
                 // load name
                 //--------------------------------------------------------------
-                size_t        shift;
+                size_t        shift=0;
                 const string  which     = *grammar.name + " axiom name";
                 const string  axiomName = string::read(source,shift,*which);
                 const Axiom  *axiomAddr = grammar.query(axiomName);
@@ -45,7 +46,8 @@ namespace upsylon
                         {
                             throw exception("%s: cannot read #chars for <%s>",**grammar.name,*axiomName);
                         }
-                        Pointer          ptr( Node::Acquire(axiom,Lexeme::Create(source.context(),axiom.name)));
+                        size_t           sample = 0;
+                        Pointer          ptr( Node::Acquire(axiom,Lexeme::Create(source.context(),axiom.name,sample)) );
                         Lexeme          &lex = aliasing::_(*(ptr->lexeme()));
                         while(num_chars-- > 0)
                         {

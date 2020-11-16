@@ -12,7 +12,7 @@ namespace {
     class MyScanner : public Lexical::Scanner
     {
     public:
-        explicit MyScanner() : Lexical::Scanner("MyScanner", AcceptEOS)
+        explicit MyScanner() : Lexical::Scanner("MyScanner", AcceptEOS, NULL)
         {
             emit("UINT",   RegExpFor::Unsigned);
             emit("INT",    RegExpFor::Integer);

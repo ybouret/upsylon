@@ -47,8 +47,10 @@ namespace upsylon {
             //! setup
             template <typename ID> inline
             explicit Lexer(const ID &id) :
-            Lexical::Queue(), Scanner(id,AcceptEOS),
-            scan(this), hist(), io(), db(), ex(),
+            Lexical::Queue(),
+            Scanner(id,AcceptEOS,&counter),
+            scan(this),
+            hist(), io(), db(), ex(),
             dictionary()
             {
                 initialize();
@@ -140,10 +142,10 @@ namespace upsylon {
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
             Scanner    *scan;
-            History     hist;
-            Lexemes     io;    // I/O
-            ScannerTree db;    // scanners
-            PluginTree  ex;    // extensions
+            History     hist;   //
+            Lexemes     io;     // I/O
+            ScannerTree db;     // scanners
+            PluginTree  ex;     // extensions
 
             void         initialize();
             Scanner &    newScanner(const Tag &t);

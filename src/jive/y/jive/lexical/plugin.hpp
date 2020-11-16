@@ -47,7 +47,7 @@ namespace upsylon
                                        const RX &p,
                                        Queue    &q,
                                        AtEOS     which) :
-                Scanner(id,which),
+                Scanner(id,which,&q.counter),
                 P(p),
                 Q(q)
                 {

@@ -69,9 +69,13 @@ namespace upsylon
                 
                 //! setup using Tags
                 template <typename ID> inline
-                explicit Scanner(const ID &id, const AtEOS which=AcceptEOS) :
+                explicit Scanner(const ID   &id,
+                                 const AtEOS which,
+                                 size_t     *lexerSample) :
                 label( Tags::Make(id) ),
                 atEOS(which),
+                sample_(0),
+                sample( lexerSample ? *lexerSample : sample_ ),
                 rules(),
                 hoard(),
                 intro(),
@@ -106,9 +110,12 @@ namespace upsylon
                 // members
                 //
                 //--------------------------------------------------------------
-                const Tag    label; //!< label for this rule
-                const AtEOS  atEOS; //!< what happens if EOS is met
-                
+                const Tag    label;  //!< label for this rule
+                const AtEOS  atEOS;  //!< what happens if EOS is met
+            private:
+                size_t       sample_;
+            public:
+                size_t      &sample; //!< reference
                 
                 //--------------------------------------------------------------
                 //

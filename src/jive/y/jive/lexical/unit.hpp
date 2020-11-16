@@ -36,7 +36,8 @@ namespace upsylon {
                 // types and definitions
                 //______________________________________________________________
                 static Unit *  Create(const Context &,
-                                      const Tag     &); //!< using supply
+                                      const Tag     &,
+                                      size_t        &); //!< using supply
                 static void    Delete(Unit *) throw();  //!< using supply
                 static Supply &Instance();              //!< instance
 
@@ -52,7 +53,6 @@ namespace upsylon {
                 virtual ~Unit() throw();                                           //!< cleanup
                 explicit Unit(const Context &, const Tag &, const size_t) throw(); //!< setup
                 friend class memory::magazine<Unit>;
-                static size_t Stamp; //!< shared stamp number
             };
 
         }

@@ -16,8 +16,7 @@ namespace upsylon
                 return _;
             }
 
-            size_t Unit::Stamp = 0;
-            
+
             Unit:: ~Unit() throw()
             {
             }
@@ -31,12 +30,13 @@ namespace upsylon
             }
 
             Unit * Unit::Create(const Context &c,
-                                const Tag     &t)
+                                const Tag     &t,
+                                size_t        &s)
             {
                 static Supply &mgr = Supply::instance();
-                Y_LOCK(mgr.access);
-                ++Unit::Stamp;
-                return mgr.acquire<const Context &,const Tag &,size_t>(c,t,Unit::Stamp);
+                Unit *ans = mgr.acquire<const Context &,const Tag &,size_t>(c,t,s);
+                ++s;
+                return ans;
             }
             
             void Unit:: Delete(Unit *unit) throw()

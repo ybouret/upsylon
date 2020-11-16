@@ -27,7 +27,8 @@ namespace upsylon {
 
         void Lexer:: reset() throw()
         {
-            scan = this;
+            sample = 0;
+            scan   = this;
             hist.free();
             io.release();
         }
@@ -53,7 +54,7 @@ namespace upsylon {
 
         Lexical::Scanner & Lexer:: newScanner( const Tag &t )
         {
-            Scanner::Pointer handle = new Scanner(t);
+            Scanner::Pointer handle = new Scanner(t,Scanner::AcceptEOS,&sample);
             if(!db.insert(*(handle->label),handle))
             {
                 throw exception("[%s] multiple scanners [%s]", **label, **(handle->label));
