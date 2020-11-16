@@ -24,7 +24,7 @@ namespace upsylon {
             public:
                 virtual ~Queue() throw();              //!< cleanup
                 virtual void push(Unit *) throw() = 0; //!< store result
-                size_t   counter;
+                size_t  counter;                       //!< shared counted to stamp units
 
             protected:
                 explicit Queue() throw();              //!< setup

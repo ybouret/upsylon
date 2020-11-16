@@ -12,7 +12,7 @@ namespace upsylon {
             {
             }
 
-            Queue:: Queue() throw()
+            Queue:: Queue() throw() : counter(0)
             {
             }
 
