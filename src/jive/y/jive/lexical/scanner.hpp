@@ -68,11 +68,16 @@ namespace upsylon
                 virtual ~Scanner() throw();
                 
                 //! setup using Tags
+                /**
+                 \param identifier the identifier for Tags
+                 \param which      behavior on At End Of Stream
+                 \param counter    address of a counter for stamp, use internal if NULL
+                 */
                 template <typename ID> inline
-                explicit Scanner(const ID   &id,
+                explicit Scanner(const ID   &identifier,
                                  const AtEOS which,
                                  size_t     *counter) :
-                label( Tags::Make(id) ),
+                label( Tags::Make(identifier) ),
                 atEOS(which),
                 stamp_(0),
                 stamp( counter ? *counter : stamp_ ),
