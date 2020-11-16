@@ -38,44 +38,28 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 
 \section{Balancing active concentrations}
 
-We define the active indicator of species $j$ in equilibrium $i$ by:
-
+We define a balancing function $B(C)$ with indicates if $C$ is valid or not.
+Then we define the global balance:
 \begin{equation}
-	 \bm{A}_{ij} = \delta_{\nu_{ij} \not= 0}
+	\mathcal{B}(\vec{C}) = \sum_j \mathbb{A}_j B(C_j)
 \end{equation}
-Then we define the balance indicator for equilibrium $i$ by:
+where $\mathbb{A}_j$ is $1$ is species $j$ is active, $0$ otherwise.
+ 
+We compute
 \begin{equation}
-	 B_i(\vec{C}) = \sum_j  \bm{A}_{ij} \max(-C_j,0)
-\end{equation}
-and the global balance is reached when:
-\begin{equation}
-	\vec{ {B}} = \vec{0} = \bm{A} 
+	\vec{\nabla} \mathcal{B} = 
 	\begin{pmatrix}
-	\vdots\\
-	\max(-C_j,0)\\
-	\vdots
+		\vdots\\
+		\mathbb{A}_j B'(C_j)\\
+		\vdots\\
 	\end{pmatrix}
 \end{equation}
- 
+and
 \begin{equation}
-	\partial_{C_j} B_i = -\bm{A}_{ij} \mathcal{H}(-C_j)
-\end{equation}
- 
-\begin{equation}
-	\left<\partial_{\vec{C}} B_i\right| =
-	\left<
- 		\begin{array}{ccc}
-	 	\cdots &  	 -\bm{A}_{ij} \mathcal{H}(-C_j) & \cdots\\
-		\end{array}
-	\right|
+	\mathcal{B}(\vec{C}+\trn{\bm{\nu}}\vec{\xi}) \simeq 
+	\mathcal{B}(\vec{C}) + \bm{\nu} \vec{\nabla}\mathcal{B} \cdot \vec{\xi}
 \end{equation}
 
-\begin{equation}
-	\left(\partial_{\vec{C}}\vec{B}\right)_{ij} =  - \bm{A}_{ij} \mathcal{H}(-C_j)
-\end{equation}
- 
-
- 
 \end{document}
 
 Let us balance a set of invalid concentrations starting from $\vec{C}$.
