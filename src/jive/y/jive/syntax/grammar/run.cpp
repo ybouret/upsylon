@@ -152,13 +152,17 @@ namespace upsylon
                     const Lexeme *next = lexer.next(source);
                     if(next)
                     {
+                        Y_JIVE_GRAMLN("next@" << next->stamp);
                         dispLexeme(name,"next",next);
                         exception excp;
                         excpLexeme(excp, *next, lexemeType(*next),true);
                         excp.cat(" is extraneous");
+#if 1
                         if(last)
                         {
-                            excp.cat(" with ");
+                            Y_JIVE_GRAMLN("last@" << last->stamp);
+
+                            excp.cat(" after ");
                             excpLexeme(excp,*last,lexemeType(*last),false);
                             if(hold)
                             {
@@ -169,9 +173,11 @@ namespace upsylon
                                 excp.cat(" of anonymous axiom");
                             }
                         }
+#endif
                         excp.cat(" in %s",**name);
                         throw excp;
                     }
+                    // else OK
                 }
                 else
                 {

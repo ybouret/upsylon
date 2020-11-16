@@ -35,23 +35,24 @@ namespace upsylon {
                 //
                 // types and definitions
                 //______________________________________________________________
-                static Unit *  Create(const Context &, const Tag &); //!< using supply
-                static void    Delete(Unit *) throw();               //!< using supply
-                static Supply &Instance();                           //!< instance
+                static Unit *  Create(const Context &,
+                                      const Tag     &); //!< using supply
+                static void    Delete(Unit *) throw();  //!< using supply
+                static Supply &Instance();              //!< instance
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const Tag    label; //!< creating rule label
-                const size_t stamp; //!< for comparison
-                
+                const Tag     label; //!< creating rule label
+                const size_t  stamp; //!< for comparison
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);
                 virtual ~Unit() throw();                                           //!< cleanup
                 explicit Unit(const Context &, const Tag &, const size_t) throw(); //!< setup
                 friend class memory::magazine<Unit>;
-                
+                static size_t Stamp; //!< shared stamp number
             };
 
         }
