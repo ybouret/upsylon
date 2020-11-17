@@ -13,6 +13,8 @@ namespace upsylon {
 
         namespace Lexical
         {
+            class Plugin;
+
             //__________________________________________________________________
             //
             //
@@ -24,13 +26,14 @@ namespace upsylon {
             public:
                 virtual ~Queue() throw();              //!< cleanup
                 virtual void push(Unit *) throw() = 0; //!< store result
-                size_t  counter;                       //!< shared counted to stamp units
 
             protected:
                 explicit Queue() throw();              //!< setup
+                size_t   counter;                      //!< shared counted to stamp units
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Queue);
+                friend class Plugin;
             };
         }
 
