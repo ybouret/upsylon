@@ -13,7 +13,7 @@ namespace upsylon {
 
         namespace Lexical
         {
-            class Plugin;
+            class Plugin; //!< forward declaration
 
             //__________________________________________________________________
             //
