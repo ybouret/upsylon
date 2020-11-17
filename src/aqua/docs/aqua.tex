@@ -20,6 +20,7 @@ Those $M$ species are involved in $N$ equilibria:
 	\forall i\in[1:N], \; \sum_{j=1}^M \nu_{i,j} \conc{A_j} = 0,
 	 \;\; K_i = \prod_{j=1}^M \conc{A_j}^{\nu_{ij}}
 \end{equation}
+We define $M_A\leq M$ the number of {\bf active} species.
 
 \section{Chemical Topology and Extent}
 We consider the chemical topology matrix:
@@ -54,6 +55,7 @@ We compute
 		\vdots\\
 	\end{pmatrix}
 \end{equation}
+which may have between $0$ and $M_A$ not-zero coefficients, 
 and
 \begin{equation}
 	\mathcal{B}(\vec{C}+\trn{\bm{\nu}}\vec{\xi}) \simeq 
@@ -77,6 +79,13 @@ And $\bm{\Omega}$ is chosen so that:
 	C_j \geq 0   & \Rightarrow & \delta {C_j} \geq -C_j \\
 	\end{array}
 \right.
+\end{equation}
+and obviously $\mathbb{A}_j = 0 \Rightarrow \delta {C_j}=0$.\\
+We need to find a set of $N$ valid extents to satisfy those $M_A$ balancing
+conditions. Due to the mass conservation......\\
+
+\begin{equation}
+	\delta \vec{C} \geq \vec{X}
 \end{equation}
 
 \end{document}
