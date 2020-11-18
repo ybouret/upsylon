@@ -23,10 +23,7 @@ namespace upsylon
             //! flexible syntax node
             //
             //__________________________________________________________________
-            class Node :
-            public inode<Node>,
-            public Vizible,
-            public Serializable
+            class Node : public inode<Node>, public Vizible, public Serializable
             {
             public:
                 //______________________________________________________________
@@ -110,7 +107,9 @@ namespace upsylon
                 uint64_t wksp[Y_U64_FOR_ITEM(List)]; //!< memory
                 static Node *AST_Internal(Node *) throw();
                 static Node *AST_Terminal(Node *) throw();
-                
+
+                void regularize(size_t &stamp, size_t &length) throw();
+
             };
             
         }
