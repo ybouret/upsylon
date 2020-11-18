@@ -25,6 +25,14 @@ namespace upsylon
                 }
             }
 
+            size_t Node:: regularized() throw()
+            {
+                size_t stamp  = 0;
+                size_t length = 0;
+                regularize(stamp,length);
+                return length;
+            }
+
         }
 
     }

@@ -8,9 +8,18 @@ namespace upsylon
     {
         namespace  Syntax
         {
+
+            Node *  Node:: Load(Source        &source,
+                                const Grammar &G,
+                                size_t        &maxLength)
+            {
+                Node::Pointer node( Reload(source,G) );
+                maxLength = node->regularized();
+                return node.yield();
+            }
             
-            Node * Node:: Load(Source        &source,
-                               const Grammar &grammar)
+            Node * Node:: Reload(Source        &source,
+                                 const Grammar &grammar)
             {
 
                 //--------------------------------------------------------------
@@ -73,7 +82,7 @@ namespace upsylon
                         Pointer xnode( Node::Acquire(axiom) );
                         while(num_leaves-- > 0)
                         {
-                            xnode->leaves().push_back( Load(source,grammar) );
+                            xnode->leaves().push_back( Reload(source,grammar) );
                         }
                         return xnode.yield();
                     };

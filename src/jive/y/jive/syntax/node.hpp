@@ -71,18 +71,25 @@ namespace upsylon
                 static Supply &Instance();                           //!< instance
                 static void    Release(Node *)           throw();    //!< release memory
                 static void    ReturnTo(Lexer &, Node *) throw();    //!< return node to lexer
-                static Node *  Load(Source &source,const Grammar &); //!< reload a node
+                static Node *  Load(Source        &source,
+                                    const Grammar &G,
+                                    size_t        &maxLength);       //!< reload a node
 
                 //! reload a node from a file
                 template <typename FILENAME> static inline
-                Node * LoadFile(const FILENAME &fileName, const Grammar &G)
+                Node * LoadFile(const FILENAME &fileName,
+                                const Grammar  &G,
+                                size_t         &maxLength)
                 {
                     Source source( Module::OpenFile(fileName) );
-                    return Load(source,G);
+                    return Load(source,G,maxLength);
                 }
 
                 //! build the AST
                 static Node *  AST(Node *node) throw();
+
+                //! regularize lexeme stamps, return max unit length
+                size_t regularized() throw();
 
                 //______________________________________________________________
                 //
@@ -98,7 +105,8 @@ namespace upsylon
                 void         setup() throw();
                 virtual void vizCore(ios::ostream &) const;
                 friend class memory::magazine<Node>;
-                
+
+
                 typedef Lexeme::Pointer Lptr;
                 
                 Lptr & _Lptr() const throw(); //!< if terminal
@@ -109,7 +117,7 @@ namespace upsylon
                 static Node *AST_Terminal(Node *) throw();
 
                 void regularize(size_t &stamp, size_t &length) throw();
-
+                static Node *Reload(Source &source,const Grammar &); //!< reload a node
             };
             
         }

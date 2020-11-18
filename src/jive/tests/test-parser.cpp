@@ -73,7 +73,9 @@ namespace {
 Y_UTEST(parser)
 {
     Syntax::Axiom::Verbose = true;
-    JSON_Parser json;
+    JSON_Parser      json;
+    Syntax::Analyzer analyzer(json.name);
+
     if(argc>1)
     {
         Source         source( Module::OpenFile(argv[1]));
@@ -85,19 +87,21 @@ Y_UTEST(parser)
         else
         {
             hashing::sha1 H;
-
             xnode->graphViz("jtree.dot");
             xnode->save_to("jtree.bin");
             const digest md = xnode->md(H);
             std::cerr << "md=" << md << std::endl;
+            XNode::Pointer rnode( XNode::LoadFile("jtree.bin",json,analyzer.maxLength) );
             {
-                XNode::Pointer rnode( XNode::LoadFile("jtree.bin",json) );
                 const digest rd = rnode->md(H);
                 std::cerr << "rd=" << rd << std::endl;
                 Y_CHECK(md==rd);
             }
-            Syntax::Analyzer analyzer(json.name);
+            std::cerr << std::endl;
             analyzer.walk(xnode.content());
+
+            std::cerr << std::endl;
+            analyzer.walk(rnode.content());
         }
     }
 }

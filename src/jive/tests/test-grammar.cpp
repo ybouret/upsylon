@@ -73,9 +73,10 @@ Y_UTEST(grammar)
         root->leaves().push_back( XNode::Acquire(dull) );
 
         root->save_to("dull.bin");
+        size_t maxLength = 0;
         {
             Source         temp( Module::OpenFile("dull.bin") );
-            XNode::Pointer load( XNode::Load(temp,G) );
+            XNode::Pointer load( XNode::Load(temp,G,maxLength) );
             Y_CHECK(load.is_valid());
         }
     }

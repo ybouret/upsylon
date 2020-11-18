@@ -28,8 +28,10 @@ namespace upsylon
 
                 //! setup
                 template <typename ID> inline
-                explicit Analyzer(const ID &id) : name( Tags::Make(id) ),
-                depth(0)
+                explicit Analyzer(const ID &id) :
+                name( Tags::Make(id) ),
+                depth(0),
+                maxLength(0)
                 {
                 }
 
@@ -69,9 +71,9 @@ namespace upsylon
                 // members
                 //______________________________________________________________
 
-                const Tag    name;  //!< should be grammar name
-                const size_t depth; //!< current depth
-
+                const Tag    name;      //!< should be grammar name
+                const size_t depth;     //!< current depth
+                size_t       maxLength; //!< max length of lexemes
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Analyzer);

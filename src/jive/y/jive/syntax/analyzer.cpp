@@ -17,7 +17,9 @@ namespace upsylon
 
             int Analyzer:: onTerminal(const string &id, const Lexeme &lexeme)
             {
-                indent(std::cerr << "[push]:" ) << id << " = '" << lexeme << "' |#" << lexeme.stamp << "|" << std::endl;
+                indent(std::cerr << "[push]:" ) << id << " = '" << lexeme << "'";
+                for(size_t i=lexeme.size;i<=maxLength;++i) std::cerr << ' ';
+                std::cerr << " |#" << lexeme.stamp << "|" << std::endl;
                 return 0;
             }
 
