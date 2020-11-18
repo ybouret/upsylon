@@ -82,26 +82,9 @@ namespace upsylon
         //
         //! convert signed value
         //______________________________________________________________________
-        static int normalize(const int ans) throw()
+        static inline result normalize(const int ans) throw()
         {
-            return (ans < 0) ? -1 : ( (0<ans) ? 1 : 0 );
-        }
-
-        //______________________________________________________________________
-        //
-        //! check same comparison signed
-        //______________________________________________________________________
-        static int are_same_results(const int a, const int b) throw()
-        {
-            switch( normalize(a) )
-            {
-                case -1: return (-1==normalize(b));
-                case  1: return ( 1==normalize(b));
-                default:
-                    break;
-            }
-            assert(0==normalize(a));
-            return (0==normalize(b));
+            return (ans < 0) ? lt : ( (0<ans) ? gt : eq );
         }
 
         //______________________________________________________________________

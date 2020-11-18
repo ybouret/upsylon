@@ -152,13 +152,32 @@ namespace upsylon
                     const Lexeme *curr = lexer.next(source);
                     if(curr)
                     {
-
-
                         dispLexeme(name,"curr",curr);
                         exception excp;
                         excpLexeme(excp, *curr, lexemeType(*curr),true);
+                        if(last)
+                        {
+                            switch( comparison::normalize( comparison::increasing(curr->stamp,last->stamp)))
+                            {
+                                case comparison::lt:
+                                    // curr before last -> unfinished two args
+                                    break;
+
+                                case comparison::eq:
+                                    // curr is last... -> unfinished one args
+                                    break;
+
+                                case comparison::gt:
+                                    // curr after last -> extraneous
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            excp.cat(" is unexpected");
+                        }
+#if 0
                         excp.cat(" is extraneous");
-#if 1
                         if(last)
                         {
                             excp.cat(" after ");
@@ -173,6 +192,7 @@ namespace upsylon
                             }
                         }
 #endif
+
                         excp.cat(" in %s",**name);
                         throw excp;
                     }
