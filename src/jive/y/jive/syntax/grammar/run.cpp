@@ -12,12 +12,22 @@ namespace upsylon
         namespace Syntax
         {
 
+            static inline void excpHeldBy(exception       &excp,
+                                          const Aggregate *hold) throw()
+            {
+                const char *id = "unknown Axiom";
+                if(hold)
+                {
+                    id = **(hold->name);
+                }
+                excp.cat("<%s>", id);
 
-            static inline
-            void excpLexeme(exception           &excp,
-                            const Lexeme        &lexeme,
-                            const Terminal::Type type,
-                            const bool           full)
+            }
+
+            static inline void excpLexeme(exception           &excp,
+                                          const Lexeme        &lexeme,
+                                          const Terminal::Type type,
+                                          const bool           full)
             {
                 const char  *id   = **lexeme.label;
                 const char  *whom = **lexeme.tag;
@@ -154,44 +164,37 @@ namespace upsylon
                     {
                         dispLexeme(name,"curr",curr);
                         exception excp;
-                        excpLexeme(excp, *curr, lexemeType(*curr),true);
                         if(last)
                         {
                             switch( comparison::normalize( comparison::increasing(curr->stamp,last->stamp)))
                             {
+                                case comparison::gt:
+                                    excpLexeme(excp, *curr, lexemeType(*curr),true);
+                                    excp << " is extraneous after ";
+                                    excpLexeme(excp, *last, lexemeType(*last),false);
+                                    excp << " of ";
+                                    excpHeldBy(excp,hold);
+                                    break;
+
                                 case comparison::lt:
-                                    // curr before last -> unfinished two args
+                                    excpLexeme(excp, *last, lexemeType(*last),true);
+                                    excp << " ends unfinished ";
+                                    excpHeldBy(excp,hold);
                                     break;
 
                                 case comparison::eq:
-                                    // curr is last... -> unfinished one args
+                                    excpLexeme(excp, *last, lexemeType(*last),true);
+                                    excp << " in unexpected ";
+                                    excpHeldBy(excp,hold);
                                     break;
 
-                                case comparison::gt:
-                                    // curr after last -> extraneous
-                                    break;
                             }
                         }
                         else
                         {
-                            excp.cat(" is unexpected");
+                            excpLexeme(excp, *curr, lexemeType(*curr),true);
+                            excp.cat(" is really unexpected");
                         }
-#if 0
-                        excp.cat(" is extraneous");
-                        if(last)
-                        {
-                            excp.cat(" after ");
-                            excpLexeme(excp,*last,lexemeType(*last),false);
-                            if(hold)
-                            {
-                                excp.cat(" of <%s>",**(hold->name));
-                            }
-                            else
-                            {
-                                excp.cat(" of anonymous axiom");
-                            }
-                        }
-#endif
 
                         excp.cat(" in %s",**name);
                         throw excp;
