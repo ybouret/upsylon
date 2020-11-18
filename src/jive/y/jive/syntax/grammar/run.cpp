@@ -162,6 +162,9 @@ namespace upsylon
                     const Lexeme *curr = lexer.next(source);
                     if(curr)
                     {
+                        //------------------------------------------------------
+                        // there is an extra lexeme
+                        //------------------------------------------------------
                         dispLexeme(name,"curr",curr);
                         exception excp;
                         if(last)
@@ -184,7 +187,7 @@ namespace upsylon
 
                                 case comparison::eq:
                                     excpLexeme(excp, *last, lexemeType(*last),true);
-                                    excp << " in unexpected ";
+                                    excp << " starts unfinished ";
                                     excpHeldBy(excp,hold);
                                     break;
 
