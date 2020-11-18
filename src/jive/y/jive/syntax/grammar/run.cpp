@@ -172,6 +172,7 @@ namespace upsylon
                             switch( comparison::normalize( comparison::increasing(curr->stamp,last->stamp)))
                             {
                                 case comparison::gt:
+                                    // curr->stamp < last->stamp
                                     excpLexeme(excp, *curr, lexemeType(*curr),true);
                                     excp << " is extraneous after ";
                                     excpLexeme(excp, *last, lexemeType(*last),false);
@@ -180,12 +181,14 @@ namespace upsylon
                                     break;
 
                                 case comparison::lt:
+                                    // curr->stamp > last->stamp
                                     excpLexeme(excp, *last, lexemeType(*last),true);
                                     excp << " ends unfinished ";
                                     excpHeldBy(excp,hold);
                                     break;
 
                                 case comparison::eq:
+                                    // curr->stamp == last->stamp, same!
                                     excpLexeme(excp, *last, lexemeType(*last),true);
                                     excp << " starts unfinished ";
                                     excpHeldBy(excp,hold);
