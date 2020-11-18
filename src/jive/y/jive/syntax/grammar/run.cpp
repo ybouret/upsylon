@@ -69,7 +69,7 @@ namespace upsylon
                 assert(title);
                 if(lx)
                 {
-                    Y_JIVE_GRAMLN(title << "    = <" << lx->label << "> (= '" << *lx << "')" );
+                    Y_JIVE_GRAMLN(title << "    = <" << lx->label << "> (= '" << *lx << "') |#" << lx->stamp << "|" );
                 }
                 else
                 {
@@ -149,19 +149,18 @@ namespace upsylon
                     // success with tree : check no extra lexeme!
                     //
                     //----------------------------------------------------------
-                    const Lexeme *next = lexer.next(source);
-                    if(next)
+                    const Lexeme *curr = lexer.next(source);
+                    if(curr)
                     {
-                        Y_JIVE_GRAMLN("next@" << next->stamp);
-                        dispLexeme(name,"next",next);
+
+
+                        dispLexeme(name,"curr",curr);
                         exception excp;
-                        excpLexeme(excp, *next, lexemeType(*next),true);
+                        excpLexeme(excp, *curr, lexemeType(*curr),true);
                         excp.cat(" is extraneous");
 #if 1
                         if(last)
                         {
-                            Y_JIVE_GRAMLN("last@" << last->stamp);
-
                             excp.cat(" after ");
                             excpLexeme(excp,*last,lexemeType(*last),false);
                             if(hold)
