@@ -1,4 +1,4 @@
-#include "y/associative/hash/znodes.hpp"
+#include "y/associative/hash/zpairs.hpp"
 #include "y/associative/hash/link.hpp"
 #include "y/associative/hash/buckets.hpp"
 #include "y/utest/run.hpp"
@@ -160,10 +160,24 @@ namespace
         }
         std::cerr << "#zombie=" << Z.size << std::endl;
         alea.shuffle(Z);
-
+        std::cerr << std::endl;
     }
 
+    static inline void doTestZPairs()
+    {
+        std::cerr << "testing zPairs" << std::endl;
+        hash_zpairs<zNode> Z;
 
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            Z.push();
+        }
+
+        alea.shuffle(Z.hlist);
+        alea.shuffle(Z.zlist);
+        std::cerr << std::endl;
+
+    }
 }
 
 Y_UTEST(hashed)
@@ -178,6 +192,7 @@ Y_UTEST(hashed)
     }
 
     doTestZNodes();
+    doTestZPairs();
 
     return 0;
     doHashSlots(0);
