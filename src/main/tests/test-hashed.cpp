@@ -1,6 +1,6 @@
 
 #include "y/associative/hash/link.hpp"
-#include "y/associative/hash/bucket.hpp"
+#include "y/associative/hash/buckets.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
@@ -105,7 +105,7 @@ namespace
 
     }
 
-    void doTestBucket()
+    static inline void doTestBucket()
     {
         hash_bucket bucket;
         for(size_t i=1+alea.leq(100);i>0;--i)
@@ -120,6 +120,33 @@ namespace
     }
 
 
+    static inline void doTestBuckets(const size_t n)
+    {
+        std::cerr << "Buckets #" << n << std::endl;
+        hash_bucket  pool;
+        hash_buckets B(n);
+        std::cerr << "\t->buckets=" << B.buckets << std::endl;
+        std::cerr << "\t->__bmask=" << B.__bmask << std::endl;
+        std::cerr << "\t->__bexp2=" << B.__bexp2 << std::endl;
+
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            const size_t hkey = alea.full<uint16_t>();
+            pool.push();
+            B[hkey].push_back( pool.query(hkey,0) );
+        }
+
+        B.dump();
+
+        hash_buckets S(n/2);
+        B.to(S);
+        S.dump();
+        
+        std::cerr << std::endl;
+    }
+
+
+
 }
 
 Y_UTEST(hashed)
@@ -127,7 +154,12 @@ Y_UTEST(hashed)
     Y_UTEST_SIZEOF(hash_handle);
     Y_UTEST_SIZEOF(hash_bucket);
     doTestBucket();
-    
+    doTestBuckets(0);
+    for(size_t n=1;n<=16;n<<=1)
+    {
+        doTestBuckets(n);
+    }
+
     return 0;
     doHashSlots(0);
     for(size_t n=1;n<=16;n<<=1)
