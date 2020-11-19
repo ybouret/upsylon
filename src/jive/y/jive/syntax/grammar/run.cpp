@@ -138,9 +138,16 @@ namespace upsylon
                                             Lexer          &lexer,
                                             Source         &source) const
             {
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 Node::Pointer    node( tree );
                 const Lexeme    *last = guess.lexeme;
                 const Aggregate *hold = guess.parent;
+
+
                 Y_JIVE_GRAMLN("success");
                 dispLexeme(name,"last",last);
                 if(hold)
@@ -205,7 +212,13 @@ namespace upsylon
                         excp.cat(" in %s",**name);
                         throw excp;
                     }
-                    // else OK!!
+                    else
+                    {
+                        //------------------------------------------------------
+                        // ok!
+                        //------------------------------------------------------
+                        goto OK;
+                    }
                 }
                 else
                 {
@@ -246,7 +259,7 @@ namespace upsylon
                 }
 
 
-
+            OK:
                 return Node::AST( node.yield() );
             }
         }
