@@ -1,6 +1,8 @@
 
-#include "y/associative/hash/slots.hpp"
+#include "y/associative/hash/link.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 
@@ -48,6 +50,60 @@ namespace
         std::cerr << std::endl;
     }
 
+
+    template <typename KEY>
+    class HNode : public object
+    {
+    public:
+
+        explicit HNode(const KEY &k) throw() : next(0), prev(0), meta(0), key_(k)
+        {
+        }
+
+        virtual ~HNode() throw()
+        {
+
+        }
+
+        HNode          *next;
+        HNode          *prev;
+        hash_meta_node *meta;
+        const KEY       key_;
+
+        const KEY & key() const throw() { return key_; }
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(HNode);
+    };
+
+    template <typename KEY>
+    static inline void doHashLink()
+    {
+        typedef HNode<KEY>  Node;
+        hash_link<KEY,Node> hl(10);
+
+        vector<size_t> H;
+        vector<KEY>    K;
+        for(size_t i=10+alea.leq(20);i>0;--i)
+        {
+            const size_t    h = alea.leq(100);
+            const KEY       k = support::get<KEY>();
+            hash_meta_list *s = 0;
+
+            if(hl.search_at(h,s,k))
+            {
+                
+            }
+
+            H << h;
+            K << k;
+        }
+
+
+    }
+
+
 }
 
 Y_UTEST(hashed)
@@ -57,6 +113,8 @@ Y_UTEST(hashed)
     {
         doHashSlots(n);
     }
+
+    doHashLink<uint16_t>();
 
 }
 Y_UTEST_DONE()

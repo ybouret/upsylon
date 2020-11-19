@@ -18,9 +18,9 @@ namespace upsylon
         virtual ~hash_meta_pool() throw(); //!< cleanup
 
         hash_meta_node *query(const size_t hkey, void *addr); //!< query
-        void            store(hash_meta_node *node) throw();  //!< store
-
-        void sort() throw(); //!< by increasing addresses
+        void            store(hash_meta_node *node)  throw(); //!< store
+        void            erase()                      throw(); //!< delete content
+        void            sort()                       throw(); //!< by increasing addresses
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_meta_pool);

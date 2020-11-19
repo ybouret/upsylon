@@ -24,6 +24,7 @@ namespace upsylon
 
         void     to(slot_type  &repo) throw(); //!< all nodes to repo
         void     to(hash_slots &hs)   throw(); //!< all nodes to other
+        void     purge()              throw(); //!< delete all nodes
 
         slot_type       & operator[](const size_t hkey) throw();       //!< access
         const slot_type & operator[](const size_t hkey) const throw(); //!< access

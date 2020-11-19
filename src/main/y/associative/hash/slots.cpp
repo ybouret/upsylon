@@ -70,6 +70,18 @@ namespace upsylon
         }
     }
 
+    void hash_slots:: purge() throw()
+    {
+        for(size_t i=0;i<slots;++i)
+        {
+            slot_type &s = slot[i];
+            while(s.size)
+            {
+                hash_meta_node::release( s.pop_back() );
+            }
+        }
+    }
+
     void hash_slots:: to(hash_slots &hs) throw()
     {
         for(size_t i=0;i<slots;++i)

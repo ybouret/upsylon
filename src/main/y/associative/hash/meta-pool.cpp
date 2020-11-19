@@ -4,15 +4,22 @@
 
 namespace upsylon
 {
-     hash_meta_pool:: hash_meta_pool() throw() : hash_meta_list()
+    hash_meta_pool:: hash_meta_pool() throw() : hash_meta_list()
     {
 
+    }
+
+    void hash_meta_pool:: erase() throw()
+    {
+        while(size) hash_meta_node::release( pop_back() );
     }
 
     hash_meta_pool:: ~hash_meta_pool() throw()
     {
-        while(size) hash_meta_node::release( pop_back() );
+        erase();
     }
+
+
 
     hash_meta_node * hash_meta_pool:: query(const size_t hkey, void *addr)
     {
