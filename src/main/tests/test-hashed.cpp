@@ -49,7 +49,7 @@ namespace
         std::cerr << "pool.size=" << pool.size << std::endl;
         std::cerr << std::endl;
     }
-
+    
 
     template <typename KEY>
     class HNode : public object
