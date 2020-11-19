@@ -39,6 +39,7 @@ namespace upsylon
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_slots);
+        void cleanup() throw();
     };
 
 

@@ -13,12 +13,21 @@ namespace upsylon
         // cleanup (will check empty slots)
         for(size_t i=0;i<slots;++i) slot[i].~slot_type();
 
+        // release memory
         object::dyadic_release(slot,sexp2);
+
+        // erase
+        cleanup();
+    }
+
+    void hash_slots:: cleanup() throw()
+    {
         slot = 0;
         _bzset(slots);
         _bzset(smask);
         _bzset(sexp2);
     }
+
 
     hash_slots:: hash_slots(const size_t n) :
     slot(0),
@@ -26,13 +35,26 @@ namespace upsylon
     smask(0),
     sexp2(0)
     {
+        // memory limits
         static const size_t min_size = 4;
-        const        size_t max_size = base2<size_t>::max_power_of_two / sizeof(slot_type);
+        static const size_t max_size = base2<size_t>::max_power_of_two / sizeof(slot_type);
 
+        // format
         aliasing::_(slots) = next_power_of_two( clamp(min_size,n,max_size) );
         aliasing::_(smask) = slots-1;
         aliasing::_(sexp2) = base2<size_t>::log2_of( next_power_of_two(slots*sizeof(slot_type)) );
-        slot               = static_cast<slot_type *>( object::dyadic_acquire(sexp2) );
+
+        // acquire memory
+        try
+        {
+            slot = static_cast<slot_type *>( object::dyadic_acquire(sexp2) );
+        }
+        catch(...)
+        {
+            cleanup();
+            throw;
+        }
+
 
         // finalize
         for(size_t i=0;i<slots;++i) new ( &slot[i] ) slot_type();
