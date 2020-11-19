@@ -16,7 +16,7 @@ namespace upsylon
     
     void hash_bucket:: release() throw()
     {
-        while(size) hash_handle::release( pop_back() );
+        while(size) pop();
 
     }
 
@@ -43,7 +43,8 @@ namespace upsylon
 
 
 
-    hash_handle * hash_bucket:: query(const size_t hkey, void *node)
+    hash_handle * hash_bucket:: query(const size_t hkey,
+                                      void        *node) throw()
     {
         assert(size);
         hash_handle *handle = pop_front();

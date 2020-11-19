@@ -36,7 +36,7 @@ namespace upsylon
         void         push();                               //!< push_back a zero handle
         void         pop() throw();                        //!< remove back
 
-        hash_handle *query(const size_t hkey, void *node); //!< with size>0
+        hash_handle *query(const size_t hkey, void *node) throw(); //!< with size>0
         void         store(hash_handle *handle)   throw(); //!< a used handle
 
         void         release() throw();                    //!< release all handles

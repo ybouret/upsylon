@@ -1,4 +1,4 @@
-
+#include "y/associative/hash/znodes.hpp"
 #include "y/associative/hash/link.hpp"
 #include "y/associative/hash/buckets.hpp"
 #include "y/utest/run.hpp"
@@ -141,10 +141,27 @@ namespace
         hash_buckets S(n/2);
         B.to(S);
         S.dump();
-        
+
         std::cerr << std::endl;
     }
 
+    struct zNode
+    {
+        zNode *next,*prev;
+    };
+
+    static inline void doTestZNodes()
+    {
+        std::cerr << "testing zNodes" << std::endl;
+        hash_znodes<zNode> Z;
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            Z.push();
+        }
+        std::cerr << "#zombie=" << Z.size << std::endl;
+        alea.shuffle(Z);
+
+    }
 
 
 }
@@ -159,6 +176,8 @@ Y_UTEST(hashed)
     {
         doTestBuckets(n);
     }
+
+    doTestZNodes();
 
     return 0;
     doHashSlots(0);
