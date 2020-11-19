@@ -1,5 +1,5 @@
 
-#include "y/associative/hash/nodes.hpp"
+#include "y/associative/hash/slots.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
