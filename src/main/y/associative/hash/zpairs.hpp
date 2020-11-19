@@ -29,6 +29,12 @@ namespace upsylon
             return hlist.size == zlist.size;
         }
 
+        inline size_t size() const throw()
+        {
+            assert( consistent() );
+            return hlist.size;
+        }
+
         //! push one of each
         inline void push()
         {
@@ -46,6 +52,24 @@ namespace upsylon
             zlist.pop();
             assert( consistent() );
         }
+
+        //! return linked handle
+        inline hash_handle *query(const size_t hkey) throw()
+        {
+            assert( consistent() );
+            assert( hlist.size>0 );
+            return hlist.query(hkey, zlist.query() );
+        }
+
+        //! store linked handle
+        inline void store(hash_handle *handle) throw()
+        {
+            assert(handle);
+            assert(handle->node);
+            zlist.store( static_cast<NODE *>(handle->node) );
+            hlist.store(handle);
+        }
+
 
         h_list_type hlist;
         z_list_type zlist;
