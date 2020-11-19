@@ -21,26 +21,29 @@ namespace upsylon
     class hash_link
     {
     public:
-        Y_DECL_ARGS(KEY,key);
+        Y_DECL_ARGS(KEY,key); //!< aliases
 
-        typedef core::list_of_cpp<NODE> list_type;
-        typedef core::list_of<NODE>     pool_type;
+        typedef core::list_of_cpp<NODE> list_type; //!< alias
+        typedef core::list_of<NODE>     pool_type; //!< alias
 
-        list_type      chain;
-        hash_slots     slots;
+        list_type      chain; //!< ...
+        hash_slots     slots; //!< ...
         hash_meta_pool metas; //!< pool of meta nodes
         pool_type      nodes; //!< pool of NODEs
 
+        //! ...
         inline explicit hash_link(const size_t num_slots) :
         chain(), slots(num_slots), metas(), nodes()
         {
         }
 
+        //! ///
         inline virtual ~hash_link() throw()
         {
 
         }
 
+        //! ...
         inline void trim() throw()
         {
             assert(nodes.size==metas.size);
@@ -52,11 +55,13 @@ namespace upsylon
             }
         }
 
+        //! ...
         void reserve_pair()
         {
             nodes.push_back( object::acquire1<NODE>() );
         }
 
+        //! ...
         inline NODE *search_at(const size_t       hkey,
                                hash_meta_list *  &slot,
                                const_key         &key) throw()
@@ -74,6 +79,7 @@ namespace upsylon
             return NULL;
         }
 
+        //! ...
         inline void insert_at(const size_t    hkey,
                               hash_meta_list *slot,
                               NODE           *node)

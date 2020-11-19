@@ -7,14 +7,21 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! lightweight handle to any node
+    //
+    //__________________________________________________________________________
     struct hash_handle
     {
-        hash_handle *next;
-        hash_handle *prev;
-        size_t       hkey;
-        void        *node;
-        static hash_handle *acquire();
-        static void         release(hash_handle *) throw();
+        hash_handle *next; //!< for list
+        hash_handle *prev; //!< for list
+        size_t       hkey; //!< hashed key
+        void        *node; //!< address of handled node
+
+        static hash_handle *acquire();                       //!< by object
+        static void         release(hash_handle *) throw();  //!< by object
     };
 }
 

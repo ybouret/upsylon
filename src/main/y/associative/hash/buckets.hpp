@@ -10,29 +10,46 @@
 
 namespace upsylon
 {
-
+    //__________________________________________________________________________
+    //
+    //
+    //! collection of buckets
+    //
+    //__________________________________________________________________________
     class hash_buckets
     {
     public:
-        static const size_t required_min_size = 4;
-        static const size_t max_size          = base2<size_t>::max_power_of_two / sizeof(hash_bucket);
-        static const size_t min_size          = max_size < required_min_size ? max_size : required_min_size;
+        //______________________________________________________________________
+        //
+        // definitions
+        //______________________________________________________________________
+        static const size_t required_min_size = 4; //!< minimal bucket count
+        static const size_t max_size          = base2<size_t>::max_power_of_two / sizeof(hash_bucket);       //!< maximal buckets
+        static const size_t min_size          = max_size < required_min_size ? max_size : required_min_size; //!< minimal buckets
 
-        hash_buckets(const size_t n);
-        ~hash_buckets() throw();
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        hash_buckets(const size_t n); //!< setup next_power_of_two(clamp(min_size,n,max_size)) buckets
+        ~hash_buckets() throw();      //!< release all memory
 
-        void swap_with(hash_buckets &other) throw();
-        void release() throw();
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        void swap_with(hash_buckets &other) throw();                     //!< no-throw swap
+        void release() throw();                                          //!< release handles
 
-        hash_bucket       & operator[](const size_t hkey)       throw();
-        const hash_bucket & operator[](const size_t hkey) const throw();
+        hash_bucket       & operator[](const size_t hkey)       throw(); //!< access
+        const hash_bucket & operator[](const size_t hkey) const throw(); //!< const access
 
         void to(hash_bucket  &pool)  throw(); //!< move all content to pool
         void to(hash_buckets &other) throw(); //!< redispacth nodes
 
         void insert( hash_handle *handle ) throw(); //!< insert handle w.r.t its key
 
-        void dump() const;
+        void dump() const; //!< display buckets/keys
 
     private:
         hash_bucket *bucket;

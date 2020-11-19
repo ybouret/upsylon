@@ -10,23 +10,37 @@
 namespace upsylon
 {
 
-    typedef core::list_of<hash_handle> hash_handles;
 
+    typedef core::list_of<hash_handle> hash_handles; //!< alias
+
+    //__________________________________________________________________________
+    //
+    //
+    //! list of handles
+    //
+    //__________________________________________________________________________
     class hash_bucket : public hash_handles
     {
     public:
-        explicit hash_bucket() throw();
-        virtual ~hash_bucket() throw();
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        explicit hash_bucket() throw(); //!< setup
+        virtual ~hash_bucket() throw(); //!< cleanup
 
-        void     push();        //!< push_back a zero handle
-        void     pop() throw(); //!< remove back
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        void         push();                               //!< push_back a zero handle
+        void         pop() throw();                        //!< remove back
 
-        hash_handle *query(const size_t hkey, void *node);
-        void         store(hash_handle *handle) throw();
+        hash_handle *query(const size_t hkey, void *node); //!< with size>0
+        void         store(hash_handle *handle)   throw(); //!< a used handle
 
-
-        void release() throw();
-        void reorder() throw();
+        void         release() throw();                    //!< release all handles
+        void         reorder() throw();                    //!< reorder by increasing address
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_bucket);
