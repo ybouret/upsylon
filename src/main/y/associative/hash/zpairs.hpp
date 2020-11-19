@@ -11,24 +11,49 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! list of paired handles and zombie NODEs
+    //
+    //__________________________________________________________________________
     template <typename NODE>
     class hash_zpairs
     {
     public:
-        typedef hash_bucket        h_list_type;
-        typedef hash_znodes<NODE>  z_list_type;
+        typedef hash_bucket        h_list_type; //!< alias
+        typedef hash_znodes<NODE>  z_list_type; //!< alias
 
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+
+        //! setup
         inline explicit hash_zpairs() throw() : hlist(), zlist()
         {
             assert( consistent() );
         }
 
+        //! cleanup
+        inline virtual ~hash_zpairs() throw()
+        {
+            assert(consistent());
+            release();
+        }
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! check consistency
         inline bool consistent() const throw()
         {
             return hlist.size == zlist.size;
         }
 
+        //! shared size
         inline size_t size() const throw()
         {
             assert( consistent() );
@@ -53,6 +78,12 @@ namespace upsylon
             assert( consistent() );
         }
 
+        //! release all
+        inline void release() throw()
+        {
+            while( size() ) pop();
+        }
+
         //! return linked handle
         inline hash_handle *query(const size_t hkey) throw()
         {
@@ -70,9 +101,12 @@ namespace upsylon
             hlist.store(handle);
         }
 
-
-        h_list_type hlist;
-        z_list_type zlist;
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        h_list_type hlist; //!< list of handles
+        z_list_type zlist; //!< list of zombie nodes
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_zpairs);
