@@ -13,6 +13,8 @@ namespace upsylon
     void hash_meta_node:: release(hash_meta_node *node) throw()
     {
         assert(node);
+        node->addr = 0;
+        node->hkey = 0;
         object::release1(node);
     }
 
