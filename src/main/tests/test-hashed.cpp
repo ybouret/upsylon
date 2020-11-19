@@ -1,6 +1,8 @@
 
 #include "y/associative/hash/link.hpp"
+#include "y/associative/hash/bucket.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 
@@ -103,11 +105,30 @@ namespace
 
     }
 
+    void doTestBucket()
+    {
+        hash_bucket bucket;
+        for(size_t i=1+alea.leq(100);i>0;--i)
+        {
+            bucket.push();
+            if( alea.choice() )
+                bucket.push_back(  hash_handle::acquire() );
+            else
+                bucket.push_front( hash_handle::acquire() );
+        }
+        alea.shuffle(bucket);
+    }
+
 
 }
 
 Y_UTEST(hashed)
 {
+    Y_UTEST_SIZEOF(hash_handle);
+    Y_UTEST_SIZEOF(hash_bucket);
+    doTestBucket();
+    
+    return 0;
     doHashSlots(0);
     for(size_t n=1;n<=16;n<<=1)
     {
@@ -115,6 +136,8 @@ Y_UTEST(hashed)
     }
 
     doHashLink<uint16_t>();
+
+
 
 }
 Y_UTEST_DONE()

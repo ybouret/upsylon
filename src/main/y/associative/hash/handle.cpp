@@ -3,12 +3,9 @@
 
 namespace upsylon
 {
-    hash_handle * hash_handle:: acquire(const size_t h,void *p)
+    hash_handle * hash_handle:: acquire( )
     {
-        hash_handle *handle = object::acquire1<hash_handle>();
-        handle->hkey = h;
-        handle->node = p;
-        return 0;
+        return object::acquire1<hash_handle>();
     }
 
     void hash_handle:: release(hash_handle *handle) throw()
