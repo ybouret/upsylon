@@ -45,6 +45,38 @@ namespace upsylon
         {
         }
 
+        //! copy
+        inline explicit hash_table( const hash_table &other ) :
+        nodes(),
+        pails(other.pails.buckets),
+        cache()
+        {
+            try
+            {
+                for(const NODE *source=other.nodes.head;source;source=source->next)
+                {
+                    // setup memory
+                    cache.push();
+                    const size_t hkey = source->meta->hkey;
+                    hash_meta   *meta = cache.query(hkey);
+                    NODE        *node = static_cast<NODE *>(meta->node);
+                    
+                    // node copy constructor
+                    try { new (node) NODE( *source ); }
+                    catch(...) { cache.store(meta); throw; }
+                    
+                    // setup node
+                    node->meta = meta;
+                    setup(node);
+                }
+            }
+            catch(...)
+            {
+                release();
+                throw;
+            }
+        }
+        
 
         //! cleanup
         inline virtual ~hash_table() throw()
@@ -65,6 +97,18 @@ namespace upsylon
             cache.swap_with(other.cache);
         }
 
+        //! populate cache
+        inline void reserve(size_t n)
+        {
+            while(n-- > 0) cache.push();
+        }
+        
+        //! capacity
+        inline size_t capacity() const throw()
+        {
+            return nodes.size + cache.size();
+        }
+        
         //! trim = release cache
         inline void trim() throw()
         {
@@ -244,8 +288,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // update structure
                 //--------------------------------------------------------------
-                pails.insert(meta);      // meta node in buckets
-                nodes.push_back(node);   // node in nodes
+                setup(node);
                 return true;
             }
             
@@ -271,13 +314,18 @@ namespace upsylon
         
         
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(hash_table);
+        Y_DISABLE_ASSIGN(hash_table);
         template <typename FUNC> static inline
         int compare_keys(const NODE *lhs, const NODE *rhs, void *args)
         {
             assert(args);
             FUNC &compare = *(FUNC *)args;
             return compare(lhs->key(),rhs->key());
+        }
+        
+        inline void setup(NODE *node) throw()
+        {
+            pails.insert( nodes.push_back(node)->meta );
         }
     };
 

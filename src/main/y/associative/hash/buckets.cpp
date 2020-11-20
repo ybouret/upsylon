@@ -114,7 +114,9 @@ namespace upsylon
         }
         else
         {
-            return buckets_for(entries/load_factor);
+            size_t n = entries/load_factor;
+            while(n*load_factor<entries) ++n;
+            return buckets_for(n);
         }
     }
 

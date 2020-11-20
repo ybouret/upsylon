@@ -125,9 +125,15 @@ namespace
 
 
         inline ~KNode() throw() {}
-
+        
+        inline KNode( const KNode &node ) :
+        next(0), prev(0), meta(0), _key(node._key), data(node.data)
+        {
+        }
+        
+        
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(KNode);
+        Y_DISABLE_ASSIGN(KNode);
     };
 
     template <typename KEY, typename T>
@@ -159,9 +165,10 @@ namespace
             Y_CHECK( table.nodes.size == 1);
         }
 
+        for(size_t cycles=0;cycles<16;++cycles)
         {
             table.release();
-            const size_t    iterMax = 20+alea.leq(50);
+            const size_t    iterMax = 50+alea.leq(150);
             vector<KEY>     keys(iterMax,as_capacity);
             vector<size_t>  hkeys(iterMax,as_capacity);
 
@@ -182,11 +189,17 @@ namespace
             const size_t required = 8;
             std::cerr << "bucket for " << required << " : " << table.buckets_for_load_factor(required) << std::endl;
 
-            std::cerr << "compact" << std::endl;
-            table.pails.dump();
+            if(cycles<=0)
+            {
+                std::cerr << "compact" << std::endl;
+                table.pails.dump();
+            }
             table.load_factor(required);
-            std::cerr << "expanded" << std::endl;
-            table.pails.dump();
+            if(cycles<=0)
+            {
+                std::cerr << "expanded" << std::endl;
+                table.pails.dump();
+            }
             std::cerr << "load: " << table.load_factor() << std::endl;
             Y_CHECK(table.load_factor() <= required );
 
@@ -208,7 +221,12 @@ namespace
                 Y_ASSERT(NULL!=node->meta);
                 Y_ASSERT(h==node->meta->hkey);
             }
-
+            
+            {
+                hash_table<Node> table_copy(table);
+                table.swap_with(table_copy);
+            }
+            
             alea.shuffle(*idx,n);
             for(size_t i=n;i>0;--i)
             {

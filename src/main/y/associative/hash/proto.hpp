@@ -13,11 +13,19 @@ namespace upsylon
 
     //! prototype of hash_table based container
 
-    template <typename KEY,typename T,typename NODE,typename BASE_CLASS>
+    template <
+    typename KEY,
+    typename T,
+    typename NODE,
+    typename KEY_HASHER,
+    typename BASE_CLASS>
     class hash_proto : public BASE_CLASS
     {
     public:
-
+        
+        
+        
+        mutable KEY_HASHER hash;
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_proto);
     };
