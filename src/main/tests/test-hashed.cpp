@@ -178,6 +178,8 @@ namespace
             }
             std::cerr << "keys: " << keys.size() << std::endl;
             std::cerr << "load: " << table.load_factor() << std::endl;
+            std::cerr << "bucket for 8 : " << table.buckets_for_load_factor(4) << std::endl;
+
             Y_CHECK(keys.size()==hkeys.size());
             Y_CHECK(keys.size()==table.nodes.size);
 

@@ -77,6 +77,12 @@ namespace upsylon
             return nodes.size / pails.buckets;
         }
 
+        //! number of buckets to reach requested load factor
+        inline size_t buckets_for_load_factor(const size_t value) const throw()
+        {
+            return pails.for_load_factor(value,nodes.size);
+        }
+
         //! free node content, keep memory
         inline void free() throw()
         {
@@ -88,6 +94,8 @@ namespace upsylon
                 cache.store( pails[meta->hkey].unlink(meta) );
             }
         }
+
+
 
         //! release all possible memory
         inline void release() throw()

@@ -43,9 +43,14 @@ namespace upsylon
         _cswap(__bexp2,other.__bexp2);
     }
 
+    static inline size_t buckets_for(const size_t n) throw()
+    {
+        return next_power_of_two<size_t>( clamp(hash_buckets::min_size,n,hash_buckets::max_size) );
+    }
+
     hash_buckets:: hash_buckets(const size_t n) :
     bucket(0),
-    buckets( next_power_of_two<size_t>( clamp(min_size,n,max_size) ) ),
+    buckets( buckets_for(n) ),
     __bmask(buckets-1),
     __bexp2( base2<size_t>::log2_of(buckets*sizeof(hash_bucket) ) )
     {
@@ -101,7 +106,17 @@ namespace upsylon
         (*this)[handle->hkey].push_front(handle);
     }
 
-
+    size_t hash_buckets:: for_load_factor(const size_t load_factor, const size_t entries) throw()
+    {
+       if( load_factor <= 1 )
+       {
+           return buckets_for(entries);
+       }
+       else
+       {
+           return buckets_for(entries/load_factor);
+       }
+    }
 
 
 }

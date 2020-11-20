@@ -51,6 +51,8 @@ namespace upsylon
 
         void dump() const; //!< display buckets/keys
 
+        static size_t for_load_factor(const size_t load_factor, const size_t entries) throw();
+
     private:
         hash_bucket *bucket;
     public:
