@@ -101,6 +101,12 @@ namespace upsylon
             hlist.store(handle);
         }
 
+        inline void swap_with(hash_zpairs &other) throw()
+        {
+            hlist.swap_with(other.hlist);
+            zlist.swap_with(other.zlist);
+        }
+
         //______________________________________________________________________
         //
         // members

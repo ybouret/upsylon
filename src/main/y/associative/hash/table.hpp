@@ -10,26 +10,45 @@
 
 namespace upsylon
 {
-    
+    //__________________________________________________________________________
+    //
+    //
+    //! low-level hash-table of NODEs with KEY and Type
+    /**
+     NODE must have:
+     - a 'hash_handle *meta' field
+     - a const_key & key() const throw() function
+     */
+    //
+    //__________________________________________________________________________
     template <typename NODE>
     class hash_table
     {
     public:
-        typedef core::list_of<NODE> list_type;
-        
-        inline explicit hash_table(const size_t num_buckets) :
+        typedef core::list_of<NODE> list_type; //!< alias
+
+        //! setup with initial default buckets
+        inline explicit hash_table() :
         nodes(),
-        pails( num_buckets ),
+        pails(0),
         cache()
         {
         }
-        
+
+        //! cleanup
         inline virtual ~hash_table() throw()
         {
         }
         
-        
-        
+
+        //! no-throw swap
+        inline void swap_with(hash_table &other) throw()
+        {
+            nodes.swap_with(other.nodes);
+            pails.swap_with(other.pails);
+            cache.swap_with(other.cache);
+        }
+
         list_type         nodes;   //!< live nodes
         hash_buckets      pails;   //!< buckets of handles to nodes
         hash_zpairs<NODE> cache;   //!< cache
