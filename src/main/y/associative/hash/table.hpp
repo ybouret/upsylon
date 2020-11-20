@@ -83,6 +83,7 @@ namespace upsylon
             return pails.for_load_factor(value,nodes.size);
         }
 
+        //! setup new load factor
         inline void load_factor(const size_t value)
         {
             const size_t required_buckets = buckets_for_load_factor(value);
@@ -93,6 +94,13 @@ namespace upsylon
                 pails.swap_with(temp);
             }
         }
+
+        //! try to setup a new load factor, no-throw
+        inline void try_load_factor(const size_t value) throw()
+        {
+            try { load_factor(value); } catch(...) { }
+        }
+
 
         //! free node content, keep memory
         inline void free() throw()
