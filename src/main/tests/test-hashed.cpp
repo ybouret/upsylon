@@ -137,25 +137,79 @@ namespace
         typedef KNode<KEY,T> Node;
         hash_table<Node>     table;
 
-        const KEY    k = support::get<KEY>();
-        const size_t h = alea.leq(100);
-        hash_bucket *b = 0;
-        Y_CHECK( !table.template search_node<KEY>(k,h,b)  );
-        Y_CHECK( !table.template remove_node<KEY>(k,h)    );
+        {
+            const KEY    k = support::get<KEY>();
+            const size_t h = alea.leq(100);
+            hash_bucket *b = 0;
+            Y_CHECK( !table.template search<KEY>(k,h,b)  );
+            Y_CHECK( !table.template remove<KEY>(k,h)    );
 
-        b = 0;
-        const T tmp = support::get<T>();
-        Y_CHECK( table.template insert_node<KEY>(k,h,tmp) );
-        Y_CHECK( table.template search_node<KEY>(k,h,b)    );
-        Y_CHECK( table.nodes.size == 1);
-        table.free();
-        Y_CHECK( table.nodes.size == 0);
+            b = 0;
+            const T tmp = support::get<T>();
+            Y_CHECK( table.template insert<KEY>(k,h,tmp) );
+            Y_CHECK( table.template search<KEY>(k,h,b)    );
+            Y_CHECK( table.nodes.size == 1);
+            table.free();
+            Y_CHECK( table.nodes.size == 0);
 
-        b=0;
-        Y_CHECK( table.template insert_node<KEY>(k,h,tmp) );
-        Y_CHECK( table.template search_node<KEY>(k,h,b)    );
-        Y_CHECK( table.nodes.size == 1);
+            b=0;
+            Y_CHECK( table.template insert<KEY>(k,h,tmp) );
+            Y_CHECK( table.template search<KEY>(k,h,b)    );
+            Y_CHECK( table.nodes.size == 1);
+        }
+
+        {
+            table.release();
+            const size_t    iterMax = 32;
+            vector<KEY>     keys(iterMax,as_capacity);
+            vector<size_t>  hkeys(iterMax,as_capacity);
+
+            for(size_t iter=0;iter<iterMax;++iter)
+            {
+                const KEY    k   = support::get<KEY>();
+                const size_t h   = alea.leq(100);
+                const T      tmp = support::get<KEY>();
+                if( table. template insert<KEY>(k,h,tmp) )
+                {
+                    keys  << k;
+                    hkeys << h;
+                }
+            }
+            std::cerr << "keys: " << keys.size() << std::endl;
+            Y_CHECK(keys.size()==hkeys.size());
+            Y_CHECK(keys.size()==table.nodes.size);
+
+            const size_t   n = keys.size();
+            vector<size_t> idx(n,0);
+            for(size_t i=n;i>0;--i) idx[i] = i;
+            alea.shuffle(*idx,n);
+            for(size_t i=n;i>0;--i)
+            {
+                const size_t j    = idx[i];
+                const KEY   &k    = keys[j];
+                const size_t h    = hkeys[j];
+                hash_bucket *b    = 0;
+                const Node  *node = table. template search<KEY>(k,h,b);
+                Y_ASSERT(NULL!=node);
+                Y_ASSERT(NULL!=node->meta);
+                Y_ASSERT(h==node->meta->hkey);
+            }
+
+            alea.shuffle(*idx,n);
+            for(size_t i=n;i>0;--i)
+            {
+                const size_t j    = idx[i];
+                const KEY   &k    = keys[j];
+                const size_t h    = hkeys[j];
+                Y_ASSERT( table. template remove<KEY>(k,h) );
+            }
+
+        }
+
         std::cerr << std::endl;
+
+
+
     }
 
 }

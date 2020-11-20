@@ -99,9 +99,9 @@ namespace upsylon
 
         //! search key and hkey within table
         template <typename KEY> inline
-        NODE *search_node(const KEY     & key,
-                          const size_t    hkey,
-                          hash_bucket * & bucket) const throw()
+        NODE *search(const KEY     & key,
+                     const size_t    hkey,
+                     hash_bucket * & bucket) const throw()
         {
             //------------------------------------------------------------------
             // get bucket from hkey
@@ -141,14 +141,14 @@ namespace upsylon
 
         //! remove node with key and hkey
         template <typename KEY> inline
-        bool remove_node(const KEY     & key,
-                         const size_t    hkey) throw()
+        bool remove(const KEY     & key,
+                    const size_t    hkey) throw()
         {
             //------------------------------------------------------------------
             // search node with key and hkey
             //------------------------------------------------------------------
             hash_bucket *bucket = 0;
-            NODE        *node   = search_node<KEY>(key,hkey,bucket);
+            NODE        *node   = search<KEY>(key,hkey,bucket);
             if(node)
             {
                 //--------------------------------------------------------------
@@ -172,12 +172,12 @@ namespace upsylon
 
         //! insert node with key, hkey and data
         template <typename KEY, typename T> inline
-        bool insert_node(const KEY  & key,
-                         const size_t hkey,
-                         const T    & data)
+        bool insert(const KEY  & key,
+                    const size_t hkey,
+                    const T    & data)
         {
             hash_bucket *bucket = 0;
-            if(search_node<KEY>(key,hkey,bucket))
+            if(search<KEY>(key,hkey,bucket))
             {
                 //--------------------------------------------------------------
                 // already there
@@ -214,8 +214,18 @@ namespace upsylon
                 nodes.push_back(node);   // node in nodes
                 return true;
             }
-
+            
         }
+
+
+        //! sort nodes by keys
+        template <typename FUNC> inline
+        void sort_keys(FUNC &compare)
+        {
+            merging<NODE>::sort(nodes,compare_keys<FUNC>,(void *)&compare);
+        }
+        
+
 
         //______________________________________________________________________
         //
@@ -228,6 +238,13 @@ namespace upsylon
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_table);
+        template <typename FUNC> static inline
+        int compare_keys(const NODE *lhs, const NODE *rhs, void *args)
+        {
+            assert(args);
+            FUNC &compare = *(FUNC *)args;
+            return compare(lhs->key(),rhs->key());
+        }
     };
 
 }
