@@ -140,9 +140,21 @@ namespace
         const KEY    k = support::get<KEY>();
         const size_t h = alea.leq(100);
         hash_bucket *b = 0;
-        Y_CHECK( !table.template search_node<KEY>(k,h,b) );
-        Y_CHECK( !table.template remove_node<KEY>(k,h)   );
+        Y_CHECK( !table.template search_node<KEY>(k,h,b)  );
+        Y_CHECK( !table.template remove_node<KEY>(k,h)    );
 
+        b = 0;
+        const T tmp = support::get<T>();
+        Y_CHECK( table.template insert_node<KEY>(k,h,tmp) );
+        Y_CHECK( table.template search_node<KEY>(k,h,b)    );
+        Y_CHECK( table.nodes.size == 1);
+        table.free();
+        Y_CHECK( table.nodes.size == 0);
+
+        b=0;
+        Y_CHECK( table.template insert_node<KEY>(k,h,tmp) );
+        Y_CHECK( table.template search_node<KEY>(k,h,b)    );
+        Y_CHECK( table.nodes.size == 1);
         std::cerr << std::endl;
     }
 

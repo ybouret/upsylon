@@ -48,6 +48,7 @@ namespace upsylon
         //! cleanup
         inline virtual ~hash_table() throw()
         {
+            release();
         }
         
         //______________________________________________________________________
@@ -62,6 +63,39 @@ namespace upsylon
             pails.swap_with(other.pails);
             cache.swap_with(other.cache);
         }
+
+        //! trim = release cache
+        inline void trim() throw()
+        {
+            cache.release();
+        }
+
+        //! free node content, keep memory
+        inline void free() throw()
+        {
+            while(nodes.size)
+            {
+                NODE        *node = nodes.pop_back();
+                hash_handle *meta = node->meta;
+                node->~NODE();
+                cache.store( pails[meta->hkey].unlink(meta) );
+            }
+        }
+
+        //! release all possible memory
+        inline void release() throw()
+        {
+            trim();
+            while(nodes.size)
+            {
+                NODE        *node = nodes.pop_back();
+                hash_handle *meta = node->meta;
+                node->~NODE();
+                object::release1(node);
+                hash_handle::release( pails[meta->hkey].unlink(meta) );
+            }
+        }
+
 
         //! search key and hkey within table
         template <typename KEY> inline
@@ -158,6 +192,10 @@ namespace upsylon
                 if(cache.size()<=0) cache.push();
                 hash_handle *meta = cache.query(hkey);
                 NODE        *node = static_cast<NODE *>(meta->node);
+
+                //--------------------------------------------------------------
+                // construct node
+                //--------------------------------------------------------------
                 try
                 {
                     new (node) NODE(key,data);
@@ -168,6 +206,12 @@ namespace upsylon
                     cache.store(meta);
                     throw;
                 }
+
+                //--------------------------------------------------------------
+                // update structure
+                //--------------------------------------------------------------
+                pails.insert(meta);      // meta node in buckets
+                nodes.push_back(node);   // node in nodes
                 return true;
             }
 
