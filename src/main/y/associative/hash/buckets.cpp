@@ -108,14 +108,14 @@ namespace upsylon
 
     size_t hash_buckets:: for_load_factor(const size_t load_factor, const size_t entries) throw()
     {
-       if( load_factor <= 1 )
-       {
-           return buckets_for(entries);
-       }
-       else
-       {
-           return buckets_for(entries/load_factor);
-       }
+        if( load_factor <= 1 )
+        {
+            return buckets_for(entries);
+        }
+        else
+        {
+            return buckets_for(entries/load_factor);
+        }
     }
 
 
@@ -127,6 +127,8 @@ namespace upsylon
 
 namespace upsylon
 {
+
+
     void hash_buckets:: dump() const
     {
         std::cerr << std::hex;

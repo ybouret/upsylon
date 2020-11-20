@@ -161,7 +161,7 @@ namespace
 
         {
             table.release();
-            const size_t    iterMax = 10+alea.leq(1000);
+            const size_t    iterMax = 20+alea.leq(50);
             vector<KEY>     keys(iterMax,as_capacity);
             vector<size_t>  hkeys(iterMax,as_capacity);
 
@@ -176,9 +176,18 @@ namespace
                     hkeys << h;
                 }
             }
+
             std::cerr << "keys: " << keys.size() << std::endl;
             std::cerr << "load: " << table.load_factor() << std::endl;
-            std::cerr << "bucket for 8 : " << table.buckets_for_load_factor(4) << std::endl;
+            const size_t required = 8;
+            std::cerr << "bucket for " << required << " : " << table.buckets_for_load_factor(required) << std::endl;
+
+            std::cerr << "compact" << std::endl;
+            table.pails.dump();
+            table.load_factor(required);
+            std::cerr << "expanded" << std::endl;
+            table.pails.dump();
+
 
             Y_CHECK(keys.size()==hkeys.size());
             Y_CHECK(keys.size()==table.nodes.size);

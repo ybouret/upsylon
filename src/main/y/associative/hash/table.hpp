@@ -83,6 +83,17 @@ namespace upsylon
             return pails.for_load_factor(value,nodes.size);
         }
 
+        inline void load_factor(const size_t value)
+        {
+            const size_t required_buckets = buckets_for_load_factor(value);
+            if(required_buckets!=pails.buckets)
+            {
+                hash_buckets temp(required_buckets);
+                pails.to(temp);
+                pails.swap_with(temp);
+            }
+        }
+
         //! free node content, keep memory
         inline void free() throw()
         {
