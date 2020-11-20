@@ -1,5 +1,4 @@
 #include "y/associative/hash/table.hpp"
-#include "y/associative/hash/buckets.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
@@ -13,6 +12,7 @@ namespace
 
     static inline void doTestBucket()
     {
+        std::cerr << "-- testing Bucket" << std::endl;
         hash_bucket bucket;
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
@@ -23,12 +23,13 @@ namespace
                 bucket.push_front( hash_handle::acquire() );
         }
         alea.shuffle(bucket);
+        std::cerr << std::endl;
     }
 
 
     static inline void doTestBuckets(const size_t n)
     {
-        std::cerr << "Buckets #" << n << std::endl;
+        std::cerr << "-- testing Buckets #" << n << std::endl;
         hash_bucket  pool;
         hash_buckets B(n);
         std::cerr << "\t->buckets=" << B.buckets << std::endl;
@@ -58,7 +59,7 @@ namespace
 
     static inline void doTestZNodes()
     {
-        std::cerr << "testing zNodes" << std::endl;
+        std::cerr << "-- testing zNodes" << std::endl;
         hash_znodes<zNode> Z;
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
@@ -71,7 +72,7 @@ namespace
 
     static inline void doTestZPairs()
     {
-        std::cerr << "testing zPairs" << std::endl;
+        std::cerr << "-- testing zPairs" << std::endl;
         hash_zpairs<zNode> Z;
 
         for(size_t i=1+alea.leq(100);i>0;--i)
@@ -95,9 +96,51 @@ namespace
             Z.store(bucket.pop_back());
         }
         std::cerr << std::endl;
-
-
     }
+
+    template <typename KEY,typename T>
+    class KNode
+    {
+    public:
+        KNode *next;
+        KNode *prev;
+        const KEY _key;
+        T         data;
+
+        inline KNode(const KEY &k, const T &x) :
+        _key(k),
+        data(x)
+        {
+        }
+
+        inline const KEY & key() const throw()
+        {
+            return _key;
+        }
+
+
+        inline ~KNode() throw() {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(KNode);
+    };
+
+    template <typename KEY, typename T>
+    void doTestTable()
+    {
+        std::cerr << "-- testing Table" << std::endl;
+
+        typedef KNode<KEY,T> Node;
+        hash_table<Node>     table;
+
+        const KEY    k = support::get<KEY>();
+        const size_t h = alea.leq(100);
+        hash_bucket *b = 0;
+        table.template search_node<KEY>(k,h,b);
+
+        std::cerr << std::endl;
+    }
+
 }
 
 Y_UTEST(hashed)
@@ -113,7 +156,7 @@ Y_UTEST(hashed)
 
     doTestZNodes();
     doTestZPairs();
-    
+    doTestTable<int,int>();
 
 }
 Y_UTEST_DONE()
