@@ -3,6 +3,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 
@@ -132,7 +133,7 @@ namespace
     template <typename KEY, typename T>
     void doTestTable()
     {
-        std::cerr << "-- testing Table" << std::endl;
+        std::cerr << "-- testing Table<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
 
         typedef KNode<KEY,T> Node;
         hash_table<Node>     table;
@@ -160,7 +161,7 @@ namespace
 
         {
             table.release();
-            const size_t    iterMax = 32;
+            const size_t    iterMax = 10+alea.leq(1000);
             vector<KEY>     keys(iterMax,as_capacity);
             vector<size_t>  hkeys(iterMax,as_capacity);
 
@@ -168,7 +169,7 @@ namespace
             {
                 const KEY    k   = support::get<KEY>();
                 const size_t h   = alea.leq(100);
-                const T      tmp = support::get<KEY>();
+                const T      tmp = support::get<T>();
                 if( table. template insert<KEY>(k,h,tmp) )
                 {
                     keys  << k;
@@ -228,7 +229,7 @@ Y_UTEST(hashed)
     doTestZNodes();
     doTestZPairs();
     doTestTable<int,int>();
-
+    doTestTable<string,apq>();
 }
 Y_UTEST_DONE()
 
