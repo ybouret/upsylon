@@ -18,6 +18,7 @@ namespace upsylon
      NODE must have:
      - a 'hash_handle *meta' field
      - a const_key & key() const throw() function
+     - a constructor NODE(key,data)
      */
     //
     //__________________________________________________________________________
@@ -63,7 +64,7 @@ namespace upsylon
         }
 
         //! search key and hkey within table
-        template <typename KEY>
+        template <typename KEY> inline
         NODE *search_node(const KEY     & key,
                           const size_t    hkey,
                           hash_bucket * & bucket) const throw()
@@ -105,7 +106,7 @@ namespace upsylon
         }
 
         //! remove node with key and hkey
-        template <typename KEY>
+        template <typename KEY> inline
         bool remove_node(const KEY     & key,
                          const size_t    hkey) throw()
         {
@@ -135,6 +136,42 @@ namespace upsylon
             }
         }
 
+        //! insert node with key, hkey and data
+        template <typename KEY, typename T> inline
+        bool insert_node(const KEY  & key,
+                         const size_t hkey,
+                         const T    & data)
+        {
+            hash_bucket *bucket = 0;
+            if(search_node<KEY>(key,hkey,bucket))
+            {
+                //--------------------------------------------------------------
+                // already there
+                //--------------------------------------------------------------
+                return false;
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                // get raw memory
+                //--------------------------------------------------------------
+                if(cache.size()<=0) cache.push();
+                hash_handle *meta = cache.query(hkey);
+                NODE        *node = static_cast<NODE *>(meta->node);
+                try
+                {
+                    new (node) NODE(key,data);
+                    node->meta = meta;
+                }
+                catch(...)
+                {
+                    cache.store(meta);
+                    throw;
+                }
+                return true;
+            }
+
+        }
 
         //______________________________________________________________________
         //
