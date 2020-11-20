@@ -51,6 +51,7 @@ namespace upsylon
 
         void dump() const; //!< display buckets/keys
 
+        //! count of buckets to ensure entries/count <= load_factor
         static size_t for_load_factor(const size_t load_factor, const size_t entries) throw();
 
     private:

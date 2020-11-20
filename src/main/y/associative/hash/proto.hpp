@@ -31,26 +31,26 @@ namespace upsylon
         //
         // types and declaration
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);
-        Y_DECL_ARGS(KEY,key_type);
-        typedef NODE      node_type;
-        typedef BASE_TYPE base_type;
+        Y_DECL_ARGS(T,type);           //!< aliases
+        Y_DECL_ARGS(KEY,key_type);     //!< aliases
+        typedef NODE      node_type;   //!< alias
+        typedef BASE_TYPE base_type;   //!< alias
         
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
-        inline virtual ~hash_proto() throw() {}
+        inline virtual ~hash_proto() throw() {} //!< cleanup
         
         //______________________________________________________________________
         //
         // container interface
         //______________________________________________________________________
-        inline virtual size_t size()     const throw() { return table.size();     }
-        inline virtual size_t capacity() const throw() { return table.capacity(); }
-        inline virtual size_t reserve(const size_t n)  { table.reserve(n);        }
-        inline virtual void   free() throw()           { table.free();            }
-        inline virtual void   release() throw()        { table.release();         }
+        inline virtual size_t size()     const throw() { return table.size();     } //!< container: size
+        inline virtual size_t capacity() const throw() { return table.capacity(); } //!< container: capacity
+        inline virtual void   reserve(const size_t n)  { table.reserve(n);        } //!< container: reserve
+        inline virtual void   free() throw()           { table.free();            } //!< container: free
+        inline virtual void   release() throw()        { table.release();         } //!< container: release
         
         
         
@@ -65,7 +65,7 @@ namespace upsylon
         hash_table<NODE>  table; //!< internal table
         
     public:
-        mutable KEY_HASHER hash;
+        mutable KEY_HASHER hash; //!< key hasher
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_proto);

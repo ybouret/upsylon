@@ -10,14 +10,18 @@
 
 namespace upsylon
 {
-    class hash_table_
+    //__________________________________________________________________________
+    //
+    //! base class for parameters
+    //__________________________________________________________________________
+     class hash_table_
     {
     public:
-        static const size_t default_load = 8;
-        virtual ~hash_table_() throw();
+        static const size_t default_load = 8; //!< default load factor
+        virtual ~hash_table_() throw();       //!< cleanup
         
     protected:
-        explicit hash_table_() throw();
+        explicit hash_table_() throw();       //!< setup
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_table_);
@@ -52,6 +56,7 @@ namespace upsylon
 
         //! setup with initial default buckets
         inline explicit hash_table() :
+        hash_table_(),
         nodes(),
         pails(0),
         cache()
@@ -62,6 +67,7 @@ namespace upsylon
         inline explicit hash_table(const size_t         n,
                                    const as_capacity_t &,
                                    const size_t        load = default_load) :
+        hash_table_(),
         nodes(),
         pails( hash_buckets::for_load_factor(load,n) ),
         cache()
@@ -71,6 +77,7 @@ namespace upsylon
 
         //! copy
         inline explicit hash_table( const hash_table &other ) :
+        hash_table_(),
         nodes(),
         pails(other.pails.count),
         cache()
