@@ -44,7 +44,7 @@ namespace upsylon
         cache()
         {
         }
-        
+
 
         //! cleanup
         inline virtual ~hash_table() throw()
@@ -69,6 +69,12 @@ namespace upsylon
         inline void trim() throw()
         {
             cache.release();
+        }
+
+        //! average load factor
+        inline size_t load_factor() const throw()
+        {
+            return nodes.size / pails.buckets;
         }
 
         //! free node content, keep memory

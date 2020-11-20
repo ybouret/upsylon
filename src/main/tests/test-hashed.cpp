@@ -177,6 +177,7 @@ namespace
                 }
             }
             std::cerr << "keys: " << keys.size() << std::endl;
+            std::cerr << "load: " << table.load_factor() << std::endl;
             Y_CHECK(keys.size()==hkeys.size());
             Y_CHECK(keys.size()==table.nodes.size);
 
