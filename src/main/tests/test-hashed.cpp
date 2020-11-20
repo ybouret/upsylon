@@ -187,7 +187,8 @@ namespace
             table.load_factor(required);
             std::cerr << "expanded" << std::endl;
             table.pails.dump();
-
+            std::cerr << "load: " << table.load_factor() << std::endl;
+            Y_CHECK(table.load_factor() <= required );
 
             Y_CHECK(keys.size()==hkeys.size());
             Y_CHECK(keys.size()==table.nodes.size);
