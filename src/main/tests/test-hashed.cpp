@@ -102,12 +102,16 @@ namespace
     class KNode
     {
     public:
-        KNode *next;
-        KNode *prev;
-        const KEY _key;
-        T         data;
+        KNode       *next;
+        KNode       *prev;
+        hash_handle *meta;
+        const KEY    _key;
+        T            data;
 
         inline KNode(const KEY &k, const T &x) :
+        next(0),
+        prev(0),
+        meta(0),
         _key(k),
         data(x)
         {
@@ -136,7 +140,8 @@ namespace
         const KEY    k = support::get<KEY>();
         const size_t h = alea.leq(100);
         hash_bucket *b = 0;
-        table.template search_node<KEY>(k,h,b);
+        Y_CHECK( !table.template search_node<KEY>(k,h,b) );
+        Y_CHECK( !table.template remove_node<KEY>(k,h)   );
 
         std::cerr << std::endl;
     }

@@ -62,21 +62,77 @@ namespace upsylon
             cache.swap_with(other.cache);
         }
 
+        //! search key and hkey within table
         template <typename KEY>
-        const NODE *search_node(typename type_traits<KEY>::parameter_type key,
-                                const    size_t                           hkey,
-                                hash_bucket                             *&bucket) const throw()
+        NODE *search_node(const KEY     & key,
+                          const size_t    hkey,
+                          hash_bucket * & bucket) const throw()
         {
+            //------------------------------------------------------------------
+            // get bucket from hkey
+            //------------------------------------------------------------------
             assert(0==bucket);
             bucket = (hash_bucket *)&pails[hkey];
+
+            //------------------------------------------------------------------
+            // loop over handle
+            //------------------------------------------------------------------
             for(const hash_handle *meta=bucket->head;meta;meta=meta->next)
             {
+                //--------------------------------------------------------------
+                // test hkey first
+                //--------------------------------------------------------------
                 if(hkey!=meta->hkey) continue;
-                const NODE *node = static_cast<const NODE *>(meta->node); assert(node);
+
+                //--------------------------------------------------------------
+                // test full key
+                //--------------------------------------------------------------
+                const NODE *node = static_cast<const NODE *>(meta->node);
+                assert(node);
+                assert(meta==node->meta);
                 if(key!=node->key()) continue;
-                return node;
+
+                //--------------------------------------------------------------
+                // found!
+                //--------------------------------------------------------------
+                return (NODE *)node;
             }
+
+            //------------------------------------------------------------------
+            // not found...
+            //------------------------------------------------------------------
             return 0;
+        }
+
+        //! remove node with key and hkey
+        template <typename KEY>
+        bool remove_node(const KEY     & key,
+                         const size_t    hkey) throw()
+        {
+            //------------------------------------------------------------------
+            // search node with key and hkey
+            //------------------------------------------------------------------
+            hash_bucket *bucket = 0;
+            NODE        *node   = search_node<KEY>(key,hkey,bucket);
+            if(node)
+            {
+                //--------------------------------------------------------------
+                // found the node
+                //--------------------------------------------------------------
+                assert(0!=bucket);
+                assert(0!=node->meta);
+                hash_handle *meta = node->meta;        // retrieve the handle
+                nodes.unlink(node)->~NODE();           // destruct node content
+                cache.store( bucket->unlink(meta) );   // back to cache
+                return true;
+            }
+            else
+            {
+                //--------------------------------------------------------------
+                // not found
+                //--------------------------------------------------------------
+                return false;
+            }
         }
 
 
