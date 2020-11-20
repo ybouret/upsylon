@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    hash_bucket:: hash_bucket() throw() : hash_handles()
+    hash_bucket:: hash_bucket() throw() : hash_metas()
     {
     }
 
@@ -22,20 +22,20 @@ namespace upsylon
 
     void hash_bucket:: reorder() throw()
     {
-        merging<hash_handle>::sort_by_increasing_address(*this);
+        merging<hash_meta>::sort_by_increasing_address(*this);
     }
 
     void hash_bucket:: push()
     {
-        push_back( hash_handle::acquire() );
+        push_back( hash_meta::acquire() );
     }
 
     void hash_bucket:: pop() throw()
     {
-        hash_handle:: release( pop_back() );
+        hash_meta:: release( pop_back() );
     }
 
-    void hash_bucket:: store(hash_handle *handle) throw()
+    void hash_bucket:: store(hash_meta *handle) throw()
     {
         assert(handle);
         push_front(handle);
@@ -43,11 +43,11 @@ namespace upsylon
 
 
 
-    hash_handle * hash_bucket:: query(const size_t hkey,
-                                      void        *node) throw()
+    hash_meta * hash_bucket:: query(const size_t hkey,
+                                    void        *node) throw()
     {
         assert(size);
-        hash_handle *handle = pop_front();
+        hash_meta *handle = pop_front();
         handle->hkey = hkey;
         handle->node = node;
         return handle;

@@ -13,15 +13,15 @@ namespace upsylon
     //! lightweight handle to any node
     //
     //__________________________________________________________________________
-    struct hash_handle
+    struct hash_meta
     {
-        hash_handle *next; //!< for list
-        hash_handle *prev; //!< for list
-        size_t       hkey; //!< hashed key
-        void        *node; //!< address of handled node
+        hash_meta *next; //!< for list
+        hash_meta *prev; //!< for list
+        size_t     hkey; //!< hashed key
+        void      *node; //!< address of handled node
 
-        static hash_handle *acquire();                       //!< by object
-        static void         release(hash_handle *) throw();  //!< by object
+        static hash_meta *acquire();                     //!< by object
+        static void       release(hash_meta *) throw();  //!< by object
     };
 }
 

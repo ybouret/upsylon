@@ -18,9 +18,9 @@ namespace
         {
             bucket.push();
             if( alea.choice() )
-                bucket.push_back(  hash_handle::acquire() );
+                bucket.push_back(  hash_meta::acquire() );
             else
-                bucket.push_front( hash_handle::acquire() );
+                bucket.push_front( hash_meta::acquire() );
         }
         alea.shuffle(bucket);
         std::cerr << std::endl;
@@ -104,7 +104,7 @@ namespace
     public:
         KNode       *next;
         KNode       *prev;
-        hash_handle *meta;
+        hash_meta   *meta;
         const KEY    _key;
         T            data;
 
@@ -162,7 +162,7 @@ namespace
 
 Y_UTEST(hashed)
 {
-    Y_UTEST_SIZEOF(hash_handle);
+    Y_UTEST_SIZEOF(hash_meta);
     Y_UTEST_SIZEOF(hash_bucket);
     doTestBucket();
     doTestBuckets(0);

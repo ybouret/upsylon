@@ -75,8 +75,8 @@ namespace upsylon
         {
             while(nodes.size)
             {
-                NODE        *node = nodes.pop_back();
-                hash_handle *meta = node->meta;
+                NODE      *node = nodes.pop_back();
+                hash_meta *meta = node->meta;
                 node->~NODE();
                 cache.store( pails[meta->hkey].unlink(meta) );
             }
@@ -88,11 +88,11 @@ namespace upsylon
             trim();
             while(nodes.size)
             {
-                NODE        *node = nodes.pop_back();
-                hash_handle *meta = node->meta;
+                NODE      *node = nodes.pop_back();
+                hash_meta *meta = node->meta;
                 node->~NODE();
                 object::release1(node);
-                hash_handle::release( pails[meta->hkey].unlink(meta) );
+                hash_meta::release( pails[meta->hkey].unlink(meta) );
             }
         }
 
@@ -112,7 +112,7 @@ namespace upsylon
             //------------------------------------------------------------------
             // loop over handle
             //------------------------------------------------------------------
-            for(const hash_handle *meta=bucket->head;meta;meta=meta->next)
+            for(const hash_meta *meta=bucket->head;meta;meta=meta->next)
             {
                 //--------------------------------------------------------------
                 // test hkey first
@@ -156,7 +156,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 assert(0!=bucket);
                 assert(0!=node->meta);
-                hash_handle *meta = node->meta;        // retrieve the handle
+                hash_meta *meta = node->meta;          // retrieve the handle
                 nodes.unlink(node)->~NODE();           // destruct node content
                 cache.store( bucket->unlink(meta) );   // back to cache
                 return true;
@@ -190,7 +190,7 @@ namespace upsylon
                 // get raw memory
                 //--------------------------------------------------------------
                 if(cache.size()<=0) cache.push();
-                hash_handle *meta = cache.query(hkey);
+                hash_meta   *meta = cache.query(hkey);
                 NODE        *node = static_cast<NODE *>(meta->node);
 
                 //--------------------------------------------------------------

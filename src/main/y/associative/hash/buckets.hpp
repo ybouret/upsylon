@@ -47,7 +47,7 @@ namespace upsylon
         void to(hash_bucket  &pool)  throw(); //!< move all content to pool
         void to(hash_buckets &other) throw(); //!< redispacth nodes
 
-        void insert( hash_handle *handle ) throw(); //!< insert handle w.r.t its key
+        void insert(hash_meta *handle) throw(); //!< insert handle w.r.t its key
 
         void dump() const; //!< display buckets/keys
 

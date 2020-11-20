@@ -85,7 +85,7 @@ namespace upsylon
         }
 
         //! return linked handle
-        inline hash_handle *query(const size_t hkey) throw()
+        inline hash_meta *query(const size_t hkey) throw()
         {
             assert( consistent() );
             assert( hlist.size>0 );
@@ -93,12 +93,12 @@ namespace upsylon
         }
 
         //! store linked handle
-        inline void store(hash_handle *handle) throw()
+        inline void store(hash_meta *meta) throw()
         {
-            assert(handle);
-            assert(handle->node);
-            zlist.store( static_cast<NODE *>(handle->node) );
-            hlist.store(handle);
+            assert(meta);
+            assert(meta->node);
+            zlist.store( static_cast<NODE *>(meta->node) );
+            hlist.store(meta);
         }
 
         //! no-throw swap

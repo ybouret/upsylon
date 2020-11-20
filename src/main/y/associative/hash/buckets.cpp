@@ -95,7 +95,7 @@ namespace upsylon
         }
     }
 
-    void  hash_buckets:: insert( hash_handle *handle ) throw()
+    void  hash_buckets:: insert(hash_meta *handle) throw()
     {
         assert(handle);
         (*this)[handle->hkey].push_front(handle);
@@ -119,7 +119,7 @@ namespace upsylon
         for(size_t i=0;i<buckets;++i)
         {
             std::cerr << "[" << std::setw(4) << i << "] :";
-            for(const hash_handle *node=bucket[i].head;node;node=node->next)
+            for(const hash_meta *node=bucket[i].head;node;node=node->next)
             {
                 std::cerr << " " << node->hkey;
             }
