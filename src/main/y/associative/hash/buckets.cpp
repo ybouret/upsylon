@@ -11,25 +11,25 @@ namespace upsylon
 
     hash_buckets:: ~hash_buckets() throw()
     {
-        for(size_t i=0;i<buckets;++i)
+        for(size_t i=0;i<count;++i)
         {
             self_destruct(bucket[i]);
         }
-        object::dyadic_release(bucket,__bexp2);
+        object::dyadic_release(bucket,bexp2);
         cleanup();
     }
 
     void hash_buckets:: cleanup() throw()
     {
         bucket = 0;
-        aliasing::_(buckets) = 0;
-        aliasing::_(__bmask) = 0;
-        aliasing::_(__bexp2) = 0;
+        aliasing::_(count) = 0;
+        aliasing::_(bmask) = 0;
+        aliasing::_(bexp2) = 0;
     }
 
     void hash_buckets:: release() throw()
     {
-        for(size_t i=0;i<buckets;++i)
+        for(size_t i=0;i<count;++i)
         {
             bucket[i].release();
         }
@@ -38,9 +38,9 @@ namespace upsylon
     void hash_buckets:: swap_with(hash_buckets &other) throw()
     {
         _cswap(bucket,other.bucket);
-        _cswap(buckets,other.buckets);
-        _cswap(__bmask,other.__bmask);
-        _cswap(__bexp2,other.__bexp2);
+        _cswap(count,other.count);
+        _cswap(bmask,other.bmask);
+        _cswap(bexp2,other.bexp2);
     }
 
     static inline size_t buckets_for(const size_t n) throw()
@@ -50,14 +50,14 @@ namespace upsylon
 
     hash_buckets:: hash_buckets(const size_t n) :
     bucket(0),
-    buckets( buckets_for(n) ),
-    __bmask(buckets-1),
-    __bexp2( base2<size_t>::log2_of(buckets*sizeof(hash_bucket) ) )
+    count( buckets_for(n) ),
+    bmask(count-1),
+    bexp2( base2<size_t>::log2_of(count*sizeof(hash_bucket) ) )
     {
         // acquire memory
         try
         {
-            bucket = static_cast<hash_bucket *>( object::dyadic_acquire(__bexp2) );
+            bucket = static_cast<hash_bucket *>( object::dyadic_acquire(bexp2) );
         }
         catch(...)
         {
@@ -66,23 +66,23 @@ namespace upsylon
         }
 
         // finalize
-        for(size_t i=0;i<buckets;++i) new (bucket+i) hash_bucket();
+        for(size_t i=0;i<count;++i) new (bucket+i) hash_bucket();
     }
 
     hash_bucket & hash_buckets:: operator[](const size_t hkey) throw()
     {
-        return bucket[hkey&__bmask];
+        return bucket[hkey&bmask];
     }
 
     const hash_bucket & hash_buckets:: operator[](const size_t hkey) const throw()
     {
-        return bucket[hkey&__bmask];
+        return bucket[hkey&bmask];
     }
 
 
     void hash_buckets:: to(hash_bucket &pool) throw()
     {
-        for(size_t i=0;i<buckets;++i)
+        for(size_t i=0;i<count;++i)
         {
             pool.merge_back(bucket[i]);
         }
@@ -90,7 +90,7 @@ namespace upsylon
 
     void hash_buckets:: to(hash_buckets &other) throw()
     {
-        for(size_t i=0;i<buckets;++i)
+        for(size_t i=0;i<count;++i)
         {
             hash_bucket &b = bucket[i];
             while(b.size)
@@ -135,7 +135,7 @@ namespace upsylon
     {
         std::cerr << std::hex;
         std::cerr << "<hash_buckets>" << std::endl;
-        for(size_t i=0;i<buckets;++i)
+        for(size_t i=0;i<count;++i)
         {
             std::cerr << "[" << std::setw(4) << i << "] :";
             for(const hash_meta *node=bucket[i].head;node;node=node->next)

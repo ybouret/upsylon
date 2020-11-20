@@ -48,7 +48,7 @@ namespace upsylon
         //! copy
         inline explicit hash_table( const hash_table &other ) :
         nodes(),
-        pails(other.pails.buckets),
+        pails(other.pails.count),
         cache()
         {
             try
@@ -118,7 +118,7 @@ namespace upsylon
         //! average load factor
         inline size_t load_factor() const throw()
         {
-            return nodes.size / pails.buckets;
+            return nodes.size / pails.count;
         }
 
         //! number of buckets to reach requested load factor
@@ -131,7 +131,7 @@ namespace upsylon
         inline void load_factor(const size_t value)
         {
             const size_t required_buckets = buckets_for_load_factor(value);
-            if(required_buckets!=pails.buckets)
+            if(required_buckets!=pails.count)
             {
                 hash_buckets temp(required_buckets);
                 pails.to(temp);

@@ -33,9 +33,9 @@ namespace
         std::cerr << "-- testing Buckets #" << n << std::endl;
         hash_bucket  pool;
         hash_buckets B(n);
-        std::cerr << "\t->buckets=" << B.buckets << std::endl;
-        std::cerr << "\t->__bmask=" << B.__bmask << std::endl;
-        std::cerr << "\t->__bexp2=" << B.__bexp2 << std::endl;
+        std::cerr << "\t->count=" << B.count << std::endl;
+        std::cerr << "\t->bmask=" << B.bmask << std::endl;
+        std::cerr << "\t->bexp2=" << B.bexp2 << std::endl;
 
         for(size_t i=1+alea.leq(100);i>0;--i)
         {

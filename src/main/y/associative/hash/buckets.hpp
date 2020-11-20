@@ -56,9 +56,9 @@ namespace upsylon
     private:
         hash_bucket *bucket;
     public:
-        const size_t buckets;      //!< number of buckets, a power of two
-        const size_t __bmask;      //!< mask for access = slots-1
-        const size_t __bexp2;      //!< ilog2(slots*sizeof(hash_bucket))
+        const size_t count;      //!< number of buckets, a power of two
+        const size_t bmask;      //!< mask for access = slots-1
+        const size_t bexp2;      //!< ilog2(slots*sizeof(hash_bucket))
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_buckets);
