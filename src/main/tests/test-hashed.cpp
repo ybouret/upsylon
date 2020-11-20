@@ -1,4 +1,4 @@
-#include "y/associative/hash/table.hpp"
+#include "y/associative/hash/proto.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
