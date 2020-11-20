@@ -10,6 +10,19 @@
 
 namespace upsylon
 {
+    class hash_table_
+    {
+    public:
+        static const size_t default_load = 8;
+        virtual ~hash_table_() throw();
+        
+    protected:
+        explicit hash_table_() throw();
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(hash_table_);
+    };
+    
     //__________________________________________________________________________
     //
     //
@@ -23,7 +36,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename NODE>
-    class hash_table
+    class hash_table : public hash_table_
     {
     public:
         //______________________________________________________________________
@@ -43,6 +56,17 @@ namespace upsylon
         pails(0),
         cache()
         {
+        }
+        
+        //! setup with memory
+        inline explicit hash_table(const size_t         n,
+                                   const as_capacity_t &,
+                                   const size_t        load = default_load) :
+        nodes(),
+        pails( hash_buckets::for_load_factor(load,n) ),
+        cache()
+        {
+            reserve(n);
         }
 
         //! copy
@@ -66,8 +90,7 @@ namespace upsylon
                     catch(...) { cache.store(meta); throw; }
                     
                     // setup node
-                    node->meta = meta;
-                    setup(node);
+                    setup(node,meta);
                 }
             }
             catch(...)
@@ -124,7 +147,7 @@ namespace upsylon
         //! number of buckets to reach requested load factor
         inline size_t buckets_for_load_factor(const size_t value) const throw()
         {
-            return pails.for_load_factor(value,nodes.size);
+            return hash_buckets::for_load_factor(value,nodes.size);
         }
 
         //! setup new load factor
@@ -277,7 +300,6 @@ namespace upsylon
                 try
                 {
                     new (node) NODE(key,data);
-                    node->meta = meta;
                 }
                 catch(...)
                 {
@@ -288,7 +310,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // update structure
                 //--------------------------------------------------------------
-                setup(node);
+                setup(node,meta);
                 return true;
             }
             
@@ -323,9 +345,9 @@ namespace upsylon
             return compare(lhs->key(),rhs->key());
         }
         
-        inline void setup(NODE *node) throw()
+        inline void setup(NODE *node, hash_meta *meta) throw()
         {
-            pails.insert( nodes.push_back(node)->meta );
+            pails.insert( nodes.push_back(node)->meta = meta );
         }
     };
 
