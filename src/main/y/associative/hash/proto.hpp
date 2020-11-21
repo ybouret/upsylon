@@ -52,7 +52,10 @@ namespace upsylon
         inline virtual void   free() throw()           { table.free();            } //!< container: free
         inline virtual void   release() throw()        { table.release();         } //!< container: release
         
-        
+        //______________________________________________________________________
+        //
+        // associative interface
+        //______________________________________________________________________
         
     protected:
         //! setup
