@@ -7,6 +7,7 @@
 #include "y/hashing/adler32.hpp"
 #include "y/hashing/crc32.hpp"
 #include "y/hashing/bjh32.hpp"
+#include "y/hashing/sha1.hpp"
 
 #include "y/sort/classes.hpp"
 #include "support.hpp"

@@ -239,10 +239,33 @@ namespace
         }
 
         std::cerr << std::endl;
-
-
-
     }
+    
+    template <typename KEY, typename T>
+    class my_proto :
+    public hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY>, container>
+    {
+    public:
+        inline virtual ~my_proto() throw()
+        {
+        }
+        
+        inline explicit my_proto() throw()
+        {
+        }
+        
+        static inline
+        void doTest()
+        {
+            my_proto proto;
+            
+        }
+        
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(my_proto);
+    };
+    
+    
 
 }
 
@@ -261,6 +284,9 @@ Y_UTEST(hashed)
     doTestZPairs();
     doTestTable<int,int>();
     doTestTable<string,apq>();
+    
+    my_proto<int,int>::doTest();
+    
 }
 Y_UTEST_DONE()
 

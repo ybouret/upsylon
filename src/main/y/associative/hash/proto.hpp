@@ -6,7 +6,7 @@
 #define Y_HASH_PROTO_INCLUDED 1
 
 #include "y/associative/hash/table.hpp"
-
+#include "y/hashing/key-hasher.hpp"
 
 namespace upsylon
 {
@@ -46,7 +46,7 @@ namespace upsylon
         //
         // container interface
         //______________________________________________________________________
-        inline virtual size_t size()     const throw() { return table.size();     } //!< container: size
+        inline virtual size_t size()     const throw() { return table.nodes.size; } //!< container: size
         inline virtual size_t capacity() const throw() { return table.capacity(); } //!< container: capacity
         inline virtual void   reserve(const size_t n)  { table.reserve(n);        } //!< container: reserve
         inline virtual void   free() throw()           { table.free();            } //!< container: free

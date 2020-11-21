@@ -4,7 +4,6 @@
 
 
 #include "y/hashing/fnv.hpp"
-#include "y/hashing/sha1.hpp"
 #include "y/type/args.hpp"
 #include "y/type/class-conversion.hpp"
 #include "y/memory/buffer.hpp"
