@@ -14,7 +14,7 @@ namespace upsylon
     //
     //! base class for parameters
     //__________________________________________________________________________
-     class hash_table_
+    class hash_table_
     {
     public:
         static const size_t default_load = 8; //!< default load factor
@@ -48,12 +48,12 @@ namespace upsylon
         // types and definitions
         //______________________________________________________________________
         typedef core::list_of<NODE> list_type; //!< alias
-
+        
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
-
+        
         //! setup with initial default buckets
         inline explicit hash_table() :
         hash_table_(),
@@ -74,7 +74,7 @@ namespace upsylon
         {
             reserve(n);
         }
-
+        
         //! copy
         inline explicit hash_table( const hash_table &other ) :
         hash_table_(),
@@ -107,7 +107,7 @@ namespace upsylon
             }
         }
         
-
+        
         //! cleanup
         inline virtual ~hash_table() throw()
         {
@@ -118,7 +118,7 @@ namespace upsylon
         //
         // methods
         //______________________________________________________________________
-
+        
         //! no-throw swap
         inline void swap_with(hash_table &other) throw()
         {
@@ -126,7 +126,7 @@ namespace upsylon
             pails.swap_with(other.pails);
             cache.swap_with(other.cache);
         }
-
+        
         //! populate cache
         inline void reserve(size_t n)
         {
@@ -144,19 +144,19 @@ namespace upsylon
         {
             cache.release();
         }
-
+        
         //! average load factor
         inline size_t load_factor() const throw()
         {
             return nodes.size / pails.count;
         }
-
+        
         //! number of buckets to reach requested load factor
         inline size_t buckets_for_load_factor(const size_t value) const throw()
         {
             return hash_buckets::for_load_factor(value,nodes.size);
         }
-
+        
         //! setup new load factor
         inline void load_factor(const size_t value)
         {
@@ -168,14 +168,14 @@ namespace upsylon
                 pails.swap_with(temp);
             }
         }
-
+        
         //! try to setup a new load factor, no-throw
         inline void try_load_factor(const size_t value) throw()
         {
             try { load_factor(value); } catch(...) { }
         }
-
-
+        
+        
         //! free node content, keep memory
         inline void free() throw()
         {
@@ -187,9 +187,9 @@ namespace upsylon
                 cache.store( pails[meta->hkey].unlink(meta) );
             }
         }
-
-
-
+        
+        
+        
         //! release all possible memory
         inline void release() throw()
         {
@@ -203,20 +203,20 @@ namespace upsylon
                 hash_meta::release( pails[meta->hkey].unlink(meta) );
             }
         }
-
-
+        
+        
         //! search key and hkey within table
         template <typename KEY> inline
-        NODE *search(const KEY     & key,
-                     const size_t    hkey,
-                     hash_bucket * & bucket) const throw()
+        const NODE *search(const KEY     & key,
+                           const size_t    hkey,
+                           hash_bucket * & bucket) const throw()
         {
             //------------------------------------------------------------------
             // get bucket from hkey
             //------------------------------------------------------------------
             assert(0==bucket);
             bucket = (hash_bucket *)&pails[hkey];
-
+            
             //------------------------------------------------------------------
             // loop over handle
             //------------------------------------------------------------------
@@ -226,7 +226,7 @@ namespace upsylon
                 // test hkey first
                 //--------------------------------------------------------------
                 if(hkey!=meta->hkey) continue;
-
+                
                 //--------------------------------------------------------------
                 // test full key
                 //--------------------------------------------------------------
@@ -234,19 +234,62 @@ namespace upsylon
                 assert(node);
                 assert(meta==node->meta);
                 if(key!=node->key()) continue;
-
+                
                 //--------------------------------------------------------------
                 // found!
                 //--------------------------------------------------------------
                 return (NODE *)node;
             }
-
+            
             //------------------------------------------------------------------
             // not found...
             //------------------------------------------------------------------
             return 0;
         }
-
+        
+        //! search key and hkey within table
+        template <typename KEY> inline
+        NODE *search(const KEY     & key,
+                     const size_t    hkey,
+                     hash_bucket * & bucket)   throw()
+        {
+            //------------------------------------------------------------------
+            // get bucket from hkey
+            //------------------------------------------------------------------
+            assert(0==bucket);
+            bucket = (hash_bucket *)&pails[hkey];
+            
+            //------------------------------------------------------------------
+            // loop over handle
+            //------------------------------------------------------------------
+            for(hash_meta *meta=bucket->head;meta;meta=meta->next)
+            {
+                //--------------------------------------------------------------
+                // test hkey first
+                //--------------------------------------------------------------
+                if(hkey!=meta->hkey) continue;
+                
+                //--------------------------------------------------------------
+                // test full key
+                //--------------------------------------------------------------
+                NODE *node = static_cast<NODE *>(meta->node);
+                assert(node);
+                assert(meta==node->meta);
+                if(key!=node->key()) continue;
+                
+                //--------------------------------------------------------------
+                // found!
+                //--------------------------------------------------------------
+                bucket->move_to_front(meta);
+                return  node;
+            }
+            
+            //------------------------------------------------------------------
+            // not found...
+            //------------------------------------------------------------------
+            return 0;
+        }
+        
         //! remove node with key and hkey
         template <typename KEY> inline
         bool remove(const KEY     & key,
@@ -277,7 +320,7 @@ namespace upsylon
                 return false;
             }
         }
-
+        
         //! insert node with key, hkey and data
         template <typename KEY, typename T> inline
         bool insert(const KEY  & key,
@@ -300,7 +343,7 @@ namespace upsylon
                 if(cache.size()<=0) cache.push();
                 hash_meta   *meta = cache.query(hkey);
                 NODE        *node = static_cast<NODE *>(meta->node);
-
+                
                 //--------------------------------------------------------------
                 // construct node
                 //--------------------------------------------------------------
@@ -313,7 +356,7 @@ namespace upsylon
                     cache.store(meta);
                     throw;
                 }
-
+                
                 //--------------------------------------------------------------
                 // update structure
                 //--------------------------------------------------------------
@@ -322,8 +365,8 @@ namespace upsylon
             }
             
         }
-
-
+        
+        
         //! sort nodes by keys
         template <typename FUNC> inline
         void sort_keys(FUNC &compare)
@@ -331,8 +374,8 @@ namespace upsylon
             merging<NODE>::sort(nodes,compare_keys<FUNC>,(void *)&compare);
         }
         
-
-
+        
+        
         //______________________________________________________________________
         //
         // members
@@ -357,7 +400,7 @@ namespace upsylon
             pails.insert( nodes.push_back(node)->meta = meta );
         }
     };
-
+    
 }
 
 #endif

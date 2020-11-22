@@ -56,6 +56,44 @@ namespace upsylon
         //
         // associative interface
         //______________________________________________________________________
+        //! associative: search in constant table
+        inline virtual const_type *search(param_key_type key) const throw()
+        {
+            hash_bucket     *slot = 0;
+            const size_t     hkey = hash(key);
+            const node_type *node = table. template search<KEY>(key,hkey,slot);
+            if(node)
+            {
+                return &(node->data);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
+        //! associative: search in table
+        inline virtual  type *search(param_key_type key) throw()
+        {
+            hash_bucket  *slot = 0;
+            const size_t  hkey = hash(key);
+            node_type    *node = table. template search<KEY>(key,hkey,slot);
+            if(node)
+            {
+                return &(node->data);
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        
+        //! removal
+        inline virtual bool remove(param_key_type key) throw()
+        {
+            const size_t  hkey = hash(key);
+            return table. template remove<KEY>(key,hkey);
+        }
         
     protected:
         //! setup
@@ -65,13 +103,21 @@ namespace upsylon
         hash()
         {}
         
+        //! setup
+        inline explicit hash_proto(const hash_proto &other) :
+        base_type(),
+        table(other.table),
+        hash()
+        {}
+        
+        
         hash_table<NODE>  table; //!< internal table
         
     public:
         mutable KEY_HASHER hash; //!< key hasher
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(hash_proto);
+        Y_DISABLE_ASSIGN(hash_proto);
     };
 
 }

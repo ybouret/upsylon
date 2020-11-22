@@ -216,10 +216,15 @@ namespace
                 const KEY   &k    = keys[j];
                 const size_t h    = hkeys[j];
                 hash_bucket *b    = 0;
-                const Node  *node = table. template search<KEY>(k,h,b);
+                Node        *node = table. template search<KEY>(k,h,b);
                 Y_ASSERT(NULL!=node);
                 Y_ASSERT(NULL!=node->meta);
                 Y_ASSERT(h==node->meta->hkey);
+                {
+                    const hash_table<Node> &const_table = table;
+                    b = 0;
+                    Y_ASSERT(NULL!=const_table. template search<KEY>(k,h,b) );
+                }
             }
             
             {
@@ -241,24 +246,45 @@ namespace
         std::cerr << std::endl;
     }
     
-    template <typename KEY, typename T>
-    class my_proto :
+    template <typename KEY, typename T> class my_proto :
     public hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY>, container>
     {
     public:
+        typedef hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY>, container> prototype;
+        
         inline virtual ~my_proto() throw()
         {
         }
         
-        inline explicit my_proto() throw()
+        inline explicit my_proto() throw(): prototype()
         {
         }
         
         static inline
         void doTest()
         {
-            my_proto proto;
+            std::cerr << "-- testing Proto<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
+            my_proto    proto;
+            vector<KEY> keys;
+            for(size_t i=10+alea.leq(10);i>0;--i)
+            {
+                const KEY key = support::get<KEY>();
+                
+                if(true)
+                {
+                    keys << key;
+                }
+            }
             
+            const size_t n = keys.size();
+            alea.shuffle(*keys,n);
+            for(size_t i=n;i>0;--i)
+            {
+                const KEY &key = keys[i];
+                proto.search(key);
+            }
+            
+            std::cerr << std::endl;
         }
         
     private:
@@ -285,7 +311,7 @@ Y_UTEST(hashed)
     doTestTable<int,int>();
     doTestTable<string,apq>();
     
-    my_proto<int,int>::doTest();
+    my_proto<uint8_t,int>::doTest();
     
 }
 Y_UTEST_DONE()
