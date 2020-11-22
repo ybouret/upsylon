@@ -4,7 +4,7 @@
 #ifndef Y_SUFFIX_NODE_TO_STRING_INCLUDED
 #define Y_SUFFIX_NODE_TO_STRING_INCLUDED 1
 
-#include "y/suffix/node.hpp"
+#include "y/associative/suffix/node.hpp"
 #include "y/string.hpp"
 
 namespace upsylon {

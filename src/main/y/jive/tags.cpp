@@ -5,7 +5,7 @@
 #include "y/code/utils.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/suffix/node-to.hpp"
+#include "y/associative/suffix/node-to.hpp"
 
 namespace upsylon {
 

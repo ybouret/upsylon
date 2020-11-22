@@ -1,5 +1,5 @@
 
-#include "y/suffix/defs.hpp"
+#include "y/associative/suffix/defs.hpp"
 #include "y/code/utils.hpp"
 #include <cstring>
 

@@ -6,7 +6,7 @@
 
 #include "y/aqua/equilibrium.hpp"
 #include "y/aqua/types.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 
 namespace upsylon {
 

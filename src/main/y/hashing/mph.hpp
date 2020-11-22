@@ -2,7 +2,7 @@
 #ifndef Y_HASHING_MPH_INCLUDED
 #define Y_HASHING_MPH_INCLUDED 1
 
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 
 namespace upsylon
 {

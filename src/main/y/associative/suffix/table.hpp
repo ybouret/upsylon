@@ -1,10 +1,11 @@
-//! \file
-#ifndef Y_SUFFIX_BATCH_INCLUDED
-#define Y_SUFFIX_BATCH_INCLUDED 1
 
-#include "y/suffix/graph.hpp"
-#include "y/associative/catalog.hpp"
-#include "y/suffix/key-to-path.hpp"
+//! \file
+#ifndef Y_SUFFIX_TABLE_INCLUDED
+#define Y_SUFFIX_TABLE_INCLUDED 1
+
+#include "y/associative/suffix/graph.hpp"
+#include "y/associative/lexicon.hpp"
+#include "y/associative/suffix/key-to-path.hpp"
 
 namespace upsylon
 {
@@ -13,22 +14,22 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! catalog<KEY,TYPE> interface
+    //! lexicon<KEY,TYPE> interface
     //
     //__________________________________________________________________________
     template <typename KEY, typename T>
-    class suffix_batch : public suffix_graph<char,T, catalog<KEY,T> >
+    class suffix_table : public suffix_graph<char,T, lexicon<KEY,T> >
     {
     public:
         //______________________________________________________________________
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);                                 //!< aliases
-        Y_DECL_ARGS(KEY,key_type);                           //!< aliases
-        typedef key_to_path<KEY>                key_get;     //!< alias
-        typedef catalog<KEY,T>                  base_class;  //!< alias
-        typedef suffix_graph<char,T,base_class> graph_type;  //!< alias
+        Y_DECL_ARGS(T,type);                                  //!< aliases
+        Y_DECL_ARGS(KEY,key_type);                            //!< aliases
+        typedef key_to_path<KEY>                key_get;      //!< alias
+        typedef lexicon<KEY,T>                  base_class;   //!< alias
+        typedef suffix_graph<char,T,base_class> graph_type;   //!< alias
 
         //______________________________________________________________________
         //
@@ -36,19 +37,19 @@ namespace upsylon
         //______________________________________________________________________
 
         //! setup
-        inline explicit suffix_batch() : graph_type() {}
+        inline explicit suffix_table() : graph_type() {}
 
         //! setup with capacity
-        inline explicit suffix_batch(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
+        inline explicit suffix_table(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
 
         //! cleanup
-        inline virtual ~suffix_batch() throw() {}
+        inline virtual ~suffix_table() throw() {}
 
         //! copy
-        inline suffix_batch(const suffix_batch &other) : collection(), graph_type(other)
+        inline suffix_table(const suffix_table &other) : collection(), graph_type(other)
         {
         }
-        
+
 
 
         //______________________________________________________________________
@@ -57,9 +58,8 @@ namespace upsylon
         //______________________________________________________________________
 
         //! catalog insert
-        inline virtual bool insert(param_type args)
+        inline virtual bool insert(param_key_type key, param_type args)
         {
-            const_key_type & key = args.key();
             return this->insert_by( key_get::addr_of(key), key_get::size_of(key),args);
         }
 

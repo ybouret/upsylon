@@ -4,7 +4,7 @@
 #ifndef Y_SUFFIX_TREE_INCLUDED
 #define Y_SUFFIX_TREE_INCLUDED 1
 
-#include "y/suffix/node.hpp"
+#include "y/associative/suffix/node.hpp"
 #include "y/type/aliasing.hpp"
 
 namespace upsylon

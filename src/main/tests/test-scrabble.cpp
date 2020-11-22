@@ -8,7 +8,7 @@
 #include "y/ios/icstream.hpp"
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/suffix/strings.hpp"
+#include "y/associative/suffix/strings.hpp"
 
 using namespace upsylon;
 

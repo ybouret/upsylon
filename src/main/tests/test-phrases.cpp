@@ -3,7 +3,7 @@
 #include "y/counting/parts.hpp"
 #include "y/counting/permutations.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/suffix/strings.hpp"
+#include "y/associative/suffix/strings.hpp"
 #include "y/fs/disk/istream.hpp"
 #include "y/sequence/vector.hpp"
 

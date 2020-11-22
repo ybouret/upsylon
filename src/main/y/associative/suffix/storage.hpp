@@ -3,7 +3,7 @@
 #ifndef Y_SUFFIX_STORAGE_INCLUDED
 #define Y_SUFFIX_STORAGE_INCLUDED 1
 
-#include "y/suffix/graph.hpp"
+#include "y/associative/suffix/graph.hpp"
 #include <cstring>
 
 namespace upsylon

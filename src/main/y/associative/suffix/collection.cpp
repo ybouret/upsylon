@@ -1,4 +1,4 @@
-#include "y/suffix/collection.hpp"
+#include "y/associative/suffix/collection.hpp"
 
 namespace upsylon
 {

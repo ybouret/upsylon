@@ -3,8 +3,8 @@
 #ifndef Y_SUFFIX_MANIFEST_INCLUDED
 #define Y_SUFFIX_MANIFEST_INCLUDED 1
 
-#include "y/suffix/tree.hpp"
-#include "y/suffix/collection.hpp"
+#include "y/associative/suffix/tree.hpp"
+#include "y/associative/suffix/collection.hpp"
 
 namespace upsylon
 {

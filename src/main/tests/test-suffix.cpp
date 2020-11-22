@@ -1,9 +1,9 @@
 
-#include "y/suffix/key-to-path.hpp"
-#include "y/suffix/strings.hpp"
+#include "y/associative/suffix/key-to-path.hpp"
+#include "y/associative/suffix/strings.hpp"
 
-#include "y/suffix/storage.hpp"
-#include "y/suffix/inventory.hpp"
+#include "y/associative/suffix/storage.hpp"
+#include "y/associative/suffix/inventory.hpp"
 
 
 #include "y/utest/run.hpp"

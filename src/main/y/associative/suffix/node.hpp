@@ -3,7 +3,7 @@
 #ifndef Y_SUFFIX_NODE_INCLUDED
 #define Y_SUFFIX_NODE_INCLUDED 1
 
-#include "y/suffix/defs.hpp"
+#include "y/associative/suffix/defs.hpp"
 #include "y/core/list.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/object.hpp"

@@ -1,7 +1,7 @@
 
 
 #include "y/jive/pattern/posix.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {

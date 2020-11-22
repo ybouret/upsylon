@@ -3,9 +3,9 @@
 #ifndef Y_SUFFIX_GRAPH_INCLUDED
 #define Y_SUFFIX_GRAPH_INCLUDED 1
 
-#include "y/suffix/knot.hpp"
-#include "y/suffix/tree.hpp"
-#include "y/suffix/collection.hpp"
+#include "y/associative/suffix/knot.hpp"
+#include "y/associative/suffix/tree.hpp"
+#include "y/associative/suffix/collection.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/memory/buffers.hpp"
 #include "y/iterate/linked.hpp"

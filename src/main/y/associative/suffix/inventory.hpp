@@ -4,7 +4,7 @@
 #ifndef Y_SUFFIX_INVENTORY_INCLUDED
 #define Y_SUFFIX_INVENTORY_INCLUDED 1
 
-#include "y/suffix/manifest.hpp"
+#include "y/associative/suffix/manifest.hpp"
 
 namespace upsylon
 {

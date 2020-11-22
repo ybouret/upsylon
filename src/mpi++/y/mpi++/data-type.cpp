@@ -2,7 +2,7 @@
 #include "y/mpi++/mpi.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/associative/be-key.hpp"
-#include "y/suffix/node-to.hpp"
+#include "y/associative/suffix/node-to.hpp"
 
 #include <typeinfo>
 

@@ -7,7 +7,7 @@
 #include "y/string.hpp"
 #include "y/exception.hpp"
 #include "y/concurrent/singleton.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 #include "y/ios/cfile.hpp"
 
 #include <cstdio>

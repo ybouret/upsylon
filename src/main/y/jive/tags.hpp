@@ -5,7 +5,7 @@
 #define Y_JIVE_TAGS_INCLUDED 1
 
 #include "y/jive/types.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 
 namespace upsylon {
 

@@ -1,5 +1,5 @@
 #include "y/ios/conveyors.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 #include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"

@@ -4,7 +4,7 @@
 #define Y_AQUA_LIBRARY_INCLUDED 1
 
 #include "y/aqua/species.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 
 namespace upsylon {
 

@@ -123,32 +123,26 @@ FILE(GLOB ordered_decl   y/ordered/*.hpp)
 FILE(GLOB ordered_code y/ordered/*.cpp)
 SET(ordered_srcs ${ordered_decl} ${ordered_code})
 SOURCE_GROUP( ordered FILES ${ordered_srcs} )
-INSTALL( FILES ${ordered_decl} DESTINATION include/y/ordered )
-
-FILE(GLOB suffix_decl   y/suffix/*.hpp)
-FILE(GLOB suffix_code y/suffix/*.cpp)
-SET(suffix_srcs ${suffix_decl} ${suffix_code})
-SOURCE_GROUP( suffix FILES ${suffix_srcs} )
-INSTALL( FILES ${suffix_decl} DESTINATION include/y/suffix )
- 
+INSTALL( FILES ${ordered_decl} DESTINATION include/y/ordered ) 
 
 FILE(GLOB associative_decl   y/associative/*.hpp)
 FILE(GLOB associative_code y/associative/*.cpp)
 SET(associative_srcs ${associative_decl} ${associative_code})
 SOURCE_GROUP( associative FILES ${associative_srcs} )
 INSTALL( FILES ${associative_decl} DESTINATION include/y/associative )
- 
-FILE(GLOB associative_prefix_decl   y/associative/prefix/*.hpp)
-FILE(GLOB associative_prefix_code y/associative/prefix/*.cpp)
-SET(associative_prefix_srcs ${associative_prefix_decl} ${associative_prefix_code})
-SOURCE_GROUP( associative/prefix FILES ${associative_prefix_srcs} )
-INSTALL( FILES ${associative_prefix_decl} DESTINATION include/y/associative/prefix )
 
 FILE(GLOB associative_hash_decl   y/associative/hash/*.hpp)
 FILE(GLOB associative_hash_code y/associative/hash/*.cpp)
 SET(associative_hash_srcs ${associative_hash_decl} ${associative_hash_code})
 SOURCE_GROUP( associative/hash FILES ${associative_hash_srcs} )
 INSTALL( FILES ${associative_hash_decl} DESTINATION include/y/associative/hash )
+
+FILE(GLOB associative_suffix_decl   y/associative/suffix/*.hpp)
+FILE(GLOB associative_suffix_code y/associative/suffix/*.cpp)
+SET(associative_suffix_srcs ${associative_suffix_decl} ${associative_suffix_code})
+SOURCE_GROUP( associative/suffix FILES ${associative_suffix_srcs} )
+INSTALL( FILES ${associative_suffix_decl} DESTINATION include/y/associative/suffix )
+
 
 FILE(GLOB hashing_decl y/hashing/*.hpp)
 FILE(GLOB hashing_code y/hashing/*.cpp)
@@ -407,8 +401,7 @@ ${iterate_srcs}
 ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
-${suffix_srcs}
-${associative_srcs} ${associative_prefix_srcs} ${associative_hash_srcs}
+${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
 ${concurrent_srcs}
 ${concurrent_scheme_srcs}
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 

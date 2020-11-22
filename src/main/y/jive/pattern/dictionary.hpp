@@ -4,7 +4,7 @@
 #define Y_JIVE_PATTERN_DICT_INCLUDED 1
 
 #include "y/jive/regexp.hpp"
-#include "y/suffix/storage.hpp"
+#include "y/associative/suffix/storage.hpp"
 
 namespace upsylon {
 

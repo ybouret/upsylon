@@ -5,7 +5,7 @@
 #include <cerrno>
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/suffix/inventory.hpp"
+#include "y/associative/suffix/inventory.hpp"
 
 namespace upsylon {
 
