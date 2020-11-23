@@ -100,7 +100,7 @@ namespace upsylon
         {
             const_key_type &key  = args.key();
             const size_t    hkey = this->hash(key);
-            if(this->table. template insert(key,hkey,args))
+            if(this->table. template insert<KEY>(key,hkey,args))
             {
                 this->post_insert();
                 return true;
