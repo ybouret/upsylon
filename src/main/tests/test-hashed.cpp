@@ -113,7 +113,7 @@ namespace
         const KEY    _key;
         T            data;
 
-        inline KNode(const KEY &k, const T &x) :
+        inline explicit KNode(const KEY &k, const T &x) :
         next(0),
         prev(0),
         meta(0),
@@ -130,13 +130,11 @@ namespace
 
         inline ~KNode() throw() {}
         
-        inline KNode( const KNode &node ) :
-        next(0), prev(0), meta(0), _key(node._key), data(node.data)
-        {
-        }
+        inline explicit KNode( const KNode &node ) : next(0), prev(0), meta(0), _key(node._key), data(node.data) { }
         
         
     private:
+        //Y_DISABLE_COPY_AND_ASSIGN(KNode);
         Y_DISABLE_ASSIGN(KNode);
     };
 
@@ -233,6 +231,7 @@ namespace
             
             {
                 hash_table<Node> table_copy(table);
+                Y_ASSERT(table_copy.nodes.size==table.nodes.size);
                 table.swap_with(table_copy);
             }
             
