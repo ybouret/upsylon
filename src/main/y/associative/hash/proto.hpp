@@ -5,6 +5,8 @@
 
 #include "y/associative/hash/table.hpp"
 #include "y/hashing/key-hasher.hpp"
+#include "y/iterate/linked.hpp"
+#include "y/collection.hpp"
 
 namespace upsylon
 {
@@ -93,10 +95,34 @@ namespace upsylon
             const size_t  hkey = hash(key);
             return table. template remove<KEY>(key,hkey);
         }
-        
+
+        //! collect keys
+        template <typename SEQUENCE> inline
+        void collect_keys(SEQUENCE &keys) const
+        {
+            for(const node_type *node=table.nodes.head;node;node=node->next)
+            {
+                keys << node->key();
+            }
+        }
+
+        //! wrapper to sort by keys
+        template <typename FUNC> inline
+        void sort_keys_with(FUNC &func)
+        {
+            table. template sort_keys(func);
+        }
+
+        //! wrapper to sort data with func
+        template <typename FUNC> inline
+        void sort_with(FUNC &func)
+        {
+            table. template sort_with(func);
+        }
+
     protected:
         //! setup
-        inline explicit hash_proto(const size_t = table_type::default_load ) :
+        inline explicit hash_proto() :
         base_type(),
         table(),
         hash()
@@ -104,6 +130,7 @@ namespace upsylon
         
         //! setup
         inline explicit hash_proto(const hash_proto &other) :
+        collection(),
         base_type(),
         table(other.table),
         hash()
@@ -122,12 +149,24 @@ namespace upsylon
         }
         
         hash_table<NODE>  table; //!< internal table
-        
-    public:
-        mutable KEY_HASHER hash; //!< key hasher
 
     private:
         Y_DISABLE_ASSIGN(hash_proto);
+        
+
+    public:
+        mutable KEY_HASHER hash; //!< key hasher
+
+        typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
+        typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator
+
+        iterator begin() throw() { return iterator( table.nodes.head ); } //!< begin forward
+        iterator end()   throw() { return iterator(0);                  } //!< end forward
+
+        const_iterator begin() const throw()   { return const_iterator( table.nodes.head ); } //!< begin forward const
+        const_iterator end()   const throw()   { return const_iterator(0);                  } //!< end forward const
+
+        
     };
 
 }

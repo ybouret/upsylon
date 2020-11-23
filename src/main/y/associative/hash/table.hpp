@@ -374,8 +374,6 @@ namespace upsylon
             merging<NODE>::sort(nodes,compare_keys<FUNC>,(void *)&compare);
         }
         
-        
-        
         //______________________________________________________________________
         //
         // members

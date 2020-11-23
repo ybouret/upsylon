@@ -79,6 +79,7 @@ namespace upsylon
         }
 
         inline hash_set(const hash_set &other) :
+        collection(),
         proto_type(other)
         {
         }

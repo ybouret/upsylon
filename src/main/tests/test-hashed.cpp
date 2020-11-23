@@ -6,6 +6,8 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
+#include "y/sort/heap.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 
@@ -247,12 +249,24 @@ namespace
 
         std::cerr << std::endl;
     }
-    
-    template <typename KEY, typename T> class my_proto :
-    public hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY>, container>
+
+
+
+    class my_collection : public virtual collection
     {
     public:
-        typedef hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY>, container> prototype;
+        inline explicit my_collection() throw() : collection() {}
+        inline virtual ~my_collection() throw() {}
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(my_collection);
+    };
+
+    template <typename KEY, typename T> class my_proto :
+    public hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY,hashing::sha1>, my_collection>
+    {
+    public:
+        typedef hash_proto<KEY,T,KNode<KEY,T>, key_hasher<KEY,hashing::sha1>, my_collection> prototype;
         
         inline virtual ~my_proto() throw()
         {
@@ -345,6 +359,33 @@ namespace
         std::cerr << "\t#keys=" << keys.size() << std::endl;
         Y_CHECK( keys.size() == db.size() );
 
+        hsort(keys,comparison::increasing<KEY>);
+        db.sort_keys_with(comparison::increasing<KEY>);
+        std::cerr << "\tcomparing keys" << std::endl;
+        {
+            size_t                                   i=1;
+            typename  hash_set<KEY,KDummy>::iterator it=db.begin();
+            for(size_t j=keys.size();j>0;--j,++i,++it)
+            {
+                Y_ASSERT( keys[i] == it.get().key() );
+            }
+        }
+
+        {
+            // copy
+            const hash_set<KEY,KDummy> db2(db);
+            Y_CHECK( db2.size() == db.size() );
+            typename  hash_set<KEY,KDummy>::iterator       it=db.begin();
+            typename  hash_set<KEY,KDummy>::const_iterator jt=db2.begin();
+            for(size_t i=db.size();i>0;--i,++it,++jt)
+            {
+                Y_ASSERT( it.get().key() == jt.get().key() );
+            }
+
+        }
+
+        
+
         std::cerr << std::endl;
 
     }
@@ -370,6 +411,7 @@ Y_UTEST(hashed)
     
     my_proto<uint8_t,int>::doTest();
     my_proto<string,apq>::doTest();
+
 
     doTestHashSet<uint16_t>();
     doTestHashSet<string>();

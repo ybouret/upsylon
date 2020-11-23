@@ -17,8 +17,7 @@ namespace {
         Y_DECL_ARGS(KEY,key_type);
         typedef intr_ptr<KEY,dummy> pointer;
         
-        const_key_type id;
-        
+        const_key_type   id;
         const_key_type & key() const throw() { return id; }
         
         dummy(param_key_type k) : id(k)
@@ -29,7 +28,7 @@ namespace {
         {
         }
         
-        dummy( const dummy &other ) :object(),  counted_object(), id(other.id)
+        dummy( const dummy &other ) : object(),  counted_object(), id(other.id)
         {
         }
         
