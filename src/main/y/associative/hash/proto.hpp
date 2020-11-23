@@ -42,7 +42,8 @@ namespace upsylon
         // C++
         //______________________________________________________________________
         inline virtual ~hash_proto() throw() {} //!< cleanup
-        
+
+
         //______________________________________________________________________
         //
         // container interface
@@ -120,6 +121,7 @@ namespace upsylon
             table. template sort_with(func);
         }
 
+
     protected:
         //! setup
         inline explicit hash_proto() :
@@ -143,16 +145,22 @@ namespace upsylon
         hash()
         {
         }
-        
+
+
+
         void post_insert()
         {
         }
-        
-        hash_table<NODE>  table; //!< internal table
+
+        inline void swap_with(hash_proto &other) throw()
+        {
+            table.swap_with(other.table);
+        }
+
+        table_type  table; //!< internal table
 
     private:
         Y_DISABLE_ASSIGN(hash_proto);
-        
 
     public:
         mutable KEY_HASHER hash; //!< key hasher

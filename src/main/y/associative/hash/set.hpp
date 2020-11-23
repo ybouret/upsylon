@@ -56,11 +56,11 @@ namespace upsylon
         //
         // types and declaration
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);                                                 //!< aliases
-        Y_DECL_ARGS(KEY,key_type);                                           //!< aliases
-        typedef hash_set_node<KEY,T> node_type;                              //!< alias
-        typedef catalog<KEY,T>       base_type;                              //!< alias
-        typedef hash_proto<KEY,T,node_type,KEY_HASHER,base_type> proto_type; //!< alias
+        Y_DECL_ARGS(T,type);                                                //!< aliases
+        Y_DECL_ARGS(KEY,key_type);                                          //!< aliases
+        typedef hash_set_node<KEY,T>                             node_type; //!< alias
+        typedef catalog<KEY,T>                                   base_type; //!< alias
+        typedef hash_proto<KEY,T,node_type,KEY_HASHER,base_type> prototype; //!< alias
 
         //______________________________________________________________________
         //
@@ -69,25 +69,25 @@ namespace upsylon
 
         inline virtual ~hash_set() throw() {}
 
-        inline explicit hash_set() : proto_type()
+        inline explicit hash_set() : prototype()
         {
         }
 
         inline explicit hash_set(const size_t n, const as_capacity_t &_) :
-        proto_type(n,_)
+        prototype(n,_)
         {
         }
 
         inline hash_set(const hash_set &other) :
         collection(),
-        proto_type(other)
+        prototype(other)
         {
         }
 
-        inline hash_set & operator=( const hash_set &other )
+        inline hash_set & operator=(const hash_set &other)
         {
-            proto_type &self = *this;
-            self = other;
+            hash_set temp(other);
+            this->swap_with(temp);
             return *this;
         }
 

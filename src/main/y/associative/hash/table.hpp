@@ -384,7 +384,6 @@ namespace upsylon
         
         
     private:
-        Y_DISABLE_ASSIGN(hash_table);
         template <typename FUNC> static inline
         int compare_keys(const NODE *lhs, const NODE *rhs, void *args)
         {

@@ -381,7 +381,13 @@ namespace
             {
                 Y_ASSERT( it.get().key() == jt.get().key() );
             }
+        }
 
+        {
+            // assign
+            hash_set<KEY,KDummy> db2(100,as_capacity);
+            db2 = db;
+            
         }
 
         
