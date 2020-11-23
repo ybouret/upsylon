@@ -130,10 +130,10 @@ namespace
 
         inline ~KNode() throw() {}
         
-        inline explicit KNode( const KNode &node ) :
+        inline explicit KNode(const KNode &node) :
         next(0), prev(0), meta(0), _key(node._key), data(node.data)
         {
-            std::cerr << "-> key=" << _key << std::endl;
+            std::cerr  << _key << '/';
         }
         
         
