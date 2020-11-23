@@ -45,9 +45,11 @@ namespace upsylon {
 
             //! constructor, reserve a little memory
             inline explicit data_set(size_t n=2) : columns(n,as_capacity) {}
+
             //! destructor
             inline virtual ~data_set() throw() {}
-            //! link a column index to a columnx
+
+            //! link a column index to a column
             inline void use( const size_t column_index, sequence<type> &seq )
             {
                 if(column_index<=0) throw exception("%scolumn index <= 0",fn);

@@ -190,6 +190,15 @@ namespace upsylon
     private:
         Y_DISABLE_ASSIGN(hash_proto);
 
+        inline void zap( node_type *node ) throw()
+        {
+            assert(node);assert(node->meta);
+            hash_meta *meta = node->meta;
+            node->~NODE();
+            table.pails[meta->hkey].unlink(meta);
+            table.cache.store(meta);
+        }
+
     public:
         size_t             ratio; //!< load factor for table
         mutable KEY_HASHER hash;  //!< key hasher
@@ -203,7 +212,33 @@ namespace upsylon
         const_iterator begin() const throw()   { return const_iterator( table.nodes.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);                  } //!< end forward const
 
-        
+        //! generic display
+        inline friend std::ostream & operator<<( std::ostream &os, const hash_proto &proto )
+        {
+            os << '{';
+            const node_type *node = proto.table.nodes.head;
+            while(node)
+            {
+                os << ' ' << node->key() << ' ' << ':' << ' ' << node->data;
+                const node_type *next = node->next;
+                if(next)
+                {
+                    os << ',';
+                }
+                node=next;
+            }
+            os << '}';
+            return os;
+        }
+
+        inline type       &front()       throw() { assert(table.nodes.head); return table.nodes.head->data; } //!< front
+        inline const_type &front() const throw() { assert(table.nodes.head); return table.nodes.head->data; } //!< front
+        inline type       &back()        throw() { assert(table.nodes.tail); return table.nodes.tail->data; } //!< back
+        inline const_type &back()  const throw() { assert(table.nodes.tail); return table.nodes.tail->data; } //!< back
+
+        inline void pop_back()  throw() { zap(table.nodes.pop_back());  } //!< remove back value
+        inline void pop_front() throw() { zap(table.nodes.pop_front()); } //!< remove front value
+
     };
 
 }

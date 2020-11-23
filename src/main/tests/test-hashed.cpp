@@ -319,6 +319,19 @@ namespace
         Y_DISABLE_COPY_AND_ASSIGN(my_proto);
     };
 
+    template <typename PROTO> static inline
+    void trim4(PROTO &proto)
+    {
+        const PROTO &cproto = proto;
+        std::cerr << "front: " << cproto.front() << " / " << proto.front() << std::endl;
+        std::cerr << "back : " << cproto.back()  << " / " << proto.back()  << std::endl;
+        while(proto.size()>4)
+        {
+            if( alea.choice() ) proto.pop_back(); else proto.pop_front();
+        }
+        std::cerr << "proto: " << proto << std::endl;
+    }
+
     template <typename KEY>
     class Dummy
     {
@@ -336,6 +349,12 @@ namespace
         inline ~Dummy() throw() {}
 
         inline const KEY & key() const throw() { return myKey; }
+
+        inline friend std::ostream & operator<<(std::ostream &os, const Dummy &d)
+        {
+            std::cerr << "@" <<(void*)&d;
+            return os;
+        }
 
     private:
         Y_DISABLE_ASSIGN(Dummy);
@@ -401,6 +420,7 @@ namespace
             }
         }
 
+        trim4(db);
         
 
         std::cerr << std::endl;
@@ -466,6 +486,7 @@ namespace
             }
         }
 
+        trim4(db);
 
 
         std::cerr << std::endl;

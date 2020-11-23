@@ -88,14 +88,14 @@ if(#ID==type_spec_of<TYPE>()) std::cerr << "\tis  " << #ID << std::endl; else st
 Y_UTEST_DONE()
 
 #include "y/hashing/type-mark.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 
 Y_UTEST(spec_db)
 {
     std::cerr << "query among: "<< std::endl;
     type_spec::display(std::cerr);
 
-    map<type_mark,string,hashing::type_mark_hasher<> > db;
+    hash_map<type_mark,string,hashing::type_mark_hasher<> > db;
 
     for(int i=1;i<argc;++i)
     {
@@ -107,7 +107,7 @@ Y_UTEST(spec_db)
         const string    value = id;
         (void) db.insert(key,value);
     }
-
+    std::cerr << "#db=" << db.size() << std::endl;
     std::cerr << "db: " << db << std::endl;
 }
 Y_UTEST_DONE()
