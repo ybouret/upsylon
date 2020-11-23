@@ -329,7 +329,6 @@ namespace
         {
         }
 
-
         inline ~Dummy() throw() {}
 
         inline const KEY & key() const throw() { return myKey; }
@@ -412,6 +411,7 @@ Y_UTEST(hashed)
 
     doTestZNodes();
     doTestZPairs();
+    
     doTestTable<int,int>();
     doTestTable<string,apq>();
     
