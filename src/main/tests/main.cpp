@@ -140,7 +140,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(rename);
 
     // assoc
-    Y_UTEST(associative);
     Y_UTEST(lexicon);
     Y_UTEST(catalog);
     Y_UTEST(ledger);
