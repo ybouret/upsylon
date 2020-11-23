@@ -133,7 +133,7 @@ namespace
         inline explicit KNode( const KNode &node ) :
         next(0), prev(0), meta(0), _key(node._key), data(node.data)
         {
-            (void)meta;
+            std::cerr << "-> key=" << _key << std::endl;
         }
         
         
