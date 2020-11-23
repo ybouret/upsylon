@@ -141,7 +141,6 @@ Y_UTEST_INIT(256)
 
     // assoc
     Y_UTEST(associative);
-    Y_UTEST(map);
     Y_UTEST(set);
     Y_UTEST(lexicon);
     Y_UTEST(catalog);

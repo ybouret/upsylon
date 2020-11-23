@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_HASH_TABLE_INCLUDED
-#define Y_HASH_TABLE_INCLUDED 1
+#ifndef Y_HASH_TABLE__INCLUDED
+#define Y_HASH_TABLE__INCLUDED 1
 
 #include "y/core/addr-list.hpp"
 #include "y/type/utils.hpp"

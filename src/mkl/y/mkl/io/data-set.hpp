@@ -3,7 +3,7 @@
 #define Y_MATH_DATA_SET_INCLUDED 1
 
 #include "y/sequence/vector.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/exception.hpp"
 #include "y/string/tokenizer.hpp"
@@ -40,8 +40,8 @@ namespace upsylon {
         {
         public:
             Y_DECL_ARGS(T,type);                                        //!< type aliases
-            typedef sequence<type>                             *column; //!< simple pointer to a sequence
-            typedef map<size_t,column,hasher_type,memory_type>  colmap; //!< [index:column] map
+            typedef sequence<type>                      *column; //!< simple pointer to a sequence
+            typedef hash_map<size_t,column,hasher_type>  colmap; //!< [index:column] map
 
             //! constructor, reserve a little memory
             inline explicit data_set(size_t n=2) : columns(n,as_capacity) {}
@@ -76,10 +76,10 @@ namespace upsylon {
                 labels.ensure(nc);
 
                 // preparing columns, order by increasing index
-                columns.sort_keys( comparison::increasing<size_t> );
+                columns.sort_keys_with( comparison::increasing<size_t> );
                 for(typename colmap::iterator i=columns.begin();i!=columns.end();++i)
                 {
-                    const string l = vformat("column #%u", unsigned(i.key()));
+                    const string l = vformat("column #%u", unsigned(i.get().key()));
                     labels.push_back_(l);
                 }
 
@@ -103,7 +103,7 @@ namespace upsylon {
                         typename colmap::iterator i=columns.begin();
                         for(size_t j=1;j<=nc;++i,++j)
                         {
-                            const size_t idx = i.key();
+                            const size_t idx = i.get().key();
                             while( tkn.count() != idx )
                             {
                                 if(!tkn.next(separator))

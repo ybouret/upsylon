@@ -9,7 +9,7 @@
 #include "y/graphic/color/rgba2data.hpp"
 #include "y/graphic/color/data2rgba.hpp"
 #include "y/string/convert.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/ordered/sorted-vector.hpp"
 
 namespace upsylon {
@@ -22,7 +22,7 @@ namespace upsylon {
         public:
             typedef key_hasher<string,hashing::fnv>                  KeyHasher;         //!< alias
             typedef memory::pooled                                   Allocator;         //!< alias
-            typedef map<string,string,KeyHasher,Allocator>           OptionDB;          //!< alias
+            typedef hash_map<string,string,KeyHasher>                OptionDB;          //!< alias
             typedef increasing_comparator<string>                    StringComparator;  //!< alias
             typedef sorted_vector<string,StringComparator,Allocator> SortedStrings;     //!< alias
             typedef ordered_single<SortedStrings>                    OrderedStrings;    //!< alias
@@ -172,7 +172,7 @@ namespace upsylon {
             explicit Image();
             virtual ~Image() throw();
             typedef arc_ptr<Format> Fmt;
-            typedef map<string,Fmt,KeyHasher,Allocator> FmtDB;
+            typedef hash_map<string,Fmt,KeyHasher> FmtDB;
 
             Format::Set formats;
             FmtDB       db;

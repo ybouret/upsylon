@@ -3,7 +3,8 @@
 
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
+#include "y/associative/suffix/map.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/string.hpp"
@@ -30,9 +31,10 @@ namespace {
 
 Y_UTEST(query)
 {
-    vector<string>     vs(NN,as_capacity);
-    list<string>       ls(NN,as_capacity);
-    map<string,string> ms(NN,as_capacity);
+    vector<string>            vs(NN,as_capacity);
+    list<string>              ls(NN,as_capacity);
+    hash_map<string,string>   ms(NN,as_capacity);
+    suffix_map<string,string> ts(NN,as_capacity);
 
     if(argc>1)
     {
@@ -44,6 +46,7 @@ Y_UTEST(query)
             vs << line;
             ls << line;
             (void) ms.insert(line,line);
+            (void) ts.insert(line,line);
         }
 
         {

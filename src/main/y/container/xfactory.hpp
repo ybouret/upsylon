@@ -13,12 +13,12 @@ namespace upsylon {
     template <
     typename T,
     typename CREATOR    = T * (*)(),
-    typename KEY_HASHER = key_hasher<string>,
-    typename ALLOCATOR  = memory::global>
-    class xfactory : public factory<T,string,CREATOR,KEY_HASHER,ALLOCATOR>
+    typename KEY_HASHER = key_hasher<string>
+    >
+    class xfactory : public factory<T,string,CREATOR,KEY_HASHER>
     {
     public:
-        typedef factory<T,string,CREATOR,KEY_HASHER,ALLOCATOR> factory_type; //!< alias
+        typedef factory<T,string,CREATOR,KEY_HASHER> factory_type; //!< alias
 
         inline virtual ~xfactory() throw() {} //!< cleanup
 

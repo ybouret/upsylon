@@ -9,7 +9,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/core/ipower.hpp"
 
 namespace upsylon {
@@ -22,11 +22,11 @@ namespace upsylon {
         {
         public:
 
-            typedef matrix<T>              matrix_type; //!< alias
-            typedef arc_ptr<matrix_type>   matrix_ptr;  //!< alias
-            typedef map<size_t,matrix_ptr> matrix_map;  //!< alias
-            typedef point2d<T>             point_type;  //!< alias
-            typedef list<point_type>       point_list;  //!< alias
+            typedef matrix<T>                    matrix_type; //!< alias
+            typedef arc_ptr<matrix_type>         matrix_ptr;  //!< alias
+            typedef hash_map<size_t,matrix_ptr>  matrix_map;  //!< alias
+            typedef point2d<T>                   point_type;  //!< alias
+            typedef list<point_type>             point_list;  //!< alias
 
             point_list       points;   //!< collected points
             const size_t     order;    //!< fit order

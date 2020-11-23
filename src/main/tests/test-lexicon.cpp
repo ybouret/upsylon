@@ -1,4 +1,4 @@
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/associative/suffix/map.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
@@ -121,7 +121,7 @@ Y_UTEST(lexicon)
             }
         }
     }
-    map<string,string>          smap(n,as_capacity);
+    hash_map<string,string>     smap(n,as_capacity);
     suffix_map<string,string>   stab(n,as_capacity);
     
     doLexicon(smap,strings,strings,"map");

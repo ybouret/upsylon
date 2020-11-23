@@ -1,7 +1,7 @@
 #include "y/sparse/matrix.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/utest/timings.hpp"
 #include "y/hashing/sfh.hpp"
 #include "y/hashing/adler32.hpp"

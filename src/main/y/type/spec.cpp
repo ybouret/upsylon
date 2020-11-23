@@ -78,13 +78,13 @@ user()
 
 }
 
-#include "y/associative/set.hpp"
-#include "y/associative/map.hpp"
+#include "y/associative/hash/set.hpp"
+#include "y/associative/hash/map.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/exception.hpp"
 #include "y/string/display.hpp"
-#include "y/hashing/fnv.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon {
 
@@ -135,17 +135,15 @@ namespace upsylon {
 
     typedef intr_ptr<std::type_info,type_spec> type_spec_pointer;
     typedef memory::pooled                     type_spec_memory;
-    typedef set<
+    typedef hash_set<
     std::type_info,
     type_spec_pointer,
-    type_info_hasher,
-    type_spec_memory>                          type_spec_db;
+    type_info_hasher>                          type_spec_db;
 
-    typedef map<
+    typedef hash_map<
     string,
     type_spec_pointer,
-    key_hasher<string>,
-    type_spec_memory> type_name_db;
+    key_hasher<string> > type_name_db;
 
 
     static const char fn[] = "type_spec";

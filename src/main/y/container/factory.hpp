@@ -4,7 +4,7 @@
 #define Y_FACTORY_INCLUDED 1
 
 
-#include "y/associative/map.hpp"
+#include "y/associative/hash/map.hpp"
 
 namespace upsylon {
 
@@ -25,13 +25,13 @@ namespace upsylon {
     typename T,
     typename KEY,
     typename CREATOR    = T * (*)(),
-    typename KEY_HASHER = key_hasher<KEY>,
-    typename ALLOCATOR  = memory::global>
+    typename KEY_HASHER = key_hasher<KEY>
+    >
     class factory
     {
     public:
-        typedef  map<KEY,CREATOR,KEY_HASHER,ALLOCATOR> db_type;         //!< alias
-        typedef  typename db_type::const_iterator      const_iterator;  //!< alias
+        typedef  hash_map<KEY,CREATOR,KEY_HASHER> db_type;         //!< alias
+        typedef  typename db_type::const_iterator const_iterator;  //!< alias
         Y_DECL_ARGS(KEY,key_type);                                      //!< aliases
 
         //! reconfigurable name

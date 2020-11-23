@@ -23,7 +23,7 @@ Y_UTEST(factory)
 
     for( hfn_factory::const_iterator i = f.begin(); i != f.end(); ++i )
     {
-        const string & key = i.key();
+        const string & key = i.get().key();
         string_display::align(std::cerr,key,16) << " "; Y_CHECK( f.query(key) );
     }
 

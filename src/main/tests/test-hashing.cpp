@@ -80,8 +80,8 @@ Y_UTEST(hashing)
     vector< hashing::function::pointer > phash(hf.size(),as_capacity);
     for( hashing::factory::const_iterator i = hf.begin(); i != hf.end(); ++i )
     {
-        std::cerr << "[" << i.key() << "]" << std::endl;
-        const hashing::function::pointer p = hf( i.key() );
+        std::cerr << "[" << i.get().key() << "]" << std::endl;
+        const hashing::function::pointer p = hf( i.get().key() );
         phash.push_back(p);
     }
 
