@@ -8,6 +8,12 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! node for hash_set
+    //
+    //__________________________________________________________________________
 
     template <typename KEY, typename T>
     class hash_set_node
@@ -16,27 +22,34 @@ namespace upsylon
         Y_DECL_ARGS(T,type);       //!< aliases
         Y_DECL_ARGS(KEY,key_type); //!< aliases
 
-        hash_set_node *next;
-        hash_set_node *prev;
-        hash_meta     *meta;
-        type           data;
+        hash_set_node *next; //!< for list
+        hash_set_node *prev; //!< for list
+        hash_meta     *meta; //!< for table
+        type           data; //!< actual data
 
+        //! setup
         inline hash_set_node(const_key_type &, const_type &user_data) :
         next(0), prev(0), meta(0), data(user_data)
         {
         }
 
+        //! copy
         inline hash_set_node(const hash_set_node &node) :
         next(0), prev(0), meta(0), data(node.data)
         {
         }
 
+        //! cleanup
         inline ~hash_set_node() throw() {}
 
+        //! madatory for table
         inline const_key_type & key() const throw()
         {
             return data.key();
         }
+
+        type &       operator*()       throw() { return data; } //!< access
+        const_type & operator*() const throw() { return data; } //!< acess
 
     private:
         Y_DISABLE_ASSIGN(hash_set_node);
@@ -48,6 +61,12 @@ namespace upsylon
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
+    //! hash_set
+    //
+    //__________________________________________________________________________
     template <typename KEY, typename T, typename KEY_HASHER = key_hasher<T> >
     class hash_set : public hash_proto<KEY,T, hash_set_node<KEY,T>, KEY_HASHER, catalog<KEY,T> >
     {
@@ -67,23 +86,28 @@ namespace upsylon
         // C++
         //______________________________________________________________________
 
+        //! cleanup
         inline virtual ~hash_set() throw() {}
 
+        //! setup
         inline explicit hash_set() : prototype()
         {
         }
 
+        //! setup with memory
         inline explicit hash_set(const size_t n, const as_capacity_t &_) :
         prototype(n,_)
         {
         }
 
+        //! copy
         inline hash_set(const hash_set &other) :
         collection(),
         prototype(other)
         {
         }
 
+        //! assign by copy/swap
         inline hash_set & operator=(const hash_set &other)
         {
             hash_set temp(other);
@@ -94,7 +118,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        // catalog interface
+        //! catalog interface
         //______________________________________________________________________
         inline virtual bool insert(param_type args)
         {

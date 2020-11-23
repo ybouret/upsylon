@@ -14,8 +14,7 @@ namespace upsylon
     //
     //! prototype of hash_table based container
     /**
-     
-     
+     - BASE_TYPE: derived with virtual collection
      */
     //__________________________________________________________________________
     template <
@@ -146,12 +145,12 @@ namespace upsylon
         {
         }
 
-
-
+        //! post-insertion adjustment
         void post_insert()
         {
         }
 
+        //! no-throw swap for derived classes
         inline void swap_with(hash_proto &other) throw()
         {
             table.swap_with(other.table);
