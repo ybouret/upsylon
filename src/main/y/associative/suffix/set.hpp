@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_SUFFIX_BATCH_INCLUDED
-#define Y_SUFFIX_BATCH_INCLUDED 1
+#ifndef Y_SUFFIX_SET_INCLUDED
+#define Y_SUFFIX_SET_INCLUDED 1
 
 #include "y/associative/suffix/graph.hpp"
 #include "y/associative/catalog.hpp"
@@ -17,7 +17,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename KEY, typename T>
-    class suffix_batch : public suffix_graph<char,T, catalog<KEY,T> >
+    class suffix_set : public suffix_graph<char,T, catalog<KEY,T> >
     {
     public:
         //______________________________________________________________________
@@ -36,19 +36,26 @@ namespace upsylon
         //______________________________________________________________________
 
         //! setup
-        inline explicit suffix_batch() : graph_type() {}
+        inline explicit suffix_set() : graph_type() {}
 
         //! setup with capacity
-        inline explicit suffix_batch(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
+        inline explicit suffix_set(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
 
         //! cleanup
-        inline virtual ~suffix_batch() throw() {}
+        inline virtual ~suffix_set() throw() {}
 
         //! copy
-        inline suffix_batch(const suffix_batch &other) : collection(), graph_type(other)
+        inline suffix_set(const suffix_set &other) : collection(), graph_type(other)
         {
         }
-        
+
+        //! assign
+        inline suffix_set & operator=( const suffix_set &other )
+        {
+            graph_type &self = *this;
+            self = other;
+            return *this;
+        }
 
 
         //______________________________________________________________________
