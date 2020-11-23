@@ -111,14 +111,14 @@ namespace upsylon
         template <typename FUNC> inline
         void sort_keys_with(FUNC &func)
         {
-            table. template sort_keys(func);
+            table. template sort_keys<FUNC>(func);
         }
 
         //! wrapper to sort data with func
         template <typename FUNC> inline
         void sort_with(FUNC &func)
         {
-            table. template sort_with(func);
+            table. template sort_with<FUNC>(func);
         }
 
 
