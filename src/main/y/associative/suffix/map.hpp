@@ -18,7 +18,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename KEY, typename T>
-    class suffix_table : public suffix_graph<char,T, lexicon<KEY,T> >
+    class suffix_map : public suffix_graph<char,T, lexicon<KEY,T> >
     {
     public:
         //______________________________________________________________________
@@ -37,19 +37,26 @@ namespace upsylon
         //______________________________________________________________________
 
         //! setup
-        inline explicit suffix_table() : graph_type() {}
+        inline explicit suffix_map() : graph_type() {}
 
         //! setup with capacity
-        inline explicit suffix_table(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
+        inline explicit suffix_map(const size_t n, const as_capacity_t &_) : graph_type(n,_) {}
 
         //! cleanup
-        inline virtual ~suffix_table() throw() {}
+        inline virtual ~suffix_map() throw() {}
 
         //! copy
-        inline suffix_table(const suffix_table &other) : collection(), graph_type(other)
+        inline suffix_map(const suffix_map &other) : collection(), graph_type(other)
         {
         }
 
+        //! assign
+        inline suffix_map & operator=( const suffix_map &other )
+        {
+            graph_type &self = *this;
+            self = other;
+            return *this;
+        }
 
 
         //______________________________________________________________________
