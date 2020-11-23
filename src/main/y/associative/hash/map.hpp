@@ -66,7 +66,7 @@ namespace upsylon
     //! hash_set
     //
     //__________________________________________________________________________
-    template <typename KEY, typename T, typename KEY_HASHER = key_hasher<T> >
+    template <typename KEY, typename T, typename KEY_HASHER = key_hasher<KEY> >
     class hash_map : public hash_proto<KEY,T, hash_map_node<KEY,T>, KEY_HASHER, lexicon<KEY,T> >
     {
     public:

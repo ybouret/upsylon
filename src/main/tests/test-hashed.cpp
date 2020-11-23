@@ -41,7 +41,6 @@ public:
     inline explicit KNode(const KNode &node) :
     next(0), prev(0), meta(0), _key(node._key), data(node.data)
     {
-        std::cerr  << _key << '/';
     }
 
 
@@ -500,6 +499,7 @@ Y_UTEST(hashed)
     doTestHashSet<string>();
 
     doTestHashMap<uint16_t,int>();
+    doTestHashMap<string,apq>();
 
 
 }
