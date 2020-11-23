@@ -1,7 +1,7 @@
 
 //! \file
-#ifndef Y_SUFFIX_TABLE_INCLUDED
-#define Y_SUFFIX_TABLE_INCLUDED 1
+#ifndef Y_SUFFIX_MAP_INCLUDED
+#define Y_SUFFIX_MAP_INCLUDED 1
 
 #include "y/associative/suffix/graph.hpp"
 #include "y/associative/lexicon.hpp"
