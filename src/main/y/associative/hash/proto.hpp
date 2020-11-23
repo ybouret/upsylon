@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_HASH_PROTO_INCLUDED
@@ -31,11 +29,12 @@ namespace upsylon
         //
         // types and declaration
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);           //!< aliases
-        Y_DECL_ARGS(KEY,key_type);     //!< aliases
-        typedef NODE      node_type;   //!< alias
-        typedef BASE_TYPE base_type;   //!< alias
-        
+        Y_DECL_ARGS(T,type);                  //!< aliases
+        Y_DECL_ARGS(KEY,key_type);            //!< aliases
+        typedef NODE             node_type;   //!< alias
+        typedef BASE_TYPE        base_type;   //!< alias
+        typedef hash_table<NODE> table_type;  //!< alias
+
         //______________________________________________________________________
         //
         // C++
@@ -97,7 +96,7 @@ namespace upsylon
         
     protected:
         //! setup
-        inline explicit hash_proto() :
+        inline explicit hash_proto(const size_t = table_type::default_load ) :
         base_type(),
         table(),
         hash()
@@ -109,7 +108,18 @@ namespace upsylon
         table(other.table),
         hash()
         {}
+
+        //! setup with capacity
+        inline explicit hash_proto(const size_t n, const as_capacity_t &_) :
+        base_type(),
+        table(n,_),
+        hash()
+        {
+        }
         
+        void post_insert()
+        {
+        }
         
         hash_table<NODE>  table; //!< internal table
         

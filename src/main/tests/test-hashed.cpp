@@ -1,4 +1,6 @@
-#include "y/associative/hash/proto.hpp"
+#include "y/associative/hash/set.hpp"
+#include "y/associative/hash/map.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
@@ -259,23 +261,31 @@ namespace
         inline explicit my_proto() throw(): prototype()
         {
         }
-        
+
+        inline bool insert(const KEY &key, const size_t &hkey, const T &tmp)
+        {
+            return this->table. template insert<KEY>(key,hkey,tmp);
+        }
+
         static inline
         void doTest()
         {
             std::cerr << "-- testing Proto<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
             my_proto    proto;
             vector<KEY> keys;
-            for(size_t i=10+alea.leq(10);i>0;--i)
+            for(size_t i=100+alea.leq(100);i>0;--i)
             {
-                const KEY key = support::get<KEY>();
-                
-                if(true)
+                const KEY    key  = support::get<KEY>();
+                const size_t hkey = proto.hash(key);
+                const T      tmp  = support::get<T>();
+                if(proto.insert(key,hkey,tmp))
                 {
                     keys << key;
                 }
             }
-            
+            std::cerr << "\t#keys=" << keys.size() << std::endl;
+            proto.post_insert();
+            Y_CHECK( proto.size() == keys.size() );
             const size_t n = keys.size();
             alea.shuffle(*keys,n);
             for(size_t i=n;i>0;--i)
@@ -290,8 +300,55 @@ namespace
     private:
         Y_DISABLE_COPY_AND_ASSIGN(my_proto);
     };
-    
-    
+
+    template <typename KEY>
+    class Dummy
+    {
+    public:
+        const KEY myKey;
+
+        inline   Dummy(const KEY &k) : myKey(k)
+        {
+        }
+
+        inline Dummy(const Dummy &other) : myKey(other.myKey)
+        {
+        }
+
+
+        inline ~Dummy() throw() {}
+
+        inline const KEY & key() const throw() { return myKey; }
+
+    private:
+        Y_DISABLE_ASSIGN(Dummy);
+    };
+
+    template <typename KEY>
+    static inline void doTestHashSet()
+    {
+        std::cerr << "-- testing HashSet<" << type_name_of<KEY>() << ">" << std::endl;
+
+        typedef Dummy<KEY>   KDummy;
+        hash_set<KEY,KDummy> db;
+        vector<KEY>          keys;
+
+        for(size_t i=10+alea.leq(10);i>0;--i)
+        {
+            const KEY    key = support::get<KEY>();
+            const KDummy dum = KDummy(key);
+            if( db.insert(dum) )
+            {
+                keys << key;
+            }
+        }
+        std::cerr << "\t#keys=" << keys.size() << std::endl;
+        Y_CHECK( keys.size() == db.size() );
+
+        std::cerr << std::endl;
+
+    }
+
 
 }
 
@@ -312,7 +369,11 @@ Y_UTEST(hashed)
     doTestTable<string,apq>();
     
     my_proto<uint8_t,int>::doTest();
-    
+    my_proto<string,apq>::doTest();
+
+    doTestHashSet<uint16_t>();
+    doTestHashSet<string>();
+
 }
 Y_UTEST_DONE()
 
