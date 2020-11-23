@@ -96,6 +96,25 @@ namespace upsylon
             return table. template remove<KEY>(key,hkey);
         }
 
+        //! get load factor
+        inline size_t load_factor() const throw()
+        {
+            return table.load_factor();
+        }
+
+        //! manual adjust (after removal...)
+        inline void  try_update_load_factor() throw()
+        {
+            table.try_load_factor(ratio);
+        }
+
+        //! set number of buckets
+        inline void set_buckets(const size_t n)
+        {
+            table.set_buckets(n);
+        }
+
+
         //! collect keys
         template <typename SEQUENCE> inline
         void collect_keys(SEQUENCE &keys) const
@@ -123,9 +142,10 @@ namespace upsylon
 
     protected:
         //! setup
-        inline explicit hash_proto() :
+        inline explicit hash_proto(const size_t factor) :
         base_type(),
         table(),
+        ratio(factor),
         hash()
         {}
         
@@ -134,13 +154,17 @@ namespace upsylon
         collection(),
         base_type(),
         table(other.table),
+        ratio(other.ratio),
         hash()
         {}
 
         //! setup with capacity
-        inline explicit hash_proto(const size_t n, const as_capacity_t &_) :
+        inline explicit hash_proto(const size_t         n,
+                                   const as_capacity_t &_,
+                                   const size_t         r) :
         base_type(),
-        table(n,_),
+        table(n,_,r),
+        ratio(r),
         hash()
         {
         }
@@ -148,12 +172,17 @@ namespace upsylon
         //! post-insertion adjustment
         void post_insert()
         {
+            if( table.load_factor()>ratio )
+            {
+                table.try_load_factor(ratio);
+            }
         }
 
         //! no-throw swap for derived classes
         inline void swap_with(hash_proto &other) throw()
         {
             table.swap_with(other.table);
+            cswap(ratio,other.ratio);
         }
 
         table_type  table; //!< internal table
@@ -162,7 +191,8 @@ namespace upsylon
         Y_DISABLE_ASSIGN(hash_proto);
 
     public:
-        mutable KEY_HASHER hash; //!< key hasher
+        size_t             ratio; //!< load factor for table
+        mutable KEY_HASHER hash;  //!< key hasher
 
         typedef iterate::linked<type,node_type,iterate::forward>             iterator;        //!< forward iterator
         typedef iterate::linked<const_type,const node_type,iterate::forward> const_iterator;  //!< forward const iterator

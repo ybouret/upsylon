@@ -89,13 +89,13 @@ namespace upsylon
         inline virtual ~hash_map() throw() {}
 
         //! setup
-        inline explicit hash_map() : prototype()
+        inline explicit hash_map(const size_t r=hash_table_::default_load) : prototype(r)
         {
         }
 
         //! setup with memory
-        inline explicit hash_map(const size_t n, const as_capacity_t &_) :
-        prototype(n,_)
+        inline explicit hash_map(const size_t n, const as_capacity_t &_, const size_t r=hash_table_::default_load) :
+        prototype(n,_,r)
         {
         }
 

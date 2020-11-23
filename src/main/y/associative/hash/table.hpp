@@ -174,7 +174,14 @@ namespace upsylon
         {
             try { load_factor(value); } catch(...) { }
         }
-        
+
+        //! force number of buckets
+        inline void set_buckets(const size_t n)
+        {
+            hash_buckets temp(n);
+            pails.to(temp);
+            pails.swap_with(temp);
+        }
         
         //! free node content, keep memory
         inline void free() throw()

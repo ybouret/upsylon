@@ -276,7 +276,7 @@ namespace
         {
         }
         
-        inline explicit my_proto() throw(): prototype()
+        inline explicit my_proto() throw(): prototype( hash_table_::default_load )
         {
         }
 
@@ -291,7 +291,7 @@ namespace
             std::cerr << "-- testing Proto<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
             my_proto    proto;
             vector<KEY> keys;
-            for(size_t i=100+alea.leq(100);i>0;--i)
+            for(size_t i=100+alea.leq(1000);i>0;--i)
             {
                 const KEY    key  = support::get<KEY>();
                 const size_t hkey = proto.hash(key);
@@ -350,7 +350,7 @@ namespace
         hash_set<KEY,KDummy> db;
         vector<KEY>          keys;
 
-        for(size_t i=10+alea.leq(10);i>0;--i)
+        for(size_t i=100+alea.leq(1000);i>0;--i)
         {
             const KEY    key = support::get<KEY>();
             const KDummy dum = KDummy(key);
@@ -415,7 +415,7 @@ namespace
         hash_map<KEY,T> db;
         vector<KEY>     keys;
 
-        for(size_t i=10+alea.leq(10);i>0;--i)
+        for(size_t i=100+alea.leq(1000);i>0;--i)
         {
             const KEY    key = support::get<KEY>();
             const T      dum = support::get<T>();
@@ -438,7 +438,7 @@ namespace
                 Y_ASSERT( keys[i] == it.get().key() );
             }
         }
-
+        std::cerr << "\tload_factor=" << db.load_factor() << std::endl;
         {
             // copy
             std::cerr << "\tcopy" << std::endl;

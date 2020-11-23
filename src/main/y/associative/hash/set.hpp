@@ -90,13 +90,13 @@ namespace upsylon
         inline virtual ~hash_set() throw() {}
 
         //! setup
-        inline explicit hash_set() : prototype()
+        inline explicit hash_set(const size_t r=hash_table_::default_load) : prototype(r)
         {
         }
 
         //! setup with memory
-        inline explicit hash_set(const size_t n, const as_capacity_t &_) :
-        prototype(n,_)
+        inline explicit hash_set(const size_t n, const as_capacity_t &_, const size_t r=hash_table_::default_load) :
+        prototype(n,_,r)
         {
         }
 
