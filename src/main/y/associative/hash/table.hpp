@@ -195,8 +195,6 @@ namespace upsylon
             }
         }
         
-        
-        
         //! release all possible memory
         inline void release() throw()
         {

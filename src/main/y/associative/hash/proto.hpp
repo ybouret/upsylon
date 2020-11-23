@@ -15,6 +15,8 @@ namespace upsylon
     //! prototype of hash_table based container
     /**
      - BASE_TYPE: derived with virtual collection
+     - internal hash_table to handle NODEs
+     - NODEs must have a 'data' field
      */
     //__________________________________________________________________________
     template <
@@ -196,8 +198,7 @@ namespace upsylon
             }
         }
 
-
-
+        
         table_type  table; //!< internal table
 
     private:
