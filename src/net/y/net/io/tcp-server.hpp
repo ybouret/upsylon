@@ -4,10 +4,8 @@
 
 #include "y/net/tcp/server.hpp"
 #include "y/net/socket/id-hasher.hpp"
-
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/associative/set.hpp"
-#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon
 {
@@ -28,11 +26,9 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(tcp_server_protocol);
         };
 
-        typedef intr_ptr<socket_id_t,tcp_server_protocol> tcp_server_proto;    //!< smart pointer
-        typedef memory::pooled                            tcp_server_alloc;    //!< allocator
-        typedef set<socket_id_t,tcp_server_proto,                              //|
-        socket_id_hasher,tcp_server_alloc>                tcp_server_db;       //!< database of tcp servers
-        typedef tcp_server_db::iterator                   tcp_server_iterator; //!< tcp server iterator
+        typedef intr_ptr<socket_id_t,tcp_server_protocol>               tcp_server_proto;    //!< smart pointer
+        typedef hash_set<socket_id_t,tcp_server_proto,socket_id_hasher> tcp_server_db;       //!< database of tcp servers
+        typedef tcp_server_db::iterator                                 tcp_server_iterator; //!< tcp server iterator
     }
 
 }

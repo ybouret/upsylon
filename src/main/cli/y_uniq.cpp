@@ -3,7 +3,7 @@
 #include "y/ptr/intr.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
@@ -11,10 +11,10 @@ using namespace upsylon;
 class Entry : public counted_object
 {
 public:
-    typedef hashing::sha1                 Hasher;
-    typedef key_hasher<string,Hasher>     KeyHasher;
-    typedef intr_ptr<string,Entry>        Pointer;
-    typedef set<string,Pointer,KeyHasher> DataBase;
+    typedef hashing::sha1                      Hasher;
+    typedef key_hasher<string,Hasher>          KeyHasher;
+    typedef intr_ptr<string,Entry>             Pointer;
+    typedef hash_set<string,Pointer,KeyHasher> DataBase;
 
     const string content;
 

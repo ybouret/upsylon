@@ -57,7 +57,8 @@ namespace {
             std::cerr << "x=" << x << std::endl;
             spark::mul_add(a,x,b);
             std::cerr << "c=" << a << std::endl;
-
+            spark::mul_sub(a,x,b);
+            std::cerr << "d=" << a << std::endl;
         }
 
         {

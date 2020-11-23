@@ -136,7 +136,7 @@ namespace upsylon
         template <typename FUNC> inline
         void sort_data_with(FUNC &func)
         {
-            table. template sort_with<FUNC>(func);
+            merging<NODE>::sort(table.nodes,compare_data<FUNC>,(void*)&func);
         }
 
         //! no-throw swap  
@@ -144,6 +144,18 @@ namespace upsylon
         {
             table.swap_with(other.table);
             cswap(ratio,other.ratio);
+        }
+
+        //! slow access
+        inline type & fetch(const size_t pos) throw()
+        {
+            return table.nodes.fetch(pos)->data;
+        }
+
+        //! slow const access
+        inline const_type & fetch(const size_t pos) const throw()
+        {
+            return table.nodes.fetch(pos)->data;
         }
 
     protected:
@@ -190,6 +202,14 @@ namespace upsylon
 
     private:
         Y_DISABLE_ASSIGN(hash_proto);
+
+        template <typename FUNC>
+        static inline int compare_data(const node_type *lhs, const node_type *rhs, void *args)
+        {
+            assert(args); assert(lhs); assert(rhs);
+            FUNC &func = *(FUNC *)args;
+            return func(lhs->data,rhs->data);
+        }
 
         inline void zap( node_type *node ) throw()
         {

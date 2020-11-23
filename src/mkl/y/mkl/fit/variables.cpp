@@ -269,7 +269,7 @@ namespace upsylon {
             
             void Variables:: update()
             {
-                sort_data( __compare_indices );
+                sort_data_with( __compare_indices );
             }
             
             void Variables:: chkdbg() const
@@ -298,7 +298,7 @@ namespace upsylon {
 #endif
                 if( size() > 0 )
                 {
-                    return tail()->index();
+                    return back()->index();
                 }
                 else
                 {

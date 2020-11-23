@@ -99,8 +99,8 @@ namespace upsylon {
             public:
                 const string name; //!< name for database of formats
 
-                typedef intr_ptr<string,Format>                 Pointer; //!< alias for db
-                typedef set<string,Pointer,KeyHasher,Allocator> Set;     //!< alias
+                typedef intr_ptr<string,Format>            Pointer; //!< alias for db
+                typedef hash_set<string,Pointer,KeyHasher> Set;     //!< alias
 
                 virtual ~Format() throw(); //!< cleanup
 

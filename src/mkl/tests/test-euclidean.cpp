@@ -1,7 +1,7 @@
 #include "y/mkl/euclidean/arc/standard.hpp"
 #include "y/mkl/euclidean/arc/periodic.hpp"
 #include "y/utest/run.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 #include "y/mkl/fcn/integrate.hpp"
@@ -20,7 +20,7 @@ namespace {
     {
         Y_EUCLIDEAN_ARC_TYPES();
 
-        typedef set<PointKey,SharedPoint> Points;
+        typedef hash_set<PointKey,SharedPoint> Points;
 
 
 

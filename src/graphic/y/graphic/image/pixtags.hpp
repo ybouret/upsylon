@@ -7,7 +7,7 @@
 #include "y/string.hpp"
 #include "y/graphic/color/rgb.hpp"
 #include "y/graphic/types.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/memory/allocator/pooled.hpp"
 
@@ -32,8 +32,8 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(PixTag_);
         };
 
-        typedef intr_ptr<type_mark,PixTag_>           PixTag;   //!< alias
-        typedef set<type_mark,PixTag,PixTag_::Hasher> PixTags_; //!< alias
+        typedef intr_ptr<type_mark,PixTag_>                PixTag;   //!< alias
+        typedef hash_set<type_mark,PixTag,PixTag_::Hasher> PixTags_; //!< alias
 
         //! datbase of pixtags
         class PixTags : public PixTags_

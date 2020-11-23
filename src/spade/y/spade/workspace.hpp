@@ -7,7 +7,7 @@
 #include "y/spade/layout/fragment.hpp"
 #include "y/spade/network/transfer.hpp"
 
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon {
@@ -22,8 +22,8 @@ namespace upsylon {
             LocalField  //!< helper field
         };
 
-        typedef set<string,_Field> FieldsDB;  //!< store fields by name
-        typedef vector<_Field>     FieldsIO_; //!< base class to handle fields
+        typedef hash_set<string,_Field> FieldsDB;  //!< store fields by name
+        typedef vector<_Field>          FieldsIO_; //!< base class to handle fields
         
         //! Fields for I/O
         class FieldsIO : public FieldsIO_

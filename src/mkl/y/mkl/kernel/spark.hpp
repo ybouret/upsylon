@@ -24,7 +24,7 @@ namespace upsylon {
                 typename sparse_array<U>::const_iterator i = b.begin();
                 for(size_t n=b.core.size();n>0;--n,++i)
                 {
-                    a[i.key()] = ***i;
+                    a[i.get().key()] = ***i;
                 }
             }
 
@@ -36,7 +36,7 @@ namespace upsylon {
                 typename sparse_array<U>::const_iterator i = b.begin();
                 for(size_t n=b.core.size();n>0;--n,++i)
                 {
-                    a[i.key()] += ***i;
+                    a[i.get().key()] += ***i;
                 }
             }
 
@@ -48,7 +48,7 @@ namespace upsylon {
                 typename sparse_array<U>::const_iterator i = b.begin();
                 for(size_t n=b.core.size();n>0;--n,++i)
                 {
-                    a[i.key()] -= ***i;
+                    a[i.get().key()] -= ***i;
                 }
             }
 
@@ -61,7 +61,7 @@ namespace upsylon {
                 typename sparse_array<T>::const_iterator ia = a.begin();
                 while(na>0)
                 {
-                    const U *pb = b( ia.key() );
+                    const U *pb = b( ia.get().key() );
                     if(pb)
                     {
                         ans += (***ia) * (*pb);
@@ -111,7 +111,7 @@ namespace upsylon {
                 typename sparse_array<U>::const_iterator i = b.begin();
                 for(size_t n=b.core.size();n>0;--n,++i)
                 {
-                    a[i.key()] += x * (***i);
+                    a[i.get().key()] += x * (***i);
                 }
             }
 
@@ -123,7 +123,7 @@ namespace upsylon {
                 typename sparse_array<U>::const_iterator i = b.begin();
                 for(size_t n=b.core.size();n>0;--n,++i)
                 {
-                    a[i.key()] -= x * (***i);
+                    a[i.get().key()] -= x * (***i);
                 }
             }
 
@@ -139,7 +139,7 @@ namespace upsylon {
                 typename sparse_matrix<U>::const_iterator k = M.begin();
                 for(size_t m=M.core.size();m>0;--m,++k)
                 {
-                    const sparse::matrix_key &K = k.key();
+                    const sparse::matrix_key &K = k.get().key();
                     const V                  *B = b(K.c);  if(!B) continue;
                     a[K.r] += (***k) * (*B);
                 }
@@ -155,7 +155,7 @@ namespace upsylon {
                 typename sparse_matrix<U>::const_iterator k = M.begin();
                 for(size_t m=M.core.size();m>0;--m,++k)
                 {
-                    const sparse::matrix_key &K = k.key();
+                    const sparse::matrix_key &K = k.get().key();
                     const V                  *B = b(K.r);  if(!B) continue;
                     a[K.c] += (***k) * (*B);
                 }

@@ -5,9 +5,8 @@
 #include "y/net/tcp/client.hpp"
 #include "y/net/socket/id-hasher.hpp"
 #include "y/net/io/tcp-queue.hpp"
-
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/associative/set.hpp"
 
 namespace upsylon
 {
@@ -29,11 +28,9 @@ namespace upsylon
             tcp_link link;
         };
 
-        typedef intr_ptr<socket_id_t,tcp_client_protocol> tcp_client_proto;    //!< smart pointer
-        typedef memory::global                            tcp_client_alloc;    //!< memory allocator
-        typedef set<socket_id_t,tcp_client_proto,                              //|
-        socket_id_hasher,tcp_client_alloc>                tcp_client_db;       //!< database of tcp clients
-        typedef tcp_client_db::iterator                   tcp_client_iterator; //!< tcp client iterator
+        typedef intr_ptr<socket_id_t,tcp_client_protocol>               tcp_client_proto;    //!< smart pointer
+        typedef hash_set<socket_id_t,tcp_client_proto,socket_id_hasher> tcp_client_db;       //!< database of tcp clients
+        typedef tcp_client_db::iterator                                 tcp_client_iterator; //!< tcp client iterator
     }
 
 }

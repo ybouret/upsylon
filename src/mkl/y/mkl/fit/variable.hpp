@@ -5,7 +5,7 @@
 
 #include "y/string.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/sequence/vector.hpp"
 
@@ -33,7 +33,7 @@ namespace upsylon {
                 typedef intr_ptr<string,Variable>               Pointer;   //!< alias
                 typedef key_hasher<string,hashing::fnv>         KeyHasher; //!< alias
                 typedef memory::pooled                          Allocator; //!< alias
-                typedef set<string,Pointer,KeyHasher,Allocator> Set;       //!< alias
+                typedef hash_set<string,Pointer,KeyHasher>      Set;       //!< alias
                 typedef vector<string,Allocator>                Names;     //!< alias
 
                 //==============================================================

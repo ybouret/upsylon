@@ -8,7 +8,7 @@
 #include "y/ptr/counted.hpp"
 
 #include "y/sequence/vector.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 
 #include <FL/fl_draw.H>
 
@@ -58,8 +58,8 @@ namespace upsylon
             PointStyle   pointStyle;
 
             const string &key() const throw();
-            typedef intr_ptr<string,Curve>      Pointer;
-            typedef set<string,Curve::Pointer>  Set;
+            typedef intr_ptr<string,Curve>           Pointer;
+            typedef hash_set<string,Curve::Pointer>  Set;
 
             Point getMin() const;
             Point getMax() const;
