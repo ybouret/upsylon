@@ -375,6 +375,7 @@ namespace
 
         {
             // copy
+            std::cerr << "\tcopy" << std::endl;
             const hash_set<KEY,KDummy> db2(db);
             Y_CHECK( db2.size() == db.size() );
             typename  hash_set<KEY,KDummy>::iterator       it=db.begin();
@@ -387,9 +388,16 @@ namespace
 
         {
             // assign
+            std::cerr << "\tassign" << std::endl;
             hash_set<KEY,KDummy> db2(100,as_capacity);
             db2 = db;
-            
+            Y_CHECK( db2.size() == db.size() );
+            typename  hash_set<KEY,KDummy>::iterator it=db.begin();
+            typename  hash_set<KEY,KDummy>::iterator jt=db2.begin();
+            for(size_t i=db.size();i>0;--i,++it,++jt)
+            {
+                Y_ASSERT( it.get().key() == jt.get().key() );
+            }
         }
 
         
