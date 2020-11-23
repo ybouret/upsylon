@@ -34,7 +34,7 @@ namespace upsylon
 
         //! copy
         inline hash_map_node(const hash_map_node &node) :
-        next(0), prev(0), meta(0), data(node.data)
+        next(0), prev(0), meta(0), ckey(node.ckey), data(node.data)
         {
         }
 
@@ -44,7 +44,7 @@ namespace upsylon
         //! madatory for table
         inline const_key_type & key() const throw()
         {
-            return data.key();
+            return ckey;
         }
 
         type &       operator*()       throw() { return data; } //!< access
@@ -67,7 +67,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename KEY, typename T, typename KEY_HASHER = key_hasher<T> >
-    class hash_map : public hash_proto<KEY,T, hash_set_node<KEY,T>, KEY_HASHER, lexicon<KEY,T> >
+    class hash_map : public hash_proto<KEY,T, hash_map_node<KEY,T>, KEY_HASHER, lexicon<KEY,T> >
     {
     public:
         //______________________________________________________________________
@@ -76,7 +76,7 @@ namespace upsylon
         //______________________________________________________________________
         Y_DECL_ARGS(T,type);                                                //!< aliases
         Y_DECL_ARGS(KEY,key_type);                                          //!< aliases
-        typedef hash_set_node<KEY,T>                             node_type; //!< alias
+        typedef hash_map_node<KEY,T>                             node_type; //!< alias
         typedef lexicon<KEY,T>                                   base_type; //!< alias
         typedef hash_proto<KEY,T,node_type,KEY_HASHER,base_type> prototype; //!< alias
 

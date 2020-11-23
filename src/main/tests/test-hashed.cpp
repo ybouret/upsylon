@@ -11,6 +11,46 @@
 
 using namespace upsylon;
 
+template <typename KEY,typename T>
+class KNode
+{
+public:
+    KNode       *next;
+    KNode       *prev;
+    hash_meta   *meta;
+    const KEY    _key;
+    T            data;
+
+    inline explicit KNode(const KEY &k, const T &x) :
+    next(0),
+    prev(0),
+    meta(0),
+    _key(k),
+    data(x)
+    {
+    }
+
+    inline const KEY & key() const throw()
+    {
+        return _key;
+    }
+
+
+    inline ~KNode() throw() {}
+
+    inline explicit KNode(const KNode &node) :
+    next(0), prev(0), meta(0), _key(node._key), data(node.data)
+    {
+        std::cerr  << _key << '/';
+    }
+
+
+private:
+    //Y_DISABLE_COPY_AND_ASSIGN(KNode);
+    Y_DISABLE_ASSIGN(KNode);
+};
+
+
 namespace
 {
 
@@ -103,44 +143,6 @@ namespace
         std::cerr << std::endl;
     }
 
-    template <typename KEY,typename T>
-    class KNode
-    {
-    public:
-        KNode       *next;
-        KNode       *prev;
-        hash_meta   *meta;
-        const KEY    _key;
-        T            data;
-
-        inline explicit KNode(const KEY &k, const T &x) :
-        next(0),
-        prev(0),
-        meta(0),
-        _key(k),
-        data(x)
-        {
-        }
-
-        inline const KEY & key() const throw()
-        {
-            return _key;
-        }
-
-
-        inline ~KNode() throw() {}
-        
-        inline explicit KNode(const KNode &node) :
-        next(0), prev(0), meta(0), _key(node._key), data(node.data)
-        {
-            std::cerr  << _key << '/';
-        }
-        
-        
-    private:
-        //Y_DISABLE_COPY_AND_ASSIGN(KNode);
-        Y_DISABLE_ASSIGN(KNode);
-    };
 
     template <typename KEY, typename T>
     void doTestTable()
@@ -406,6 +408,70 @@ namespace
 
     }
 
+    template <typename KEY, typename T>
+    static inline void doTestHashMap()
+    {
+        std::cerr << "-- testing HashMap<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
+
+        hash_map<KEY,T> db;
+        vector<KEY>     keys;
+
+        for(size_t i=10+alea.leq(10);i>0;--i)
+        {
+            const KEY    key = support::get<KEY>();
+            const T      dum = support::get<T>();
+            if( db.insert(key,dum) )
+            {
+                keys << key;
+            }
+        }
+        std::cerr << "\t#keys=" << keys.size() << std::endl;
+        Y_CHECK( keys.size() == db.size() );
+
+        hsort(keys,comparison::increasing<KEY>);
+        db.sort_keys_with(comparison::increasing<KEY>);
+        std::cerr << "\tcomparing keys" << std::endl;
+        {
+            size_t                              i=1;
+            typename  hash_map<KEY,T>::iterator it=db.begin();
+            for(size_t j=keys.size();j>0;--j,++i,++it)
+            {
+                Y_ASSERT( keys[i] == it.get().key() );
+            }
+        }
+
+        {
+            // copy
+            std::cerr << "\tcopy" << std::endl;
+            const hash_map<KEY,T> db2(db);
+            Y_CHECK( db2.size() == db.size() );
+            typename  hash_map<KEY,T>::iterator       it=db.begin();
+            typename  hash_map<KEY,T>::const_iterator jt=db2.begin();
+            for(size_t i=db.size();i>0;--i,++it,++jt)
+            {
+                Y_ASSERT( it.get().key() == jt.get().key() );
+            }
+        }
+
+        {
+            // assign
+            std::cerr << "\tassign" << std::endl;
+            hash_map<KEY,T> db2(100,as_capacity);
+            db2 = db;
+            Y_CHECK( db2.size() == db.size() );
+            typename  hash_map<KEY,T>::iterator it=db.begin();
+            typename  hash_map<KEY,T>::iterator jt=db2.begin();
+            for(size_t i=db.size();i>0;--i,++it,++jt)
+            {
+                Y_ASSERT( it.get().key() == jt.get().key() );
+            }
+        }
+
+
+
+        std::cerr << std::endl;
+
+    }
 
 }
 
@@ -432,6 +498,9 @@ Y_UTEST(hashed)
 
     doTestHashSet<uint16_t>();
     doTestHashSet<string>();
+
+    doTestHashMap<uint16_t,int>();
+
 
 }
 Y_UTEST_DONE()
