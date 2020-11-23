@@ -1,5 +1,5 @@
 #include "y/associative/suffix/set.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/utest/run.hpp"
 #include "y/ptr/intr.hpp"
 #include "support.hpp"
@@ -49,8 +49,8 @@ namespace {
         vector<KEY>               ok(nmax, as_capacity);
         suffix_set<KEY,Dummy>     st(nmax/4, as_capacity);
         suffix_set<KEY,Pointer>   pst(nmax/4,as_capacity);
-        set<KEY,Dummy>            db(nmax/4, as_capacity);
-        set<KEY,Pointer>          pdb(nmax/4,as_capacity);
+        hash_set<KEY,Dummy>       db(nmax/4, as_capacity);
+        hash_set<KEY,Pointer>     pdb(nmax/4,as_capacity);
         
         std::cerr << "\tgenerating data..." << std::endl;
         for(size_t i=0;i<nmax;++i)
@@ -99,8 +99,8 @@ namespace {
         {
             suffix_set<KEY,Dummy>     st2(st);
             suffix_set<KEY,Pointer>   pst2(pst);
-            set<KEY,Dummy>            db2(db);
-            set<KEY,Pointer>          pdb2(pdb);
+            hash_set<KEY,Dummy>       db2(db);
+            hash_set<KEY,Pointer>     pdb2(pdb);
         }
 
         

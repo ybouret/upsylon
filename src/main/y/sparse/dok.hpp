@@ -2,7 +2,7 @@
 #ifndef Y_SPARSE_DOK_INCLUDED
 #define Y_SPARSE_DOK_INCLUDED 1
 
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
 
 namespace upsylon
@@ -101,10 +101,9 @@ namespace upsylon
         template <
         typename KEY,
         typename T,
-        typename KEY_HASHER = key_hasher<KEY,hashing::fnv>,
-        typename ALLOCATOR  = memory::global >
+        typename KEY_HASHER = key_hasher<KEY,hashing::fnv> >
         class dok :
-        public set<KEY, typename dok_item<KEY,T>::pointer, KEY_HASHER, ALLOCATOR>,
+        public hash_set<KEY, typename dok_item<KEY,T>::pointer, KEY_HASHER>,
         public dok_base
         {
         public:
@@ -116,7 +115,7 @@ namespace upsylon
             Y_DECL_ARGS(KEY,key_type);                                     //!< alias
             typedef dok_item<KEY,T>                        item_type;      //!< alias
             typedef typename item_type::pointer            item_ptr;       //!< alias
-            typedef set<KEY,item_ptr,KEY_HASHER,ALLOCATOR> self_type;      //!< alias
+            typedef hash_set<KEY,item_ptr,KEY_HASHER>      self_type;      //!< alias
             typedef typename self_type::iterator           iterator;       //!< alias
             typedef typename self_type::const_iterator     const_iterator; //!< alias
 

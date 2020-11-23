@@ -5,7 +5,7 @@
 
 #include "y/geometry/iso3d/edge.hpp"
 #include "y/ptr/intr.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 
 namespace upsylon {
     
@@ -48,7 +48,7 @@ namespace upsylon {
             //! base class for database of unique points
             //
             //==================================================================
-            typedef set<Edge,Point,Edge::Hasher,memory::global> PointsType;
+            typedef hash_set<Edge,Point,Edge::Hasher> PointsType;
             
             
             //==================================================================

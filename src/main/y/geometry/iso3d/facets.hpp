@@ -34,7 +34,7 @@ namespace upsylon {
             typedef intr_ptr<Edge3,Facet_> Facet;
 
             //! database of facets
-            typedef set<Edge3,Facet,Edge3::Hasher> Facets;
+            typedef hash_set<Edge3,Facet,Edge3::Hasher> Facets;
 
 
         }

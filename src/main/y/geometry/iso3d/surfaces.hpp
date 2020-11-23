@@ -42,7 +42,7 @@ namespace upsylon {
             typedef intr_ptr<size_t,Surface_> Surface;
 
             //! base type for surfaces
-            typedef set<size_t,Surface,key_dumper,Contour::Allocator> SurfacesType;
+            typedef hash_set<size_t,Surface,key_dumper> SurfacesType;
 
             //! database of surfaces, key=level index
             class Surfaces : public SurfacesType

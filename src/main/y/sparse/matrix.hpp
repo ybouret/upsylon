@@ -6,6 +6,7 @@
 #include "y/container/const-field.hpp"
 #include "y/comparison.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -70,7 +71,7 @@ namespace upsylon
     }
 
     //! front-end to an internal dictionay of keys
-    template <typename T, typename ALLOCATOR = memory::global>
+    template <typename T>
     class sparse_matrix :
     public sparse::matrix_info,
     public const_field<T>
@@ -83,7 +84,7 @@ namespace upsylon
         //----------------------------------------------------------------------
         Y_DECL_ARGS(T,type);                                                       //!< aliases
         typedef sparse::matrix_key                                 key_type;       //!< key type
-        typedef sparse::dok<key_type,T,key_type::hasher,ALLOCATOR> dok_type;       //!< alias
+        typedef sparse::dok<key_type,T,key_type::hasher>           dok_type;       //!< alias
         typedef typename dok_type::iterator                        iterator;       //!< alias
         typedef typename dok_type::const_iterator                  const_iterator; //!< alias
         typedef typename dok_type::item_type                       item_type;      //!< alias
@@ -169,7 +170,7 @@ namespace upsylon
         //! sort keys by increasing order
         inline void update()
         {
-            items.sort_keys( comparison::increasing<key_type> );
+            items.sort_keys_with( comparison::increasing<key_type> );
         }
 
 

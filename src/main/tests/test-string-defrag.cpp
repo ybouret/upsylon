@@ -5,7 +5,7 @@
 #include "y/sequence/list.hpp"
 #include "support.hpp"
 #include "y/memory/allocator/pooled.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
 
 using namespace upsylon;
@@ -124,7 +124,7 @@ Y_UTEST(string_defrag)
     size_t ndb = 25;
     {
 
-        set<string,kDummy> db;
+        hash_set<string,kDummy> db;
         {
             volatile noise space;
             std::cerr << "adding keys" << std::endl;
@@ -143,7 +143,7 @@ Y_UTEST(string_defrag)
 
 
     {
-        set<string,kDummy::Ptr> db;
+        hash_set<string,kDummy::Ptr> db;
         {
             volatile noise space;
             std::cerr << "adding keys" << std::endl;

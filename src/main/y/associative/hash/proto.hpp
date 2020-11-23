@@ -134,11 +134,17 @@ namespace upsylon
 
         //! wrapper to sort data with func
         template <typename FUNC> inline
-        void sort_with(FUNC &func)
+        void sort_data_with(FUNC &func)
         {
             table. template sort_with<FUNC>(func);
         }
 
+        //! no-throw swap  
+        inline void swap_with(hash_proto &other) throw()
+        {
+            table.swap_with(other.table);
+            cswap(ratio,other.ratio);
+        }
 
     protected:
         //! setup
@@ -178,12 +184,7 @@ namespace upsylon
             }
         }
 
-        //! no-throw swap for derived classes
-        inline void swap_with(hash_proto &other) throw()
-        {
-            table.swap_with(other.table);
-            cswap(ratio,other.ratio);
-        }
+
 
         table_type  table; //!< internal table
 
@@ -239,6 +240,20 @@ namespace upsylon
         inline void pop_back()  throw() { zap(table.nodes.pop_back());  } //!< remove back value
         inline void pop_front() throw() { zap(table.nodes.pop_front()); } //!< remove front value
 
+
+        //! helper
+        template <typename FUNC> inline
+        void remove_key_if( FUNC &is_bad_key )
+        {
+            core::list_of<NODE> &l    = table.nodes;
+            NODE                *node = l.head;
+            while(node)
+            {
+                NODE *next = node->next;
+                if( is_bad_key(node->key()) ) zap( l.unlink(node) );
+                node=next;
+            }
+        }
     };
 
 }

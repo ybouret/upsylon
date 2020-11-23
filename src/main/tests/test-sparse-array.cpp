@@ -78,11 +78,11 @@ Y_UTEST(sparse_array)
         std::cerr << "sm=" << sm << std::endl;
         std::cerr << "sd=" << sd << std::endl;
 
-        sd.sort_keys( comparison::decreasing<size_t> );
+        sd.sort_keys_with( comparison::decreasing<size_t> );
         std::cerr << "sd=" << sd << std::endl;
 
         sparse::dok<size_t,double> sd2(sd);
-        sd2.sort_keys( comparison::increasing<size_t> );
+        sd2.sort_keys_with( comparison::increasing<size_t> );
         std::cerr << "sd2=" << sd2 << std::endl;
     }
 

@@ -39,10 +39,7 @@ namespace upsylon
     //! sparse array implementation
     //
     //__________________________________________________________________________
-    template <
-    typename T,
-    typename ALLOCATOR  = memory::global
-    >
+    template <typename T>
     class sparse_array : public sparse::array_info, public const_field<T>
     {
     public:
@@ -51,7 +48,7 @@ namespace upsylon
         // types and definitions
         //______________________________________________________________________
         Y_DECL_ARGS(T,type);                                               //!< aliases
-        typedef sparse::dok<size_t,T,key_dumper,ALLOCATOR> dok_type;       //!< alias
+        typedef sparse::dok<size_t,T,key_dumper>           dok_type;       //!< alias
         typedef typename dok_type::iterator                iterator;       //!< alias
         typedef typename dok_type::const_iterator          const_iterator; //!< alias
         typedef typename dok_type::item_type               item_type;      //!< alias
@@ -97,7 +94,7 @@ namespace upsylon
         //! sort keys by increasing order
         inline void update()
         {
-            items.sort_keys( comparison::increasing<size_t> );
+            items.sort_keys_with( comparison::increasing<size_t> );
         }
 
         //! direct creation, no multiple indices
@@ -182,7 +179,7 @@ namespace upsylon
             if( this != &other)
             {
                 cswap(size_,other.size_);
-                items.swap_table_with(other.items);
+                items.swap_with(other.items);
             }
         }
 

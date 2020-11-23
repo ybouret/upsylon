@@ -3,7 +3,7 @@
 #define Y_GEOM_ISO2D_LEVELS_INCLUDED 1
 
 #include "y/geometry/iso2d/segments.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 
 namespace upsylon {
 
@@ -15,7 +15,7 @@ namespace upsylon {
             //
             //! base class for a level
             //__________________________________________________________________
-            typedef set<Edge,Point,Edge::Hasher,memory::global> Points;
+            typedef hash_set<Edge,Point,Edge::Hasher> Points;
 
             struct Scanner; //!< forward declaration
 
@@ -75,7 +75,7 @@ namespace upsylon {
             //
             //! base class for level_set
             //__________________________________________________________________
-            typedef set<size_t,Level,key_dumper,Contour::Allocator> LevelSetType;
+            typedef hash_set<size_t,Level,key_dumper> LevelSetType;
 
             //__________________________________________________________________
             //
