@@ -14,13 +14,16 @@ namespace upsylon
         {
         }
 
-        Value & Compiler:: getValue()
+        void  Compiler:: getValue(Value &value, const Jive::XNode *tree)
         {
+            analyzer.reset();
+            analyzer.walk( tree );
             if( analyzer.vstack.size() != 1)
             {
                 throw exception("invalid JSON tree after compilation");
             }
-            return analyzer.vstack.front();
+            value.swapWith(analyzer.vstack.front());
+            analyzer.reset();
         }
         
         

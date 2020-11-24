@@ -28,12 +28,9 @@ namespace upsylon
             template <typename FILENAME>
             void loadFile(const FILENAME &fileName, Value &value)
             {
-                analyzer.reset();
                 parser.reset();
                 const Jive::XNode::Pointer tree( parser.parseFile(fileName) );
-                analyzer.walk( tree.content() );
-                value.swapWith(getValue());
-                analyzer.reset();
+                getValue(value,tree.content());
             }
 
             Parser   parser;    //!< internal parser
@@ -41,7 +38,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            Value &getValue();
+            void getValue(Value &value, const Jive::XNode *tree);
         };
 
     }
