@@ -28,7 +28,9 @@ namespace upsylon
                 jValue << terminal("null") << terminal("true") << terminal("false") << jString << jNumber;
                 const Axiom &COMA    = division(',');
 
+                //--------------------------------------------------------------
                 // arrays
+                //--------------------------------------------------------------
                 {
                     Alternate &jArray = alt("array");
                     {
@@ -43,7 +45,9 @@ namespace upsylon
                     self   << jArray;
                 }
 
+                //--------------------------------------------------------------
                 // objects
+                //--------------------------------------------------------------
                 {
                     Alternate   &jObject = alt("object");
                     const Axiom &LBRACE  = division('{');
