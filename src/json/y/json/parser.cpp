@@ -84,7 +84,7 @@ namespace upsylon
                 drop(__blank,__blank);
             }
 
-            graphViz("json-grammar.dot");
+            //graphViz("json-grammar.dot");
             validate();
         }
 

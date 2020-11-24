@@ -25,19 +25,25 @@ namespace upsylon
             "pair",          // 0
             "empty_array",   // 1
             "heavy_array",   // 2
-            "empty_object"
+            "empty_object",  // 3
+            "heavy_object"
         };
 
+        void Analyzer:: reset() throw()
+        {
+            vstack.free();
+            pstack.free();
+        }
 
-        Analyzer:: Analyzer() :
-        Jive::Syntax::Analyzer("JSON"),
+        Analyzer:: Analyzer(const Jive::Tag &id) :
+        Jive::Syntax::Analyzer(id),
         vstack(),
         pstack(),
         vhash(Y_MPH_WORDS(Terminals)),
         ihash(Y_MPH_WORDS(Internals))
         {
-            vhash.get_root().graphViz("json-vhash.dot");
-            ihash.get_root().graphViz("json-ihash.dot");
+            //vhash.get_root().graphViz("json-vhash.dot");
+            //ihash.get_root().graphViz("json-ihash.dot");
         }
 
         int Analyzer:: onTerminal(const string &id, const Jive::Lexeme &data)
@@ -47,35 +53,28 @@ namespace upsylon
             switch( h )
             {
                 case 0: assert( Terminals[h] == id );
-                {
-                    const Value value = NullType;
-                    vstack.push_back(value);
-                } break;
+                    vstack.push( NullType );
+                    break;
 
                 case 1: assert( Terminals[h] == id );
-                {
-                    const Value value = TrueType;
-                    vstack.push_back(value);
-                } break;
+                    vstack.push(TrueType);
+                    break;
 
                 case 2: assert( Terminals[h] == id);
-                {
-                    const Value value = FalseType;
-                    vstack.push_back(value);
-                } break;
+                    vstack.push(FalseType);
+                    break;
 
                 case 3: assert( Terminals[h] == id);
                 {
                     const string s = data.toString();
                     const double x = string_convert::to<double>(s,Terminals[h]);
-                    const Value  v = x;
-                    vstack.push_back(v);
+                    vstack.push(x);
                 } break;
 
                 case 4: assert( Terminals[h] == id);
                 {
-                    const Value  value = data.toString();
-                    vstack.push_back(value);
+                    const string s = data.toString();
+                    vstack.push(s);
                 } break;
 
                 default:
@@ -91,12 +90,15 @@ namespace upsylon
             const unsigned h = ihash(id);
             switch(h)
             {
+                    //----------------------------------------------------------
                     // pair
+                    //----------------------------------------------------------
                 case 0: assert( Internals[h] == id);
                 {
                     // check call
                     if(size!=2)          throw exception("invalid <%s> #args=%u != 2", *id, unsigned(size) );
 
+                    
                     // check stack
                     const size_t n = vstack.size();
                     if(n<2) throw exception("not enough values (%u) for <%s>",unsigned(n),*id);
@@ -108,47 +110,74 @@ namespace upsylon
                     }
                     const Pair p = new _Pair(k.as<String>(),v);
                     pstack.push_back(p);
-                    vstack.pop_back();
-                    vstack.pop_back();
+                    vstack.pop();
+                    vstack.pop();
                 } break;
 
+                    //----------------------------------------------------------
                     // empty_array
+                    //----------------------------------------------------------
                 case 1: assert( Internals[h] == id);
-                {
-                    Value value = ArrayType;
-                    { const Value nil; vstack.push_back(nil);}
-                    vstack.back().swapWith(value);
-                } break;
+                    if(size!=0) throw exception("invalid size=0 for <%s>", *id);
+                    vstack.push(ArrayType);
+                    break;
 
+                    //----------------------------------------------------------
                     // heavy_array
+                    //----------------------------------------------------------
                 case 2: assert( Internals[h] == id );
                 {
                     const size_t n = vstack.size();
                     if(size>n) throw exception("not enough data (%u) for <%s>", unsigned(n), *id);
                     Value      value = ArrayType;
-                    Array     &arr   = value.as<Array>();
-                    for(size_t i=size;i>0;--i)
                     {
-                        { const Value nil; arr.push(nil); }
-                        arr.back().swapWith(vstack.back());
-                        vstack.pop_back();
+                        Array     &arr   = value.as<Array>();
+                        for(size_t i=size;i>0;--i)
+                        {
+                            arr.xpush(vstack.back());
+                            vstack.pop();
+                        }
+                        arr.reverse();
                     }
-                    arr.reverse();
-                    { const Value nil; vstack.push_back(nil);}
-                    vstack.back().swapWith(value);
+                    vstack.xpush(value);
                 } break;
 
+                    //----------------------------------------------------------
                     // empty object
+                    //----------------------------------------------------------
                 case 3: assert( Internals[h] == id);
+                    if(size!=0) throw exception("invalid size=0 for <%s>", *id);
+                    vstack.push( ObjectType );
+                    break;
+
+                    //----------------------------------------------------------
+                    // heavy object
+                    //----------------------------------------------------------
+                case 4: assert( Internals[h] == id);
                 {
+                    if(pstack.size()<size) throw exception("not enough pairs to create <%s>", *id);
                     Value value = ObjectType;
-                    { const Value nil; vstack.push_back(nil);}
-                    vstack.back().swapWith(value);
+                    {
+                        Object &obj = value.as<Object>();
+                        for(size_t i=size;i>0;--i)
+                        {
+                            const Pair &p = pstack.back();
+                            if(!obj.insert(p))
+                            {
+                                throw exception("multiple object key=\"%s\"",*(p->key()));
+                            }
+                            pstack.pop_back();
+                        }
+                        obj.reverse();
+                    }
+                    vstack.xpush(value);
                 } break;
 
                 default:
-                    throw exception("%s unhandled call to <%s> hash=%u", **name, *id, h);
+                    throw exception("%s unhandled call to <%s>", **name, *id);
             }
+
+
             return 0;
         }
 

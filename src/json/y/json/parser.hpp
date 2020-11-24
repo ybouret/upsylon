@@ -10,12 +10,17 @@ namespace upsylon
 
     namespace JSON
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! JSON grammar and parser
+        //
+        //______________________________________________________________________
         class Parser : public Jive::Parser
         {
         public:
-            explicit Parser();
-            virtual ~Parser() throw();
+            explicit Parser();          //!< setup grammar
+            virtual ~Parser() throw();  //!< cleanup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
