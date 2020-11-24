@@ -115,7 +115,7 @@ namespace upsylon
             Number       &push( const Number x);                                               //!< push a new number
             String       &push( const String &);                                               //!< push a new string
             String       &push( const char   *);                                               //!< push a new string
-            void          xpush( Value &v ) { push(NullType); back().swapWith(v); }              //!< push by exchange
+            void          xpush( Value &v ) { push(NullType); back().swapWith(v); }            //!< push by exchange, value set to Null
 
             void display( ios::ostream &os, int depth) const; //!< display
 
