@@ -27,6 +27,8 @@ namespace upsylon
                 Alternate   &jValue  = alt("value");
                 jValue << terminal("null") << terminal("true") << terminal("false") << jString << jNumber;
                 const Axiom &COMA    = division(',');
+
+                // arrays
                 {
                     Alternate &jArray = alt("array");
                     {
@@ -39,6 +41,24 @@ namespace upsylon
                     }
                     jValue << jArray;
                     self   << jArray;
+                }
+
+                // objects
+                {
+                    Alternate   &jObject = alt("object");
+                    const Axiom &LBRACE  = division('{');
+                    const Axiom &RBRACE  = division('}');
+                    jObject << (agg("empty_object")  << LBRACE << RBRACE );
+                    {
+                        const Axiom &jPair = (agg("pair") << jString << division(':') << jValue);
+                        jObject << (
+                                    agg("heavy_object") << LBRACE << jPair
+                                    << zeroOrMore( cat(COMA,jPair) )
+                                    << RBRACE
+                                    );
+                    }
+                    jValue << jObject;
+                    self   << jObject;
                 }
             }
 
@@ -61,7 +81,7 @@ namespace upsylon
             }
 
             graphViz("json-grammar.dot");
-
+            validate();
         }
 
 
