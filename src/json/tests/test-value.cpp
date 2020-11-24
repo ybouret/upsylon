@@ -1,4 +1,5 @@
-#include "y/json/compiler.hpp"
+#include "y/json/value.hpp"
+#include "y/json/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/ios/serialized.hpp"
@@ -26,8 +27,15 @@ Y_UTEST(value)
             v0 = world;
         }
     }
-    
-    //Jargon::Axiom::Verbose = true;
+
+    JSON::Parser jsp;
+    if(argc>1)
+    {
+        Jive::XNode::Pointer xnode( jsp.parseFile(argv[1]));
+        xnode->graphViz("json-tree.dot");
+    }
+
+#if 0
     JSON::Compiler json;
     json.graphViz("json.dot");
     if(argc>1)
@@ -44,6 +52,7 @@ Y_UTEST(value)
         json.value.display(fp,0);
         fp << '\n';
     }
+#endif
 
 }
 Y_UTEST_DONE()

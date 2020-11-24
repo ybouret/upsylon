@@ -52,10 +52,12 @@ namespace upsylon
 
         //! count of slots to ensure entries/count <= load_factor
         static size_t required_for(const size_t load_factor, const size_t entries) throw();
-        
+
+        //! try resize to have the required load factor for given entries
         bool try_resize_for(const size_t load_factor,
                             const size_t entries) throw();
 
+        //! try resize to have the required number of slots
         bool try_resize(const size_t required) throw();
 
 

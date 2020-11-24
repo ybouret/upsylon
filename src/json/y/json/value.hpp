@@ -4,7 +4,7 @@
 
 #include "y/ios/ostream.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/associative/set.hpp"
+#include "y/associative/hash/set.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/string.hpp"
 
@@ -139,8 +139,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(_Pair);
         };
         
-        typedef _Pair::Pointer    Pair;   //!< a dynamic Pair
-        typedef set<string,Pair> _Object; //!< base class for Object
+        typedef _Pair::Pointer         Pair;   //!< a dynamic Pair
+        typedef hash_set<string,Pair> _Object; //!< base class for Object
 
         //! a database of pairs
         class Object : public _Object

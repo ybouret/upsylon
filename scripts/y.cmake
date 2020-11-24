@@ -242,12 +242,12 @@ MACRO(TARGET_LINK_Y tgt)
 			LIST(APPEND ylibs "y-lua")
 		ENDIF()
 		
-		IF( ${extra} STREQUAL "chem" )
+		IF( ${extra} STREQUAL "aqua" )
 			LIST(APPEND ylibs "y-mkl;y-lua++;y-lua")
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "json" )
-			LIST(APPEND ylibs "y-jargon")
+			LIST(APPEND ylibs "y-jive")
 		ENDIF()
 		
 		IF( ${extra} STREQUAL "graphic" )

@@ -88,10 +88,12 @@ namespace upsylon
                 ++indxAggregate;
                 return ax;
             }
-            
+
+#define Y_JIVE_CAT_SYMBOL ""
+
             const Axiom & Grammar:: cat(const Axiom &a, const Axiom &b)
             {
-                const string id = '(' + *a.name + '+' + *b.name + ')';
+                const string id = '(' + *a.name + Y_JIVE_CAT_SYMBOL + *b.name + ')';
                 Aggregate &ans = grp(id);
                 ans << a << b;
                 return ans;
@@ -101,7 +103,7 @@ namespace upsylon
                                         const Axiom &b,
                                         const Axiom &c)
             {
-                const string id  = '(' +*a.name + '+' + *b.name + '+' + *c.name + ')';
+                const string id  = '(' +*a.name + Y_JIVE_CAT_SYMBOL + *b.name + Y_JIVE_CAT_SYMBOL + *c.name + ')';
                 Aggregate   &ans = grp(id);
                 ans << a << b << c;
                 return ans;
