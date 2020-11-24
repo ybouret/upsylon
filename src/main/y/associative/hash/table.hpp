@@ -58,7 +58,7 @@ namespace upsylon
         inline explicit hash_table() :
         hash_table_(),
         nodes(),
-        pails(0),
+        slots(0),
         cache()
         {
         }
@@ -69,7 +69,7 @@ namespace upsylon
                                    const size_t          load = default_load) :
         hash_table_(),
         nodes(),
-        pails( hash_slots::required_for(load,n) ),
+        slots( hash_slots::required_for(load,n) ),
         cache()
         {
             reserve(n);
@@ -79,7 +79,7 @@ namespace upsylon
         inline explicit hash_table( const hash_table &other ) :
         hash_table_(),
         nodes(),
-        pails(other.pails.count),
+        slots(other.slots.count),
         cache()
         {
             try
@@ -97,7 +97,7 @@ namespace upsylon
                     catch(...) { cache.store(meta); throw; }
                     
                     // setup node
-                    setup(node,meta);
+                    slots[hkey].push_front( ( nodes.push_back(node)->meta=meta) );
                 }
             }
             catch(...)
@@ -123,7 +123,7 @@ namespace upsylon
         inline void swap_with(hash_table &other) throw()
         {
             nodes.swap_with(other.nodes);
-            pails.swap_with(other.pails);
+            slots.swap_with(other.slots);
             cache.swap_with(other.cache);
         }
         
@@ -148,21 +148,13 @@ namespace upsylon
         //! average load factor
         inline size_t load_factor() const throw()
         {
-            return nodes.size / pails.count;
+            return nodes.size / slots.count;
         }
 
-#if 0
-        //! number of buckets to reach requested load factor
-        inline size_t buckets_for_load_factor(const size_t value) const throw()
-        {
-            return hash_slots::required_for(value,nodes.size);
-        }
-#endif
-        
         //! setup new load factor
         inline void load_factor(const size_t value)
         {
-            (void) pails.try_resize_for(value,nodes.size);
+            (void) slots.try_resize_for(value,nodes.size);
         }
         
         //! try to setup a new load factor, no-throw
@@ -180,7 +172,7 @@ namespace upsylon
                 NODE      *node = nodes.pop_back();
                 hash_meta *meta = node->meta;
                 node->~NODE();
-                cache.store( pails.remove(meta) );
+                cache.store( slots.remove(meta) );
             }
         }
         
@@ -194,7 +186,7 @@ namespace upsylon
                 hash_meta *meta = node->meta;
                 node->~NODE();
                 object::release1(node);
-                hash_meta::release( pails.remove(meta) );
+                hash_meta::release( slots.remove(meta) );
             }
         }
         
@@ -209,7 +201,7 @@ namespace upsylon
             // get bucket from hkey
             //------------------------------------------------------------------
             assert(0==slot);
-            slot = (hash_slot *)&pails[hkey];
+            slot = (hash_slot *)&slots[hkey];
             
             //------------------------------------------------------------------
             // loop over handle
@@ -251,7 +243,7 @@ namespace upsylon
             // get bucket from hkey
             //------------------------------------------------------------------
             assert(0==slot);
-            slot = &pails[hkey];
+            slot = &slots[hkey];
             
             //------------------------------------------------------------------
             // loop over handle
@@ -354,7 +346,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // update structure
                 //--------------------------------------------------------------
-                setup(node,meta);
+                slot->push_front( ( nodes.push_back(node)->meta=meta) );
                 return true;
             }
             
@@ -373,7 +365,7 @@ namespace upsylon
         // members
         //______________________________________________________________________
         list_type         nodes;   //!< live nodes
-        hash_slots        pails;   //!< buckets of handles to nodes
+        hash_slots        slots;   //!< slots of meta nodes to data nodes
         hash_zpairs<NODE> cache;   //!< cache
         
         
@@ -386,10 +378,10 @@ namespace upsylon
             return compare(lhs->key(),rhs->key());
         }
         
-        inline void setup(NODE *node, hash_meta *meta) throw()
-        {
-            pails.insert( nodes.push_back(node)->meta = meta );
-        }
+        //inline void setup(NODE *node, hash_meta *meta) throw()
+        //{
+        // slots.insert( nodes.push_back(node)->meta = meta );
+        //}
     };
     
 }

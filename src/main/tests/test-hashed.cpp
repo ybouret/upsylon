@@ -198,13 +198,13 @@ namespace
             if(cycles<=0)
             {
                 std::cerr << "compact" << std::endl;
-                table.pails.dump();
+                table.slots.dump();
             }
             table.load_factor(required);
             if(cycles<=0)
             {
                 std::cerr << "expanded" << std::endl;
-                table.pails.dump();
+                table.slots.dump();
             }
             std::cerr << "load: " << table.load_factor() << std::endl;
             Y_CHECK(table.load_factor() <= required );
@@ -310,7 +310,7 @@ namespace
                 const KEY &key = keys[i];
                 proto.search(key);
             }
-            
+            std::cerr << "\tload_factor=" << proto.load_factor() << " / " << proto.ratio << std::endl;
             std::cerr << std::endl;
         }
         

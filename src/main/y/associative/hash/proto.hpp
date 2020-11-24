@@ -109,13 +109,7 @@ namespace upsylon
         {
             table.try_load_factor(ratio);
         }
-
-        //! set number of buckets
-        inline void set_buckets(const size_t n)
-        {
-            table.set_buckets(n);
-        }
-
+        
 
         //! collect keys
         template <typename SEQUENCE> inline
@@ -217,8 +211,7 @@ namespace upsylon
             assert(node);assert(node->meta);
             hash_meta *meta = node->meta;
             node->~NODE();
-            table.pails[meta->hkey].unlink(meta);
-            table.cache.store(meta);
+            table.cache.store( table.slots.remove(meta) );
         }
 
     public:
