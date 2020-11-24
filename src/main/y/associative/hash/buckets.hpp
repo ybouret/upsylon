@@ -44,12 +44,11 @@ namespace upsylon
         hash_bucket       & operator[](const size_t hkey)       throw(); //!< access
         const hash_bucket & operator[](const size_t hkey) const throw(); //!< const access
 
-        void to(hash_bucket  &pool)  throw(); //!< move all content to pool
-        void to(hash_buckets &other) throw(); //!< redispacth nodes
-
-        void insert(hash_meta *handle) throw(); //!< insert handle w.r.t its key
-
-        void dump() const; //!< display buckets/keys
+        void       to(hash_bucket  &pool)    throw(); //!< move all content to pool
+        void       to(hash_buckets &other)   throw(); //!< redispatch nodes
+        void       insert(hash_meta *handle) throw(); //!< insert handle w.r.t its key
+        hash_meta *remove(hash_meta *meta)   throw(); //!< remove from its bucket
+        void       dump() const;                      //!< display buckets/keys
 
         //! count of buckets to ensure entries/count <= load_factor
         static size_t for_load_factor(const size_t load_factor, const size_t entries) throw();

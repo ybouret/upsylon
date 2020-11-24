@@ -106,6 +106,12 @@ namespace upsylon
         (*this)[handle->hkey].push_front(handle);
     }
 
+    hash_meta * hash_buckets:: remove(hash_meta *meta) throw()
+    {
+        assert(meta);
+        return (*this)[meta->hkey].unlink(meta);
+    }
+
     size_t hash_buckets:: for_load_factor(const size_t load_factor, const size_t entries) throw()
     {
         if( load_factor <= 1 )

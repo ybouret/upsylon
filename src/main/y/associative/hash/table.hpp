@@ -65,8 +65,8 @@ namespace upsylon
         
         //! setup with memory
         inline explicit hash_table(const size_t         n,
-                                   const as_capacity_t &,
-                                   const size_t        load = default_load) :
+                                   const as_capacity_t  &,
+                                   const size_t          load = default_load) :
         hash_table_(),
         nodes(),
         pails( hash_buckets::for_load_factor(load,n) ),
@@ -191,7 +191,7 @@ namespace upsylon
                 NODE      *node = nodes.pop_back();
                 hash_meta *meta = node->meta;
                 node->~NODE();
-                cache.store( pails[meta->hkey].unlink(meta) );
+                cache.store( pails.remove(meta) );
             }
         }
         
@@ -205,7 +205,7 @@ namespace upsylon
                 hash_meta *meta = node->meta;
                 node->~NODE();
                 object::release1(node);
-                hash_meta::release( pails[meta->hkey].unlink(meta) );
+                hash_meta::release( pails.remove(meta) );
             }
         }
         
