@@ -135,6 +135,12 @@ namespace upsylon
             merging<NODE>::sort(table.nodes,compare_data<FUNC>,(void*)&func);
         }
 
+        //! reverse order of values
+        inline void reverse() throw()
+        {
+            table.nodes.reverse();
+        }
+
         //! no-throw swap  
         inline void swap_with(hash_proto &other) throw()
         {
@@ -226,6 +232,16 @@ namespace upsylon
 
         const_iterator begin() const throw()   { return const_iterator( table.nodes.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);                  } //!< end forward const
+
+        typedef iterate::linked<type,node_type,iterate::reverse>             reverse_iterator;        //!< reverse iterator
+        typedef iterate::linked<const_type,const node_type,iterate::forward> const_reverse_iterator;  //!< reverse const iterator
+
+        reverse_iterator rbegin() throw() { return iterator( table.nodes.tail ); } //!< begin reverse
+        reverse_iterator rend()   throw() { return iterator(0);                  } //!< end reverse
+
+        const_reverse_iterator rbegin() const throw()   { return const_iterator( table.nodes.tail ); } //!< begin reverse const
+        const_reverse_iterator rend()   const throw()   { return const_iterator(0);                  } //!< end reverse const
+
 
         //! generic display
         inline friend std::ostream & operator<<( std::ostream &os, const hash_proto &proto )
