@@ -39,34 +39,69 @@ so that a set of concentrations $\vec{C}\in\mathbb{R}^M$ is described by:
 
 
 \section{Balancing active concentrations}
- We define a balancing function $B(C)$ with indicates if $C$ is valid or not.
-Then we define the global balance:
+
+If we met some invalid negative active concentrations, we look for a valid
+\begin{equation}
+	\vec{C} + \trn{\bm{\nu}} \vec{\xi}
+\end{equation}
+with
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	C_j \leq 0 & \Rightarrow & \vec{v}_j \cdot \vec{\xi} \geq 0\\
+	C_j > 0    & \Rightarrow & \vec{v}_j \cdot \vec{\xi} \geq -C_j
+\end{array}
+\right.
+\Leftrightarrow \trn{\bm{\nu}} \vec{\xi} \geq \vec{\theta}
+\end{equation}
+We look for the minimisation  of the global balance:
 \begin{equation}
 	\mathcal{B}(\vec{C}) = \sum_j \mathbb{A}_j \max(-C_j,0)
 \end{equation}
-where $\mathbb{A}_j$ is $1$ is species $j$ is active, $0$ otherwise.
- 
-We compute
+so that the gradient is
 \begin{equation}
-	\vec{\beta} = -\vec{\nabla} \mathcal{B} = 
+	\vec{\nabla} \mathcal{B} = 
 	\begin{pmatrix}
-		\vdots\\
-		\mathbb{A}_j \mathds{1}_{C_j\leq0}\\
-		\vdots\\
+	\vdots\\
+	- \mathbb{A}_j \mathcal{H}(-C_j)\\
+	\vdots\\
 	\end{pmatrix}
 \end{equation}
-which may have between $0$ and $M_A$ not-zero coefficients, 
 and
 \begin{equation}
-	\mathcal{B}(\vec{C}+\trn{\bm{\nu}}\vec{\xi}) \simeq 
-	\mathcal{B}(\vec{C}) - \bm{\nu} \vec{\beta} \cdot \vec{\xi}
+	\mathcal{B}(\vec{C} + \trn{\bm{\nu}} \vec{\xi}) \simeq \mathcal{B}(\vec{C}) + \bm{\nu} \vec{\nabla} \mathcal{B} \cdot \vec{\xi}
 \end{equation}
-Any decreasing direction is in the form:
+so we choose
 \begin{equation}
-	\delta\vec{C} = \trn{\bm{\nu}} \bm{\Omega} \nu \vec{\beta}, \;\; \forall \vec{X}\in\mathbb{R}^N \;\; \trn{\vec{X}}\bm{\Omega}\vec{X} \geq 0
+	\vec{\xi} = -\bm{\Omega} (\bm{\nu} \vec{\nabla} \mathcal{B} )
 \end{equation}
-  
- \end{document}
+with
+\begin{equation}
+	\bm{\Omega} \in \mathcal{M}_N,\;\; "\bm{\Omega}\geq0"
+\end{equation}
+We choose here
+\begin{equation}
+	\bm{\Omega} = \mathrm{diag}\left(\vec{\Omega}\right),\;\;\Omega_k = \omega_k^2
+\end{equation}
+We choose
+\begin{equation}
+	\vec{\sigma}= -\vec{\nabla} \mathcal{B}
+\end{equation}
+and we want
+\begin{equation}
+	\trn{\bm{\nu}}\vec{\xi} = \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \geq \vec{\theta}
+\end{equation}
+with
+\begin{equation}
+	\trn{\vec{\sigma}} \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \simeq \mathcal{B}(\vec{C})
+\end{equation}
+
+We compute
+\begin{equation}
+	 (\trn{\bm{\nu}} \bm{\Omega} \bm{\nu} )_{ij} = \sum_k \Omega_k \nu_{ki}\nu_{kj} = \vec{\Omega} \cdot \vec{Y}_{ij}
+\end{equation}
+
+\end{document}
 
 Let us balance a set of invalid concentrations starting from $\vec{C}$.
 We define the excess vector:
