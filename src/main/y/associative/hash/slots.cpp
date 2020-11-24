@@ -43,16 +43,24 @@ namespace upsylon
         _cswap(bexp2,other.bexp2);
     }
 
+    static inline size_t bmask_for(const size_t count) throw()
+    {
+        assert( is_a_power_of_two(count) );
+        return count-1;
+    }
+
     static inline size_t slots_for(const size_t n) throw()
     {
         return next_power_of_two<size_t>( clamp(hash_slots::min_size,n,hash_slots::max_size) );
     }
 
-    hash_slots:: hash_slots(const size_t n) :
-    slot(0),
-    count( slots_for(n) ),
-    bmask(count-1),
-    bexp2( base2<size_t>::log2_of(count*sizeof(hash_slot) ) )
+
+    static inline size_t bexp2_for(const size_t count) throw()
+    {
+        return base2<size_t>::log2_of(count*sizeof(hash_slot) );
+    }
+
+    void hash_slots:: setup()
     {
         // acquire memory
         try
@@ -68,6 +76,30 @@ namespace upsylon
         // finalize
         for(size_t i=0;i<count;++i) new (slot+i) hash_slot();
     }
+
+    hash_slots:: hash_slots(const size_t n) :
+    slot(0),
+    count( slots_for(n)     ),
+    bmask( bmask_for(count) ),
+    bexp2( bexp2_for(count) )
+    {
+        setup();
+    }
+
+    hash_slots:: hash_slots(const size_t __count,
+                            const size_t __bmask,
+                            const size_t __bexp2) :
+    slot(0),
+    count(__count),
+    bmask(__bmask),
+    bexp2(__bexp2)
+    {
+        assert(count>=min_size);
+        assert(count<=max_size);
+        assert(count-1==bmask);
+        setup();
+    }
+
 
     hash_slot & hash_slots:: operator[](const size_t hkey) throw()
     {
@@ -112,20 +144,55 @@ namespace upsylon
         return (*this)[meta->hkey].unlink(meta);
     }
 
-    size_t hash_slots:: for_load_factor(const size_t load_factor, const size_t entries) throw()
+    static inline
+    size_t raw_required_for(const size_t load_factor, const size_t entries) throw()
     {
-        if( load_factor <= 1 )
+        if(load_factor<=1)
         {
-            return slots_for(entries);
+            return entries;
         }
         else
         {
             size_t n = entries/load_factor;
             while(n*load_factor<entries) ++n;
-            return slots_for(n);
+            return n;
         }
     }
 
+    size_t hash_slots:: required_for(const size_t load_factor, const size_t entries) throw()
+    {
+        return slots_for( raw_required_for(load_factor,entries) );
+    }
+
+    bool hash_slots:: try_resize_for(const size_t load_factor,
+                                     const size_t entries) throw()
+    {
+        return try_resize( raw_required_for(load_factor,entries) );
+    }
+
+
+    bool hash_slots:: try_resize(const size_t required) throw()
+    {
+        try
+        {
+            // initialize
+            const size_t new_count =  slots_for(required);
+            if(new_count!=count)
+            {
+                // memory acquisition
+                hash_slots new_slots(new_count,bmask_for(new_count),bexp2_for(new_count));
+
+                // exchange
+                to(new_slots);
+                swap_with(new_slots);
+            }
+            return true;
+        }
+        catch(...)
+        {
+            return false;
+        }
+    }
 
 }
 

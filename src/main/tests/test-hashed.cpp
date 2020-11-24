@@ -194,8 +194,7 @@ namespace
             std::cerr << "keys: " << keys.size() << std::endl;
             std::cerr << "load: " << table.load_factor() << std::endl;
             const size_t required = 8;
-            std::cerr << "bucket for " << required << " : " << table.buckets_for_load_factor(required) << std::endl;
-
+            
             if(cycles<=0)
             {
                 std::cerr << "compact" << std::endl;

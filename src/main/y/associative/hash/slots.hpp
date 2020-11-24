@@ -39,7 +39,7 @@ namespace upsylon
         // methods
         //______________________________________________________________________
         void swap_with(hash_slots &other) throw();                       //!< no-throw swap
-        void release() throw();                                          //!< release handles
+        void release() throw();                                          //!< release all slots
 
         hash_slot       & operator[](const size_t hkey)       throw(); //!< access
         const hash_slot & operator[](const size_t hkey) const throw(); //!< const access
@@ -50,8 +50,14 @@ namespace upsylon
         hash_meta *remove(hash_meta *meta)  throw(); //!< remove from its bucket
         void       dump() const;                     //!< display each slot: keys
 
-        //! count of buckets to ensure entries/count <= load_factor
-        static size_t for_load_factor(const size_t load_factor, const size_t entries) throw();
+        //! count of slots to ensure entries/count <= load_factor
+        static size_t required_for(const size_t load_factor, const size_t entries) throw();
+        
+        bool try_resize_for(const size_t load_factor,
+                            const size_t entries) throw();
+
+        bool try_resize(const size_t required) throw();
+
 
     private:
         hash_slot   *slot;
@@ -62,7 +68,9 @@ namespace upsylon
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(hash_slots);
+        hash_slots(const size_t, const size_t, const size_t);
         void cleanup() throw();
+        void setup();
     };
 
 

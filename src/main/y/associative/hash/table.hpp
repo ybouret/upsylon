@@ -69,7 +69,7 @@ namespace upsylon
                                    const size_t          load = default_load) :
         hash_table_(),
         nodes(),
-        pails( hash_slots::for_load_factor(load,n) ),
+        pails( hash_slots::required_for(load,n) ),
         cache()
         {
             reserve(n);
@@ -150,21 +150,19 @@ namespace upsylon
         {
             return nodes.size / pails.count;
         }
-        
+
+#if 0
         //! number of buckets to reach requested load factor
         inline size_t buckets_for_load_factor(const size_t value) const throw()
         {
-            return hash_slots::for_load_factor(value,nodes.size);
+            return hash_slots::required_for(value,nodes.size);
         }
+#endif
         
         //! setup new load factor
         inline void load_factor(const size_t value)
         {
-            const size_t required  = buckets_for_load_factor(value);
-            if(required!=pails.count)
-            {
-                set_buckets(required);
-            }
+            (void) pails.try_resize_for(value,nodes.size);
         }
         
         //! try to setup a new load factor, no-throw
@@ -173,14 +171,7 @@ namespace upsylon
             try { load_factor(value); } catch(...) { }
         }
 
-        //! force number of buckets
-        inline void set_buckets(const size_t n)
-        {
-            hash_slots temp(n);
-            pails.to(temp);
-            pails.swap_with(temp);
-        }
-        
+
         //! free node content, keep memory
         inline void free() throw()
         {
