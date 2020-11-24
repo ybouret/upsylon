@@ -303,7 +303,7 @@ namespace upsylon
                     }
                     else
                     {
-                        excp.cat(" is unfinished");
+                        excp.cat(" before unexpected EOF");
                     }
                 }
                 else
