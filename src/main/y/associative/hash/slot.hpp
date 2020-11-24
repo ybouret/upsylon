@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_HASH_BUCKET_INCLUDED
-#define Y_HASH_BUCKET_INCLUDED 1
+#ifndef Y_HASH_SLOT_INCLUDED
+#define Y_HASH_SLOT_INCLUDED 1
 
 #include "y/associative/hash/meta.hpp"
 #include "y/core/list.hpp"
@@ -19,15 +19,15 @@ namespace upsylon
     //! list of handles
     //
     //__________________________________________________________________________
-    class hash_bucket : public hash_metas
+    class hash_slot : public hash_metas
     {
     public:
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
-        explicit hash_bucket() throw(); //!< setup
-        virtual ~hash_bucket() throw(); //!< cleanup
+        explicit hash_slot() throw(); //!< setup
+        virtual ~hash_slot() throw(); //!< cleanup
 
         //______________________________________________________________________
         //
@@ -43,7 +43,7 @@ namespace upsylon
         void         reorder() throw();                    //!< reorder by increasing address
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(hash_bucket);
+        Y_DISABLE_COPY_AND_ASSIGN(hash_slot);
     };
 
 

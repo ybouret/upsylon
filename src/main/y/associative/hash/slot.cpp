@@ -1,50 +1,50 @@
 
-#include "y/associative/hash/bucket.hpp"
+#include "y/associative/hash/slot.hpp"
 #include "y/sort/merge.hpp"
 
 namespace upsylon
 {
-    hash_bucket:: hash_bucket() throw() : hash_metas()
+    hash_slot:: hash_slot() throw() : hash_metas()
     {
     }
 
-    hash_bucket:: ~hash_bucket() throw()
+    hash_slot:: ~hash_slot() throw()
     {
         release();
     }
 
     
-    void hash_bucket:: release() throw()
+    void hash_slot:: release() throw()
     {
         while(size) pop();
 
     }
 
-    void hash_bucket:: reorder() throw()
+    void hash_slot:: reorder() throw()
     {
         merging<hash_meta>::sort_by_increasing_address(*this);
     }
 
-    void hash_bucket:: push()
+    void hash_slot:: push()
     {
         push_back( hash_meta::acquire() );
     }
 
-    void hash_bucket:: pop() throw()
+    void hash_slot:: pop() throw()
     {
         hash_meta:: release( pop_back() );
     }
 
-    void hash_bucket:: store(hash_meta *handle) throw()
+    void hash_slot:: store(hash_meta *handle) throw()
     {
         assert(handle);
         push_front(handle);
     }
 
+    
 
-
-    hash_meta * hash_bucket:: query(const size_t hkey,
-                                    void        *node) throw()
+    hash_meta * hash_slot:: query(const size_t hkey,
+                                  void        *node) throw()
     {
         assert(size);
         hash_meta *handle = pop_front();

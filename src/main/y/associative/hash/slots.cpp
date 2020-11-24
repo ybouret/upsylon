@@ -1,6 +1,6 @@
 
 
-#include "y/associative/hash/buckets.hpp"
+#include "y/associative/hash/slots.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/self-destruct.hpp"
@@ -9,55 +9,55 @@
 namespace upsylon
 {
 
-    hash_buckets:: ~hash_buckets() throw()
+    hash_slots:: ~hash_slots() throw()
     {
         for(size_t i=0;i<count;++i)
         {
-            self_destruct(bucket[i]);
+            self_destruct(slot[i]);
         }
-        object::dyadic_release(bucket,bexp2);
+        object::dyadic_release(slot,bexp2);
         cleanup();
     }
 
-    void hash_buckets:: cleanup() throw()
+    void hash_slots:: cleanup() throw()
     {
-        bucket = 0;
+        slot = 0;
         aliasing::_(count) = 0;
         aliasing::_(bmask) = 0;
         aliasing::_(bexp2) = 0;
     }
 
-    void hash_buckets:: release() throw()
+    void hash_slots:: release() throw()
     {
         for(size_t i=0;i<count;++i)
         {
-            bucket[i].release();
+            slot[i].release();
         }
     }
 
-    void hash_buckets:: swap_with(hash_buckets &other) throw()
+    void hash_slots:: swap_with(hash_slots &other) throw()
     {
-        _cswap(bucket,other.bucket);
+        _cswap(slot,other.slot);
         _cswap(count,other.count);
         _cswap(bmask,other.bmask);
         _cswap(bexp2,other.bexp2);
     }
 
-    static inline size_t buckets_for(const size_t n) throw()
+    static inline size_t slots_for(const size_t n) throw()
     {
-        return next_power_of_two<size_t>( clamp(hash_buckets::min_size,n,hash_buckets::max_size) );
+        return next_power_of_two<size_t>( clamp(hash_slots::min_size,n,hash_slots::max_size) );
     }
 
-    hash_buckets:: hash_buckets(const size_t n) :
-    bucket(0),
-    count( buckets_for(n) ),
+    hash_slots:: hash_slots(const size_t n) :
+    slot(0),
+    count( slots_for(n) ),
     bmask(count-1),
-    bexp2( base2<size_t>::log2_of(count*sizeof(hash_bucket) ) )
+    bexp2( base2<size_t>::log2_of(count*sizeof(hash_slot) ) )
     {
         // acquire memory
         try
         {
-            bucket = static_cast<hash_bucket *>( object::dyadic_acquire(bexp2) );
+            slot = static_cast<hash_slot *>( object::dyadic_acquire(bexp2) );
         }
         catch(...)
         {
@@ -66,33 +66,33 @@ namespace upsylon
         }
 
         // finalize
-        for(size_t i=0;i<count;++i) new (bucket+i) hash_bucket();
+        for(size_t i=0;i<count;++i) new (slot+i) hash_slot();
     }
 
-    hash_bucket & hash_buckets:: operator[](const size_t hkey) throw()
+    hash_slot & hash_slots:: operator[](const size_t hkey) throw()
     {
-        return bucket[hkey&bmask];
+        return slot[hkey&bmask];
     }
 
-    const hash_bucket & hash_buckets:: operator[](const size_t hkey) const throw()
+    const hash_slot & hash_slots:: operator[](const size_t hkey) const throw()
     {
-        return bucket[hkey&bmask];
+        return slot[hkey&bmask];
     }
 
 
-    void hash_buckets:: to(hash_bucket &pool) throw()
+    void hash_slots:: to(hash_slot &pool) throw()
     {
         for(size_t i=0;i<count;++i)
         {
-            pool.merge_back(bucket[i]);
+            pool.merge_back(slot[i]);
         }
     }
 
-    void hash_buckets:: to(hash_buckets &other) throw()
+    void hash_slots:: to(hash_slots &other) throw()
     {
         for(size_t i=0;i<count;++i)
         {
-            hash_bucket &b = bucket[i];
+            hash_slot &b = slot[i];
             while(b.size)
             {
                 other.insert( b.pop_back() );
@@ -100,29 +100,29 @@ namespace upsylon
         }
     }
 
-    void  hash_buckets:: insert(hash_meta *handle) throw()
+    void  hash_slots:: insert(hash_meta *handle) throw()
     {
         assert(handle);
         (*this)[handle->hkey].push_front(handle);
     }
 
-    hash_meta * hash_buckets:: remove(hash_meta *meta) throw()
+    hash_meta * hash_slots:: remove(hash_meta *meta) throw()
     {
         assert(meta);
         return (*this)[meta->hkey].unlink(meta);
     }
 
-    size_t hash_buckets:: for_load_factor(const size_t load_factor, const size_t entries) throw()
+    size_t hash_slots:: for_load_factor(const size_t load_factor, const size_t entries) throw()
     {
         if( load_factor <= 1 )
         {
-            return buckets_for(entries);
+            return slots_for(entries);
         }
         else
         {
             size_t n = entries/load_factor;
             while(n*load_factor<entries) ++n;
-            return buckets_for(n);
+            return slots_for(n);
         }
     }
 
@@ -137,14 +137,14 @@ namespace upsylon
 {
 
 
-    void hash_buckets:: dump() const
+    void hash_slots:: dump() const
     {
         std::cerr << std::hex;
         std::cerr << "<hash_buckets>" << std::endl;
         for(size_t i=0;i<count;++i)
         {
             std::cerr << "[" << std::setw(4) << i << "] :";
-            for(const hash_meta *node=bucket[i].head;node;node=node->next)
+            for(const hash_meta *node=slot[i].head;node;node=node->next)
             {
                 std::cerr << " " << node->hkey;
             }

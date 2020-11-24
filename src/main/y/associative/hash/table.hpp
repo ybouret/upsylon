@@ -5,7 +5,7 @@
 #define Y_HASH_TABLE_INCLUDED 1
 
 #include "y/associative/hash/zpairs.hpp"
-#include "y/associative/hash/buckets.hpp"
+#include "y/associative/hash/slots.hpp"
 
 
 namespace upsylon
@@ -69,7 +69,7 @@ namespace upsylon
                                    const size_t          load = default_load) :
         hash_table_(),
         nodes(),
-        pails( hash_buckets::for_load_factor(load,n) ),
+        pails( hash_slots::for_load_factor(load,n) ),
         cache()
         {
             reserve(n);
@@ -154,18 +154,16 @@ namespace upsylon
         //! number of buckets to reach requested load factor
         inline size_t buckets_for_load_factor(const size_t value) const throw()
         {
-            return hash_buckets::for_load_factor(value,nodes.size);
+            return hash_slots::for_load_factor(value,nodes.size);
         }
         
         //! setup new load factor
         inline void load_factor(const size_t value)
         {
-            const size_t required_buckets = buckets_for_load_factor(value);
-            if(required_buckets!=pails.count)
+            const size_t required  = buckets_for_load_factor(value);
+            if(required!=pails.count)
             {
-                hash_buckets temp(required_buckets);
-                pails.to(temp);
-                pails.swap_with(temp);
+                set_buckets(required);
             }
         }
         
@@ -178,7 +176,7 @@ namespace upsylon
         //! force number of buckets
         inline void set_buckets(const size_t n)
         {
-            hash_buckets temp(n);
+            hash_slots temp(n);
             pails.to(temp);
             pails.swap_with(temp);
         }
@@ -214,18 +212,18 @@ namespace upsylon
         template <typename KEY> inline
         const NODE *search(const KEY     & key,
                            const size_t    hkey,
-                           hash_bucket * & bucket) const throw()
+                           hash_slot  *  & slot) const throw()
         {
             //------------------------------------------------------------------
             // get bucket from hkey
             //------------------------------------------------------------------
-            assert(0==bucket);
-            bucket = (hash_bucket *)&pails[hkey];
+            assert(0==slot);
+            slot = (hash_slot *)&pails[hkey];
             
             //------------------------------------------------------------------
             // loop over handle
             //------------------------------------------------------------------
-            for(const hash_meta *meta=bucket->head;meta;meta=meta->next)
+            for(const hash_meta *meta=slot->head;meta;meta=meta->next)
             {
                 //--------------------------------------------------------------
                 // test hkey first
@@ -256,18 +254,18 @@ namespace upsylon
         template <typename KEY> inline
         NODE *search(const KEY     & key,
                      const size_t    hkey,
-                     hash_bucket * & bucket)   throw()
+                     hash_slot *   & slot)   throw()
         {
             //------------------------------------------------------------------
             // get bucket from hkey
             //------------------------------------------------------------------
-            assert(0==bucket);
-            bucket = (hash_bucket *)&pails[hkey];
+            assert(0==slot);
+            slot = &pails[hkey];
             
             //------------------------------------------------------------------
             // loop over handle
             //------------------------------------------------------------------
-            for(hash_meta *meta=bucket->head;meta;meta=meta->next)
+            for(hash_meta *meta=slot->head;meta;meta=meta->next)
             {
                 //--------------------------------------------------------------
                 // test hkey first
@@ -285,7 +283,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // found!
                 //--------------------------------------------------------------
-                bucket->move_to_front(meta);
+                slot->move_to_front(meta);
                 return  node;
             }
             
@@ -303,18 +301,18 @@ namespace upsylon
             //------------------------------------------------------------------
             // search node with key and hkey
             //------------------------------------------------------------------
-            hash_bucket *bucket = 0;
-            NODE        *node   = search<KEY>(key,hkey,bucket);
+            hash_slot  *slot = 0;
+            NODE       *node = search<KEY>(key,hkey,slot);
             if(node)
             {
                 //--------------------------------------------------------------
                 // found the node
                 //--------------------------------------------------------------
-                assert(0!=bucket);
+                assert(0!=slot);
                 assert(0!=node->meta);
                 hash_meta *meta = node->meta;          // retrieve the handle
                 nodes.unlink(node)->~NODE();           // destruct node content
-                cache.store( bucket->unlink(meta) );   // back to cache
+                cache.store( slot->unlink(meta) );   // back to cache
                 return true;
             }
             else
@@ -332,8 +330,8 @@ namespace upsylon
                     const size_t hkey,
                     const T    & data)
         {
-            hash_bucket *bucket = 0;
-            if(search<KEY>(key,hkey,bucket))
+            hash_slot *slot = 0;
+            if(search<KEY>(key,hkey,slot))
             {
                 //--------------------------------------------------------------
                 // already there
@@ -384,7 +382,7 @@ namespace upsylon
         // members
         //______________________________________________________________________
         list_type         nodes;   //!< live nodes
-        hash_buckets      pails;   //!< buckets of handles to nodes
+        hash_slots        pails;   //!< buckets of handles to nodes
         hash_zpairs<NODE> cache;   //!< cache
         
         

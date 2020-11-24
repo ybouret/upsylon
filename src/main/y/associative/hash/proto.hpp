@@ -62,7 +62,7 @@ namespace upsylon
         //! associative: search in constant table
         inline virtual const_type *search(param_key_type key) const throw()
         {
-            hash_bucket     *slot = 0;
+            hash_slot       *slot = 0;
             const size_t     hkey = hash(key);
             const node_type *node = table. template search<KEY>(key,hkey,slot);
             if(node)
@@ -78,7 +78,7 @@ namespace upsylon
         //! associative: search in table
         inline virtual  type *search(param_key_type key) throw()
         {
-            hash_bucket  *slot = 0;
+            hash_slot    *slot = 0;
             const size_t  hkey = hash(key);
             node_type    *node = table. template search<KEY>(key,hkey,slot);
             if(node)

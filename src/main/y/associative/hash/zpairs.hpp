@@ -4,7 +4,7 @@
 #ifndef Y_HASH_ZPAIRS_INCLUDED
 #define Y_HASH_ZPAIRS_INCLUDED 1
 
-#include "y/associative/hash/bucket.hpp"
+#include "y/associative/hash/slot.hpp"
 #include "y/associative/hash/znodes.hpp"
 
 
@@ -21,7 +21,7 @@ namespace upsylon
     class hash_zpairs
     {
     public:
-        typedef hash_bucket        h_list_type; //!< alias
+        typedef hash_slot          h_list_type; //!< alias
         typedef hash_znodes<NODE>  z_list_type; //!< alias
 
         //______________________________________________________________________

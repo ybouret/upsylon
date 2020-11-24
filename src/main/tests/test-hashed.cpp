@@ -54,10 +54,10 @@ namespace
 {
 
 
-    static inline void doTestBucket()
+    static inline void doTestSlot()
     {
-        std::cerr << "-- testing Bucket" << std::endl;
-        hash_bucket bucket;
+        std::cerr << "-- testing Slot" << std::endl;
+        hash_slot bucket;
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
             bucket.push();
@@ -71,11 +71,11 @@ namespace
     }
 
 
-    static inline void doTestBuckets(const size_t n)
+    static inline void doTestSlots(const size_t n)
     {
-        std::cerr << "-- testing Buckets #" << n << std::endl;
-        hash_bucket  pool;
-        hash_buckets B(n);
+        std::cerr << "-- testing Slots #" << n << std::endl;
+        hash_slot  pool;
+        hash_slots B(n);
         std::cerr << "\t->count=" << B.count << std::endl;
         std::cerr << "\t->bmask=" << B.bmask << std::endl;
         std::cerr << "\t->bexp2=" << B.bexp2 << std::endl;
@@ -89,7 +89,7 @@ namespace
 
         B.dump();
 
-        hash_buckets S(n/2);
+        hash_slots S(n/2);
         B.to(S);
         S.dump();
 
@@ -128,7 +128,7 @@ namespace
         alea.shuffle(Z.zlist);
 
         std::cerr << "Z.size=" << Z.size() << std::endl;
-        hash_bucket bucket;
+        hash_slot bucket;
         while( Z.size() )
         {
             bucket.push_back( Z.query(alea.leq(100) ) );
@@ -154,7 +154,7 @@ namespace
         {
             const KEY    k = support::get<KEY>();
             const size_t h = alea.leq(100);
-            hash_bucket *b = 0;
+            hash_slot   *b = 0;
             Y_CHECK( !table.template search<KEY>(k,h,b)  );
             Y_CHECK( !table.template remove<KEY>(k,h)    );
 
@@ -222,7 +222,7 @@ namespace
                 const size_t j    = idx[i];
                 const KEY   &k    = keys[j];
                 const size_t h    = hkeys[j];
-                hash_bucket *b    = 0;
+                hash_slot   *b    = 0;
                 Node        *node = table. template search<KEY>(k,h,b);
                 Y_ASSERT(NULL!=node);
                 Y_ASSERT(NULL!=node->meta);
@@ -498,12 +498,12 @@ namespace
 Y_UTEST(hashed)
 {
     Y_UTEST_SIZEOF(hash_meta);
-    Y_UTEST_SIZEOF(hash_bucket);
-    doTestBucket();
-    doTestBuckets(0);
+    Y_UTEST_SIZEOF(hash_slot);
+    doTestSlot();
+    doTestSlots(0);
     for(size_t n=1;n<=16;n<<=1)
     {
-        doTestBuckets(n);
+        doTestSlots(n);
     }
 
     doTestZNodes();
