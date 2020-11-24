@@ -48,7 +48,7 @@ namespace upsylon
 
         int Analyzer:: onTerminal(const string &id, const Jive::Lexeme &data)
         {
-            (void)Jive::Syntax::Analyzer::onTerminal(id,data);
+            //(void)Jive::Syntax::Analyzer::onTerminal(id,data);
             const unsigned h = vhash(id);
             switch( h )
             {
@@ -86,7 +86,7 @@ namespace upsylon
 
         int  Analyzer:: onInternal(const string &id, const size_t  size)
         {
-            (void)Jive::Syntax::Analyzer::onInternal(id,size);
+            //(void)Jive::Syntax::Analyzer::onInternal(id,size);
             const unsigned h = ihash(id);
             switch(h)
             {
