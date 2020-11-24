@@ -36,7 +36,7 @@ namespace upsylon
                     {
                         const Axiom &LBRACK = division('[');
                         const Axiom &RBRACK = division(']');
-                        jArray << ( agg("emtpy_array") << LBRACK << RBRACK );
+                        jArray << ( agg("empty_array") << LBRACK << RBRACK );
                         jArray << ( agg("heavy_array") << LBRACK << jValue
                                    << zeroOrMore( cat(COMA,jValue) )
                                    << RBRACK);

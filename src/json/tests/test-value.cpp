@@ -1,4 +1,4 @@
-#include "y/json/value.hpp"
+#include "y/json/analyzer.hpp"
 #include "y/json/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
@@ -29,18 +29,26 @@ Y_UTEST(value)
     }
 
     JSON::Parser           jsp;
-    Jive::Syntax::Analyzer A( jsp.name );
+    JSON::Analyzer         jsa;
     if(argc>1)
     {
         Jive::XNode::Pointer xnode( jsp.parseFile(argv[1]));
         xnode->graphViz("json-tree.dot");
         std::cerr << "-> walk..." << std::endl;
-        A.walk( & *xnode );
+        jsa.walk( & *xnode );
+        {
+            ios::ocstream fp( ios::cstderr );
+            for(size_t i=1;i<=jsa.vstack.size();++i)
+            {
+                jsa.vstack[i].display(fp) << "\n";
+            }
+        }
+
         std::cerr << std::endl;
         {
             xnode->save_to("json-tree.bin");
-            Jive::XNode::Pointer rnode( Jive::XNode::LoadFile("json-tree.bin",jsp,A.maxLength));
-            A.walk( & *rnode );
+            Jive::XNode::Pointer rnode( Jive::XNode::LoadFile("json-tree.bin",jsp,jsa.maxLength));
+            jsa.walk( & *rnode );
             std::cerr << std::endl;
         }
     }

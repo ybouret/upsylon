@@ -58,7 +58,7 @@ namespace upsylon
 
             //! get hash, invalid if not found
             template <typename ID> inline
-            type operator()(const ID &key)
+            type operator()(const ID &key) const
             {
                 const_type *ptr = search(key);
                 if(ptr)
