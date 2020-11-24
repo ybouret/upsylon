@@ -29,7 +29,7 @@ namespace upsylon
             void loadFile(const FILENAME &fileName, Value &value)
             {
                 analyzer.reset();
-                parser.start();
+                parser.reset();
                 const Jive::XNode::Pointer tree( parser.parseFile(fileName) );
                 analyzer.walk( tree.content() );
                 value.swapWith(getValue());

@@ -101,9 +101,7 @@ namespace upsylon
             // management
             //__________________________________________________________________
 
-            //! reset lexer...
-            void   start() throw();
-
+            
             //! parse using Grammar::run
             XNode *parse(Source &source,const size_t prefetch=0);
 

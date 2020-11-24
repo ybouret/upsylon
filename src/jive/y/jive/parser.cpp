@@ -12,12 +12,7 @@ namespace upsylon
         {
         }
 
-        void Parser:: start() throw()
-        {
-            reset();
-        }
-
-
+        
         XNode * Parser:: parse(Source &source,const size_t prefetch)
         {
             ready(source,prefetch);

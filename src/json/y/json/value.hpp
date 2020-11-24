@@ -81,8 +81,7 @@ namespace upsylon
             
             //! display
             ios::ostream & display(ios::ostream &, int depth=0) const;
-            std::ostream & display(std::ostream &, int depth=0) const;
-            friend std::ostream & operator<<( std::ostream &os, const Value &);
+            
 
             const ValueType type; //!< named type
             
