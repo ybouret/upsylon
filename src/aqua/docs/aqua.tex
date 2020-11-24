@@ -52,7 +52,8 @@ with
 	C_j > 0    & \Rightarrow & \vec{v}_j \cdot \vec{\xi} \geq -C_j
 \end{array}
 \right.
-\Leftrightarrow \trn{\bm{\nu}} \vec{\xi} \geq \vec{\theta}
+\;\;
+\Leftrightarrow \;\; \trn{\bm{\nu}} \vec{\xi} \geq \vec{\theta}
 \end{equation}
 We look for the minimisation  of the global balance:
 \begin{equation}
@@ -89,16 +90,31 @@ We choose
 \end{equation}
 and we want
 \begin{equation}
-	\trn{\bm{\nu}}\vec{\xi} = \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \geq \vec{\theta}
+\left\lbrace
+\begin{array}{rcl}
+	\trn{\bm{\nu}}\vec{\xi} & = & \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \geq \vec{\theta}\\
+ 	\mathcal{B}(\vec{C}) & \simeq & \trn{\vec{\sigma}} \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \\
+\end{array}
+\right.
 \end{equation}
-with
+
 \begin{equation}
-	\trn{\vec{\sigma}} \trn{\bm{\nu}} \bm{\Omega} \bm{\nu} \vec{\sigma} \simeq \mathcal{B}(\vec{C})
+	\mathcal{B}(\vec{C}) \simeq \vec{\Omega} \cdot
+	\begin{pmatrix}
+		\vdots\\
+		(\sum_k \nu_{ik} \sigma_k)^2\\
+		\vdots\\
+	\end{pmatrix}
 \end{equation}
 
 We compute
 \begin{equation}
-	 (\trn{\bm{\nu}} \bm{\Omega} \bm{\nu} )_{ij} = \sum_k \Omega_k \nu_{ki}\nu_{kj} = \vec{\Omega} \cdot \vec{Y}_{ij}
+	\forall (i,j) \in  [1:M]^2, \;\; (\trn{\bm{\nu}} \bm{\Omega} \bm{\nu} )_{ij} = \sum_{k\in[1:N]} \Omega_k \nu_{ki}\nu_{kj} = \vec{\Omega} \cdot \vec{Y}_{ij}
+\end{equation}
+then
+\begin{equation}
+	\forall m \in [1:M], \;\; \sum_{l\in[1:M]} (\trn{\bm{\nu}} \bm{\Omega} \bm{\nu} )_{ml} \sigma_l 
+	= \vec{\Omega} \cdot \left( \sum_l\sigma_{l\in[1:M]} \vec{Y}_{ml} \right) \geq \theta_m
 \end{equation}
 
 \end{document}
