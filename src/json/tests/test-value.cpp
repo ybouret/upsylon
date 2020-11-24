@@ -2,7 +2,7 @@
 #include "y/json/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/ios/serialized.hpp"
+#include "y/jive/syntax/analyzer.hpp"
 
 using namespace upsylon;
 
@@ -10,11 +10,11 @@ Y_UTEST(value)
 {
     {
         JSON::Value  v0;
-        JSON::Value  v1 = JSON::NullType;
-        JSON::Value  v2 = JSON::TrueType;
-        JSON::Value  v3 = JSON::FalseType;
-        JSON::Value  v4 = 4.0;
-        JSON::Value  v5 = "Hello";
+        JSON::Value  v1    = JSON::NullType;
+        JSON::Value  v2    = JSON::TrueType;
+        JSON::Value  v3    = JSON::FalseType;
+        JSON::Value  v4    = 4.0;
+        JSON::Value  v5    = "Hello";
         const string world = "World";
         JSON::Value  v6 = world;
 
@@ -28,11 +28,21 @@ Y_UTEST(value)
         }
     }
 
-    JSON::Parser jsp;
+    JSON::Parser           jsp;
+    Jive::Syntax::Analyzer A( jsp.name );
     if(argc>1)
     {
         Jive::XNode::Pointer xnode( jsp.parseFile(argv[1]));
         xnode->graphViz("json-tree.dot");
+        std::cerr << "-> walk..." << std::endl;
+        A.walk( & *xnode );
+        std::cerr << std::endl;
+        {
+            xnode->save_to("json-tree.bin");
+            Jive::XNode::Pointer rnode( Jive::XNode::LoadFile("json-tree.bin",jsp,A.maxLength));
+            A.walk( & *rnode );
+            std::cerr << std::endl;
+        }
     }
 
 #if 0
