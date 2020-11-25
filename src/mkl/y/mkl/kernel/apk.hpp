@@ -22,7 +22,8 @@ namespace upsylon
         {
             //! integer type determinant
             /**
-             assuming that T is an integer type
+             - assuming that T is an integer type
+             - will convert to rational
              */
             template <typename T> static inline
             apz determinant(const matrix<T> &a)
