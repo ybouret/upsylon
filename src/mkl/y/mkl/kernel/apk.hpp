@@ -38,6 +38,10 @@ namespace upsylon
             }
 
             //! compute adjoint for integer types
+            /**
+             internal computation is made with internal
+             minors of rationals.
+             */
             template <typename T> static inline
             void adjoint( matrix<apz> &target, const matrix<T> &source )
             {
@@ -66,7 +70,7 @@ namespace upsylon
                 }
             }
 
-            //! simplify
+            //! simplify num/den by the greatest gcd
             static void simplify(addressable<apz> &num, apz &den, apz *ratio);
 
             //! simplify full matrix
@@ -79,6 +83,11 @@ namespace upsylon
             static void simplify(addressable<apz> &d, matrix<apz> &num, const apz &den);
 
             //! simplified adjoint of gram matrix
+            /**
+             \param A the simplified output adjoint matrix
+             \param M the input integral matrix
+             \return denominator value, adjoint=A/denominator
+             */
             template <typename T> static inline
             apz adjoint_gram(matrix<apz> &A, const matrix<T> &M)
             {
@@ -94,7 +103,9 @@ namespace upsylon
 
             //! convert matrix
             template <typename T> static inline
-            void convert(matrix<T> &target, const matrix<apz> &source, const char *when=0)
+            void convert(matrix<T>          &target,
+                         const matrix<apz>  &source,
+                         const char *when=0)
             {
                 assert( target.same_size_than(source) );
                 T         *tgt = *target;
