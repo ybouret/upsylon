@@ -1,7 +1,10 @@
+INCLUDE(ProcessorCount)
+ProcessorCount(NP)
 FILE(GLOB compilers "./forge/*" )
+LIST(SORT compilers)
 
 FOREACH( compiler ${compilers} )
-	MESSAGE( STATUS "processing ${compiler}" )
+	MESSAGE( STATUS "${compiler}" )
 	SET(known_compiler FALSE)
 	
 	#single configuration compilers
@@ -42,10 +45,26 @@ FOREACH( compiler ${compilers} )
 	IF( NOT known_compiler )
 	MESSAGE( FATAL_ERROR "unknown compiler" )
 	ENDIF()
+		
+	#processing
+	IF( gnu OR intel OR clang )
+		FILE(GLOB generators "${compiler}/*" )
+		FOREACH( generator ${generators} )
+ 			FILE(GLOB configs "${generator}/*")
+			FOREACH( config ${configs} )
+				MESSAGE(STATUS "[${config}]...")
+				EXECUTE_PROCESS(
+				COMMAND           ${CMAKE_COMMAND} --build . --target all -- -j ${NP}
+				WORKING_DIRECTORY ${config}
+				OUTPUT_QUIET
+				)
+			ENDFOREACH()
+		ENDFOREACH()
+	ENDIF()
 	
 	IF(xcode)
-		MESSAGE( STATUS "building for Xcode..." )
-		EXECUTE_PROCESS(
+		MESSAGE( STATUS "[Xcode/Release]..." )
+ 		EXECUTE_PROCESS(
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD
 		WORKING_DIRECTORY ${compiler}
 		OUTPUT_QUIET
@@ -53,15 +72,13 @@ FOREACH( compiler ${compilers} )
 	ENDIF()
 	
 	IF(msc)
-		MESSAGE( STATUS "building for Microsoft..." )
-		EXECUTE_PROCESS(
+		MESSAGE( STATUS "[Microsoft/Release]..." )
+ 		EXECUTE_PROCESS(
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD -- -m
 		WORKING_DIRECTORY ${compiler}
 		OUTPUT_QUIET
  		)
 	ENDIF()
-	
-	
 	
 ENDFOREACH()
 
