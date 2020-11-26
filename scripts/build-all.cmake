@@ -44,20 +44,24 @@ FOREACH( compiler ${compilers} )
 	ENDIF()
 	
 	IF(xcode)
-		MESSAGE( STATUS "building for Xcode in '${compiler}'" )
+		MESSAGE( STATUS "building for Xcode..." )
 		EXECUTE_PROCESS(
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD
 		WORKING_DIRECTORY ${compiler}
+		OUTPUT_QUIET
  		)
 	ENDIF()
 	
 	IF(msc)
-		MESSAGE( STATUS "building for Microsoft" )
+		MESSAGE( STATUS "building for Microsoft..." )
 		EXECUTE_PROCESS(
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD -- -m
 		WORKING_DIRECTORY ${compiler}
+		OUTPUT_QUIET
  		)
 	ENDIF()
+	
+	
 	
 ENDFOREACH()
 
