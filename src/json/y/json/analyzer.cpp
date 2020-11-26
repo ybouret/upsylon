@@ -48,7 +48,11 @@ namespace upsylon
 
         int Analyzer:: onTerminal(const string &id, const Jive::Lexeme &data)
         {
-            //(void)Jive::Syntax::Analyzer::onTerminal(id,data);
+            //------------------------------------------------------------------
+            //
+            // building a new Terminal
+            //
+            //------------------------------------------------------------------
             const unsigned h = vhash(id);
             switch( h )
             {
@@ -86,7 +90,11 @@ namespace upsylon
 
         int  Analyzer:: onInternal(const string &id, const size_t  size)
         {
-            //(void)Jive::Syntax::Analyzer::onInternal(id,size);
+            //------------------------------------------------------------------
+            //
+            // building a new Internal
+            //
+            //------------------------------------------------------------------
             const unsigned h = ihash(id);
             switch(h)
             {
@@ -118,7 +126,7 @@ namespace upsylon
                     // empty_array
                     //----------------------------------------------------------
                 case 1: assert( Internals[h] == id);
-                    if(size!=0) throw exception("invalid size=0 for <%s>", *id);
+                    if(size!=0) throw exception("invalid #args=%u for <%s>", unsigned(size), *id);
                     vstack.push(ArrayType);
                     break;
 
@@ -146,7 +154,7 @@ namespace upsylon
                     // empty object
                     //----------------------------------------------------------
                 case 3: assert( Internals[h] == id);
-                    if(size!=0) throw exception("invalid size=0 for <%s>", *id);
+                    if(size!=0) throw exception("invalid #args=%u for <%s>", unsigned(size), *id);
                     vstack.push( ObjectType );
                     break;
 
