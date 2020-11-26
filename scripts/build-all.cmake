@@ -54,6 +54,7 @@ FOREACH( compiler ${compilers} )
 			FOREACH( config ${configs} )
 				MESSAGE(STATUS "[${config}]...")
 				EXECUTE_PROCESS(
+				COMMAND           ${CMAKE_COMMAND} .
 				COMMAND           ${CMAKE_COMMAND} --build . --target all -- -j ${NP}
 				WORKING_DIRECTORY ${config}
 				OUTPUT_QUIET
@@ -65,6 +66,7 @@ FOREACH( compiler ${compilers} )
 	IF(xcode)
 		MESSAGE( STATUS "[Xcode/Release]..." )
  		EXECUTE_PROCESS(
+ 		COMMAND           ${CMAKE_COMMAND} .
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD
 		WORKING_DIRECTORY ${compiler}
 		OUTPUT_QUIET
@@ -74,6 +76,7 @@ FOREACH( compiler ${compilers} )
 	IF(msc)
 		MESSAGE( STATUS "[Microsoft/Release]..." )
  		EXECUTE_PROCESS(
+ 		COMMAND           ${CMAKE_COMMAND} .
 		COMMAND           ${CMAKE_COMMAND} --build . --config Release --target ALL_BUILD -- -m
 		WORKING_DIRECTORY ${compiler}
 		OUTPUT_QUIET
