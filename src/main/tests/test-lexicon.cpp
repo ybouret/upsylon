@@ -124,8 +124,8 @@ Y_UTEST(lexicon)
     hash_map<string,string>     smap(n,as_capacity);
     suffix_map<string,string>   stab(n,as_capacity);
     
-    doLexicon(smap,strings,strings,"map");
-    doLexicon(stab,strings,strings,"prefix_table");
+    doLexicon(smap,strings,strings,"hash_map");
+    doLexicon(stab,strings,strings,"suffix_map");
     
     
     
