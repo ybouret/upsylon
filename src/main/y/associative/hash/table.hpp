@@ -130,7 +130,10 @@ namespace upsylon
         //! populate cache
         inline void reserve(size_t n)
         {
-            while(n-- > 0) cache.push();
+            while(n-- > 0)
+            {
+                cache.push();
+            }
         }
         
         //! capacity

@@ -51,10 +51,16 @@ namespace upsylon
         //______________________________________________________________________
         inline virtual size_t size()     const throw() { return table.nodes.size; } //!< container: size
         inline virtual size_t capacity() const throw() { return table.capacity(); } //!< container: capacity
-        inline virtual void   reserve(const size_t n)  { table.reserve(n);        } //!< container: reserve
         inline virtual void   free() throw()           { table.free();            } //!< container: free
         inline virtual void   release() throw()        { table.release();         } //!< container: release
-        
+
+        //! container: reserve
+        inline virtual void   reserve(const size_t n)
+        {
+            table.reserve(n);
+            table.slots.try_resize_for(ratio,table.capacity());
+        }
+
         //______________________________________________________________________
         //
         // associative interface
