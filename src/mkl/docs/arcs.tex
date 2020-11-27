@@ -1,0 +1,61 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+
+
+\begin{document}
+\title{Arcs}
+\maketitle
+	
+
+\subsection{Kinematics}
+
+We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
+that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
+At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration $\vec{A}_i$.
+\begin{itemize}
+\item With a view to compute the curvature, the arc must have a continuous acceleration.
+\item To have a consistent metrics, we need two extra degrees of freedom (to match both velocities and position by integration).
+\end{itemize}
+
+\subsection{Acceleration}
+
+\begin{equation}
+	\vec{A}(t) = (1-t)\vec{A}_i + t  \vec{A}_{i+1} + \left[ t - t^3 \right] \vec{\alpha} + \left[ (1-t) - (1-t)^3 \right] \vec{\beta}
+\end{equation}
+
+\subsection{Velocity}
+\begin{itemize}
+\item Integration:
+\begin{equation}
+	\vec{V}(t) = \vec{V}_i + \int_0^t \vec{A}(u)\mathrm{d}u = \vec{V}_i + \left(t-\dfrac{t^2}{2}\right) \vec{A}_i + \dfrac{t^2}{2} \vec{A}_{i+1} + \left(\dfrac{t^2}{2} - \dfrac{t^4}{4} \right) \vec{\alpha} + \left(\dfrac{t^4}{4} - t^3 + t^2\right) \vec{\beta}
+\end{equation}
+
+\item Expression:
+\begin{equation}
+ \vec{V}(t) = \vec{V}_i + t 
+ \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \dfrac{t}{2} \vec{A}_{i+1} +
+  t \left [
+  \left(\dfrac{1}{2} - \dfrac{t^2}{4} \right) \vec{\alpha} + \left(\dfrac{t^2}{4} - t + 1\right) \vec{\beta}
+  \right ]
+ \right]
+\end{equation}
+
+\item Equation:
+\begin{equation}
+\vec{V}_{i+1} = \vec{V}_i + \dfrac{1}{2}\left(\vec{A}_i + \vec{A}_{i+1}\right) + \dfrac{1}{4} \left( \vec{\alpha} + \vec{\beta}\right)
+\end{equation}
+
+\end{itemize}
+
+\subsection{Position}
+\begin{equation}
+	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)\mathrm{d}u = \vec{P}_i + 
+\end{equation}
+
+\end{document}
