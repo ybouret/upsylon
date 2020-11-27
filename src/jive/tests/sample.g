@@ -6,8 +6,7 @@
 
 .sample; // grammar name
 
-@jstring : //<jstring>;
-//@bstring : <string_> "'" '\'';
+@string : <jstring>;
 
 #include <lex.g>
 
