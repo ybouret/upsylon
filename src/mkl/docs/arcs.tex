@@ -13,7 +13,7 @@
 \maketitle
 	
 
-\subsection{Kinematics}
+\subsection{Metrics}
 
 \subsubsection{Description}
 We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
@@ -112,5 +112,22 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 	\vec{\beta}  & = & 60\left[\vec{P}_{i+1}-\vec{P}_i\right]   & - \left[28\vec{V}_{i+1} + 32 \vec{V}_i\right] & + \left[4\vec{A}_{i+1}-6\vec{A}_{i}\right]\\
 \end{array}
 \end{equation}
+
+\subsection{Kinematics}
+
+\subsubsection{Bulk}
+
+\begin{equation}
+\forall 1 < i < N, \;\;
+\left\lbrace
+\begin{array}{rcl}
+	\vec{V}_i & = & \dfrac{1}{2} \left[ \vec{P}_{i+1} - \vec{P}_i\right]\\
+	\\
+	\vec{A}_i & = & \dfrac{1}{2} \left[ \vec{V}_{i+1} - \vec{V}_i\right]\\
+\end{array}
+\right.
+\end{equation}
+
+
 
 \end{document}
