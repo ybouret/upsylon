@@ -54,8 +54,20 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \end{itemize}
 
 \subsection{Position}
+\begin{itemize}
+\item Integration:
 \begin{equation}
-	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)\mathrm{d}u = \vec{P}_i + 
+	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)\mathrm{d}u = \vec{P}_i + t \vec{V}_i 
+	+ \left(\dfrac{t^2}{2} - \dfrac{t^3}{6}\right) \vec{A}_i + \dfrac{t^3}{6} \vec{A}_{i+1} 
+	+ \left(\dfrac{t^3}{6} - \dfrac{t^5}{20} \right) \vec{\alpha}
+	+ \left( \dfrac{t^5}{20} - \dfrac{t^4}{4} + \dfrac{t^3}{3} \right) \vec{\beta}
 \end{equation}
+
+\item Equation:
+\begin{equation}
+	\vec{P}_{i+1} = \vec{P}_i + \vec{V}_{i} + \dfrac{1}{3} \vec{A}_i + \dfrac{1}{6} \vec{A}_{i+1} + \dfrac{7}{60} \vec{\alpha} + \dfrac{2}{15} \vec{\beta}
+\end{equation}
+
+\end{itemize}
 
 \end{document}
