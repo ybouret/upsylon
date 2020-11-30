@@ -10,9 +10,16 @@ namespace upsylon
 {
     namespace yap
     {
+        //______________________________________________________________________
+        //
+        //
+        //! computing least common multiple
+        //
+        //______________________________________________________________________
         struct lcm
         {
 
+            //! compute for a range
             template <typename ITERATOR> static inline
             natural of(ITERATOR curr, size_t size)
             {
@@ -37,6 +44,7 @@ namespace upsylon
 
             }
 
+            //! compute for a sequence
             template <typename SEQUENCE> static inline
             natural of(SEQUENCE &seq)
             {
