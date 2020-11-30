@@ -21,7 +21,6 @@ namespace {
 Y_UTEST(yap_pf)
 {
 
-
     prime_iterator       p( library::instance() );
     vector<prime_factor> pf;
     {
@@ -56,6 +55,16 @@ Y_UTEST(yap_pf)
         std::cerr << pf[i] << " = " << pf[i].value() << std::endl;
     }
 
+    std::cerr << "factorial decomposition:" << std::endl;
+    {
+        prime_factors P(1);
+        for(size_t n=1;n<=30;++n)
+        {
+            P *= n;
+            std::cerr << n << "! = " << P << std::endl;
+        }
+        std::cerr << std::endl;
+    }
 
     if(argc>1)
     {
@@ -87,18 +96,10 @@ Y_UTEST(yap_pf)
             Y_ASSERT(P.value()==p);
         }
 
+        std::cerr << std::endl;
     }
 
-    std::cerr << "factorial decomposition:" << std::endl;
-    {
-        prime_factors P(1);
-        for(size_t n=1;n<=30;++n)
-        {
-            P *= n;
-            std::cerr << n << "! = " << P << std::endl;
-        }
-        
-    }
+
     Y_UTEST_SIZEOF(natural);
     Y_UTEST_SIZEOF(prime);
     Y_UTEST_SIZEOF(prime_factor);

@@ -330,6 +330,7 @@ test-yap-sprp.cpp
 test-yap-log.cpp
 test-yap-pt.cpp
 test-yap-mod-exp.cpp
+test-yap-lcm.cpp
 )
 ADD_TEST(yap:n    test-main yap_n)
 ADD_TEST(yap:z    test-main yap_z)
@@ -344,6 +345,7 @@ ADD_TEST(yap:log  test-main yap_log)
 ADD_TEST(yap:pt   test-main yap_pt)
 ADD_TEST(fatorial test-main factorial 1 2 3 4 5 6 10 20 30)
 ADD_TEST(yap:mod_exp test-main yap_mod_exp 7 4 5)
+ADD_TEST(yap:lcm  test-main yap_lcm 10 11 12)
 
 
 SOURCE_GROUP(jive FILES

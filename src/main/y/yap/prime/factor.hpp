@@ -51,7 +51,7 @@ namespace upsylon {
             // methods
             //__________________________________________________________________
             natural       value() const;      //!< explicit computation
-            prime_factor *ld1() throw(); //!< transform into 1^1, no-throw
+            prime_factor *ld1() throw();      //!< transform into 1^1, no-throw
             friend bool operator==(const prime_factor &lhs, const prime_factor &rhs) throw(); //!< ==
             friend bool operator!=(const prime_factor &lhs, const prime_factor &rhs) throw(); //!< !=
             //! display

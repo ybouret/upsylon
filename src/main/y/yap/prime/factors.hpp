@@ -40,6 +40,7 @@ namespace upsylon {
             prime_factors(const natural &n);                   //!< decompose
             prime_factors(const utype    u);                   //!< decompose
             prime_factors(const prime_factors &);              //!< copy
+            prime_factors(const prime_factor &f);              //!< with one factor
             prime_factors & operator=( const prime_factors &); //!< assign
             virtual ~prime_factors() throw();                  //!< cleanup
 
@@ -86,7 +87,7 @@ namespace upsylon {
             //
             // members
             //__________________________________________________________________
-            const pf_list factors; //!< list of factors, increasing
+            const pf_list factors; //!< list of factors, in increasing order
 
         private:
             void make(const natural &n);

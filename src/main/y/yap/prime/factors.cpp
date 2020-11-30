@@ -94,6 +94,15 @@ namespace upsylon
 
         }
 
+        prime_factors:: prime_factors(const prime_factor &f) :
+        number(),
+        factors()
+        {
+            aliasing::_(factors).push_back( new prime_factor(f) );
+        }
+
+
+
         prime_factors & prime_factors:: operator=( const prime_factors &other )
         {
             pf_list tmp(other.factors);

@@ -39,12 +39,23 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 
 \item Expression:
 \begin{equation}
- \vec{V}(t) = \vec{V}_i + t 
- \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \dfrac{t}{2} \vec{A}_{i+1} +
+\left\lbrace
+\begin{array}{rcl}
+ \vec{V}(t) & = &\vec{V}_i + t 
+ \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \left(\dfrac{t}{2}\right) \vec{A}_{i+1} +
   t \left [
   \left(\dfrac{1}{2} - \dfrac{t^2}{4} \right) \vec{\alpha} + \left(\dfrac{t^2}{4} - t + 1\right) \vec{\beta}
   \right ]
- \right]
+ \right]\\
+ \\
+  & = & \vec{V}_i + t 
+ \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \dfrac{t}{2} \vec{A}_{i+1} +
+  t \left [
+  \left(\dfrac{1}{2} -  \left(\dfrac{t}{2}\right)^2 \right) \vec{\alpha} + \left( 1-t \left(1-\dfrac{t}{4}\right)\right) \vec{\beta}
+  \right ]
+ \right]\\
+ \end{array}
+ \right.
 \end{equation}
 
 \item Equation:
