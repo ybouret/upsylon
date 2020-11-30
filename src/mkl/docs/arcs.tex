@@ -131,10 +131,10 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \begin{equation}
 \forall 1 < i < N, \;\;
 \left\lbrace
-\begin{array}{rcl}
-	\vec{V}_i & = & \dfrac{1}{2} \left[ \vec{P}_{i+1} - \vec{P}_i\right]\\
+\begin{array}{rcll}
+	\vec{V}_i & = & \dfrac{1}{2} \left[ \vec{P}_{i+1} - \vec{P}_i\right] & \\
 	\\
-	\vec{A}_i & = & \dfrac{1}{2} \left[ \vec{V}_{i+1} - \vec{V}_i\right]\\
+	\vec{A}_i & = &  \left[ \vec{P}_{i+1} - 2\vec{P}_i + \vec{P}_{i+1} \right] & \text{or } \dfrac{1}{2}\left[\vec{V}_{i+1}-\vec{V}_{i-1}\right]
 \end{array}
 \right.
 \end{equation}
@@ -143,10 +143,10 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \begin{equation}
 \left\lbrace
 \begin{array}{rcll}
-\vec{V}_1 & = & \text{given or} & \vec{P}_2 - \vec{P}_1\\ 
-\vec{V}_2 & = & \text{given or} & \vec{P}_2 - \vec{P}_1 = \vec{V}_1\\
-\vec{A}_1 & = & \text{given or} & \vec{V}_2 - \vec{V}_1\\ 
-\vec{A}_2 & = & \text{given or} & \vec{V}_2 - \vec{V}_1=\vec{A}_1\\ 
+\vec{V}_1 & = & \text{given, or} & \vec{P}_2 - \vec{P}_1\\ 
+\vec{V}_2 & = & \text{given, or} & \vec{P}_2 - \vec{P}_1 = \vec{V}_1\\
+\vec{A}_1 & = & \text{given, or} & \vec{V}_2 - \vec{V}_1\\ 
+\vec{A}_N & = & \text{given, or} & \vec{V}_2 - \vec{V}_1=\vec{A}_1\\ 
 \end{array} 
 \right.
 \end{equation}
@@ -155,13 +155,13 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \begin{equation}
 \left\lbrace
 \begin{array}{rcll}
-\vec{V}_1 & = & \text{given or} & \dfrac{1}{2}\left( \left[\vec{P}_2 - \vec{P}_3\right] + 3\left[\vec{P_2}-\vec{P}_1\right] \right)\\ 
+\vec{V}_1 & = & \text{given, or} & \dfrac{1}{2}\left( \left[\vec{P}_2 - \vec{P}_3\right] + 3\left[\vec{P_2}-\vec{P}_1\right] \right)\\ 
 \\
-\vec{V}_N & = & \text{given or} & \dfrac{1}{2}\left( \left[\vec{P}_{N-2}-\vec{P}_{N-1}\right]  + 3\left[\vec{P}_{N} - \vec{P}_{N-1}\right] \right)\\
+\vec{V}_N & = & \text{given, or} & \dfrac{1}{2}\left( \left[\vec{P}_{N-2}-\vec{P}_{N-1}\right]  + 3\left[\vec{P}_{N} - \vec{P}_{N-1}\right] \right)\\
 \\
-\vec{A}_1 & = & \text{given or} &  \dfrac{1}{2}\left( \left[\vec{V}_2 - \vec{V}_3\right] + 3\left[\vec{V_2}-\vec{V}_1\right] \right)\\ 
+\vec{A}_1 & = & \text{given, or} &  \vec{A}_2=\left[\vec{P}_1 - 2\vec{P}_2 + \vec{P}_3\right] \text{, or } \dfrac{1}{2}\left( \left[\vec{V}_2 - \vec{V}_3\right] + 3\left[\vec{V_2}-\vec{V}_1\right] \right)\\ 
 \\
-\vec{A}_2 & = & \text{given or} &  \dfrac{1}{2}\left( \left[\vec{V}_{N-2}-\vec{V}_{N-1}\right]  + 3\left[\vec{V}_{N} - \vec{V}_{N-1}\right] \right)\\ 
+\vec{A}_N & = & \text{given, or} &   \vec{A}_{N-1}=\left[\vec{P}_{N-2} - 2\vec{P}_{N-1} + \vec{P}_{N}\right] \text{, or } \dfrac{1}{2}\left( \left[\vec{V}_{N-2}-\vec{V}_{N-1}\right]  + 3\left[\vec{V}_{N} - \vec{V}_{N-1}\right] \right)\\ 
 \end{array}
 \right.
 \end{equation}
@@ -171,13 +171,13 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \begin{equation}
 \left\lbrace
 \begin{array}{rcll}
-\vec{V}_1 & = & \text{given or} & \dfrac{1}{2}\left(\vec{P}_2 - \vec{P}_{N-1}\right)\\ 
+\vec{V}_1 & = & \text{given, or} & \dfrac{1}{2}\left(\vec{P}_2 - \vec{P}_{N-1}\right)\\ 
 \\
-\vec{V}_N & = & \text{given or} & \dfrac{1}{2}\left(\vec{P}_1 - \vec{P}_{N-1}\right)\\
+\vec{V}_N & = & \text{given, or} & \dfrac{1}{2}\left(\vec{P}_1 - \vec{P}_{N-1}\right)\\
 \\
-\vec{A}_1 & = & \text{given or} &  \dfrac{1}{2}\left(\vec{V}_2 - \vec{V}_{N-1}\right)\\ 
+\vec{A}_1 & = & \text{given, or} &   \left[\vec{P}_{N} - 2\vec{P}_{1} + \vec{P}_2\right]  \text{, or } \dfrac{1}{2}\left(\vec{V}_2 - \vec{V}_{N-1}\right)\\ 
 \\
-\vec{A}_2 & = & \text{given or} &  \dfrac{1}{2}\left(\vec{V}_1 - \vec{V}_{N-1}\right)\\ 
+\vec{A}_N & = & \text{given, or} &    \left[\vec{P}_{N-1} - 2\vec{P}_N + \vec{P}_1\right] \text{, or }  \dfrac{1}{2}\left(\vec{V}_1 - \vec{V}_{N-1}\right)\\ 
 \end{array} 
 \right.
 \end{equation}
