@@ -141,13 +141,33 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 
 \subsubsection{Standard Boundaries for $N=2$}
 \begin{equation}
+\left\lbrace
 \begin{array}{rcll}
 \vec{V}_1 & = & \text{given or} & \vec{P}_2 - \vec{P}_1\\ 
 \vec{V}_2 & = & \text{given or} & \vec{P}_2 - \vec{P}_1 = \vec{V}_1\\
 \vec{A}_1 & = & \text{given or} & \vec{V}_2 - \vec{V}_1\\ 
 \vec{A}_2 & = & \text{given or} & \vec{V}_2 - \vec{V}_1=\vec{A}_1\\ 
 \end{array} 
+\right.
 \end{equation}
+
+\subsubsection{Standard Boundaries for $N>2$}
+\begin{equation}
+\left\lbrace
+\begin{array}{rcll}
+\vec{V}_1 & = & \text{given or} & \dfrac{1}{2}\left( \left[\vec{P}_2 - \vec{P}_3\right] + 3\left[\vec{P_2}-\vec{P}_1\right] \right)\\ 
+\\
+\vec{V}_N & = & \text{given or} & \dfrac{1}{2}\left( \left[\vec{P}_{N-2}-\vec{P}_{N-1}\right]  + 3\left[\vec{P}_{N} - \vec{P}_{N-1}\right] \right)\\
+\\
+\vec{A}_1 & = & \text{given or} &  \dfrac{1}{2}\left( \left[\vec{V}_2 - \vec{V}_3\right] + 3\left[\vec{V_2}-\vec{V}_1\right] \right)\\ 
+\\
+\vec{A}_2 & = & \text{given or} &  \dfrac{1}{2}\left( \left[\vec{V}_{N-2}-\vec{V}_{N-1}\right]  + 3\left[\vec{V}_{N} - \vec{V}_{N-1}\right] \right)\\ 
+\end{array}
+\right.
+\end{equation}
+
+
+
 
 
 \end{document}
