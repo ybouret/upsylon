@@ -27,31 +27,31 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \subsubsection{Acceleration}
 
 \begin{equation}
-	\vec{A}(t) = (1-t)\vec{A}_i + t  \vec{A}_{i+1} + \left[ t - t^3 \right] \vec{\alpha} + \left[ (1-t) - (1-t)^3 \right] \vec{\beta}
+	\vec{A}(\tau) = (1-\tau)\vec{A}_i + \tau  \vec{A}_{i+1} + \left[ \tau - \tau^3 \right] \vec{\alpha} + \left[ (1-\tau) - (1-\tau)^3 \right] \vec{\beta}
 \end{equation}
 
 \subsubsection{Velocity}
 \begin{itemize}
 \item Integration:
 \begin{equation}
-	\vec{V}(t) = \vec{V}_i + \int_0^t \vec{A}(u)\mathrm{d}u = \vec{V}_i + \left(t-\dfrac{t^2}{2}\right) \vec{A}_i + \dfrac{t^2}{2} \vec{A}_{i+1} + \left(\dfrac{t^2}{2} - \dfrac{t^4}{4} \right) \vec{\alpha} + \left(\dfrac{t^4}{4} - t^3 + t^2\right) \vec{\beta}
+	\vec{V}(t) = \vec{V}_i + \int_0^\tau \vec{A}(u)\mathrm{d}u = \vec{V}_i + \left(\tau-\dfrac{\tau^2}{2}\right) \vec{A}_i + \dfrac{\tau^2}{2} \vec{A}_{i+1} + \left(\dfrac{\tau^2}{2} - \dfrac{\tau^4}{4} \right) \vec{\alpha} + \left(\dfrac{\tau^4}{4} - \tau^3 + \tau^2\right) \vec{\beta}
 \end{equation}
 
 \item Expression:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
- \vec{V}(t) & = &\vec{V}_i + t 
- \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \left(\dfrac{t}{2}\right) \vec{A}_{i+1} +
-  t \left [
-  \left(\dfrac{1}{2} - \dfrac{t^2}{4} \right) \vec{\alpha} + \left(\dfrac{t^2}{4} - t + 1\right) \vec{\beta}
+ \vec{V}(t) & = &\vec{V}_i + \tau 
+ \left[ \left(1-\dfrac{\tau}{2}\right) \vec{A}_i + \left(\dfrac{\tau}{2}\right) \vec{A}_{i+1} +
+  \tau \left [
+  \left(\dfrac{1}{2} - \dfrac{\tau^2}{4} \right) \vec{\alpha} + \left(\dfrac{\tau^2}{4} - \tau + 1\right) \vec{\beta}
   \right ]
  \right]\\
  \\
-  & = & \vec{V}_i + t 
- \left[ \left(1-\dfrac{t}{2}\right) \vec{A}_i + \dfrac{t}{2} \vec{A}_{i+1} +
-  t \left [
-  \left(\dfrac{1}{2} -  \left(\dfrac{t}{2}\right)^2 \right) \vec{\alpha} + \left( 1-t \left(1-\dfrac{t}{4}\right)\right) \vec{\beta}
+  & = & \vec{V}_i + \tau 
+ \left[ \left(1-\dfrac{\tau}{2}\right) \vec{A}_i + \dfrac{\tau}{2} \vec{A}_{i+1} +
+  \tau \left [
+  \left(\dfrac{1}{2} -  \left(\dfrac{\tau}{2}\right)^2 \right) \vec{\alpha} + \left( 1-\tau \left(1-\dfrac{\tau}{4}\right)\right) \vec{\beta}
   \right ]
  \right]\\
  \end{array}
@@ -69,10 +69,10 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \begin{itemize}
 \item Integration:
 \begin{equation}
-	\vec{P}(t) = \vec{P}_{i} + \int_0^t \vec{V}(u)\mathrm{d}u = \vec{P}_i + t \vec{V}_i 
-	+ \left(\dfrac{t^2}{2} - \dfrac{t^3}{6}\right) \vec{A}_i + \dfrac{t^3}{6} \vec{A}_{i+1} 
-	+ \left(\dfrac{t^3}{6} - \dfrac{t^5}{20} \right) \vec{\alpha}
-	+ \left( \dfrac{t^5}{20} - \dfrac{t^4}{4} + \dfrac{t^3}{3} \right) \vec{\beta}
+	\vec{P}(t) = \vec{P}_{i} + \int_0^\tau \vec{V}(u)\mathrm{d}u = \vec{P}_i + \tau \vec{V}_i 
+	+ \left(\dfrac{\tau^2}{2} - \dfrac{\tau^3}{6}\right) \vec{A}_i + \dfrac{\tau^3}{6} \vec{A}_{i+1} 
+	+ \left(\dfrac{\tau^3}{6} - \dfrac{\tau^5}{20} \right) \vec{\alpha}
+	+ \left( \dfrac{\tau^5}{20} - \dfrac{\tau^4}{4} + \dfrac{\tau^3}{3} \right) \vec{\beta}
 \end{equation}
 
 \item Equation:
