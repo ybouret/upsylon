@@ -20,11 +20,19 @@ Y_UTEST(yap_lcm)
     std::cerr <<  "u=" << u << std::endl;
     std::cerr <<  "U=" << U << std::endl;
 
-    std::cerr << "using native  type:" << std::endl;
+    std::cerr << "Using native  type:" << std::endl;
     apn l = lcm::of(u); std::cerr << "l=" << l << std::endl;
 
-    std::cerr << "using natural type:" << std::endl;
+    std::cerr << "Using natural type:" << std::endl;
     apn L = lcm::of(U); std::cerr << "L=" << L << std::endl;
+
+    std::cerr << "Checking divisibility..." << std::endl;
+    for(list<apn>::iterator it=U.begin();it!=U.end();++it)
+    {
+        const apn & value = *it;
+        Y_ASSERT( L.is_divisible_by(value) );
+    }
+    Y_CHECK( !die("all good") );
 
 
 }
