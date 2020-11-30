@@ -44,7 +44,10 @@ namespace upsylon
     extern const as_capacity_t  as_capacity;   //!< for constructors
 
     //! for verbose assert
-    inline bool die( const char *) throw() { return false; }
+    inline bool die(const char *) throw() { return false; }
+
+    //! for verbose assert
+    inline bool say( const char *) throw() { return true; }
 
     //! the signed system size
     typedef ptrdiff_t unit_t;

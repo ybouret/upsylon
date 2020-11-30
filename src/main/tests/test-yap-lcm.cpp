@@ -32,7 +32,7 @@ Y_UTEST(yap_lcm)
         const apn & value = *it;
         Y_ASSERT( L.is_divisible_by(value) );
     }
-    Y_CHECK( !die("all good") );
+    Y_CHECK( say("all good") );
 
 
 }
