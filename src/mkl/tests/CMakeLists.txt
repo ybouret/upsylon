@@ -77,6 +77,9 @@ ADD_TEST(fit:gauss test-mkl fit_gauss)
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-mkl euclidean)
 
+SOURCE_GROUP(geometric FILES test-geometric.cpp)
+ADD_TEST(geometric test-ml geometric)
+
 SOURCE_GROUP( tao FILES
 test-tao.cpp
 test-simplify.cpp)

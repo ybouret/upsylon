@@ -44,6 +44,7 @@ Y_UTEST_INIT(64)
 
 
     Y_UTEST(euclidean);
+    Y_UTEST(geometric);
 
     Y_UTEST(fit);
     Y_UTEST(fit2);
