@@ -98,6 +98,17 @@ namespace upsylon
                     return Print(os,*p);
                 }
 
+                //! squared norm of a vertex
+                static inline type Norm2(const vertex v) throw()
+                {
+                    const_type *p    = (const_type *)&v;
+                    type        sum2 = square_of(p[0]);
+                    for(size_t dim=1;dim<Dimensions;++dim)
+                    {
+                        sum2 += square_of(p[dim]);
+                    }
+                    return sum2;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Point);

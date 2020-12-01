@@ -57,7 +57,7 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                void build() throw()
+                inline void build() throw()
                 {
                     static const_type _60 = type(60);
                     static const_type _32 = type(32);
@@ -75,6 +75,16 @@ namespace upsylon
                     const vertex _60_dP = _60 * (Pp-Pm);
                     alpha = (_32*Vp+_28*Vm) - (_6*Ap-_4*Am) - _60_dP;
                     beta  = _60_dP - (_28*Vp+_32*Vm) + (_4*Ap-_6*Am);
+                }
+
+                inline vertex A(const_type tau) const throw()
+                {
+                    static const_type one = type(1);
+                    const_type        omt = one-tau;
+                    assert(head); assert(tail);
+                    const vertex Am = head->A;
+                    const vertex Ap = tail->A;
+                    return omt*Am + tau*Ap;
                 }
 
                 //______________________________________________________________

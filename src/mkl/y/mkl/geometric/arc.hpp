@@ -5,6 +5,7 @@
 
 #include "y/mkl/geometric/segment.hpp"
 #include "y/associative/hash/set.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {
