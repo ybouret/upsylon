@@ -1,4 +1,5 @@
-#include "y/mkl/geometric/arc.hpp"
+#include "y/mkl/geometric/arc/standard.hpp"
+#include "y/mkl/geometric/arc/periodic.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/associative/hash/set.hpp"
@@ -41,6 +42,17 @@ namespace {
             Y_ASSERT(nodes.insert(n));
         }
         std::cerr << "nodes=" << nodes << std::endl;
+
+        StandardArc<T,VTX> sa;
+        PeriodicArc<T,VTX> pa;
+        for(typename Points::iterator it=points.begin();it!=points.end();++it)
+        {
+            sa.insert(*it);
+            pa.insert(*it);
+        }
+
+        std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size << std::endl;
+        std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size << std::endl;
 
         std::cerr << "sizes: " << std::endl;
         Y_UTEST_SIZEOF(vertex);

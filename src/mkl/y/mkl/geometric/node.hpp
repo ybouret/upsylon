@@ -37,7 +37,7 @@ namespace upsylon
                 typedef typename PointType::vertex  vertex;      //!< alias
                 typedef typename PointType::Pointer SharedPoint; //!< alias
                 typedef intr_ptr<NodeKey,Node>      Pointer;     //!< alias
-
+                
                 //______________________________________________________________
                 //
                 // C++
