@@ -5,6 +5,7 @@
 #include "y/type/spec.hpp"
 
 using namespace upsylon;
+using namespace mkl;
 using namespace Geometric;
 
 namespace {
@@ -22,12 +23,12 @@ namespace {
 
         hash_set<PointKey,PointerType> points;
 
-        for(size_t i=10+alea.leq(100);i>0;--i)
+        for(size_t i=10+alea.leq(10);i>0;--i)
         {
             const PointerType p = new PointType( support::get<vertex>() );
             Y_ASSERT(points.insert(p));
         }
-        
+        std::cerr << points << std::endl;
 
     }
 

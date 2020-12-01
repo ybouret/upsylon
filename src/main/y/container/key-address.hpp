@@ -5,6 +5,7 @@
 #include "y/memory/buffer.hpp"
 #include "y/os/static-check.hpp"
 #include <cstring>
+#include <iostream>
 
 namespace upsylon {
 
@@ -147,6 +148,13 @@ namespace upsylon {
         {
             const key_address &self = *this;
             return (T*)( self[i] );
+        }
+
+        inline friend std::ostream & operator<<( std::ostream &os, const key_address &k)
+        {
+            os << '@';
+            for(size_t i=0;i<N;++i) os << k.addr[i];
+            return os;
         }
 
     private:
