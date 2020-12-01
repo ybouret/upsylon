@@ -1,4 +1,4 @@
-#include "y/mkl/geometric/point.hpp"
+#include "y/mkl/geometric/node.hpp"
 #include "y/utest/run.hpp"
 #include "y/associative/hash/set.hpp"
 #include "support.hpp"
@@ -21,15 +21,27 @@ namespace {
         std::cerr << "points: " << type_name_of<vertex>() << std::endl;
         std::cerr << "  dims: " << PointType::Dimensions << std::endl;
 
-        hash_set<PointKey,PointerType> points;
+        typedef hash_set<PointKey,PointerType> Points;
+        Points points;
 
-        for(size_t i=10+alea.leq(10);i>0;--i)
+        for(size_t i=3+alea.leq(7);i>0;--i)
         {
             const PointerType p = new PointType( support::get<vertex>() );
             Y_ASSERT(points.insert(p));
         }
-        std::cerr << points << std::endl;
+        std::cerr << "points=" <<  points << std::endl;
 
+        typedef Node<T,VTX>                NodeType;
+        typedef typename NodeType::Pointer NodePointer;
+        hash_set<NodeKey,NodePointer>      nodes;
+        for(typename Points::iterator it=points.begin();it!=points.end();++it)
+        {
+            const NodePointer n = new NodeType( *it );
+            Y_ASSERT(nodes.insert(n));
+        }
+        std::cerr << "nodes=" << nodes << std::endl;
+
+        std::cerr << std::endl;
     }
 
 }
