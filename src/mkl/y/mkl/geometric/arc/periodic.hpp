@@ -63,14 +63,14 @@ namespace upsylon
                 //! insert and update segment(s)
                 inline virtual void insert_(const SharedPoint &point)
                 {
-                    // check back node to get future head of segment
-                    Nodes           &nodes = aliasing::_(this->nodes);
-                    const size_t     count = nodes.size();
-                    const NodeType  *head  = count ? nodes.back().content() : NULL;
+                    // check back node to get future origin of segment
+                    Nodes           &nodes  = aliasing::_(this->nodes);
+                    const size_t     count  = nodes.size();
+                    const NodeType  *origin = count ? nodes.back().content() : NULL;
 
                     // create new node
-                    NodeType        *curr  = new NodeType(point);
-                    const SharedNode node  = curr;
+                    NodeType        *current  = new NodeType(point);
+                    const SharedNode node     = current;
 
                     // insert node
                     if(!nodes.insert(node)) this->nodeInsertFailure( typeid(vertex) );
@@ -82,8 +82,8 @@ namespace upsylon
                         case 0: assert(1==nodes.size()); assert(0==segments.size); break;
                         case 1: assert(2==nodes.size()); assert(0==segments.size);
                             try {
-                                segments.push_back( new SegmentType(head,curr) );
-                                segments.push_back( new SegmentType(curr,head) );
+                                segments.push_back( new SegmentType(origin,current) );
+                                segments.push_back( new SegmentType(current,origin) );
                             }
                             catch(...) {
                                 (void) nodes.remove(node->uuid);
@@ -96,12 +96,12 @@ namespace upsylon
                             assert(count+1==nodes.size());
                             assert(count==segments.size);
                             try {
-                                SegmentType *seg = new SegmentType(head,curr);
+                                SegmentType *seg = new SegmentType(origin,current);
                                 SegmentType *cyc = segments.pop_back();
                                 segments.push_back(seg);
-                                cyc->head = curr;
+                                cyc->origin = current;
                                 segments.push_back(cyc);
-                                assert(cyc->tail==nodes.front().content());
+                                assert(cyc->finish==nodes.front().content());
                             }
                             catch(...) {
                                 (void) nodes.remove(node->uuid);

@@ -41,16 +41,16 @@ namespace upsylon
                 inline virtual ~Segment() throw() {}
 
                 //! setup head --> tail 
-                inline explicit Segment(const NodeType *headNode,
-                                        const NodeType *tailNode) throw() :
+                inline explicit Segment(const NodeType *orgNode,
+                                        const NodeType *finNode) throw() :
                 next(0), prev(0),
-                head( headNode  ),
-                tail( tailNode  ),
+                origin( orgNode  ),
+                finish( finNode  ),
                 alpha(),
                 beta()
                 {
-                    assert(NULL!=tailNode);
-                    assert(NULL!=headNode);
+                    assert(NULL!=orgNode);
+                    assert(NULL!=finNode);
                 }
 
                 //______________________________________________________________
@@ -64,13 +64,13 @@ namespace upsylon
                     static const_type _28 = type(28);
                     static const_type _6  = type(6);
                     static const_type _4  = type(4);
-                    assert(head); assert(tail);
-                    const vertex Pm = ***head;
-                    const vertex Pp = ***tail;
-                    const vertex Vm = head->V;
-                    const vertex Vp = tail->V;
-                    const vertex Am = head->A;
-                    const vertex Ap = tail->A;
+                    assert(origin); assert(finish);
+                    const vertex Pm = ***origin;
+                    const vertex Pp = ***finish;
+                    const vertex Vm = origin->V;
+                    const vertex Vp = finish->V;
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
 
                     const vertex _60_dP = _60 * (Pp-Pm);
                     alpha = (_32*Vp+_28*Vm) - (_6*Ap-_4*Am) - _60_dP;
@@ -83,9 +83,9 @@ namespace upsylon
                     const_type        omt  = one-tau;
                     const_type        tau2 = tau*tau;
                     const_type        omt2 = omt*omt;
-                    assert(head); assert(tail);
-                    const vertex Am = head->A;
-                    const vertex Ap = tail->A;
+                    assert(origin); assert(finish);
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
                     return (omt*Am + tau*Ap) + tau*(one-tau2)*alpha + omt*(one-omt2)*beta;
                 }
 
@@ -93,12 +93,12 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                Segment        *next;  //!< for list
-                Segment        *prev;  //!< for list
-                const NodeType *head;  //!< head point
-                const NodeType *tail;  //!< tail point
-                vertex          alpha; //!< coefficient
-                vertex          beta;  //!< coefficient
+                Segment        *next;    //!< for list
+                Segment        *prev;    //!< for list
+                const NodeType *origin;  //!< origin point
+                const NodeType *finish;  //!< finish point
+                vertex          alpha;   //!< coefficient
+                vertex          beta;    //!< coefficient
 
 
 

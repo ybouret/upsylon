@@ -87,25 +87,25 @@ namespace upsylon
                 //! insert and update segments
                 inline virtual void insert_(const SharedPoint &point)
                 {
-                    // check back node to get future head of segment
-                    Nodes           &nodes = aliasing::_(this->nodes);
-                    const size_t     count = nodes.size();
-                    const NodeType  *head  = count ? nodes.back().content() : NULL;
+                    // check back node to get future origin of segment
+                    Nodes           &nodes  = aliasing::_(this->nodes);
+                    const size_t     count  = nodes.size();
+                    const NodeType  *origin = count ? nodes.back().content() : NULL;
 
-                    // create new node got get future tail of segment
-                    NodeType        *tail  = new NodeType(point);
-                    const SharedNode node  = tail;
+                    // create new node got get future finish of segment
+                    NodeType        *finish = new NodeType(point);
+                    const SharedNode node   = finish;
 
                     // insert node
                     if(!nodes.insert(node)) this->nodeInsertFailure( typeid(vertex) );
 
                     // create segment
-                    if(head)
+                    if(origin)
                     {
                         assert(this->nodes.size()>=2);
                         try
                         {
-                            aliasing::_(this->segments).push_back( new SegmentType(head,tail) );
+                            aliasing::_(this->segments).push_back( new SegmentType(origin,finish) );
                         }
                         catch(...)
                         {
