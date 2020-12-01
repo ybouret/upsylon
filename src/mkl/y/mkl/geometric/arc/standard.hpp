@@ -41,8 +41,22 @@ namespace upsylon
                 inline explicit StandardArc() : ArcType() {} //!< setup
                 inline virtual ~StandardArc() throw() {}     //!< cleanup
 
+               
+
+                inline virtual type tauMax() const throw()
+                {
+                    return type(this->nodes.size());
+                }
+
+
+                
+               
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
+                
                 //! insert and update segments
-                inline void insert(const SharedPoint &point)
+                inline virtual void insert_(const SharedPoint &point)
                 {
                     // check back node to get future head of segment
                     Nodes           &nodes = aliasing::_(this->nodes);
@@ -71,18 +85,6 @@ namespace upsylon
                         }
                     }
                 }
-
-                inline virtual type tauMax() const throw()
-                {
-                    return type(this->nodes.size());
-                }
-
-
-                
-               
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(StandardArc);
             };
 
         }

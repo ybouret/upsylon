@@ -65,12 +65,17 @@ namespace upsylon
                 inline virtual ~Arc() throw() {}
 
                 //! insert new point, update segments
-                virtual void insert(const SharedPoint &point) = 0;
+
+                inline void insert(const SharedPoint &point)
+                {
+                    insert_(point);
+                    aliasing::_(compiled) = false;
+                }
 
                 //! tau in [1:tauMax]
                 virtual type tauMax() const throw() = 0;
 
-                
+
 
 
                 //! update bulk
@@ -114,16 +119,18 @@ namespace upsylon
                 //______________________________________________________________
                 const Nodes    nodes;    //!< table/list of nodes
                 const Segments segments; //!< list of segments
+                const bool     compiled; //!< flag
 
             protected:
                 //! setup empty
-                explicit Arc() : nodes(), segments()
+                explicit Arc() : nodes(), segments(), compiled(false)
                 {
                 }
                 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
+                virtual void insert_(const SharedPoint &point) = 0;
             };
 
         }

@@ -48,8 +48,20 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
+
+
+                inline virtual type tauMax() const throw()
+                {
+                    return type(this->nodes.size()+1);
+                }
+
+                
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
+
                 //! insert and update segment(s)
-                inline void insert(const SharedPoint &point)
+                inline virtual void insert_(const SharedPoint &point)
                 {
                     // check back node to get future head of segment
                     Nodes           &nodes = aliasing::_(this->nodes);
@@ -95,20 +107,10 @@ namespace upsylon
                                 (void) nodes.remove(node->uuid);
                                 throw;
                             }
-                            
+
                     }
 
                 }
-
-                inline virtual type tauMax() const throw()
-                {
-                    return type(this->nodes.size()+1);
-                }
-
-                
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
             };
 
         }
