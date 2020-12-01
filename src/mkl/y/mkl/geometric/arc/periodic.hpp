@@ -27,6 +27,7 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
+                Y_DECL_ARGS(T,type);                                   //!< aliases
                 typedef Arc<T,VTX> ArcType;                            //!< alias
                 typedef typename   ArcType::SharedPoint  SharedPoint;  //!< alias
                 typedef typename   ArcType::NodeType     NodeType;     //!< alias
@@ -98,7 +99,14 @@ namespace upsylon
                     }
 
                 }
+
+                inline virtual type tauMax() const throw()
+                {
+                    return type(this->nodes.size()+1);
+                }
+
                 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
             };

@@ -67,6 +67,12 @@ namespace upsylon
                 //! insert new point, update segments
                 virtual void insert(const SharedPoint &point) = 0;
 
+                //! tau in [1:tauMax]
+                virtual type tauMax() const throw() = 0;
+
+                
+
+
                 //! update bulk
                 void bulk() throw()
                 {
