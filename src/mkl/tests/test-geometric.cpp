@@ -1,5 +1,6 @@
 #include "y/mkl/geometric/node.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/associative/hash/set.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
@@ -41,6 +42,10 @@ namespace {
         }
         std::cerr << "nodes=" << nodes << std::endl;
 
+        std::cerr << "sizes: " << std::endl;
+        Y_UTEST_SIZEOF(vertex);
+        Y_UTEST_SIZEOF(PointType);
+        Y_UTEST_SIZEOF(NodeType);
         std::cerr << std::endl;
     }
 
