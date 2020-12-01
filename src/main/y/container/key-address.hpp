@@ -150,6 +150,7 @@ namespace upsylon {
             return (T*)( self[i] );
         }
 
+        //! default output function
         inline friend std::ostream & operator<<( std::ostream &os, const key_address &k)
         {
             os << '@';

@@ -17,7 +17,7 @@ namespace upsylon
             //
             // types
             //__________________________________________________________________
-            typedef key_address<2> NodeKey;
+            typedef key_address<2> NodeKey; //!< key for Nodes
 
 
             //__________________________________________________________________
@@ -32,11 +32,11 @@ namespace upsylon
                 //
                 // types and defintions
                 //______________________________________________________________
-                Y_DECL_ARGS(T,type);
-                typedef Point<T,VTX>                PointType;
-                typedef typename PointType::vertex  vertex;
-                typedef typename PointType::Pointer SharedPoint;
-                typedef intr_ptr<NodeKey,Node>      Pointer;
+                Y_DECL_ARGS(T,type);                             //!< aliases
+                typedef Point<T,VTX>                PointType;   //!< alias
+                typedef typename PointType::vertex  vertex;      //!< alias
+                typedef typename PointType::Pointer SharedPoint; //!< alias
+                typedef intr_ptr<NodeKey,Node>      Pointer;     //!< alias
 
                 //______________________________________________________________
                 //
@@ -46,12 +46,12 @@ namespace upsylon
                 //! setup
                 inline explicit Node( const SharedPoint &ptr ) throw() :
                 Object(), SharedPoint(ptr), uuid(*this,*ptr),
-                V()
+                V(), A(), alpha(), beta()
                 {
                     
                 }
 
-                // cleanup
+                //! cleanup
                 inline virtual ~Node() throw()
                 {
 
@@ -62,7 +62,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
-                // inline
+                //! key for database of nodes
                 inline const NodeKey & key() const throw() { return uuid; }
 
 
@@ -70,8 +70,11 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const NodeKey uuid;
-                const vertex  V;
+                const NodeKey uuid;  //!< node+point
+                const vertex  V;     //!< local velocity
+                const vertex  A;     //!< local acceleration
+                const vertex  alpha; //!< coefficient
+                const vertex  beta;  //!< coefficient
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

@@ -92,6 +92,7 @@ namespace upsylon
                     return os;
                 }
 
+                //! default output function
                 inline friend std::ostream & operator<< (std::ostream &os, const Point &p)
                 {
                     return Print(os,*p);
