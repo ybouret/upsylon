@@ -84,11 +84,6 @@ SOURCE_GROUP( euclidean FILES ${euclidean_srcs} )
 INSTALL( FILES ${euclidean_decl} DESTINATION include/y/mkl/euclidean )
 
 
-FILE(GLOB geometric_decl y/mkl/geometric/*.hpp)
-FILE(GLOB geometric_code y/mkl/geometric/*.cpp)
-SET(geometric_srcs ${geometric_decl} ${geometric_code})
-SOURCE_GROUP( geometric FILES ${geometric_srcs} )
-INSTALL( FILES ${geometric_decl} DESTINATION include/y/mkl/geometric )
 
 
 FILE(GLOB euclidean_arc_decl y/mkl/euclidean/arc/*.hpp)
@@ -96,6 +91,21 @@ FILE(GLOB euclidean_arc_code y/mkl/euclidean/arc/*.cpp)
 SET(euclidean_arc_srcs ${euclidean_arc_decl} ${euclidean_arc_code})
 SOURCE_GROUP( euclidean/arc FILES ${euclidean_arc_srcs} )
 INSTALL( FILES ${euclidean_arc_decl} DESTINATION include/y/mkl/euclidean/arc )
+
+
+FILE(GLOB geometric_decl y/mkl/geometric/*.hpp)
+FILE(GLOB geometric_code y/mkl/geometric/*.cpp)
+SET(geometric_srcs ${geometric_decl} ${geometric_code})
+SOURCE_GROUP( geometric FILES ${geometric_srcs} )
+INSTALL( FILES ${geometric_decl} DESTINATION include/y/mkl/geometric )
+
+
+FILE(GLOB geometric_arc_decl y/mkl/geometric/arc/*.hpp)
+FILE(GLOB geometric_arc_code y/mkl/geometric/arc/*.cpp)
+SET(geometric_arc_srcs ${geometric_arc_decl} ${geometric_arc_code})
+SOURCE_GROUP( geometric/arc FILES ${geometric_arc_srcs} )
+INSTALL( FILES ${geometric_arc_decl} DESTINATION include/y/mkl/geometric/arc )
+
 
 FILE(GLOB fit_decl y/mkl/fit/*.h??)
 FILE(GLOB fit_code y/mkl/fit/*.cpp)
@@ -138,7 +148,7 @@ ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 ${opt_srcs}
 ${signal_srcs}
 ${stat_srcs}
-${geometric_srcs}
+${geometric_srcs} ${geometric_arc_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
 ${fit_srcs} ${fit_sample_srcs} ${fit_variable_srcs} ${fit_sequential_srcs} ${fit_share_srcs} 
 )
