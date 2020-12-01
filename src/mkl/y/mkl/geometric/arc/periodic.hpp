@@ -55,6 +55,14 @@ namespace upsylon
                     return type(this->nodes.size()+1);
                 }
 
+                virtual void update_lower() throw()
+                {
+                }
+                
+                virtual void update_upper() throw()
+                {
+                }
+                
                 
 
             private:

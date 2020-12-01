@@ -242,11 +242,11 @@ namespace upsylon
         typedef iterate::linked<type,node_type,iterate::reverse>             reverse_iterator;        //!< reverse iterator
         typedef iterate::linked<const_type,const node_type,iterate::forward> const_reverse_iterator;  //!< reverse const iterator
 
-        reverse_iterator rbegin() throw() { return iterator( table.nodes.tail ); } //!< begin reverse
-        reverse_iterator rend()   throw() { return iterator(0);                  } //!< end reverse
+        reverse_iterator rbegin() throw() { return reverse_iterator( table.nodes.tail ); } //!< begin reverse
+        reverse_iterator rend()   throw() { return reverse_iterator(0);                  } //!< end reverse
 
-        const_reverse_iterator rbegin() const throw()   { return const_iterator( table.nodes.tail ); } //!< begin reverse const
-        const_reverse_iterator rend()   const throw()   { return const_iterator(0);                  } //!< end reverse const
+        const_reverse_iterator rbegin() const throw()   { return const_reverse_iterator( table.nodes.tail ); } //!< begin reverse const
+        const_reverse_iterator rend()   const throw()   { return const_reverse_iterator(0);                  } //!< end reverse const
 
 
         //! generic display

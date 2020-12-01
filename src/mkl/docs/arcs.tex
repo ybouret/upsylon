@@ -182,6 +182,15 @@ At each point $\vec{P}_i$ we define a velocity $\vec{V}_i$ and and acceleration 
 \right.
 \end{equation}
 
+\begin{equation}
+\vec{P} = (1-\tau) \vec{P}_{i} + \tau \vec{P}_{i+1} + \sum_{i=1}^4 \tau^i\vec{a}_i 
+\end{equation}
 
+\begin{equation}
+\begin{array}{rcl}
+\vec{V} & = & \vec{P}_{i+1} - \vec{P}_i + \sum_{i=1}^4 i\tau^{i-1}\vec{a}_i \\
+& = & (1-\tau) \vec{V}_{i+1} + \tau \vec{V}_{i}\\
+\end{array}
+\end{equation}
 
 \end{document}

@@ -80,11 +80,9 @@ namespace upsylon
                 //! tau in [1:tauMax]
                 virtual type tauMax() const throw() = 0;
 
-
-
-
+                
                 //! update bulk
-                void bulk() throw()
+                void update_bulk() throw()
                 {
                     static const type half = type(0.5);
                     Nodes &nodes = aliasing::_(this->nodes);
@@ -110,7 +108,13 @@ namespace upsylon
                         }
                     }
                 }
-
+                
+                //! default lower boundary
+                virtual void update_lower() throw() = 0;
+                
+                //! default upper boundary
+                virtual void update_upper() throw() = 0;
+                
                 //! build segment data
                 void build() throw()
                 {
@@ -123,7 +127,9 @@ namespace upsylon
 
                 inline void compile()
                 {
-                    bulk();
+                    update_bulk();
+                    update_lower();
+                    update_upper();
                     build();
                     aliasing::_(compiled) = true;
                 }
