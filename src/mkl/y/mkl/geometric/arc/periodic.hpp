@@ -61,9 +61,23 @@ namespace upsylon
                                 throw;
                             }
                             break;
+
                         default:
                             assert(count+1==nodes.size());
-                            assert(nodes.size()==segments.size);
+                            assert(count==segments.size);
+                            try {
+                                SegmentType *seg = new SegmentType(head,curr);
+                                SegmentType *cyc = segments.pop_back();
+                                segments.push_back(seg);
+                                cyc->head = curr;
+                                segments.push_back(cyc);
+                                assert(cyc->tail==nodes.front().content());
+                            }
+                            catch(...) {
+                                (void) nodes.remove(node->uuid);
+                                throw;
+                            }
+                            
                     }
 
                 }
