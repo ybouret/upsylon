@@ -15,22 +15,39 @@ namespace upsylon
         namespace Geometric
         {
 
+            //__________________________________________________________________
+            //
+            //! periodic arc
+            //__________________________________________________________________
             template <typename T,template <class> class VTX>
             class PeriodicArc : public Arc<T,VTX>
             {
             public:
-                typedef Arc<T,VTX> ArcType;
-                typedef typename   ArcType::SharedPoint  SharedPoint;
-                typedef typename   ArcType::NodeType     NodeType;
-                typedef typename   ArcType::SharedNode   SharedNode;
-                typedef typename   ArcType::vertex       vertex;
-                typedef typename   ArcType::Nodes        Nodes;
-                typedef typename   ArcType::SegmentType  SegmentType;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef Arc<T,VTX> ArcType;                            //!< alias
+                typedef typename   ArcType::SharedPoint  SharedPoint;  //!< alias
+                typedef typename   ArcType::NodeType     NodeType;     //!< alias
+                typedef typename   ArcType::SharedNode   SharedNode;   //!< alias
+                typedef typename   ArcType::vertex       vertex;       //!< alias
+                typedef typename   ArcType::Nodes        Nodes;        //!< alias
+                typedef typename   ArcType::SegmentType  SegmentType;  //!< alias
 
-
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 inline explicit PeriodicArc() : ArcType() {}
                 inline virtual ~PeriodicArc() throw() {}
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+
+                //! insert and update segment(s)
                 inline void insert(const SharedPoint &point)
                 {
                     // check back node to get future head of segment
@@ -81,7 +98,7 @@ namespace upsylon
                     }
 
                 }
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
             };

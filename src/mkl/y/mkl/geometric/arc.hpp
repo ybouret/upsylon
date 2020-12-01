@@ -15,14 +15,19 @@ namespace upsylon
         namespace Geometric
         {
 
+            //__________________________________________________________________
+            //
+            //! common stuff for an arc
+            //__________________________________________________________________
             class Arc_ : public Object
             {
             public:
-                virtual ~Arc_() throw();
+                virtual ~Arc_() throw(); //!< cleanup
 
             protected:
-                explicit Arc_() throw();
+                explicit Arc_() throw(); //!< setup
 
+                //! throw exception, shouldn't happen
                 void   nodeInsertFailure(const std::type_info &tid) const;
 
             private:
@@ -39,7 +44,7 @@ namespace upsylon
             public:
                 //______________________________________________________________
                 //
-                // types and defintions
+                // types and definitions
                 //______________________________________________________________
                 Y_DECL_ARGS(T,type);                              //!< aliases
                 typedef Point<T,VTX>                 PointType;   //!< alias
@@ -58,12 +63,50 @@ namespace upsylon
                 //! cleanup
                 inline virtual ~Arc() throw() {}
 
-                //! insert new point
+                //! insert new point, update segments
                 virtual void insert(const SharedPoint &point) = 0;
 
+                //! update bulk
+                void bulk() throw()
+                {
+                    static const type half = type(0.5);
+                    Nodes &nodes = aliasing::_(this->nodes);
+                    size_t count = nodes.size();
+                    if(count>2)
+                    {
+                        typename Nodes::iterator prev = nodes.begin();
+                        typename Nodes::iterator curr = prev; ++curr;
+                        typename Nodes::iterator next = curr; ++prev;
+                        for(count-=2;count>0;--count)
+                        {
+                            prev=curr;
+                            curr=next;
+                            ++next;
+                            const NodeType &prevNode = **prev; const vertex &pm = **prevNode;
+                            NodeType       &currNode = **curr; const vertex &p0 = **currNode;
+                            const NodeType &nextNode = **next; const vertex &pp = **nextNode;
+                            vertex &v = aliasing::_(currNode.V), &a = aliasing::_(currNode.A);
+                            v=half*(pp-pm);
+                            a=( (pp-p0) + (pm-p0) );
+                        }
+                    }
+                }
 
-                const Nodes    nodes;
-                const Segments segments;
+                //! build segment data
+                void build() throw()
+                {
+                    for(SegmentType *segment = aliasing::_(segments).head;segment;segment=segment->next)
+                    {
+                        segment->build();
+                    }
+                }
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Nodes    nodes;    //!< table/list of nodes
+                const Segments segments; //!< list of segments
 
             protected:
                 //! setup empty

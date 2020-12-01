@@ -13,22 +13,34 @@ namespace upsylon
 
         namespace Geometric
         {
-
+            //__________________________________________________________________
+            //
+            //! standard arc
+            //__________________________________________________________________
             template <typename T,template <class> class VTX>
             class StandardArc : public Arc<T,VTX>
             {
             public:
-                typedef Arc<T,VTX> ArcType;
-                typedef typename   ArcType::SharedPoint  SharedPoint;
-                typedef typename   ArcType::NodeType     NodeType;
-                typedef typename   ArcType::SharedNode   SharedNode;
-                typedef typename   ArcType::vertex       vertex;
-                typedef typename   ArcType::Nodes        Nodes;
-                typedef typename   ArcType::SegmentType  SegmentType;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef Arc<T,VTX> ArcType;                            //!< alias
+                typedef typename   ArcType::SharedPoint  SharedPoint;  //!< alias
+                typedef typename   ArcType::NodeType     NodeType;     //!< alias
+                typedef typename   ArcType::SharedNode   SharedNode;   //!< alias
+                typedef typename   ArcType::vertex       vertex;       //!< alias
+                typedef typename   ArcType::Nodes        Nodes;        //!< alias
+                typedef typename   ArcType::SegmentType  SegmentType;  //!< alias
 
-                inline explicit StandardArc() : ArcType() {}
-                inline virtual ~StandardArc() throw() {}
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                inline explicit StandardArc() : ArcType() {} //!< setup
+                inline virtual ~StandardArc() throw() {}     //!< cleanup
 
+                //! insert and update segments
                 inline void insert(const SharedPoint &point)
                 {
                     // check back node to get future head of segment
@@ -58,6 +70,8 @@ namespace upsylon
                         }
                     }
                 }
+
+               
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(StandardArc);

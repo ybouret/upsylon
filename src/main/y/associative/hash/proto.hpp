@@ -165,7 +165,7 @@ namespace upsylon
         {
             return table.nodes.fetch(pos)->data;
         }
-
+        
     protected:
         //! setup
         inline explicit hash_proto(const size_t factor) :

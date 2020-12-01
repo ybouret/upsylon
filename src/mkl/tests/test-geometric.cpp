@@ -19,14 +19,15 @@ namespace {
         typedef Point<T,VTX>                PointType;
         typedef typename PointType::Pointer PointerType;
         typedef typename PointType::vertex  vertex;
+        typedef          Segment<T,VTX>     SegmentType;
 
         std::cerr << "points: " << type_name_of<vertex>() << std::endl;
         std::cerr << "  dims: " << PointType::Dimensions << std::endl;
 
         typedef hash_set<PointKey,PointerType> Points;
-        Points points;
 
-        for(size_t i=3+alea.leq(7);i>0;--i)
+        Points points;
+        for(size_t i=alea.leq(10);i>0;--i)
         {
             const PointerType p = new PointType( support::get<vertex>() );
             Y_ASSERT(points.insert(p));
@@ -54,10 +55,30 @@ namespace {
         std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size << std::endl;
         std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size << std::endl;
 
+        sa.bulk(); sa.build();
+        pa.bulk(); pa.build();
+
+
+        std::cerr << "standard: " << std::endl;
+        for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
+        {
+            const NodeType &node = **it;
+            std::cerr << "  node@" << **node << ", v=" << node.V << ", a=" << node.A << std::endl;
+        }
+
+        std::cerr << "periodic: " << std::endl;
+        for(typename Arc<T,VTX>::Nodes::const_iterator it=pa.nodes.begin();it!=pa.nodes.end();++it)
+        {
+            const NodeType &node = **it;
+            std::cerr << "  node@" << **node << ", v=" << node.V << ", a=" << node.A << std::endl;
+        }
+
+
         std::cerr << "sizes: " << std::endl;
         Y_UTEST_SIZEOF(vertex);
         Y_UTEST_SIZEOF(PointType);
         Y_UTEST_SIZEOF(NodeType);
+        Y_UTEST_SIZEOF(SegmentType);
         std::cerr << std::endl;
     }
 
