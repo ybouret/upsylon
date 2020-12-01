@@ -5,6 +5,7 @@
 
 #include "y/mkl/geometric/segment.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/memory/buffers.hpp"
 #include <typeinfo>
 
 namespace upsylon
@@ -27,9 +28,11 @@ namespace upsylon
 
             protected:
                 explicit Arc_() throw(); //!< setup
-
+                
                 //! throw exception, shouldn't happen
                 void   nodeInsertFailure(const std::type_info &tid) const;
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc_);
@@ -47,15 +50,17 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                Y_DECL_ARGS(T,type);                              //!< aliases
-                typedef Point<T,VTX>                 PointType;   //!< alias
-                typedef typename PointType::Pointer  SharedPoint; //!< alias
-                typedef typename PointType::vertex   vertex;      //!< alias
-                typedef Node<T,VTX>                  NodeType;    //!< alias
-                typedef typename NodeType::Pointer   SharedNode;  //!< alias
-                typedef hash_set<NodeKey,SharedNode> Nodes;       //!< alias
-                typedef Segment<T,VTX>               SegmentType; //!< alias
-                typedef typename SegmentType::List   Segments;    //!< alias
+                Y_DECL_ARGS(T,type);                                     //!< aliases
+                typedef Point<T,VTX>                     PointType;      //!< alias
+                typedef typename PointType::Pointer      SharedPoint;    //!< alias
+                typedef typename PointType::vertex       vertex;         //!< alias
+                typedef Node<T,VTX>                      NodeType;       //!< alias
+                typedef typename NodeType::Pointer       SharedNode;     //!< alias
+                typedef hash_set<NodeKey,SharedNode>     Nodes;          //!< alias
+                typedef Segment<T,VTX>                   SegmentType;    //!< alias
+                typedef typename SegmentType::List       Segments;       //!< alias
+                typedef SegmentType                     *SegmentPointer; //!< alias
+                typedef memory::cppblock<SegmentPointer> LinearSegments; //!< alias
 
                 //______________________________________________________________
                 //
@@ -88,18 +93,20 @@ namespace upsylon
                     {
                         typename Nodes::iterator prev = nodes.begin();
                         typename Nodes::iterator curr = prev; ++curr;
-                        typename Nodes::iterator next = curr; ++prev;
+                        typename Nodes::iterator next = curr; ++next;
                         for(count-=2;count>0;--count)
                         {
-                            prev=curr;
-                            curr=next;
-                            ++next;
                             const NodeType &prevNode = **prev; const vertex &pm = **prevNode;
                             NodeType       &currNode = **curr; const vertex &p0 = **currNode;
                             const NodeType &nextNode = **next; const vertex &pp = **nextNode;
-                            vertex &v = aliasing::_(currNode.V), &a = aliasing::_(currNode.A);
+                            vertex &v = aliasing::_(currNode.V);
+                            vertex &a = aliasing::_(currNode.A);
                             v=half*(pp-pm);
                             a=( (pp-p0) + (pm-p0) );
+
+                            prev=curr;
+                            curr=next;
+                            ++next;
                         }
                     }
                 }
@@ -111,7 +118,18 @@ namespace upsylon
                     {
                         segment->build();
                     }
+
                 }
+
+                inline void compile()
+                {
+                    bulk();
+                    build();
+                    aliasing::_(compiled) = true;
+                }
+
+                
+
 
                 //______________________________________________________________
                 //

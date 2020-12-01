@@ -33,7 +33,6 @@ namespace upsylon
             virtual const void *ro()     const throw(); //!< block_addr
             virtual size_t      length() const throw(); //!< block_size
             
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cblock);
             const size_t block_size;

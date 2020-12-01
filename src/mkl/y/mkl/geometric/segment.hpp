@@ -79,12 +79,14 @@ namespace upsylon
 
                 inline vertex A(const_type tau) const throw()
                 {
-                    static const_type one = type(1);
-                    const_type        omt = one-tau;
+                    static const_type one  = type(1);
+                    const_type        omt  = one-tau;
+                    const_type        tau2 = tau*tau;
+                    const_type        omt2 = omt*omt;
                     assert(head); assert(tail);
                     const vertex Am = head->A;
                     const vertex Ap = tail->A;
-                    return omt*Am + tau*Ap;
+                    return (omt*Am + tau*Ap) + tau*(one-tau2)*alpha + omt*(one-omt2)*beta;
                 }
 
                 //______________________________________________________________

@@ -82,13 +82,13 @@ namespace upsylon
                 OSTREAM & Print(OSTREAM &os, const vertex &v)
                 {
                     const_type *p = (const_type *)&v;
-                    os << '[';
+                    //os << '[';
                     Format(os,p[0]);
                     for(size_t dim=1;dim<Dimensions;++dim)
                     {
-                        os << ';'; Format(os,p[dim]);
+                        os << ' '; Format(os,p[dim]);
                     }
-                    os << ']';
+                    //os << ']';
                     return os;
                 }
 

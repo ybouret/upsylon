@@ -48,6 +48,35 @@ namespace upsylon
                     return type(this->nodes.size());
                 }
 
+                vertex A(type tau) const throw()
+                {
+                    if(tau<=1)
+                    {
+                        return this->nodes.front()->A;
+                    }
+                    else
+                    {
+                        const_type top = tauMax();
+                        if(tau>=top)
+                        {
+                            return this->nodes.back()->A;
+                        }
+                        else
+                        {
+                            assert(this->segments.size>0);
+                            const SegmentType *segment = this->segments.head;
+                            type im=1;
+                            type ip=2;
+                            while(!(im<=tau&&tau<=ip))
+                            {
+                                ++im;
+                                ++ip;
+                                segment = segment->next;
+                            }
+                            return segment->A(tau-im);
+                        }
+                    }
+                }
 
                 
                

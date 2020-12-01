@@ -5,12 +5,35 @@
 #include "y/associative/hash/set.hpp"
 #include "support.hpp"
 #include "y/type/spec.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace mkl;
 using namespace Geometric;
 
 namespace {
+
+    static inline string type2file( const std::type_info &tid)
+    {
+        string id = type_name_for(tid);
+        for(size_t i=0;i<id.size();++i)
+        {
+            char C = id[i];
+            switch(C)
+            {
+                case '<':
+                case '>':
+                case ',':
+                    C = '_';
+                    break;
+
+                default:
+                    break;
+            }
+            id[i] = C;
+        }
+        return id;
+    }
 
     template <typename T, template <class> class VTX>
     static inline void testPoints()
@@ -26,10 +49,19 @@ namespace {
 
         typedef hash_set<PointKey,PointerType> Points;
 
-        Points points;
-        for(size_t i=alea.leq(10);i>0;--i)
+        Points       points;
+        const size_t np = 1+alea.leq(10);
+        const vertex center = support::get<vertex>();
+        const vertex radius = support::get<vertex>();
+
+        for(size_t i=0;i<np;++i)
         {
-            const PointerType p = new PointType( support::get<vertex>() );
+            const T theta     = (numeric<T>::two_pi*i)/np;
+            const T *r        = (const T *)&radius;
+            const T *c        = (const T *)&center;
+            const T  coord[3] = { c[0] + r[0] * cos_of(theta), c[1] + r[1] * sin_of(theta), c[2] };
+            PointerType p = new PointType();
+            memcpy( & **p, coord, sizeof(T) * PointType::Dimensions );
             Y_ASSERT(points.insert(p));
         }
         std::cerr << "points=" <<  points << std::endl;
@@ -55,8 +87,8 @@ namespace {
         std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size << std::endl;
         std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size << std::endl;
 
-        sa.bulk(); sa.build();
-        pa.bulk(); pa.build();
+        sa.compile();
+        pa.compile();
 
 
         std::cerr << "standard: " << std::endl;
@@ -71,6 +103,72 @@ namespace {
         {
             const NodeType &node = **it;
             std::cerr << "  node@" << **node << ", v=" << node.V << ", a=" << node.A << std::endl;
+        }
+
+
+        {
+            const string filename = "standard_" + type2file( typeid(vertex) ) + "p.dat";
+            std::cerr << "saving to " << filename << std::endl;
+            ios::ocstream fp(filename);
+            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
+            {
+                const NodeType &node = **it;
+                const vertex    p    = **node;
+                const vertex    a    = node.A;
+                PointType::Print(fp,p)   << '\n';
+            }
+
+        }
+
+        {
+            const string filename = "standard_" + type2file( typeid(vertex) ) + "v.dat";
+            std::cerr << "saving to " << filename << std::endl;
+            ios::ocstream fp(filename);
+            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
+            {
+                const NodeType &node = **it;
+                const vertex    p    = **node;
+                const vertex    v   = node.V;
+                PointType::Print(fp,p)   << '\n';
+                PointType::Print(fp,p+v) << '\n';
+                fp << '\n';
+            }
+
+        }
+
+        {
+            const string filename = "standard_" + type2file( typeid(vertex) ) + "a.dat";
+            std::cerr << "saving to " << filename << std::endl;
+            ios::ocstream fp(filename);
+            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
+            {
+                const NodeType &node = **it;
+                const vertex    p    = **node;
+                const vertex    a    = node.A;
+                PointType::Print(fp,p)   << '\n';
+                PointType::Print(fp,p+a) << '\n';
+                fp << '\n';
+            }
+
+        }
+
+
+        {
+#if 1
+            const string filename = "standard_" + type2file( typeid(vertex) ) + "aa.dat";
+            std::cerr << "saving to " << filename << std::endl;
+            ios::ocstream fp(filename);
+            const size_t NP = 100;
+            const T tmin = 1;
+            const T tmax = sa.tauMax();
+            for(size_t i=0;i<=NP;++i)
+            {
+                const T      t = tmin + (i * (tmax-tmin) )/NP;
+                const vertex A = sa.A(t);
+                PointType::Print(fp,A);
+                fp(" %g %g\n", t, PointType::Norm2(A));
+             }
+#endif
         }
 
 
