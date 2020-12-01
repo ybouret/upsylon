@@ -49,8 +49,8 @@ namespace upsylon
                     typename ArcType::Segments &segments = aliasing::_(this->segments);
                     switch(count)
                     {
-                        case 0: assert(1==nodes.size()); assert(0==this->segments.size); break;
-                        case 1: assert(2==nodes.size()); assert(0==this->segments.size);
+                        case 0: assert(1==nodes.size()); assert(0==segments.size); break;
+                        case 1: assert(2==nodes.size()); assert(0==segments.size);
                             try {
                                 segments.push_back( new SegmentType(head,curr) );
                                 segments.push_back( new SegmentType(curr,head) );
@@ -61,6 +61,9 @@ namespace upsylon
                                 throw;
                             }
                             break;
+                        default:
+                            assert(count+1==nodes.size());
+                            assert(nodes.size()==segments.size);
                     }
 
                 }
