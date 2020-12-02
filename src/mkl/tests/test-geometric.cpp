@@ -42,7 +42,6 @@ namespace {
         typedef Point<T,VTX>                PointType;
         typedef typename PointType::Pointer PointerType;
         typedef typename PointType::vertex  vertex;
-        typedef          Segment<T,VTX>     SegmentType;
 
         std::cerr << "points: " << type_name_of<vertex>() << std::endl;
         std::cerr << "  dims: " << PointType::Dimensions << std::endl;
@@ -84,99 +83,12 @@ namespace {
             pa.insert(*it);
         }
 
-        std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size << std::endl;
-        std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size << std::endl;
-
-        sa.compile();
-        pa.compile();
-
-
-        std::cerr << "standard: " << std::endl;
-        for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
-        {
-            const NodeType &node = **it;
-            std::cerr << "  node@" << **node << ", v=" << node.V << ", a=" << node.A << std::endl;
-        }
-
-        std::cerr << "periodic: " << std::endl;
-        for(typename Arc<T,VTX>::Nodes::const_iterator it=pa.nodes.begin();it!=pa.nodes.end();++it)
-        {
-            const NodeType &node = **it;
-            std::cerr << "  node@" << **node << ", v=" << node.V << ", a=" << node.A << std::endl;
-        }
-
-
-        {
-            const string filename = "standard_" + type2file( typeid(vertex) ) + "p.dat";
-            std::cerr << "saving to " << filename << std::endl;
-            ios::ocstream fp(filename);
-            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
-            {
-                const NodeType &node = **it;
-                const vertex    p    = **node;
-                const vertex    a    = node.A;
-                PointType::Print(fp,p)   << '\n';
-            }
-
-        }
-
-        {
-            const string filename = "standard_" + type2file( typeid(vertex) ) + "v.dat";
-            std::cerr << "saving to " << filename << std::endl;
-            ios::ocstream fp(filename);
-            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
-            {
-                const NodeType &node = **it;
-                const vertex    p    = **node;
-                const vertex    v   = node.V;
-                PointType::Print(fp,p)   << '\n';
-                PointType::Print(fp,p+v) << '\n';
-                fp << '\n';
-            }
-
-        }
-
-        {
-            const string filename = "standard_" + type2file( typeid(vertex) ) + "a.dat";
-            std::cerr << "saving to " << filename << std::endl;
-            ios::ocstream fp(filename);
-            for(typename Arc<T,VTX>::Nodes::const_iterator it=sa.nodes.begin();it!=sa.nodes.end();++it)
-            {
-                const NodeType &node = **it;
-                const vertex    p    = **node;
-                const vertex    a    = node.A;
-                PointType::Print(fp,p)   << '\n';
-                PointType::Print(fp,p+a) << '\n';
-                fp << '\n';
-            }
-
-        }
-
-
-        {
-#if 1
-            const string filename = "standard_" + type2file( typeid(vertex) ) + "aa.dat";
-            std::cerr << "saving to " << filename << std::endl;
-            ios::ocstream fp(filename);
-            const size_t NP = 100;
-            const T tmin = 1;
-            const T tmax = sa.tauMax();
-            for(size_t i=0;i<=NP;++i)
-            {
-                const T      t = tmin + (i * (tmax-tmin) )/NP;
-                const vertex A = sa.A(t);
-                PointType::Print(fp,A);
-                fp(" %g %g\n", t, PointType::Norm2(A));
-             }
-#endif
-        }
-
+         
 
         std::cerr << "sizes: " << std::endl;
         Y_UTEST_SIZEOF(vertex);
         Y_UTEST_SIZEOF(PointType);
         Y_UTEST_SIZEOF(NodeType);
-        Y_UTEST_SIZEOF(SegmentType);
         std::cerr << std::endl;
     }
 

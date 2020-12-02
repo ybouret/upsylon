@@ -3,9 +3,9 @@
 #ifndef Y_GEOMETRIC_ARC_INCLUDED
 #define Y_GEOMETRIC_ARC_INCLUDED 1
 
-#include "y/mkl/geometric/segment.hpp"
+#include "y/mkl/geometric/node.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/sequence/vector.hpp"
 #include <typeinfo>
 
 namespace upsylon
@@ -57,10 +57,6 @@ namespace upsylon
                 typedef Node<T,VTX>                      NodeType;       //!< alias
                 typedef typename NodeType::Pointer       SharedNode;     //!< alias
                 typedef hash_set<NodeKey,SharedNode>     Nodes;          //!< alias
-                typedef Segment<T,VTX>                   SegmentType;    //!< alias
-                typedef typename SegmentType::List       Segments;       //!< alias
-                typedef SegmentType                     *SegmentPointer; //!< alias
-                typedef memory::cppblock<SegmentPointer> LinearSegments; //!< alias
 
                 //______________________________________________________________
                 //
@@ -73,88 +69,33 @@ namespace upsylon
 
                 inline void insert(const SharedPoint &point)
                 {
-                    insert_(point);
+                    const SharedNode node = new NodeType(point);
+                    if(! aliasing::_(nodes).insert(node) ) this->nodeInsertFailure( typeid(vertex) );
                     aliasing::_(compiled) = false;
                 }
 
                 //! tau in [1:tauMax]
                 virtual type tauMax() const throw() = 0;
 
-                
-                //! update bulk
-                void update_bulk() throw()
-                {
-                    static const type half = type(0.5);
-                    Nodes &nodes = aliasing::_(this->nodes);
-                    size_t count = nodes.size();
-                    if(count>2)
-                    {
-                        typename Nodes::iterator prev = nodes.begin();
-                        typename Nodes::iterator curr = prev; ++curr;
-                        typename Nodes::iterator next = curr; ++next;
-                        for(count-=2;count>0;--count)
-                        {
-                            const NodeType &prevNode = **prev; const vertex &pm = **prevNode;
-                            NodeType       &currNode = **curr; const vertex &p0 = **currNode;
-                            const NodeType &nextNode = **next; const vertex &pp = **nextNode;
-                            vertex &v = aliasing::_(currNode.V);
-                            vertex &a = aliasing::_(currNode.A);
-                            v=half*(pp-pm);
-                            a=( (pp-p0) + (pm-p0) );
-
-                            prev=curr;
-                            curr=next;
-                            ++next;
-                        }
-                    }
-                }
-                
-                //! default lower boundary
-                virtual void update_lower() throw() = 0;
-                
-                //! default upper boundary
-                virtual void update_upper() throw() = 0;
-                
-                //! build segment data
-                void build() throw()
-                {
-                    for(SegmentType *segment = aliasing::_(segments).head;segment;segment=segment->next)
-                    {
-                        segment->build();
-                    }
-
-                }
-
-                inline void compile()
-                {
-                    update_bulk();
-                    update_lower();
-                    update_upper();
-                    build();
-                    aliasing::_(compiled) = true;
-                }
-
-                
-
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const Nodes    nodes;    //!< table/list of nodes
-                const Segments segments; //!< list of segments
-                const bool     compiled; //!< flag
+                const Nodes    nodes; //!< table/list of nodes
 
             protected:
+                vector<vertex> A;
                 //! setup empty
-                explicit Arc() : nodes(), segments(), compiled(false)
+                explicit Arc() : nodes(),  A(), compiled(false)
                 {
                 }
                 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Arc);
-                virtual void insert_(const SharedPoint &point) = 0;
+            public:
+                const bool compiled; //!< flag
             };
 
         }

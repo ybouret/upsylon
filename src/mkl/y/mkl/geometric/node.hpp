@@ -45,8 +45,7 @@ namespace upsylon
 
                 //! setup
                 inline explicit Node( const SharedPoint &ptr ) throw() :
-                Object(), SharedPoint(ptr), uuid(*this,*ptr),
-                V(), A()
+                Object(), SharedPoint(ptr), uuid(*this,*ptr)
                 {
                     
                 }
@@ -71,8 +70,7 @@ namespace upsylon
                 // members
                 //______________________________________________________________
                 const NodeKey uuid;  //!< node+point
-                const vertex  V;     //!< local velocity
-                const vertex  A;     //!< local acceleration
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
