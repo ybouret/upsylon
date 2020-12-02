@@ -28,10 +28,12 @@ namespace upsylon
                 Y_DECL_ARGS(T,type);                                   //!< aliases
                 typedef Arc<T,VTX> ArcType;                            //!< alias
                 typedef typename   ArcType::SharedPoint  SharedPoint;  //!< alias
+                typedef typename   ArcType::vertex       vertex;       //!< alias
                 typedef typename   ArcType::NodeType     NodeType;     //!< alias
                 typedef typename   ArcType::SharedNode   SharedNode;   //!< alias
-                typedef typename   ArcType::vertex       vertex;       //!< alias
                 typedef typename   ArcType::Nodes        Nodes;        //!< alias
+                typedef typename   ArcType::SegmentType  SegmentType;  //!< alias
+                typedef typename   ArcType::Segments     Segments;     //!< alias
 
                 //______________________________________________________________
                 //
@@ -40,16 +42,30 @@ namespace upsylon
                 inline explicit StandardArc() : ArcType() {} //!< setup
                 inline virtual ~StandardArc() throw() {}     //!< cleanup
 
-
                 
-                inline virtual type tauMax() const throw()
+                void insert( const SharedPoint &point )
                 {
-                    return type(this->nodes.size());
+                    Nodes           &nodes  = aliasing::_(this->nodes);
+                    const size_t     count  = nodes.size();
+                    const NodeType  *origin = (count>0) ? & *nodes.back() : NULL;
+                    const SharedNode node   = new NodeType(point);
+                    nodes << node;
+                    if(origin)
+                    {
+                        try
+                        {
+                            const NodeType   *finish = node.content();
+                            const SegmentType segment(origin,finish);
+                            aliasing::_(this->segments) << segment;
+                            assert(this->segments.size()+1==this->nodes.size());
+                        }
+                        catch(...)
+                        {
+                            nodes.pop_back();
+                            throw;
+                        }
+                    }
                 }
-
-
-                
-               
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(StandardArc);

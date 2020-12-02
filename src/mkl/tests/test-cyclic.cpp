@@ -3,21 +3,25 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/mkl/tao.hpp"
-#include <typeinfo>
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace mkl;
 
 template <typename T>
-static inline void do_cyclic(const size_t nmax=10, const size_t niter=4)
+static inline void do_cyclic(const bool   check,
+                             const size_t nmax=10,
+                             const size_t niter=4)
+
 {
+    (void)check;
     for(size_t n=3;n<=nmax;++n)
     {
         cyclic<T> C(n,3);
         array<T>  &r = C[0];
         array<T>  &u = C[1];
         array<T>  &x = C[2];
-        std::cerr << "cyclic<" << n << "> for <" << typeid(T).name() << ">" << std::endl;
+        std::cerr << "cyclic<" << n << "> for <" << type_name_of<T>() << ">" << std::endl;
 
         if(n==3)
         {
@@ -59,11 +63,11 @@ static inline void do_cyclic(const size_t nmax=10, const size_t niter=4)
 Y_UTEST(cyclic)
 {
 
-    do_cyclic<float>();
-    do_cyclic<double>();
-    do_cyclic< complex<float> >();
-    do_cyclic< complex<double> >();
-    do_cyclic< apq >(6,1);
+    do_cyclic<float>(false);
+    do_cyclic<double>(false);
+    do_cyclic< complex<float> >(false);
+    do_cyclic< complex<double> >(false);
+    do_cyclic< apq >(true,6,1);
 
 }
 Y_UTEST_DONE()

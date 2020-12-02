@@ -4,6 +4,7 @@
 #define Y_GEOMETRIC_NODE_INCLUDED 1
 
 #include "y/mkl/geometric/point.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -13,16 +14,10 @@ namespace upsylon
 
         namespace Geometric
         {
-            //__________________________________________________________________
-            //
-            // types
-            //__________________________________________________________________
-            typedef key_address<2> NodeKey; //!< key for Nodes
-
 
             //__________________________________________________________________
             //
-            //! a unique node is a shared point with attribute
+            //! a   node is a shared point with attribute
             //__________________________________________________________________
             template <typename T, template <class> class VTX>
             class Node : public Object, public Point<T,VTX>::Pointer
@@ -36,7 +31,7 @@ namespace upsylon
                 typedef Point<T,VTX>                PointType;   //!< alias
                 typedef typename PointType::vertex  vertex;      //!< alias
                 typedef typename PointType::Pointer SharedPoint; //!< alias
-                typedef intr_ptr<NodeKey,Node>      Pointer;     //!< alias
+                typedef arc_ptr<Node>               Pointer;     //!< alias
                 
                 //______________________________________________________________
                 //
@@ -45,7 +40,7 @@ namespace upsylon
 
                 //! setup
                 inline explicit Node( const SharedPoint &ptr ) throw() :
-                Object(), SharedPoint(ptr), uuid(*this,*ptr)
+                Object(), SharedPoint(ptr), A()
                 {
                     
                 }
@@ -56,21 +51,7 @@ namespace upsylon
 
                 }
 
-                //______________________________________________________________
-                //
-                // methods
-                //______________________________________________________________
-
-                //! key for database of nodes
-                inline const NodeKey & key() const throw() { return uuid; }
-
-
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                const NodeKey uuid;  //!< node+point
-
+                vertex A;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

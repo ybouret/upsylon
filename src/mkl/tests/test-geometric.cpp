@@ -12,7 +12,7 @@ using namespace Geometric;
 
 namespace {
 
-#if 0
+#if 1
     static inline string type2file( const std::type_info &tid)
     {
         string id = type_name_for(tid);
@@ -53,43 +53,90 @@ namespace {
         const size_t np = 1+alea.leq(10);
         const vertex center = support::get<vertex>();
         const vertex radius = support::get<vertex>();
-
+        const T      t0     = numeric<T>::two_pi * alea.to<T>();
         for(size_t i=0;i<np;++i)
         {
-            const T theta     = (numeric<T>::two_pi*i)/np;
+            const T theta     = (numeric<T>::two_pi*i)/np + t0;
             const T *r        = (const T *)&radius;
             const T *c        = (const T *)&center;
-            const T  coord[3] = { c[0] + r[0] * cos_of(theta), c[1] + r[1] * sin_of(theta), c[2] };
+            const T  coord[3] = { c[0] + r[0] * cos_of(theta), c[1] + r[1] * sin_of(theta), c[2]*cos_of(theta) };
             PointerType p = new PointType();
-            memcpy( & **p, coord, sizeof(T) * PointType::Dimensions );
+            memcpy( (void*) & **p, coord, sizeof(T) * PointType::Dimensions );
             Y_ASSERT(points.insert(p));
         }
         std::cerr << "points=" <<  points << std::endl;
 
-        typedef Node<T,VTX>                NodeType;
-        typedef typename NodeType::Pointer NodePointer;
-        hash_set<NodeKey,NodePointer>      nodes;
-        for(typename Points::iterator it=points.begin();it!=points.end();++it)
-        {
-            const NodePointer n = new NodeType( *it );
-            Y_ASSERT(nodes.insert(n));
-        }
-        std::cerr << "nodes=" << nodes << std::endl;
 
         StandardArc<T,VTX> sa;
         PeriodicArc<T,VTX> pa;
         for(typename Points::iterator it=points.begin();it!=points.end();++it)
         {
-            sa.insert(*it);
-            pa.insert(*it);
+            sa.insert( *it );
+            pa.insert( *it );
         }
 
-         
+
+        std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size() << std::endl;
+        std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size() << std::endl;
+
+        pa.build();
+        {
+            for(size_t i=1;i<=pa.segments.size();++i)
+            {
+                const Segment<T,VTX> &segment = pa.segments[i];
+                segment.P(0);
+            }
+        }
+
+        {
+            const string  fileName = "pa-" + type2file( typeid(vertex) ) + "p.dat";
+            ios::ocstream fp(fileName);
+            for(size_t i=1;i<=pa.nodes.size();++i)
+            {
+                PointType::Print(fp,***pa.nodes[i]) << '\n';
+            }
+            if(pa.nodes.size())
+            {
+                PointType::Print(fp,***pa.nodes[1]) << '\n';
+            }
+        }
+
+        {
+            const string fileName = "pa-" + type2file( typeid(vertex) ) + "pp.dat";
+            ios::ocstream fp(fileName);
+            for(size_t i=1;i<=pa.segments.size();++i)
+            {
+                const Segment<T,VTX> &segment = pa.segments[i];
+                for(T tau=0;tau<=1.0;tau+=0.1)
+                {
+                    const vertex P = segment.P(tau);
+                    PointType::Print(fp,P) << '\n';
+                }
+            }
+        }
+
+        {
+            const string fileName = "pa-" + type2file( typeid(vertex) ) + "v.dat";
+            ios::ocstream fp(fileName);
+            for(size_t i=1;i<=pa.segments.size();++i)
+            {
+                const Segment<T,VTX> &segment = pa.segments[i];
+                for(T tau=0;tau<=1.0;tau+=0.2)
+                {
+                    const vertex P = segment.P(tau);
+                    const vertex V = segment.V(tau);
+
+                    PointType::Print(fp,P) << '\n';
+                    PointType::Print(fp,P+V) << '\n';
+                    fp << '\n';
+                }
+            }
+        }
+
 
         std::cerr << "sizes: " << std::endl;
         Y_UTEST_SIZEOF(vertex);
         Y_UTEST_SIZEOF(PointType);
-        Y_UTEST_SIZEOF(NodeType);
         std::cerr << std::endl;
     }
 

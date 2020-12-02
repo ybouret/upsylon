@@ -79,7 +79,7 @@ namespace upsylon
 
                 //! helper to display
                 template <typename OSTREAM> static inline
-                OSTREAM & Print(OSTREAM &os, const vertex &v)
+                OSTREAM & Print(OSTREAM &os, const vertex v)
                 {
                     const_type *p = (const_type *)&v;
                     //os << '[';

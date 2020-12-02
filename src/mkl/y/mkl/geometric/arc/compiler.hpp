@@ -23,18 +23,25 @@ namespace upsylon
             template <typename T, template <class> class VTX>
             struct CompileArc
             {
+#if 0
                 typedef Arc<T,VTX> ArcType;
                 typedef typename   ArcType::PointType PointType;
                 typedef typename   ArcType::vertex vertex;
                 typedef typename   ArcType::Coefficients Coefficients;
                 typedef typename   ArcType::type         type;
-                typedef typename   ArcType::Nodes        Nodes;
                 static const size_t Dimensions = PointType::Dimensions;
                 static inline void For(const PeriodicArc<T,VTX> &arc)
                 {
+
+
+                    aliasing::_(arc.compiled) = false;
+
                     const vertex zero;
-                    const size_t size = arc.nodes.size();
-                    Coefficients &A   = aliasing::_(arc.A);
+                    const Nodes &nodes = arc.nodes;
+                    const size_t size  = nodes.size();
+                    Coefficients &P    = aliasing::_(arc.P);
+                    Coefficients &A    = aliasing::_(arc.A);
+                    P.make(size,zero);
                     A.make(size,zero);
                     switch(size)
                     {
@@ -45,24 +52,44 @@ namespace upsylon
                     }
                     cyclic<type> M(size);
                     matrix<type> lhs(Dimensions,size);
-                    M.set(1,2,1);
+                    vector<type> res(size,0);
+                    M.set(1,4,1);
                     // collect
                     {
-                        typename Nodes::const_iterator it = arc.nodes.begin();
+                        typename Nodes::const_iterator im = arc.nodes.begin();
+                        typename Nodes::const_iterator i0 = im; ++i0;
+                        typename Nodes::const_iterator ip = i0; ++ip;
+
                         // lower bound
                         {
-                            const vertex &p0 = ****it;
-                            ++it;
-                            const vertex &pp = ****it;
-                            const vertex &pm = **arc.nodes.back();
-                            fill(lhs,1,6,pm,p0,pp);
+                            fill(lhs,1,6,***arc.nodes.back(),****im,****i0);
                         }
 
                         // bulk
+                        for(size_t i=2;i<size;++i,++im,++i0,++ip)
+                        {
+                            fill(lhs,i,6,****im,****i0,****ip);
+                        }
 
                         // upper bound
+                        fill(lhs,size,6,****im,****i0,***arc.nodes.front());
                         
                     }
+                    std::cerr << "M=" << M << std::endl;
+                    std::cerr << "lhs=" << lhs << std::endl;
+                    for(size_t dim=0,row=1;dim<Dimensions;++dim,++row)
+                    {
+                        M.solve(res, lhs[row] );
+                        std::cerr << "res" << dim << "=" << res << std::endl;
+                        for(size_t i=size;i>0;--i)
+                        {
+                            type *v = (type *) &A[i];
+                            v[dim]  = res[i];
+                        }
+                    }
+                    std::cerr << "A=" << A << std::endl;
+                    aliasing::_(arc.compiled) = true;
+
                 }
 
                 static inline void fill(matrix<type> &lhs,
@@ -79,7 +106,7 @@ namespace upsylon
                         lhs[r][col] = v[i];
                     }
                 }
-
+#endif
             };
         }
 

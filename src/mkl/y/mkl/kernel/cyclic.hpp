@@ -49,7 +49,7 @@ namespace upsylon {
 
 
             //! solve (*this)*x = r
-            inline void solve( array<T> &x, const array<T> &r )
+            inline void solve( addressable<T> &x, const accessible<T> &r )
             {
                 assert( this->size() == x.size() );
                 assert( this->size() == r.size() );
@@ -225,7 +225,7 @@ namespace upsylon {
             }
 
             //! target = (*this)*source
-            inline void mul( array<T> &target, const array<T> &source ) const
+            inline void mul( addressable<T> &target, const accessible<T> &source ) const
             {
                 assert(this->size()>=3);
                 assert(target.size()==this->size());
