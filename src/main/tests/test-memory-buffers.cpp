@@ -13,7 +13,8 @@ namespace {
         {
             blk[i] = support::get<T>();
         }
-
+        alea.shuffle(*blk,blk.size());
+        
     }
 }
 
