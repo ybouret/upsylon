@@ -32,7 +32,7 @@ namespace upsylon
                 typedef typename   ArcType::SharedNode   SharedNode;   //!< alias
                 typedef typename   ArcType::vertex       vertex;       //!< alias
                 typedef typename   ArcType::Nodes        Nodes;        //!< alias
-                
+
                 //______________________________________________________________
                 //
                 // C++

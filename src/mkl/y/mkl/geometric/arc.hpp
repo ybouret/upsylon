@@ -57,6 +57,7 @@ namespace upsylon
                 typedef Node<T,VTX>                      NodeType;       //!< alias
                 typedef typename NodeType::Pointer       SharedNode;     //!< alias
                 typedef hash_set<NodeKey,SharedNode>     Nodes;          //!< alias
+                typedef            vector<vertex>        Coefficients; //!< alias
 
                 //______________________________________________________________
                 //
@@ -82,12 +83,13 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Nodes    nodes; //!< table/list of nodes
-
+                const Nodes        nodes; //!< table/list of nodes
+                const Coefficients A;
+                const Coefficients B;
+                
             protected:
-                vector<vertex> A;
                 //! setup empty
-                explicit Arc() : nodes(),  A(), compiled(false)
+                explicit Arc() : nodes(),  A(), B(), compiled(false)
                 {
                 }
                 

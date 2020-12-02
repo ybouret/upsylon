@@ -1,5 +1,4 @@
-#include "y/mkl/geometric/arc/standard.hpp"
-#include "y/mkl/geometric/arc/periodic.hpp"
+#include "y/mkl/geometric/arc/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/associative/hash/set.hpp"
@@ -13,6 +12,7 @@ using namespace Geometric;
 
 namespace {
 
+#if 0
     static inline string type2file( const std::type_info &tid)
     {
         string id = type_name_for(tid);
@@ -34,7 +34,8 @@ namespace {
         }
         return id;
     }
-
+#endif
+    
     template <typename T, template <class> class VTX>
     static inline void testPoints()
     {
