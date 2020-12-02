@@ -4,6 +4,8 @@
 
 #include "y/memory/buffer.hpp"
 #include "y/sequence/addressable.hpp"
+#include "y/type/block/zset.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {
@@ -23,6 +25,7 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
+            explicit cblock() throw();       //!< no memory
             explicit cblock(const size_t n); //!< setup with next_power_of_two
             virtual ~cblock() throw();       //!< cleanup
 
@@ -32,7 +35,13 @@ namespace upsylon
             //__________________________________________________________________
             virtual const void *ro()     const throw(); //!< block_addr
             virtual size_t      length() const throw(); //!< block_size
-            
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void swap_with( cblock &other ) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cblock);
             const size_t block_size;
@@ -61,6 +70,9 @@ namespace upsylon
             // C++
             //__________________________________________________________________
 
+            //! setup empty
+            inline explicit cppblock() throw() : cblock(), items(0), item(0) {}
+
             //! setup with rounding
             inline explicit cppblock(const size_t n) :
             cblock(n*sizeof(T)),
@@ -73,6 +85,7 @@ namespace upsylon
             inline virtual ~cppblock() throw()
             {
                 item = 0;
+                _bzset(items);
             }
 
             //__________________________________________________________________
@@ -115,6 +128,22 @@ namespace upsylon
             {
                 return (type *) ro();
             }
+
+            //__________________________________________________________________
+            //
+            // other methods
+            //__________________________________________________________________
+            inline void swap_with( cppblock &other ) throw()
+            {
+                {
+                    cblock &I   = *this;
+                    cblock &it = other;
+                    I.swap_with(it);
+                }
+                _cswap(items,other.items);
+                _cswap(item,other.item);
+            }
+
 
         private:
             const size_t  items;
