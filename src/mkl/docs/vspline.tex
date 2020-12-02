@@ -1,0 +1,113 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+
+
+\begin{document}
+\title{Virtual Splines}
+\maketitle
+	
+
+\section{Description}
+We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
+that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
+We define:
+\begin{equation}
+ 	\begin{array}{rcl|rcl|rcl}
+	B(\tau) & = & \tau  & B'(\tau) & = & 1 & B''(\tau) & = & 0\\
+	A(\tau) & = & B(1-\tau) & A'(\tau) & = & -1 & A''(\tau) & = & 0\\
+	D(\tau) & = & \dfrac{\tau^3-\tau}{6} & D'(\tau) & = & \dfrac{3\tau^2-1}{6}& D'(\tau) & = & \tau\\
+	C(\tau) & = & D(1-\tau) & C'(\tau) & = & \dfrac{1-3(1-\tau)^2}{6} & C''(\tau) & = & 1-\tau\\
+	F(\tau) & = & \dfrac{3\tau^5-5\tau^4+2\tau}{60} & F'(\tau) & = & ...& F''(\tau) & = & \tau^3-\tau^2\\
+	E(\tau) & = & F(1-\tau) & E'(\tau) & = & -F'(1-\tau) & E''(\tau) & = & (1-\tau)^3-(1-\tau)^2\\
+	\end{array}
+ \end{equation}
+ We get:
+\begin{itemize}
+\item
+\begin{equation}
+\vec{P}(\tau) = A(\tau)\vec{P}_i + B(\tau) \vec{P}_{i+1} + C(\tau)\vec{P}_{i}'' + D(\tau) \vec{P}_{i+1}''
+\end{equation}
+which go through all the points and second derivatives,
+\item
+\begin{equation}
+\vec{Q}(\tau) = A(\tau)\vec{P}_i + B(\tau) \vec{P}_{i+1} + C(\tau)\vec{P}_{i}'' + D(\tau) \vec{P}_{i+1}'' + G(\tau) \left[ \vec{P}_{i+1}'' - \vec{P}_{i}''\right]
+\end{equation}
+which go through all the points and second derivative, with a null third derivative for each points.
+\end{itemize}
+
+\section{Continuity}
+
+\subsection{For $\vec{P}$}
+
+\subsubsection{Bulk}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{P}'(0) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i} \\
+	\\
+	\vec{P}'(1) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] + \dfrac{1}{3} \vec{A}_{i+1} + \dfrac{1}{6}\vec{A}_{i}\\
+\end{array}
+\right.
+\end{equation}
+and
+\begin{equation}
+	 \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i}
+	 =
+	 \left[\vec{P}_{i}-\vec{P}_{i-1}\right] + \dfrac{1}{3} \vec{A}_{i} + \dfrac{1}{6}\vec{A}_{i-1}
+\end{equation}
+then
+\begin{equation}
+	 \left[\vec{P}_{i+1}-2\vec{P}_i+\vec{P}_{i-1}\right] = \dfrac{1}{6} \vec{A}_{i-1} + \dfrac{2}{3}\vec{A}_{i} + \dfrac{1}{6} \vec{A}_{i+1}
+\end{equation}
+
+\subsubsection{Fixed Boundaries}
+ 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ 	 \left[\vec{P}_{2}-\vec{P}_1\right] - \vec{P}'_{lower}& = &\dfrac{1}{3} \vec{A}_1 + \dfrac{1}{6} \vec{A}_{2}\\
+	 \\
+	\vec{P}'_{upper} - \left[\vec{P}_N - \vec{P}_{N-1}\right] & = & \dfrac{1}{6} \vec{A}_{N-1} + \dfrac{1}{3} \vec{A}_{N}\\
+\end{array}
+\right.
+\end{equation}
+ 
+ 
+\subsection{For $\vec{Q}$}
+\subsubsection{Bulk}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{Q}'(0) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{3}{20} \vec{A}_{i+1} - \dfrac{7}{20}\vec{A}_{i} \\
+	\\
+	\vec{Q}'(1) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] + \dfrac{7}{20} \vec{A}_{i+1} + \dfrac{3}{20}\vec{A}_{i}\\
+\end{array}
+\right.
+\end{equation}
+then:
+\begin{equation}
+	 \left[\vec{P}_{i+1}-2\vec{P}_i+\vec{P}_{i-1}\right] = \dfrac{3}{20} \vec{A}_{i-1} + \dfrac{7}{10}\vec{A}_{i} + \dfrac{3}{20} \vec{A}_{i+1}
+\end{equation}
+
+\subsubsection{Fixed Boundaries}
+ 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ 	 \left[\vec{P}_{2}-\vec{P}_1\right] - \vec{P}'_{lower}& = &\dfrac{7}{20} \vec{A}_1 + \dfrac{3}{20} \vec{A}_{2}\\
+	 \\
+	\vec{P}'_{upper} - \left[\vec{P}_N - \vec{P}_{N-1}\right] & = & \dfrac{3}{20} \vec{A}_{N-1} + \dfrac{7}{20} \vec{A}_{N}\\
+\end{array}
+\right.
+\end{equation}
+
+
+\end{document}
