@@ -102,6 +102,17 @@ namespace upsylon
                     return deltaP + (a2*Am+b2*Ap)/6;
                 }
 
+                //! acceleration
+                inline vertex A(const type beta) const throw()
+                {
+                    static const type one = 1;
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
+
+                    const type  alpha = one-beta;
+                    return alpha * Am + beta * Ap;
+                }
+
 
                 //______________________________________________________________
                 //

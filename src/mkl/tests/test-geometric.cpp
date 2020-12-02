@@ -133,6 +133,24 @@ namespace {
             }
         }
 
+        {
+            const string fileName = "pa-" + type2file( typeid(vertex) ) + "a.dat";
+            ios::ocstream fp(fileName);
+            for(size_t i=1;i<=pa.segments.size();++i)
+            {
+                const Segment<T,VTX> &segment = pa.segments[i];
+                for(T tau=0;tau<=1.0;tau+=0.2)
+                {
+                    const vertex P = segment.P(tau);
+                    const vertex A = segment.A(tau);
+
+                    PointType::Print(fp,P) << '\n';
+                    PointType::Print(fp,P+A) << '\n';
+                    fp << '\n';
+                }
+            }
+        }
+
 
         std::cerr << "sizes: " << std::endl;
         Y_UTEST_SIZEOF(vertex);
