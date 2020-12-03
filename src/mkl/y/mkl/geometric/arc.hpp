@@ -70,12 +70,23 @@ namespace upsylon
                 //! insert a point and create Node/Segment(s) accordingly
                 virtual void insert( const SharedPoint &point ) = 0;
 
+                //! compile data for evaluation in segments
+                void compileSegments() throw()
+                {
+                    for(size_t i=segments.size();i>0;--i)
+                    {
+                        aliasing::_(segments[i]).compile();
+                    }
+                }
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 const Nodes    nodes;       //!< nodes of shared points
                 const Segments segments;    //!< segments
+
+
 
             protected:
                 //! setup empty

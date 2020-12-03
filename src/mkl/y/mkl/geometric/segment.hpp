@@ -42,7 +42,9 @@ namespace upsylon
                 inline   Segment(const NodeType *orgNode,
                                  const NodeType *finNode) throw() :
                 origin( orgNode  ),
-                finish( finNode  )
+                finish( finNode  ),
+                deltaP(),
+                deltaA()
                 {
 
                 }
@@ -50,7 +52,9 @@ namespace upsylon
                 //! copy
                 inline Segment(const Segment &segment) throw() :
                 origin(segment.origin),
-                finish(segment.finish)
+                finish(segment.finish),
+                deltaP(segment.deltaP),
+                deltaA(segment.deltaA)
                 {
                 }
 
@@ -70,67 +74,110 @@ namespace upsylon
                 inline void reverse() throw()
                 {
                     _cswap(origin,finish);
-                 }
+                }
+
+                //! pre-compile
+                inline void compile() throw()
+                {
+                    aliasing::_(deltaP) = ***finish - ***origin;
+                    aliasing::_(deltaA) = finish->A - origin->A;
+                }
 
                 //! position
-                inline vertex P(const type beta) const throw()
+                inline vertex P(const type tau) const throw()
                 {
-                    static const type one = 1;
+                    static const type one   = 1;
+                    static const type six   = 6;
+
                     const vertex Pm = ***origin;
                     const vertex Am = origin->A;
                     const vertex Pp = ***finish;
                     const vertex Ap = finish->A;
 
-                    const type  alpha = one-beta;
-                    const type  a3ma  = alpha*alpha*alpha - alpha;
-                    const type  b3mb  = beta*beta*beta    - beta;
-                    return (alpha * Pm + beta * Pp) + (a3ma * Am + b3mb * Ap)/6;
+                    const type  alpha     = one-tau;
+                    const type  beta      = tau;
+                    const type  six_gamma = (alpha*alpha-one)*alpha;
+                    const type  six_delta = (beta*beta  -one)*beta;
+                    return (alpha * Pm + beta * Pp) + (six_gamma * Am + six_delta * Ap)/six;
                 }
 
-                //! position bis
-                inline vertex Q(const type beta) const throw()
+                inline vertex V(const type tau) const throw()
                 {
-                    static const type one = 1;
+                    static const type one   = 1;
+                    static const type two   = 2;
+                    static const type three = 3;
+                    static const type six   = 6;
+
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
+
+                    const type  six_gamma_p = (six-three*tau)*tau-two;
+                    const type  six_delta_p = (three*tau*tau-one);
+
+                    return deltaP + (six_gamma_p * Am + six_delta_p * Ap)/six;
+                }
+
+                inline vertex A(const type tau) const throw()
+                {
+                    static const type one   = 1;
+                    
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
+                    return (one-tau)*Am + tau * Ap;
+                }
+
+
+
+                //! position
+                inline vertex Q(const type tau) const throw()
+                {
+                    static const type one   = 1;
+                    static const type half  = type(0.5);
+                    static const type six   = 6;
+                    static const type three = 3;
+
                     const vertex Pm = ***origin;
                     const vertex Am = origin->A;
                     const vertex Pp = ***finish;
                     const vertex Ap = finish->A;
 
-                    const type  alpha = one-beta;
-                    const type  a3ma  = alpha*alpha*alpha - alpha;
-                    const type  beta3 = beta*beta*beta;
-                    const type  b3mb  = beta3    - beta;
-                    const type  eta   = (beta-10*beta3 + 15*beta3*beta - 6*beta*beta*beta3 );
-                    return (alpha * Pm + beta * Pp) + (a3ma * Am + b3mb * Ap)/6 + (eta * (Ap-Am)) /60;
+                    const type  alpha     = one-tau;
+                    const type  beta      = tau;
+                    const type  six_gamma = (alpha*alpha-one)*alpha;
+                    const type  six_delta = (beta*beta  -one)*beta;
+                    const type  tmt       = alpha*beta;
+                    const type  eta       = (half-tau)*tmt*(one+three*tmt)/30;
+                    return (alpha * Pm + beta * Pp) + (six_gamma * Am + six_delta * Ap)/six + eta * deltaA;
                 }
 
-
-                //! speed
-                inline vertex V(const type beta) const throw()
+                inline vertex VQ(const type tau) const throw()
                 {
-                    static const type one = 1;
-                    const vertex Pm = ***origin;
-                    const vertex Am = origin->A;
-                    const vertex Pp = ***finish;
-                    const vertex Ap = finish->A;
+                    static const type one   = 1;
+                    static const type half  = type(0.5);
+                    static const type two   = 2;
+                    static const type three = 3;
+                    static const type six   = 6;
 
-                    const type  alpha = one-beta;
-                    const type  b2    = 3*beta*beta - one;
-                    const type  a2    = one  - 3*alpha*alpha;
-                    return (Pp-Pm) + (a2*Am+b2*Ap)/6;
-                }
-
-                //! acceleration
-                inline vertex A(const type beta) const throw()
-                {
-                    static const type one = 1;
                     const vertex Am = origin->A;
                     const vertex Ap = finish->A;
 
-                    const type  alpha = one-beta;
-                    return alpha * Am + beta * Ap;
+                    const type  six_gamma_p = (six-three*tau)*tau-two;
+                    const type  six_delta_p = (three*tau*tau-one);
+                    const type  tmt  = tau*(one-tau);
+                    const type  eta_p = (one/30-tmt*tmt)*half;
+                    return deltaP + (six_gamma_p * Am + six_delta_p * Ap)/six + eta_p * deltaA;
                 }
 
+                inline vertex AQ(const type tau) const throw()
+                {
+                    static const type one   = 1;
+
+                    const vertex Am = origin->A;
+                    const vertex Ap = finish->A;
+                    const type   omt = one-tau;
+                    const type   eta_s = tau * omt * (tau+tau-one);
+                    return omt*Am + tau * Ap + eta_s * deltaA;
+                }
 
                 //______________________________________________________________
                 //
@@ -138,6 +185,8 @@ namespace upsylon
                 //______________________________________________________________
                 const NodeType * const origin;  //!< origin point
                 const NodeType * const finish;  //!< finish point
+                const vertex           deltaP;  //!< pre-compiled deltaP
+                const vertex           deltaA;  //!< pre-compiled deltaA
 
             private:
                 Y_DISABLE_ASSIGN(Segment);

@@ -112,18 +112,19 @@ namespace upsylon
                 //! build regular v-spline
                 void buildP()
                 {
-                    build_with(1,4,1,6);
+                    buildWith(1,4,1,6);
                 }
 
                 //! build another v-spline
                 void buildQ()
                 {
-                    build_with(3,14,3,20);
+                    buildWith(3,14,3,20);
                 }
 
+              
 
                 //! build periodic v-spline
-                void build_with(const type coefm,
+                void buildWith(const type coefm,
                                 const type coef0,
                                 const type coefp,
                                 const type factor)
@@ -136,6 +137,7 @@ namespace upsylon
                         {
                             bzset(nodes[i]->A);
                         }
+                        this->compileSegments();
                     }
                     else
                     {
@@ -160,7 +162,7 @@ namespace upsylon
                             // upper boundary
                             this->fill_bulk(rhs,count,factor, ***nodes[count-1], ***nodes.back(), ***nodes.front());
 
-                            // solve per dimengion
+                            // solve per dimension
                             for(size_t row=1,dim=0;row<=Dimensions;++row,++dim)
                             {
                                 cyc.solve(cof,rhs[row]);
@@ -171,6 +173,8 @@ namespace upsylon
                                     p[dim] = cof[i];
                                 }
                             }
+
+                            this->compileSegments();
 
                         }
                         catch(...)
