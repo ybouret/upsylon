@@ -28,7 +28,10 @@ namespace upsylon
                 //! cleanup
                 virtual ~Parser() throw();
 
+
                 static const char Include[];   //!< "Include"
+                static const char DialectID[]; //!< "Dialect"
+                static const char GrammarID[]; //!< "Grammar"
                 static const char bStringID[]; //!< "bString"
                 static const char jStringID[]; //!< "jString"
                 static const char rStringID[]; //!< "rString"

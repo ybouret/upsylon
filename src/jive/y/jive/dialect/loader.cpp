@@ -46,9 +46,9 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // initialize loop over top-level child(ren)
                 //--------------------------------------------------------------
-                if(XNode::IsInternal!=dialect->kind) throw exception("%sdialect not is not internal!",fn);
-                XNode::List &children = dialect->leaves();
-                XNode       *child    = children.head;
+                if( !dialect->isInternal() ) throw exception("%sdialect not is not internal!",fn);
+                XList  &children = dialect->leaves();
+                XNode  *child    = children.head;
                 while(child)
                 {
                     XNode *next = child->next;
@@ -57,7 +57,7 @@ namespace upsylon
                         //------------------------------------------------------
                         // check Include kind
                         //------------------------------------------------------
-                        if(XNode::IsInternal!=child->kind) throw exception("%s'%s' directive is not internal!",fn,Include);
+                        if( ! child->isInternal() ) throw exception("%s'%s' directive is not internal!",fn,Include);
 
                         //------------------------------------------------------
                         // check Include args
@@ -69,8 +69,8 @@ namespace upsylon
                         // check Include arg
                         //------------------------------------------------------
                         const XNode       &data  = *args.head;
-                        if(XNode::IsTerminal!=data.kind)    throw exception("%s'%s' argument is not a terminal",fn,Include);
-                        const string      &name     = *data.axiom.name;
+                        if( !data.isTerminal() )    throw exception("%s'%s' argument is not a terminal",fn,Include);
+                        const string      &name     = data.name();
                         bool               absolute = false;
                         switch( shash(name) )
                         {

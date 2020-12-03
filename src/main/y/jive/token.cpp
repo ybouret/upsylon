@@ -27,14 +27,23 @@ namespace upsylon {
             return *this;
         }
 
-        string Token:: toString() const
+        string Token:: toString(size_t nskip) const
         {
-            string ans(size,as_capacity,false);
-            for(const Char *ch=head;ch;ch=ch->next)
+            if(nskip>=size)
             {
-                ans += char(ch->code);
+                return string();
             }
-            return ans;
+            else
+            {
+                const Char *ch=head; while(nskip--) ch=ch->next;
+
+                string ans(size-nskip,as_capacity,false);
+                for(;ch;ch=ch->next)
+                {
+                    ans += char(ch->code);
+                }
+                return ans;
+            }
         }
 
         string Token:: translate(const char * table[]) const

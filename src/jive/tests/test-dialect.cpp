@@ -1,4 +1,5 @@
 #include "y/jive/dialect/loader.hpp"
+#include "y/jive/dialect/compiler.hpp"
 #include "y/utest/run.hpp"
 #include "y/fs/local/fs.hpp"
 #include "y/jive/syntax/analyzer.hpp"
@@ -36,6 +37,13 @@ Y_UTEST(dialect)
             std::cerr << std::endl;
         }
 
+        Dialect::Compiler dialectComp;
+
+        Parser *p = dialectComp.compileAST(ast);
+        if(p)
+        {
+            delete p;
+        }
 
     }
 

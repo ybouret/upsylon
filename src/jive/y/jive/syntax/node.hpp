@@ -58,9 +58,33 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                const Lexeme * lexeme() const    throw();         //!< access lexeme
-                List         & leaves()          throw();         //!< access leaves
-                const List   & leaves() const    throw();         //!< access leaves
+                const Lexeme * lexeme()     const throw();         //!< access lexeme
+                List         & leaves()           throw();         //!< access leaves
+                const List   & leaves()     const throw();         //!< access leaves
+                bool           isInternal() const throw();         //!< kind==IsInternal
+                bool           isTerminal() const throw();         //!< kind==IsTerminal
+                const string  &name()       const throw();         //!< axiom.name
+                
+                template <typename ID> inline
+                bool is(const ID &id) const throw()
+                {
+                    return id == name();
+                }
+
+                template <typename ID> inline
+                bool isTerminal(const ID &id) const throw()
+                {
+                    return isTerminal() && is(id);
+                }
+
+                template <typename ID> inline
+                bool isInternal(const ID &id) const throw()
+                {
+                    return isInternal() && is(id);
+                }
+
+
+
 
                 //______________________________________________________________
                 //
@@ -123,6 +147,7 @@ namespace upsylon
         }
 
         typedef Syntax::Node  XNode; //!< alias
+        typedef XNode::List   XList; //!< alias
     }
 
 	Y_MAGAZINE_DECL(Jive::Syntax::Node)

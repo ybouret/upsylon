@@ -50,7 +50,23 @@ namespace upsylon
                 return *static_cast<List *>( (void*)aliasing::anonymous(wksp) );
             }
             
-            
+
+            bool Node:: isInternal() const throw()
+            {
+                return IsInternal==kind;
+            }
+
+            bool Node:: isTerminal() const throw()
+            {
+                return IsTerminal==kind;
+            }
+
+            const string & Node::name() const throw()
+            {
+                return *(axiom.name);
+            }
+
+
             Node:: ~Node() throw()
             {
                 switch(kind)

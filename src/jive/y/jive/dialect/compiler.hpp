@@ -3,7 +3,7 @@
 //! \file
 
 #ifndef Y_JIVE_DIALECT_COMPILER_INCLUDED
-#define Y_JIVE_DIALECT_LOADER_INCLUDED 1
+#define Y_JIVE_DIALECT_COMPILER_INCLUDED 1
 
 #include "y/jive/dialect/parser.hpp"
 
@@ -23,8 +23,11 @@ namespace upsylon
 
                 Jive::Parser *compileAST( XNode::Pointer &ast );
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
+                static const string *GetName( XNode::Pointer &ast );
+
             };
         }
 

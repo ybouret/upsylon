@@ -12,6 +12,8 @@ namespace upsylon
         namespace Dialect
         {
             const char Parser::Include[]   = "Include";
+            const char Parser::DialectID[] = "Dialect";
+            const char Parser::GrammarID[] = "Grammar";
             const char Parser::bStringID[] = "bString";
             const char Parser::jStringID[] = "jString";
             const char Parser::rStringID[] = "rString";
@@ -36,7 +38,7 @@ namespace upsylon
                 // top level
                 //
                 //--------------------------------------------------------------
-                Aggregate   &DIALECT = agg("Dialect");
+                Aggregate   &DIALECT = agg(DialectID);
                 const Axiom &END     = division(';');
                 const Axiom &SEP     = division(':');
                 const Axiom &BSTRING = plugin<Lexical::bString>(bStringID);
