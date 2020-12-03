@@ -12,11 +12,95 @@
 \title{Virtual Splines}
 \maketitle
 	
-
-\section{Description}
 We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
 that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
-We define:
+ 
+
+\section{Regular V-Spline}
+\subsection{Coefficients}
+\begin{equation}
+\forall \tau \in [0:1], \;
+\left\lbrace
+\begin{array}{rcl}
+\alpha & = & 1-\tau\\
+\beta  & = & \tau\\
+\gamma & = & \dfrac{ (1-\tau)^3 - (1-\tau) }{6}\\
+\delta & = & \dfrac{\tau^3-\tau}{6}\\
+\end{array}
+\right.
+\Rightarrow
+\left\lbrace
+\begin{array}{rcl}
+\alpha' & = & -1\\
+\beta'  & = & 1\\
+\gamma' & = & \dfrac{ 1-3(1-\tau)^2 }{6}\\
+\delta' & = & \dfrac{3\tau^2-1}{6}\\
+\end{array}
+\right.
+\Rightarrow
+\left\lbrace
+\begin{array}{rcl}
+\alpha'' & = & 0\\
+\beta''  & = & 0\\
+\gamma'' & = & 1-\tau\\
+\delta'' & = & \tau\\
+\end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{P}(\tau)  & = & \alpha(\tau)\vec{P}_i + \beta(\tau) \vec{P}_{i+1} + \gamma(\tau)\vec{P}_{i}'' + \delta(\tau) \vec{P}_{i+1}''\\
+\\
+\vec{P}'(\tau) & = & \left[\vec{P}_{i+1} - \vec{P}_i\right] + \dfrac{1}{6} \left[ \underbrace{(1-3(1-\tau)^2)}_{(6-3\tau)\tau-2} \vec{P}_{i}'' + (3\tau^2-1) \vec{P}_{i+1}'' \right] \\
+\\
+\vec{P}''(\tau) & = & (1-\tau) \vec{P}_{i}'' + \tau \vec{P}_{i+1}''\\
+\\
+\vec{P}'''(\tau) & = & \vec{P}_{i+1}'' - \vec{P}_i''\\
+\end{array}
+\right.
+\end{equation}
+
+\subsection{Continuity}
+
+\subsubsection{Bulk}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{P}'(0) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i} \\
+	\\
+	\vec{P}'(1) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] + \dfrac{1}{3} \vec{A}_{i+1} + \dfrac{1}{6}\vec{A}_{i}\\
+\end{array}
+\right.
+\end{equation}
+and
+\begin{equation}
+	 \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i}
+	 =
+	 \left[\vec{P}_{i}-\vec{P}_{i-1}\right] + \dfrac{1}{3} \vec{A}_{i} + \dfrac{1}{6}\vec{A}_{i-1}
+\end{equation}
+then
+\begin{equation}
+	 \left[\vec{P}_{i+1}-2\vec{P}_i+\vec{P}_{i-1}\right] = \dfrac{1}{6} \vec{A}_{i-1} + \dfrac{2}{3}\vec{A}_{i} + \dfrac{1}{6} \vec{A}_{i+1}
+\end{equation}
+
+\subsubsection{Fixed Boundaries}
+ 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ 	 \left[\vec{P}_{2}-\vec{P}_1\right] - \vec{P}'_{lower}& = &\dfrac{1}{3} \vec{A}_1 + \dfrac{1}{6} \vec{A}_{2}\\
+	 \\
+	\vec{P}'_{upper} - \left[\vec{P}_N - \vec{P}_{N-1}\right] & = & \dfrac{1}{6} \vec{A}_{N-1} + \dfrac{1}{3} \vec{A}_{N}\\
+\end{array}
+\right.
+\end{equation}
+
+
+\end{document}
+
 \begin{equation}
  	\begin{array}{rcl|rcl|rcl}
 	\beta(\tau) & = & \tau  & \beta'(\tau) & = & 1 & \beta''(\tau) & = & 0\\
