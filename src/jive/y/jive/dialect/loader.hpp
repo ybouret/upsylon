@@ -37,13 +37,22 @@ namespace upsylon
                 //! load file and recursively load include directives
                 //______________________________________________________________
                 template <typename FILENAME>
-                XNode *loadFile( const FILENAME &fileName )
+                XNode *loadSketch( const FILENAME &fileName )
                 {
 
                     XNode::Pointer dialect( parseFile(fileName) );
                     checkIncludes(dialect);
                     return dialect.yield();
                 }
+
+                //______________________________________________________________
+                //
+                //! load precompiled grammar
+                //______________________________________________________________
+                XNode *loadBinary(Module *);
+                
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Loader);

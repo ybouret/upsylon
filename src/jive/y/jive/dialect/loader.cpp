@@ -29,6 +29,14 @@ namespace upsylon
 
             }
 
+            XNode * Loader:: loadBinary(Module *module)
+            {
+                Source         source(module);
+                size_t         temp=0;
+                XNode::Pointer xnode( XNode::Load(source,*this,temp) );
+                return xnode.yield();
+            }
+
 
             void Loader:: checkIncludes( XNode::Pointer &dialect )
             {
@@ -78,19 +86,28 @@ namespace upsylon
                                 throw exception("%sunhandled %s argument '%s' ",fn,Include,*name );
                         }
 
+                        //------------------------------------------------------
+                        // create include name
+                        //------------------------------------------------------
+                        // TODO: absolute/relative
                         const Lexeme  *lexeme   = data.lexeme();
-                        const Context &context  = *lexeme;
                         const string   fileName = lexeme->toString();
+                        const string   rootName = vfs::get_file_dir(*(lexeme->tag));
                         std::cerr << "loading " << (absolute?"absolute":"relative") << " '" << fileName << "'" << std::endl;
-                        const string   rootName = vfs::get_file_dir(*context.tag);
                         std::cerr << "from " << rootName << std::endl;
                         const string   inclName = rootName + fileName;
-                        // TODO: absolute/relative
-                        XNode *included = loadFile(inclName);
-                        // no throw exchange
-                        XNode::Release( children.replace(child,included) );
 
+                        //------------------------------------------------------
+                        // create included node
+                        //------------------------------------------------------
+                        XNode *included = loadSketch(inclName);
+
+                        //------------------------------------------------------
+                        // no throw exchange/release
+                        //------------------------------------------------------
+                        XNode::Release( children.replace(child,included) );
                     }
+
                     child = next;
                 }
 

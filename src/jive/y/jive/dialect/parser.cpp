@@ -26,6 +26,11 @@ namespace upsylon
 
             Parser:: Parser() : Jive::Parser("Dialect")
             {
+
+                define("NAME",NAME_RX);
+
+
+
                 //--------------------------------------------------------------
                 //
                 // top level
@@ -44,7 +49,7 @@ namespace upsylon
                 // Grammar Name
                 //
                 //--------------------------------------------------------------
-                DIALECT << ( grp("GrammarDecl") <<  terminal("Grammar", "\\." NAME_RX) << END );
+                DIALECT << ( grp("GrammarDecl") <<  terminal("Grammar", "\\.{NAME}") << END );
 
                 Alternate &STATEMENT = alt("Statement");
                 DIALECT << repeat(STATEMENT,0);
@@ -57,7 +62,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 {
                     Aggregate &PluginDecl = agg("Plugin");
-                    PluginDecl << terminal("PluginName", "@" NAME_RX) << SEP << BSTRING;
+                    PluginDecl << terminal("PluginName", "@{NAME}") << SEP << BSTRING;
                     PluginDecl << repeat("PluginArgs",STRING,0);
                     PluginDecl << END;
                     STATEMENT << PluginDecl;

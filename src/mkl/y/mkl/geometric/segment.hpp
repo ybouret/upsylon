@@ -101,6 +101,7 @@ namespace upsylon
                     return (alpha * Pm + beta * Pp) + (six_gamma * Am + six_delta * Ap)/six;
                 }
 
+                //! speed
                 inline vertex V(const type tau) const throw()
                 {
                     static const type one   = 1;
@@ -117,6 +118,7 @@ namespace upsylon
                     return deltaP + (six_gamma_p * Am + six_delta_p * Ap)/six;
                 }
 
+                //! acceleration
                 inline vertex A(const type tau) const throw()
                 {
                     static const type one   = 1;
@@ -150,6 +152,7 @@ namespace upsylon
                     return (alpha * Pm + beta * Pp) + (six_gamma * Am + six_delta * Ap)/six + eta * deltaA;
                 }
 
+                //! Q-Speed
                 inline vertex VQ(const type tau) const throw()
                 {
                     static const type one   = 1;
@@ -168,6 +171,7 @@ namespace upsylon
                     return deltaP + (six_gamma_p * Am + six_delta_p * Ap)/six + eta_p * deltaA;
                 }
 
+                //! Q-acceleration
                 inline vertex AQ(const type tau) const throw()
                 {
                     static const type one   = 1;

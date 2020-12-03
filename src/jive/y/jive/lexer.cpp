@@ -231,6 +231,12 @@ namespace upsylon {
             }
         }
 
+        void Lexer:: multipleID(const char *id) const
+        {
+            throw exception("[%s] multiple dictionary '%s'", **label, id);
+        }
+
+
     }
 
 }
