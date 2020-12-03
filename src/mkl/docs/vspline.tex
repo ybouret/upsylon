@@ -98,75 +98,28 @@ then
 \right.
 \end{equation}
 
+\section{Other V-Spline}
+\subsection{Coefficients}
+We use:
+\begin{equation}
+	\eta(\tau) = \dfrac{\tau}{60} - \dfrac{\tau^3}{6} + \dfrac{\tau^4}{4} - \dfrac{\tau^5}{10}
+	 = \dfrac{1}{30} \left(\dfrac{1}{2} - \tau \right)\tau (1-\tau) \left[ 1 + 3 \tau(1-\tau) \right]
+\end{equation}
+with
+\begin{equation}
+\eta'(\tau) = \dfrac{1}{60} - \dfrac{1}{2} \left[ \tau(1-\tau) \right]^2
+\end{equation}
+
+\begin{equation}
+\eta''(\tau) =  \tau(1-\tau)(2\tau-1)
+\end{equation}
+
+\begin{equation}
+\eta'''(\tau) =  6\tau(1-\tau)-1
+\end{equation}
 
 \end{document}
 
-\begin{equation}
- 	\begin{array}{rcl|rcl|rcl}
-	\beta(\tau) & = & \tau  & \beta'(\tau) & = & 1 & \beta''(\tau) & = & 0\\
-	\alpha(\tau) & = & \beta(1-\tau) & \alpha'(\tau) & = & -1 & \alpha''(\tau) & = & 0\\
-	\\
-	\delta(\tau) & = & \dfrac{\tau^3-\tau}{6} & \delta'(\tau) & = & \dfrac{3\tau^2-1}{6}& \delta''(\tau) & = & \tau\\
-	\gamma(\tau) & = & \delta(1-\tau) & \gamma'(\tau) & = & \dfrac{1-3(1-\tau)^2}{6} & \gamma''(\tau) & = & 1-\tau\\
-	\\
-	F(\tau) & = & \dfrac{3\tau^5-5\tau^4+2\tau}{60} & F'(\tau) & = & ...& F''(\tau) & = & \tau^3-\tau^2\\
-	E(\tau) & = & F(1-\tau) & E'(\tau) & = & -F'(1-\tau) & E''(\tau) & = & (1-\tau)^3-(1-\tau)^2\\
-	\eta(\tau) & = & E(\tau)-F(\tau) & \eta' & = & .. & \eta'' & = & ...\\
-	\end{array}
- \end{equation}
- We get:
-\begin{itemize}
-\item
-\begin{equation}
-\vec{P}(\tau) = \alpha(\tau)\vec{P}_i + \beta(\tau) \vec{P}_{i+1} + \gamma(\tau)\vec{P}_{i}'' + \delta(\tau) \vec{P}_{i+1}''
-\end{equation}
-which go through all the points and second derivatives,
-\item
-\begin{equation}
-\vec{Q}(\tau) =  \alpha(\tau)\vec{P}_i + \beta(\tau) \vec{P}_{i+1} + \gamma(\tau)\vec{P}_{i}'' + \delta(\tau) \vec{P}_{i+1}'' + \eta(\tau) \left[ \vec{P}_{i+1}'' - \vec{P}_{i}''\right]
-\end{equation}
-which go through all the points and second derivative, with a null third derivative for each points.
-\end{itemize}
-
-\section{Continuity}
-
-\subsection{For $\vec{P}$}
-
-\subsubsection{Bulk}
-
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\vec{P}'(0) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i} \\
-	\\
-	\vec{P}'(1) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] + \dfrac{1}{3} \vec{A}_{i+1} + \dfrac{1}{6}\vec{A}_{i}\\
-\end{array}
-\right.
-\end{equation}
-and
-\begin{equation}
-	 \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{1}{6} \vec{A}_{i+1} - \dfrac{1}{3}\vec{A}_{i}
-	 =
-	 \left[\vec{P}_{i}-\vec{P}_{i-1}\right] + \dfrac{1}{3} \vec{A}_{i} + \dfrac{1}{6}\vec{A}_{i-1}
-\end{equation}
-then
-\begin{equation}
-	 \left[\vec{P}_{i+1}-2\vec{P}_i+\vec{P}_{i-1}\right] = \dfrac{1}{6} \vec{A}_{i-1} + \dfrac{2}{3}\vec{A}_{i} + \dfrac{1}{6} \vec{A}_{i+1}
-\end{equation}
-
-\subsubsection{Fixed Boundaries}
- 
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
- 	 \left[\vec{P}_{2}-\vec{P}_1\right] - \vec{P}'_{lower}& = &\dfrac{1}{3} \vec{A}_1 + \dfrac{1}{6} \vec{A}_{2}\\
-	 \\
-	\vec{P}'_{upper} - \left[\vec{P}_N - \vec{P}_{N-1}\right] & = & \dfrac{1}{6} \vec{A}_{N-1} + \dfrac{1}{3} \vec{A}_{N}\\
-\end{array}
-\right.
-\end{equation}
- 
- 
 \subsection{For $\vec{Q}$}
 \subsubsection{Bulk}
 

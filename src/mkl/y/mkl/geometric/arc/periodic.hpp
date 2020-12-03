@@ -109,11 +109,13 @@ namespace upsylon
                 }
 
 
+                //! build regular v-spline
                 void buildP()
                 {
                     build_with(1,4,1,6);
                 }
 
+                //! build another v-spline
                 void buildQ()
                 {
                     build_with(3,14,3,20);

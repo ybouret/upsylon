@@ -47,6 +47,7 @@ namespace upsylon
 
                 }
 
+                //! copy
                 inline Segment(const Segment &segment) throw() :
                 origin(segment.origin),
                 finish(segment.finish)
