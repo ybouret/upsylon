@@ -118,6 +118,52 @@ with
 \eta'''(\tau) =  6\tau(1-\tau)-1
 \end{equation}
 
+and we use
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{P}(\tau)  & = & \alpha(\tau)\vec{P}_i + \beta(\tau) \vec{P}_{i+1} + \gamma(\tau)\vec{P}_{i}'' + \delta(\tau) \vec{P}_{i+1}'' + \eta(\tau) \left[\vec{P}_{i+1}'' - \vec{P}_i''\right]\\
+\\
+\vec{P}'(\tau) & = & \left[\vec{P}_{i+1} - \vec{P}_i\right] + \dfrac{1}{6} \left[ \underbrace{(1-3(1-\tau)^2)}_{(6-3\tau)\tau-2} \vec{P}_{i}'' + (3\tau^2-1) \vec{P}_{i+1}'' \right] + \eta'(\tau) \left[\vec{P}_{i+1}'' - \vec{P}_i''\right]\\
+\\
+\vec{P}''(\tau) & = & (1-\tau) \vec{P}_{i}'' + \tau \vec{P}_{i+1}'' + \eta''(\tau) \left[\vec{P}_{i+1}'' - \vec{P}_i''\right]\\\
+\\
+\vec{P}'''(\tau) & = & \underbrace{\left[1+\eta'''(\tau)\right]}_{6\tau(1-\tau)} \left[\vec{P}_{i+1}'' - \vec{P}_i''\right]\\\
+\end{array}
+\right.
+\end{equation}
+
+\subsection{Continuity}
+
+\subsubsection{Bulk}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{P}'(0) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] - \dfrac{3}{20} \vec{A}_{i+1} - \dfrac{7}{20}\vec{A}_{i} \\
+	\\
+	\vec{P}'(1) & = & \left[\vec{P}_{i+1}-\vec{P}_i\right] + \dfrac{7}{20} \vec{A}_{i+1} + \dfrac{3}{20}\vec{A}_{i}\\
+\end{array}
+\right.
+\end{equation}
+then:
+\begin{equation}
+	 \left[\vec{P}_{i+1}-2\vec{P}_i+\vec{P}_{i-1}\right] = \dfrac{3}{20} \vec{A}_{i-1} + \dfrac{7}{10}\vec{A}_{i} + \dfrac{3}{20} \vec{A}_{i+1}
+\end{equation}
+
+\subsubsection{Fixed Boundaries}
+ 
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+ 	 \left[\vec{P}_{2}-\vec{P}_1\right] - \vec{P}'_{lower}& = &\dfrac{7}{20} \vec{A}_1 + \dfrac{3}{20} \vec{A}_{2}\\
+	 \\
+	\vec{P}'_{upper} - \left[\vec{P}_N - \vec{P}_{N-1}\right] & = & \dfrac{3}{20} \vec{A}_{N-1} + \dfrac{7}{20} \vec{A}_{N}\\
+\end{array}
+\right.
+\end{equation}
+
+
 \end{document}
 
 \subsection{For $\vec{Q}$}
