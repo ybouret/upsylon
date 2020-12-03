@@ -38,7 +38,7 @@ namespace {
 #endif
     
     template <typename T, template <class> class VTX>
-    static inline void testPoints()
+    static inline void testPoints(const bool save=false)
     {
 
         typedef Point<T,VTX>                PointType;
@@ -81,73 +81,86 @@ namespace {
         std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size() << std::endl;
 
         pa.buildP();
+        if(save)
         {
-            for(size_t i=1;i<=pa.segments.size();++i)
             {
-                const Segment<T,VTX> &segment = pa.segments[i];
-                segment.P(0);
-            }
-        }
-
-        {
-            const string  fileName = "pa-" + type2file( typeid(vertex) ) + "p.dat";
-            ios::ocstream fp(fileName);
-            for(size_t i=1;i<=pa.nodes.size();++i)
-            {
-                PointType::Print(fp,***pa.nodes[i]) << '\n';
-            }
-            if(pa.nodes.size())
-            {
-                PointType::Print(fp,***pa.nodes[1]) << '\n';
-            }
-        }
-
-        {
-            const string fileName = "pa-" + type2file( typeid(vertex) ) + "pp.dat";
-            ios::ocstream fp(fileName);
-            for(size_t i=1;i<=pa.segments.size();++i)
-            {
-                const Segment<T,VTX> &segment = pa.segments[i];
-                for(T tau=0;tau<=1.0;tau+=0.1)
+                const string  fileName = "pa-" + type2file( typeid(vertex) ) + "p.dat";
+                ios::ocstream fp(fileName);
+                for(size_t i=1;i<=pa.nodes.size();++i)
                 {
-                    const vertex P = segment.P(tau);
-                    PointType::Print(fp,P) << '\n';
+                    PointType::Print(fp,***pa.nodes[i]) << '\n';
+                }
+                if(pa.nodes.size())
+                {
+                    PointType::Print(fp,***pa.nodes[1]) << '\n';
+                }
+            }
+
+            {
+                const string fileName = "pa-" + type2file( typeid(vertex) ) + "pp.dat";
+                ios::ocstream fp(fileName);
+                for(size_t i=1;i<=pa.segments.size();++i)
+                {
+                    const Segment<T,VTX> &segment = pa.segments[i];
+                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    {
+                        const vertex P = segment.P(tau);
+                        PointType::Print(fp,P) << '\n';
+                    }
+                }
+            }
+
+            {
+                const string fileName = "pa-" + type2file( typeid(vertex) ) + "v.dat";
+                ios::ocstream fp(fileName);
+                for(size_t i=1;i<=pa.segments.size();++i)
+                {
+                    const Segment<T,VTX> &segment = pa.segments[i];
+                    for(T tau=0;tau<=1.0;tau+=0.2)
+                    {
+                        const vertex P = segment.P(tau);
+                        const vertex V = segment.V(tau);
+
+                        PointType::Print(fp,P)   << '\n';
+                        PointType::Print(fp,P+V) << '\n';
+                        fp << '\n';
+                    }
+                }
+            }
+
+            {
+                const string  fileName = "pa-" + type2file( typeid(vertex) ) + "a.dat";
+                ios::ocstream fp(fileName);
+                for(size_t i=1;i<=pa.segments.size();++i)
+                {
+                    const Segment<T,VTX> &segment = pa.segments[i];
+                    for(T tau=0;tau<=1.0;tau+=0.2)
+                    {
+                        const vertex P = segment.P(tau);
+                        const vertex A = segment.A(tau);
+
+                        PointType::Print(fp,P) << '\n';
+                        PointType::Print(fp,P+A) << '\n';
+                        fp << '\n';
+                    }
                 }
             }
         }
 
+        pa.buildQ();
+        if(save)
         {
-            const string fileName = "pa-" + type2file( typeid(vertex) ) + "v.dat";
-            ios::ocstream fp(fileName);
-            for(size_t i=1;i<=pa.segments.size();++i)
             {
-                const Segment<T,VTX> &segment = pa.segments[i];
-                for(T tau=0;tau<=1.0;tau+=0.2)
+                const string fileName = "pa-" + type2file( typeid(vertex) ) + "pq.dat";
+                ios::ocstream fp(fileName);
+                for(size_t i=1;i<=pa.segments.size();++i)
                 {
-                    const vertex P = segment.P(tau);
-                    const vertex V = segment.V(tau);
-
-                    PointType::Print(fp,P)   << '\n';
-                    PointType::Print(fp,P+V) << '\n';
-                    fp << '\n';
-                }
-            }
-        }
-
-        {
-            const string  fileName = "pa-" + type2file( typeid(vertex) ) + "a.dat";
-            ios::ocstream fp(fileName);
-            for(size_t i=1;i<=pa.segments.size();++i)
-            {
-                const Segment<T,VTX> &segment = pa.segments[i];
-                for(T tau=0;tau<=1.0;tau+=0.2)
-                {
-                    const vertex P = segment.P(tau);
-                    const vertex A = segment.A(tau);
-
-                    PointType::Print(fp,P) << '\n';
-                    PointType::Print(fp,P+A) << '\n';
-                    fp << '\n';
+                    const Segment<T,VTX> &segment = pa.segments[i];
+                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    {
+                        const vertex P = segment.Q(tau);
+                        PointType::Print(fp,P) << '\n';
+                    }
                 }
             }
         }
@@ -170,7 +183,7 @@ Y_UTEST(geometric)
 
     testPoints<double,point2d>();
     testPoints<double,point3d>();
-    testPoints<double,complex>();
+    testPoints<double,complex>(true);
 
 }
 Y_UTEST_DONE()

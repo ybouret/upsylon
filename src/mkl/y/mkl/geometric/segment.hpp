@@ -86,6 +86,24 @@ namespace upsylon
                     return (alpha * Pm + beta * Pp) + (a3ma * Am + b3mb * Ap)/6;
                 }
 
+                //! position bis
+                inline vertex Q(const type beta) const throw()
+                {
+                    static const type one = 1;
+                    const vertex Pm = ***origin;
+                    const vertex Am = origin->A;
+                    const vertex Pp = ***finish;
+                    const vertex Ap = finish->A;
+
+                    const type  alpha = one-beta;
+                    const type  a3ma  = alpha*alpha*alpha - alpha;
+                    const type  beta3 = beta*beta*beta;
+                    const type  b3mb  = beta3    - beta;
+                    const type  eta   = (beta-10*beta3 + 15*beta3*beta - 6*beta*beta*beta3 );
+                    return (alpha * Pm + beta * Pp) + (a3ma * Am + b3mb * Ap)/6 + (eta * (Ap-Am)) /60;
+                }
+
+
                 //! speed
                 inline vertex V(const type beta) const throw()
                 {
