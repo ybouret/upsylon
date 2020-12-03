@@ -11,6 +11,11 @@ namespace upsylon
         
         namespace Dialect
         {
+            const char Parser::Include[]   = "Include";
+            const char Parser::bStringID[] = "bString";
+            const char Parser::jStringID[] = "jString";
+            const char Parser::rStringID[] = "rString";
+
             Parser:: ~Parser() throw()
             {
             }
@@ -29,9 +34,9 @@ namespace upsylon
                 Aggregate   &DIALECT = agg("Dialect");
                 const Axiom &END     = division(';');
                 const Axiom &SEP     = division(':');
-                const Axiom &BSTRING = plugin<Lexical::bString>("bString");
-                const Axiom &JSTRING = plugin<Lexical::jString>("jString");
-                const Axiom &RSTRING = plugin<Lexical::rString>("rString");
+                const Axiom &BSTRING = plugin<Lexical::bString>(bStringID);
+                const Axiom &JSTRING = plugin<Lexical::jString>(jStringID);
+                const Axiom &RSTRING = plugin<Lexical::rString>(rStringID);
                 const Axiom &STRING  = (alt("String") << JSTRING << RSTRING);
                 
                 //--------------------------------------------------------------
@@ -64,7 +69,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 {
-                    Aggregate &IncludeDecl = agg("Include");
+                    Aggregate &IncludeDecl = agg(Include);
                     IncludeDecl << division("#include") << ( alt("IncludeName") << BSTRING << JSTRING );
                     STATEMENT << IncludeDecl;
                 }

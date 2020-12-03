@@ -28,6 +28,11 @@ namespace upsylon
                 //! cleanup
                 virtual ~Parser() throw();
 
+                static const char Include[];
+                static const char bStringID[];
+                static const char jStringID[];
+                static const char rStringID[];
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
             };
