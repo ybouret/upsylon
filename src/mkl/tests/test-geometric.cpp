@@ -1,4 +1,5 @@
-#include "y/mkl/geometric/arc/compiler.hpp"
+#include "y/mkl/geometric/arc/periodic.hpp"
+#include "y/mkl/geometric/arc/standard.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/associative/hash/set.hpp"
@@ -79,7 +80,7 @@ namespace {
         std::cerr << "sa: nodes=" << sa.nodes.size() << " segments=" << sa.segments.size() << std::endl;
         std::cerr << "pa: nodes=" << pa.nodes.size() << " segments=" << pa.segments.size() << std::endl;
 
-        pa.build();
+        pa.buildP();
         {
             for(size_t i=1;i<=pa.segments.size();++i)
             {
@@ -126,7 +127,7 @@ namespace {
                     const vertex P = segment.P(tau);
                     const vertex V = segment.V(tau);
 
-                    PointType::Print(fp,P) << '\n';
+                    PointType::Print(fp,P)   << '\n';
                     PointType::Print(fp,P+V) << '\n';
                     fp << '\n';
                 }
@@ -134,7 +135,7 @@ namespace {
         }
 
         {
-            const string fileName = "pa-" + type2file( typeid(vertex) ) + "a.dat";
+            const string  fileName = "pa-" + type2file( typeid(vertex) ) + "a.dat";
             ios::ocstream fp(fileName);
             for(size_t i=1;i<=pa.segments.size();++i)
             {

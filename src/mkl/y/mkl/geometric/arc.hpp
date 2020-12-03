@@ -53,12 +53,12 @@ namespace upsylon
                 typedef Point<T,VTX>                     PointType;      //!< alias
                 typedef typename PointType::Pointer      SharedPoint;    //!< alias
                 typedef typename PointType::vertex       vertex;         //!< alias
-                typedef Node<T,VTX>                      NodeType;
-                typedef typename NodeType::Pointer       SharedNode;
-                typedef vector<SharedNode>               Nodes;
-                typedef Segment<T,VTX>                   SegmentType;
-                typedef vector<SegmentType>              Segments;
-                static const size_t Dimensions = PointType::Dimensions;
+                typedef Node<T,VTX>                      NodeType;       //!< alias
+                typedef typename NodeType::Pointer       SharedNode;     //!< alias
+                typedef vector<SharedNode>               Nodes;          //!< alias
+                typedef Segment<T,VTX>                   SegmentType;    //!< alias
+                typedef vector<SegmentType>              Segments;       //!< alias
+                static const size_t Dimensions = PointType::Dimensions;  //!< alias
                 
                 //______________________________________________________________
                 //
@@ -67,34 +67,36 @@ namespace upsylon
                 //! cleanup
                 inline virtual ~Arc() throw() {}
 
+                //! insert a point and create Node/Segment(s) accordingly
                 virtual void insert( const SharedPoint &point ) = 0;
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const Nodes    nodes;
-                const Segments segments;
+                const Nodes    nodes;       //!< nodes of shared points
+                const Segments segments;    //!< segments
 
             protected:
                 //! setup empty
-                explicit Arc() : nodes(), segments()
+                explicit Arc() throw() : nodes(), segments()
                 {
                 }
 
+                //! rhs[:,col] = factor * (pm-2*p0+pp)
                 static inline
-                void fill_bulk(matrix<type> &lhs,
-                               const size_t col,
-                               const type   factor,
-                               const vertex &pm,
-                               const vertex &p0,
-                               const vertex &pp) throw()
+                void fill_bulk(matrix<type>  &rhs,
+                               const size_t   col,
+                               const type     factor,
+                               const vertex  &pm,
+                               const vertex  &p0,
+                               const vertex  &pp) throw()
                 {
                     const vertex d = factor * ( (pm-p0) + (pp-p0) );
                     const type  *v = (const type*)&d;
                     for(size_t row=1,pos=0;pos<Dimensions;++pos,++row)
                     {
-                        lhs[row][col] = v[pos];
+                        rhs[row][col] = v[pos];
                     }
                 }
 

@@ -17,7 +17,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            //! a   node is a shared point with attribute
+            //! a node is a shared point with attribute
             //__________________________________________________________________
             template <typename T, template <class> class VTX>
             class Node : public Object, public Point<T,VTX>::Pointer
@@ -51,7 +51,11 @@ namespace upsylon
 
                 }
 
-                vertex A;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                vertex A; //!< the second derivative
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

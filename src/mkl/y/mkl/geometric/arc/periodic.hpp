@@ -37,21 +37,21 @@ namespace upsylon
                 typedef typename   ArcType::Nodes        Nodes;        //!< alias
                 typedef typename   ArcType::SegmentType  SegmentType;  //!< alias
                 typedef typename   ArcType::Segments     Segments;     //!< alias
-                static const size_t Dimensions = ArcType::Dimensions;
+                static const size_t Dimensions = ArcType::Dimensions;  //!< alias
 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                inline explicit PeriodicArc() : ArcType() {}
-                inline virtual ~PeriodicArc() throw() {}
+                inline explicit PeriodicArc() throw() : ArcType() {} //!< setup
+                inline virtual ~PeriodicArc() throw() {}             //!< cleanup
 
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
-                
-                void insert( const SharedPoint &point )
+                //! insert a new point, update segments
+                void insert(const SharedPoint &point )
                 {
                     Nodes           &nodes  = aliasing::_(this->nodes);
                     const size_t     count  = nodes.size();
@@ -108,34 +108,57 @@ namespace upsylon
                     }
                 }
 
-                void build()
+
+                void buildP()
+                {
+                    build_with(1,4,1,6);
+                }
+
+                void buildQ()
+                {
+                    build_with(3,14,3,20);
+                }
+
+
+                //! build periodic v-spline
+                void build_with(const type coefm,
+                                const type coef0,
+                                const type coefp,
+                                const type factor)
                 {
                     Nodes       &nodes = aliasing::_(this->nodes);
                     const size_t count = nodes.size();
-                    try {
-                        if(count<3)
+                    if(count<3)
+                    {
+                        for(size_t i=count;i>0;--i)
                         {
-                            for(size_t i=count;i>0;--i)
-                            {
-                                bzset(nodes[i]->A);
-                            }
+                            bzset(nodes[i]->A);
                         }
-                        else
+                    }
+                    else
+                    {
+                        try
                         {
-                            const type factor = 6;
                             matrix<type> rhs(Dimensions,count);
                             vector<type> cof(count,0);
                             cyclic<type> cyc(count);
-                            cyc.set(1,4,1);
 
+                            // prepare the cyclic matrix
+                            cyc.set(coefm,coef0,coefp);
+
+                            // lower boudnary
                             this->fill_bulk(rhs,1,factor,***nodes.back(),***nodes[1], ***nodes[2]);
+
+                            // bulk
                             for(size_t im=1,i=2,ip=3;i<count;++i,++im,++ip)
                             {
-                                this->fill_bulk(rhs,i,6,***nodes[im],***nodes[i],***nodes[ip]);
+                                this->fill_bulk(rhs,i,factor,***nodes[im],***nodes[i],***nodes[ip]);
                             }
-                            this->fill_bulk(rhs,count,factor, ***nodes[count-1], ***nodes.back(), ***nodes.front());
-                            std::cerr << "rhs=" << rhs << std::endl;
 
+                            // upper boundary
+                            this->fill_bulk(rhs,count,factor, ***nodes[count-1], ***nodes.back(), ***nodes.front());
+
+                            // solve per dimengion
                             for(size_t row=1,dim=0;row<=Dimensions;++row,++dim)
                             {
                                 cyc.solve(cof,rhs[row]);
@@ -146,33 +169,29 @@ namespace upsylon
                                     p[dim] = cof[i];
                                 }
                             }
-                            for(size_t i=1;i<=count;++i)
-                            {
-                                std::cerr << "A[" << i << "]=" << nodes[i]->A << std::endl;
-                            }
 
                         }
-                    }
-                    catch(...)
-                    {
-                        for(size_t i=count;i>0;--i)
+                        catch(...)
                         {
-                            bzset(nodes[i]->A);
+                            for(size_t i=count;i>0;--i)
+                            {
+                                bzset(nodes[i]->A);
+                            }
+                            throw;
                         }
-                        throw;
                     }
                 }
 
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(PeriodicArc);
 
 
-            };
-
-        }
+        };
 
     }
+
+}
 
 }
 

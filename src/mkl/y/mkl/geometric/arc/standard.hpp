@@ -39,8 +39,8 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
-                inline explicit StandardArc() : ArcType() {} //!< setup
-                inline virtual ~StandardArc() throw() {}     //!< cleanup
+                inline explicit StandardArc() throw() : ArcType() {} //!< setup
+                inline virtual ~StandardArc() throw()             {} //!< cleanup
 
                 
                 void insert( const SharedPoint &point )

@@ -40,6 +40,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+            //! no-throw swap
             void swap_with( cblock &other ) throw();
 
         private:
@@ -133,6 +134,7 @@ namespace upsylon
             //
             // other methods
             //__________________________________________________________________
+            //! no-throw full swap
             inline void swap_with( cppblock &other ) throw()
             {
                 {

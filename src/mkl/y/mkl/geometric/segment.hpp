@@ -42,16 +42,14 @@ namespace upsylon
                 inline   Segment(const NodeType *orgNode,
                                  const NodeType *finNode) throw() :
                 origin( orgNode  ),
-                finish( finNode  ),
-                deltaP( ***finish - ***origin )
+                finish( finNode  )
                 {
 
                 }
 
                 inline Segment(const Segment &segment) throw() :
                 origin(segment.origin),
-                finish(segment.finish),
-                deltaP(segment.deltaP)
+                finish(segment.finish)
                 {
                 }
 
@@ -60,19 +58,18 @@ namespace upsylon
                 // members
                 //______________________________________________________________
 
+                //! reset origin node, mostly for periodic arcs
                 inline void resetOrigin(const NodeType *orgNode) throw()
                 {
                     assert(orgNode);
                     aliasing::_(origin) = orgNode;
-                    aliasing::_(deltaP) = ***finish - ***origin;
                 }
 
                 //! reverse order
                 inline void reverse() throw()
                 {
                     _cswap(origin,finish);
-                    aliasing::_(deltaP) = -deltaP;
-                }
+                 }
 
                 //! position
                 inline vertex P(const type beta) const throw()
@@ -93,13 +90,15 @@ namespace upsylon
                 inline vertex V(const type beta) const throw()
                 {
                     static const type one = 1;
+                    const vertex Pm = ***origin;
                     const vertex Am = origin->A;
+                    const vertex Pp = ***finish;
                     const vertex Ap = finish->A;
 
                     const type  alpha = one-beta;
                     const type  b2    = 3*beta*beta - one;
                     const type  a2    = one  - 3*alpha*alpha;
-                    return deltaP + (a2*Am+b2*Ap)/6;
+                    return (Pp-Pm) + (a2*Am+b2*Ap)/6;
                 }
 
                 //! acceleration
@@ -120,7 +119,6 @@ namespace upsylon
                 //______________________________________________________________
                 const NodeType * const origin;  //!< origin point
                 const NodeType * const finish;  //!< finish point
-                const vertex     deltaP;  //!< finish-origin;
 
             private:
                 Y_DISABLE_ASSIGN(Segment);
