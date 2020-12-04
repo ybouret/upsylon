@@ -47,7 +47,7 @@ namespace upsylon
                 template <typename RX> inline
                 Matching & create(const char *id, const RX &rx, const Dictionary *dict=NULL)
                 {
-                    const string _(id); return create(id,rx,dict);
+                    const string _(id); return create(_,rx,dict);
                 }
 
                 Matching & relate(const string &id, Pattern *p); //!< relate id to pattern

@@ -12,6 +12,12 @@ using namespace Jive;
 Y_UTEST(jive_match)
 {
 
+    {
+        Matching::Map mm;
+        mm.create("strings", "[jr]String");
+
+    }
+
     if(argc>1)
     {
         Matching match = argv[1];
