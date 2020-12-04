@@ -11,7 +11,7 @@ namespace upsylon
         
         namespace Dialect
         {
-            const char Parser::Include[]   = "Include";
+            const char * const Parser::Include   = "Include";
             const char Parser::DialectID[] = "Dialect";
             const char Parser::GrammarID[] = "Grammar";
             const char Parser::bStringID[] = "bString";
