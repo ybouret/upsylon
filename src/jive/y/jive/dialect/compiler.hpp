@@ -15,12 +15,28 @@ namespace upsylon
 
         namespace Dialect
         {
+            //__________________________________________________________________
+            //
+            //
+            //! compile a parsed grammar description
+            //
+            //__________________________________________________________________
             class Compiler
             {
             public:
-                explicit Compiler();
-                virtual ~Compiler() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit Compiler();          //!< setup
+                virtual ~Compiler() throw();  //!< cleanup
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+
+                //! full compilation
                 Jive::Parser *compileAST( XNode::Pointer &ast );
 
 

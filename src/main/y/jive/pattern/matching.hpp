@@ -5,6 +5,7 @@
 
 #include "y/jive/regexp.hpp"
 #include "y/container/sequence.hpp"
+#include "y/associative/suffix/map.hpp"
 
 namespace upsylon
 {
@@ -13,7 +14,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! mathing API, acts as a clone pointer
+        //! matching API, acts as a clone pointer
         //
         //______________________________________________________________________
         class Matching : public CountedObject
@@ -21,10 +22,50 @@ namespace upsylon
         public:
             //__________________________________________________________________
             //
+            // types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<Matching>          Pointer; //!< alias
+            typedef suffix_map<string,Pointer> MapType; //!< alias
+
+            //! map type to store named matching
+            class Map : public MapType
+            {
+            public:
+                explicit Map();          //!< setup
+                virtual ~Map() throw();  //!< cleanup
+                Map(const Map &);        //!< copy
+
+                //! try to register a new matching
+                template <typename ID, typename RX> inline
+                bool operator()(const ID &id, const RX &rx, const Dictionary *dict=NULL)
+                {
+                    const Matching::Pointer p = new Matching(rx,dict);
+                    return insert(id,p);
+                }
+
+                //! try to register a new pattern
+                template <typename ID> inline
+                bool operator()(const ID &id, Pattern *h)
+                {
+                    const Matching::Pointer p = new Matching(h);
+                    return insert(id,p);
+                }
+
+
+                Matching & operator[](const string &) const; //!< access by string
+                Matching & operator[](const char   *) const; //!< access by text
+
+            private:
+                Y_DISABLE_ASSIGN(Map);
+            };
+
+
+            //__________________________________________________________________
+            //
             // C++
             //__________________________________________________________________
             virtual ~Matching() throw();             //!< cleanup
-            Matching(const Matching &);              //!< copy
+            Matching(const Matching &);              //!< copy by cloning
 
             //! build from an acceptable regular expression
             template <typename REGEXP> inline

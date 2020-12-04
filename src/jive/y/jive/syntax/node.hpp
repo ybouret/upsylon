@@ -64,19 +64,22 @@ namespace upsylon
                 bool           isInternal() const throw();         //!< kind==IsInternal
                 bool           isTerminal() const throw();         //!< kind==IsTerminal
                 const string  &name()       const throw();         //!< axiom.name
-                
+
+                //! test if name is ID
                 template <typename ID> inline
                 bool is(const ID &id) const throw()
                 {
                     return id == name();
                 }
 
+                //! test if is terminal with given id
                 template <typename ID> inline
                 bool isTerminal(const ID &id) const throw()
                 {
                     return isTerminal() && is(id);
                 }
 
+                //! test is is internal with given id
                 template <typename ID> inline
                 bool isInternal(const ID &id) const throw()
                 {

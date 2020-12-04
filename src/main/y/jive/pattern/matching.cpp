@@ -123,6 +123,29 @@ namespace upsylon
             aliasing::_(motif) = 0;
         }
 
+        Matching:: Map:: Map() : MapType()
+        {
+        }
+
+        Matching:: Map:: ~Map() throw()
+        {
+        }
+
+        Matching:: Map:: Map(const Map &other) : collection(), MapType(other)
+        {
+        }
+
+        Matching &  Matching:: Map:: operator[](const string &id) const
+        {
+            const Matching::Pointer *ppM = search(id);
+            if(!ppM) throw exception("no Matching::Map['%s']",*id);
+            return aliasing::_(**ppM);
+        }
+
+        Matching &  Matching:: Map:: operator[](const char *id) const
+        {
+            const string _(id); return (*this)[_];
+        }
     }
 
 }

@@ -156,7 +156,7 @@ namespace upsylon {
             void         noPlugin(const char   *s) const;
             void         noScanner(const string &s) const;
             void         noScanner(const char   *s) const;
-            void         multipleID(const char *id) const;
+            void         multipleDictionaryID(const char *id) const;
 
         public:
             Dictionary   dictionary; //!< shared dictionary for all scanners
@@ -166,7 +166,7 @@ namespace upsylon {
             void define(const char *id, const RX &rx)
             {
                 assert(id);
-                if(!dictionary.use(id,rx)) multipleID(id);
+                if(!dictionary.use(id,rx)) multipleDictionaryID(id);
             }
 
         };
