@@ -29,12 +29,13 @@ namespace upsylon
                 virtual ~Parser() throw();
 
 
+
                 static const char * const Include;   //!< "Include"
-                static const char DialectID[]; //!< "Dialect"
-                static const char GrammarID[]; //!< "Grammar"
-                static const char bStringID[]; //!< "bString"
-                static const char jStringID[]; //!< "jString"
-                static const char rStringID[]; //!< "rString"
+                static const char * const DialectID; //!< "Dialect"
+                static const char * const GrammarID; //!< "Grammar"
+                static const char * const bStringID; //!< "bString"
+                static const char * const jStringID; //!< "jString"
+                static const char * const rStringID; //!< "rString"
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);

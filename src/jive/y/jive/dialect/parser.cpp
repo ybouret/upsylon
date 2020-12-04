@@ -12,11 +12,11 @@ namespace upsylon
         namespace Dialect
         {
             const char * const Parser::Include   = "Include";
-            const char Parser::DialectID[] = "Dialect";
-            const char Parser::GrammarID[] = "Grammar";
-            const char Parser::bStringID[] = "bString";
-            const char Parser::jStringID[] = "jString";
-            const char Parser::rStringID[] = "rString";
+            const char * const Parser::DialectID = "Dialect";
+            const char * const Parser::GrammarID = "Grammar";
+            const char * const Parser::bStringID = "bString";
+            const char * const Parser::jStringID = "jString";
+            const char * const Parser::rStringID = "rString";
 
             Parser:: ~Parser() throw()
             {
