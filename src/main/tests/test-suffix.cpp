@@ -460,6 +460,9 @@ namespace
         a1.sort_with( comparison::decreasing<T> );
         Y_CHECK(a1.has_same_layout_than(a2));
 
+        std::cerr << "a1=" << a1 << std::endl;
+        std::cerr << "a2=" << a2 << std::endl;
+
         std::cerr << std::endl;
 
     }

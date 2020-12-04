@@ -274,6 +274,35 @@ catch(...) { dpool.store(node); throw; }
         //______________________________________________________________________
         const tree_node &get_root() const throw() { return *htree.root; }
 
+        //______________________________________________________________________
+        //
+        //! printing
+        //______________________________________________________________________
+        inline std::ostream & display(std::ostream &os) const
+        {
+            const size_t           nmax = max_depth();
+            memory::cppblock<CODE> blk(nmax);
+            os << '{' << std::endl;
+            for(const data_node *node=dlist.head;node;node=node->next)
+            {
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
+                os << ' ';
+                for(size_t i=1;i<=len;++i) os << blk[i];
+                os << ' ' << ':' << ' ';
+                os << node->data;
+                os << std::endl;
+            }
+            os << '}';
+            return os;
+        }
+
+        //! display
+        inline friend std::ostream & operator<<( std::ostream &os, const suffix_graph &g)
+        {
+            return g.display(os);
+        }
+
+
     protected:
         //! direct protected access to head for internal faster scan
         inline const data_node *head() const throw() { return dlist.head; }
