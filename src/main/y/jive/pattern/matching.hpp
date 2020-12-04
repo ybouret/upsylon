@@ -36,27 +36,29 @@ namespace upsylon
                 Map(const Map &);        //!< copy
 
                 //! try to register a new matching
-                template <typename ID, typename RX> inline
-                bool operator()(const ID &id, const RX &rx, const Dictionary *dict=NULL)
+                template <typename RX> inline
+                Matching & create(const string &id, const RX &rx, const Dictionary *dict=NULL)
                 {
-                    const Matching::Pointer p = new Matching(rx,dict);
-                    return insert(id,p);
+                    Matching::Pointer p = new Matching(rx,dict);
+                    return insertMatching(id,p);
                 }
 
-                //! try to register a new pattern
-                template <typename ID> inline
-                bool operator()(const ID &id, Pattern *h)
+                //! try to register a new matching
+                template <typename RX> inline
+                Matching & create(const char *id, const RX &rx, const Dictionary *dict=NULL)
                 {
-                    const Matching::Pointer p = new Matching(h);
-                    return insert(id,p);
+                    const string _(id); return create(id,rx,dict);
                 }
 
+                Matching & relate(const string &id, Pattern *p); //!< relate id to pattern
+                Matching & relate(const char   *id, Pattern *p); //!< relate id to pattern
 
                 Matching & operator[](const string &) const; //!< access by string
                 Matching & operator[](const char   *) const; //!< access by text
 
             private:
                 Y_DISABLE_ASSIGN(Map);
+                Matching & insertMatching(const string &, Matching::Pointer &);
             };
 
 

@@ -62,42 +62,45 @@ namespace upsylon
         {
             Source         source(module);
             token.release();
-            if( source.find(firstChars) )
+
+            while( source.is_active() )
             {
-                assert( source.in_cache() > 0);
-                if( !motif->accept(token,source) )
-                {
-                    throw exception("Jive::Matching::Somehow(corrupted firstChars)");
-                }
-                return &token;
+                if( source.find(firstChars) && motif->accept(token,source) ) return &token;
+                source.skip();
             }
-            else
-            {
-                return NULL;
-            }
+            return NULL;
+
         }
 
         size_t Matching:: collect_(sequence<Token::Handle> &tokens, Module *module)
         {
             Source         source(module);
             size_t         n     = 0;
-            token.release();
-            while( source.find(firstChars) )
+
+            while( source.is_active() && source.find(firstChars) )
             {
-                assert(source.in_cache() > 0);
-                Token::Handle h = new Token();
-                if( !motif->accept(*h,source) )
+                token.release();
+                if( motif->accept(token,source) )
                 {
-                    throw exception("Jive::Matching::Somehow(corrupted firstChars)");
+                    if(token.size>0)
+                    {
+                        Token::Handle h = new Token();
+                        h->swap_with(token);
+                        tokens.push_back(h);
+                        ++n;
+                    }
+                    else
+                    {
+                        assert(motif->feeble());
+                        source.skip();
+                    }
                 }
-                tokens.push_back(h);
-                ++n;
-                if(h->size<=0)
+                else
                 {
-                    assert(motif->feeble());
                     source.skip();
                 }
             }
+
             return n;
         }
 
@@ -146,6 +149,25 @@ namespace upsylon
         {
             const string _(id); return (*this)[_];
         }
+
+        Matching & Matching::Map:: insertMatching(const string &id, Matching::Pointer &p)
+        {
+            if(!insert(id,p)) throw exception("Matching::Map(multiple '%s')",*id);
+            return *p;
+        }
+
+        Matching & Matching::Map:: relate(const string &id, Pattern *p)
+        {
+            assert(p);
+            Matching::Pointer ptr = new Matching(p);
+            return insertMatching(id,ptr);
+        }
+
+        Matching & Matching::Map:: relate(const char *id, Pattern *p)
+        {
+            const string _(id); return relate(_,p);
+        }
+
     }
 
 }
