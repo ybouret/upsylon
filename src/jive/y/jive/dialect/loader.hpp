@@ -47,7 +47,7 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                //! load precompiled grammar
+                //! load precompiled grammar, without includes
                 //______________________________________________________________
                 XNode *loadBinary(Module *);
                 
