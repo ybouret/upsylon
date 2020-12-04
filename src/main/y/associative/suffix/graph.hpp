@@ -288,7 +288,8 @@ catch(...) { dpool.store(node); throw; }
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
                 os << ' ';
                 for(size_t i=1;i<=len;++i) os << blk[i];
-                os << ' ' << ':' << ' ';
+                for(size_t i=len;i<=nmax;++i) os << ' ';
+                os << ':' << ' ';
                 os << node->data;
                 os << std::endl;
             }
