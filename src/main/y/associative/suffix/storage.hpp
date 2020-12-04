@@ -57,6 +57,11 @@ namespace upsylon
             return *this;
         }
 
+        //______________________________________________________________________
+        //
+        // insertion methods
+        //______________________________________________________________________
+
         //! insert by buffer
         inline bool insert(const memory::ro_buffer &key, param_type args)
         {
@@ -69,6 +74,11 @@ namespace upsylon
             return this->insert_by(key,key?strlen(key):0,args);
         }
 
+        //______________________________________________________________________
+        //
+        // search methods
+        //______________________________________________________________________
+
         //! search by string
         inline const_type *search(const memory::ro_buffer &key) const throw()
         {
@@ -80,6 +90,19 @@ namespace upsylon
         {
             return this->search_by(key,key?strlen(key):0);
         }
+
+        //! simple test
+        template <typename KEY_TYPE> inline
+        bool contains( const KEY_TYPE & key ) const throw()
+        {
+            return NULL != search(key);
+        }
+
+
+        //______________________________________________________________________
+        //
+        // removal methods
+        //______________________________________________________________________
 
         //! remove by string
         inline bool remove(const memory::ro_buffer &key) throw()

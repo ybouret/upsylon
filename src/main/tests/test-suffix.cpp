@@ -442,9 +442,9 @@ namespace
             const T tmp = support::get<T>();
             if(a1.insert(key,tmp))
             {
-                Y_ASSERT(a2.insert(*key,tmp));
-                Y_ASSERT(b1.insert(key,tmp));
-                Y_ASSERT(b2.insert(*key,tmp));
+                Y_ASSERT(a2.insert(*key,tmp)); Y_ASSERT(a2.contains(key));
+                Y_ASSERT(b1.insert(key,tmp));  Y_ASSERT(b1.contains(key));
+                Y_ASSERT(b2.insert(*key,tmp)); Y_ASSERT(b2.contains(key));
                 std::cerr << "+";
             }
             else
