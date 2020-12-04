@@ -41,7 +41,8 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            string       toString(size_t nskip=0) const; //!< codes->chars
+            string       toString(size_t nskip=0,
+                                  size_t ntrim=0) const; //!< codes->chars
             string       toVisible()      const; //!< codes->visible
             string       toPrintable()    const; //!< codes->printable
             string       toEncoded()      const; //!< codes->encoded
