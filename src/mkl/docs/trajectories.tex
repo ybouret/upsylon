@@ -17,18 +17,29 @@ that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
 
 We need to reconstruct the accelerations $\vec{A}_i$.
 We will use the rotation formula of a vector $\vec{U}$ of an angle $\theta$ around a unit vector $\vec{k}$:
+
 \begin{equation}
 	\vec{R}_{\vec{k},\theta}(\vec{U})=	 \left(\cos \theta\right) \vec{U}
 	+ \left(\sin \theta\right) \vec{k} \wedge\vec{U} 
 	+ \left(1-\cos\theta\right) \left(\vec{k}\cdot\vec{U}\right)\vec{k}
 \end{equation}
 
+The rotation from $\vec{A}$ to $\vec{B}$ is defined by:
 \begin{equation}
-	\vec{A}_i = \alpha_i \vec{u}_i
+	\vec{k} = \dfrac{\vec{A}\wedge\vec{B}}{\left|\vec{A}\wedge\vec{B} \right|}
 \end{equation}
 
 \begin{equation}
-	\vec{A}(\tau) = \left[ (1-\tau)\alpha_i + \tau \alpha_{i+1}\right] \vec{R}_{\vec{k}_i,\tau \theta_i}(\vec{u}_i)
+	\sin \phi =  \dfrac{\left|\vec{A}\wedge\vec{B} \right|}{\left|\vec{A}\right| \left|\vec{B}\right|}
+\end{equation}
+
+\begin{equation}
+	\cos \phi = \dfrac{ \vec{A} \cdot \vec{B} }{ \left|\vec{A}\right| \left|\vec{B}\right| }
+\end{equation}
+
+The linear rotation of $\vec{A}$ around $\vec{k}$ is defined by:
+\begin{equation}
+ \tilde{R}_{\vec{k},\tau\phi} = \cos(\tau\phi) \vec{A} + \sin(\tau\phi) \vec{k} \wedge \vec{A} + \left[1-\cos(\tau\phi)\right] \underbrace{\left(\vec{k}\cdot\vec{A}\right)}_{0}\vec{k}
 \end{equation}
 
 \end{document}
