@@ -10,19 +10,41 @@ namespace upsylon
 {
     namespace net
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! queue to use buffer <-> bytes
+        //
+        //______________________________________________________________________
         class io_queue : public net_object, public io_bytes
         {
         public:
-            typedef memory::cblock data_block;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef memory::cblock data_block;  //!< buffer of data
 
-            explicit io_queue(const size_t bs);
-            virtual ~io_queue() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit io_queue(const size_t bs); //!< setup with minimal block size, reserve some bytes
+            virtual ~io_queue() throw();        //!< cleanup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void load(size_t bs); //!< data --> bytes
+
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            data_block data; //!< data
             
-            void load(size_t bs);
-
-            data_block data;
-
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(io_queue);
