@@ -1,4 +1,3 @@
-
 //! \file
 #ifndef Y_NET_IO_BYTES_INCLUDED
 #define Y_NET_IO_BYTES_INCLUDED 1
