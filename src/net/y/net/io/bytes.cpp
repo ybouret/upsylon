@@ -88,7 +88,7 @@ namespace upsylon
             return *this;
         }
 
-        void io_bytes:: free() throw()
+        void io_bytes:: clear() throw()
         {
             pool.merge_back(*this);
         }

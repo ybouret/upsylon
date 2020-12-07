@@ -26,7 +26,7 @@ Y_UTEST(io_bytes)
         display(Q);
         Q << "Hello !";
         display(Q);
-        Q.free();
+        Q.clear();
         display(Q);
         Q << "World";
         display(Q);

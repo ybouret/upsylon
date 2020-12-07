@@ -11,21 +11,23 @@ namespace upsylon
     namespace net
     {
 
-        class queue : public io_bytes
+        class io_queue : public net_object, public io_bytes
         {
         public:
-            typedef memory::cblock block_type;
+            typedef memory::cblock data_block;
 
-            explicit queue(size_t n);
-            virtual ~queue() throw();
+            explicit io_queue(const size_t bs);
+            virtual ~io_queue() throw();
+            
+            void load(size_t bs);
 
-            block_type comm;
-
+            data_block data;
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(queue);
+            Y_DISABLE_COPY_AND_ASSIGN(io_queue);
         };
+
 
     }
 

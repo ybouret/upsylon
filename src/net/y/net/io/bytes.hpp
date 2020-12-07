@@ -41,8 +41,8 @@ namespace upsylon
             void       push(const void *buffer, const size_t buflen);  //!< push back a buffer
             io_bytes & operator<<(const char   *text);                 //!< push back some text
             io_bytes & operator<<(const memory::ro_buffer &);          //!< push back a r/o buffer
-            void       free() throw();                                 //!< free content, keep memory
-            uint8_t    pop()  throw();                                 //!< return content of removed head
+            void       clear() throw();                                 //!< free content, keep memory
+            uint8_t    pop()   throw();                                 //!< return content of removed head
 
             //__________________________________________________________________
             //
