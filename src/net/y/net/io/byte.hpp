@@ -9,7 +9,12 @@ namespace upsylon
 {
     namespace net
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! single dynamic byte
+        //
+        //______________________________________________________________________
         class io_byte
         {
         public:
@@ -24,16 +29,20 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            static supply & instance();
-            static supply & location() throw();
+            static supply & instance();          //!< singleton instance
+            static supply & location() throw();  //!< singleton instance
+
+            //! display as visible
+            friend std::ostream & operator<<(std::ostream &os, const io_byte &b);
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const uint8_t code;
-            io_byte      *next;
-            io_byte      *prev;
+            const uint8_t code; //!< held byte
+            io_byte      *next; //!< for list
+            io_byte      *prev; //!< for list
+
 
             
         private:
@@ -47,6 +56,7 @@ namespace upsylon
 
     }
 
+    //! magazine of byte declaration
     Y_MAGAZINE_DECL(net::io_byte);
 
 }

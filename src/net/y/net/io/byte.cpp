@@ -2,6 +2,7 @@
 #include "y/net/io/byte.hpp"
 #include "y/object.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -33,5 +34,10 @@ namespace upsylon
             return mgr;
         }
 
+        std::ostream & operator<<(std::ostream &os, const io_byte &b)
+        {
+            os << cchars::visible[b.code];
+            return os;
+        }
     }
 }
