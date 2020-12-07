@@ -12,7 +12,7 @@
 \title{3D Trajectories}
 \maketitle
 	
-We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d$ is the space dimension), and we assume
+We have a set of $N$ points $\vec{P}_1,\ldots,\vec{P}_N$, each point in $\mathbb{R}^d$ (where $d\in[2,3]$ is the space dimension), and we assume
 that they describe a virtual arc for a dimensionless coordinate $t_i=i$.
 
 We need to reconstruct the accelerations $\vec{A}_i$.
@@ -39,7 +39,22 @@ The rotation from $\vec{A}$ to $\vec{B}$ is defined by:
 
 The linear rotation of $\vec{A}$ around $\vec{k}$ is defined by:
 \begin{equation}
- \tilde{R}_{\vec{k},\tau\phi} = \cos(\tau\phi) \vec{A} + \sin(\tau\phi) \vec{k} \wedge \vec{A} + \left[1-\cos(\tau\phi)\right] \underbrace{\left(\vec{k}\cdot\vec{A}\right)}_{0}\vec{k}
+ \vec{R}_{\vec{k},\tau\phi}(\vec{A}) = \cos(\tau\phi) \vec{A} + \sin(\tau\phi) \vec{k} \wedge \vec{A} + \left[1-\cos(\tau\phi)\right] \underbrace{\left(\vec{k}\cdot\vec{A}\right)}_{0}\vec{k}
+\end{equation}
+
+\begin{equation}
+	\left(\vec{u}\wedge\vec{v}\right)\wedge\vec{w} = \left(\vec{u}\cdot\vec{w}\right) \vec{v} - \left(\vec{v}\cdot\vec{w}\right) \vec{u}
+\end{equation}
+
+\begin{equation}
+	\left(\vec{A}\wedge\vec{B}\right)\wedge\vec{A} = \left(\vec{A}^2\right) \vec{B} - \left(\vec{A}\cdot\vec{B}\right) \vec{A}
+\end{equation}
+
+The expansion/rotation is
+\begin{equation}
+	\vec{Q}(\tau) = 
+	\left[ (1-\tau) + \tau \dfrac{\left| \vec{B}\right|}{\left|\vec{A}\right|}\right] 
+	\left[ \cos(\tau\phi) \vec{A} + \sin(\tau\phi) \vec{k} \wedge \vec{A} \right]
 \end{equation}
 
 \end{document}
