@@ -38,3 +38,30 @@ namespace upsylon
 
 }
 
+#include "y/net/tcp/client.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+        void recv_queue:: recv(tcp_client &client)
+        {
+            load( client.recv( data.rw(), data.length() ) );
+        }
+
+
+    }
+}
+
+#include "y/net/udp/client.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+        void recv_queue:: recv(udp_client &client)
+        {
+            load( client.recv( data.rw(), data.length() ) );
+        }
+    }
+}
