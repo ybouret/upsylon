@@ -20,8 +20,10 @@ namespace upsylon
 
         size_t recv_queue:: bring_(size_t bs)
         {
+            const size_t res = bs;
             if(bs>0)
             {
+
                 assert(bs<=data.length());
                 if(bs>pool.size) reserve(bs-pool.size); assert(pool.size>=bs);
 
@@ -31,7 +33,7 @@ namespace upsylon
                     assert(pool.size>0);
                     aliasing::_( push_back( pool.pop_back() )->code ) = *(bp++);
                 }
-                return bs;
+                return res;
             }
             else
             {
@@ -61,6 +63,7 @@ namespace upsylon
             while(todo)
             {
                 const size_t ld = justLoad(base,todo);
+                assert(ld<=todo);
                 todo -= ld;
                 base += ld;
             }
