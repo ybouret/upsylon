@@ -80,8 +80,6 @@ namespace upsylon
 
         std::ostream &send_queue:: display(std::ostream &os) const
         {
-            const io_queue &self = *this;
-            os << '[' << self << ']';
             os << '[';
             os << '+' << offset;
             os << '|';
@@ -92,6 +90,8 @@ namespace upsylon
             os << '|';
             os << '+' << available;
             os << ']';
+            const io_queue &self = *this;
+            os << '[' << self << ']';
             return os;
         }
 

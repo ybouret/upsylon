@@ -16,15 +16,16 @@ namespace
 
         std::cerr << "block_size=" << Q.block_size() << std::endl;
 
-        Q << "Hello";
-        std::cerr  << "Q=" << Q << std::endl;
-        Q.pack();
-        std::cerr  << "Q=" << Q << std::endl;
-        std::cerr << "packed=" << Q.packed() << std::endl;
-        Q.sent( Q.packed()/2 );
-        std::cerr  << "Q=" << Q << std::endl;
-        Q.defrag();
-        std::cerr  << "Q=" << Q << std::endl;
+        Q << "Hello, World";
+        std::cerr << "Q=" << Q << std::endl;
+        while( Q.size > 0 || Q.packed() > 0)
+        {
+            Q.pack();
+            Y_ASSERT(Q.packed()>0);
+            std::cerr << "Q=" << Q << std::endl;
+            Q.sent( alea.range<size_t>(1,Q.packed()) );
+            std::cerr << "Q=" << Q << std::endl;
+        }
 
     }
 }
