@@ -6,6 +6,16 @@ namespace upsylon
     namespace net
     {
 
+        recv_queue:: ~recv_queue() throw()
+        {
+
+        }
+
+        recv_queue:: recv_queue(const size_t bs) : io_queue(bs)
+        {
+
+        }
+
         void recv_queue:: load(size_t bs)
         {
             assert(bs<=data.length());
