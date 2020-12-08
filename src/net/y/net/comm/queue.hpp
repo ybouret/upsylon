@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_NET_IO_QUEUE_INCLUDED
-#define Y_NET_IO_QUEUE_INCLUDED 1
+#ifndef Y_NET_COMM_QUEUE_INCLUDED
+#define Y_NET_COMM_QUEUE_INCLUDED 1
 
 #include "y/net/types.hpp"
-#include "y/net/io/bytes.hpp"
+#include "y/net/comm/bytes.hpp"
 #include "y/memory/cblock.hpp"
 
 namespace upsylon

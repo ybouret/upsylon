@@ -1,4 +1,4 @@
-#include "y/net/io/recv-queue.hpp"
+#include "y/net/comm/recv-queue.hpp"
 #include "y/type/aliasing.hpp"
 
 namespace upsylon

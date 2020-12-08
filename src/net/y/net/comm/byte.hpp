@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_NET_IO_BYTE_INCLUDED
-#define Y_NET_IO_BYTE_INCLUDED 1
+#ifndef Y_NET_COMM_BYTE_INCLUDED
+#define Y_NET_COMM_BYTE_INCLUDED 1
 
 
 #include "y/memory/magazine.hpp"

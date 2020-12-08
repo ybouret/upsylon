@@ -1,8 +1,8 @@
 //! \file
-#ifndef Y_NET_IO_SEND_QUEUE_INCLUDED
-#define Y_NET_IO_SEND_QUEUE_INCLUDED 1
+#ifndef Y_NET_COMM_SEND_QUEUE_INCLUDED
+#define Y_NET_COMM_SEND_QUEUE_INCLUDED 1
 
-#include "y/net/io/queue.hpp"
+#include "y/net/comm/queue.hpp"
 
 namespace upsylon
 {

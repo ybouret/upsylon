@@ -1,4 +1,4 @@
-#include "y/net/io/bytes.hpp"
+#include "y/net/comm/bytes.hpp"
 #include "y/type/aliasing.hpp"
 #include <cstring>
 

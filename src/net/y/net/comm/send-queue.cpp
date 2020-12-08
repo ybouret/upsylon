@@ -1,5 +1,5 @@
 
-#include "y/net/io/send-queue.hpp"
+#include "y/net/comm/send-queue.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
 

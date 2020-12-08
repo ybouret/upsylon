@@ -1,5 +1,5 @@
 
-#include "y/net/io/queues.hpp"
+#include "y/net/comm/queues.hpp"
 
 namespace upsylon
 {

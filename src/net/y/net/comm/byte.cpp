@@ -1,5 +1,5 @@
 
-#include "y/net/io/byte.hpp"
+#include "y/net/comm/byte.hpp"
 #include "y/object.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/code/utils.hpp"

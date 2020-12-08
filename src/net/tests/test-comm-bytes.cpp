@@ -1,4 +1,4 @@
-#include "y/net/io/bytes.hpp"
+#include "y/net/comm/bytes.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -16,7 +16,7 @@ namespace {
 
 }
 
-Y_UTEST(io_bytes)
+Y_UTEST(comm_bytes)
 {
 
     io_byte::supply &mgr = io_byte::instance();

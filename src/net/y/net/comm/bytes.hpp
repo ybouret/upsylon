@@ -1,9 +1,9 @@
 //! \file
-#ifndef Y_NET_IO_BYTES_INCLUDED
-#define Y_NET_IO_BYTES_INCLUDED 1
+#ifndef Y_NET_COMM_BYTES_INCLUDED
+#define Y_NET_COMM_BYTES_INCLUDED 1
 
 
-#include "y/net/io/byte.hpp"
+#include "y/net/comm/byte.hpp"
 #include "y/memory/buffer.hpp"
 
 namespace upsylon

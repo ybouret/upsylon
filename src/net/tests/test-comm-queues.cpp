@@ -1,6 +1,6 @@
 
-#include "y/net/io/recv-queue.hpp"
-#include "y/net/io/send-queue.hpp"
+#include "y/net/comm/recv-queue.hpp"
+#include "y/net/comm/send-queue.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
@@ -31,7 +31,7 @@ namespace
 }
 
 
-Y_UTEST(queues)
+Y_UTEST(comm_queues)
 {
     Y_UTEST_SIZEOF(send_queue);
     Y_UTEST_SIZEOF(recv_queue);

@@ -1,4 +1,4 @@
-#include "y/net/io/queue.hpp"
+#include "y/net/comm/queue.hpp"
 
 namespace upsylon
 {

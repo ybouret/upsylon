@@ -1,10 +1,10 @@
 
 //! \file
-#ifndef Y_NET_IO_QUEUES_INCLUDED
-#define Y_NET_IO_QUEUES_INCLUDED 1
+#ifndef Y_NET_COMM_QUEUES_INCLUDED
+#define Y_NET_COMM_QUEUES_INCLUDED 1
 
-#include "y/net/io/send-queue.hpp"
-#include "y/net/io/recv-queue.hpp"
+#include "y/net/comm/send-queue.hpp"
+#include "y/net/comm/recv-queue.hpp"
 #include "y/ptr/arc.hpp"
 
 namespace upsylon
