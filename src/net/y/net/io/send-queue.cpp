@@ -127,3 +127,22 @@ namespace upsylon
 
 }
 
+#include "y/net/tcp/client.hpp"
+
+namespace upsylon
+{
+    namespace net
+    {
+
+        bool send_queue:: sent(tcp_client &client)
+        {
+            pack();
+            if(written)
+            {
+                update( client.send(current,written) );
+            }
+            return size<=0 && written<=0;
+        }
+
+    }
+}

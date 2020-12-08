@@ -8,6 +8,11 @@ namespace upsylon
 {
     namespace net
     {
+        //______________________________________________________________________
+        //
+        //! forward declaration
+        //______________________________________________________________________
+        class tcp_client;
         
         //______________________________________________________________________
         //
@@ -34,9 +39,11 @@ namespace upsylon
             void         update(const size_t) throw(); //!< update after a successful send
             void         pack()               throw(); //!< transert bytes to buffer
 
-
             std::ostream        & display(std::ostream &) const;               //!< display content
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
+
+            bool sent(tcp_client &);
+
 
         protected:
             uint8_t       *origin;    //!< data
