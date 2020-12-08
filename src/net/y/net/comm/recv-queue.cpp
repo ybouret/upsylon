@@ -89,8 +89,6 @@ namespace upsylon
         {
             return bring_( client.recv( data.rw(), data.length() ) );
         }
-
-
     }
 }
 
