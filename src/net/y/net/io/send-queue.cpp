@@ -78,7 +78,7 @@ namespace upsylon
         }
 
 
-        void send_queue:: sent(const size_t n) throw()
+        void send_queue:: update(const size_t n) throw()
         {
             assert(n<=written);
             current += n;

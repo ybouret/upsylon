@@ -29,10 +29,10 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t       packed()     const throw(); //!< packed data (written)
-            void         defrag()           throw(); //!< try to defrag data
-            void         sent(const size_t) throw(); //!< adjust after a successful send
-            void         pack()             throw(); //!< transert bytes to buffer
+            size_t       packed()       const throw(); //!< packed data (written)
+            void         defrag()             throw(); //!< try to defrag data
+            void         update(const size_t) throw(); //!< update after a successful send
+            void         pack()               throw(); //!< transert bytes to buffer
 
 
             std::ostream        & display(std::ostream &) const;               //!< display content

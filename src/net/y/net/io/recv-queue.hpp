@@ -12,12 +12,10 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        // forward declarations
+        //! forward declaration
         //
         //______________________________________________________________________
-        class tcp_client; //!< forward tcp client
-        class udp_client; //!< forward udp client
-
+        class tcp_client;
         //______________________________________________________________________
         //
         //
@@ -35,15 +33,11 @@ namespace upsylon
             virtual ~recv_queue() throw();        //!< cleanup
 
             void recv(tcp_client &); //!< receive from tcp_client
-            void recv(udp_client &); //!< receive from udp_cleint
-
-        protected:
-            void load(size_t bs); //!< data --> queue
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(recv_queue);
             virtual void reset_() throw();  
-
+            void         download(size_t bs); //!< data --> queue
         };
 
     }

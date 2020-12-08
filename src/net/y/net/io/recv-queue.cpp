@@ -16,7 +16,7 @@ namespace upsylon
 
         }
 
-        void recv_queue:: load(size_t bs)
+        void recv_queue:: download(size_t bs)
         {
             assert(bs<=data.length());
             if(bs>pool.size) reserve(bs-pool.size); assert(pool.size>=bs);
@@ -46,22 +46,11 @@ namespace upsylon
     {
         void recv_queue:: recv(tcp_client &client)
         {
-            load( client.recv( data.rw(), data.length() ) );
+            download( client.recv( data.rw(), data.length() ) );
         }
 
 
     }
 }
 
-#include "y/net/udp/client.hpp"
 
-namespace upsylon
-{
-    namespace net
-    {
-        void recv_queue:: recv(udp_client &client)
-        {
-            load( client.recv( data.rw(), data.length() ) );
-        }
-    }
-}

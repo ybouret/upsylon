@@ -23,7 +23,7 @@ namespace
             Q.pack();
             Y_ASSERT(Q.packed()>0);
             std::cerr << "Q=" << Q << std::endl;
-            Q.sent( alea.range<size_t>(1,Q.packed()) );
+            Q.update( alea.range<size_t>(1,Q.packed()) );
             std::cerr << "Q=" << Q << std::endl;
         }
 
