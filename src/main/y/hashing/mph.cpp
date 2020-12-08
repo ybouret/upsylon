@@ -54,7 +54,7 @@ namespace upsylon
 
 #include "y/ios/ostream.hpp"
 #include "y/string.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/cppblock.hpp"
 #include "y/ios/align.hpp"
 
 namespace upsylon

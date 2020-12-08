@@ -1,4 +1,4 @@
-#include "y/memory/buffers.hpp"
+#include "y/memory/cppblock.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
 

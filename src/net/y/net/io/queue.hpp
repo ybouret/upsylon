@@ -4,7 +4,7 @@
 
 #include "y/net/types.hpp"
 #include "y/net/io/bytes.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/cblock.hpp"
 
 namespace upsylon
 {

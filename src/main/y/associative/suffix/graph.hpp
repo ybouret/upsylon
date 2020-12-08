@@ -7,7 +7,7 @@
 #include "y/associative/suffix/tree.hpp"
 #include "y/associative/suffix/collection.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/memory/buffers.hpp"
+#include "y/memory/cppblock.hpp"
 #include "y/iterate/linked.hpp"
 
 namespace upsylon
