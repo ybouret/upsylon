@@ -134,7 +134,7 @@ namespace upsylon
     namespace net
     {
 
-        bool send_queue:: sent(tcp_client &client)
+        bool send_queue:: uploaded(tcp_client &client)
         {
             pack();
             if(written)

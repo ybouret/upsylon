@@ -37,12 +37,12 @@ namespace upsylon
             size_t       packed()       const throw(); //!< packed data (written)
             void         defrag()             throw(); //!< try to defrag data
             void         update(const size_t) throw(); //!< update after a successful send
-            void         pack()               throw(); //!< transert bytes to buffer
+            void         pack()               throw(); //!< transfer bytes to data
+            bool         uploaded(tcp_client &);       //!< check if all could be sent
 
             std::ostream        & display(std::ostream &) const;               //!< display content
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 
-            bool sent(tcp_client &);
 
 
         protected:
@@ -56,9 +56,9 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(send_queue);
-            void         transfer(size_t n) throw();
-            void         resetData() throw();
-            virtual void reset_() throw();
+            void         transfer(size_t n) throw(); // queue -> data
+            void         resetData() throw();        // clear data
+            virtual void reset_() throw();           // resetData
         };
 
     }

@@ -31,12 +31,12 @@ namespace upsylon
             explicit recv_queue(const size_t bs); //!< setup data/queue
             virtual ~recv_queue() throw();        //!< cleanup
 
-            void recv(tcp_client &); //!< receive from tcp_client
+            size_t dowload(tcp_client &); //!< receive from tcp_client
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(recv_queue);
             virtual void reset_() throw();  
-            void         download(size_t bs); //!< data --> queue
+            size_t       fetch_(size_t bs); //!< data --> queue
         };
 
     }
