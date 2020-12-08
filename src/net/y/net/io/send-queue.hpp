@@ -48,6 +48,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(send_queue);
             void transfer(size_t n) throw();
+            void resetData() throw();
         };
 
     }

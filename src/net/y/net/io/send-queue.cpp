@@ -25,6 +25,15 @@ namespace upsylon
             
         }
 
+        void send_queue:: resetData() throw()
+        {
+            offset    = 0;
+            current   = origin;
+            written   = 0;
+            beginning = origin;
+            available = data.length();
+        }
+
 
         void send_queue:: pack() throw()
         {
@@ -75,8 +84,18 @@ namespace upsylon
             assert(n<=written);
             current += n;
             written -= n;
-            offset  += n;
+            if(written>0)
+            {
+                offset  += n;
+            }
+            else
+            {
+                resetData();
+            }
         }
+
+
+
 
         std::ostream &send_queue:: display(std::ostream &os) const
         {
