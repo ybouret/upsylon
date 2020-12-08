@@ -34,6 +34,7 @@ namespace upsylon
             size_t download(tcp_client &);               //!< receive from tcp_client
             size_t justLoad(const void *, const size_t); //!< copy and bring, to debug
             void   demoLoad(const void *, const size_t); //!< copy all and bring all
+            void   demoLoad(const char *);               //!< demo load text
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(recv_queue);

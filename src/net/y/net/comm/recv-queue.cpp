@@ -53,6 +53,24 @@ namespace upsylon
             return bring_(bs);
         }
 
+        void   recv_queue:: demoLoad(const void *buffer, const size_t buflen)
+        {
+            assert(!(NULL==buffer&&buflen>0));
+            const uint8_t *base = static_cast<const uint8_t*>(buffer);
+            size_t         todo = buflen;
+            while(todo)
+            {
+                const size_t ld = justLoad(base,todo);
+                todo -= ld;
+                base += ld;
+            }
+        }
+
+        void recv_queue:: demoLoad(const char *text)
+        {
+            if(text) demoLoad( text, strlen(text) );
+        }
+
 
     }
 

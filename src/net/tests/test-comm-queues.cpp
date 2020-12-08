@@ -34,6 +34,8 @@ namespace
     {
         std::cerr << "recv block_size=" << Q.block_size() << std::endl;
 
+        Q.demoLoad("Hello, my nice little world!");
+
         std::cerr << std::endl;
 
     }
