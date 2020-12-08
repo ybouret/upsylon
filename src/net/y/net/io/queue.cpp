@@ -17,6 +17,10 @@ namespace upsylon
             reserve( data.length() );
         }
 
+        size_t io_queue:: block_size() const throw()
+        {
+            return data.length();
+        }
 
 
 

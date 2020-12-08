@@ -18,6 +18,10 @@ namespace upsylon
         class recv_queue : public io_queue
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit recv_queue(const size_t bs); //!< setup data/queue
             virtual ~recv_queue() throw();        //!< cleanup
 

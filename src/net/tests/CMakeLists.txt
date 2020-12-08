@@ -14,6 +14,7 @@ ADD_TEST(Resolve test-net resolve localhost@8080)
 ADD_TEST(Info    test-net info)
 ADD_TEST(SockSet test-net sockset)
 ADD_TEST(IOBytes test-net io_bytes)
+ADD_TEST(Queues  test-net queues)
 ADD_TEST(IO      test-net io)
 
 ADD_CUSTOM_TARGET(utest-net

@@ -32,7 +32,12 @@ namespace upsylon
             explicit io_queue(const size_t bs); //!< setup with minimal block size, reserve some bytes
             virtual ~io_queue() throw();        //!< cleanup
 
-            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            size_t block_size() const throw();
+
         protected:
             data_block data; //!< data
             
