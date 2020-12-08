@@ -22,6 +22,11 @@ namespace upsylon
             return data.length();
         }
 
+        void io_queue:: reset() throw()
+        {
+            clear();
+            reset_();
+        }
 
 
     }

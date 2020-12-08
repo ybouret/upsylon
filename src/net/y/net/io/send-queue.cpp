@@ -66,7 +66,6 @@ namespace upsylon
             assert(n<=available);
             while(n-- > 0 )
             {
-                //std::cerr << "transfer '" << cchars::visible[head->code] << "'" << std::endl;
                 *(beginning++) = pop();
                 --available;
                 ++written;
@@ -94,6 +93,10 @@ namespace upsylon
             }
         }
 
+        void send_queue:: reset_() throw()
+        {
+            resetData();
+        }
 
 
 

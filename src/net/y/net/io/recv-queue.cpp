@@ -29,6 +29,11 @@ namespace upsylon
             }
 
         }
+
+        void recv_queue:: reset_() throw()
+        {
+        }
+        
     }
 
 }

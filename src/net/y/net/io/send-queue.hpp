@@ -28,13 +28,14 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t   packed()     const throw(); //!< packed data (written)
-            void     defrag()           throw(); //!< try to defrag data
-            void     sent(const size_t) throw(); //!< adjust after a successful send
-            void     pack()             throw(); //!< transert bytes to buffer
+            size_t       packed()     const throw(); //!< packed data (written)
+            void         defrag()           throw(); //!< try to defrag data
+            void         sent(const size_t) throw(); //!< adjust after a successful send
+            void         pack()             throw(); //!< transert bytes to buffer
 
-            std::ostream        & display(std::ostream &) const;
-            friend std::ostream & operator<<(std::ostream&,const send_queue&);
+
+            std::ostream        & display(std::ostream &) const;               //!< display content
+            friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 
         protected:
             uint8_t       *origin;    //!< data
@@ -47,8 +48,9 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(send_queue);
-            void transfer(size_t n) throw();
-            void resetData() throw();
+            void         transfer(size_t n) throw();
+            void         resetData() throw();
+            virtual void reset_() throw();
         };
 
     }

@@ -36,7 +36,9 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t block_size() const throw();
+            size_t block_size() const throw(); //!< available I/O block size
+            void   reset()            throw(); //!< reseting queue+data
+
 
         protected:
             data_block data; //!< data
@@ -44,6 +46,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(io_queue);
+            virtual void reset_() throw() = 0;
         };
 
 
