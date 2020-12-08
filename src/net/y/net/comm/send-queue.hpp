@@ -20,7 +20,7 @@ namespace upsylon
         //! pack user bytes into block
         //
         //______________________________________________________________________
-        class send_queue : public io_queue
+        class send_queue : public comm_queue
         {
         public:
             //__________________________________________________________________
@@ -40,6 +40,10 @@ namespace upsylon
             void         pack()               throw(); //!< transfer bytes to data
             bool         uploaded(tcp_client &);       //!< check if all could be sent
 
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
             std::ostream        & display(std::ostream &) const;               //!< display content
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 

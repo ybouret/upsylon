@@ -1,5 +1,7 @@
 #include "y/net/comm/recv-queue.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/type/utils.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -11,12 +13,12 @@ namespace upsylon
 
         }
 
-        recv_queue:: recv_queue(const size_t bs) : io_queue(bs)
+        recv_queue:: recv_queue(const size_t bs) : comm_queue(bs)
         {
 
         }
 
-        size_t recv_queue:: fetch_(size_t bs)
+        size_t recv_queue:: bring_(size_t bs)
         {
             if(bs>0)
             {
@@ -41,7 +43,17 @@ namespace upsylon
         void recv_queue:: reset_() throw()
         {
         }
-        
+
+
+        size_t recv_queue:: justLoad(const void *buffer, const size_t buflen)
+        {
+            assert(!(NULL==buffer&&buflen>0));
+            const size_t bs = min_of(buflen,data.block_size);
+            memcpy( data.rw(), buffer, bs);
+            return bring_(bs);
+        }
+
+
     }
 
 }
@@ -52,9 +64,9 @@ namespace upsylon
 {
     namespace net
     {
-        size_t recv_queue:: dowload(tcp_client &client)
+        size_t recv_queue:: download(tcp_client &client)
         {
-            return fetch_( client.recv( data.rw(), data.length() ) );
+            return bring_( client.recv( data.rw(), data.length() ) );
         }
 
 

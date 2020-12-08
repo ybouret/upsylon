@@ -10,6 +10,7 @@ namespace upsylon
     namespace memory
     {
 
+
         cblock:: cblock() throw() :
         block_size(0),
         block_exp2(0),

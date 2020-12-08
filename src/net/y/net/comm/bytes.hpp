@@ -11,7 +11,7 @@ namespace upsylon
     namespace net
     {
 
-        typedef io_byte::list_type io_bytes_type; //!< alias
+        typedef comm_byte::list_type comm_bytes_type; //!< alias
 
         //______________________________________________________________________
         //
@@ -19,39 +19,37 @@ namespace upsylon
         //! dynamic cached list of byte
         //
         //______________________________________________________________________
-        class io_bytes : public io_bytes_type
+        class comm_bytes : public comm_bytes_type
         {
         public:
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit io_bytes() throw();                        //!< setup empty
-            explicit io_bytes(size_t n, const as_capacity_t &); //!< setup with capacity
-            virtual ~io_bytes() throw();                        //!< cleanup
+            explicit comm_bytes() throw();                        //!< setup empty
+            explicit comm_bytes(size_t n, const as_capacity_t &); //!< setup with capacity
+            virtual ~comm_bytes() throw();                        //!< cleanup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void     reserve(size_t n); //!< populate pool with extra bytes
-
-
-            io_bytes & operator<<(const uint8_t code);                 //!< push back one byte
-            void       push(const void *buffer, const size_t buflen);  //!< push back a buffer
-            io_bytes & operator<<(const char   *text);                 //!< push back some text
-            io_bytes & operator<<(const memory::ro_buffer &);          //!< push back a r/o buffer
-            void       clear() throw();                                 //!< free content, keep memory
-            uint8_t    pop()   throw();                                 //!< return content of removed head
+            void         reserve(size_t n);                              //!< populate pool with extra bytes
+            comm_bytes & operator<<(const uint8_t code);                 //!< push back one byte
+            void         push(const void *buffer, const size_t buflen);  //!< push back a buffer
+            comm_bytes & operator<<(const char   *text);                 //!< push back some text
+            comm_bytes & operator<<(const memory::ro_buffer &);          //!< push back a r/o buffer
+            void         clear() throw();                                //!< free content, keep memory
+            uint8_t      pop()   throw();                                //!< return content of removed head
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            io_bytes_type pool; //!< local pool
+            comm_bytes_type pool; //!< local pool
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(io_bytes);
+            Y_DISABLE_COPY_AND_ASSIGN(comm_bytes);
         };
 
     }

@@ -5,28 +5,29 @@ namespace upsylon
     namespace net
     {
 
-        io_queue:: ~io_queue() throw()
+        comm_queue:: ~comm_queue() throw()
         {
         }
 
-        io_queue:: io_queue(const size_t bs) :
-        net_object(),
-        io_bytes(),
+        comm_queue:: comm_queue(const size_t bs) :
+        comm_bytes(),
         data(bs)
         {
             reserve( data.length() );
         }
 
-        size_t io_queue:: block_size() const throw()
+        size_t comm_queue:: block_size() const throw()
         {
             return data.length();
         }
 
-        void io_queue:: reset() throw()
+        void comm_queue:: reset() throw()
         {
             clear();
             reset_();
         }
+
+
 
 
     }

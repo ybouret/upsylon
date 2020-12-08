@@ -2,7 +2,6 @@
 #ifndef Y_NET_COMM_QUEUE_INCLUDED
 #define Y_NET_COMM_QUEUE_INCLUDED 1
 
-#include "y/net/types.hpp"
 #include "y/net/comm/bytes.hpp"
 #include "y/memory/cblock.hpp"
 
@@ -10,7 +9,6 @@ namespace upsylon
 {
     namespace net
     {
-      
 
         //______________________________________________________________________
         //
@@ -18,7 +16,7 @@ namespace upsylon
         //! queue to use buffer <-> bytes
         //
         //______________________________________________________________________
-        class io_queue : public net_object, public io_bytes
+        class comm_queue : public comm_bytes
         {
         public:
             //__________________________________________________________________
@@ -31,23 +29,21 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit io_queue(const size_t bs); //!< setup with minimal block size, reserve some bytes
-            virtual ~io_queue() throw();        //!< cleanup
+            explicit comm_queue(const size_t bs); //!< setup with minimal block size, reserve some bytes
+            virtual ~comm_queue() throw();        //!< cleanup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            size_t block_size() const throw(); //!< available I/O block size
-            void   reset()            throw(); //!< reseting queue+data
-
+            size_t         block_size() const  throw(); //!< available I/O block size
+            void           reset()             throw(); //!< reseting queue+data
 
         protected:
-            data_block data; //!< data
+            data_block   data; //!< data
             
-
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(io_queue);
+            Y_DISABLE_COPY_AND_ASSIGN(comm_queue);
             virtual void reset_() throw() = 0;
         };
 

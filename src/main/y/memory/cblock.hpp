@@ -38,14 +38,20 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            //! no-throw swap
-            void swap_with( cblock &other ) throw();
+            void swap_with( cblock &other ) throw();    //!< no-throw swap
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t block_size; //!< length
+            const size_t block_exp2; //!< length = (1<<block_exp2) when positive
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cblock);
-            const size_t block_size;
-            const size_t block_exp2;
+
             void        *block_addr;
+            
         };
 
        

@@ -21,7 +21,7 @@ namespace upsylon
         //! transform block input into queue of byte
         //
         //______________________________________________________________________
-        class recv_queue : public io_queue
+        class recv_queue : public comm_queue
         {
         public:
             //__________________________________________________________________
@@ -31,12 +31,14 @@ namespace upsylon
             explicit recv_queue(const size_t bs); //!< setup data/queue
             virtual ~recv_queue() throw();        //!< cleanup
 
-            size_t dowload(tcp_client &); //!< receive from tcp_client
-
+            size_t download(tcp_client &);               //!< receive from tcp_client
+            size_t justLoad(const void *, const size_t); //!< copy and bring, to debug
+            void   demoLoad(const void *, const size_t); //!< copy all and bring all
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(recv_queue);
             virtual void reset_() throw();  
-            size_t       fetch_(size_t bs); //!< data --> queue
+            size_t       bring_(size_t bs); //!< data --> queue
         };
 
     }

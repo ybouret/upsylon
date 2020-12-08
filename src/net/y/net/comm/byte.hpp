@@ -15,15 +15,15 @@ namespace upsylon
         //! single dynamic byte
         //
         //______________________________________________________________________
-        class io_byte
+        class comm_byte
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef memory::magazine<io_byte> supply;     //!< alias
-            typedef supply::list_             list_type;  //!< alias
+            typedef memory::magazine<comm_byte> supply;     //!< alias
+            typedef supply::list_               list_type;  //!< alias
 
             //__________________________________________________________________
             //
@@ -33,23 +33,23 @@ namespace upsylon
             static supply & location() throw();  //!< singleton instance
 
             //! display as visible
-            friend std::ostream & operator<<(std::ostream &os, const io_byte &b);
+            friend std::ostream & operator<<(std::ostream &os, const comm_byte &b);
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const uint8_t code; //!< held byte
-            io_byte      *next; //!< for list
-            io_byte      *prev; //!< for list
+            comm_byte    *next; //!< for list
+            comm_byte    *prev; //!< for list
 
 
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(io_byte);
-            io_byte(const uint8_t) throw();
-            ~io_byte() throw();
-            friend class memory::magazine<io_byte>;
+            Y_DISABLE_COPY_AND_ASSIGN(comm_byte);
+            comm_byte(const uint8_t) throw();
+            ~comm_byte() throw();
+            friend class memory::magazine<comm_byte>;
         };
 
 
@@ -57,7 +57,7 @@ namespace upsylon
     }
 
     //! magazine of byte declaration
-    Y_MAGAZINE_DECL(net::io_byte);
+    Y_MAGAZINE_DECL(net::comm_byte);
 
 }
 

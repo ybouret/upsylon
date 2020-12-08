@@ -12,23 +12,21 @@ namespace upsylon
     namespace net
     {
         
-
-        typedef arc_ptr<recv_queue>  recvQ;
-        typedef arc_ptr<send_queue>  sendQ;
-
-        class queues
+        class comm_queues
         {
         public:
-            explicit queues(const recvQ &r, const recvQ &s) throw();
-            virtual ~queues() throw();
+            explicit comm_queues(const size_t send_block_size,
+                                 const size_t recv_block_size);
+            virtual ~comm_queues() throw();
 
-            recvQ recv;
-            sendQ send;
-
+            send_queue sendQ;
+            recv_queue recvQ;
+            
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(queues);
+            Y_DISABLE_COPY_AND_ASSIGN(comm_queues);
         };
 
+        
     }
 
 }

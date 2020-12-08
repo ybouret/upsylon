@@ -2,6 +2,7 @@
 #include "y/net/comm/send-queue.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/utils.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -14,7 +15,7 @@ namespace upsylon
         }
 
         send_queue:: send_queue(const size_t bs) :
-        io_queue(bs),
+        comm_queue(bs),
         origin( data.as<uint8_t>() ),
         offset( 0 ),
         current( origin ),
@@ -112,7 +113,7 @@ namespace upsylon
             os << '|';
             os << '+' << available;
             os << ']';
-            const io_queue &self = *this;
+            const comm_queue &self = *this;
             os << '[' << self << ']';
             return os;
         }
