@@ -128,7 +128,7 @@ Y_UTEST(magazine)
             }
             dummy::list L2(L);
 
-            L << mgr.acquire();
+            L.push( mgr.acquire() );
         }
 
         std::cerr << "#prefetched: " << mgr.prefetched() << std::endl;

@@ -76,7 +76,7 @@ namespace upsylon {
             Char *ch = source.get();
             if(ch)
             {
-                token << ch;
+                token.push(ch);
                 return true;
             }
             else

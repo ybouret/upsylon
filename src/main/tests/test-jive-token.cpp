@@ -18,7 +18,7 @@ Y_UTEST(jive_token)
     Token          t;
     {
         Char *ch=0;
-        while( (ch=m->getChar()) ) t << ch;
+        while( (ch=m->getChar()) ) t.push(ch);
     }
     std::cerr << "Token='" << t << "'" << std::endl;
 

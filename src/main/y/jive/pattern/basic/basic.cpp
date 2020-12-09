@@ -30,7 +30,7 @@ namespace upsylon {
             {
                 if( isValid(ch->code) )
                 {
-                    token << ch;
+                    token.push(ch);
                     return true;
                 }
                 else

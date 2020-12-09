@@ -36,14 +36,14 @@ namespace upsylon
                 assert(block.is_valid());
                 assert(t.size>0);
                 origin->newLine();
-                *block << Char::Copyset(t.head,'\n');
+                block->push( Char::Copyset(t.head,'\n') );
             }
 
             void BlockReader:: OnChar(const Token &t)
             {
                 assert(block.is_valid());
                 assert(1==t.size);
-                *block << Char::Copycat(t.head);
+                block->push( Char::Copycat(t.head) );
             }
             
             

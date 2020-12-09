@@ -182,20 +182,20 @@ Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,SUPPLY);                 \
                 //______________________________________________________________
 
                 //! insert a valid pointer
-                inline list_ & operator<<(type *obj) throw()
+                inline list_ & push(type *obj) throw()
                 {
                     this->push_back( (mutable_type*) obj );
                     return *this;
                 }
 
                 //! append a copy of the list
-                inline list_ & operator<<( const list_ &other )
+                inline list_ & push( const list_ &other )
                 {
                     list_ cpy(other);
                     this->merge_back(cpy);
                     return *this;
                 }
-
+                
                 //! send each node to stream
                 template <typename STREAM> inline
                 STREAM & display(STREAM &os) const

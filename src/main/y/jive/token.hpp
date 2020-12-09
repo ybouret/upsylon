@@ -51,6 +51,8 @@ namespace upsylon
             Token     &  trim(size_t n) throw(); //!< skip n chars
             Token     &  chop(size_t n) throw(); //!< trim(n).skip(n)
 
+            Token & operator<<(Char *);
+            
         private:
             string translate(const char * table[]) const;
         };

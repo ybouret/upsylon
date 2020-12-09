@@ -31,7 +31,7 @@ Y_UTEST(jive_module)
         Char      *ch = 0;
         while( (ch=module->getChar()) )
         {
-            chars << ch;
+            chars.push(ch);
         }
         std::cerr << "#chars=" << chars.size << std::endl;
         std::cerr << chars << std::endl;
