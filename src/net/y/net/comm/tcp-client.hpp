@@ -1,4 +1,4 @@
-`//! \file
+//! \file
 
 #ifndef Y_NET_COMM_TCP_CLIENT_INCLUDED
 #define Y_NET_COMM_TCP_CLIENT_INCLUDED 1
@@ -57,7 +57,4 @@ namespace upsylon
     }
 }
 
-
-
 #endif
-`
