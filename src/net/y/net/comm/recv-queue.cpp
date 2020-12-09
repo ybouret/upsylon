@@ -75,6 +75,30 @@ namespace upsylon
         }
 
 
+        bool recv_queue:: is_active() throw()
+        {
+            return size>0;
+        }
+
+        bool recv_queue:: query(char &C)
+        {
+            if(size>0)
+            {
+                C = char( pop() );
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        void recv_queue:: store(char C)
+        {
+            push_front( rig(C) );
+        }
+
+
     }
 
 }

@@ -9,5 +9,7 @@
 #	define Y_PRINTF_CHECK(i,j)
 #endif
 
+//! default formating methods
+#define Y_AS_PRINTF Y_PRINTF_CHECK(2,3)
 
 #endif

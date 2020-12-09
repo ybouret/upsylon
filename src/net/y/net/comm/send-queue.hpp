@@ -3,6 +3,7 @@
 #define Y_NET_COMM_SEND_QUEUE_INCLUDED 1
 
 #include "y/net/comm/queue.hpp"
+#include "y/ios/ostream.hpp"
 
 namespace upsylon
 {
@@ -20,7 +21,7 @@ namespace upsylon
         //! pack user bytes into block
         //
         //______________________________________________________________________
-        class send_queue : public comm_queue
+        class send_queue : public comm_queue, public ios::ostream
         {
         public:
             //__________________________________________________________________
@@ -40,6 +41,14 @@ namespace upsylon
             void         pack()               throw(); //!< transfer bytes to data
             bool         uploaded(tcp_client &);       //!< check if all could be sent
 
+            //__________________________________________________________________
+            //
+            // ios::ostream interface
+            //__________________________________________________________________
+            virtual void write(char C);                      //!< push(C)
+            virtual void flush() throw();                    //!< pack()
+            virtual void output(const void *, const size_t); //!< push(...)
+            
             //__________________________________________________________________
             //
             // helpers

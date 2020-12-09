@@ -4,6 +4,7 @@
 #define Y_NET_COMM_RECV_QUEUE_INCLUDED 1
 
 #include "y/net/comm/queue.hpp"
+#include "y/ios/istream.hpp"
 
 namespace upsylon
 {
@@ -21,7 +22,7 @@ namespace upsylon
         //! transform block input into queue of byte
         //
         //______________________________________________________________________
-        class recv_queue : public comm_queue
+        class recv_queue : public comm_queue, public ios::istream
         {
         public:
             //__________________________________________________________________
@@ -31,7 +32,24 @@ namespace upsylon
             explicit recv_queue(const size_t bs); //!< setup data/queue
             virtual ~recv_queue() throw();        //!< cleanup
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             size_t download(tcp_client &);               //!< receive from tcp_client
+
+            //__________________________________________________________________
+            //
+            // ios::istream interface
+            //__________________________________________________________________
+            virtual bool is_active()   throw();
+            virtual bool query(char &);
+            virtual void store(char C);
+            
+            //__________________________________________________________________
+            //
+            // debug methods
+            //__________________________________________________________________
             size_t justLoad(const void *, const size_t); //!< copy and bring, to debug
             void   demoLoad(const void *, const size_t); //!< copy all and bring all
             void   demoLoad(const char *);               //!< demo load text

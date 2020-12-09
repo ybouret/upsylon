@@ -34,13 +34,14 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void         reserve(size_t n);                              //!< populate pool with extra bytes
-            comm_bytes & operator<<(const uint8_t code);                 //!< push back one byte
-            void         push(const void *buffer, const size_t buflen);  //!< push back a buffer
-            comm_bytes & operator<<(const char   *text);                 //!< push back some text
-            comm_bytes & operator<<(const memory::ro_buffer &);          //!< push back a r/o buffer
-            void         clear() throw();                                //!< free content, keep memory
-            uint8_t      pop()   throw();                                //!< return content of removed head
+            void         reserve(size_t n);                             //!< populate pool with extra bytes
+            void         push(const uint8_t code);                      //!< push back one byte
+            void         push(const void *buffer, const size_t buflen); //!< push back a buffer
+            void         push(const char   *text);                      //!< push back some text
+            void         push(const memory::ro_buffer &);               //!< push back a r/o buffer
+            void         clear() throw();                               //!< free content, keep memory
+            uint8_t      pop()   throw();                               //!< return content of removed head
+            comm_byte   *rig(const uint8_t);                            //!< from pool or acquire
 
             //__________________________________________________________________
             //

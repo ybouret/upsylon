@@ -31,18 +31,25 @@ namespace upsylon
             }
         }
 
-        comm_bytes & comm_bytes:: operator<<(const uint8_t code)
+        comm_byte * comm_bytes:: rig(const uint8_t code)
         {
             static comm_byte::supply &mgr = comm_byte::instance();
             if(pool.size)
             {
-                aliasing::_(push_back( pool.pop_back() )->code )= code;
+                comm_byte *node = pool.pop_back();
+                aliasing::_(node->code) = code;
+                return node;
             }
             else
             {
-                push_back( mgr.acquire<uint8_t>(code) );
+                return mgr.acquire<uint8_t>(code);
             }
-            return *this;
+        }
+
+
+        void comm_bytes::push(const uint8_t code)
+        {
+            (void)push_back( rig(code) );
         }
 
         void comm_bytes:: push(const void *buffer, const size_t buflen)
@@ -76,16 +83,14 @@ namespace upsylon
 
         }
 
-        comm_bytes & comm_bytes:: operator<<(const char   *text)
+        void comm_bytes:: push(const char *text)
         {
             if(text) push(text, strlen(text));
-            return *this;
         }
 
-        comm_bytes & comm_bytes:: operator<<(const memory::ro_buffer &buff)
+        void comm_bytes::push(const memory::ro_buffer &buff)
         {
             push( buff.ro(), buff.length() );
-            return *this;
         }
 
         void comm_bytes:: clear() throw()

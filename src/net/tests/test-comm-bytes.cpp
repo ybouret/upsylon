@@ -24,11 +24,11 @@ Y_UTEST(comm_bytes)
     {
         comm_bytes Q;
         display(Q);
-        Q << "Hello !";
+        Q.push("Hello !");
         display(Q);
         Q.clear();
         display(Q);
-        Q << "World";
+        Q.push("World");
         display(Q);
     }
     std::cerr << "mgr.prefetch=" << mgr.prefetched() << std::endl;

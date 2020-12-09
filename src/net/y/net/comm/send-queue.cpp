@@ -99,6 +99,20 @@ namespace upsylon
             resetData();
         }
 
+        void send_queue:: write(char C)
+        {
+            push_back( rig(C) );
+        }
+
+        void send_queue:: flush() throw()
+        {
+            pack();
+        }
+
+        void send_queue:: output(const void *buffer, const size_t buflen)
+        {
+            push(buffer,buflen);
+        }
 
 
         std::ostream &send_queue:: display(std::ostream &os) const

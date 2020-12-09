@@ -14,7 +14,7 @@ namespace upsylon
 {
     namespace ios
     {
-    
+
 
         //! interface for output streams
         class ostream : public stream
@@ -24,44 +24,34 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-
-            //! destructor
-            virtual ~ostream() throw();
-
-            //! write one char
-            virtual void write( char C ) = 0;
-
-            //! flush
-            virtual void flush()         = 0;
-
-            //! printf style, may be superseeded
-            virtual ostream & operator()(const char *fmt,...) Y_PRINTF_CHECK(2,3);
+            virtual          ~ostream() throw();                           //!< cleanup
+            virtual void      write( char C ) = 0;                         //!< write one char
+            virtual void      flush()         = 0;                         //!< flush stream
+            virtual void      output(const void *, const size_t);          //!< output large buffer, may be superseeded
+            virtual ostream & operator()(const char *fmt,...) Y_AS_PRINTF; //!< printf style, may be superseeded
 
             //__________________________________________________________________
             //
             // non-virtual interface : output utilities
             //__________________________________________________________________
 
-            //! output large buffer
-            void output(const void *buffer, const size_t buflen);
-
             //! flux for one char
-            ostream & operator<<( const char );
+            ostream & operator<<(const char);
             
             //! output text
-            ostream & operator<<( const char *buffer );
+            ostream & operator<<(const char *);
 
             //! output buffer
-            ostream & operator<<(const memory::ro_buffer &buffer);
+            ostream & operator<<(const memory::ro_buffer &);
 
             //! output binary address
-            ostream & viz( const void *addr );
+            ostream & viz(const void *addr);
             
          
             //! repeat a char
-            inline ostream & repeat( size_t sz, const char C)
+            inline ostream & repeat(size_t sz, const char C)
             {
-                while(sz-->0) write(C);
+                while(sz-- > 0) write(C);
                 return *this;
             }
 
@@ -71,7 +61,7 @@ namespace upsylon
                                    const size_t aligned, const char C=' ')
             {
                 assert(!(0==buffer&&buflen>0));
-                for(size_t i=0;i<buflen;++i)       write(buffer[i]);
+                output(buffer,buflen);
                 for(size_t i=buflen;i<aligned;++i) write(C);
                 return *this;
             }
