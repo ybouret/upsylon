@@ -1,5 +1,6 @@
 #include "y/memory/cppblock.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -50,6 +51,10 @@ Y_UTEST(buffers)
         std::cerr << std::endl;
 
     }
+
+    Y_UTEST_SIZEOF(memory::cblock);
+    Y_UTEST_SIZEOF(memory::cppblock<char>);
+    Y_UTEST_SIZEOF(memory::cppblock<uint64_t>);
 
 }
 Y_UTEST_DONE()
