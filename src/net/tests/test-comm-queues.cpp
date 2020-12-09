@@ -1,6 +1,7 @@
 
 #include "y/net/comm/queues.hpp"
- 
+#include "y/type/fourcc.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -15,7 +16,8 @@ namespace
 
         std::cerr << "send block_size=" << Q.block_size() << std::endl;
 
-        Q << "Hello, World";
+        Q.write_nbo<uint32_t>( Y_FOURCC('A','B','C','D') );
+        Q << " Hello, World";
         std::cerr << "sQ=" << Q << std::endl;
         while( Q.size > 0 || Q.packed() > 0)
         {
