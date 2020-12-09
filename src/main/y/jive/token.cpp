@@ -123,6 +123,20 @@ namespace upsylon {
             return trim(n).skip(n);
         }
 
+        Token & Token:: operator<<( Char *ch )
+        {
+            assert(ch);
+            push_back(ch);
+            return *this;
+        }
+
+        Token & Token:: operator<<( const Token &other )
+        {
+            Token tmp(other);
+            merge_back(tmp);
+            return *this;
+        }
+
     }
 
 }
