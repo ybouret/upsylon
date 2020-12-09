@@ -21,6 +21,10 @@ namespace upsylon
         class comm_queues
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             //! setup with send/recv block size
             explicit comm_queues(const size_t send_block_size,
                                  const size_t recv_block_size);
@@ -28,6 +32,10 @@ namespace upsylon
             //! cleanup
             virtual ~comm_queues() throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             send_queue sendQ; //!< to send
             recv_queue recvQ; //!< to recv
             

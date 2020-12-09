@@ -15,6 +15,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(sockset);
     Y_UTEST(comm_bytes);
     Y_UTEST(comm_queues);
+    Y_UTEST(comm_proto);
     Y_UTEST(io);
 }
 Y_UTEST_EXEC()

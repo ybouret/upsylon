@@ -15,6 +15,7 @@ ADD_TEST(Info    test-net info)
 ADD_TEST(SockSet test-net sockset)
 ADD_TEST(Comm:Bytes  test-net comm_bytes)
 ADD_TEST(Comm:Queues test-net comm_queues)
+ADD_TEST(Comm:Proto  test-net comm_proto)
 ADD_TEST(IO      test-net io)
 
 ADD_CUSTOM_TARGET(utest-net
