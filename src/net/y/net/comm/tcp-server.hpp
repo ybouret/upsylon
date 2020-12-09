@@ -15,16 +15,36 @@ namespace upsylon
     {
         class comm_tcp_client; //!< forward declaration
 
+        //______________________________________________________________________
+        //
+        //
+        //! dynamic comm tcp server
+        //
+        //______________________________________________________________________
         class comm_tcp_server : public tcp_server
         {
         public:
-            virtual ~comm_tcp_server() throw();                       //!< destructor
-            explicit comm_tcp_server(const socket_address &ip);       //!< default constructor
-            virtual  comm_tcp_client *create( const tcp_link &link ); //!< called upon accepted tcp connection
-
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef intr_ptr<socket_id_t,comm_tcp_server>         proto;    //!< smart pointer
             typedef hash_set<socket_id_t,proto,socket_id_hasher>  db;       //!< database of tcp servers
             typedef db::iterator                                  iterator; //!< tcp server iterator
+
+            //__________________________________________________________________
+            //
+            //C++
+            //__________________________________________________________________
+            virtual ~comm_tcp_server() throw();                       //!< destructor
+            explicit comm_tcp_server(const socket_address &ip);       //!< default constructor
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual  comm_tcp_client *create( const tcp_link &link ); //!< called upon accepted tcp connection
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_tcp_server);

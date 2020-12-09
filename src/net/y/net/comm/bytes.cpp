@@ -103,7 +103,7 @@ namespace upsylon
             assert(size>0);
             assert(head!=NULL);
             const uint8_t code = head->code;
-            pool.push_back( pop_front() );
+            aliasing::_(pool.push_back( pop_front() )->code) = 0;
             return code;
         }
 

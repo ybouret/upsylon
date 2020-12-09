@@ -31,7 +31,8 @@ namespace upsylon
                 while(bs-- > 0 )
                 {
                     assert(pool.size>0);
-                    aliasing::_( push_back( pool.pop_back() )->code ) = *(bp++);
+                    aliasing::_( push_back( pool.pop_back() )->code ) = *bp;
+                    *(bp++) = 0;
                 }
                 return res;
             }
