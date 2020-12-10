@@ -10,8 +10,9 @@ namespace upsylon
         {
         }
 
-        comm_tcp_server:: comm_tcp_server(const socket_address &ip) :
-        tcp_server(ip)
+        comm_tcp_server:: comm_tcp_server(const socket_address &ip,
+                                          const unsigned        pending) :
+        tcp_server(ip,pending)
         {
         }
 

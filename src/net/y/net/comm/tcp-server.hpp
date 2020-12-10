@@ -37,13 +37,18 @@ namespace upsylon
             //C++
             //__________________________________________________________________
             virtual ~comm_tcp_server() throw();                       //!< destructor
-            explicit comm_tcp_server(const socket_address &ip);       //!< default constructor
+            explicit comm_tcp_server(const socket_address &ip,
+                                     const unsigned        pending);  //!< default constructor
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            virtual  comm_tcp_client *create( const tcp_link &link ); //!< called upon accepted tcp connection
+            //! create the matching client to support the protocol
+            /**
+
+             */
+            virtual  comm_tcp_client *create(const tcp_link &link);
 
 
         private:
