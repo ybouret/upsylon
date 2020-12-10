@@ -1,4 +1,5 @@
 #include "y/net/comm/queue.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -16,15 +17,13 @@ namespace upsylon
             reserve( data.length() );
         }
 
-        size_t comm_queue:: block_size() const throw()
-        {
-            return data.length();
-        }
+
 
         void comm_queue:: reset() throw()
         {
             clear();
             reset_();
+            aliasing::_(data).ldz();
         }
 
 

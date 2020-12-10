@@ -39,7 +39,8 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             void swap_with( cblock &other ) throw();    //!< no-throw swap
-            
+            void ldz() throw();                         //!< load with 0
+
             //__________________________________________________________________
             //
             // members

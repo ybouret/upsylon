@@ -63,7 +63,7 @@ namespace upsylon
             //! see as<T>
             template <typename T> inline
             T *as() throw() { return static_cast<T *>( rw() ); }
-
+            
         protected:
             explicit rw_buffer() throw(); //!< constructor
 

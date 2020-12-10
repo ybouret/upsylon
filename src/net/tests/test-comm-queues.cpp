@@ -14,7 +14,7 @@ namespace
     void testSendQ( send_queue &Q )
     {
 
-        std::cerr << "send block_size=" << Q.block_size() << std::endl;
+        std::cerr << "send block_size=" << Q.data.block_size << std::endl;
 
         Q.write_nbo<uint32_t>( Y_FOURCC('A','B','C','D') );
         Q << " Hello, World";
@@ -34,7 +34,7 @@ namespace
     static inline
     void testRecvQ( recv_queue &Q )
     {
-        std::cerr << "recv block_size=" << Q.block_size() << std::endl;
+        std::cerr << "recv block_size=" << Q.data.block_size << std::endl;
 
         Q.demoLoad("Hello, my nice little world!");
         std::cerr << Q << std::endl;

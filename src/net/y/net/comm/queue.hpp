@@ -13,18 +13,12 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! queue to use buffer <-> bytes
+        //! low-level queue to use buffer <-> bytes
         //
         //______________________________________________________________________
         class comm_queue : public comm_bytes
         {
         public:
-            //__________________________________________________________________
-            //
-            // types and definitions
-            //__________________________________________________________________
-            typedef memory::cblock data_block;  //!< buffer of data
-
             //__________________________________________________________________
             //
             // C++
@@ -36,11 +30,13 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t         block_size() const  throw(); //!< available I/O block size
-            void           reset()             throw(); //!< reseting queue+data
-
-        protected:
-            data_block   data; //!< data
+            void             reset()             throw(); //!< reseting queue+data
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const memory::cblock data; //!< data
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_queue);

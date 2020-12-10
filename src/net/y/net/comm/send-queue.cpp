@@ -1,6 +1,7 @@
 
 #include "y/net/comm/send-queue.hpp"
 #include "y/type/utils.hpp"
+#include "y/type/aliasing.hpp"
 #include "y/code/utils.hpp"
 #include <cstring>
 
@@ -16,7 +17,7 @@ namespace upsylon
 
         send_queue:: send_queue(const size_t bs) :
         comm_queue(bs),
-        origin( data.as<uint8_t>() ),
+        origin( aliasing::_(data).as<uint8_t>() ),
         offset( 0 ),
         current( origin ),
         written( 0 ),
@@ -54,6 +55,9 @@ namespace upsylon
             if(offset>0)
             {
                 memmove(origin,current,written);
+                {
+                    
+                }
                 beginning -= offset;
                 available += offset;
                 current   =  origin;

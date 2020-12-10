@@ -32,16 +32,22 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // methods
+            // memory adjustment methods
             //__________________________________________________________________
-            void         reserve(size_t n);                             //!< populate pool with extra bytes
-            void         push(const uint8_t code);                      //!< push back one byte
-            void         push(const void *buffer, const size_t buflen); //!< push back a buffer
-            void         push(const char   *text);                      //!< push back some text
-            void         push(const memory::ro_buffer &);               //!< push back a r/o buffer
-            void         clear() throw();                               //!< free content, keep memory
-            uint8_t      pop()   throw();                               //!< return content of removed head
-            comm_byte   *rig(const uint8_t);                            //!< from pool or acquire
+            void         reserve(size_t n);                //!< populate pool with extra bytes
+            void         clear() throw();                  //!< free content, keep memory
+            void         prune() throw();                  //!< prune extra memory : pool.release()
+
+            //__________________________________________________________________
+            //
+            // I/O methods
+            //__________________________________________________________________
+            uint8_t      pop() throw();                    //!< return content of removed head
+            void         push(const uint8_t);              //!< push back one byte
+            void         push(const void *, const size_t); //!< push back a buffer
+            void         push(const char *);               //!< push back some text
+            void         push(const memory::ro_buffer &);  //!< push back a r/o buffer
+            comm_byte   *rig(const uint8_t);               //!< from pool or acquire
 
             //__________________________________________________________________
             //

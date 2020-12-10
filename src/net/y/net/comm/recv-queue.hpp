@@ -19,7 +19,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! transform block input into queue of byte
+        //!   block input --> queue of byte, low-level but usable as istream
         //
         //______________________________________________________________________
         class recv_queue : public comm_queue, public ios::istream

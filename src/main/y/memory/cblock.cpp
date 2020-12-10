@@ -3,6 +3,7 @@
 #include "y/code/base2.hpp"
 #include "y/object.hpp"
 #include "y/type/block/zset.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -24,6 +25,12 @@ namespace upsylon
             _cswap(block_exp2,other.block_exp2);
             _cswap(block_addr,other.block_addr);
         }
+
+        void cblock:: ldz() throw()
+        {
+            memset(block_addr,0,block_size);
+        }
+        
 
         cblock:: ~cblock() throw()
         {

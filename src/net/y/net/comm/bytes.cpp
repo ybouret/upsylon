@@ -95,7 +95,10 @@ namespace upsylon
 
         void comm_bytes:: clear() throw()
         {
-            pool.merge_back(*this);
+            while(size>0 )
+            {
+                aliasing::_( pool.push_back( pop_back() )->code ) = 0;
+            }
         }
 
         uint8_t comm_bytes:: pop() throw()
@@ -107,7 +110,10 @@ namespace upsylon
             return code;
         }
 
-
+        void comm_bytes:: prune() throw()
+        {
+            pool.release();
+        }
 
     }
 

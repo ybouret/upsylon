@@ -18,7 +18,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! pack user bytes into block
+        //! pack user bytes into block, low-level but usable as ostream
         //
         //______________________________________________________________________
         class send_queue : public comm_queue, public ios::ostream
