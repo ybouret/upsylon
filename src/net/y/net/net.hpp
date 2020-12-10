@@ -54,7 +54,7 @@ namespace upsylon
         // members
         //______________________________________________________________________
         byte_nodes_cache byte_nodes; //!< shared cache for I/O
-        
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);
         explicit network();

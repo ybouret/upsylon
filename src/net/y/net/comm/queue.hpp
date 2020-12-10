@@ -4,6 +4,7 @@
 
 #include "y/net/comm/bytes.hpp"
 #include "y/memory/cblock.hpp"
+#include "y/memory/dblock.hpp"
 
 namespace upsylon
 {
@@ -36,7 +37,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const memory::cblock data; //!< data
+            memory::dblock::pointer data; //!< query data from comm_cache
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_queue);

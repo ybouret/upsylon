@@ -4,6 +4,7 @@
 #include "y/type/utils.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/object.hpp"
+#include <cstring>
 
 namespace upsylon
 {
@@ -75,7 +76,7 @@ namespace upsylon
             if(pointee->origin)
             {
                 dblocks &blocks = *(pointee->origin);
-                Y_LOCK(blocks.access);
+                Y_LOCK(blocks.sync);
                 assert(pointee->source!=NULL);
                 assert(pointee->exp2<blocks.slots);
                 assert(&blocks[pointee->exp2]==pointee->source);
@@ -86,6 +87,11 @@ namespace upsylon
                 assert(0==pointee->source);
                 delete pointee;
             }
+        }
+        
+        void dblock:: ldz() throw()
+        {
+            memset(addr,0,size);
         }
 
     }
@@ -143,7 +149,7 @@ namespace upsylon
 
         dblocks:: ~dblocks() throw()
         {
-            Y_LOCK(access);
+            Y_LOCK(sync);
             for(size_t i=0;i<slots;++i)
             {
                 slot_type &s = slot[i];
@@ -171,7 +177,7 @@ namespace upsylon
         mem_size( sizeof(slot_type) * slots ),
         mem_exp2( base2<size_t>::log2_of(mem_size) ),
         slot( static_cast<slot_type*>( object::dyadic_acquire(mem_exp2) )),
-        access(shared_access)
+        sync(shared_access)
         {
             for(size_t i=0;i<slots;++i)
             {
@@ -189,7 +195,7 @@ namespace upsylon
 
         dblock * dblocks:: query(const size_t bs)
         {
-            Y_LOCK(access);
+            Y_LOCK(sync);
             const size_t block_size = dblock_size(bs);
             const size_t block_exp2 = base2<size_t>::log2_of(block_size); assert(block_exp2<slots);
             slot_type   &s          = slot[block_exp2];
@@ -202,9 +208,21 @@ namespace upsylon
             {
                 return new dblock(block_size,block_exp2,this,&s);
             }
-
         }
 
+        void dblocks:: reserve(size_t n, const size_t bs)
+        {
+            Y_LOCK(sync);
+            const size_t block_size = dblock_size(bs);
+            const size_t block_exp2 = base2<size_t>::log2_of(block_size); assert(block_exp2<slots);
+            slot_type   &s          = slot[block_exp2];
+            while(n-- > 0)
+            {
+                s.push_back( new dblock(block_size,block_exp2,this,&s) );
+            }
+        }
+
+        
         std::ostream & dblocks:: display(std::ostream &os) const
         {
             static const size_t one = 1;

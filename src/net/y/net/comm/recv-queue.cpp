@@ -23,11 +23,10 @@ namespace upsylon
             const size_t res = bs;
             if(bs>0)
             {
-
-                assert(bs<=data.length());
+                assert(bs<=data->size);
                 if(bs>pool.size) reserve(bs-pool.size); assert(pool.size>=bs);
 
-                uint8_t *bp = aliasing::_(data).as<uint8_t>();
+                uint8_t *bp = **data;
                 while(bs-- > 0 )
                 {
                     assert(pool.size>0);
@@ -51,8 +50,8 @@ namespace upsylon
         size_t recv_queue:: justLoad(const void *buffer, const size_t buflen)
         {
             assert(!(NULL==buffer&&buflen>0));
-            const size_t bs = min_of(buflen,data.block_size);
-            memcpy( aliasing::_(data).rw(), buffer, bs);
+            const size_t bs = min_of(buflen,data->size);
+            memcpy( **data, buffer, bs);
             return bring_(bs);
         }
 
@@ -112,7 +111,7 @@ namespace upsylon
     {
         size_t recv_queue:: download(tcp_client &client)
         {
-            return bring_( client.recv( aliasing::_(data).rw(), data.length() ) );
+            return bring_( client.recv( **data, data->size ) );
         }
     }
 }

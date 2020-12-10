@@ -17,12 +17,12 @@ namespace upsylon
 
         send_queue:: send_queue(const size_t bs) :
         comm_queue(bs),
-        origin( aliasing::_(data).as<uint8_t>() ),
+        origin( **data ),
         offset( 0 ),
         current( origin ),
         written( 0 ),
         beginning( origin ),
-        available( data.length() )
+        available( data->size )
         {
             
         }
@@ -33,7 +33,7 @@ namespace upsylon
             current   = origin;
             written   = 0;
             beginning = origin;
-            available = data.length();
+            available = data->size;
         }
 
 

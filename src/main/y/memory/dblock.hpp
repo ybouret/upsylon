@@ -69,11 +69,15 @@ namespace upsylon
 
             uint8_t *       operator*()       throw();  //!< access
             const uint8_t * operator*() const throw();  //!< access
-            static   void zap(dblock *pointee) throw(); //!< smart delete
+            static void     zap(dblock *)     throw();  //!< smart delete
+            void            ldz()             throw();  //!< zero data
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const size_t size; //!< available bytes
             const size_t exp2; //!< block_size = 2^block_exp2
-        public:
             uint8_t     *addr; //!< bytes
             dblock      *next; //!< for list
             dblock      *prev; //!< for list
@@ -85,8 +89,8 @@ namespace upsylon
                                 dblocks    * block_org,
                                 core_list  * block_src);
 
-            dblocks     *origin; // cache
-            core_list   *source; // slot in cache
+            dblocks     *origin; //!< cache
+            core_list   *source; //!< slot in cache
 
             friend class dblocks;
         };
@@ -123,7 +127,10 @@ namespace upsylon
 
             //! query/create a block
             dblock * query(const size_t bs);
-
+            
+            //! reserve some memory blocks
+            void reserve(size_t n, const size_t bs);
+            
             //! display (to debug)
             std::ostream        & display( std::ostream &os ) const;
             //! display (to debug)
@@ -139,7 +146,7 @@ namespace upsylon
             friend class  dblock;
 
         public:
-            lockable     &access;  //!< shared access
+            lockable     &sync;  //!< shared access
         };
 
     }

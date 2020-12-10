@@ -1,5 +1,5 @@
 #include "y/net/comm/queue.hpp"
-#include "y/type/aliasing.hpp"
+#include "y/net/comm/cache.hpp"
 
 namespace upsylon
 {
@@ -10,11 +10,18 @@ namespace upsylon
         {
         }
 
+        static inline
+        memory::dblock *query_dblock(const size_t bs)
+        {
+            static comm_cache &mgr = comm_cache::instance();
+            return mgr.query(bs);
+        }
+        
         comm_queue:: comm_queue(const size_t bs) :
         comm_bytes(),
-        data(bs)
+        data( query_dblock(bs) )
         {
-            reserve( data.length() );
+            reserve( data->size );
         }
 
 
@@ -23,7 +30,7 @@ namespace upsylon
         {
             clear();
             reset_();
-            aliasing::_(data).ldz();
+            data->ldz();
         }
 
 
