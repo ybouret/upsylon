@@ -29,6 +29,7 @@ namespace upsylon
             assert( v <= (one<<r) );
             return r;
         }
+        
 
     };
 
