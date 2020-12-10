@@ -54,9 +54,14 @@ namespace upsylon
         {
             if(offset>0)
             {
-                memmove(origin,current,written);
                 {
-                    
+                    uint8_t *target = origin;
+                    uint8_t *source = (uint8_t *)current;
+                    for(size_t i=written;i>0;--i)
+                    {
+                        (*target++) = *source;
+                        (*source++) = 0;
+                    }
                 }
                 beginning -= offset;
                 available += offset;
