@@ -42,7 +42,7 @@ namespace upsylon
         dblock:: dblock(const size_t block_size,
                         const size_t block_exp2,
                         dblocks    * block_org,
-                        list_type  * block_src) :
+                        core_list  * block_src) :
         size(block_size),
         exp2(block_exp2),
         addr( static_cast<uint8_t *>(object::dyadic_acquire(exp2)) ),
@@ -68,21 +68,8 @@ namespace upsylon
             assert(addr);
             return addr;
         }
-        
-    }
-}
 
-
-namespace upsylon
-{
-    namespace memory
-    {
-        dblock:: pointer:: pointer( dblock *blk ) throw() : ptr<dblock>(blk)
-        {
-            assert(pointee!=NULL);
-        }
-
-        dblock:: pointer:: ~pointer() throw()
+        void dblock:: zap(dblock *pointee) throw()
         {
             assert(pointee!=NULL);
             if(pointee->origin)
@@ -99,6 +86,25 @@ namespace upsylon
                 assert(0==pointee->source);
                 delete pointee;
             }
+        }
+
+    }
+}
+
+
+namespace upsylon
+{
+    namespace memory
+    {
+        dblock:: pointer:: pointer( dblock *blk ) throw() : ptr<dblock>(blk)
+        {
+            assert(pointee!=NULL);
+        }
+
+        dblock:: pointer:: ~pointer() throw()
+        {
+            assert(pointee!=NULL);
+            dblock::zap(pointee);
             pointee=0;
         }
 
@@ -106,6 +112,29 @@ namespace upsylon
 
 }
 
+
+namespace upsylon
+{
+    namespace memory
+    {
+
+        dblock:: list:: list() throw() : core_list()
+        {
+        }
+
+        dblock:: list:: ~list() throw()
+        {
+            while(size)
+            {
+                zap( pop_back() );
+            }
+        }
+
+    }
+
+}
+
+#include <iomanip>
 
 namespace upsylon
 {
@@ -174,6 +203,27 @@ namespace upsylon
                 return new dblock(block_size,block_exp2,this,&s);
             }
 
+        }
+
+        std::ostream & dblocks:: display(std::ostream &os) const
+        {
+            static const size_t one = 1;
+            os << "<dblocks>" << std::endl;
+            for(size_t i=0;i<slots;++i)
+            {
+                const slot_type &s = slot[i];
+                if(s.size)
+                {
+                    os << '\t' <<  '[' << std::setw(12) << (one<<i) << ']' << " : " << s.size << std::endl;
+                }
+            }
+            os << "<dblocks/>" ;
+            return os;
+        }
+
+        std::ostream &   operator<<(std::ostream &os, const dblocks &db)
+        {
+            return db.display(os);
         }
 
 
