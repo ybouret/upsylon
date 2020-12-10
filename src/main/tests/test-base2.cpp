@@ -25,9 +25,13 @@ Y_UTEST(base2)
     show2<uint32_t>();
     show2<int32_t>();
 
-    for(int i=1;i<=1000; i += 1+int(alea.leq(30)) )
+    for(int i=1;i<=100000; i += 1+int(alea.leq(3000)) )
     {
-        std::cerr << prev_power_of_two(i) << " : " << i << " : " << next_power_of_two(i) << " =>" << integer_log2(i) << std::endl;
+        const int      p = prev_power_of_two(i);
+        const int      n = next_power_of_two(i);
+        const unsigned l = integer_log2(i);
+        std::cerr << p << " : " << i << " : " << n << " =>" << l << std::endl;
+        Y_ASSERT( (base2<size_t>::one << l) <= size_t(i) );
     }
 
     
