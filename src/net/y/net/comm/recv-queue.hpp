@@ -36,7 +36,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t download(tcp_client &);               //!< receive from tcp_client
+            size_t download(tcp_client &);        //!< receive from tcp_client
 
             //__________________________________________________________________
             //
