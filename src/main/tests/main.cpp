@@ -59,6 +59,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(magazine);
     Y_UTEST(buffers);
     Y_UTEST(shack);
+    Y_UTEST(dblocks);
 
     Y_UTEST(joint_section);
     Y_UTEST(joint_ward);

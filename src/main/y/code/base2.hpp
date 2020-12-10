@@ -13,9 +13,10 @@ namespace upsylon
     template <typename T>
     struct base2
     {
-        Y_DECL_ARGS_(T,type); //!< aliases
+        Y_DECL_ARGS_(T,type);                                                            //!< aliases
         static const bool     signed_value     = is_signed<type>::value;                 //!< alias
         static const unsigned max_shift        = (sizeof(type)<<3) - (signed_value?2:1); //!< alias
+        static const unsigned max_slots        = max_shift+1;                            //!< alias
         static const_type     one              = 1;                                      //!< alias
         static const_type     max_power_of_two = (one << max_shift);                     //!< alias
 

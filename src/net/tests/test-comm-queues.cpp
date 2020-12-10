@@ -1,4 +1,4 @@
-
+#include "y/net/comm/cache.hpp"
 #include "y/net/comm/queues.hpp"
 #include "y/type/fourcc.hpp"
 
@@ -44,11 +44,11 @@ namespace
 
 }
 
+#include "y/code/base2.hpp"
 
 Y_UTEST(comm_queues)
 {
-    Y_UTEST_SIZEOF(send_queue);
-    Y_UTEST_SIZEOF(recv_queue);
+
 
     // simulate
     for(size_t bs=1;bs<=32;bs<<=1)
@@ -64,7 +64,11 @@ Y_UTEST(comm_queues)
         }
     }
 
+    Y_UTEST_SIZEOF(send_queue);
+    Y_UTEST_SIZEOF(recv_queue);
 
+    std::cerr << "max_slots: " << base2<size_t>::max_slots << std::endl;
+    
 
 }
 Y_UTEST_DONE()
