@@ -39,7 +39,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const uint8_t code; //!< held byte
+            uint8_t       code; //!< held byte
             comm_byte    *next; //!< for list
             comm_byte    *prev; //!< for list
 

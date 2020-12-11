@@ -1,5 +1,4 @@
 #include "y/net/comm/bytes.hpp"
-#include "y/type/aliasing.hpp"
 #include <cstring>
 
 namespace upsylon
@@ -37,7 +36,7 @@ namespace upsylon
             if(pool.size)
             {
                 comm_byte *node = pool.pop_back();
-                aliasing::_(node->code) = code;
+                node->code = code;
                 return node;
             }
             else
@@ -64,7 +63,7 @@ namespace upsylon
             {
                 while(todo-- >0)
                 {
-                    aliasing::_(push_back( pool.pop_back() )->code )= *(code++);
+                    push_back( pool.pop_back() )->code = *(code++);
                 }
             }
             else
@@ -77,7 +76,7 @@ namespace upsylon
                 assert(todo==pool.size);
                 while(todo-- >0)
                 {
-                    aliasing::_(push_back( pool.pop_back() )->code )= *(code++);
+                    push_back( pool.pop_back() )->code = *(code++);
                 }
             }
 
@@ -97,7 +96,7 @@ namespace upsylon
         {
             while(size>0 )
             {
-                aliasing::_( pool.push_back( pop_back() )->code ) = 0;
+                pool.push_back( pop_back() )->code = 0;
             }
         }
 
@@ -106,7 +105,7 @@ namespace upsylon
             assert(size>0);
             assert(head!=NULL);
             const uint8_t code = head->code;
-            aliasing::_(pool.push_back( pop_front() )->code) = 0;
+            pool.push_back( pop_front() )->code = 0;
             return code;
         }
 

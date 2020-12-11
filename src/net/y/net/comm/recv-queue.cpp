@@ -30,7 +30,7 @@ namespace upsylon
                 while(bs-- > 0 )
                 {
                     assert(pool.size>0);
-                    aliasing::_( push_back( pool.pop_back() )->code ) = *bp;
+                    push_back( pool.pop_back() )->code  = *bp;
                     *(bp++) = 0;
                 }
                 return res;
@@ -58,14 +58,14 @@ namespace upsylon
         void   recv_queue:: demoLoad(const void *buffer, const size_t buflen)
         {
             assert(!(NULL==buffer&&buflen>0));
-            const uint8_t *base = static_cast<const uint8_t*>(buffer);
+            const uint8_t *code = static_cast<const uint8_t*>(buffer);
             size_t         todo = buflen;
             while(todo)
             {
-                const size_t ld = justLoad(base,todo);
+                const size_t ld = justLoad(code,todo);
                 assert(ld<=todo);
                 todo -= ld;
-                base += ld;
+                code += ld;
             }
         }
 

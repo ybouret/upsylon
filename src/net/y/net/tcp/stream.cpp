@@ -10,7 +10,7 @@ namespace upsylon
 
         }
 
-        tcp_stream:: tcp_stream( const tcp_link &conn ) throw() :
+        tcp_stream:: tcp_stream(const tcp_link &conn) throw() :
         link(conn)
         {
         }
