@@ -45,6 +45,8 @@ namespace upsylon
             virtual void flush() throw();                    //!< do nothing
             virtual void output(const void *, const size_t); //!< optimized write
             void         remove(const size_t n) throw();     //!< remove n bytes from readable
+            bool         sending()        const throw();     //!< size>0 || readable>0
+            size_t       to_send()        const throw();     //!< size+readable
             
             //__________________________________________________________________
             //

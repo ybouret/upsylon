@@ -31,6 +31,16 @@ assert(invalid+readable+writable==data->size)
             Y_SENDQ_CHECK();
         }
         
+        bool send_queue:: sending() const throw()
+        {
+            return size>0 || readable>0;
+        }
+        
+        size_t send_queue:: to_send() const throw()
+        {
+            return size+readable;
+        }
+        
         void send_queue:: reset_metrics() throw()
         {
             invalid               = 0;
@@ -225,7 +235,8 @@ namespace upsylon
         
         bool send_queue:: uploaded(tcp_client &client)
         {
-            return false;
+            remove( client.send(ro,readable) );
+            return size<=0 && readable<=0;
         }
         
     }
