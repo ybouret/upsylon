@@ -55,6 +55,8 @@ namespace
 }
 
 #include "y/code/base2.hpp"
+#include "y/ios/icstream.hpp"
+#include "y/sequence/vector.hpp"
 
 Y_UTEST(comm_queues)
 {
@@ -69,7 +71,6 @@ Y_UTEST(comm_queues)
             send_queue Q( mgr.query(bx) );
             testSendQ(Q);
         }
-        continue;
         
         {
             recv_queue Q( mgr.query(bx) );
@@ -78,11 +79,17 @@ Y_UTEST(comm_queues)
     }
 
     std::cerr << mgr << std::endl;
-
-    Y_UTEST_SIZEOF(send_queue);
-    Y_UTEST_SIZEOF(recv_queue);
-
-    std::cerr << "max_slots: " << base2<size_t>::max_slots << std::endl;
+    
+    if(argc>1)
+    {
+        vector<string> strings;
+        {
+            ios::icstream  fp(argv[1]);
+            string         line;
+            while( fp.gets(line) ) strings << line;
+        }
+        std::cerr << "#lines=" << strings.size() << std::endl;
+    }
     
 
 }
