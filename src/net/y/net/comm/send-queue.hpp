@@ -58,7 +58,7 @@ namespace upsylon
 
 
 
-        protected:
+        private:
             uint8_t       *origin;    //!< data
             size_t         offset;    //!< initial offset
             const uint8_t *current;   //!< first byte to send
