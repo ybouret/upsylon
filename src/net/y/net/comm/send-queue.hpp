@@ -35,18 +35,15 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void         defrag()             throw(); //!< try to defrag data
-            void         update(const size_t) throw(); //!< update after a successful send
-            void         pack()               throw(); //!< transfer bytes to unmoved data
             bool         uploaded(tcp_client &);       //!< check if all could be sent
 
             //__________________________________________________________________
             //
             // ios::ostream interface
             //__________________________________________________________________
-            virtual void write(char C);                      //!< push(C)
-            virtual void flush() throw();                    //!< pack()
-            virtual void output(const void *, const size_t); //!< push(...)
+            virtual void write(char C);                      //!< optimized write
+            virtual void flush() throw();                    //!< do nothing
+            virtual void output(const void *, const size_t); //!< optimized write
             
             //__________________________________________________________________
             //
@@ -56,24 +53,22 @@ namespace upsylon
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 
 
-
-        private:
-            uint8_t       *origin;    //!< data
-            size_t         offset;    //!< initial offset
-            const uint8_t *current;   //!< first byte to send
         public:
-            const size_t   written;   //!< bytes to send
-        private:
-            uint8_t       *beginning; //!< first writable bytes
-        public:
-            const size_t   available; //!< available bytes
-
+            size_t         writable;  //!< writable bytes
+            size_t         readable;  //!< readable bytes
+            
 
         private:
+            size_t         invalid;   //!< invalid bytes
+            uint8_t       *rw;        //!< first writable byte : ro+readable
+            const uint8_t *ro;        //!< first read onnly: **base+invalid
+
             Y_DISABLE_COPY_AND_ASSIGN(send_queue);
-            void         transfer(size_t n) throw(); // queue -> data
-            void         resetData() throw();        // clear data
-            virtual void reset_() throw();           // resetData
+            void         reset_metrics() throw();
+            virtual void reset_() throw(); //!< reset_metrics()
+            void         write1(const uint8_t code) throw();
+            void         writeN(const void *,const size_t) throw();
+            void         defrag() throw();
         };
 
     }

@@ -20,31 +20,17 @@ namespace upsylon
 
         void tcp_ostream:: flush()
         {
-            while(true)
-            {
-                Q.pack();
-                if(Q.written)
-                {
-                    const size_t ns = Q.uploaded(*link);
-                    if(ns<=0) return;
-                    Q.update(ns);
-                }
-            }
+
         }
 
         void tcp_ostream:: write(char C)
         {
-            Q.write(C);
-            if(Q.available<=0)
-            {
-                flush();
-            }
+
         }
 
         void tcp_ostream:: output(const void *buffer, const size_t buflen)
         {
-            Q.output(buffer,buflen);
-            if(Q.available<=0) flush();
+            
         }
     }
 

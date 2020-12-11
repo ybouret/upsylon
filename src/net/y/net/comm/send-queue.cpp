@@ -17,128 +17,106 @@ namespace upsylon
 
         send_queue:: send_queue(comm_block *block) :
         comm_queue(block),
-        origin( **data ),
-        offset( 0 ),
-        current( origin ),
-        written( 0 ),
-        beginning( origin ),
-        available( data->size )
+        writable(0),
+        readable(0),
+        invalid(0),
+        rw(**data),
+        ro(rw)
         {
             
         }
 
-        void send_queue:: resetData() throw()
+        void send_queue:: reset_metrics() throw()
         {
-            offset                 = 0;
-            current                = origin;
-            aliasing::_(written)   = 0;
-            beginning              = origin;
-            aliasing::_(available) = data->size;
+            invalid = 0;
+            rw      = **data;
+            ro      = **data;
+            aliasing::_(readable) = 0;
+            aliasing::_(writable) = 0;
         }
+        
 
-
-        void send_queue:: pack() throw()
+        void send_queue:: reset_() throw()
         {
-            if(size<=available)
-            {
-                transfer(size);
-            }
-            else
-            {
-                defrag();
-                transfer(min_of(size,available));
-            }
+            reset_metrics();
         }
 
         void send_queue:: defrag() throw()
         {
-            if(offset>0)
+            assert(invalid>0);
+            uint8_t *org = **data;
             {
+                uint8_t *target = org;
+                uint8_t *source = target+invalid; assert(ro==source);
+                for(size_t i=0;i<readable;++i)
                 {
-                    uint8_t *target = origin;
-                    uint8_t *source = (uint8_t *)current;
-                    for(size_t i=written;i>0;--i)
-                    {
-                        (*target++) = *source;
-                        (*source++) = 0;
-                    }
+                    *(target++) = *source;
+                    *(source++) = 0;
                 }
-                beginning              -= offset;
-                aliasing::_(available) += offset;
-                current   =  origin;
-                offset    =  0;
-                pack();
             }
+            ro = org;
+            rw = org + readable;
+            aliasing::_(writable) += invalid;
+            invalid = 0;
+            assert(readable+writable==data->size);
         }
 
-        void send_queue:: transfer(size_t n) throw()
+        void send_queue:: write1(const uint8_t code) throw()
         {
-            assert(n<=size);
-            assert(n<=available);
-            while(n-- > 0 )
-            {
-                *(beginning++) = pop();
-                --aliasing::_(available);
-                ++aliasing::_(written);
-            }
-        }
+            assert(writable);
 
-        
-        void send_queue:: update(const size_t n) throw()
-        {
-            assert(n<=written);
-            current              += n;
-            aliasing::_(written) -= n;
-            if(written>0)
-            {
-                offset  += n;
-            }
-            else
-            {
-                resetData();
-            }
-
-        }
-
-        void send_queue:: reset_() throw()
-        {
-            resetData();
+            *(rw++) = code;
+            --aliasing::_(writable);
+            ++aliasing::_(readable);
         }
 
         void send_queue:: write(char C)
         {
-            if(available)
+            if(writable<=0)
             {
-                *(beginning++) = C;
-                --aliasing::_(available);
-                ++aliasing::_(written);
+                if(invalid>0)
+                {
+                    defrag();
+                    assert(writable>0);
+                    write1(C);
+                }
+                else
+                {
+                    push_back( rig(C) );
+                }
             }
             else
             {
-                push_back( rig(C) );
+                write1(C);
             }
         }
 
         void send_queue:: flush() throw()
         {
-            pack();
+
+        }
+
+        void send_queue:: writeN(const void *buffer, const size_t buflen) throw()
+        {
+            assert(buflen<=writable);
+            // direct copy
+            memcpy(rw,buffer,buflen);
+            rw                    += buflen;
+            aliasing::_(writable) -= buflen;
+            aliasing::_(readable) += buflen;
         }
 
         void send_queue:: output(const void *buffer, const size_t buflen)
         {
-            assert( !(NULL==buffer&&buflen>0));
-            const uint8_t *p = static_cast<const uint8_t *>(buffer);
-            size_t         n = buflen;
-            while(available&&n)
+            assert(!(0==buffer&&buflen>0));
+            if(buflen<=writable)
             {
-                *(beginning++) = *(p++);
-                --aliasing::_(available);
-                ++aliasing::_(written);
-                --n;
+                writeN(buffer,buflen);
             }
-            while(n-- > 0)
+            else
             {
-                push_back( rig(*(p++) ));
+                assert(buflen>0);
+
             }
         }
 
@@ -146,14 +124,14 @@ namespace upsylon
         std::ostream &send_queue:: display(std::ostream &os) const
         {
             os << '[';
-            os << offset;
+            os << invalid;
             os << '>';
-            for(size_t i=0;i<written;++i)
+            for(size_t i=0;i<readable;++i)
             {
-                os << cchars::visible[ current[i] ];
+                os << cchars::visible[ ro[i] ];
             }
             os << '<';
-            os << available;
+            os << writable;
             os << ']';
             const comm_queue &self = *this;
             os << '[' << self << ']';
@@ -179,12 +157,7 @@ namespace upsylon
 
         bool send_queue:: uploaded(tcp_client &client)
         {
-            pack();
-            if(written)
-            {
-                update( client.send(current,written) );
-            }
-            return size<=0 && written<=0;
+            return false;
         }
 
     }
