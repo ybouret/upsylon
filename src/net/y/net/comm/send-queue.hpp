@@ -35,8 +35,9 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            bool         uploaded(tcp_client &);       //!< check if all could be sent
-
+            bool         uploaded(tcp_client &);       //!< check if all could be sent in one call
+            size_t       uploaded(void *buffer, const size_t buflen) throw(); //!< number of copied bytes in one call
+            
             //__________________________________________________________________
             //
             // ios::ostream interface

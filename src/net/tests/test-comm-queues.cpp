@@ -5,6 +5,8 @@
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/hashing/sha1.hpp"
 
 using namespace upsylon;
 using namespace net;
@@ -49,14 +51,53 @@ namespace
         Q.demoLoad("Hello, my nice little world!");
         std::cerr << Q << std::endl;
         std::cerr << std::endl;
-
+    }
+    
+    static inline
+    void testSendQ( send_queue &Q, const accessible<string> &strings )
+    {
+        std::cerr << "send block_size=" << Q.data->size << std::endl;
+        Q.reset();
+        comm_block::pointer blk( comm_cache::instance().query(8) );
+        uint8_t     *buffer = **blk;
+        const size_t buflen = blk->size;
+        
+        hashing::sha1 source;
+        hashing::sha1 target;
+        source.set();
+        target.set();
+        
+        for(size_t i=1; i<= strings.size(); ++i)
+        {
+            Q << strings[i];
+            source(strings[i]);
+            while( Q.to_send() > 8 )
+            {
+                const size_t maxlen = alea.range<size_t>(1,buflen);
+                const size_t curlen = Q.uploaded(buffer,maxlen);
+                target.run(buffer,curlen);
+            }
+        }
+        
+        while( Q.to_send()  )
+        {
+            const size_t maxlen = alea.range<size_t>(1,buflen);
+            const size_t curlen = Q.uploaded(buffer,maxlen);
+            target.run(buffer,curlen);
+        }
+        
+        const digest src = source.md();
+        const digest tgt = target.md();
+        std::cerr << "\tsrc: " << src << std::endl;
+        std::cerr << "\ttgt: " << tgt << std::endl;
+        Y_CHECK(src==tgt);
+        std::cerr << std::endl;
     }
 
 }
 
 #include "y/code/base2.hpp"
 #include "y/ios/icstream.hpp"
-#include "y/sequence/vector.hpp"
 
 Y_UTEST(comm_queues)
 {
@@ -89,6 +130,12 @@ Y_UTEST(comm_queues)
             while( fp.gets(line) ) strings << line;
         }
         std::cerr << "#lines=" << strings.size() << std::endl;
+        // simulate
+        for(size_t bx=2;bx<=10;++bx)
+        {
+            send_queue Q( mgr.query(bx) );
+            testSendQ(Q,strings);
+        }
     }
     
 

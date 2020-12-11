@@ -187,15 +187,16 @@ assert(invalid+readable+writable==data->size)
                 invalid               += n;
                 Y_SENDQ_CHECK();
                 if(invalid>0) defrag();
-                size_t count = min_of(writable,size);
-                while( count-- > 0)
-                {
-                    *(rw++) = pop();
-                    --aliasing::_(writable);
-                    ++aliasing::_(readable);
-                }
-                Y_SENDQ_CHECK();
             }
+            size_t count = min_of(writable,size);
+            while( count-- > 0)
+            {
+                *(rw++) = pop();
+                --aliasing::_(writable);
+                ++aliasing::_(readable);
+            }
+            Y_SENDQ_CHECK();
+            
         }
         
         
@@ -221,6 +222,14 @@ assert(invalid+readable+writable==data->size)
             return Q.display(os);
         }
         
+        size_t send_queue:: uploaded(void *buffer, const size_t buflen) throw()
+        {
+            assert(!(NULL==buffer&&buflen>0));
+            const size_t ns = min_of(buflen,readable);
+            memcpy(buffer,ro,ns);
+            remove(ns);
+            return ns;
+        }
         
     }
     
