@@ -93,6 +93,21 @@ namespace upsylon
 
     const uint16_t network:: user_port_width = (network::final_user_port-network::first_user_port)+1;
 
+
+    net::ip_version network:: ip_version(const string &ipv)
+    {
+        if(ipv=="v4") return net::v4;
+        if(ipv=="v6") return net::v6;
+        throw exception("invalid ip version '%s'", *ipv);
+    }
+
+    net::ip_version network:: ip_version(const char *ipv)
+    {
+        const string _(ipv); return ip_version(_);
+    }
+
+
+
 }
 
 

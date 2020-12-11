@@ -35,10 +35,9 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t       packed()       const throw(); //!< packed data (written)
             void         defrag()             throw(); //!< try to defrag data
             void         update(const size_t) throw(); //!< update after a successful send
-            void         pack()               throw(); //!< transfer bytes to data
+            void         pack()               throw(); //!< transfer bytes to unmoved data
             bool         uploaded(tcp_client &);       //!< check if all could be sent
 
             //__________________________________________________________________
@@ -62,9 +61,12 @@ namespace upsylon
             uint8_t       *origin;    //!< data
             size_t         offset;    //!< initial offset
             const uint8_t *current;   //!< first byte to send
-            size_t         written;   //!< bytes to send
+        public:
+            const size_t   written;   //!< bytes to send
+        private:
             uint8_t       *beginning; //!< first writable bytes
-            size_t         available; //!< available bytes
+        public:
+            const size_t   available; //!< available bytes
 
 
         private:

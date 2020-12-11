@@ -29,11 +29,11 @@ namespace upsylon
 
         void send_queue:: resetData() throw()
         {
-            offset    = 0;
-            current   = origin;
-            written   = 0;
-            beginning = origin;
-            available = data->size;
+            offset                 = 0;
+            current                = origin;
+            aliasing::_(written)   = 0;
+            beginning              = origin;
+            aliasing::_(available) = data->size;
         }
 
 
@@ -63,10 +63,11 @@ namespace upsylon
                         (*source++) = 0;
                     }
                 }
-                beginning -= offset;
-                available += offset;
+                beginning              -= offset;
+                aliasing::_(available) += offset;
                 current   =  origin;
                 offset    =  0;
+                pack();
             }
         }
 
@@ -77,22 +78,17 @@ namespace upsylon
             while(n-- > 0 )
             {
                 *(beginning++) = pop();
-                --available;
-                ++written;
+                --aliasing::_(available);
+                ++aliasing::_(written);
             }
         }
 
-        size_t send_queue:: packed() const throw()
-        {
-            return written;
-        }
-
-
+        
         void send_queue:: update(const size_t n) throw()
         {
             assert(n<=written);
-            current += n;
-            written -= n;
+            current              += n;
+            aliasing::_(written) -= n;
             if(written>0)
             {
                 offset  += n;
@@ -101,6 +97,7 @@ namespace upsylon
             {
                 resetData();
             }
+
         }
 
         void send_queue:: reset_() throw()
@@ -110,7 +107,16 @@ namespace upsylon
 
         void send_queue:: write(char C)
         {
-            push_back( rig(C) );
+            if(available)
+            {
+                *(beginning++) = C;
+                --aliasing::_(available);
+                ++aliasing::_(written);
+            }
+            else
+            {
+                push_back( rig(C) );
+            }
         }
 
         void send_queue:: flush() throw()
@@ -120,21 +126,34 @@ namespace upsylon
 
         void send_queue:: output(const void *buffer, const size_t buflen)
         {
-            push(buffer,buflen);
+            assert( !(NULL==buffer&&buflen>0));
+            const uint8_t *p = static_cast<const uint8_t *>(buffer);
+            size_t         n = buflen;
+            while(available&&n)
+            {
+                *(beginning++) = *(p++);
+                --aliasing::_(available);
+                ++aliasing::_(written);
+                --n;
+            }
+            while(n-- > 0)
+            {
+                push_back( rig(*(p++) ));
+            }
         }
 
 
         std::ostream &send_queue:: display(std::ostream &os) const
         {
             os << '[';
-            os << '+' << offset;
-            os << '|';
+            os << offset;
+            os << '>';
             for(size_t i=0;i<written;++i)
             {
                 os << cchars::visible[ current[i] ];
             }
-            os << '|';
-            os << '+' << available;
+            os << '<';
+            os << available;
             os << ']';
             const comm_queue &self = *this;
             os << '[' << self << ']';

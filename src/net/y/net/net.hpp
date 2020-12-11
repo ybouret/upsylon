@@ -49,6 +49,9 @@ namespace upsylon
         void resolve( net::socket_address &ip, const char   *s ) const;
 
 
+        static net::ip_version ip_version(const string &); //!< "v4|v6" -> [v4|v6]
+        static net::ip_version ip_version(const char   *); //!< "v4|v6" -> [v4|v6]
+
         //______________________________________________________________________
         //
         // members

@@ -4,6 +4,7 @@
 #include "y/net/udp/client.hpp"
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/net/comm/queues.hpp"
 
 using namespace upsylon;
 using namespace net;
@@ -26,9 +27,8 @@ Y_UTEST(info)
     SHOW(udp_client);
     SHOW(tcp_server);
     SHOW(tcp_client);
-    SHOW(tcp_ostream);
-    SHOW(tcp_istream);
-    SHOW(tcp_recv_cache);
+    //SHOW(tcp_ostream);
+    //SHOW(tcp_istream);
     SHOW(byte_node);
 
 }

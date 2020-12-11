@@ -11,13 +11,17 @@ namespace upsylon
 {
     namespace net
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! engine for async comms
+        //
+        //______________________________________________________________________
         class comm_engine
         {
         public:
-            virtual ~comm_engine() throw();
-            explicit comm_engine() throw();
-
+            virtual ~comm_engine();         //!< setup
+            explicit comm_engine() throw(); //!< cleanup
 
 
         private:
