@@ -81,6 +81,7 @@ assert(invalid+readable+writable==data->size)
         
         void send_queue:: write(char C)
         {
+            Y_SENDQ_CHECK();
             if(writable<=0)
             {
                 if(invalid>0)
@@ -100,6 +101,7 @@ assert(invalid+readable+writable==data->size)
             {
                 write1(C);
             }
+            Y_SENDQ_CHECK();
         }
         
         void send_queue:: flush() throw()
@@ -110,17 +112,18 @@ assert(invalid+readable+writable==data->size)
         void send_queue:: writeN(const void *p, const size_t n) throw()
         {
             assert(n<=writable);
+            Y_SENDQ_CHECK();
             // direct copy
             memcpy(rw,p,n);
             rw                    += n;
             aliasing::_(writable) -= n;
             aliasing::_(readable) += n;
+            Y_SENDQ_CHECK();
         }
         
         void send_queue:: output(const void *buffer, const size_t buflen)
         {
             assert(!(0==buffer&&buflen>0));
-            std::cerr << "send_queue output #" << buflen << "/" << writable << std::endl;
             if(buflen<=writable)
             {
                 writeN(buffer,buflen);
@@ -150,13 +153,17 @@ assert(invalid+readable+writable==data->size)
                     }
                     else
                     {
-                        // really no space, push all
+                        // really no space, store all!
                         push(buffer,buflen);
                     }
                 }
-                
-                
             }
+        }
+        
+        void send_queue:: remove(const size_t n) throw()
+        {
+            assert(n<=readable);
+            
         }
         
         
