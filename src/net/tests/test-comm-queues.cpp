@@ -17,10 +17,16 @@ namespace
 
         std::cerr << "send block_size=" << Q.data->size << std::endl;
 
+        std::cerr << "sQ=" << Q << std::endl;
         Q.write_nbo<uint32_t>( Y_FOURCC('A','B','C','D') );
+        std::cerr << "sQ=" << Q << std::endl;
         Q << " Hello, World";
+        std::cerr << "sQ=" << Q << std::endl;
         Q << " from Mars";
         std::cerr << "sQ=" << Q << std::endl;
+        Q.remove( Q.readable/2 );
+        std::cerr << "sQ=" << Q << std::endl;
+
 #if 0
         while( Q.size > 0 || Q.written > 0)
         {

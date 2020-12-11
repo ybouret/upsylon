@@ -163,7 +163,29 @@ assert(invalid+readable+writable==data->size)
         void send_queue:: remove(const size_t n) throw()
         {
             assert(n<=readable);
-            
+            Y_SENDQ_CHECK();
+
+            // adjust buffer
+            if(n>=readable)
+            {
+                reset_metrics();
+            }
+            else
+            {
+                ro                    += n;
+                aliasing::_(readable) -= n;
+                invalid               += n;
+                Y_SENDQ_CHECK();
+                if(invalid>0) defrag();
+                size_t count = min_of(writable,size);
+                while( count-- > 0)
+                {
+                    *(rw++) = pop();
+                    --aliasing::_(writable);
+                    ++aliasing::_(readable);
+                }
+                Y_SENDQ_CHECK();
+            }
         }
         
         
