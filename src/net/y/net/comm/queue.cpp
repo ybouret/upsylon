@@ -1,5 +1,4 @@
 #include "y/net/comm/queue.hpp"
-#include "y/net/comm/cache.hpp"
 
 namespace upsylon
 {
@@ -10,16 +9,17 @@ namespace upsylon
         {
         }
 
+#if 0
         static inline
-        memory::dblock *query_dblock(const size_t bs)
+        memory::dblock *query_dblock(const size_t block_exp2)
         {
             static comm_cache &mgr = comm_cache::instance();
-            return mgr.query(bs);
+            return mgr.query(block_exp2);
         }
-        
-        comm_queue:: comm_queue(const size_t bs) :
+#endif
+        comm_queue:: comm_queue(comm_block *block) :
         comm_bytes(),
-        data( query_dblock(bs) )
+        data(block)
         {
             reserve( data->size );
         }

@@ -37,8 +37,8 @@ namespace upsylon
             //__________________________________________________________________
             //! create a new connexion
             explicit comm_tcp_client(const tcp_link &given_connexion,
-                                     const size_t    send_block_size,
-                                     const size_t    recv_block_size);
+                                     const size_t    send_block_exp2,
+                                     const size_t    recv_block_exp2);
             //! cleanup
             virtual ~comm_tcp_client() throw();
 

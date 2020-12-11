@@ -22,15 +22,17 @@ namespace upsylon
         }
 
 
-        static inline
-        size_t dblock_size(const size_t bs)
+        size_t dblock:: regularize(const size_t block_exp2) throw()
         {
-            return next_power_of_two( clamp(sizeof(void*),bs,base2<size_t>::max_power_of_two) );
+            return clamp<size_t>( ilog2_of<void*>::value, block_exp2, base2<size_t>::max_shift );
         }
 
-        dblock:: dblock(const size_t bs) :
-        size( dblock_size(bs) ),
-        exp2( base2<size_t>::log2_of(size) ),
+
+        
+
+        dblock:: dblock(const size_t block_exp2) :
+        exp2( regularize(block_exp2) ),
+        size( size_t(1) << exp2 ),
         addr( static_cast<uint8_t *>(object::dyadic_acquire(exp2)) ),
         next(0),
         prev(0),
@@ -40,12 +42,12 @@ namespace upsylon
         }
 
 
-        dblock:: dblock(const size_t block_size,
-                        const size_t block_exp2,
+        dblock:: dblock(const size_t block_exp2,
+                        const size_t block_size,
                         dblocks    * block_org,
                         core_list  * block_src) :
-        size(block_size),
         exp2(block_exp2),
+        size(block_size),
         addr( static_cast<uint8_t *>(object::dyadic_acquire(exp2)) ),
         next(0),
         prev(0),
@@ -193,12 +195,17 @@ namespace upsylon
             return slot[islot];
         }
 
-        dblock * dblocks:: query(const size_t bs)
+#define Y_DBLOCKS_QUERY_PROLOG() \
+block_exp2              = dblock::regularize(block_exp2);\
+const size_t block_size = size_t(1) << block_exp2;\
+slot_type   &s          = slot[block_exp2]
+
+#define Y_DBLOCKS_NEW() new dblock(block_exp2,block_size,this,&s)
+
+        dblock * dblocks:: query(size_t block_exp2)
         {
             Y_LOCK(sync);
-            const size_t block_size = dblock_size(bs);
-            const size_t block_exp2 = base2<size_t>::log2_of(block_size); assert(block_exp2<slots);
-            slot_type   &s          = slot[block_exp2];
+            Y_DBLOCKS_QUERY_PROLOG();
             if(s.size)
             {
                 dblock *blk = s.pop_back(); assert(blk->origin==this); assert(&s==blk->source);
@@ -206,19 +213,17 @@ namespace upsylon
             }
             else
             {
-                return new dblock(block_size,block_exp2,this,&s);
+                return Y_DBLOCKS_NEW();
             }
         }
 
-        void dblocks:: reserve(size_t n, const size_t bs)
+        void dblocks:: reserve(size_t n, size_t block_exp2)
         {
             Y_LOCK(sync);
-            const size_t block_size = dblock_size(bs);
-            const size_t block_exp2 = base2<size_t>::log2_of(block_size); assert(block_exp2<slots);
-            slot_type   &s          = slot[block_exp2];
+            Y_DBLOCKS_QUERY_PROLOG();
             while(n-- > 0)
             {
-                s.push_back( new dblock(block_size,block_exp2,this,&s) );
+                s.push_back( Y_DBLOCKS_NEW() );
             }
         }
 

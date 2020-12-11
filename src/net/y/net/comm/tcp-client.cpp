@@ -9,11 +9,11 @@ namespace upsylon
         {
         }
 
-        comm_tcp_client::  comm_tcp_client(const tcp_link &given_connexion,
-                                           const size_t    send_block_size,
-                                           const size_t    recv_block_size):
+         comm_tcp_client::  comm_tcp_client(const tcp_link &given_connexion,
+                                           const size_t    send_block_exp2,
+                                           const size_t    recv_block_exp2):
         net_object(),
-        comm_queues(send_block_size,recv_block_size),
+        comm_queues(send_block_exp2,recv_block_exp2),
         link(given_connexion)
         {
         }

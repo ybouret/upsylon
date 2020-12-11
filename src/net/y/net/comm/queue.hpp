@@ -11,10 +11,15 @@ namespace upsylon
     namespace net
     {
 
+        typedef memory::dblock comm_block; //!< alias
+
         //______________________________________________________________________
         //
         //
         //! low-level queue to use buffer <-> bytes
+        /**
+         a comm_queue is some comm_bytes with a data block
+         */
         //
         //______________________________________________________________________
         class comm_queue : public comm_bytes
@@ -24,8 +29,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit comm_queue(const size_t bs); //!< setup with minimal block size, reserve some bytes
-            virtual ~comm_queue() throw();        //!< cleanup
+            explicit comm_queue(comm_block *); //!< setup with a dblock and adjust bytes
+            virtual ~comm_queue() throw();     //!< cleanup
 
             //__________________________________________________________________
             //
@@ -37,7 +42,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            memory::dblock::pointer data; //!< query data from comm_cache
+            comm_block::pointer data; //!< query data from comm_cache
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_queue);

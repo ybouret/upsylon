@@ -1,5 +1,6 @@
 #include "y/net/comm/cache.hpp"
 #include "y/net/comm/queues.hpp"
+#include "y/net/comm/cache.hpp"
 #include "y/type/fourcc.hpp"
 
 #include "y/utest/run.hpp"
@@ -48,21 +49,25 @@ namespace
 
 Y_UTEST(comm_queues)
 {
+    comm_cache &mgr = comm_cache::instance();
 
 
     // simulate
-    for(size_t bs=1;bs<=32;bs<<=1)
+    for(size_t bx=0;bx<=10;++bx)
     {
+
         {
-            send_queue Q(bs);
+            send_queue Q( mgr.query(bx) );
             testSendQ(Q);
         }
 
         {
-            recv_queue Q(bs);
+            recv_queue Q( mgr.query(bx) );
             testRecvQ(Q);
         }
     }
+
+    std::cerr << mgr << std::endl;
 
     Y_UTEST_SIZEOF(send_queue);
     Y_UTEST_SIZEOF(recv_queue);

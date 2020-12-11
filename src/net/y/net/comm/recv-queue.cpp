@@ -13,7 +13,7 @@ namespace upsylon
 
         }
 
-        recv_queue:: recv_queue(const size_t bs) : comm_queue(bs)
+        recv_queue:: recv_queue(comm_block *block) : comm_queue(block)
         {
 
         }

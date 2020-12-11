@@ -26,8 +26,8 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             //! setup with send/recv block size
-            explicit comm_queues(const size_t send_block_size,
-                                 const size_t recv_block_size);
+            explicit comm_queues(const size_t send_block_exp2,
+                                 const size_t recv_block_exp2);
 
             //! cleanup
             virtual ~comm_queues() throw();

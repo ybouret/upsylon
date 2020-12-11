@@ -5,9 +5,9 @@
 
 using namespace upsylon;
 
-static inline size_t get_block_size()
+static inline size_t get_block_exp2()
 {
-    return alea.leq(1024*1024);
+    return alea.leq(16);
 }
 
 Y_UTEST(dblocks)
@@ -16,7 +16,7 @@ Y_UTEST(dblocks)
     std::cerr << "Testing Block" << std::endl;
     for(size_t i=0;i<32;++i)
     {
-        memory::dblock::pointer p( new memory::dblock(  get_block_size() ) );
+        memory::dblock::pointer p( new memory::dblock(  get_block_exp2() ) );
     }
     Y_UTEST_SIZEOF(memory::dblock);
     std::cerr << std::endl;
@@ -30,8 +30,8 @@ Y_UTEST(dblocks)
 
         for(size_t i=0;i<32;++i)
         {
-            bl.push_back( new memory::dblock(   get_block_size() ) );
-            bl.push_back( db.query( get_block_size() ) );
+            bl.push_back( new memory::dblock(   get_block_exp2() ) );
+            bl.push_back( db.query( get_block_exp2() ) );
         }
 
         alea.shuffle(bl);

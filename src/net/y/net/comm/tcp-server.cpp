@@ -18,7 +18,7 @@ namespace upsylon
 
         comm_tcp_client * comm_tcp_server:: create(const tcp_link &link)
         {
-            return new comm_tcp_client(link,128,128);
+            return new comm_tcp_client(link,7,7);
         }
     }
 

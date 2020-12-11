@@ -58,9 +58,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-
-            virtual ~dblock() throw();          //!< cleanup
-            explicit dblock(const size_t bs);   //!< setup
+            virtual ~dblock() throw();                 //!< cleanup
+            explicit dblock(const size_t block_exp2);  //!< manual setup
 
             //__________________________________________________________________
             //
@@ -71,13 +70,14 @@ namespace upsylon
             const uint8_t * operator*() const throw();  //!< access
             static void     zap(dblock *)     throw();  //!< smart delete
             void            ldz()             throw();  //!< zero data
+            static size_t   regularize(const size_t block_exp2) throw(); //!< clamp values
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
+            const size_t exp2; //!< size = 2^ exp2
             const size_t size; //!< available bytes
-            const size_t exp2; //!< block_size = 2^block_exp2
             uint8_t     *addr; //!< bytes
             dblock      *next; //!< for list
             dblock      *prev; //!< for list
@@ -126,10 +126,10 @@ namespace upsylon
             const slot_type & operator[](const size_t) const throw();
 
             //! query/create a block
-            dblock * query(const size_t bs);
+            dblock * query(size_t block_exp2);
             
             //! reserve some memory blocks
-            void reserve(size_t n, const size_t bs);
+            void reserve(size_t n, size_t block_exp2);
             
             //! display (to debug)
             std::ostream        & display( std::ostream &os ) const;

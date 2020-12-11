@@ -28,8 +28,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit send_queue(const size_t bs); //!< setup data/queue
-            virtual ~send_queue() throw();        //!< cleanup
+            explicit send_queue(comm_block *block); //!< setup data/queue
+            virtual ~send_queue() throw();          //!< cleanup
 
             //__________________________________________________________________
             //

@@ -29,8 +29,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit recv_queue(const size_t bs); //!< setup data/queue
-            virtual ~recv_queue() throw();        //!< cleanup
+            explicit recv_queue(comm_block *); //!< setup data/queue
+            virtual ~recv_queue() throw();     //!< cleanup
 
             //__________________________________________________________________
             //

@@ -15,8 +15,8 @@ namespace upsylon
 
         }
 
-        send_queue:: send_queue(const size_t bs) :
-        comm_queue(bs),
+        send_queue:: send_queue(comm_block *block) :
+        comm_queue(block),
         origin( **data ),
         offset( 0 ),
         current( origin ),
