@@ -20,6 +20,7 @@ namespace
         Q.write_nbo<uint32_t>( Y_FOURCC('A','B','C','D') );
         Q << " Hello, World";
         std::cerr << "sQ=" << Q << std::endl;
+#if 0
         while( Q.size > 0 || Q.written > 0)
         {
             Q.pack();
@@ -28,6 +29,7 @@ namespace
             Q.update( alea.range<size_t>(1,Q.written) );
             std::cerr << "updated: sQ=" << Q << std::endl;
         }
+#endif
         std::cerr << std::endl;
     }
 
@@ -53,14 +55,15 @@ Y_UTEST(comm_queues)
 
 
     // simulate
-    for(size_t bx=0;bx<=5;++bx)
+    for(size_t bx=2;bx<=4;++bx)
     {
 
         {
             send_queue Q( mgr.query(bx) );
             testSendQ(Q);
         }
-
+        continue;
+        
         {
             recv_queue Q( mgr.query(bx) );
             testRecvQ(Q);

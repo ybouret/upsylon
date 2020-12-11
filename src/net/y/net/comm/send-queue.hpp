@@ -52,16 +52,13 @@ namespace upsylon
             std::ostream        & display(std::ostream &) const;               //!< display content
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 
-
-        public:
-            size_t         writable;  //!< writable bytes
-            size_t         readable;  //!< readable bytes
+            const size_t writable;  //!< writable bytes
+            const size_t readable;  //!< readable bytes
             
-
         private:
             size_t         invalid;   //!< invalid bytes
             uint8_t       *rw;        //!< first writable byte : ro+readable
-            const uint8_t *ro;        //!< first read onnly: **base+invalid
+            const uint8_t *ro;        //!< first read onnly    : **base+invalid
 
             Y_DISABLE_COPY_AND_ASSIGN(send_queue);
             void         reset_metrics() throw();
