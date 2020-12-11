@@ -19,6 +19,7 @@ namespace
 
         Q.write_nbo<uint32_t>( Y_FOURCC('A','B','C','D') );
         Q << " Hello, World";
+        Q << " from Mars";
         std::cerr << "sQ=" << Q << std::endl;
 #if 0
         while( Q.size > 0 || Q.written > 0)

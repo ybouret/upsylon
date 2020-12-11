@@ -139,11 +139,20 @@ assert(invalid+readable+writable==data->size)
                 }
                 else
                 {
+                    assert(buflen>writable);
                     // partial copy then store
                     const size_t w = writable;
-                    const size_t n = buflen-w;
-                    writeN(buffer,w); assert(0==writable);
-                    push(static_cast<const uint8_t*>(buffer)+w,n);
+                    if(w)
+                    {
+                        const size_t n = buflen-w;
+                        writeN(buffer,w); assert(0==writable);
+                        push(static_cast<const uint8_t*>(buffer)+w,n);
+                    }
+                    else
+                    {
+                        // really no space, push all
+                        push(buffer,buflen);
+                    }
                 }
                 
                 
