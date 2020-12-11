@@ -48,6 +48,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_byte);
             comm_byte(const uint8_t) throw();
+            comm_byte()  throw();
             ~comm_byte() throw();
             friend class memory::magazine<comm_byte>;
         };

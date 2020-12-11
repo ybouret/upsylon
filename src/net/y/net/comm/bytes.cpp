@@ -27,7 +27,7 @@ namespace upsylon
             static comm_byte::supply &mgr = comm_byte::instance();
             while(n-- > 0)
             {
-                pool.push_back( mgr.acquire<uint8_t>(0) );
+                pool.push_back( mgr.acquire() );
             }
         }
 

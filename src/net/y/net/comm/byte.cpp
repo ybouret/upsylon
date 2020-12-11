@@ -17,6 +17,11 @@ namespace upsylon
         {
         }
 
+        comm_byte:: comm_byte() throw() : code(0), next(0), prev(0)
+        {
+        }
+        
+
         comm_byte:: ~comm_byte() throw()
         {
             _bzset(code);

@@ -31,7 +31,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void             reset()             throw(); //!< reseting queue+data
+            void reset() throw(); //!< clear queue, call reset_(), zero data
             
             //__________________________________________________________________
             //
@@ -41,7 +41,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_queue);
-            virtual void reset_() throw() = 0;
+            virtual void reset_() throw() = 0; //!< reset internal derived data
         };
 
 
