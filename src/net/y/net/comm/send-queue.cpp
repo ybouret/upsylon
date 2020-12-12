@@ -116,7 +116,7 @@ assert(invalid+readable+writable==data->size)
         
         void send_queue:: flush() throw()
         {
-            
+            if(invalid>0) defrag();
         }
         
         void send_queue:: writeN(const void *p, const size_t n) throw()
