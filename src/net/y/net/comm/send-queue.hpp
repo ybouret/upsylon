@@ -35,7 +35,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            bool         uploaded(tcp_client &);                              //!< check if all could be sent in one call
+            size_t       uploaded(tcp_client &);                              //!< what was uploaded in one call
             size_t       uploaded(void *buffer, const size_t buflen) throw(); //!< number of copied bytes in one call
             
             //__________________________________________________________________
@@ -43,7 +43,7 @@ namespace upsylon
             // ios::ostream interface
             //__________________________________________________________________
             virtual void write(char C);                      //!< optimized write
-            virtual void flush() throw();                    //!< do nothing
+            virtual void flush() throw();                    //!< defragment
             virtual void output(const void *, const size_t); //!< optimized write of a block
             void         remove(const size_t n) throw();     //!< remove n bytes from readable, and defrag
             bool         sending()        const throw();     //!< size>0 || readable>0
@@ -69,7 +69,7 @@ namespace upsylon
             virtual void reset_() throw(); //!< reset_metrics()
             void         write1(const uint8_t code)        throw(); //! one byte at rw, update status
             void         writeN(const void *,const size_t) throw(); //!< N bytes at rwm update status
-            void         defrag()                          throw();
+            void         defrag()                          throw(); //!< defragment (invalid>0)
         };
 
     }

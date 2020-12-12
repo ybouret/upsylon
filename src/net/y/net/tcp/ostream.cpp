@@ -19,7 +19,12 @@ namespace upsylon
         }
 
         void tcp_ostream:: flush()
-        { 
+        {
+            while( Q.sending() )
+            {
+                const size_t ns = Q.uploaded(*link);
+                if(ns<=0) return;
+            }
         }
 
         void tcp_ostream:: write(char C)

@@ -242,10 +242,19 @@ namespace upsylon
     namespace net
     {
         
-        bool send_queue:: uploaded(tcp_client &client)
+        size_t send_queue:: uploaded(tcp_client &client)
         {
-            remove( client.send(ro,readable) );
-            return size<=0 && readable<=0;
+            const size_t ns = client.send(ro,readable);
+            if(ns)
+            {
+                remove(ns);
+                return ns;
+            }
+            else
+            {
+                return 0;
+            }
+            
         }
         
     }
