@@ -25,8 +25,10 @@ namespace upsylon
 
 
         private:
-            socket_set sockset;
             Y_DISABLE_COPY_AND_ASSIGN(comm_engine);
+            socket_set          sockset;
+            comm_tcp_server::db tcp_servers;
+            
         };
 
     }
