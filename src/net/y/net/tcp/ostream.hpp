@@ -20,11 +20,11 @@ namespace upsylon
         public:
             virtual ~tcp_ostream() throw();         //!< destructor
             explicit tcp_ostream(const tcp_link &,  //|
-                                 comm_block      *); //!< setup
+                                 comm_block     *); //!< setup
 
-            virtual void write( char C ); //!< direct write
-            virtual void flush();         //!< flush
-            virtual void output(const void *, const size_t); //!< output
+            virtual void write( char C ); //!< direct write, flush if filled
+            virtual void flush();         //!< best effort flush
+            virtual void output(const void *, const size_t); //!< output, flush if filled
 
             send_queue Q; //!< sending queue
             

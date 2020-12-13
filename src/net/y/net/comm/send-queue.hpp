@@ -45,7 +45,7 @@ namespace upsylon
             virtual void write(char C);                      //!< optimized write
             virtual void flush() throw();                    //!< defragment
             virtual void output(const void *, const size_t); //!< optimized write of a block
-            void         remove(const size_t n) throw();     //!< remove n bytes from readable, and defrag
+            void         remove(const size_t n) throw();     //!< remove n bytes from readable, defrag and  load frome queue
             bool         sending()        const throw();     //!< size>0 || readable>0
             size_t       to_send()        const throw();     //!< size+readable
             
