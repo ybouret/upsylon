@@ -57,7 +57,7 @@ namespace upsylon
             friend std::ostream & operator<<(std::ostream&,const send_queue&); //!< display content
 
             const size_t writable;  //!< writable bytes
-            const size_t readable;  //!< readable bytes
+            const size_t readable;  //!< readable bytes (ready to send)
             
         private:
             size_t         invalid;   //!< invalid bytes
