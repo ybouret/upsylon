@@ -20,10 +20,19 @@ namespace upsylon
         class comm_engine
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~comm_engine() throw(); //!< cleanup
             explicit comm_engine();         //!< setup
-            
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             void start( comm_tcp_server *srv );
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_engine);

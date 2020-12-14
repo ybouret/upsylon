@@ -42,7 +42,7 @@ namespace upsylon
             assert( !(data==NULL&&size>0) );
 
             const int sz = check_bound<int,size_t>(size);
-            Y_NET_VERBOSE(const socket_address &ip = **this; std::cerr << "[net.tcp.client.send #" << sz << " ->" << ip << "]" << std::endl);
+            Y_NET_VERBOSE(const socket_address &ip = **this; std::cerr << "[network.tcp.client.send #" << sz << " ->" << ip << "]" << std::endl);
 
 #if defined(Y_BSD)
             int            ns = 0;
@@ -71,7 +71,7 @@ namespace upsylon
         {
             Y_GIANT_LOCK();
             const int sz = check_bound<int,size_t>(size);
-            Y_NET_VERBOSE(std::cerr << "[net.tcp.client.recv(up to " << sz << ")]" << std::endl);
+            Y_NET_VERBOSE(std::cerr << "[network.tcp.client.recv(up to " << sz << ")]" << std::endl);
 
 #if defined(Y_BSD)
             int            nr = 0;

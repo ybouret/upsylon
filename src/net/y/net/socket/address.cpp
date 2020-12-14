@@ -214,6 +214,12 @@ namespace upsylon
         sockaddr         * socket_address:: get_sa()              throw() { return static_cast<sockaddr        *>( rw() ); }
         const sockaddr   * socket_address:: get_sa()        const throw() { return static_cast<const sockaddr  *>( ro() ); }
 
+        void socket_address:: xcat(upsylon::exception &excp) const throw()
+        {
+            excp << text();
+            excp.cat(":%u",bswp(port));
+        }
+
     }
 
 }
