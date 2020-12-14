@@ -52,8 +52,7 @@ namespace upsylon
     }
 
 
-    network:: network() :
-    byte_nodes( object::proto() )
+    network:: network()
     {
         Y_NET_VERBOSE(std::cerr << "[network.startup]" << std::endl);
         Y_GIANT_LOCK();

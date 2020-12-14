@@ -3,7 +3,6 @@
 #define Y_NETWORK_INCLUDED 1
 
 #include "y/net/socket/addr-ex.hpp"
-#include "y/memory/tight/xcache.hpp"
 #include "y/string.hpp"
 
 namespace upsylon
@@ -23,7 +22,6 @@ namespace upsylon
         // types and definition
         //______________________________________________________________________
 
-        typedef memory::tight::xcache_of<net::byte_node> byte_nodes_cache; //!< for I/O
 
         static bool           verbose;                 //!< mostly to debug
         static const uint16_t reserved_port;           //!< port < reserved_port: for system
@@ -56,8 +54,7 @@ namespace upsylon
         //
         // members
         //______________________________________________________________________
-        byte_nodes_cache byte_nodes; //!< shared cache for I/O
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(network);
         explicit network();

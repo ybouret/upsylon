@@ -34,12 +34,13 @@ SET(comm_srcs ${comm_decl} ${comm_code})
 SOURCE_GROUP( net/comm FILES ${comm_srcs} )
 INSTALL( FILES ${comm_decl} DESTINATION include/y/net/comm )
 
+IF(FALSE)
 FILE(GLOB io_decl y/net/io/*.hpp)
 FILE(GLOB io_code y/net/io/*.cpp)
 SET(io_srcs ${io_decl} ${io_code})
 SOURCE_GROUP( net/io FILES ${io_srcs} )
 INSTALL( FILES ${io_decl} DESTINATION include/y/net/io )
-
+ENDIF()
 
 ADD_LIBRARY(y-net STATIC 
 ${main_srcs}
@@ -47,7 +48,6 @@ ${socket_srcs}
 ${tcp_srcs}
 ${udp_srcs}
 ${comm_srcs}
-${io_srcs}
 )
 INSTALL( TARGETS y-net ARCHIVE DESTINATION lib )
 

@@ -27,10 +27,7 @@ Y_UTEST(info)
     SHOW(udp_client);
     SHOW(tcp_server);
     SHOW(tcp_client);
-    //SHOW(tcp_ostream);
-    //SHOW(tcp_istream);
-    SHOW(byte_node);
-
+    
 }
 Y_UTEST_DONE()
 
