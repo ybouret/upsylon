@@ -24,7 +24,7 @@ Y_UTEST(tcp_server)
     const unsigned                 pending   = 1;
     net::tcp_server                server( user_port, pending, version );
     vector<string>                 words(16,as_capacity);
-
+    std::cerr << "Handling TCP server "<< *server << std::endl;
     
     while(true)
     {

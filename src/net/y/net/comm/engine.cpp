@@ -19,7 +19,18 @@ namespace upsylon
         {
             assert(srv);
             const comm_tcp_server::proto proto(srv);
-            
+            if( !tcp_servers.insert(proto) )
+            {
+                throw upsylon::exception("multiple TCP server!");
+            }
+            try
+            {
+                sockset.insert( *srv );
+            }
+            catch(...)
+            {
+
+            }
         }
     }
 }

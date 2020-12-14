@@ -35,15 +35,6 @@ namespace upsylon
         allocated(0),
         workspace(0),
         sock(0), ufd(0), wfd(0), rfd(0), xfd(0)
-#if 0
-        allocated( capacity * sizeof(socket_type) + 4 * memory::align(sizeof(fd_set))  ),
-        workspace( memory::global::instance().acquire( aliasing::_(allocated)) ),
-        sock( memory::io::cast<socket_type>(workspace,0) ),
-        ufd(  memory::io::cast<fd_set>(workspace,capacity*sizeof(socket_type) ) ),
-        wfd(  memory::io::cast<fd_set>(ufd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
-        rfd(  memory::io::cast<fd_set>(wfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) ),
-        xfd(  memory::io::cast<fd_set>(rfd, Y_MEMORY_ALIGN(sizeof(fd_set)) ) )
-#endif
         {
 
             Y_NET_VERBOSE(std::cerr << "[network.socket_set.init] capacity  = " << capacity << std::endl);

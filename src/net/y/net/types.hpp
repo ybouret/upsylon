@@ -100,8 +100,8 @@ namespace upsylon
 
     namespace net
     {
-        //! swap network byte order 16 bits
-        inline uint8_t bswp(const uint8_t x) throw() { return x; }
+        //! swap network byte order 8 bits
+        inline uint8_t bswp(const uint8_t x)  throw() { return x; }
 
         //! swap network byte order 16 bits
         inline uint16_t bswp(const uint16_t x) throw() { return Y_SWAP_BE16(x); }
@@ -119,7 +119,7 @@ namespace upsylon
             y.reverse();
             return y;
         }
-        
+
         //! generic bswp
         template <typename T>
         inline T bswp_as( const T &x ) throw()
@@ -132,6 +132,7 @@ namespace upsylon
             alias.bits = bswp(alias.bits);
             return alias.item;
         }
+
     }
 
     namespace net
