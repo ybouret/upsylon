@@ -33,15 +33,20 @@ namespace
 Y_UTEST(comm_proto)
 {
 
-    if(argc<=2) throw upsylon::exception("%s: version=[v4|v6] port",argv[0]);
+    if(argc<=2)
+    {
+        std::cerr << "usage: " << program << " version=[v4|v6] port" << std::endl;
+    }
+    else
+    {
+        network::verbose = true;
+        net::ip_version        version   = network::ip_version(argv[1]);
+        const uint16_t         user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
+        const socket_addr_ex   server_ip(ip_addr_any,version,user_port);
+        comm_engine            engine;
+        engine.start( new TCP_Echo_Server(*server_ip) );
 
-    network::verbose = true;
-    net::ip_version        version   = network::ip_version(argv[1]);
-    const uint16_t         user_port = uint16_t(string_convert::to<size_t>(argv[2],"port"));
-    const socket_addr_ex   server_ip(ip_addr_any,version,user_port);
-    comm_engine            engine;
-    engine.start( new TCP_Echo_Server(*server_ip) );
-
+    }
     
 
 }

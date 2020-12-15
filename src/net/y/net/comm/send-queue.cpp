@@ -244,11 +244,11 @@ namespace upsylon
         
         size_t send_queue:: uploaded(tcp_client &client)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.send_queue-->" << *client << " #" << readable << "... ]" << std::endl);
+            Y_NET_VERBOSE("[network.send_queue-->" << *client << " #" << readable << "... ]");
             const size_t ns = client.send(ro,readable);
             if(ns)
             {
-                Y_NET_VERBOSE(std::cerr << "[network.send_queue-->" << *client << " #" << ns << "/" << readable << "]" << std::endl);
+                Y_NET_VERBOSE("[network.send_queue-->" << *client << " #" << ns << "/" << readable << "]");
                 remove(ns);
                 return ns;
             }

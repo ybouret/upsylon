@@ -63,7 +63,7 @@ namespace upsylon
     void network:: resolve(net::socket_address &ip,
                            const string         &name ) const
     {
-        Y_NET_VERBOSE(std::cerr << __resolve_pfx << name << __resolve_sfx << std::endl);
+        Y_NET_VERBOSE(__resolve_pfx << name << __resolve_sfx);
         Y_GIANT_LOCK();
 
         addrinfo fmt;
@@ -122,7 +122,7 @@ namespace upsylon
             try
             {
                 network::instance().resolve(*this,name);
-                Y_NET_VERBOSE(std::cerr << __resolve_pfx << '@' << bswp(port) << __resolve_sfx << std::endl);
+                Y_NET_VERBOSE( __resolve_pfx << '@' << bswp(port) << __resolve_sfx);
                 if(psep) *psep = port_separator;
             }
             catch(...)

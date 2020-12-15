@@ -9,7 +9,7 @@ namespace upsylon
     {
         tcp_server:: ~tcp_server() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_server.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_server.quit]");
         }
 
         tcp_server:: tcp_server( const socket_address &ip, const unsigned pending) :
@@ -26,14 +26,14 @@ namespace upsylon
 
         void tcp_server:: start(const unsigned pending)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_server.init]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_server.init]");
 
             // TODO: check pending overflow ?
             const socket_address &self = **this;
 
             self.bind(sock);
 
-            Y_NET_VERBOSE(std::cerr << "[network.listen(" << self.text() << '@' << bswp(self.port) <<  ")]" << std::endl);
+            Y_NET_VERBOSE("[network.listen(" << self.text() << '@' << bswp(self.port) <<  ")]");
             Y_GIANT_LOCK();
 
 #if defined(Y_WIN)
@@ -61,7 +61,7 @@ namespace upsylon
 
         socket_type tcp_server:: __accept( socket_address &ip ) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_server(" << (*this)->text() << '@' << bswp((*this)->port) << ").accept]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_server(" << (*this)->text() << '@' << bswp((*this)->port) << ").accept]");
 
             socket_type s      = invalid_socket;
             sa_length_t sa_len = ip.get_sa_length();

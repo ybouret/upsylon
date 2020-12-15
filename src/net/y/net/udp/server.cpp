@@ -8,7 +8,7 @@ namespace upsylon
     {
         udp_server:: ~udp_server() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.udp_server.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.udp_server.quit]");
         }
 
 #define Y_NET_UDP_SERVER(INI)           \
@@ -18,7 +18,7 @@ peer(ip_addr_none, (**this).version() )
 
         static inline void __udp_server_init()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.udp_server.init]" << std::endl);
+            Y_NET_VERBOSE("[network.udp_server.init]");
         }
 
         udp_server:: udp_server( const socket_address &ip ) :

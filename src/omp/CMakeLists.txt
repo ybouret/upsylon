@@ -19,7 +19,7 @@ IF(OpenMP_C_FOUND)
     TARGET_LINK_LIBRARIES(pi-v2 PUBLIC OpenMP::OpenMP_C)
 
 IF(NOT MSVC)
-	TARGET_LINK_LIBRARIES(pi    m)
+	target_link_libraries(pi    m)
 	TARGET_LINK_LIBRARIES(pi-v2 m)
 	TARGET_LINK_LIBRARIES(pi-ng m)
 ENDIF(NOT MSVC)

@@ -66,9 +66,10 @@ namespace upsylon
     };
 
     //! macro to be used with network verbosity
-#define Y_NET_VERBOSE(CODE) do {  \
-if(network::verbose) {            \
-Y_LOCK(network::access); CODE;    \
+#define Y_NET_VERBOSE(MSG) do {  \
+if(network::verbose) {           \
+Y_LOCK(network::access);         \
+std::cerr << MSG << std::endl;   \
 } } while(false);                
 
 }

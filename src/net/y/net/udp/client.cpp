@@ -7,12 +7,12 @@ namespace upsylon
     {
         udp_client:: ~udp_client() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.udp_client.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.udp_client.quit]");
         }
 
         static inline void __udp_client_init()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.udp_client.init]" << std::endl);
+            Y_NET_VERBOSE("[network.udp_client.init]");
         }
 
 #define Y_NET_UDP_CLIENT( INI ) socket_addr_ex INI,  udp_socket( (**this).version() ), last_recv_ip(ip_addr_none, (**this).version(),0 )

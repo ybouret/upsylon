@@ -15,7 +15,7 @@ namespace upsylon
         static inline
         void bsd_close( socket_type &sock ) throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.quit]");
 
             assert( invalid_socket != sock );
 #if defined(Y_BSD)
@@ -30,7 +30,7 @@ namespace upsylon
 
         bsd_socket:: ~bsd_socket() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.~<" << name << ">]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.~<" << name << ">]");
             shutdown(sd_both);
             bsd_close(sock);
         }
@@ -67,7 +67,7 @@ uuid( sock2uuid(sock)     ), \
 name( uuid )
 
 #define Y_NET_BSD_INI() do { \
-Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.init: uuid=" << uuid << ", name=<" << name << ">]" << std::endl);\
+Y_NET_VERBOSE("[network.bsd_socket.init: uuid=" << uuid << ", name=<" << name << ">]");\
 on_init();        \
 } while(false)
 
@@ -88,7 +88,7 @@ on_init();        \
 
         void bsd_socket:: blocking(const bool value)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.blocking(<" << name << ">," << (value ? "ON" : "OFF") << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.blocking(<" << name << ">," << (value ? "ON" : "OFF") << ")]");
             Y_GIANT_LOCK();
             assert( invalid_socket != sock );
 #if defined(Y_WIN)
@@ -136,7 +136,7 @@ on_init();        \
         void bsd_socket:: shutdown(const shutdown_type how) throw()
         {
             assert( sock != invalid_socket );
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.shutdown(" << sd_text(how) << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.shutdown(" << sd_text(how) << ")]");
 
 #if defined(Y_WIN)
             switch (how) {
@@ -184,7 +184,7 @@ on_init();        \
 
         void bsd_socket:: setopt(const int level, const int optname, const void *optval, const unsigned optlen)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.setopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.setopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]");
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)
@@ -217,7 +217,7 @@ on_init();        \
                                  void          *optval,
                                  const unsigned optlen) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.getopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.getopt(<" << name << ">," << sockopt_level(level) << "," << sockopt_name(optname) << ")]");
             Y_GIANT_LOCK();
             assert(invalid_socket!=sock);
             if(optval==0||optlen<=0)

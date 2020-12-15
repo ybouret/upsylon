@@ -31,7 +31,7 @@ namespace upsylon
 
     network:: ~network() throw()
     {
-        Y_NET_VERBOSE(std::cerr<< "[network.cleanup]" << std::endl);
+        Y_NET_VERBOSE("[network.cleanup]");
 
         //----------------------------------------------------------------------
         //
@@ -54,7 +54,7 @@ namespace upsylon
 
     network:: network()
     {
-        Y_NET_VERBOSE(std::cerr << "[network.startup]" << std::endl);
+        Y_NET_VERBOSE("[network.startup]");
         Y_GIANT_LOCK();
 
         //----------------------------------------------------------------------
@@ -172,7 +172,7 @@ namespace upsylon
                                        const int type,
                                        const int protocol)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bsd_socket.open]" << std::endl);
+            Y_NET_VERBOSE("[network.bsd_socket.open]");
 
 
             Y_GIANT_LOCK();
@@ -205,22 +205,25 @@ namespace upsylon
 
     net::socket_type network:: open(const net::ip_protocol proto, const net::ip_version version)
     {
-        Y_NET_VERBOSE(std::cerr << "[network.open(");
-        int pf  = -1;
+        static const char unk[] = "unknown";
+
+        int         pf  = -1;
+        const char *ipv = unk;
         switch( version )
         {
-            case net::v4: pf = PF_INET;  Y_NET_VERBOSE(std::cerr << net::ipv4::class_name); break;
-            case net::v6: pf = PF_INET6; Y_NET_VERBOSE(std::cerr << net::ipv6::class_name); break;
+            case net::v4: pf = PF_INET;  ipv= net::ipv4::class_name; break;
+            case net::v6: pf = PF_INET6; ipv= net::ipv4::class_name; break;
         }
 
         int st = -1;
         int pr = -1;
+        const char *ppv = unk;
         switch( proto )
         {
-            case net::tcp: st = SOCK_STREAM; pr=IPPROTO_TCP; Y_NET_VERBOSE(std::cerr << ",tcp"); break;
-            case net::udp: st = SOCK_DGRAM;  pr=IPPROTO_UDP; Y_NET_VERBOSE(std::cerr << ",udp"); break;
+            case net::tcp: st = SOCK_STREAM; pr=IPPROTO_TCP; ppv = "tcp"; break;
+            case net::udp: st = SOCK_DGRAM;  pr=IPPROTO_UDP; ppv = "udp"; break;
         }
-        Y_NET_VERBOSE(std::cerr << ")]"<<std::endl);
+        Y_NET_VERBOSE("[network.open(" << ipv << "," << ppv << ")]"<<std::endl);
         return net::bsd_acquire_socket(pf,st,pr);
     }
 

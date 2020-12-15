@@ -31,6 +31,8 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+
+            //! record a new TCP server proto
             void start( comm_tcp_server *srv );
 
 

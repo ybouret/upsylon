@@ -13,7 +13,7 @@ namespace upsylon
 
         void socket_address:: bind( socket_type &sock ) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.bind(" << text() << '@' << bswp(port) <<  ")]" << std::endl);
+            Y_NET_VERBOSE("[network.bind(" << text() << '@' << bswp(port) <<  ")]");
             Y_GIANT_LOCK();
 
 #if defined(Y_WIN)
@@ -42,7 +42,7 @@ namespace upsylon
 
         void socket_address:: connect( socket_type &sock ) const
         {
-            Y_NET_VERBOSE(std::cerr << "[network.connect(" << text() << '@' << bswp(port) <<  ")]" << std::endl);
+            Y_NET_VERBOSE("[network.connect(" << text() << '@' << bswp(port) <<  ")]");
             Y_GIANT_LOCK();
 
 #if defined(Y_WIN)

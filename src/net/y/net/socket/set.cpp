@@ -37,7 +37,7 @@ namespace upsylon
         sock(0), ufd(0), wfd(0), rfd(0), xfd(0)
         {
 
-            Y_NET_VERBOSE(std::cerr << "[network.socket_set.init] capacity  = " << capacity << std::endl);
+            Y_NET_VERBOSE("[network.socket_set.init] capacity  = " << capacity);
             {
                 memory::embed emb[] =
                 {
@@ -56,20 +56,12 @@ namespace upsylon
                     assert(m.params.length>=sizeof(fd_set));
                 }
 #endif
-                Y_NET_VERBOSE(std::cerr << "[network.socket_set.init] allocated = " << allocated << std::endl);
+                Y_NET_VERBOSE("[network.socket_set.init] allocated = " << allocated);
 
             }
 
 #if !defined(NDEBUG)
-            {
-                uint8_t *b = static_cast<uint8_t *>(workspace);
-
-                for(size_t i=0;i<allocated;++i)
-                {
-                    b[i] = alea.full<uint8_t>();
-                }
-
-            }
+            alea.fillnz(workspace,allocated);
 
 #define Y_NET_S32 crc32(sock,capacity*sizeof(socket_type))
 #define Y_NET_U32 crc32(ufd,sizeof(fd_set))
@@ -213,7 +205,7 @@ namespace upsylon
 
         size_t socket_set:: incoming( socket_delay &d )
         {
-            Y_NET_VERBOSE(std::cerr << "[network.socket_set.incoming(delay=" << d.wait_for() << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.socket_set.incoming(delay=" << d.wait_for() << ")]");
             if(size>0)
             {
 
@@ -237,7 +229,7 @@ namespace upsylon
 
         size_t socket_set:: outgoing()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.socket_set.outgoing)]" << std::endl);
+            Y_NET_VERBOSE("[network.socket_set.outgoing)]");
             if(size>0)
             {
                 {

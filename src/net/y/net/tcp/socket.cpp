@@ -7,13 +7,13 @@ namespace upsylon
 
         tcp_socket:: ~tcp_socket() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_socket.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_socket.quit]");
         }
 
         tcp_socket:: tcp_socket( const ip_version version ) :
         bsd_socket(tcp,version)
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_socket.init]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_socket.init]");
         }
 
         tcp_socket:: tcp_socket( const socket_type &s) :

@@ -13,7 +13,7 @@ namespace upsylon
 
         tcp_client:: ~tcp_client() throw()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_client.quit]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_client.quit]");
         }
 
 #define Y_NET_TCP_CLIENT( INI ) socket_addr_ex INI,  tcp_socket( (**this).version() )
@@ -24,7 +24,7 @@ namespace upsylon
 
         void tcp_client:: start()
         {
-            Y_NET_VERBOSE(std::cerr << "[network.tcp_client.init]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp_client.init]");
             (*this)->connect(sock);
         }
 
@@ -42,7 +42,7 @@ namespace upsylon
             assert( !(data==NULL&&size>0) );
 
             const int sz = check_bound<int,size_t>(size);
-            Y_NET_VERBOSE(const socket_address &ip = **this; std::cerr << "[network.tcp.client.send #" << sz << " ->" << ip << "]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp.client.send #" << sz << " ->" << **this << "]");
 
 #if defined(Y_BSD)
             int            ns = 0;
@@ -71,7 +71,7 @@ namespace upsylon
         {
             Y_GIANT_LOCK();
             const int sz = check_bound<int,size_t>(size);
-            Y_NET_VERBOSE(std::cerr << "[network.tcp.client.recv(up to " << sz << ")]" << std::endl);
+            Y_NET_VERBOSE("[network.tcp.client.recv(up to " << sz << ")]");
 
 #if defined(Y_BSD)
             int            nr = 0;
