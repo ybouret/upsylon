@@ -38,11 +38,16 @@ namespace upsylon
 
                 //! full compilation
                 Jive::Parser *compileAST( XNode::Pointer &ast );
-
+            
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Tag name;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-                static const string *GetName( XNode::Pointer &ast );
+                const string *GetName( XNode::Pointer &ast ) const;
 
             };
         }
