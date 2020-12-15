@@ -28,17 +28,7 @@ namespace
         std::cerr << "sQ=" << Q << std::endl;
         Q.remove( Q.readable/2 );
         std::cerr << "sQ=" << Q << std::endl;
-
-#if 0
-        while( Q.size > 0 || Q.written > 0)
-        {
-            Q.pack();
-            Y_ASSERT(Q.written>0);
-            std::cerr << "packed:  sQ=" << Q << std::endl;
-            Q.update( alea.range<size_t>(1,Q.written) );
-            std::cerr << "updated: sQ=" << Q << std::endl;
-        }
-#endif
+        
         std::cerr << std::endl;
     }
 

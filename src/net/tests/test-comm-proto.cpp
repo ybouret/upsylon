@@ -45,7 +45,6 @@ Y_UTEST(comm_proto)
         const socket_addr_ex   server_ip(ip_addr_any,version,user_port);
         comm_engine            engine;
         engine.start( new TCP_Echo_Server(*server_ip) );
-
     }
     
 
