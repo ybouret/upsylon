@@ -9,6 +9,24 @@ namespace upsylon
 
         namespace Dialect
         {
+          
+            PreAnalyzer:: ~PreAnalyzer() throw()
+            {
+
+            }
+        }
+
+    }
+}
+
+namespace upsylon
+{
+
+    namespace Jive
+    {
+
+        namespace Dialect
+        {
 
             Compiler:: Compiler() : name( Tags::Make("Dialect::Compiler") )
             {
@@ -38,6 +56,17 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Tag parserName = GetName(ast);
                 std::cerr << "parserName=" << parserName << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // PreAnalyze
+                //
+                //--------------------------------------------------------------
+                auto_ptr<Jive::Parser> parser = new Jive::Parser( parserName );
+                {
+                    PreAnalyzer A(name,parser.content());
+                    A.walk( ast.content() );
+                }
                 return 0;
             }
 

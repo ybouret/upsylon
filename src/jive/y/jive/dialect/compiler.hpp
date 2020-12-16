@@ -6,6 +6,7 @@
 #define Y_JIVE_DIALECT_COMPILER_INCLUDED 1
 
 #include "y/jive/dialect/parser.hpp"
+#include "y/jive/syntax/analyzer.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,24 @@ namespace upsylon
 
         namespace Dialect
         {
+            class PreAnalyzer : public Syntax::Analyzer
+            {
+            public:
+                template <typename ID> inline
+                explicit PreAnalyzer( const ID &id, Jive::Parser *p) :
+                Syntax::Analyzer( id ),
+                parser(p)
+                {
+                    assert(parser!=NULL);
+                }
+                virtual ~PreAnalyzer() throw();
+
+                Jive::Parser *parser;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(PreAnalyzer);
+            };
+
             //__________________________________________________________________
             //
             //
@@ -43,8 +62,8 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag name;
-
+                const Tag   name;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
                 const string *GetName( XNode::Pointer &ast ) const;
