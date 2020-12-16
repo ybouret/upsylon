@@ -1,0 +1,84 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+
+
+\begin{document}
+\title{Diffusion of protic species within confined, aqueous and reactive media}
+\maketitle
+	
+\section{Description}	
+
+\subsection{Notations and framework}
+ 
+\subsubsection{Hypothesis}
+We make the following assumptions:
+\begin{itemize}
+\item we observe some species in a confined medium where no convection occurs,
+\item in this medium, the ionic strength is high enough to allow the sole autodiffusion of each ion, without further electrostatic coupling,
+\end{itemize}
+
+
+\subsubsection{Algebraic problem}
+Consequently, each species $S$ :
+\begin{itemize}
+\item follow the second Fick law with its autodiffusion coefficient $D_S$:
+\begin{equation}
+\label{eq:fick}
+	\partial_t [S] = D_S \Delta [S],
+\end{equation}
+
+\item and obeys the setup boundary conditions.
+\end{itemize}
+
+Moreover, each species may be involved in one or many reactions that shall produce some additional terms in \eqref{eq:fick}.
+
+\subsubsection{Space and time scales}
+
+Let us consider the following handbook table extract:
+\begin{equation}
+\label{tab:diff}
+\begin{array}{|c|c|}
+\hline
+\text{species} & \text{diffusion coefficient in } \text{m}^2\text{s}^{-1} \\
+\hline
+\hline
+H^+ & 9.31 \cdot 10^{-9} \\
+HO^- & 5.27 \cdot 10^{-9} \\
+CH_3COO^- & 1.09 \cdot 10^{-9}\\
+\hline
+\end{array}
+\end{equation}
+
+Let us consider the following equilibrium:
+\begin{equation}
+\label{eq:water}
+H_2O \xrightleftharpoons[]{} H^+ + HO^-, \;\; K_w.
+\end{equation}
+The relaxation time for water self-dissociation is around a microsecond, and this is the characteristic time-scale
+for the protic equilibria (see \cite{PLOS} for a short review).
+Accordingly, for length scales above a few nanometers, \textbf{the diffusion is a perturbation of all the protic equilibria}.
+
+\section{Asymptotic diffusion}
+
+\subsection{Specific problem}
+
+
+
+\section{References}
+\begin{thebibliography}{1}
+
+\bibitem[Bouret14]{PLOS}
+	Y.Bouret,M.Argentina and L.Counillon
+	\textit{Capturing Intracellular pH Dynamics by Coupling Its Molecular Mechanisms within a Fully Tractable Mathematical Model}
+	PLOS One 2014
+	https://doi.org/10.1371/journal.pone.0085449
+
+\end{thebibliography}
+
+\end{document}
