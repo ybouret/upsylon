@@ -1,0 +1,61 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+
+
+\begin{document}
+\title{Diffusion}
+\maketitle
+	
+\section{Planar Fixed Length Diffusion}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl|l}
+	\partial_t C(x,t) & = & D \partial_{xx} C(x,t) & \text{1D diffusion}\\
+	C(x,0) & = & 0 & \text{initial condition}\\
+	\partial_x C(L,t) & = & 0 & \text{null flux at } L \\
+	C(0,t) & = & \Lambda(t) & \text{given field at } 0\\
+\end{array}
+\right.
+\end{equation} 
+
+Using 
+\begin{equation}
+	\tilde{C}(x,s) = \int_0^{+\infty} C(x,t) e^{-st} \mathrm{d}t
+\end{equation} 
+ \begin{equation}
+	s\tilde{C}(x,s) - \underbrace{C(x,0)}_{=0} = D \partial_{xx} \tilde{C}(x,s)
+\end{equation}
+ 
+\begin{equation}
+	\partial_{xx} \tilde{C}(x,s) = \dfrac{s}{D} \tilde{C}(x,s)
+\end{equation}
+ 
+\begin{equation}
+	\tilde{C}(x,s) = A(s) e^{\sqrt{\frac{s}{D}} x} + B(s)  e^{-\sqrt{\frac{s}{D}} x}
+\end{equation}
+ 
+\begin{equation}
+	\tilde{C}(0,s) = \tilde{\Lambda}(s) = A(s) + B(s)
+\end{equation}
+
+\begin{equation}
+	\partial_x\tilde{C}(L,s) = 0 = \sqrt{\frac{s}{D}} \left[ A(s) e^{\sqrt{\frac{s}{D}} L}  - B(s) e^{-\sqrt{\frac{s}{D}} L} \right]
+\end{equation}
+
+\begin{equation}
+	B(s) = \tilde{\Lambda}(s)\dfrac{1}{1+e^{-2\sqrt{\frac{s}{D}} L}}, \;\;A(s) = \tilde{\Lambda}(s)\dfrac{e^{-2\sqrt{\frac{s}{D}} L}}{1+e^{-2\sqrt{\frac{s}{D}} L}}
+\end{equation}
+
+\begin{equation}
+	\tilde{C}(x,s) = \tilde{\Lambda}(s) \dfrac{\left[  e^{-2\sqrt{\frac{s}{D}} L} e^{\sqrt{\frac{s}{D}} x} +   e^{-\sqrt{\frac{s}{D}} x} \right]}
+	{1+e^{-2\sqrt{\frac{s}{D}} L}}
+\end{equation}
+
+\end{document}
