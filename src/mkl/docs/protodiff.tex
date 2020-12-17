@@ -1,4 +1,4 @@
-\documentclass[aps,12pt]{revtex4}
+\documentclass[aps,11pt]{revtex4}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath,amsthm}
 \usepackage{chemarr}
@@ -12,11 +12,10 @@
 \title{Diffusion of protic species within confined, aqueous and reactive media}
 \maketitle
 	
-\section{Description}	
+\section{Description and framework}	
 
-\subsection{Notations and framework}
+\subsection{Hypothesis}
  
-\subsubsection{Hypothesis}
 We make the following assumptions:
 \begin{itemize}
 \item we observe some species in a confined medium where no convection occurs,
@@ -24,7 +23,6 @@ We make the following assumptions:
 \end{itemize}
 
 
-\subsubsection{Algebraic problem}
 Consequently, each species $S$ :
 \begin{itemize}
 \item follow the second Fick law with its autodiffusion coefficient $D_S$:
@@ -36,11 +34,26 @@ Consequently, each species $S$ :
 \item and obeys the setup boundary conditions.
 \end{itemize}
 
-Moreover, each species may be involved in one or many reactions that shall produce some additional terms in \eqref{eq:fick}.
+Moreover, each species may be involved in one or many reactions that shall produce some additional terms in Eq.\eqref{eq:fick}.
 
-\subsubsection{Space and time scales}
+\subsection{Chemical time scales}
 
-Let us consider the following handbook table extract:
+Let us consider the following equilibrium:
+\begin{equation}
+\label{eqs}
+\left\lbrace
+\begin{array}{rl}
+H_2O \xrightleftharpoons[]{} H^+ + HO^-, &K_w \\
+AH  \xrightleftharpoons[]{} H^+ + A-, & K_a\\
+\end{array}
+\right.
+\end{equation}
+The relaxation time for water self-dissociation is around a microsecond, and this is the characteristic time-scale
+for the protic equilibria. Eventually, this fast relaxation times allow to consider some "slower" reactions (mostly membrane transport of protic species) as perturbation of all the protic equilibria.\\
+A short review of these time scales and a way to derive the proper kinetic equation in such a case were derived in \cite{PLOS} and furthermore applied in \cite{BBA}.\\
+
+\subsection{Diffusive time scales}
+Let us now consider the following handbook table extract:
 \begin{equation}
 \label{tab:diff}
 \begin{array}{|c|c|}
@@ -50,36 +63,117 @@ Let us consider the following handbook table extract:
 \hline
 H^+     & 9.31 \cdot 10^{-9} \\
 HO^-    & 5.27 \cdot 10^{-9} \\
- HEPES  &   0.50 \cdot 10^{-9}\\
-~^-EPES &   0.50 \cdot 10^{-9}\\
+ HEPES=AH  &   0.50 \cdot 10^{-9}\\
+~^-EPES=A- &   0.50 \cdot 10^{-9}\\
 \hline
 \end{array}
 \end{equation}
-
-Let us consider the following equilibrium:
-\begin{equation}
-\label{eq:water}
-H_2O \xrightleftharpoons[]{} H^+ + HO^-, \;\; K_w.
-\end{equation}
-The relaxation time for water self-dissociation is around a microsecond, and this is the characteristic time-scale
-for the protic equilibria. For a short review of this, see \cite{PLOS}: eventually, this fast relaxation times allow to consider some "slower" reaction (mostly membrane transport of protic species) as perturbation of all the protic equilibria.\\
 Here, the fastest diffusive species is the proton, according to both its size and the hydrogen bond dynamics.
-Consequently, a simple estimation points out that for length scales above a few nanometers, \textbf{the diffusion is a perturbation of all the protic equilibria}.
-Hence, 
+Consequently, a simple estimation points out that for length scales above a few nanometers, \textit{the diffusion is a perturbation of all the protic equilibria}.
+Hence, we will use and adapted version of the computational framework successfully harnessed in the cited previous works.
+
 \section{Asymptotic diffusion}
 
-\subsection{Specific problem}
-We want to solve
+\subsection{Specific chemical problem}
+We want to simulate the diffusion in a space described by $\vec{r}$ and with respect to time $t$ 
+of four species, $H^+$, $HO^-$, $AH$ and $A^-$, starting from an homogeneous, equilibrium state where everywhere the following conditions are satisfied from Eq.\eqref{eqs}:
+\begin{equation}
+\label{eq:steady}
+\left\lbrace
+\begin{array}{rcl}
+0 & = & K_w - [H^+]  [HO^-]\\
+0 & = & K_a   [AH] - [H^+][A^-] \\
+\end{array}
+\right.
+\end{equation}
+We define:
+\begin{itemize}
+\item the vector of concentrations:
+\begin{equation}
+\vec{C} = 
+\begin{pmatrix}
+[H^+]\\
+[HO^-]\\
+[AH]\\
+[A^-]\\
+\end{pmatrix},
+\end{equation}
 
+\item the extent matrix:
+\begin{equation}
+	\bm{\nu} = 
+	\begin{pmatrix}
+	1 & 1 & 0 & 0 \\
+	1 & 0 & -1 & 1\\
+	\end{pmatrix},
+\end{equation}
 
+\item and the Jacobian matrix of Eq.\ref{eq:steady}:
+\begin{equation}
+	\bm{J} = 
+	\begin{pmatrix}
+	-[HO^-] & -[H^+] & 0 & 0 \\
+	-[A^-] & 0 & K_a & -[H^+]\\
+	\end{pmatrix}
+\end{equation}
+
+\end{itemize}
+
+\subsection{Specific diffusion problem}
+
+We know need to move the species according to:
+\begin{equation}
+\label{eq:move}
+\left\lbrace
+\begin{array}{lcll}
+\partial_t [H^+]  & = & D_{H}  &\Delta [H^+]\\
+\partial_t [HO^-] & = & D_{OH} &\Delta [HO^-]\\
+\partial_t [AH]   & = & D_{AH} &\Delta [AH]\\
+\partial_t [A^-]  & = & D_{A}  &\Delta [A-]\\
+\end{array}
+\right.
+\end{equation}
+Once the boundary conditions are chosen, we implement an alternating-direction Crank-Nicolson scheme to obtain
+the diffusional increase at each chosen point in space, for a time-step $\delta t$, which is formally an operator $\mathcal{L}$:
+\begin{equation}
+	\delta \vec{C}(\vec{r}) = \mathcal{L}(\vec{C},\delta t)
+\end{equation}
+This computation generally requires the knowledge of all the concentration fields, and is therefore not prone to parallelisation. 
+     
+\subsection{Asymptotic diffusion}
+Obviously, the unconstrained step $\delta \vec{C}$ sends $\vec{C} + \delta\vec{C}$ out of the "allowed" conditions of Eq.\eqref{eq:steady}.
+As shown in previous works, the chemical system produces an instantaneous extent (namely very fast compared to the diffusive perturbation) which
+modify the concentration increase to return to a "legal" state. The constrained value is:
+\begin{equation}
+	\delta_\chi \vec{C} = \left[\bm{I} - ~^t\bm{J}\left(\bm{J}~^t\bm{\nu}\right)^{-1} \bm{J}\right] \mathcal{L}(\vec{C},\delta t)
+\end{equation}
+For each point in space, this is a local transform which offers the possibility to be carried out in parallel.
+
+\subsection{Chemical balance}
+From now on, we compute the asymptotic value of the new concentration:
+\begin{equation}
+\vec{C}_\chi(\vec{r},t+\delta t) = \vec{C}(\vec{r},t) + \left[\bm{I} - ~^t\bm{J}\left(\bm{J}~^t\bm{\nu}\right)^{-1} \bm{J}\right] \mathcal{L}(\vec{C},\delta t)
+\end{equation}  
+But since the constraints defined by Eq.\eqref{eq:steady} are not linear, this expression is still not correct.
+We need to let the chemical system evolve to reach a valid state. 
+This is numerically performed by a few Newton's steps: thanks to the asymptotic formulation, the guess concentration $\vec{C}_\chi(\vec{r},t+\delta t)$ is never too far from such a state, and generally only one or two Newton's steps are sufficient.
+  
 \section{References}
 \begin{thebibliography}{1}
 
 \bibitem[Bouret14]{PLOS}
-	Y.Bouret,M.Argentina and L.Counillon
-	\textit{Capturing Intracellular pH Dynamics by Coupling Its Molecular Mechanisms within a Fully Tractable Mathematical Model}
-	PLOS One 2014
+	Y.Bouret,M.Argentina and L.Counillon,
+	\textit{Capturing Intracellular pH Dynamics by Coupling Its Molecular Mechanisms within a Fully Tractable Mathematical Model},
+	PLOS One 2014,
 	https://doi.org/10.1371/journal.pone.0085449
+
+
+\bibitem[Bouret16]{BBA}
+	L.Counillon, Y.Bouret, I.Marchiq and J.Puyss\'egur,
+	\textit{{Na$^+$/H$^+$ antiporter (NHE1) and Lactate/H$^+$ symporters (MCTs)
+	 in pH Homeostasis and Cancer Metabolism}},
+	 BBA Molecular Cell Research 2016,
+	 DOI: 10.1016/j.bbamcr.2016.02.018
 
 \end{thebibliography}
 
