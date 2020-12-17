@@ -15,6 +15,11 @@
 #   endif
 #endif
 
+#if defined(__CYGWIN__)
+#    define Y_PLATFORM "Windows"
+#    define Y_WIN        1
+#endif
+
 #if defined(__MACH__) && ( defined(__APPLE__) || defined(__APPLE_CC__) )
 #    define Y_PLATFORM    "Darwin"
 #    define Y_BSD         1

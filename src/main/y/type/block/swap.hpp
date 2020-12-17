@@ -65,7 +65,7 @@ const T tmp = t; t=s; s=tmp
 
     //! swap blocks, forced
     template <typename T>
-    inline void _bswap(const T &target, const T &source) throw()
+    inline void bswap_force(const T &target, const T &source) throw()
     {
         typedef cull<sizeof(T)>          info;
         typedef typename info::word_type word_type;
