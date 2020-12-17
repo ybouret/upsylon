@@ -15,10 +15,14 @@ namespace upsylon
 	{
 		semaphore:: semaphore() throw() : sem_( NULL )
 		{
+			static const long lMinCount = 0;
+			static const long lMaxCount = 65535;
 			Y_GIANT_LOCK();
-			sem_ = ::CreateSemaphore( NULL, 0, LONG_MAX, 0 );
-			if( ! sem_ )
-				win32::critical_error( ::GetLastError(), "::CreateSemaphore()");
+			sem_ = ::CreateSemaphore( NULL, lMinCount, lMaxCount, NULL );
+			if (!sem_)
+			{
+				win32::critical_error(::GetLastError(), "::CreateSemaphore()");
+			}
 		}
 		
 		semaphore:: ~semaphore() throw()
