@@ -94,7 +94,12 @@ on_init();        \
 #if defined(Y_WIN)
             // If iMode == 0, blocking is enabled;
             // If iMode != 0, non-blocking mode is enabled.
-            u_long iMode = value ? 0 : 1;
+#if defined(__CYGWIN__)
+			__ms_u_long
+#else 
+			u_long
+#endif
+           iMode = value ? 0 : 1;
             if( SOCKET_ERROR == ioctlsocket(sock, FIONBIO, &iMode) )
             {
                 throw net::exception( Y_NET_LAST_ERROR(), "ioctlsocket(<%s>)",*name);
