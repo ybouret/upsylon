@@ -194,7 +194,14 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
+#if defined(__CYGWIN__)
+			__ms_timeval mstv = { int32_t(tv->tv_sec), int32_t(tv->tv_usec) };
+			const int ans = ::select(0, r, w, x, &mstv);
+			tv->tv_sec  = mstv.tv_sec;
+			tv->tv_usec = mstv.tv_usec;
+#else
             const int ans = ::select(0,r, w, x, tv);
+#endif
             if(ans==SOCKET_ERROR)
             {
                 throw net::exception( Y_NET_LAST_ERROR(), "::select()");
