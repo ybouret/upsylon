@@ -23,22 +23,22 @@ We make the following assumptions:
 \end{itemize}
 
 
-Consequently, each species $S$ :
+Consequently, :
 \begin{itemize}
-\item follow the second Fick law with its autodiffusion coefficient $D_S$:
+\item each species $S$ follow the second Fick law with its autodiffusion coefficient $D_S$:
 \begin{equation}
 \label{eq:fick}
 	\partial_t [S] = D_S \Delta [S],
 \end{equation}
 
-\item and obeys the setup boundary conditions.
+\item and each species obeys the setup geometrical boundary conditions.
 \end{itemize}
 
 Moreover, each species may be involved in one or many reactions that shall produce some additional terms in Eq.\eqref{eq:fick}.
 
 \subsection{Chemical time scales}
 
-Let us consider the following equilibrium:
+Let us consider the following equilibria and their constants:
 \begin{equation}
 \label{eqs}
 \left\lbrace
@@ -49,8 +49,8 @@ AH  \xrightleftharpoons[]{} H^+ + A-, & K_a\\
 \right.
 \end{equation}
 The relaxation time for water self-dissociation is around a microsecond, and this is the characteristic time-scale
-for the protic equilibria. Eventually, this fast relaxation times allow to consider some "slower" reactions (mostly membrane transport of protic species) as perturbation of all the protic equilibria.\\
-A short review of these time scales and a way to derive the proper kinetic equation in such a case were derived in \cite{PLOS} and furthermore applied in \cite{BBA}.\\
+for about all protic equilibria. Physiologically, this fast relaxation times allow to consider some "slower" reactions (mostly membrane transport of protic species) as perturbation of all the protic equilibria.\\
+A short review of these time scales and a way to derive the proper kinetic equations in such a case were derived in \cite{PLOS} and furthermore applied in \cite{BBA}.\\
 
 \subsection{Diffusive time scales}
 Let us now consider the following handbook table extract:
@@ -70,13 +70,13 @@ HO^-    & 5.27 \cdot 10^{-9} \\
 \end{equation}
 Here, the fastest diffusive species is the proton, according to both its size and the hydrogen bond dynamics.
 Consequently, a simple estimation points out that for length scales above a few nanometers, \textit{the diffusion is a perturbation of all the protic equilibria}.
-Hence, we will use and adapted version of the computational framework successfully harnessed in the cited previous works.
+Hence, we will use here and adapted version of the computational framework successfully harnessed in the previous works.
 
 \section{Asymptotic diffusion}
 
 \subsection{Specific chemical problem}
 We want to simulate the diffusion in a space described by $\vec{r}$ and with respect to time $t$ 
-of four species, $H^+$, $HO^-$, $AH$ and $A^-$, starting from an homogeneous, equilibrium state where everywhere the following conditions are satisfied from Eq.\eqref{eqs}:
+of four species, $H^+$, $HO^-$, $AH$ and $A^-$, starting from an equilibrium state where everywhere the following conditions are satisfied from Eq.\eqref{eqs}:
 \begin{equation}
 \label{eq:steady}
 \left\lbrace
@@ -134,23 +134,25 @@ We know need to move the species according to:
 \right.
 \end{equation}
 Once the boundary conditions are chosen, we implement an alternating-direction Crank-Nicolson scheme to obtain
-the diffusional increase at each chosen point in space, for a time-step $\delta t$, which is formally an operator $\mathcal{L}$:
+the diffusional increase $\delta \vec{C}(\vec{r},t)$ at each chosen point in space, for a time-step $\delta t$, which is formally an operator $\mathcal{L}$:
 \begin{equation}
-	\delta \vec{C}(\vec{r}) = \mathcal{L}(\vec{C},\delta t)
+	\delta \vec{C}(\vec{r},t) = \mathcal{L}(\vec{C}(\vec{r},t),\delta t)
 \end{equation}
 This computation generally requires the knowledge of all the concentration fields, and is therefore not prone to parallelisation. 
      
 \subsection{Asymptotic diffusion}
 Obviously, the unconstrained step $\delta \vec{C}$ sends $\vec{C} + \delta\vec{C}$ out of the "allowed" conditions of Eq.\eqref{eq:steady}.
 As shown in previous works, the chemical system produces an instantaneous extent (namely very fast compared to the diffusive perturbation) which
-modify the concentration increase to return to a "legal" state. The constrained value is:
+modifies the concentrations to return to a "legal" state. The constrained value is:
 \begin{equation}
-	\delta_\chi \vec{C} = \left[\bm{I} - ~^t\bm{J}\left(\bm{J}~^t\bm{\nu}\right)^{-1} \bm{J}\right] \mathcal{L}(\vec{C},\delta t)
+\label{eq:chi}
+	\delta_\chi \vec{C}(\vec{r},t) = \underbrace{\left[\bm{I} - ~^t\bm{J}\left(\bm{J}~^t\bm{\nu}\right)^{-1} \bm{J}\right]}_{\text{of } \vec{C}(\vec{r},t)} 
+	\mathcal{L}(\vec{C}(\vec{r},t),\delta t)
 \end{equation}
-For each point in space, this is a local transform which offers the possibility to be carried out in parallel.
-
+For each point in space, once $\mathcal{L}(\vec{C}(\vec{r},t),\delta t)$ is computed, this is a local transform which offers the possibility to be carried out in parallel.\\
+Eventually, we define by Eq.\eqref{eq:chi} the modified diffusion step, \textit{where an asymptotically fast relaxing system is driven by a perturbative diffusion}.
 \subsection{Chemical balance}
-From now on, we compute the asymptotic value of the new concentration:
+From now on, we compute the "asymptotic" values of the new concentrations:
 \begin{equation}
 \vec{C}_\chi(\vec{r},t+\delta t) = \vec{C}(\vec{r},t) + \left[\bm{I} - ~^t\bm{J}\left(\bm{J}~^t\bm{\nu}\right)^{-1} \bm{J}\right] \mathcal{L}(\vec{C},\delta t)
 \end{equation}  
