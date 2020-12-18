@@ -8,8 +8,8 @@
 #include "y/mkl/utils.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/tao.hpp"
-#include "y/core/temporary-link.hpp"
-#include "y/core/temporary-value.hpp"
+#include "y/momentary/link.hpp"
+#include "y/momentary/value.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon

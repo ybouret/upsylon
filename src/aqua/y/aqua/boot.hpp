@@ -5,7 +5,7 @@
 
 #include "y/aqua/boot/constraint.hpp"
 #include "y/container/matrix.hpp"
-#include "y/core/temporary-acquire.hpp"
+#include "y/momentary/acquire.hpp"
 
 namespace upsylon {
 
@@ -97,7 +97,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
-            core::temporary_acquire<4> keep;
+            temporary_acquire<4> keep;
             void setup() throw();
         };
 

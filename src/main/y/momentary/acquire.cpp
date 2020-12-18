@@ -1,5 +1,5 @@
 
-#include "y/core/temporary-acquire.hpp"
+#include "y/momentary/acquire.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
 

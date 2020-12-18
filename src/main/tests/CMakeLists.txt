@@ -70,7 +70,7 @@ test-progress.cpp
 test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
 test-meta-loop.cpp
 test-core-nodes.cpp
-test-core-temp.cpp
+test-core-momentary.cpp
 test-core-rnode.cpp
  )
 ADD_TEST(core:ppty     test-main ppty)
@@ -91,7 +91,7 @@ ADD_TEST(core:zfi         test-main zfi)
 ADD_TEST(core:binary      test-main binary)
 ADD_TEST(core:metaloop    test-main metaloop)
 ADD_TEST(core:nodes       test-main core_nodes)
-ADD_TEST(core:temp        test-main core_temp)
+ADD_TEST(core:momentary   test-main core_momentary)
 ADD_TEST(core:rnode       test-main core_rnode)
 
 SOURCE_GROUP(mem FILES test-alloc.cpp 

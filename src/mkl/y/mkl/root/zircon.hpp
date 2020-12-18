@@ -11,9 +11,9 @@
 #include "y/mkl/kernel/preconditioning.hpp"
 
 #include "y/sequence/arrays.hpp"
-#include "y/core/temporary-link.hpp"
-#include "y/core/temporary-value.hpp"
-#include "y/core/temporary-acquire.hpp"
+#include "y/momentary/link.hpp"
+#include "y/momentary/value.hpp"
+#include "y/momentary/acquire.hpp"
 #include "y/mkl/opt/bracket.hpp"
 #include "y/mkl/opt/minimize.hpp"
 #include "y/core/ipower.hpp"
@@ -138,7 +138,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 core::temporary_link<ftype>           flink(f,&f_);
                 core::temporary_link<addressable<T> > Xlink(X,&X_);
                 core::temporary_link<addressable<T> > Flink(F,&F_);
-                core::temporary_acquire<8>            Rlink;
+                temporary_acquire<8>            Rlink;
 
                 //--------------------------------------------------------------
                 //

@@ -5,7 +5,7 @@
 #include "y/aqua/library.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/arrays.hpp"
-#include "y/core/temporary-acquire.hpp"
+#include "y/momentary/acquire.hpp"
 
 namespace upsylon
 {
@@ -26,7 +26,7 @@ namespace upsylon
             //
             // types and defintiions
             //__________________________________________________________________
-            typedef core::temporary_acquire<16> Collector; //!< alias
+            typedef  temporary_acquire<16> Collector; //!< alias
 
 
             //__________________________________________________________________

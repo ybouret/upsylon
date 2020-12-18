@@ -46,6 +46,12 @@ SET(core_srcs ${core_decl} ${core_code})
 SOURCE_GROUP( core FILES ${core_srcs} )
 INSTALL( FILES ${core_decl} DESTINATION include/y/core )
 
+FILE(GLOB momentary_decl   y/momentary/*.hpp)
+FILE(GLOB momentary_code y/momentary/*.cpp)
+SET(momentary_srcs ${momentary_decl} ${momentary_code})
+SOURCE_GROUP( momentary FILES ${momentary_srcs} )
+INSTALL( FILES ${momentary_decl} DESTINATION include/y/momentary )
+
 FILE(GLOB sort_decl y/sort/*.hpp)
 FILE(GLOB sort_code y/sort/*.cpp)
 SET(sort_srcs ${sort_decl} ${sort_code})
@@ -390,6 +396,7 @@ ${utest_srcs}
 ${type_srcs} ${type_block_srcs}
 ${core_srcs}
 ${code_srcs}
+${momentary_srcs}
 ${sort_srcs}
 ${sort_network_srcs}
 ${randomized_srcs}

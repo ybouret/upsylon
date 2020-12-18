@@ -6,7 +6,7 @@
 #include "y/mkl/fit/sequential.hpp"
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/mkl/tao.hpp"
-#include "y/core/temporary-value.hpp"
+#include "y/momentary/value.hpp"
 
 namespace upsylon {
 

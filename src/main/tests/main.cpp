@@ -32,7 +32,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(core_roll);
     Y_UTEST(core_nodes);
     Y_UTEST(core_rnode);
-    Y_UTEST(core_temp);
+    Y_UTEST(core_momentary);
 
 
     Y_UTEST(isqrt);

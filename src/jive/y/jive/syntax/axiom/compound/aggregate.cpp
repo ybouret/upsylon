@@ -1,7 +1,7 @@
 
 
 #include "y/jive/syntax/axiom/compound/aggregate.hpp"
-#include "y/core/temporary-value.hpp"
+#include "y/momentary/value.hpp"
 
 namespace upsylon
 {

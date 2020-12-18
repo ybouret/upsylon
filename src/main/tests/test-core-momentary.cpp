@@ -1,7 +1,7 @@
 #include "y/utest/run.hpp"
-#include "y/core/temporary-value.hpp"
-#include "y/core/temporary-link.hpp"
-#include "y/core/temporary-acquire.hpp"
+#include "y/momentary/value.hpp"
+#include "y/momentary/link.hpp"
+#include "y/momentary/acquire.hpp"
 #include "support.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
@@ -44,7 +44,7 @@ namespace {
         matrix<double> m;
         vector<float>  v;
         {
-            core::temporary_acquire<2> link;
+            temporary_acquire<2> link;
             link.record(m);
             link.record(v);
             m.make(10,10);
@@ -58,7 +58,7 @@ namespace {
 
 }
 
-Y_UTEST(core_temp)
+Y_UTEST(core_momentary)
 {
     std::cerr << "temporary values" << std::endl;
     temp_value<int>();

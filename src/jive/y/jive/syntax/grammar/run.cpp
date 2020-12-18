@@ -1,7 +1,7 @@
 
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
-#include "y/core/temporary-value.hpp"
+#include "y/momentary/value.hpp"
 
 #define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
 

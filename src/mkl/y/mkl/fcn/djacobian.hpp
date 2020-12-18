@@ -5,8 +5,8 @@
 #define Y_MATH_FCN_DJACOBIAN_INCLUDED 1
 
 #include "y/mkl/fcn/derivative.hpp"
-#include "y/core/temporary-link.hpp"
-#include "y/core/temporary-value.hpp"
+#include "y/momentary/link.hpp"
+#include "y/momentary/value.hpp"
 
 namespace upsylon
 {

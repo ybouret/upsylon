@@ -37,33 +37,35 @@ namespace upsylon {
         };
 
 
-        //______________________________________________________________________
-        //
-        //
-        //! fixed count local temporary acquired
-        //
-        //______________________________________________________________________
-        template <size_t N>
-        class temporary_acquire : public temporary_acquire_
-        {
-        public:
-            static const size_t capacity = N; //!< alias
-
-            //! cleanup
-            inline virtual ~temporary_acquire() throw() {}
-
-            //! setup
-            inline explicit temporary_acquire() throw() :
-            temporary_acquire_(prv,capacity)
-            {}
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(temporary_acquire);
-            releasable *prv[N];
-        };
-
     }
+
+    //__________________________________________________________________________
+    //
+    //
+    //! fixed count local temporary acquired
+    //
+    //__________________________________________________________________________
+    template <size_t N>
+    class temporary_acquire : public core::temporary_acquire_
+    {
+    public:
+        static const size_t capacity = N; //!< alias
+
+        //! cleanup
+        inline virtual ~temporary_acquire() throw() {}
+
+        //! setup
+        inline explicit temporary_acquire() throw() :
+        temporary_acquire_(prv,capacity)
+        {}
+
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(temporary_acquire);
+        releasable *prv[N];
+    };
+
+
 
 }
 
