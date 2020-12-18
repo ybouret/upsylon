@@ -6,6 +6,7 @@
 #include "y/mkl/fit/sequential.hpp"
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/mkl/tao.hpp"
+#include "y/core/temporary-value.hpp"
 
 namespace upsylon {
 
@@ -16,7 +17,7 @@ namespace upsylon {
             //==================================================================
             //
             //
-            //! Gradient w.r.t parameters
+            //! Gradient w.r.t parameters for Sequential function
             //
             //
             //==================================================================
