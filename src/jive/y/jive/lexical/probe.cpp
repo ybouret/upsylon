@@ -74,7 +74,7 @@ namespace upsylon {
 
             Unit * Scanner:: probe(Source &source, Directive &directive)
             {
-                const core::temporary_link<Source> link(source,&origin);
+                const momentary_link<Source> link(source,&origin);
                 assert(0==directive);
 
             PROBE:

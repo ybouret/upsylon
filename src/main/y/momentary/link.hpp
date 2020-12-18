@@ -1,42 +1,42 @@
 //! \file
 
-#ifndef Y_CORE_TEMPORARY_LINK_INCLUDED
-#define Y_CORE_TEMPORARY_LINK_INCLUDED 1
+#ifndef Y_MOMENTARY_LINK_INCLUDED
+#define Y_MOMENTARY_LINK_INCLUDED 1
 
 #include "y/type/args.hpp"
 
 namespace upsylon {
 
-    namespace core
+    //__________________________________________________________________________
+    //
+    //
+    //! make a temporary link...
+    //
+    //_________________________________________________________________________
+    template <typename T>
+    class momentary_link
     {
-        //______________________________________________________________________
-        //
-        //! make a temporary link...
-        //______________________________________________________________________
-        template <typename T>
-        class temporary_link
+    public:
+        Y_DECL_ARGS(T,type); //!< aliasses
+
+        //! handle = &source
+        inline explicit momentary_link(type  &source,
+                                       type **handle) throw():
+        linked(handle)
         {
-        public:
-            Y_DECL_ARGS(T,type); //!< aliasses
+            assert(linked);
+            assert(0==*linked);
+            *linked = &source;
+        }
 
-            //! handle = &source
-            inline explicit temporary_link(type  &source,
-                                           type **handle) throw():
-            linked(handle)
-            {
-                assert(linked);
-                assert(0==*linked);
-                *linked = &source;
-            }
+        //! handle = NULL
+        inline ~momentary_link() throw() { assert(linked); *linked = 0; }
 
-            //! handle = NULL
-            inline ~temporary_link() throw() { assert(linked); *linked = 0; }
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(momentary_link);
+        type **linked;
+    };
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(temporary_link);
-            type **linked;
-        };
-    }
 }
 
 #endif

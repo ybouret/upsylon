@@ -31,7 +31,7 @@ namespace {
         {
             Y_CHECK(NULL==ptr);
             T x = support::get<T>();
-            core::temporary_link<T> link(x,&ptr);
+            momentary_link<T> link(x,&ptr);
             Y_CHECK(&x==ptr);
         }
         Y_CHECK(NULL==ptr);

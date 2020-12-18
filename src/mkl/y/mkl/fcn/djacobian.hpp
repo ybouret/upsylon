@@ -51,8 +51,8 @@ namespace upsylon
             //! compute the jacobian: J[i][j] = dF_i/d_X[j]
             inline void compute(matrix<T> &J,  const accessible<T> &X)
             {
-                core::temporary_link<const accessible<T> > xlink(X,&pX); assert(pX);
-                core::temporary_link<addressable<T> >      vlink(J.c_aux1,&pV); assert(pV);
+                momentary_link<const accessible<T> > xlink(X,&pX); assert(pX);
+                momentary_link<addressable<T> >      vlink(J.c_aux1,&pV); assert(pV);
                 const size_t r = J.rows;
                 const size_t c = J.cols;
                 for(i=r;i>0;--i)

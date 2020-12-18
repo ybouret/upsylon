@@ -90,9 +90,9 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // initialize
                 //--------------------------------------------------------------
-                momentary_value<size_t>                nlink(nvar,X.size());
-                core::temporary_link< addressable<T> > xlink(X,&X_);
-                core::temporary_link<ftype>            flink(f,&f_);
+                momentary_value<size_t>          nlink(nvar,X.size());
+                momentary_link< addressable<T> > xlink(X,&X_);
+                momentary_link<ftype>            flink(f,&f_);
                 assert(nvar==X.size());
                 J.make(nvar,nvar);
                 A.acquire(nvar);

@@ -127,8 +127,8 @@ namespace upsylon
                 // look up
                 //
                 //--------------------------------------------------------------
-                const core::temporary_link<array_type>  dlink(diag,&diag_);
-                const momentary_value<T>                kdrho(drho,_drho());
+                const momentary_link<array_type>  dlink(diag,&diag_);
+                const momentary_value<T>          kdrho(drho,_drho());
 
 
                 //--------------------------------------------------------------
@@ -136,8 +136,8 @@ namespace upsylon
                 // prepare a workspace to compute new values
                 //
                 //--------------------------------------------------------------
-                array_type                              wksp(*fwksp,nrun);
-                const core::temporary_link<array_type>  wlink(wksp,&wksp_);
+                array_type                        wksp(*fwksp,nrun);
+                const momentary_link<array_type>  wlink(wksp,&wksp_);
 
 
 

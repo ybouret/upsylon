@@ -96,7 +96,7 @@ namespace upsylon {
                     if(directive)
                     {
                         // do something
-                        const core::temporary_link<Source> link(source,&origin);
+                        const momentary_link<Source> link(source,&origin);
                         assert(0!=origin);
                         switch( directive->type )
                         {

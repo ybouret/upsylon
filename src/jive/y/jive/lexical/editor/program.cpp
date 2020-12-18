@@ -112,7 +112,7 @@ namespace upsylon
 
                 void Program:: run(ios::ostream &fp, Source &source)
                 {
-                    const core::temporary_link<Source> link(source,&org);
+                    const momentary_link<Source> link(source,&org);
 
                     for(Char *ch = source.get();ch!=NULL;ch=source.get())
                     {
