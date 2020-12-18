@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_CORE_TEMPORARY_ACQUIRE_INCLUDED
-#define Y_CORE_TEMPORARY_ACQUIRE_INCLUDED 1
+#ifndef Y_MOMENTARY_ACQUIRE_INCLUDED
+#define Y_MOMENTARY_ACQUIRE_INCLUDED 1
 
 #include "y/type/releasable.hpp"
 
@@ -16,20 +16,20 @@ namespace upsylon {
         //! base class to localy release objects
         //
         //______________________________________________________________________
-        class temporary_acquire_
+        class momentary_acquire_
         {
         public:
-            virtual ~temporary_acquire_() throw();                 //!< release_all() and cleanup
+            virtual ~momentary_acquire_() throw();                 //!< release_all() and cleanup
             void     record(releasable &) throw();                 //!< record a new object
-            temporary_acquire_ & operator<<(releasable &) throw(); //!< helper
+            momentary_acquire_ & operator<<(releasable &) throw(); //!< helper
             void release_all()                            throw(); //!< release all in reverse recorded order
 
         protected:
             //! setup from user's defined memory
-            explicit temporary_acquire_(releasable **arr, const size_t num) throw();
+            explicit momentary_acquire_(releasable **arr, const size_t num) throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(temporary_acquire_);
+            Y_DISABLE_COPY_AND_ASSIGN(momentary_acquire_);
             releasable   **addr;
             const size_t   capa;
         public:
@@ -46,22 +46,22 @@ namespace upsylon {
     //
     //__________________________________________________________________________
     template <size_t N>
-    class temporary_acquire : public core::temporary_acquire_
+    class momentary_acquire : public core::momentary_acquire_
     {
     public:
         static const size_t capacity = N; //!< alias
 
         //! cleanup
-        inline virtual ~temporary_acquire() throw() {}
+        inline virtual ~momentary_acquire() throw() {}
 
         //! setup
-        inline explicit temporary_acquire() throw() :
-        temporary_acquire_(prv,capacity)
+        inline explicit momentary_acquire() throw() :
+        core::momentary_acquire_(prv,capacity)
         {}
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(temporary_acquire);
+        Y_DISABLE_COPY_AND_ASSIGN(momentary_acquire);
         releasable *prv[N];
     };
 

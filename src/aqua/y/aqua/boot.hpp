@@ -97,7 +97,7 @@ namespace upsylon {
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Boot);
-            temporary_acquire<4> keep;
+            momentary_acquire<4> keep;
             void setup() throw();
         };
 

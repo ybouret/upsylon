@@ -26,7 +26,7 @@ namespace upsylon
             //
             // types and defintiions
             //__________________________________________________________________
-            typedef  temporary_acquire<16> Collector; //!< alias
+            typedef  momentary_acquire<16> Collector; //!< alias
 
 
             //__________________________________________________________________

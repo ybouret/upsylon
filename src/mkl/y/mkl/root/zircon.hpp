@@ -138,7 +138,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 core::temporary_link<ftype>           flink(f,&f_);
                 core::temporary_link<addressable<T> > Xlink(X,&X_);
                 core::temporary_link<addressable<T> > Flink(F,&F_);
-                temporary_acquire<8>            Rlink;
+                momentary_acquire<8>                  Rlink;
 
                 //--------------------------------------------------------------
                 //

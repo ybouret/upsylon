@@ -44,7 +44,7 @@ namespace {
         matrix<double> m;
         vector<float>  v;
         {
-            temporary_acquire<2> link;
+            momentary_acquire<2> link;
             link.record(m);
             link.record(v);
             m.make(10,10);

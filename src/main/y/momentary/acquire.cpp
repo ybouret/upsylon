@@ -7,7 +7,7 @@ namespace upsylon {
 
     namespace core
     {
-        temporary_acquire_:: ~temporary_acquire_() throw()
+        momentary_acquire_:: ~momentary_acquire_() throw()
         {
             release_all();
             addr=0;
@@ -15,7 +15,7 @@ namespace upsylon {
         }
 
 
-        void  temporary_acquire_:: release_all() throw()
+        void  momentary_acquire_:: release_all() throw()
         {
             while(size>0)
             {
@@ -23,7 +23,7 @@ namespace upsylon {
             }
         }
 
-        temporary_acquire_:: temporary_acquire_(releasable **arr, const size_t num) throw() :
+        momentary_acquire_:: momentary_acquire_(releasable **arr, const size_t num) throw() :
         addr(arr),
         capa(num),
         size(0)
@@ -35,13 +35,13 @@ namespace upsylon {
 
         
 
-        void temporary_acquire_:: record(releasable &obj) throw()
+        void momentary_acquire_:: record(releasable &obj) throw()
         {
             assert(size<capa);
             addr[aliasing::_(size)++] = &obj;
         }
 
-        temporary_acquire_ & temporary_acquire_:: operator<<( releasable &obj) throw()
+        momentary_acquire_ & momentary_acquire_:: operator<<( releasable &obj) throw()
         {
             record(obj);
             return *this;
