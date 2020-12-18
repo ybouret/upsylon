@@ -16,9 +16,11 @@ namespace upsylon
 
         namespace Dialect
         {
+            //! todo
             class PreAnalyzer : public Syntax::Analyzer
             {
             public:
+                //! setup
                 template <typename ID> inline
                 explicit PreAnalyzer( const ID &id, Jive::Parser *p) :
                 Syntax::Analyzer( id ),
@@ -26,9 +28,11 @@ namespace upsylon
                 {
                     assert(parser!=NULL);
                 }
+
+                //! cleanup
                 virtual ~PreAnalyzer() throw();
 
-                Jive::Parser *parser;
+                Jive::Parser *parser; //!< linked
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(PreAnalyzer);
@@ -62,7 +66,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag   name;
+                const Tag   name; //!< Dialect::Compiler
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compiler);
