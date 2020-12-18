@@ -88,21 +88,10 @@ namespace upsylon {
                         assert(aorg_p);
                         assert(vars_p);
                         
-                        Sequential<T>        &F    = *F_p;
-                        const accessible<T>  &aorg = *aorg_p;
-                        T                    &ai   = aliasing::_(aorg[i]);
-                        const T               a0   = ai;
-                        try {
-                            ai = a;
-                            const T f = F.start(x,aorg,*vars_p);
-                            ai = a0;
-                            return f;
-                        }
-                        catch(...)
-                        {
-                            ai = a0;
-                            throw;
-                        }
+                        Sequential<T>           &F    = *F_p;
+                        const accessible<T>     &aorg = *aorg_p;
+                        const momentary_value<T> alink(aliasing::_(aorg[i]),a);
+                        return F.start(x,aorg,*vars_p);
                     }
 
                 };
