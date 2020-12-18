@@ -105,9 +105,9 @@ namespace upsylon
                 // find dmin and dmax using adapted diag[1..nrun]
                 //
                 //--------------------------------------------------------------
-                array_type                     diag(*cdiag,nrun); sort(diag);
-                const core::temporary_value<T> kdmin(dmin,diag[1]);
-                const core::temporary_value<T> kdmax(dmax,diag[nrun]);
+                array_type              diag(*cdiag,nrun); sort(diag);
+                const momentary_value<T> kdmin(dmin,diag[1]);
+                const momentary_value<T> kdmax(dmax,diag[nrun]);
 
                 //--------------------------------------------------------------
                 //
@@ -128,7 +128,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 const core::temporary_link<array_type>  dlink(diag,&diag_);
-                const core::temporary_value<T>          kdrho(drho,_drho());
+                const momentary_value<T>                kdrho(drho,_drho());
 
 
                 //--------------------------------------------------------------

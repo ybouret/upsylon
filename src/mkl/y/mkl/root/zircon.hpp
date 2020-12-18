@@ -134,7 +134,7 @@ do { if(this->verbose) { std::cerr << '[' << CLID << ']' << ' ' << MSG << std::e
                 // prepare context
                 //
                 //--------------------------------------------------------------
-                core::temporary_value<size_t>         nlink(nvar,X.size());
+                momentary_value<size_t>               nlink(nvar,X.size());
                 core::temporary_link<ftype>           flink(f,&f_);
                 core::temporary_link<addressable<T> > Xlink(X,&X_);
                 core::temporary_link<addressable<T> > Flink(F,&F_);

@@ -72,7 +72,7 @@ namespace upsylon
                 assert(pX);
                 addressable<T>          &V    = *pV;
                 const accessible<T>     &X    = *pX;
-                core::temporary_value<T> S( aliasing::_(X[j]),xtry);
+                momentary_value<T>       S( aliasing::_(X[j]),xtry);
                 F(V,X);
                 return V[i];
             }

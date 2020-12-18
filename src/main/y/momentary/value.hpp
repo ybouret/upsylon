@@ -1,45 +1,44 @@
 
 //! \file
 
-#ifndef Y_CORE_TEMPORARY_VALUE_INCLUDED
-#define Y_CORE_TEMPORARY_VALUE_INCLUDED 1
+#ifndef Y_MOMENTARY_VALUE_INCLUDED
+#define Y_MOMENTARY_VALUE_INCLUDED 1
 
 #include "y/os/platform.hpp"
 
 namespace upsylon {
 
-    namespace core
+    //__________________________________________________________________________
+    //
+    //
+    //! make a temporary value
+    //
+    //__________________________________________________________________________
+    template <typename T>
+    class momentary_value
     {
-        //______________________________________________________________________
-        //
-        //! make a temporary value
-        //______________________________________________________________________
-        template <typename T>
-        class temporary_value
+    public:
+
+        //! ref=source,sav=source
+        inline explicit momentary_value(T      &variable,
+                                        T       replaced) :
+        ref(variable),
+        sav(ref)
         {
-        public:
+            variable = replaced;
+        }
 
-            //! ref=source,sav=source
-            inline explicit temporary_value(T      &variable,
-                                            T       replaced) :
-            ref(variable),
-            sav(ref)
-            {
-                variable = replaced;
-            }
+        //! ref=sav
+        inline ~momentary_value() throw()
+        {
+            ref=sav;
+        }
 
-            //! ref=sav
-            inline ~temporary_value() throw()
-            {
-                ref=sav;
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(temporary_value);
-            T &ref;
-            T  sav;
-        };
-    }
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(momentary_value);
+        T &ref;
+        T  sav;
+    };
 }
 
 #endif

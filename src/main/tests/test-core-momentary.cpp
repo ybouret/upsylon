@@ -18,7 +18,7 @@ namespace {
         std::cerr << x << std::endl;
         {
             const T tmp = support::get<T>();
-            core::temporary_value<T> link(x,tmp);
+            momentary_value<T> link(x,tmp);
             std::cerr << x << std::endl;
         }
         std::cerr << x << std::endl;

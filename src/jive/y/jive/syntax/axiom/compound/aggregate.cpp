@@ -45,7 +45,8 @@ namespace upsylon
             Y_JIVE_AXIOM_ACCEPT_IMPL(Aggregate)
             {
                 Y_JIVE_PRINTLN("aggregate#" << size << ">");
-                typedef core::temporary_value<Observer::Holder> Temporary;
+                typedef momentary_value<Observer::Holder> Temporary;
+                
                 //--------------------------------------------------------------
                 //
                 // initialize scanning of children
