@@ -26,7 +26,7 @@ inline bool fit(SampleType<T>            &sample,
     //
     //__________________________________________________________________________
     sample.ready();                             // prepare the sample
-    tao::ld(aerr,-1);                         // invalidate errors
+    tao::ld(aerr,-1);                           // invalidate errors
     if(n<=0)                                    //
     {                                           //
         Y_LS_PRINTLN("[LS] <no parameters>");   //
