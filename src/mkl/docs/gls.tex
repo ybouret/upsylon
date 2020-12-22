@@ -33,13 +33,16 @@ and the total least square is:
 \begin{equation}
 	D^2(\vec{A}) = \frac{1}{N}\sum_s N_s D^2_s (\vec{A}_s ),\;\; N=\sum_s N_s
 \end{equation}
+
+Let us compute the local descent direction:
+\begin{equation}
+	\vec{\beta}_s = - \vec{\nabla}_{\vec{A}_s} D^2_s =  \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F
+\end{equation}
+
 Let us compute the descent direction:
 \begin{equation}
-\begin{array}{rcl}
-	\vec{\beta}  & = & - \vec{\nabla}_{\vec{A}} D^2 \\
-	& = & - \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \vec{\nabla}_{\vec{A}_s} D^2_s\\
-	& = & \dfrac{1}{N} \left[\sum_s N_s \trn{\bm{\Gamma}}_s \left( \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F(\vec{X}_{si},\vec{A}_s)\right)\right]\\
-\end{array}
+ 	\vec{\beta}    = - \vec{\nabla}_{\vec{A}} D^2 
+	 =  \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \vec{\beta}_s
 \end{equation}
  
  
