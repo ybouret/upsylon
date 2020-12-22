@@ -1,0 +1,46 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{bookman}
+ 
+\newcommand{\trn}[1]{~^t{#1}}
+ 
+\begin{document}
+\title{General Least Squares}
+\maketitle
+
+We assume that we have $S\in \mathbb{N}^*$ sets of \textbf{scalar observable values} depending on $d-$dimensional coordinates:
+\begin{equation}
+	\forall s \in [1:S], \; \forall i \in [1:N_s], \; Y_{si} \in \mathbb{R} \text{ at } \vec{X}_{si} \in \mathbb{R}^d.
+\end{equation}
+
+We want to fit this data with a global set of parameters $\vec{A}\in \mathbb{R}^M$,
+with the same function that will depend on a different subset $\vec{A}_s\in\mathbb{R}^m$:
+\begin{equation}
+	\forall s \in [1:S], \; F(\vec{X},\vec{A}_s), \;\; \vec{A}_s = \bm{\Gamma}_s \vec{A}, \;\; \bm{\Gamma}_s \in \mathbb{M}_{m,M},\;\;m\leq M
+\end{equation}
+
+The least square a sample is:
+\begin{equation}
+		\forall s \in [1:S], \; D^2_s = \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right]^2
+\end{equation}
+and the total least square is:
+\begin{equation}
+	D^2(\vec{A}) = \frac{1}{N}\sum_s N_s D^2_s (\vec{A}_s ),\;\; N=\sum_s N_s
+\end{equation}
+Let us compute the descent direction:
+\begin{equation}
+\begin{array}{rcl}
+	\vec{\beta}  & = & - \vec{\nabla}_{\vec{A}} D^2 \\
+	& = & - \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \vec{\nabla}_{\vec{A}_s} D^2_s\\
+	& = & \dfrac{1}{N} \left[\sum_s N_s \trn{\bm{\Gamma}}_s \left( \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F(\vec{X}_{si},\vec{A}_s)\right)\right]\\
+\end{array}
+\end{equation}
+ 
+ 
+\end{document}
