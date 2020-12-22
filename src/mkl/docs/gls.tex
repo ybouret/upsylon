@@ -22,10 +22,10 @@ We assume that we have $S\in \mathbb{N}^*$ sets of \textbf{scalar observable val
 We want to fit this data with a global set of parameters $\vec{A}\in \mathbb{R}^M$,
 with the same function that will depend on a different subset $\vec{A}_s\in\mathbb{R}^m$:
 \begin{equation}
-	\forall s \in [1:S], \; F(\vec{X},\vec{A}_s), \;\; \vec{A}_s = \bm{\Gamma}_s \vec{A}, \;\; \bm{\Gamma}_s \in \mathbb{M}_{m,M},\;\;m\leq M
+	\forall s \in [1:S], \; F(\vec{X},\vec{A}_s), \;\; \vec{A}_s = \bm{\Gamma}_s \vec{A}, \;\; \bm{\Gamma}_s \in \mathcal{M}_{m,M}(\{0,1\}),\;\;m\leq M
 \end{equation}
-
-The least square a sample is:
+The matrix $\bm{\Gamma}_s$ is the "subset" operator.\\
+The least squares of a sample is:
 \begin{equation}
 		\forall s \in [1:S], \; D^2_s = \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right]^2
 \end{equation}

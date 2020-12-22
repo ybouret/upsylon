@@ -14,8 +14,8 @@ static const double rho_s = 12.0192;
 static const double d7out = 14.57;
 static const double eps6  = 1.0/(1.0+rho_s*(1+1e-3*d7out));
 static const double eps7  = 1.0-eps6;
-static const double sigma = 1.003772;
-
+//static const double sigma = 1.003772;
+static const double sigma = 1.00378555476349;
 static const double scale = 1000.0;
 
 namespace {
