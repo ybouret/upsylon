@@ -66,7 +66,7 @@ We assume that the first term vanishes around the minimum, so that we define:
 	\bm{\alpha}(\vec{A}) = \dfrac{1}{N} \sum_s N_s \underbrace{\trn{\bm{\Gamma}_s} \alpha_s (\vec{X}_{si},\vec{A}_s) \bm{\Gamma}_s}_{\in \mathcal{M}_M}
 \end{equation}
 
-\section{Looking for minima}
+\section{Looking for descent step}
 
 Starting from $\vec{A}$, we look for $\delta\vec{A}$ such that:
 \begin{equation}
@@ -80,9 +80,20 @@ We define:
 	\left\lbrace
 	\begin{array}{rcl}
 	(\bm{\alpha}(\vec{A})\vert_{uv}) & \text{if} & u!=v\\
-	(1+\lambda)(\bm{\alpha}(\vec{A})\vert_{uv})  & \text{if} & u=v\\
+	(1+\lambda)(\bm{\alpha}(\vec{A})\vert_{uu})  & \text{if} & u=v\\
 	\end{array}
 	\right.
 \end{equation}
-
+We have to increase $\lambda$ to find an invertible matrix.
+Then we have a guess:
+\begin{equation}
+	\delta\vec{A}_\lambda = \left[\bm{\alpha}_\lambda(\vec{A})\right]^{-1} \cdot \vec{\beta}(\vec{A})
+\end{equation}
+We have to increase $\lambda$ so that
+\begin{equation}
+	\delta\vec{A}_\lambda \cdot \vec{\beta}(\vec{A}) > 0
+\end{equation}
+ 
+\section{Looking for a minimum}
+ 
 \end{document}
