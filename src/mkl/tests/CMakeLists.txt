@@ -78,7 +78,7 @@ SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-mkl euclidean)
 
 SOURCE_GROUP(geometric FILES test-geometric.cpp)
-ADD_TEST(geometric test-ml geometric)
+ADD_TEST(geometric test-mkl geometric)
 
 SOURCE_GROUP( tao FILES
 test-tao.cpp

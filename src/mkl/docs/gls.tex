@@ -72,7 +72,17 @@ Starting from $\vec{A}$, we look for $\delta\vec{A}$ such that:
 \begin{equation}
 	\vec{\beta}(\vec{A}+\delta\vec{A}) = \vec{0} \simeq \vec{\beta}(\vec{A}) - \bm{\alpha}(\vec{A}) \cdot \delta \vec{A}
 \end{equation}
-
-
+We use the Levenberg-Marquardt regularisation approach, since $\bm{\alpha}$ is symmetric with a positive (or zero) diagonal.
+We define:
+\begin{equation}
+\forall u,v \in [1:M]^2, \;\;
+	\bm{\alpha}_{\lambda}(\vec{A})\vert_{uv} = 
+	\left\lbrace
+	\begin{array}{rcl}
+	(\bm{\alpha}(\vec{A})\vert_{uv}) & \text{if} & u!=v\\
+	(1+\lambda)(\bm{\alpha}(\vec{A})\vert_{uv})  & \text{if} & u=v\\
+	\end{array}
+	\right.
+\end{equation}
 
 \end{document}
