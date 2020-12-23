@@ -14,13 +14,18 @@
 \title{General Least Squares}
 \maketitle
 
+\section{Least Squares}
 We assume that we have $S\in \mathbb{N}^*$ sets of \textbf{scalar observable values} depending on $d-$dimensional coordinates:
 \begin{equation}
 	\forall s \in [1:S], \; \forall i \in [1:N_s], \; Y_{si} \in \mathbb{R} \text{ at } \vec{X}_{si} \in \mathbb{R}^d.
 \end{equation}
 
 We want to fit this data with a global set of parameters $\vec{A}\in \mathbb{R}^M$,
-with the same function that will depend on a different subset $\vec{A}_s\in\mathbb{R}^m$:
+with the same function: 
+\begin{equation}
+F : \mathbb{R}^d \times \mathbb{R}^m \rightarrow \mathbb{R},
+\end{equation}
+that will depend on a different subset $\vec{A}_s\in\mathbb{R}^m$:
 \begin{equation}
 	\forall s \in [1:S], \; F(\vec{X},\vec{A}_s), \;\; \vec{A}_s = \bm{\Gamma}_s \vec{A}, \;\; \bm{\Gamma}_s \in \mathcal{M}_{m,M}(\{0,1\}),\;\;m\leq M
 \end{equation}
@@ -34,6 +39,7 @@ and the total least square is:
 	D^2(\vec{A}) = \frac{1}{N}\sum_s N_s D^2_s (\vec{A}_s ),\;\; N=\sum_s N_s
 \end{equation}
 
+\section{Descent direction(s)}
 Let us compute the local descent direction:
 \begin{equation}
 	\vec{\beta}_s = - \vec{\nabla}_{\vec{A}_s} D^2_s =  \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F(\vec{X}_{si},\vec{A}_s)
@@ -47,8 +53,26 @@ Let us compute the descent direction:
 
 We want to find $\vec{\beta} = \vec{0}$.
 
+\section{Curvature}
 \begin{equation}
-	\partial_{\vec{A}} \vec{\beta} = \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \partial_{\vec{A}} \vec{\beta}_s
+	%\partial_{\vec{A}} \vec{\beta} = \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \partial_{\vec{A}} \vec{\beta}_s
+	\partial_{\vec{A}_s} \vec{\beta}_s = \sum_{i=1}^{N_s}  \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \bm{H}_F(\vec{X}_{si},\vec{A}_s)
+	- \underbrace{
+	\sum_{i=1}^{N_s} \vert\vec{\nabla} F(\vec{X}_{si},\vec{A}_s) \rangle  \langle\vec{\nabla} F(\vec{X}_{si},\vec{A}_s)\vert
+	}_{\bm{\alpha}_s(\vec{X}_{si},\vec{A}_s)\in\mathcal{M}_{m} }
 \end{equation}
- 
+We assume that the first term vanishes around the minimum, so that we define:
+\begin{equation}
+	\bm{\alpha}(\vec{A}) = \dfrac{1}{N} \sum_s N_s \underbrace{\trn{\bm{\Gamma}_s} \alpha_s (\vec{X}_{si},\vec{A}_s) \bm{\Gamma}_s}_{\in \mathcal{M}_M}
+\end{equation}
+
+\section{Looking for minima}
+
+Starting from $\vec{A}$, we look for $\delta\vec{A}$ such that:
+\begin{equation}
+	\vec{\beta}(\vec{A}+\delta\vec{A}) = \vec{0} \simeq \vec{\beta}(\vec{A}) - \bm{\alpha}(\vec{A}) \cdot \delta \vec{A}
+\end{equation}
+
+
+
 \end{document}
