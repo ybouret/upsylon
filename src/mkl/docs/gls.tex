@@ -75,6 +75,7 @@ Starting from $\vec{A}$, we look for $\delta\vec{A}$ such that:
 We use the Levenberg-Marquardt regularisation approach, since $\bm{\alpha}$ is symmetric with a positive (or zero) diagonal.
 We define:
 \begin{equation}
+\label{start}
 \forall u,v \in [1:M]^2, \;\;
 	\bm{\alpha}_{\lambda}(\vec{A})\vert_{uv} = 
 	\left\lbrace
@@ -84,12 +85,12 @@ We define:
 	\end{array}
 	\right.
 \end{equation}
-We have to increase $\lambda$ to find an invertible matrix.
+We have to increase $\lambda$ (and recomputing from Eq.\eqref{start}) to find an invertible matrix.
 Then we have a guess:
 \begin{equation}
 	\delta\vec{A}_\lambda = \left[\bm{\alpha}_\lambda(\vec{A})\right]^{-1} \cdot \vec{\beta}(\vec{A})
 \end{equation}
-We have to increase $\lambda$ so that:
+We have to increase $\lambda$ (and recomputing from Eq.\eqref{start}) so that:
 \begin{equation}
 	\sigma_ = \delta\vec{A}_\lambda \cdot \vec{\beta}(\vec{A}) > 0
 \end{equation}
@@ -97,18 +98,22 @@ We have to increase $\lambda$ so that:
 \section{Looking for a minimum}
 Let us define:
 \begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	f(\gamma) & = & D^2(\vec{A}+\gamma \delta\vec{A}_\lambda)\\
-	f(0)      & = & f_0 = D^2(\vec{A})\\
-	f'(0)     & = & -\sigma\\
-	f(1)      & = & f_1\\
-\end{array}\right.
-\end{equation} 
-We need to compute $f(1)$, and thanks to the previous definitions, we have an idea of the topology of $f$.
-
-\begin{equation}
-	f(\gamma) \simeq f_0 - \gamma \sigma + a \gamma^2
+	f(\gamma)  =  D^2(\vec{A}+\gamma \delta\vec{A}_\lambda)
 \end{equation}
+We compute $f(1)=f_1$ (the full step) and we need to compare to $f(0)=f_0$.
+\begin{itemize}
+\item If $f_1\geq f_0$, we need to increase $\lambda$ and recompute the step from Eq.\eqref{start}.
+\item if $f_1<f_0$
+\end{itemize}
+
+%\begin{equation}
+%\left\lbrace
+%\begin{array}{rcl}
+%	f(0)      & = & f_0 = D^2(\vec{A})\\
+%	f'(0)     & = & -\sigma\\
+%	f(1)      & = & f_1\\
+%\end{array}\right.
+%\end{equation} 
+
  
 \end{document}
