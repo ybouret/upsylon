@@ -157,6 +157,8 @@ DEPENDS test-main test-jive test-mkl test-aqua test-chem test-net test-spade tes
 COMMENT "Built Core Libraries"
 )
 
+ADD_SUBDIRECTORY(python)
+
 ########################################################################
 ##
 ##

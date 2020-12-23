@@ -1,0 +1,6 @@
+find_package (Python COMPONENTS Interpreter Development)
+if(Python_FOUND)
+	message( STATUS "will use Python" )
+else()
+	message( STATUS "will NOT use Python")
+endif()
