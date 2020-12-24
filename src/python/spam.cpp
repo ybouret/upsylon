@@ -15,7 +15,7 @@ spam_system(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "s", &command))
         return NULL;
     sts = system(command);
-    if (sts < 0) {
+    if (sts != 0) {
         PyErr_SetString(SpamError, "System command failed");
         return NULL;
     }
