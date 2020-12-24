@@ -40,6 +40,8 @@ SET(to_remove ${to_remove} ${tmp})
 #specific stuff
 LIST( APPEND to_remove "src/r++/tests/rmodule.so"  )
 LIST( APPEND to_remove "src/r++/tests/rmodule.dll" )
+LIST( APPEND to_remove "src/python/spam.so" )
+LIST( APPEND to_remove "src/python/spam.dll" )
 
 FOREACH(item IN LISTS to_remove)
 	IF(EXISTS "${item}")
