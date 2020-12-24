@@ -4,7 +4,7 @@
 static PyObject *SpamError = 0;
 
 
-static PyObject *
+static inline PyObject *
 spam_system(PyObject *self, PyObject *args)
 {
     const char *command;
@@ -45,9 +45,7 @@ static struct PyModuleDef spamModule =
 PyMODINIT_FUNC
 PyInit_spam(void)
 {
-    PyObject *m;
-
-    m = PyModule_Create(&spamModule);
+    PyObject *m = PyModule_Create(&spamModule);
     if (m == NULL)
         return NULL;
 
