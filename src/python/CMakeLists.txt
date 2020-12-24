@@ -5,12 +5,9 @@ if(Python_FOUND)
 	#message( STATUS "Python_LIBRARIES:    ${Python_LIBRARIES}"    )
 	include_directories(${Python_INCLUDE_DIRS})
 	Python_add_library(spam MODULE spam.cpp)
-	set_target_properties(spam
-    PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-)
+	ADD_CUSTOM_COMMAND( TARGET spam POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:spam> ${CMAKE_CURRENT_SOURCE_DIR}/$<TARGET_FILE_NAME:spam>
+	COMMENT "Copy spam module...")
 else()
 	message( STATUS "will NOT use Python")
 endif()

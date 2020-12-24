@@ -22,8 +22,18 @@ spam_system(PyObject *self, PyObject *args)
     return PyLong_FromLong(sts);
 }
 
+static inline PyObject *
+spam_version(PyObject *self, PyObject *args)
+{
+    (void)self;
+    (void)args;
+
+    return Py_BuildValue("s", "1.0");
+}
+
 static PyMethodDef SpamMethods[] = {
-    {"system",  spam_system, METH_VARARGS, "Execute a shell command."},
+    {"system",  spam_system,  METH_VARARGS, "Execute a shell command."},
+    {"version", spam_version, METH_VARARGS, "Return the current version." },
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
