@@ -1,6 +1,8 @@
 find_package (Python COMPONENTS Interpreter Development)
 if(Python_FOUND)
 	message( STATUS "will use Python" )
+	include_directories(${Python_INCLUDE_DIRS})
+	add_library(spam SHARED spam.cpp)
 else()
 	message( STATUS "will NOT use Python")
 endif()
