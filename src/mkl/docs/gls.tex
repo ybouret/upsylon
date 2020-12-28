@@ -92,7 +92,7 @@ Then we have a guess:
 \end{equation}
 We have to increase $\lambda$ (and recomputing from Eq.\eqref{start}) so that:
 \begin{equation}
-	\sigma_ = \delta\vec{A}_\lambda \cdot \vec{\beta}(\vec{A}) > 0
+	\sigma = \delta\vec{A}_\lambda \cdot \vec{\beta}(\vec{A}) > 0
 \end{equation}
  
 \section{Looking for a minimum}
@@ -103,17 +103,30 @@ Let us define:
 We compute $f(1)=f_1$ (the full step) and we need to compare to $f(0)=f_0$.
 \begin{itemize}
 \item If $f_1\geq f_0$, we need to increase $\lambda$ and recompute the step from Eq.\eqref{start}.
-\item if $f_1<f_0$
+\item if $f_1<f_0$, then accept step an decrease $\lambda$.
 \end{itemize}
 
-%\begin{equation}
-%\left\lbrace
-%\begin{array}{rcl}
-%	f(0)      & = & f_0 = D^2(\vec{A})\\
-%	f'(0)     & = & -\sigma\\
-%	f(1)      & = & f_1\\
-%\end{array}\right.
-%\end{equation} 
+\section{Scaling management}
+
+\begin{equation}
+	\epsilon \leq \lambda = 10^p < \lambda_{\max}
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{lcl}
+	p_{min}  & =  &-\mathrm{[FLOAT|DOUBLE]\_DIG}\\
+	\lambda_{min} & = & 0\\
+ 	\hline
+	p_{max} & = &  \mathrm{[FLOAT|DOUBLE]\_MAX\_10\_EXP}\\
+	p>p_{max}& \Rightarrow & \mathrm{singularity}\\
+	\hline
+	p_{ini} & = & \dfrac{p_{min}}{2}\\
+\end{array}
+\right.
+\end{equation}
+
+
 
  
 \end{document}
