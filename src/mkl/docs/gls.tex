@@ -119,14 +119,28 @@ We compute $f(1)=f_1$ (the full step) and we need to compare to $f(0)=f_0$.
 	\lambda_{min} & = & 0\\
  	\hline
 	p_{max} & = &  \mathrm{[FLOAT|DOUBLE]\_MAX\_10\_EXP}\\
-	p>p_{max}& \Rightarrow & \mathrm{singularity}\\
+	p>p_{max}& \Rightarrow & \text{singularity or stall}\\
 	\hline
 	p_{ini} & = & \dfrac{p_{min}}{2}\\
 \end{array}
 \right.
 \end{equation}
 
+\section{Error computation}
+The number of degrees of freedom $n$ is equal to the number of points $N=\sum_s N_s$ minus the number of used parameters $M'\leq M$.
+\begin{itemize}
+\item If $n<0$ then the fit is meaningless.
+\item If $n=0$, this is an interpolation, there is no error.
+\item If $n>0$, then the variance for the variable $A_j$ is:
+\begin{equation}
+	\sigma^2_j \simeq \dfrac{D^2(\vec{A})}{N-M'} \max\left(0,\left[\alpha_0(\vec{A})\right]^{-1}_{jj}\right)
+\end{equation}
+and the standard error is:
+\begin{equation}
+	\mathrm{err}_j = \sqrt{\dfrac{D^2(\vec{A})}{\left(N-M'\right)^2} \max\left(0,\left[\alpha_0(\vec{A})\right]^{-1}_{jj}\right) }
+\end{equation}
 
+\end{itemize}
 
  
 \end{document}
