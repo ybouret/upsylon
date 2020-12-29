@@ -24,9 +24,18 @@ namespace upsylon
             class lambdas
             {
             public:
+                //______________________________________________________________
+                //
+                // definitions
+                //______________________________________________________________
                 static const int pmin; //!< 10^pmin   => 0
                 static const int pmax; //!< 10^pmax+1 => singularity
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                
                 //! setup
                 inline explicit lambdas() : bytes( (1+pmax-pmin) * sizeof(T) ),
                 value( static_cast<T*>(memory::global::instance().acquire(bytes))-pmin )
@@ -44,13 +53,7 @@ namespace upsylon
                     }
                 }
 
-                //! fetch idx in [pmin..pmax]
-                inline T operator[](const int idx) const throw()
-                {
-                    assert(idx>=pmin); assert(idx<=pmax);
-                    return value[idx];
-                }
-
+                
                 //! cleanup
                 inline virtual ~lambdas() throw()
                 {
@@ -58,6 +61,18 @@ namespace upsylon
                     memory::global::location().release(*(void**)&value,bytes);
                 }
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                
+                //! fetch idx in [pmin..pmax]
+                inline T operator[](const int idx) const throw()
+                {
+                    assert(idx>=pmin); assert(idx<=pmax);
+                    return value[idx];
+                }
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(lambdas);
                 size_t bytes;

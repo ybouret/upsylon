@@ -2,7 +2,10 @@
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/sequence/list.hpp"
 #include "y/mkl/types.hpp"
+#include "y/ptr/arc.hpp"
+#include "y/ptr/arr.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -27,8 +30,13 @@ Y_UTEST(fitting_lam)
 {
 
     lambdas<double> ld; show_lambda(ld);
-
     lambdas<float>  lf; show_lambda(lf);
 
+    typedef arr_ptr< sequence<double>, arc_ptr> ptr_type;
+    ptr_type v = new vector<double>(),
+    l=new list<double>();
+    
+    
+    
 }
 Y_UTEST_DONE()
