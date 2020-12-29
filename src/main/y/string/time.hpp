@@ -7,9 +7,13 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //! various time formating routines
+    //__________________________________________________________________________
     struct string_time
     {
-        static string stamp(); //!< y-m-d H:M:S
+        static string stamp(); //!< "y-m-d H:M:S" stamp
     };
 }
 
