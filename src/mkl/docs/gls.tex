@@ -143,8 +143,60 @@ and the standard error is:
 \end{itemize}
 
 \section{Application to Algebraic Circle Fit}
-
-
-
- 
+We have one sample of $N$ points $\vec{X}_{i\in[1:N]}$ with:
+\begin{equation}
+	\vec{X}_i = \begin{bmatrix}x_i\\y_i\\\end{bmatrix}
+\end{equation}
+and we want to match the equation:
+\begin{equation}
+	x^2+y^2=ax+by+c.
+\end{equation}
+We define:
+\begin{equation}
+	\forall i \in [1:N], \;\; z_i = x_i^2+y_i^2,
+\end{equation}
+and
+\begin{equation}
+	\vec{A} = \begin{bmatrix} a\\b\\c\\ \end{bmatrix}.
+\end{equation}
+Then:
+\begin{equation}
+	\bm{\alpha}_0 = 
+	\begin{bmatrix}
+	\sum x_i^2 & \sum x_iy_i & \sum x_i\\
+	\sum x_iy_i & \sum y_i^2 & \sum y_i\\
+	\sum x_i & \sum y_i & N \\
+	\end{bmatrix}
+\end{equation}
+and the algebraic solution is:
+\begin{equation}
+\bm{\alpha}_0 \vec{A} = \begin{bmatrix}
+	\sum z_i x_i\\
+	\sum z_i y_i\\
+	\sum z_i\\
+\end{bmatrix}
+\end{equation}
+Using:
+\begin{equation}
+	D^2(\vec{A}) = \sum_i \left(z_i - (ax_i+by_i+c)\right)^2, \;\; M'=3,
+\end{equation}
+we found
+\begin{equation}
+	\vec{A} = \bm{\alpha}_0^{-1} \begin{bmatrix}
+	\sum z_i x_i\\
+	\sum z_i y_i\\
+	\sum z_i\\
+\end{bmatrix}
++ \delta \vec{A}
+\end{equation}
+and we get:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	x_c & = & \frac{a}{2} + \frac{\delta a}{2}\\
+	y_c & = & \frac{b}{2} + \frac{\delta b}{2}\\
+	r   & = & \sqrt{c+x_c^2+y_c^2} + ...\\
+\end{array}
+\right.
+\end{equation}
 \end{document}
