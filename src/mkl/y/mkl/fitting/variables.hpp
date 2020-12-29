@@ -13,6 +13,14 @@ namespace upsylon
         namespace fitting
         {
 
+            class variables
+            {
+            public:
+                virtual ~variables() throw();
+                
+            private:
+            };
+
         }
     }
 }
