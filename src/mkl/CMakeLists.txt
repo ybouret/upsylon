@@ -83,9 +83,6 @@ SET(euclidean_srcs ${euclidean_decl} ${euclidean_code})
 SOURCE_GROUP( euclidean FILES ${euclidean_srcs} )
 INSTALL( FILES ${euclidean_decl} DESTINATION include/y/mkl/euclidean )
 
-
-
-
 FILE(GLOB euclidean_arc_decl y/mkl/euclidean/arc/*.hpp)
 FILE(GLOB euclidean_arc_code y/mkl/euclidean/arc/*.cpp)
 SET(euclidean_arc_srcs ${euclidean_arc_decl} ${euclidean_arc_code})
@@ -137,6 +134,19 @@ SET(fit_share_srcs ${fit_share_decl} ${fit_share_code})
 SOURCE_GROUP( fit/share FILES ${fit_share_srcs} )
 INSTALL( FILES ${fit_share_decl} DESTINATION include/y/mkl/fit/share )
 
+FILE(GLOB fitting_decl y/mkl/fitting/*.hpp)
+FILE(GLOB fitting_code y/mkl/fitting/*.cpp)
+SET(fitting_srcs ${fitting_decl} ${fitting_code})
+SOURCE_GROUP( fitting FILES ${fitting_srcs} )
+INSTALL( FILES ${fitting_decl} DESTINATION include/y/mkl/fitting )
+
+FILE(GLOB fitting_variable_decl y/mkl/fitting/variable/*.hpp)
+FILE(GLOB fitting_variable_code y/mkl/fitting/variable/*.cpp)
+SET(fitting_variable_srcs ${fitting_variable_decl} ${fitting_variable_code})
+SOURCE_GROUP( fitting/variable FILES ${fitting_variable_srcs} )
+INSTALL( FILES ${fitting_variable_decl} DESTINATION include/y/mkl/fitting/variable )
+
+
 ADD_LIBRARY(y-mkl STATIC
 ${main_srcs}
 ${tao_srcs}
@@ -151,6 +161,7 @@ ${stat_srcs}
 ${geometric_srcs} ${geometric_arc_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
 ${fit_srcs} ${fit_sample_srcs} ${fit_variable_srcs} ${fit_sequential_srcs} ${fit_share_srcs} 
+${fitting_srcs} ${fitting_variable_srcs} 
 )
 INSTALL( TARGETS y-mkl ARCHIVE DESTINATION lib )
 

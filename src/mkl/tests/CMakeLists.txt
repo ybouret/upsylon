@@ -86,6 +86,9 @@ test-simplify.cpp)
 ADD_TEST(tao test-mkl tao)
 ADD_TEST(simplify test-mkl simplify)
 
+SOURCE_GROUP( fitting FILES test-fitting-vars.cpp )
+ADD_TEST(fitting:vars test-mkl fitting_vars)
+
 
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

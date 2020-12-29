@@ -59,7 +59,8 @@ Y_UTEST_INIT(64)
 
     Y_UTEST(tao);
     Y_UTEST(simplify);
-    
+
+    Y_UTEST(fitting_vars);
 }
 Y_UTEST_EXEC()
 
