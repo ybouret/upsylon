@@ -61,6 +61,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(simplify);
 
     Y_UTEST(fitting_vars);
+    Y_UTEST(fitting_lam);
 }
 Y_UTEST_EXEC()
 

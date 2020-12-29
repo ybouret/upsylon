@@ -12,18 +12,29 @@ namespace upsylon
         namespace fitting
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! base class for a variable
+            //
+            //__________________________________________________________________
             class variable : public object, public counted
             {
             public:
-
+                //______________________________________________________________
+                //
                 // virtual interface
-                virtual       ~variable()        throw();
-                virtual size_t get_index() const throw() = 0;
+                //______________________________________________________________
+                virtual       ~variable()        throw();      //!< cleanup
+                virtual size_t get_index() const throw() = 0;  //!< final index
 
+                //______________________________________________________________
+                //
                 // non-virtual interface
-                const string &key() const throw();
+                //______________________________________________________________
+                const string &key() const throw();           //!< key for sets
 
-
+                //! get item in addressable
                 template <typename T>
                 T & operator()(addressable<T> &arr) const throw()
                 {
@@ -31,6 +42,7 @@ namespace upsylon
                     return arr[ get_index() ];
                 }
 
+                //! get item in accessible
                 template <typename T>
                 const T & operator()(const accessible<T> &arr) const throw()
                 {
@@ -38,11 +50,19 @@ namespace upsylon
                     return arr[ get_index() ];
                 }
 
-                const string name;
-
+                //! display 'name' and get_index()
                 friend std::ostream & operator<<(std::ostream &, const variable &);
 
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const string name; //!< unique name
+
+
             protected:
+                //! setup with name
                 template <typename ID> inline
                 explicit variable(const ID &id): name(id)
                 {

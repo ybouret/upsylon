@@ -12,18 +12,34 @@ namespace upsylon
         namespace fitting
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! primary variable, regular access
+            //
+            //__________________________________________________________________
             class primary_variable : public variable
             {
             public:
-                virtual ~primary_variable() throw();
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~primary_variable() throw(); //!< cleanup
+
+                //! setup with name and positive index
                 template <typename ID> inline
                 explicit primary_variable(const ID &id, const size_t the_index) :
                 variable(id), indx( check_index(the_index) )
                 {
                 }
 
-                
-                const size_t indx;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const size_t indx; //!< global [1..] index
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(primary_variable);

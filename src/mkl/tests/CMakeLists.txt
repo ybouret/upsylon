@@ -1,5 +1,5 @@
 PROJECT(test-mkl)
-INCLUDE_DIRECTORIES(../../main/tests)
+INCLUDE_DIRECTORIES(../../main/tests ../../spade)
 FILE(GLOB srcs test-*.cpp)
 
 ADD_EXECUTABLE(test-mkl main.cpp ${srcs} ../../main/tests/support.hpp)
@@ -86,9 +86,9 @@ test-simplify.cpp)
 ADD_TEST(tao test-mkl tao)
 ADD_TEST(simplify test-mkl simplify)
 
-SOURCE_GROUP( fitting FILES test-fitting-vars.cpp )
+SOURCE_GROUP( fitting FILES test-fitting-vars.cpp test-fitting-lam.cpp)
 ADD_TEST(fitting:vars test-mkl fitting_vars)
-
+ADD_TEST(fitting:lam  test-mkl fitting_lam)
 
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

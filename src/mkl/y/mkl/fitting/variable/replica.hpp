@@ -14,12 +14,24 @@ namespace upsylon
         namespace fitting
         {
 
-            typedef intr_ptr<string,variable> shared_variable;
+            typedef intr_ptr<string,variable> shared_variable; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! replica variable, alias to another varialbe
+            //
+            //__________________________________________________________________
             class replica_variable : public variable
             {
             public:
-                virtual ~replica_variable() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~replica_variable() throw(); //!< cleanup
+
+                //! setup with name and parent variable
                 template <typename ID> inline
                 explicit replica_variable(const ID              &id,
                                           const shared_variable &parent) :
@@ -27,7 +39,11 @@ namespace upsylon
                 {
                 }
 
-                const shared_variable source;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const shared_variable source; //!< effective variable
 
 
 

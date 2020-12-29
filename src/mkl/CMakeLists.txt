@@ -2,7 +2,7 @@ PROJECT(y-mkl C CXX)
 
 MESSAGE( STATUS "<MKL>" )
 
-INCLUDE_DIRECTORIES(. ../main)
+INCLUDE_DIRECTORIES(. ../main ../spade)
 
 FILE(GLOB main_decl y/mkl/*.hpp)
 FILE(GLOB main_code y/mkl/*.cpp)

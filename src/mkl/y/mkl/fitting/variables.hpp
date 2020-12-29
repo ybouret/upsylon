@@ -13,17 +13,31 @@ namespace upsylon
     {
         namespace fitting
         {
+            //! base class for variables
             typedef hash_set<string,shared_variable> variables_;
 
+            //__________________________________________________________________
+            //
+            //
+            //! set of variables
+            //
+            //__________________________________________________________________
             class variables : public variables_
             {
             public:
+                //______________________________________________________________
+                //
                 // C++
-                virtual ~variables() throw();
-                explicit variables();
-                variables(const variables &);
-                variables & operator=(const variables &);
+                //______________________________________________________________
+                virtual ~variables() throw();             //!< cleanup
+                explicit variables();                     //!< setup
+                variables(const variables &);             //!< copy
+                variables & operator=(const variables &); //!< assign
 
+                //______________________________________________________________
+                //
+                //! create primary variables
+                //______________________________________________________________
                 template <typename ID> inline
                 variables &operator()(const ID &id, const size_t indx)
                 {
@@ -32,6 +46,10 @@ namespace upsylon
                     return *this;
                 }
 
+                //______________________________________________________________
+                //
+                //! append primary variable
+                //______________________________________________________________
                 template <typename ID> inline
                 variables & operator<<( const ID &id )
                 {
@@ -39,6 +57,10 @@ namespace upsylon
                     return *this;
                 }
 
+                //______________________________________________________________
+                //
+                //! create replica variable
+                //______________________________________________________________
                 template <typename ID> inline
                 variables &operator()(const ID &id, const shared_variable &parent)
                 {
@@ -47,30 +69,54 @@ namespace upsylon
                     return *this;
                 }
 
+                //______________________________________________________________
+                //
+                //! access by id
+                //______________________________________________________________
                 const shared_variable & operator()(const string &id) const;
+
+                //______________________________________________________________
+                //
+                //! access by id, wrapper
+                //______________________________________________________________
                 const shared_variable & operator()(const char   *id) const;
 
+                //______________________________________________________________
+                //
+                //! direct variable access
+                //______________________________________________________________
                 template <typename ID> inline
                 const variable & operator[](const ID &id) const
                 {
                     return *(*this)(id);
                 }
 
-
+                //______________________________________________________________
+                //
+                //! access item by name
+                //______________________________________________________________
                 template <typename ID,typename T> inline
                 T & operator()(const ID &id, addressable<T> &arr) const
                 {
                     return (*this)[id](arr);
                 }
 
+                //______________________________________________________________
+                //
+                //! access const item by name
+                //______________________________________________________________
                 template <typename ID,typename T> inline
                 const T & operator()(const ID &id, const accessible<T> &arr) const
                 {
                     return (*this)[id](arr);
                 }
 
-                size_t max_name_length() const throw();
-                size_t sweep()           const throw();
+                //______________________________________________________________
+                //
+                // other methods
+                //______________________________________________________________
+                size_t max_name_length() const throw(); //!< max of name lengths
+                size_t sweep()           const throw(); //!< max of index values
 
 
             private:
