@@ -13,11 +13,12 @@ namespace upsylon
         namespace fitting
         {
 
-            class variables
+            class variables : public collection
             {
             public:
                 virtual ~variables() throw();
-                
+                virtual size_t size() const throw();
+
             private:
             };
 

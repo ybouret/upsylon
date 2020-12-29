@@ -1,9 +1,23 @@
 #include "y/mkl/fitting/variables.hpp"
 #include "y/utest/run.hpp"
 
+#include "y/associative/hash/set.hpp"
+#include "y/associative/suffix/set.hpp"
+
 using namespace upsylon;
 using namespace mkl;
 using namespace fitting;
+
+namespace
+{
+    template <typename VSET>
+    static inline
+    void testVars()
+    {
+        VSET vset;
+
+    }
+}
 
 Y_UTEST(fitting_vars)
 {
@@ -22,8 +36,13 @@ Y_UTEST(fitting_vars)
         std::cerr << v_t0a << std::endl;
         std::cerr << v_t0b << std::endl;
 
-
     }
+
+    
+
+    testVars< hash_set<string,shared_variable>   >();
+    testVars< suffix_set<string,shared_variable> >();
+
 
 }
 Y_UTEST_DONE()
