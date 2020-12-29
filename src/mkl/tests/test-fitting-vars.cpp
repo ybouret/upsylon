@@ -1,8 +1,6 @@
 #include "y/mkl/fitting/variables.hpp"
 #include "y/utest/run.hpp"
-
-#include "y/associative/hash/set.hpp"
-#include "y/associative/suffix/set.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -10,13 +8,7 @@ using namespace fitting;
 
 namespace
 {
-    template <typename VSET>
-    static inline
-    void testVars()
-    {
-        VSET vset;
 
-    }
 }
 
 Y_UTEST(fitting_vars)
@@ -38,10 +30,34 @@ Y_UTEST(fitting_vars)
 
     }
 
-    
+    variables vars;
+    vars << "D" << "t1" << "t2";
+    std::cerr << "vars: " << vars << std::endl;
 
-    testVars< hash_set<string,shared_variable>   >();
-    testVars< suffix_set<string,shared_variable> >();
+    variables sub1;
+    sub1("D",vars("D"));
+    sub1("t0",vars("t1"));
+    std::cerr << "sub1: " << sub1 << std::endl;
+
+    variables sub2;
+    sub2("D",vars("D"));
+    sub2("t0",vars("t2"));
+    std::cerr << "sub2: " << sub2 << std::endl;
+
+    const size_t   n = vars.sweep();
+    vector<int>    aorg(n,0);
+
+    const variable &D = vars["D"];
+    {
+        const int r = alea.full<int>();
+        D(aorg) = r;
+        Y_CHECK(r==vars("D",aorg));
+        Y_CHECK(r==sub1("D",aorg));
+        Y_CHECK(r==sub2("D",aorg));
+
+    }
+
+
 
 
 }
