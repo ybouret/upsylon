@@ -203,7 +203,7 @@ namespace upsylon {
                                 if(width>numeric<T>::minimum)
                                 {
                                     todo.store( new range<T>(mid,end,depth) );
-                                    std::cerr << "range: [" << mid <<":" << end << std::endl;
+                                    std::cerr << "range: [" << mid <<":" << end << "]" << std::endl;
                                 }
                             }
 
@@ -213,7 +213,7 @@ namespace upsylon {
                                 if(width>numeric<T>::minimum)
                                 {
                                     todo.store( new range<T>(ini,mid,depth) );
-                                    std::cerr << "range: [" << ini <<":" << mid << std::endl;
+                                    std::cerr << "range: [" << ini <<":" << mid << "]" << std::endl;
                                 }
                             }
                         }
