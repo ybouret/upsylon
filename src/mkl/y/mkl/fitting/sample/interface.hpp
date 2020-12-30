@@ -26,19 +26,32 @@ namespace upsylon
             typename ABSCISSA,
             typename ORDINATE
             >
-            class sample_type : public object, public counted
+            class sample_api : public object, public counted
             {
             public:
                 //______________________________________________________________
                 //
                 // virtual inteface
                 //______________________________________________________________
-                inline virtual       ~sample_type() throw() {}   //!< cleanup
-                inline virtual size_t size()  const throw() = 0; //!< number of points
+                inline virtual       ~sample_type()  throw() {}   //!< cleanup
+                inline virtual size_t count()  const throw() = 0; //!< number of points
+
+                //______________________________________________________________
+                //
+                // non-virtual inteface
+                //______________________________________________________________
+                inline const string &key() const throw() { return name; }
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const string name;
 
             protected:
                 //! setup
-                inline explicit sample_type() throw() : object(), counted()
+                template <typename ID>
+                inline explicit sample_type( const ID &id) throw() : object(), counted(), name(id)
                 {
                 }
 

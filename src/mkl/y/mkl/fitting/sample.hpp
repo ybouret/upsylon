@@ -3,7 +3,7 @@
 #ifndef Y_FITTING_SAMPLE_INCLUDED
 #define Y_FITTING_SAMPLE_INCLUDED 1
 
-#include "y/mkl/fitting/sample/type.hpp"
+#include "y/mkl/fitting/sample/interface.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/ptr/auto.hpp"
@@ -43,7 +43,8 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef          arc_ptr<sample>        pointer;       //!< for samples
+                typedef          sample_type<ABSCISSA,ORDINATE> self_type;
+                typedef          intr_ptr<string,sample>        pointer;       //!< for samples
                 typedef typename series<ABSCISSA>::type abscissa_type; //!< alias
                 typedef typename series<ORDINATE>::type ordinate_type; //!< alias
 
@@ -56,9 +57,12 @@ namespace upsylon
                 inline virtual ~sample() throw() {}
 
                 //! setup with user's series
-                inline explicit sample(const abscissa_type &the_abscissa,
+                template <typename ID>
+                inline explicit sample(const ID            &the_name,
+                                       const abscissa_type &the_abscissa,
                                        const ordinate_type &the_ordinate,
                                        const ordinate_type &the_adjusted) :
+                self_type(the_name),
                 abscissa(the_abscissa),
                 ordinate(the_ordinate),
                 adjusted(the_adjusted),
@@ -70,23 +74,23 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 //! create an empty sample with capacity
-                static inline
-                sample * create(const size_t n)
+                template <typename ID> static inline
+                sample * create(const ID &id, const size_t n)
                 {
                     const abscissa_type the_abscissa = new vector<ABSCISSA>(n,as_capacity);
                     const ordinate_type the_ordinate = new vector<ORDINATE>(n,as_capacity);
                     const ordinate_type the_adjusted = new vector<ORDINATE>(n,as_capacity);
-                    return new sample(the_abscissa,the_ordinate,the_adjusted);
+                    return new sample(id,the_abscissa,the_ordinate,the_adjusted);
                 }
 
                 //! create a filled sample
-                static inline
-                sample * create(const ABSCISSA *x, const ORDINATE *y, const size_t n)
+                template <typename ID> static inline
+                sample * create(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
                 {
                     assert(!(NULL==x&&n>0));
                     assert(!(NULL==y&&n>0));
 
-                    auto_ptr<sample> self( create(n) );
+                    auto_ptr<sample> self( create(id,n) );
                     self->add(x,y,n);
                     return self.yield();
                 }
@@ -123,7 +127,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! data within
-                inline virtual size_t size() const throw()
+                inline virtual size_t count() const throw()
                 {
                     assert( abscissa.size() == ordinate.size() );
                     assert( abscissa.size() == adjusted.size() );
