@@ -6,6 +6,7 @@
 #include "y/mkl/fitting/variable/primary.hpp"
 #include "y/mkl/fitting/variable/replica.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/string/tokenizer.hpp"
 
 namespace upsylon
 {
@@ -25,6 +26,13 @@ namespace upsylon
             class variables : public variables_
             {
             public:
+                //______________________________________________________________
+                //
+                // definition
+                //______________________________________________________________
+                static const char default_separator = ':'; //!< for groups of variables
+
+
                 //______________________________________________________________
                 //
                 // C++
@@ -95,8 +103,8 @@ namespace upsylon
                 //
                 //! access item by name
                 //______________________________________________________________
-                template <typename ID,typename T> inline
-                T & operator()(const ID &id, addressable<T> &arr) const
+                template <typename T,typename ID> inline
+                T & operator()(addressable<T> &arr, const ID &id) const
                 {
                     return (*this)[id](arr);
                 }
@@ -105,11 +113,68 @@ namespace upsylon
                 //
                 //! access const item by name
                 //______________________________________________________________
-                template <typename ID,typename T> inline
-                const T & operator()(const ID &id, const accessible<T> &arr) const
+                template <typename T,typename ID> inline
+                const T & operator()(const accessible<T> &arr, const ID &id) const
                 {
                     return (*this)[id](arr);
                 }
+
+                //! set all names, separated with separator, to the same value
+                template <typename T, typename ID> inline
+                void make(addressable<T> &arr,
+                          const ID       &names,
+                          const T         value,
+                          const char      separator = default_separator)
+                {
+                    variables      &self = *this;
+                    tokenizer<char> t(names);
+                    while( t.next_with(separator) )
+                    {
+                        const string id( t.token(), t.units() );
+                        self(arr,id) = value;
+                    }
+                }
+
+                //! turn on specific flags, leave others untouched
+                template <typename ID> inline
+                void on(addressable<bool> &flags,
+                        const ID          &names,
+                        const char         separator = default_separator )
+                {
+                    make(flags,names,true,separator);
+                }
+
+                //! turn on specific flags, make other 'off'
+                template <typename ID> inline
+                void only_on(addressable<bool> &flags,
+                             const ID          &names,
+                             const char         separator = default_separator )
+                {
+                    for(size_t i=flags.size();i>0;--i) flags[i] = false;
+                    make(flags,names,true,separator);
+                }
+
+
+                //! turn off specific flags, leave others untouched
+                template <typename ID> inline
+                void off(addressable<bool> &flags,
+                         const ID          &names,
+                         const char         separator = default_separator )
+                {
+                    make(flags,names,false,separator);
+                }
+
+                //! turn off specific flags, make other 'on'
+                template <typename ID> inline
+                void only_off(addressable<bool> &flags,
+                              const ID          &names,
+                              const char         separator = default_separator )
+                {
+                    for(size_t i=flags.size();i>0;--i) flags[i] = true;
+                    make(flags,names,false,separator);
+                }
+
+
 
                 //______________________________________________________________
                 //

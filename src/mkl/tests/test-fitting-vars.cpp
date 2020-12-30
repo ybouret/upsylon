@@ -51,11 +51,14 @@ Y_UTEST(fitting_vars)
     {
         const int r = alea.full<int>();
         D(aorg) = r;
-        Y_CHECK(r==vars("D",aorg));
-        Y_CHECK(r==sub1("D",aorg));
-        Y_CHECK(r==sub2("D",aorg));
-
+        Y_CHECK(r==vars(aorg,"D"));
+        Y_CHECK(r==sub1(aorg,"D"));
+        Y_CHECK(r==sub2(aorg,"D"));
     }
+
+    vars.make(aorg, "t1:t2", 1);
+    std::cerr << "aorg=" << aorg << std::endl;
+
 
 
 

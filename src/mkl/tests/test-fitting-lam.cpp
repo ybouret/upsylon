@@ -33,8 +33,8 @@ Y_UTEST(fitting_lam)
     lambdas<float>  lf; show_lambda(lf);
 
     typedef arr_ptr< sequence<double>, arc_ptr> ptr_type;
-    ptr_type v = new vector<double>(),
-    l=new list<double>();
+    ptr_type v = new vector<double>(1000,as_capacity),
+    l=new list<double>(1000,as_capacity);
     
     
     
