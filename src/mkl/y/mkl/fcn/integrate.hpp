@@ -189,14 +189,17 @@ namespace upsylon {
 
                         // check depth
                         const size_t depth = curr->depth+1;
-                        if(depth>=max_depth) continue;
+                        if(depth>=max_depth)
+                        {
+                            continue;
+                        }
 
                         // split
                         {
-                            const T mid = (curr->ini+curr->end)/2;
+                            const T mid = T(0.5)*(curr->ini+curr->end);
                             {
                                 const T end   = curr->end;
-                                const T width = abs_of(end-mid);
+                                const T width = fabs_of(end-mid);
                                 if(width>numeric<T>::minimum)
                                 {
                                     todo.store( new range<T>(mid,end,depth) );
@@ -205,7 +208,7 @@ namespace upsylon {
 
                             {
                                 const T ini   = curr->ini;
-                                const T width = abs_of(mid-ini);
+                                const T width = fabs_of(mid-ini);
                                 if(width>numeric<T>::minimum)
                                 {
                                     todo.store( new range<T>(ini,mid,depth) );
@@ -216,6 +219,7 @@ namespace upsylon {
                     }
                 }
                 assert(done.size>0);
+
                 //______________________________________________________________
                 //
                 // sort and sum
