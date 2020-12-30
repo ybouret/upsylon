@@ -3,7 +3,7 @@
 #ifndef Y_FITTING_SAMPLE_INCLUDED
 #define Y_FITTING_SAMPLE_INCLUDED 1
 
-#include "y/mkl/fitting/sample/interface.hpp"
+#include "y/mkl/fitting/sample/api.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/ptr/auto.hpp"
@@ -36,17 +36,17 @@ namespace upsylon
             typename ABSCISSA,
             typename ORDINATE
             >
-            class sample : public sample_type<ABSCISSA,ORDINATE>
+            class sample: public sample_api<ABSCISSA,ORDINATE>
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef          sample_type<ABSCISSA,ORDINATE> self_type;
-                typedef          intr_ptr<string,sample>        pointer;       //!< for samples
-                typedef typename series<ABSCISSA>::type abscissa_type; //!< alias
-                typedef typename series<ORDINATE>::type ordinate_type; //!< alias
+                typedef          sample_api<ABSCISSA,ORDINATE> api_type;      //!< alia
+                typedef          intr_ptr<string,sample>       pointer;       //!< for samples
+                typedef typename series<ABSCISSA>::type        abscissa_type; //!< alias
+                typedef typename series<ORDINATE>::type        ordinate_type; //!< alias
 
                 //______________________________________________________________
                 //
@@ -62,7 +62,7 @@ namespace upsylon
                                        const abscissa_type &the_abscissa,
                                        const ordinate_type &the_ordinate,
                                        const ordinate_type &the_adjusted) :
-                self_type(the_name),
+                api_type(the_name),
                 abscissa(the_abscissa),
                 ordinate(the_ordinate),
                 adjusted(the_adjusted),

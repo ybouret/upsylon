@@ -33,13 +33,14 @@ namespace upsylon
                 //
                 // virtual inteface
                 //______________________________________________________________
-                inline virtual       ~sample_type()  throw() {}   //!< cleanup
+                inline virtual       ~sample_api()   throw() {}   //!< cleanup
                 inline virtual size_t count()  const throw() = 0; //!< number of points
 
                 //______________________________________________________________
                 //
                 // non-virtual inteface
                 //______________________________________________________________
+                //! key for sets and intr_ptr
                 inline const string &key() const throw() { return name; }
 
                 //______________________________________________________________
@@ -51,12 +52,12 @@ namespace upsylon
             protected:
                 //! setup
                 template <typename ID>
-                inline explicit sample_type( const ID &id) throw() : object(), counted(), name(id)
+                inline explicit sample_api( const ID &id) throw() : object(), counted(), name(id)
                 {
                 }
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(sample_type);
+                Y_DISABLE_COPY_AND_ASSIGN(sample_api);
             };
 
         }
