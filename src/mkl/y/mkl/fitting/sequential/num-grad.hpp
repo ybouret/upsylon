@@ -79,7 +79,7 @@ namespace upsylon
                     // run on variables
                     for(variables::const_iterator it=vars.begin();nvar>0;--nvar,++it)
                     {
-                        const size_t ia = (func.ia = (**it).get_index());
+                        const size_t    ia = (func.ia = (**it).get_index());
                         if(used[ia])
                         {
                             dFdA[ia] = this->diff(func,aorg[ia],1e-4);

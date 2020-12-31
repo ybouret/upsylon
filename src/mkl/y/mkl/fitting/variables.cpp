@@ -2,6 +2,7 @@
 #include "y/mkl/fitting/variables.hpp"
 #include "y/exception.hpp"
 #include "y/type/utils.hpp"
+
 namespace upsylon
 {
     namespace mkl
@@ -41,14 +42,14 @@ namespace upsylon
                 for(iterator i=begin();i!=end();++i)
                 {
                     const variable &tmp = **i;
-                    if(tmp.get_index()==iv) throw exception("%s multiple index #%u for '%s' and '%s'", fn, unsigned(iv), *(v->name), *(tmp.name) );
+                    if(tmp.get_index()==iv) throw exception("%smultiple index #%u for '%s' and '%s'", fn, unsigned(iv), *(v->name), *(tmp.name) );
                 }
                 local_add(v);
             }
 
             void variables:: local_add(const shared_variable &v)
             {
-                if(!insert(v)) throw exception("%s multiple name '%s'", fn, *(v->name));
+                if(!insert(v)) throw exception("%smultiple name '%s'", fn, *(v->name));
             }
 
             const shared_variable & variables:: operator()(const string &id) const
@@ -56,6 +57,7 @@ namespace upsylon
                 const shared_variable *ppV = search(id);
                 if(!ppV)
                 {
+                    throw exception("%sunknown variable '%s' among #%u",fn,*id, unsigned( size() ));
                 }
                 return *ppV;
             }

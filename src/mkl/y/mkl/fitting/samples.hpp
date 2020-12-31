@@ -42,13 +42,13 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef sample_api<ABSCISSA,ORDINATE>         api_type;        //!< alias
-                typedef sample<ABSCISSA,ORDINATE>             single_sample;   //!< alias
-                typedef typename single_sample::pointer       shared_sample;   //!< alias
-                typedef hash_set<string,shared_sample>        samples_db;      //!< alias
-                typedef typename samples_db::const_iterator   const_iterator;  //!< alias
-                typedef typename samples_db::iterator         iterator;        //!< alias
-                typedef typename api_type::sequential_type    sequential_type; //!< alias
+                typedef sample_api<ABSCISSA,ORDINATE>               api_type;        //!< alias
+                typedef sample<ABSCISSA,ORDINATE>                   single_sample;   //!< alias
+                typedef typename single_sample::pointer             shared_sample;   //!< alias
+                typedef hash_set<string,shared_sample>              samples_db;      //!< alias
+                typedef typename samples_db::const_iterator         const_iterator;  //!< alias
+                typedef typename samples_db::iterator               iterator;        //!< alias
+                typedef typename api_type::sequential_type          sequential_type; //!< alias
 
                 //______________________________________________________________
                 //
@@ -78,12 +78,12 @@ namespace upsylon
                 }
 
                 //! setup each sample
-                inline virtual void setup()
+                inline virtual void setup(const accessible<ORDINATE> &aorg)
                 {
                     reserved.adjust(this->size(),0);
                     for(iterator it=this->begin();it!=this->end();++it)
                     {
-                        (**it).setup();
+                        (**it).setup(aorg);
                     }
                 }
 

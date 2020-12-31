@@ -24,7 +24,7 @@ namespace
         {
             const double t0 = vars(aorg,"t0");
             const double D  = vars(aorg,"D");
-            std::cerr << "diffusion(" << t << "," << t0 << "," << D << ")" << std::endl;
+            //std::cerr << "diffusion(" << t << "," << t0 << "," << D << ")" << std::endl;
             return t <= t0 ? 0 : sqrt( D*(t-t0) );
         }
 
@@ -98,7 +98,7 @@ Y_UTEST(fitting_diff)
         seq_type::function call(&diff,&Diffusion::compute);
         seq_type           F(call);
 
-        sa.setup();
+        sa.setup(aorg);
 
         // init
         const double s1_D2 = s1.D2(F,aorg); std::cerr << "s1_D2=" << s1_D2 << std::endl;
@@ -113,12 +113,19 @@ Y_UTEST(fitting_diff)
         // gradient
         sequential_num_grad<double,double> G;
 
-        vector<double> dF(3,-1.0);
+        vector<double> beta(3,-1.0);
         vector<bool>   used(3,true);
+        matrix<double> alpha(3,3);
 
-        const double tt = 60;
-        G(dF,F,tt,aorg,sa.vars,used);
-        std::cerr << "dF=" << dF << std::endl;
+        const double s1_D2a = s1.D2(alpha,beta,F,G,aorg,used);
+        std::cerr << "s1_D2a=" << s1_D2a << std::endl;
+        std::cerr << "beta:  " << beta << std::endl;
+        std::cerr << "alpha: " << alpha << std::endl;
+
+        const double s2_D2a = s2.D2(alpha,beta,F,G,aorg,used);
+        std::cerr << "s2_D2a=" << s2_D2a << std::endl;
+        std::cerr << "beta:  " << beta << std::endl;
+        std::cerr << "alpha: " << alpha << std::endl;
 
     }
 

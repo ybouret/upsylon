@@ -96,7 +96,8 @@ namespace upsylon
                 template <typename ID> inline
                 const variable & operator[](const ID &id) const
                 {
-                    return *(*this)(id);
+                    const variables &self = *this;
+                    return * self(id);
                 }
 
                 //______________________________________________________________
