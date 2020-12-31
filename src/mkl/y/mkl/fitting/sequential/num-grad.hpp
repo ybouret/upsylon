@@ -27,16 +27,29 @@ namespace upsylon
             public derivative<ORDINATE>
             {
             public:
-                typedef sequential<ABSCISSA,ORDINATE>          function_type;
-                typedef sequential_gradient<ABSCISSA,ORDINATE> gradient_type;
-                typedef derivative<ORDINATE>                   derivative_type;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef sequential<ABSCISSA,ORDINATE>          sequential_type; //!< alias
+                typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad; //!< alias
+                typedef derivative<ORDINATE>                   derivative_type; //!< alias
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 inline explicit sequential_num_grad() :
-                gradient_type(), derivative_type(), h() {}
+                sequential_grad(), derivative_type(), h() {}
 
                 inline virtual ~sequential_num_grad() throw() {}
 
-                vector<ORDINATE> h;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+
+                vector<ORDINATE> h; //!< scaling to evaluate parameters
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_num_grad);
@@ -44,28 +57,22 @@ namespace upsylon
                 struct wrapper
                 {
                     size_t                      ia;
-                    function_type              *F_;
+                    sequential_type            *F_;
                     const ABSCISSA             *X_;
                     const accessible<ORDINATE> *aorg_;
                     const variables            *vars_;
 
                     inline ORDINATE operator()(const ORDINATE a)
                     {
-                        assert(ia>0);
-                        assert(F_);
-                        assert(X_);
-                        assert(aorg_);
-                        assert(vars_);
-
+                        assert(ia>0); assert(F_); assert(X_); assert(aorg_); assert(vars_);
                         const accessible<ORDINATE> &aorg = *aorg_;
                         momentary_value<ORDINATE>   link( aliasing::_( aorg[ia]), a );
-                        
                         return F_->start(*X_,aorg,*vars_);
                     }
                 };
 
                 virtual void compute(addressable<ORDINATE>      &dFdA,
-                                     function_type              &F,
+                                     sequential_type            &F,
                                      const ABSCISSA              X,
                                      const accessible<ORDINATE> &aorg,
                                      const variables            &vars,

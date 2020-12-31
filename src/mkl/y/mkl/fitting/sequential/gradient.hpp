@@ -23,16 +23,29 @@ namespace upsylon
             class sequential_gradient
             {
             public:
-                typedef sequential<ABSCISSA,ORDINATE> function_type;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef sequential<ABSCISSA,ORDINATE> sequential_type; //!< alias
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
             protected:
                 inline explicit sequential_gradient() throw() {}
 
             public:
                 inline virtual ~sequential_gradient() throw() {}
 
+                //______________________________________________________________
+                //
+                // non virtual interface
+                //______________________________________________________________
+                //! prepare dFdA and compute it
                 inline void operator()(addressable<ORDINATE>      &dFdA,
-                                       function_type              &F,
+                                       sequential_type            &F,
                                        const ABSCISSA              X,
                                        const accessible<ORDINATE> &aorg,
                                        const variables            &vars,
@@ -46,7 +59,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_gradient);
                 virtual void compute(addressable<ORDINATE>      &dFdA,
-                                     function_type              &F,
+                                     sequential_type             &F,
                                      const ABSCISSA              X,
                                      const accessible<ORDINATE> &aorg,
                                      const variables            &vars,

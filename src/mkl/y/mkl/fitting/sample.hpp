@@ -98,6 +98,15 @@ namespace upsylon
                     return self.yield();
                 }
 
+                //! create a clone with shared data, new adjusted
+                template <typename ID> inline
+                sample * clone_as(const ID &id)
+                {
+                    const size_t        n            = this->count();
+                    const ordinate_type the_adjusted = new vector<ORDINATE>(n,zero);
+                    return new sample(id,abscissa,ordinate,the_adjusted);
+                }
+
                 //! add x,y,__zero__
                 inline void add(const ABSCISSA x, const ABSCISSA y)
                 {
@@ -172,20 +181,7 @@ namespace upsylon
                     }
                 }
 
-                inline void add_to(matrix<ORDINATE> &alpha) const throw()
-                {
-                    const accessible<ORDINATE> &df = dFdA;
-                    for(size_t i=df.size();i>0;--i)
-                    {
-                        const ORDINATE         df_i    = df[i];
-                        addressable<ORDINATE> &alpha_i = alpha[i];
-                        alpha_i[i] += df_i * df_i;
-                        for(size_t j=i-1;j>0;--j)
-                        {
-                            alpha_i[j] += df_i * df[j];
-                        }
-                    }
-                }
+
 
                 //! D2, beta and alpha
                 inline virtual ORDINATE D2(matrix<ORDINATE>           &alpha,
@@ -249,6 +245,21 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sample);
+                
+                inline void add_to(matrix<ORDINATE> &alpha) const throw()
+                {
+                    const accessible<ORDINATE> &df = dFdA;
+                    for(size_t i=df.size();i>0;--i)
+                    {
+                        const ORDINATE         df_i    = df[i];
+                        addressable<ORDINATE> &alpha_i = alpha[i];
+                        alpha_i[i] += df_i * df_i;
+                        for(size_t j=i-1;j>0;--j)
+                        {
+                            alpha_i[j] += df_i * df[j];
+                        }
+                    }
+                }
             };
         }
 
