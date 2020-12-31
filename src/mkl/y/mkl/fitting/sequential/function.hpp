@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_FITTING_SEQUENTIAL_FUNCTION_INCLUDED

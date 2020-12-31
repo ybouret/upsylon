@@ -2,6 +2,7 @@
 
 #include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
+#include "y/mkl/fitting/sequential/num-grad.hpp"
 #include "y/type/point2d.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
@@ -23,6 +24,7 @@ namespace
         {
             const double t0 = vars(aorg,"t0");
             const double D  = vars(aorg,"D");
+            std::cerr << "diffusion(" << t << "," << t0 << "," << D << ")" << std::endl;
             return t <= t0 ? 0 : sqrt( D*(t-t0) );
         }
 
@@ -98,6 +100,7 @@ Y_UTEST(fitting_diff)
 
         sa.setup();
 
+        // init
         const double s1_D2 = s1.D2(F,aorg); std::cerr << "s1_D2=" << s1_D2 << std::endl;
         const double s2_D2 = s2.D2(F,aorg); std::cerr << "s2_D2=" << s2_D2 << std::endl;
         const double sa_D2 = sa.D2(F,aorg); std::cerr << "sa_D2=" << sa_D2 << std::endl;
@@ -107,7 +110,15 @@ Y_UTEST(fitting_diff)
         saveSample("s2.dat", s2);
 
 
+        // gradient
+        sequential_num_grad<double,double> G;
 
+        vector<double> dF(3,-1.0);
+        vector<bool>   used(3,true);
+
+        const double tt = 60;
+        G(dF,F,tt,aorg,sa.vars,used);
+        std::cerr << "dF=" << dF << std::endl;
 
     }
 

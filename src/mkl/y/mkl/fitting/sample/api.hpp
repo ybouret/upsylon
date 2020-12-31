@@ -52,12 +52,15 @@ namespace upsylon
                 //! key for sets and intr_ptr
                 inline const string &key() const throw() { return name; }
 
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 const string name; //!< unique identifier
                 variables    vars; //!< variables to pass to objective function
+
+
 
             protected:
                 //! setup
