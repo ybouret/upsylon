@@ -152,6 +152,12 @@ SET(fitting_sample_srcs ${fitting_sample_decl} ${fitting_sample_code})
 SOURCE_GROUP( fitting/sample FILES ${fitting_sample_srcs} )
 INSTALL( FILES ${fitting_sample_decl} DESTINATION include/y/mkl/fitting/sample )
 
+FILE(GLOB fitting_sequential_decl y/mkl/fitting/sequential/*.hpp)
+FILE(GLOB fitting_sequential_code y/mkl/fitting/sequential/*.cpp)
+SET(fitting_sequential_srcs ${fitting_sequential_decl} ${fitting_sequential_code})
+SOURCE_GROUP( fitting/sequential FILES ${fitting_sequential_srcs} )
+INSTALL( FILES ${fitting_sequential_decl} DESTINATION include/y/mkl/fitting/sequential )
+
 ADD_LIBRARY(y-mkl STATIC
 ${main_srcs}
 ${tao_srcs}
@@ -166,7 +172,7 @@ ${stat_srcs}
 ${geometric_srcs} ${geometric_arc_srcs}
 ${euclidean_srcs} ${euclidean_arc_srcs}
 ${fit_srcs} ${fit_sample_srcs} ${fit_variable_srcs} ${fit_sequential_srcs} ${fit_share_srcs} 
-${fitting_srcs} ${fitting_variable_srcs} ${fitting_sample_srcs} 
+${fitting_srcs} ${fitting_variable_srcs} ${fitting_sample_srcs} ${fitting_sequential_srcs} 
 )
 INSTALL( TARGETS y-mkl ARCHIVE DESTINATION lib )
 

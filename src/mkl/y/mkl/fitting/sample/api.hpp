@@ -1,10 +1,9 @@
 //! \file
 
-#ifndef Y_FITTING_SAMPLE_TYPE_INCLUDED
-#define Y_FITTING_SAMPLE_TYPE_INCLUDED 1
+#ifndef Y_FITTING_SAMPLE_API_INCLUDED
+#define Y_FITTING_SAMPLE_API_INCLUDED 1
 
-#include "y/mkl/fitting/variables.hpp"
-#include "y/functor.hpp"
+#include "y/mkl/fitting/sequential.hpp"
 
 namespace upsylon
 {
