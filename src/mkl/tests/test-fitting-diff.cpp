@@ -2,6 +2,7 @@
 
 #include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
+#include "y/type/point2d.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -54,11 +55,22 @@ Y_UTEST(fitting_diff)
         showSample(s2);
         showSample(sdb);
 
-
     }
 
+    //! fitting circles from "pixels"
     {
+        typedef point2d<unit_t>              pixel;
+#define S_LIST double,pixel,unit_t
+        typedef sample<S_LIST>  sample_type;
+        typedef samples<S_LIST> samples_type;
 
+        samples_type circles("circles");
+        sample_type &c1 = circles("circle1");
+        sample_type &c2 = circles("circle2");
+
+        showSample(c1);
+        showSample(c2);
+        showSample(circles);
     }
 
 }
