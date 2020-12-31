@@ -87,9 +87,9 @@ namespace upsylon
                     }
                 }
 
-                //! return D2
+                //! return D2, weighted sum of samples
                 inline virtual ORDINATE D2(sequential_type            &F,
-                                           const accessible<ORDINATE> &A )
+                                           const accessible<ORDINATE> &A)
                 {
                     assert(reserved.size()==this->size() || die("setup") );
                     size_t sum = 0;
@@ -99,7 +99,8 @@ namespace upsylon
                         {
                             single_sample &s = (**it);
                             const size_t   n = s.count();
-                            sum += n;
+
+                            sum          += n;
                             reserved[++i] = n * s.D2(F,A);
                         }
                     }
