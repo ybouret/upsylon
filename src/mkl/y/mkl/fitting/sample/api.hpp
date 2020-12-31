@@ -4,6 +4,7 @@
 #define Y_FITTING_SAMPLE_TYPE_INCLUDED 1
 
 #include "y/mkl/fitting/variables.hpp"
+#include "y/functor.hpp"
 
 namespace upsylon
 {
@@ -17,18 +18,25 @@ namespace upsylon
             //
             //! sample type definition
             /**
+             - T       : type for parameters
              - ABSCISSA: abscissa type in 'R^d'
              - ORDINATE: ordinate type
              */
             //
             //__________________________________________________________________
             template <
+            typename T,
             typename ABSCISSA,
             typename ORDINATE
             >
             class sample_api : public object, public counted
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
+                
                 //______________________________________________________________
                 //
                 // virtual inteface
@@ -47,7 +55,8 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const string name;
+                const string name; //!< unique identifier
+                variables    vars; //!< variables to pass to objective function
 
             protected:
                 //! setup

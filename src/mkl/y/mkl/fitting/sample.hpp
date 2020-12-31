@@ -33,20 +33,21 @@ namespace upsylon
             //
             //__________________________________________________________________
             template <
+            typename T,
             typename ABSCISSA,
             typename ORDINATE
             >
-            class sample: public sample_api<ABSCISSA,ORDINATE>
+            class sample: public sample_api<T,ABSCISSA,ORDINATE>
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef          sample_api<ABSCISSA,ORDINATE> api_type;      //!< alia
-                typedef          intr_ptr<string,sample>       pointer;       //!< for samples
-                typedef typename series<ABSCISSA>::type        abscissa_type; //!< alias
-                typedef typename series<ORDINATE>::type        ordinate_type; //!< alias
+                typedef          sample_api<T,ABSCISSA,ORDINATE> api_type;      //!< alia
+                typedef          intr_ptr<string,sample>         pointer;       //!< for samples
+                typedef typename series<ABSCISSA>::type          abscissa_type; //!< alias
+                typedef typename series<ORDINATE>::type          ordinate_type; //!< alias
 
                 //______________________________________________________________
                 //
