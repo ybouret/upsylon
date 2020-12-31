@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_FITTING_SEQUENTIAL_INCLUDED
-#define Y_FITTING_SEQUENTIAL_INCLUDED 1
+#ifndef Y_FITTING_SEQUENTIAL_FUNCTION_INCLUDED
+#define Y_FITTING_SEQUENTIAL_FUNCTION_INCLUDED 1
 
 #include "y/mkl/fitting/sequential.hpp"
 #include "y/functor.hpp"
@@ -20,28 +20,30 @@ namespace upsylon
             //! sequential calls interface
             //
             //__________________________________________________________________
-            template <typename T,
-            typename ABSCISSA,
-            typename ORDINATE>
-            class sequential_function : public sequential<T,ABSCISSA,ORDINATE>
+            template <typename ABSCISSA, typename ORDINATE>
+            class sequential_function : public sequential<ABSCISSA,ORDINATE>
             {
             public:
-                typedef functor<ORDINATE,TL3(ABSCISSA,const accessible<T>&,const variables&) type;
+                //! alias to a functor
+                typedef functor<ORDINATE,TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&)> function;
 
-                inline explicit sequential_function( type &host ) throw() : F(host) {}
+                //! setup
+                inline explicit sequential_function( function &host ) throw() : F(host) {}
+
+                //! cleanup
                 inline virtual ~sequential_function() throw() {}
                 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_function);
-                type &F;
+                function &F;
 
-                virtual ORDINATE onStart(const ABSCISSA x, const accessible<T> &aorg, const variables &vars)
+                virtual ORDINATE onStart(const ABSCISSA x, const accessible<ORDINATE> &aorg, const variables &vars)
                 {
                     return F(x,aorg,vars);
                 }
 
-                virtual ORDINATE onReach(const ABSCISSA x, const accessible<T> &aorg, const variables &vars)
+                virtual ORDINATE onReach(const ABSCISSA x, const accessible<ORDINATE> &aorg, const variables &vars)
                 {
                     return F(x,aorg,vars);
                 }

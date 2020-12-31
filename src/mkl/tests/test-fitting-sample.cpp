@@ -1,6 +1,6 @@
 
 #include "y/mkl/fitting/samples.hpp"
- 
+
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -10,8 +10,8 @@ using namespace fitting;
 
 Y_UTEST(fitting_sample)
 {
-    typedef sample<double,double,double>  dsample;
-    typedef samples<double,double,double> dsamples;
+    typedef sample<double,double>  dsample;
+    typedef samples<double,double> dsamples;
 
     {
         const double x1[] = { 1,2,3,4 };

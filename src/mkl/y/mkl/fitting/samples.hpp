@@ -33,25 +33,22 @@ namespace upsylon
             //! sample for a set of data
             //
             //__________________________________________________________________
-            template <
-            typename T,
-            typename ABSCISSA,
-            typename ORDINATE
-            >
-            class samples : public sample_api<T,ABSCISSA,ORDINATE>,
-            public hash_set<string, typename sample<T,ABSCISSA,ORDINATE>::pointer>
+            template <typename ABSCISSA, typename ORDINATE>
+            class samples : public sample_api<ABSCISSA,ORDINATE>,
+            public hash_set<string, typename sample<ABSCISSA,ORDINATE>::pointer>
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef sample_api<T,ABSCISSA,ORDINATE>       api_type;       //!< alias
-                typedef sample<T,ABSCISSA,ORDINATE>           single_sample;  //!< alias
-                typedef typename single_sample::pointer       shared_sample;  //!< alias
-                typedef hash_set<string,shared_sample>        samples_db;     //!< alias
-                typedef typename samples_db::const_iterator   const_iterator; //!< alias
-                typedef typename samples_db::iterator         iterator;       //!< alias
+                typedef sample_api<ABSCISSA,ORDINATE>         api_type;        //!< alias
+                typedef sample<ABSCISSA,ORDINATE>             single_sample;   //!< alias
+                typedef typename single_sample::pointer       shared_sample;   //!< alias
+                typedef hash_set<string,shared_sample>        samples_db;      //!< alias
+                typedef typename samples_db::const_iterator   const_iterator;  //!< alias
+                typedef typename samples_db::iterator         iterator;        //!< alias
+                typedef typename api_type::sequential_type    sequential_type; //!< alias
 
                 //______________________________________________________________
                 //
@@ -59,7 +56,7 @@ namespace upsylon
                 //______________________________________________________________
                 //! setup
                 template <typename ID>
-                inline explicit samples(const ID &id) : api_type(id), samples_db() {}
+                inline explicit samples(const ID &id) : api_type(id), samples_db(), reserved() {}
 
                 //! cleanup
                 inline virtual ~samples() throw() {}
@@ -68,6 +65,8 @@ namespace upsylon
                 //
                 // sample_interface
                 //______________________________________________________________
+
+                //! sum of all counts
                 inline virtual size_t count() const throw()
                 {
                     size_t ans = 0;
@@ -78,6 +77,34 @@ namespace upsylon
                     return ans;
                 }
 
+                //! setup each sample
+                inline virtual void setup()
+                {
+                    reserved.adjust(this->size(),0);
+                    for(iterator it=this->begin();it!=this->end();++it)
+                    {
+                        (**it).setup();
+                    }
+                }
+
+                //! return D2
+                inline virtual ORDINATE D2(sequential_type            &F,
+                                           const accessible<ORDINATE> &A )
+                {
+                    assert(reserved.size()==this->size() || die("setup") );
+                    size_t sum = 0;
+                    {
+                        size_t i=0;
+                        for(iterator it=this->begin();it!=this->end();++it)
+                        {
+                            single_sample &s = (**it);
+                            const size_t   n = s.count();
+                            sum += n;
+                            reserved[++i] = n * s.D2(F,A);
+                        }
+                    }
+                    return (sum>0) ? sorted_sum(reserved)/sum : 0;
+                }
 
                 //______________________________________________________________
                 //
@@ -135,10 +162,9 @@ namespace upsylon
                 }
 
 
-
-
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(samples);
+                vector<double> reserved;
             };
 
         }

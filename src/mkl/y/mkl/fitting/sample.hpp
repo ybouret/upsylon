@@ -7,6 +7,8 @@
 #include "y/sequence/vector.hpp"
 #include "y/ptr/arr.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/sort/sorted-sum.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -32,23 +34,19 @@ namespace upsylon
             //! sample for a set of data
             //
             //__________________________________________________________________
-            template <
-            typename T,
-            typename ABSCISSA,
-            typename ORDINATE
-            >
-            class sample: public sample_api<T,ABSCISSA,ORDINATE>
+            template <typename ABSCISSA, typename ORDINATE>
+            class sample: public sample_api<ABSCISSA,ORDINATE>
             {
             public:
                 //______________________________________________________________
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef          sample_api<T,ABSCISSA,ORDINATE> api_type;      //!< alia
-                typedef          intr_ptr<string,sample>         pointer;       //!< for samples
-                typedef typename series<ABSCISSA>::type          abscissa_type; //!< alias
-                typedef typename series<ORDINATE>::type          ordinate_type; //!< alias
-
+                typedef          sample_api<ABSCISSA,ORDINATE> api_type;        //!< alias
+                typedef          intr_ptr<string,sample>       pointer;         //!< for samples
+                typedef typename series<ABSCISSA>::type        abscissa_type;   //!< alias
+                typedef typename series<ORDINATE>::type        ordinate_type;   //!< alias
+                typedef typename api_type::sequential_type     sequential_type; //!< alias
                 //______________________________________________________________
                 //
                 // C++
@@ -67,6 +65,7 @@ namespace upsylon
                 abscissa(the_abscissa),
                 ordinate(the_ordinate),
                 adjusted(the_adjusted),
+                reserved(),
                 __zero__(0)
                 {}
 
@@ -122,6 +121,8 @@ namespace upsylon
                     }
                 }
 
+
+
                 //______________________________________________________________
                 //
                 // interface
@@ -136,14 +137,47 @@ namespace upsylon
                     return abscissa.size();
                 }
 
+                //! setup for a cycle
+                inline virtual void setup()
+                {
+                    reserved.adjust(count(),0);
+                }
+                
+                //! D2
+                inline virtual ORDINATE D2(sequential_type            &F,
+                                           const accessible<ORDINATE> &A) 
+                {
+                    assert(reserved.size()==count() || die("setup!") );
+                    const accessible<ABSCISSA> &X = *abscissa;
+                    const accessible<ORDINATE> &Y = *ordinate;
+                    addressable<ORDINATE>      &Z = *adjusted;
+                    const variables            &V = this->vars;
+                    const size_t                N = count();
+                    if(N>0)
+                    {
+                        reserved[1] = square_of(Y[1]-(Z[1]=F.start(X[1],A,V)));
+                        for(size_t i=2;i<=N;++i)
+                        {
+                            reserved[i] = square_of(Y[i]-(Z[i]=F.reach(X[i],A,V)));
+                        }
+                        return sorted_sum(reserved);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                abscissa_type  abscissa; //!< abscissa, NDim
-                ordinate_type  ordinate; //!< ordinate, 1Dim
-                ordinate_type  adjusted; //!< adjusted, 1Dim
-                const ORDINATE __zero__; //!< a zero ordinate value
+                abscissa_type    abscissa; //!< abscissa, NDim
+                ordinate_type    ordinate; //!< ordinate, 1Dim
+                ordinate_type    adjusted; //!< adjusted, 1Dim
+                vector<ORDINATE> reserved; //!< memory,   1Dim
+                const ORDINATE   __zero__; //!< a zero ordinate value
 
 
             private:

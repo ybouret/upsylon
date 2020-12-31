@@ -20,9 +20,7 @@ namespace upsylon
             //! sequential calls interface
             //
             //__________________________________________________________________
-            template <typename T,
-            typename ABSCISSA,
-            typename ORDINATE>
+            template <typename ABSCISSA, typename ORDINATE>
             class sequential
             {
                 //______________________________________________________________
@@ -44,7 +42,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! make first call
-                inline ORDINATE start(const ABSCISSA x, const accessible<T> &aorg, const variables &vars)
+                inline ORDINATE start(const ABSCISSA x, const accessible<ORDINATE> &aorg, const variables &vars)
                 {
                     const ORDINATE   ans = onStart(x,aorg,vars);
                     aliasing::_(current) = x;
@@ -52,7 +50,7 @@ namespace upsylon
                 }
 
                 //! make subsequent calls
-                inline ORDINATE reach(const ABSCISSA x, const accessible<T> &aorg, const variables &vars)
+                inline ORDINATE reach(const ABSCISSA x, const accessible<ORDINATE> &aorg, const variables &vars)
                 {
                     const ORDINATE   ans = onReach(x,aorg,vars);
                     aliasing::_(current) = x;
@@ -67,8 +65,8 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential);
-                virtual ORDINATE onStart(const ABSCISSA, const accessible<T> &,const variables &) = 0;
-                virtual ORDINATE onReach(const ABSCISSA, const accessible<T> &,const variables &) = 0;
+                virtual ORDINATE onStart(const ABSCISSA, const accessible<ORDINATE> &,const variables &) = 0;
+                virtual ORDINATE onReach(const ABSCISSA, const accessible<ORDINATE> &,const variables &) = 0;
             };
         }
 

@@ -17,14 +17,12 @@ namespace upsylon
             //
             //! sample type definition
             /**
-             - T       : type for parameters
-             - ABSCISSA: abscissa type in 'R^d'
-             - ORDINATE: ordinate type
+             - ABSCISSA: abscissa type in 'REAL^d'
+             - ORDINATE: ordinate type, float or double
              */
             //
             //__________________________________________________________________
             template <
-            typename T,
             typename ABSCISSA,
             typename ORDINATE
             >
@@ -35,13 +33,17 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-                
+                typedef sequential<ABSCISSA,ORDINATE> sequential_type; //!< alias
+
                 //______________________________________________________________
                 //
                 // virtual inteface
                 //______________________________________________________________
-                inline virtual       ~sample_api()   throw() {}   //!< cleanup
-                inline virtual size_t count()  const throw() = 0; //!< number of points
+                inline virtual  ~sample_api()   throw() {}   //!< cleanup
+                virtual size_t   count()  const throw() = 0; //!< number of points
+                virtual void     setup()                = 0; //!< prepare for a cycle
+                virtual ORDINATE D2(sequential_type &, const accessible<ORDINATE> &) = 0; //!< compute D2 and all adjusted var
+
 
                 //______________________________________________________________
                 //
@@ -60,7 +62,11 @@ namespace upsylon
             protected:
                 //! setup
                 template <typename ID>
-                inline explicit sample_api( const ID &id) throw() : object(), counted(), name(id)
+                inline explicit sample_api( const ID &id):
+                object(),
+                counted(),
+                name(id),
+                vars()
                 {
                 }
 
