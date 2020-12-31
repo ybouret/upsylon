@@ -21,7 +21,10 @@ namespace upsylon
             struct _samples
             {
                 //! raise an exception
-                static void throw_multiple_sample(const string &name);
+                static void throw_multiple_sample(const string &owner, const string &name);
+
+                //! raise an exception
+                static void throw_missing_sample(const string &owner, const string &name);
             };
 
             //__________________________________________________________________
@@ -85,18 +88,53 @@ namespace upsylon
                 single_sample & operator()(const ID &id,const size_t n=0)
                 {
                     shared_sample p = single_sample::create(id,n);
-                    if(!this->insert(p)) _samples::throw_multiple_sample(p->name);
+                    if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
                     return *p;
                 }
 
                 //! create a filled sample
                 template <typename ID> inline
-                single_sample * create(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
+                single_sample * operator()(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
                 {
                     shared_sample p = single_sample::create(id,x,y,n);
-                    if(!this->insert(p)) _samples::throw_multiple_sample(p->name);
+                    if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
                     return *p;
                 }
+
+                //______________________________________________________________
+                //
+                // query samples
+                //______________________________________________________________
+
+                //! query by string
+                inline single_sample & operator[](const string &id)
+                {
+                    const shared_sample *pps = this->search(id);
+                    if(!pps) _samples::throw_missing_sample(this->name,id);
+                    shared_sample tmp(*pps);
+                    return *tmp;
+                }
+
+                //! query by string
+                inline const single_sample & operator[](const string &id) const
+                {
+                    const shared_sample *pps = this->search(id);
+                    if(!pps) _samples::throw_missing_sample(this->name,id);
+                    return **pps;
+                }
+                //! query by text
+                inline single_sample & operator[](const char *id)
+                {
+                    const string _(id); return (*this)[_];
+                }
+                
+                //! query by text
+                inline const single_sample & operator[](const char *id) const
+                {
+                    const string _(id); return (*this)[_];
+                }
+
+
 
 
             private:
