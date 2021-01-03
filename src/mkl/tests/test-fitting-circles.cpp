@@ -50,6 +50,10 @@ Y_UTEST(fitting_circles)
     fill(C1,12,-11,34); { ios::ocstream fp("c1.dat"); save_sample(C1,fp); }
     fill(C2,-2,7,34);   { ios::ocstream fp("c2.dat"); save_sample(C2,fp); }
     
+    *C1 << "a" << "b" << "c";
+    *C2 << "c" << "a" << "b";
+    
+    
     
 }
 Y_UTEST_DONE()

@@ -4,6 +4,7 @@
 #define Y_FITTING_BUILT_IN_CIRCLE_INCLUDED 1
 
 #include "y/mkl/fitting/samples.hpp"
+#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/type/point2d.hpp"
 
 namespace upsylon
@@ -25,6 +26,10 @@ namespace upsylon
                     typedef samples<ABSCISSA,ORDINATE> samples_type;
                     typedef vector<ABSCISSA>           abscissae;
                     typedef vector<ORDINATE>           ordinates;
+                    typedef sequential<ABSCISSA,ORDINATE>          sequential_type;
+                    typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;
+                    typedef typename sequential_type::function     sequential_func;
+                    
                     
                     inline ORDINATE call(const ABSCISSA             &p,
                                          const accessible<ORDINATE> &A,

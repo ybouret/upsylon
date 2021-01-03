@@ -3,7 +3,6 @@
 #ifndef Y_FITTING_SEQUENTIAL_GRADIENT_INCLUDED
 #define Y_FITTING_SEQUENTIAL_GRADIENT_INCLUDED 1
 
-#include "y/mkl/fitting/sequential.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/tao.hpp"
 
@@ -28,8 +27,8 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef sequential<ABSCISSA,ORDINATE>                             sequential_type; //!< alias
-                typedef typename sequential_function<ABSCISSA,ORDINATE>::function sequential_func;
+                typedef sequential<ABSCISSA,ORDINATE>      sequential_type; //!< alias
+                typedef typename sequential_type::function sequential_func;
                 //______________________________________________________________
                 //
                 // C++

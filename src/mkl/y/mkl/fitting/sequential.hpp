@@ -6,6 +6,7 @@
 #include "y/mkl/fitting/variables.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/functor.hpp"
 
 namespace upsylon
 {
@@ -23,11 +24,13 @@ namespace upsylon
             template <typename ABSCISSA, typename ORDINATE>
             class sequential
             {
+            public:
+                typedef functor<ORDINATE,TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&)> function;
+
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-            public:
                 //! cleanup
                 inline virtual ~sequential() throw() { _bzset(current); }
 

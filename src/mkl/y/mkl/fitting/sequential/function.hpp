@@ -4,7 +4,6 @@
 #define Y_FITTING_SEQUENTIAL_FUNCTION_INCLUDED 1
 
 #include "y/mkl/fitting/sequential.hpp"
-#include "y/functor.hpp"
 
 namespace upsylon
 {
@@ -24,7 +23,7 @@ namespace upsylon
             {
             public:
                 //! alias to a functor
-                typedef functor<ORDINATE,TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&)> function;
+                typedef typename sequential<ABSCISSA,ORDINATE>::function function;
 
                 //! setup
                 inline explicit sequential_function( function &host ) throw() : F(host) {}
