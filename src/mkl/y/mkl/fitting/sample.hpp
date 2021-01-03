@@ -120,7 +120,7 @@ namespace upsylon
                 }
 
                 //! add x,y,__zero__
-                inline void add(const ABSCISSA x, const ABSCISSA y)
+                inline void add(const ABSCISSA x, const ORDINATE y)
                 {
                     assert( abscissa.size() == ordinate.size() );
                     assert( abscissa.size() == adjusted.size() );

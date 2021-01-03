@@ -4,6 +4,7 @@
 #define Y_FITTING_SEQUENTIAL_GRADIENT_INCLUDED 1
 
 #include "y/mkl/fitting/sequential.hpp"
+#include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/tao.hpp"
 
 namespace upsylon
@@ -27,8 +28,8 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef sequential<ABSCISSA,ORDINATE> sequential_type; //!< alias
-
+                typedef sequential<ABSCISSA,ORDINATE>                             sequential_type; //!< alias
+                typedef typename sequential_function<ABSCISSA,ORDINATE>::function sequential_func;
                 //______________________________________________________________
                 //
                 // C++
@@ -43,6 +44,7 @@ namespace upsylon
                 //
                 // non virtual interface
                 //______________________________________________________________
+               
                 //! prepare dFdA and compute it
                 inline void operator()(addressable<ORDINATE>      &dFdA,
                                        sequential_type            &F,
@@ -52,6 +54,19 @@ namespace upsylon
                                        const accessible<bool>     &used)
                 {
                     tao::ld(dFdA,0);
+                    return compute(dFdA,F,X,aorg,vars,used);
+                }
+
+                //! prepare dFdA and compute it with a function
+                inline void operator()(addressable<ORDINATE>      &dFdA,
+                                       sequential_func            &f,
+                                       const ABSCISSA              X,
+                                       const accessible<ORDINATE> &aorg,
+                                       const variables            &vars,
+                                       const accessible<bool>     &used)
+                {
+                    tao::ld(dFdA,0);
+                    sequential_function<ABSCISSA,ORDINATE> F(f);
                     return compute(dFdA,F,X,aorg,vars,used);
                 }
 
