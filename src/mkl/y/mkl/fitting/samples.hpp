@@ -57,7 +57,13 @@ namespace upsylon
                 //______________________________________________________________
                 //! setup
                 template <typename ID>
-                inline explicit samples(const ID &id) : api_type(id), samples_db(), reserved() {}
+                inline explicit samples(const ID &id) :
+                api_type(id),
+                samples_db(),
+                reserved(),
+                __beta(),
+                __alpha()
+                {}
                 
                 //! cleanup
                 inline virtual ~samples() throw() {}
