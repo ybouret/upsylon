@@ -19,8 +19,11 @@ namespace upsylon
                 template <
                 typename UNIT,
                 typename ORDINATE>
-                struct circle
+                class circle
                 {
+                public:
+                    
+                    
                     typedef point2d<UNIT>              ABSCISSA;
                     typedef sample<ABSCISSA,ORDINATE>  sample_type;
                     typedef samples<ABSCISSA,ORDINATE> samples_type;
@@ -29,7 +32,7 @@ namespace upsylon
                     typedef sequential<ABSCISSA,ORDINATE>          sequential_type;
                     typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;
                     typedef typename sequential_type::function     sequential_func;
-                    
+                   
                     
                     inline ORDINATE call(const ABSCISSA             &p,
                                          const accessible<ORDINATE> &A,
@@ -74,7 +77,24 @@ namespace upsylon
                         
                     };
                     
+                    class gradient : public sequential_grad
+                    {
+                    public:
+                        inline explicit gradient() throw() : sequential_grad() {}
+                        inline virtual ~gradient() throw() {}
+                        
+                    private:
+                        Y_DISABLE_COPY_AND_ASSIGN(gradient);
+                       
+                    };
                     
+                    
+                    inline explicit circle() : func(this, & circle::call) {}
+                    inline virtual ~circle() throw()
+                    {
+                    }
+                    sequential_func func;
+
                 };
                 
             }
