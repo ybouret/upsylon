@@ -1,11 +1,11 @@
 
-
 #include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/fitting/sequential/num-grad.hpp"
 #include "y/type/point2d.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -149,6 +149,10 @@ Y_UTEST(fitting_diff)
         std::cerr << "sa_D2a=" << sa_D2a << std::endl;
         std::cerr << "beta  =" << beta3  << std::endl;
         std::cerr << "alpha =" << alpha3 << std::endl;
+        
+        if(LU::build(alpha2)) std::cerr << "OK2" << std::endl;
+        if(LU::build(alpha3)) std::cerr << "OK3" << std::endl;
+
         
         std::cerr << std::endl;
     }
