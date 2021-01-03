@@ -116,26 +116,35 @@ namespace upsylon
                 //
                 // design interface
                 //______________________________________________________________
+                
+                
+                template <typename SAMPLE_TYPE>
+                SAMPLE_TYPE & operator()( SAMPLE_TYPE *s )
+                {
+                    return use(s);
+                }
+                
                 //! create a new sample in the database
                 template <typename ID> inline
-                single_sample & operator()(const ID &id,const size_t n=0)
+                single_sample & create(const ID &id,const size_t n=0)
                 {
-                    return use( single_sample::create(id,n) );
+                    return (*this)( single_sample::create(id,n) );
                 }
                 
                 //! create a filled sample
                 template <typename ID> inline
-                single_sample & operator()(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
+                single_sample & create(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
                 {
-                    return use( single_sample::create(id,x,y,n) );
+                    return (*this)( single_sample::create(id,x,y,n) );
                 }
                 
                 //! create a clone sample
                 template <typename ID> inline
-                single_sample & operator()(const ID &id, const single_sample &source)
+                single_sample & create(const ID &id, const single_sample &source)
                 {
-                    return use( source.clone_as(id) );
+                    return (*this)( source.clone_as(id) );
                 }
+                
                 
                 
                 //______________________________________________________________
@@ -178,7 +187,8 @@ namespace upsylon
                 vector<ORDINATE> __beta;
                 matrix<ORDINATE> __alpha;
                 
-                single_sample & use( single_sample *s )
+                template <typename SAMPLE_TYPE>
+                SAMPLE_TYPE & use( SAMPLE_TYPE *s )
                 {
                     const shared_sample p = s;
                     if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);

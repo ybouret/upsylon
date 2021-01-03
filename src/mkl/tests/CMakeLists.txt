@@ -90,11 +90,13 @@ SOURCE_GROUP( fitting FILES
 test-fitting-vars.cpp 
 test-fitting-lam.cpp
 test-fitting-sample.cpp
-test-fitting-diff.cpp)
+test-fitting-diff.cpp
+test-fitting-circles.cpp)
 ADD_TEST(fitting:vars   test-mkl fitting_vars)
 ADD_TEST(fitting:lam    test-mkl fitting_lam)
 ADD_TEST(fitting:sample test-mkl fitting_sample)
 ADD_TEST(fitting:diff   test-mkl fitting_diff)
+ADD_TEST(fitting:circles test-mkl fitting_circles)
 
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

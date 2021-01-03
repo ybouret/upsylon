@@ -21,7 +21,7 @@ Y_UTEST(fitting_sample)
     }
 
     dsamples  db("db");
-    dsample  &s1 = db("s1");
+    dsample  &s1 = db.create("s1");
     std::cerr << "created " << s1.name << " in " << db.name << std::endl;
 
 }

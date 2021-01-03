@@ -7,6 +7,7 @@
 #include "y/utest/run.hpp"
 #include "y/mkl/kernel/lu.hpp"
 
+
 using namespace upsylon;
 using namespace mkl;
 using namespace fitting;
@@ -65,8 +66,8 @@ Y_UTEST(fitting_diff)
         
         // standalone samples
         samples_type  db("db");
-        sample_type  &S1 = db("S1");
-        sample_type  &S2 = db("S2");
+        sample_type  &S1 = db.create("S1");
+        sample_type  &S2 = db.create("S2");
 
         *S1 << "t0" << "D";
         *S2 = *S1;
@@ -91,8 +92,8 @@ Y_UTEST(fitting_diff)
         
         
         samples_type  sa("samples");
-        sample_type  &s1 = sa("s1",S1);
-        sample_type  &s2 = sa("s2",S2);
+        sample_type  &s1 = sa.create("s1",S1);
+        sample_type  &s2 = sa.create("s2",S2);
         
        
         
@@ -152,27 +153,11 @@ Y_UTEST(fitting_diff)
         
         if(LU::build(alpha2)) std::cerr << "OK2" << std::endl;
         if(LU::build(alpha3)) std::cerr << "OK3" << std::endl;
-
         
         std::cerr << std::endl;
     }
 
-    //! fitting circles from "pixels"
-    {
-        typedef point2d<unit_t>              pixel;
-#define S_LIST pixel,float
-        typedef sample<S_LIST>  sample_type;
-        typedef samples<S_LIST> samples_type;
-
-        samples_type circles("circles");
-        sample_type &c1 = circles("circle1");
-        sample_type &c2 = circles("circle2");
-
-        showSample(c1);
-        showSample(c2);
-        showSample(circles);
-    }
-
+    
 }
 Y_UTEST_DONE()
 
