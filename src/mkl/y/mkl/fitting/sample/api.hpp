@@ -12,7 +12,7 @@ namespace upsylon
     {
         namespace fitting
         {
-
+            
             //__________________________________________________________________
             //
             //
@@ -38,7 +38,7 @@ namespace upsylon
                 typedef sequential_gradient<ABSCISSA,ORDINATE>      sequential_grad;          //!< alias
                 typedef sequential_function<ABSCISSA,ORDINATE>      sequential_function_type; //!< alias
                 typedef typename sequential_function_type::function sequential_func;          //!< alias
-
+                
                 //______________________________________________________________
                 //
                 // virtual inteface
@@ -47,31 +47,77 @@ namespace upsylon
                 virtual size_t   count()  const throw() = 0; //!< number of points
                 virtual void     setup(const accessible<ORDINATE> &)                 = 0; //!< prepare for a cycle and parameters
                 virtual ORDINATE D2(sequential_type &, const accessible<ORDINATE> &) = 0; //!< compute D2 and all adjusted var
-
-
+                
+                
                 //______________________________________________________________
                 //
                 // non-virtual inteface
                 //______________________________________________________________
                 //! key for sets and intr_ptr
                 inline const string &key() const throw() { return name; }
-
+                
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_func &f, const accessible<ORDINATE> &a)
                 {
                     sequential_function_type F(f);
                     return D2(F,a);
                 }
-
+                
+                //! fullD2 with curvature and gradient
+                inline ORDINATE fullD2(matrix<ORDINATE>           &alpha,
+                                       addressable<ORDINATE>      &beta,
+                                       sequential_type            &F,
+                                       sequential_grad            &G,
+                                       const accessible<ORDINATE> &A,
+                                       const accessible<bool>     &used)
+                {
+                    const ORDINATE res = _D2(alpha,beta,F,G,A,used);
+                    this->regularize(alpha,used);
+                    return res;
+                }
+                
+                //! access variables
+                inline variables       & operator*()        throw() { return vars; }
+                
+                //! access variables
+                inline const variables & operator*() const throw() { return vars; }
+                
+                //______________________________________________________________
+                //
+                // helpers
+                //______________________________________________________________
+                
+                //! make alpha symmetric and set diagonal term to 1 for unused
+                static inline void regularize(matrix<ORDINATE>       &alpha,
+                                              const accessible<bool> &used)
+                {
+                    assert(alpha.rows ==alpha.cols);
+                    assert(used.size()==alpha.rows);
+                    for(size_t i=alpha.rows;i>0;--i)
+                    {
+                        if(used[i])
+                        {
+                            for(size_t j=i-1;j>0;--j)
+                            {
+                                alpha[j][i] = alpha[i][j];
+                            }
+                        }
+                        else
+                        {
+                            alpha[i][i] = 1;
+                        }
+                    }
+                }
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const string name; //!< unique identifier
-                variables    vars; //!< variables to pass to objective function
-
-
-
+                const string   name; //!< unique identifier
+                variables      vars; //!< variables to pass to objective function
+                const ORDINATE zero; //!< a zero ordinate
+                
+                
             protected:
                 //! setup
                 template <typename ID>
@@ -79,18 +125,25 @@ namespace upsylon
                 object(),
                 counted(),
                 name(id),
-                vars()
+                vars(),
+                zero(0)
                 {
                 }
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sample_api);
+                virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
+                                     addressable<ORDINATE>      &beta,
+                                     sequential_type            &F,
+                                     sequential_grad            &G,
+                                     const accessible<ORDINATE> &A,
+                                     const accessible<bool>     &used) = 0;
             };
-
+            
         }
-
+        
     }
-
+    
 }
 
 

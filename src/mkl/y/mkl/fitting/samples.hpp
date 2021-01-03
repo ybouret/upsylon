@@ -11,7 +11,7 @@ namespace upsylon
     {
         namespace fitting
         {
-
+            
             //__________________________________________________________________
             //
             //
@@ -22,11 +22,11 @@ namespace upsylon
             {
                 //! raise an exception
                 static void throw_multiple_sample(const string &owner, const string &name);
-
+                
                 //! raise an exception
                 static void throw_missing_sample(const string &owner, const string &name);
             };
-
+            
             //__________________________________________________________________
             //
             //
@@ -49,7 +49,8 @@ namespace upsylon
                 typedef typename samples_db::const_iterator         const_iterator;  //!< alias
                 typedef typename samples_db::iterator               iterator;        //!< alias
                 typedef typename api_type::sequential_type          sequential_type; //!< alias
-
+                typedef typename api_type::sequential_grad          sequential_grad; //!< alias
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -57,15 +58,15 @@ namespace upsylon
                 //! setup
                 template <typename ID>
                 inline explicit samples(const ID &id) : api_type(id), samples_db(), reserved() {}
-
+                
                 //! cleanup
                 inline virtual ~samples() throw() {}
-
+                
                 //______________________________________________________________
                 //
                 // sample_interface
                 //______________________________________________________________
-
+                
                 //! sum of all counts
                 inline virtual size_t count() const throw()
                 {
@@ -76,7 +77,7 @@ namespace upsylon
                     }
                     return ans;
                 }
-
+                
                 //! setup each sample
                 inline virtual void setup(const accessible<ORDINATE> &aorg)
                 {
@@ -85,8 +86,12 @@ namespace upsylon
                     {
                         (**it).setup(aorg);
                     }
+                    const size_t dims = aorg.size();
+                    __beta.adjust(dims,this->zero);
+                    __alpha.make(dims,dims);
+                    
                 }
-
+                
                 //! return D2, weighted sum of samples
                 inline virtual ORDINATE D2(sequential_type            &F,
                                            const accessible<ORDINATE> &A)
@@ -99,14 +104,14 @@ namespace upsylon
                         {
                             single_sample &s = (**it);
                             const size_t   n = s.count();
-
+                            
                             sum          += n;
                             reserved[++i] = n * s.D2(F,A);
                         }
                     }
-                    return (sum>0) ? sorted_sum(reserved)/sum : 0;
+                    return (sum>0) ? sorted_sum(reserved)/sum : this->zero;
                 }
-
+                
                 //______________________________________________________________
                 //
                 // design interface
@@ -115,25 +120,29 @@ namespace upsylon
                 template <typename ID> inline
                 single_sample & operator()(const ID &id,const size_t n=0)
                 {
-                    shared_sample p = single_sample::create(id,n);
-                    if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
-                    return *p;
+                    return use( single_sample::create(id,n) );
                 }
-
+                
                 //! create a filled sample
                 template <typename ID> inline
-                single_sample * operator()(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
+                single_sample & operator()(const ID &id, const ABSCISSA *x, const ORDINATE *y, const size_t n)
                 {
-                    shared_sample p = single_sample::create(id,x,y,n);
-                    if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
-                    return *p;
+                    return use( single_sample::create(id,x,y,n) );
                 }
-
+                
+                //! create a clone sample
+                template <typename ID> inline
+                single_sample & operator()(const ID &id, const single_sample &source)
+                {
+                    return use( source.clone_as(id) );
+                }
+                
+                
                 //______________________________________________________________
                 //
                 // query samples
                 //______________________________________________________________
-
+                
                 //! query by string
                 inline single_sample & operator[](const string &id)
                 {
@@ -142,7 +151,7 @@ namespace upsylon
                     shared_sample tmp(*pps);
                     return *tmp;
                 }
-
+                
                 //! query by string
                 inline const single_sample & operator[](const string &id) const
                 {
@@ -161,17 +170,85 @@ namespace upsylon
                 {
                     const string _(id); return (*this)[_];
                 }
-
-
+                
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(samples);
-                vector<double> reserved;
+                vector<ORDINATE> reserved;
+                vector<ORDINATE> __beta;
+                matrix<ORDINATE> __alpha;
+                
+                single_sample & use( single_sample *s )
+                {
+                    const shared_sample p = s;
+                    if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
+                    return *s;
+                }
+                
+                
+                virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
+                                     addressable<ORDINATE>      &beta,
+                                     sequential_type            &F,
+                                     sequential_grad            &G,
+                                     const accessible<ORDINATE> &A,
+                                     const accessible<bool>     &used)
+                {
+                    const size_t dims = A.size();
+                    assert(dims==alpha.rows);
+                    assert(dims==alpha.cols);
+                    assert(dims==beta.size());
+                    
+                    assert(dims==__alpha.rows || die("setup"));
+                    assert(dims==__alpha.cols || die("setup"));
+                    assert(dims==__beta.size()|| die("setup"));
+
+                    tao::ld(beta,this->zero);
+                    alpha.ld(this->zero);
+                    
+                    size_t sum = 0;
+                    {
+                        size_t i=0;
+                        for(iterator it=this->begin();it!=this->end();++it)
+                        {
+                            single_sample &s = (**it);
+                            const size_t   n = s.count();
+                            
+                            sum          += n;
+                            reserved[++i] = n * s._D2(__alpha,__beta,F,G,A,used);
+                            for(size_t j=dims;j>0;--j)
+                            {
+                                beta[j] += __beta[j] * n;
+                                for(size_t k=j;k>0;--k)
+                                {
+                                    alpha[j][k] += n * __alpha[j][k];
+                                }
+                            }
+                        }
+                    }
+                    if(sum>0)
+                    {
+                        
+                        for(size_t j=dims;j>0;--j)
+                        {
+                            beta[j] /= sum;
+                            for(size_t k=j;k>0;--k)
+                            {
+                                alpha[j][k] /= sum;
+                            }
+                        }
+                        return sorted_sum(reserved)/sum;
+                    }
+                    else
+                    {
+                        return this->zero;
+                    }
+                }
             };
-
+            
         }
-
+        
     }
-
+    
 }
 #endif
 

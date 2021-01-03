@@ -68,10 +68,24 @@ namespace upsylon
                 ordinate(the_ordinate),
                 adjusted(the_adjusted),
                 reserved(),
-                dFdA(),
-                zero(0)
+                dFdA()
                 {}
 
+                //! make a copy with a different name
+                template <typename ID>
+                inline explicit sample(const ID     &the_name,
+                                       const sample &the_data) :
+                api_type(the_name),
+                abscissa(the_data.abscissa),
+                ordinate(the_data.ordinate),
+                adjusted( new vector<ORDINATE>( the_data.count(), the_data.zero) ),
+                reserved(),
+                dFdA()
+                {
+                    
+                }
+                
+                
                 //______________________________________________________________
                 //
                 // methods
@@ -100,11 +114,9 @@ namespace upsylon
 
                 //! create a clone with shared data, new adjusted
                 template <typename ID> inline
-                sample * clone_as(const ID &id)
+                sample * clone_as(const ID &id) const
                 {
-                    const size_t        n            = this->count();
-                    const ordinate_type the_adjusted = new vector<ORDINATE>(n,zero);
-                    return new sample(id,abscissa,ordinate,the_adjusted);
+                    return new sample(id,*this);
                 }
 
                 //! add x,y,__zero__
@@ -114,7 +126,7 @@ namespace upsylon
                     assert( abscissa.size() == adjusted.size() );
                     abscissa->push_back(x);
                     try { ordinate->push_back(y); } catch(...) { abscissa->pop_back(); throw; }
-                    try { adjusted->push_back(zero); }
+                    try { adjusted->push_back(this->zero); }
                     catch(...) {
                         ordinate->pop_back();
                         abscissa->pop_back();
@@ -184,12 +196,12 @@ namespace upsylon
 
 
                 //! D2, beta and alpha
-                inline virtual ORDINATE D2(matrix<ORDINATE>           &alpha,
-                                           addressable<ORDINATE>      &beta,
-                                           sequential_type            &F,
-                                           sequential_grad            &G,
-                                           const accessible<ORDINATE> &A,
-                                           const accessible<bool>     &used)
+                inline virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
+                                            addressable<ORDINATE>      &beta,
+                                            sequential_type            &F,
+                                            sequential_grad            &G,
+                                            const accessible<ORDINATE> &A,
+                                            const accessible<bool>     &used)
                 {
                     assert(dFdA.size()==A.size());
                     assert(beta.size()==A.size());
@@ -201,33 +213,35 @@ namespace upsylon
                     addressable<ORDINATE>      &Z = *adjusted;
                     const variables            &V = this->vars;
                     const size_t                N = count();
-                    tao::ld(beta,0);
-                    alpha.ld(0);
+                    tao::ld(beta,this->zero);
+                    alpha.ld(this->zero);
 
                     if(N>0)
                     {
-                        {
-                            const ABSCISSA &Xi = X[1];
-                            const ORDINATE dY  = Y[1]-(Z[1]=F.start(Xi,A,V));
-                            reserved[1] = square_of(dY);
-                            G(dFdA,F,Xi,A,V,used);
-                            tao::muladd(beta,dY,dFdA);
-                            add_to(alpha);
-                        }
+                        // first pass : compute reserved as dY
+                        reserved[1] = Y[1]-(Z[1]=F.start(X[1],A,V));
                         for(size_t i=2;i<=N;++i)
                         {
+                            reserved[i] = Y[i]-(Z[i]=F.reach(X[i],A,V));
+                        }
+                        
+                        // second pass: compute gradient and update reserved
+                        for(size_t i=N;i>0;--i)
+                        {
                             const ABSCISSA &Xi = X[i];
-                            const ORDINATE dY  = Y[i]-(Z[i]=F.reach(Xi,A,V));
-                            reserved[1] = square_of(dY);
+                            const ORDINATE dY  = reserved[i];
                             G(dFdA,F,Xi,A,V,used);
                             tao::muladd(beta,dY,dFdA);
                             add_to(alpha);
+                            reserved[i] = dY*dY;
                         }
+                        
+                        // done
                         return sorted_sum(reserved);
                     }
                     else
                     {
-                        return 0;
+                        return this->zero;
                     }
                 }
                 
@@ -239,9 +253,8 @@ namespace upsylon
                 ordinate_type    ordinate; //!< ordinate, 1Dim
                 ordinate_type    adjusted; //!< adjusted, 1Dim
                 vector<ORDINATE> reserved; //!< memory,   1Dim
-                vector<ORDINATE> dFdA; //!< memory for gradient
-                const ORDINATE   zero; //!< a zero ordinate value
-
+                vector<ORDINATE> dFdA;     //!< memory for gradient
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sample);
