@@ -79,7 +79,17 @@ namespace upsylon
                 {
                 }
 
+                //______________________________________________________________
+                //
                 //! generic call
+                /**
+                 \param s a sample interface
+                 \param F a sequential function
+                 \param G a gradient of F
+                 \param A array of parameters
+                 \param E array of errors
+                 */
+                //______________________________________________________________
                 inline bool fit(sample_api_type        &s,
                                 sequential_type        &F,
                                 v_gradient_type        &G,
@@ -113,8 +123,7 @@ namespace upsylon
                     Y_GLS_PRINTLN("init: p=" << p << ", lambda=" << lambda);
                     if(verbose)
                     {
-                        s.vars.display(std::cerr << "values:" << std::endl,aorg,"\t");
-                        s.vars.display(std::cerr << "used  :" << std::endl,used,"\t");
+                        s.vars.display(std::cerr,aorg,used," : ","\t(*) ","");
                     }
 
                     //----------------------------------------------------------
@@ -190,7 +199,7 @@ namespace upsylon
                     {
                         s.vars.display(std::cerr,atry,step," (","\t(*) ",")");
                     }
-                    Y_GLS_PRINTLN("D2_try = " << D2_try << "@lambda=" << lambda);
+                    Y_GLS_PRINTLN("D2_try = " << D2_try << " @ <lambda=" << lambda << "> <cycle=" << cycle << ">");
 
                     if(D2_try>D2_org)
                     {

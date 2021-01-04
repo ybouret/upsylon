@@ -164,7 +164,24 @@ Y_UTEST(fitting_diff)
     lsf.verbose = true;
 
     vector<double> e2(2,0);
-    lsf.fit(S1,F,G,a2,u2,e2);
+    if(lsf.fit(S1,F,G,a2,u2,e2))
+    {
+        
+    }
+
+    if(lsf.fit(S2,F,G,a2,u2,e2))
+    {
+
+
+    }
+
+    vector<double> e3(3,0);
+    if(lsf.fit(sa,F,G,a3,u3,e3))
+    {
+
+    }
+
+
 
     
 }
