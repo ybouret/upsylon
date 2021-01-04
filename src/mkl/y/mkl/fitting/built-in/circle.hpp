@@ -127,7 +127,7 @@ namespace upsylon
                     // C++
                     //__________________________________________________________
                     //! setup
-                    inline explicit circle() : func(this, & circle::call) {}
+                    inline explicit circle() : func(this, & circle::call), grad() {}
 
                     //! cleanup
                     inline virtual ~circle() throw() {}
