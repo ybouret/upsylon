@@ -48,7 +48,7 @@ namespace upsylon
                 typedef typename series<ABSCISSA>::type             abscissa_type;   //!< alias
                 typedef typename series<ORDINATE>::type             ordinate_type;   //!< alias
                 typedef typename api_type::sequential_type          sequential_type; //!< alias
-                typedef typename api_type::sequential_grad          sequential_grad; //!< alias
+                typedef typename api_type::v_gradient_type          v_gradient_type; //!< alias
 
                 //______________________________________________________________
                 //
@@ -200,7 +200,7 @@ namespace upsylon
                 inline virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
                                             addressable<ORDINATE>      &beta,
                                             sequential_type            &F,
-                                            sequential_grad            &G,
+                                            v_gradient_type            &G,
                                             const accessible<ORDINATE> &A,
                                             const accessible<bool>     &used)
                 {
@@ -231,7 +231,7 @@ namespace upsylon
                         {
                             const ABSCISSA &Xi = X[i];
                             const ORDINATE dY  = reserved[i];
-                            G(dFdA,F,Xi,A,V,used);
+                            G(dFdA,Xi,A,V,used);
                             tao::muladd(beta,dY,dFdA);
                             add_to(alpha);
                             reserved[i] = dY*dY;

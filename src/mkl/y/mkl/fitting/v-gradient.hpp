@@ -35,6 +35,7 @@ namespace upsylon
                 inline explicit v_gradient() throw()  {}
 
             public:
+                //! call operator, initialize dFdA and call compute
                 inline void operator()(addressable<ORDINATE>      &dFdA,
                                        const ABSCISSA              X,
                                        const accessible<ORDINATE> &aorg,

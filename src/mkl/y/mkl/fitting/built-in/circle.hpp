@@ -15,36 +15,44 @@ namespace upsylon
             
             namespace built_in
             {
+                //______________________________________________________________
+                //
+                //
+                //! Casa and Koope extended method
+                //
+                //______________________________________________________________
                 template <
                 typename UNIT,
                 typename ORDINATE>
                 class circle
                 {
                 public:
-                    
-                    
-                    typedef point2d<UNIT>              ABSCISSA;
-                    typedef sample<ABSCISSA,ORDINATE>  sample_type;
-                    typedef samples<ABSCISSA,ORDINATE> samples_type;
-                    typedef vector<ABSCISSA>           abscissae;
-                    typedef vector<ORDINATE>           ordinates;
-                    typedef sequential<ABSCISSA,ORDINATE>          sequential_type;
-                    typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;
-                    typedef typename sequential_type::function     sequential_func;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+
+                    typedef point2d<UNIT>                      ABSCISSA;        //!< base type
+                    typedef sample<ABSCISSA,ORDINATE>          sample_type;     //!< alias
+                    typedef samples<ABSCISSA,ORDINATE>         samples_type;    //!< alias
+                    typedef vector<ABSCISSA>                   abscissae;       //!< alias
+                    typedef vector<ORDINATE>                   ordinates;       //!< alias
+                    typedef sequential<ABSCISSA,ORDINATE>      sequential_type; //!< alias
+                    typedef v_gradient<ABSCISSA,ORDINATE>      v_gradient_type; //!< alias
+                    typedef typename sequential_type::function sequential_func; //!< alias
                    
-                    
-                    inline ORDINATE call(const ABSCISSA             &p,
-                                         const accessible<ORDINATE> &A,
-                                         const variables            &V)
-                    {
-                        return V(A,"a") * p.x + V(A,"b") * p.y + V(A,"c");
-                    }
-                    
+
+                    //__________________________________________________________
+                    //
+                    //! special sample to collect x,y and build z=x^2+y^2
+                    //__________________________________________________________
                     class sampling : public sample_type
                     {
                     public:
+                        //! cleanup
                         inline virtual ~sampling() throw() {}
-                        
+
+                        //! create with name
                         template <typename ID>
                         static inline
                         sampling *create(const ID &id, const size_t n=0)
@@ -54,7 +62,8 @@ namespace upsylon
                             const typename sample_type::ordinate_type the_adjusted = new ordinates(n,as_capacity);
                             return new sampling(id,the_abscissa,the_ordinate,the_adjusted);
                         }
-                        
+
+                        //! append a "pixel"
                         inline void append(const UNIT x, const UNIT y)
                         {
                             const ORDINATE z = square_of( ORDINATE(x) ) + square_of( ORDINATE(y) );
@@ -76,25 +85,39 @@ namespace upsylon
                         
                     };
                     
-                    class gradient : public sequential_grad
-                    {
-                    public:
-                        inline explicit gradient() throw() : sequential_grad() {}
-                        inline virtual ~gradient() throw() {}
-                        
-                    private:
-                        Y_DISABLE_COPY_AND_ASSIGN(gradient);
-                       
-                    };
-                    
+                    //__________________________________________________________
+                    //
+                    // C++
+                    //__________________________________________________________
                     
                     inline explicit circle() : func(this, & circle::call) {}
                     inline virtual ~circle() throw()
                     {
                     }
-                    sequential_func func;
 
+
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
+                    //! base call to fit
+                    inline ORDINATE call(const ABSCISSA             &p,
+                                         const accessible<ORDINATE> &A,
+                                         const variables            &V)
+                    {
+                        return V(A,"a") * p.x + V(A,"b") * p.y + V(A,"c");
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // members
+                    //__________________________________________________________
+                    sequential_func func; //!< call()
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(circle);
                 };
+
                 
             }
             

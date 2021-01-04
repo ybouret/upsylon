@@ -25,6 +25,7 @@ namespace upsylon
             class sequential
             {
             public:
+                //! functor matching the sequential call
                 typedef functor<ORDINATE,TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&)> function;
 
                 //______________________________________________________________

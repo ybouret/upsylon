@@ -49,7 +49,7 @@ namespace upsylon
                 typedef typename samples_db::const_iterator         const_iterator;  //!< alias
                 typedef typename samples_db::iterator               iterator;        //!< alias
                 typedef typename api_type::sequential_type          sequential_type; //!< alias
-                typedef typename api_type::sequential_grad          sequential_grad; //!< alias
+                typedef typename api_type::v_gradient_type          v_gradient_type; //!< alias
                 
                 //______________________________________________________________
                 //
@@ -123,7 +123,7 @@ namespace upsylon
                 // design interface
                 //______________________________________________________________
                 
-                
+                //! record a new dynamic sample
                 template <typename SAMPLE_TYPE>
                 SAMPLE_TYPE & operator()( SAMPLE_TYPE *s )
                 {
@@ -205,7 +205,7 @@ namespace upsylon
                 virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
                                      addressable<ORDINATE>      &beta,
                                      sequential_type            &F,
-                                     sequential_grad            &G,
+                                     v_gradient_type            &G,
                                      const accessible<ORDINATE> &A,
                                      const accessible<bool>     &used)
                 {

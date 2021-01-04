@@ -1,7 +1,7 @@
 
 #include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
-#include "y/mkl/fitting/sequential/num-grad.hpp"
+#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/type/point2d.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
@@ -62,8 +62,10 @@ Y_UTEST(fitting_diff)
         Diffusion          diff;
         seq_type::function call(&diff,&Diffusion::compute);
         seq_type           F(call);
-        sequential_num_grad<double,double> G;
-        
+        sequential_gradient<double,double> G;
+
+        G.F = &F;
+
         // standalone samples
         samples_type  db("db");
         sample_type  &S1 = db.create("S1");
