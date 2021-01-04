@@ -8,6 +8,8 @@
 #include "y/associative/hash/set.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/ios/align.hpp"
+#include "y/type/utils.hpp"
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -185,8 +187,9 @@ namespace upsylon
                 size_t max_name_length() const throw(); //!< max of name lengths
                 size_t sweep()           const throw(); //!< max of index values
 
+                //! display var = value
                 template <typename ARRAY>
-                std::ostream & display( std::ostream &os, ARRAY &arr, const char *pfx=NULL ) const
+                std::ostream & display( std::ostream &os, ARRAY &arr, const char *pfx ) const
                 {
                     const size_t width = max_name_length();
                     if(!pfx) pfx="";
@@ -198,7 +201,52 @@ namespace upsylon
                     return os;
                 }
 
+                //! values -> strings, return max length
+                template <typename ARRAY>   inline
+                size_t to_strings(sequence<string> &strings, ARRAY &arr) const
+                {
+                    size_t ans = 0;
+                    strings.free();
+                    for(const_iterator it=begin();it!=end();++it)
+                    {
+                        const variable &v = **it;
+                        string          s = vformat("%.15g",v(arr));
+                        ans = max_of(ans,s.size());
+                        strings.push_back(s);
+                    }
+                    return ans;
+                }
 
+                //! name = pfx arr sep brr sfx
+                template <typename ARR, typename BRR>
+                std::ostream & display(std::ostream &os,
+                                       ARR          &arr,
+                                       BRR          &brr,
+                                       const char   *sep,
+                                       const char   *pfx=NULL,
+                                       const char   *sfx=NULL) const
+                {
+                    assert(sep!=NULL);
+                    const size_t width = max_name_length();
+                    if(!pfx) pfx="";
+                    if(!sfx) sfx="";
+                    vector<string>  data(arr.size(),as_capacity);
+                    const size_t    alen   = to_strings(data,arr);
+                    size_t          j      = 1;
+                    for(const_iterator it=begin();it!=end();++it,++j)
+                    {
+                        const variable &v = **it;
+                        os << pfx;
+                        os << ios::align(v.name,ios::align::left,width);
+                        os << " = ";
+                        os << ios::align(data[j],ios::align::left,alen);
+                        os << sep;
+                        os << v(brr);
+                        os << sfx;
+                        os << std::endl;
+                    }
+                    return os;
+                }
 
 
             private:

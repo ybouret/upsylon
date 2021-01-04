@@ -17,59 +17,75 @@ namespace upsylon
         namespace fitting
         {
 
+            //------------------------------------------------------------------
+            //
+            //! common least squares data
+            //
+            //------------------------------------------------------------------
             struct __least_squares
             {
-                static const char prefix[];
+                static const char prefix[]; //!< "[fit] "
             };
 
+            //! for verbose output
 #define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << __least_squares::prefix << MSG << std::endl; } } while(false)
 
+            //------------------------------------------------------------------
+            //
+            //! least square algorithm
+            //
+            //------------------------------------------------------------------
             template <typename ABSCISSA, typename ORDINATE>
             class least_squares
             {
             public:
-                typedef lambdas<ORDINATE>             lambdas_type;
-                typedef matrix<ORDINATE>              matrix_type;
-                typedef vector<ORDINATE>              vector_type;
-                typedef sample_api<ABSCISSA,ORDINATE> sample_api_type;
-                typedef sequential<ABSCISSA,ORDINATE> sequential_type;
-                typedef v_gradient<ABSCISSA,ORDINATE> v_gradient_type;
+                typedef lambdas<ORDINATE>             lambdas_type;     //!< alias
+                typedef matrix<ORDINATE>              matrix_type;      //!< alias
+                typedef vector<ORDINATE>              vector_type;      //!< alias
+                typedef sample_api<ABSCISSA,ORDINATE> sample_api_type;  //!< alias
+                typedef sequential<ABSCISSA,ORDINATE> sequential_type;  //!< alias
+                typedef v_gradient<ABSCISSA,ORDINATE> v_gradient_type;  //!< alias
 
-                size_t             M;
-                const lambdas_type lam;
-                ORDINATE           lambda;
-                int                p;
-                matrix_type        alpha;
-                matrix_type        curv;
-                vector_type        beta;
-                vector_type        aorg;
-                vector_type        atry;
-                vector_type        step;
-                vector<bool>       used;
-                bool               verbose;
+                size_t             M;       //!< number of parameters
+                const lambdas_type lam;     //!< array of precomputed lambdas
+                ORDINATE           lambda;  //!< current lambda
+                int                p;       //!< lambda=10^p
+                matrix_type        alpha;   //!< curvature
+                matrix_type        covar;   //!< covariance
+                vector_type        beta;    //!< beta
+                vector_type        aorg;    //!< starting point
+                vector_type        atry;    //!< trial point
+                vector_type        step;    //!< computed step
+                vector<bool>       used;    //!< used parameters
+                bool               verbose; //!< output verbosity
 
+                //! setup
                 inline explicit least_squares() :
                 M(0),
                 lam(), lambda(0), p(0),
                 alpha(),
-                curv(),
+                covar(),
                 beta(),
                 aorg(),
                 atry(),
                 step(),
+                used(),
                 verbose(false)
                 {
                 }
 
+                //! cleanup
                 inline virtual ~least_squares() throw()
                 {
                 }
 
+                //! generic call
                 inline bool fit(sample_api_type        &s,
                                 sequential_type        &F,
                                 v_gradient_type        &G,
                                 addressable<ORDINATE>  &A,
-                                const accessible<bool> &U)
+                                const accessible<bool> &U,
+                                addressable<ORDINATE>  &E)
                 {
                     //----------------------------------------------------------
                     //
@@ -83,7 +99,7 @@ namespace upsylon
                     p      = 0;
                     lambda = lam[p];
                     alpha.make(M,M);
-                    curv.make(M,M);
+                    covar.make(M,M);
                     beta.adjust(M,s.zero);
                     aorg.adjust(M,s.zero);
                     atry.adjust(M,s.zero);
@@ -91,6 +107,7 @@ namespace upsylon
                     used.adjust(M,false);
                     tao::set(aorg,A);
                     tao::set(used,U);
+                    tao::ld(E,-1);
                     s.setup(A);
 
                     Y_GLS_PRINTLN("init: p=" << p << ", lambda=" << lambda);
@@ -111,9 +128,10 @@ namespace upsylon
                 CYCLE:
                     ++cycle;
                     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
-                    Y_GLS_PRINTLN("D2_org = " << D2_org);
-                    Y_GLS_PRINTLN("beta   = " << beta  );
-                    Y_GLS_PRINTLN("alpha  = " << alpha  );
+                    Y_GLS_PRINTLN("<cycle> = " << cycle  );
+                    Y_GLS_PRINTLN("D2_org  = " << D2_org );
+                    Y_GLS_PRINTLN("beta    = " << beta   );
+                    Y_GLS_PRINTLN("alpha   = " << alpha  );
 
                     //----------------------------------------------------------
                     //
@@ -158,6 +176,7 @@ namespace upsylon
                             converged = false;
                         }
                     }
+                    Y_GLS_PRINTLN("converged/variable = " << converged);
 
 
 
@@ -169,12 +188,11 @@ namespace upsylon
                     const double D2_try = s.D2(F,atry);
                     if(verbose)
                     {
-                        s.vars.display(std::cerr << "\tstep:" << std::endl,step,"\t\t");
-                        s.vars.display(std::cerr << "\tatry:" << std::endl,atry,"\t\t");
+                        s.vars.display(std::cerr,atry,step," (","\t(*) ",")");
                     }
-                    Y_GLS_PRINTLN("D2_try = " << D2_try);
+                    Y_GLS_PRINTLN("D2_try = " << D2_try << "@lambda=" << lambda);
 
-                    if(D2_try>=D2_org)
+                    if(D2_try>D2_org)
                     {
                         //------------------------------------------------------
                         // reject
@@ -192,22 +210,126 @@ namespace upsylon
                         //------------------------------------------------------
                         tao::set(aorg,atry);
                         decrease();
+
                         if(converged)
                         {
                             goto CONVERGED;
                         }
+
+                        const ORDINATE dd = fabs_of(D2_org-D2_try);
+                        if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
+                        {
+                            Y_GLS_PRINTLN("<D2 convergence>");
+                            goto CONVERGED;
+                        }
+
                         goto CYCLE;
                     }
 
 
                 CONVERGED:
-                    // success
-                    Y_GLS_PRINTLN("converged = " << converged);
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // success ?
+                    //
+                    //
+                    //----------------------------------------------------------
                     Y_GLS_PRINTLN("lambda    = " << lambda);
 
+                    //----------------------------------------------------------
+                    //
+                    // final D2
+                    //
+                    //----------------------------------------------------------
+                    D2_org = s.D2(alpha,beta,F,G,aorg,used);
+
+                    //----------------------------------------------------------
+                    //
+                    // compute covariance
+                    //
+                    //----------------------------------------------------------
+                    if(!LU::build(alpha))
+                    {
+                        Y_GLS_PRINTLN("singular extremum");
+                        return false;
+                    }
 
 
-                    return true;
+                    LU::inverse(alpha,covar);
+                    Y_GLS_PRINTLN("covar    = " << covar);
+
+                    //----------------------------------------------------------
+                    //
+                    // set new parameters
+                    //
+                    //----------------------------------------------------------
+                    tao::set(A,aorg);
+
+
+                    //----------------------------------------------------------
+                    //
+                    // compute d.o.f
+                    //
+                    //----------------------------------------------------------
+                    size_t ndof = s.count();
+                    size_t nuse = 0;
+                    for(size_t i=M;i>0;--i)
+                    {
+                        if(used[i]) ++nuse;
+                    }
+
+                    if(nuse>ndof)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // meaningless, leave error to -1
+                        //
+                        //------------------------------------------------------
+                        Y_GLS_PRINTLN("<meaningless>" );
+                        return true;
+                    }
+                    else if(nuse==ndof)
+                    {
+                        //------------------------------------------------------
+                        //
+                        // interpolation, set error to 0
+                        //
+                        //------------------------------------------------------
+                        Y_GLS_PRINTLN("<interpolation>");
+                        tao::ld(E,s.zero);
+                        return true;
+                    }
+                    else
+                    {
+                        //------------------------------------------------------
+                        //
+                        // successfull, compute individual errors
+                        //
+                        //------------------------------------------------------
+                        assert(ndof>nuse);
+                        Y_GLS_PRINTLN("<success>");
+                        ndof -= nuse;
+                        const size_t n2 = ndof*ndof;
+                        for(size_t i=M;i>0;--i)
+                        {
+                            if(used[i])
+                            {
+                                E[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
+                            }
+                            else
+                            {
+                                E[i] = s.zero;
+                            }
+                        }
+                        if(verbose)
+                        {
+                            s.vars.display(std::cerr,A,E," \\pm ","\t(*) ","");
+                        }
+                        return true;
+                    }
+
+
                 }
 
 
@@ -218,15 +340,15 @@ namespace upsylon
                 {
                 TRY_COMPUTE:
                     const ORDINATE fac = ORDINATE(1) + lambda;
-                    curv.assign(alpha);
+                    covar.assign(alpha);
                     for(size_t i=M;i>0;--i)
                     {
                         if(used[i])
                         {
-                            curv[i][i] *= fac;
+                            covar[i][i] *= fac;
                         }
                     }
-                    if(!LU::build(curv))
+                    if(!LU::build(covar))
                     {
                         if(!increase())
                         {
@@ -236,7 +358,7 @@ namespace upsylon
                         goto TRY_COMPUTE;
                     }
                     tao::set(step,beta);
-                    LU::solve(curv,step);
+                    LU::solve(covar,step);
                     return true;
                 }
 
