@@ -6,8 +6,10 @@
 
 #include "y/mkl/fitting/sample/api.hpp"
 #include "y/mkl/fitting/lambda.hpp"
+#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -38,12 +40,14 @@ namespace upsylon
             class least_squares
             {
             public:
-                typedef lambdas<ORDINATE>             lambdas_type;     //!< alias
-                typedef matrix<ORDINATE>              matrix_type;      //!< alias
-                typedef vector<ORDINATE>              vector_type;      //!< alias
-                typedef sample_api<ABSCISSA,ORDINATE> sample_api_type;  //!< alias
-                typedef sequential<ABSCISSA,ORDINATE> sequential_type;  //!< alias
-                typedef v_gradient<ABSCISSA,ORDINATE> v_gradient_type;  //!< alias
+                typedef lambdas<ORDINATE>                      lambdas_type;     //!< alias
+                typedef matrix<ORDINATE>                       matrix_type;      //!< alias
+                typedef vector<ORDINATE>                       vector_type;      //!< alias
+                typedef sample_api<ABSCISSA,ORDINATE>          sample_api_type;  //!< alias
+                typedef sequential<ABSCISSA,ORDINATE>          sequential_type;  //!< alias
+                typedef v_gradient<ABSCISSA,ORDINATE>          v_gradient_type;  //!< alias
+                typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;  //!< alias
+                typedef typename sequential_type::function     sequential_func;  //!< alias
 
                 size_t             M;       //!< number of parameters
                 const lambdas_type lam;     //!< array of precomputed lambdas
@@ -58,6 +62,7 @@ namespace upsylon
                 vector<bool>       used;    //!< used parameters
                 bool               verbose; //!< output verbosity
 
+
                 //! setup
                 inline explicit least_squares() :
                 M(0),
@@ -69,7 +74,8 @@ namespace upsylon
                 atry(),
                 step(),
                 used(),
-                verbose(false)
+                verbose(false),
+                grad_(0)
                 {
                 }
 
@@ -78,273 +84,51 @@ namespace upsylon
                 {
                 }
 
-                //______________________________________________________________
-                //
-                //! generic call
-                /**
-                 \param s a sample interface
-                 \param F a sequential function
-                 \param G a gradient of F
-                 \param A array of parameters
-                 \param U array of flags to use parameters
-                 \param E array of errors
-                 */
-                //______________________________________________________________
+                //! internal gradient
+                sequential_grad &grad()
+                {
+                    if(grad_.is_empty())
+                    {
+                        grad_ = new sequential_grad();
+                    }
+                    return *grad_;
+                }
+
+
+#include "least-squares.hxx"
+
+                //! fit with internal gradient
                 inline bool fit(sample_api_type        &s,
                                 sequential_type        &F,
-                                v_gradient_type        &G,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
                                 addressable<ORDINATE>  &E)
                 {
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // initialize
-                    //
-                    //
-                    //----------------------------------------------------------
-                    assert(A.size()==U.size());
-                    M      = A.size();
-                    p      = 0;
-                    lambda = lam[p];
-                    alpha.make(M,M);
-                    covar.make(M,M);
-                    beta.adjust(M,s.zero);
-                    aorg.adjust(M,s.zero);
-                    atry.adjust(M,s.zero);
-                    step.adjust(M,s.zero);
-                    used.adjust(M,false);
-                    tao::set(aorg,A);
-                    tao::set(used,U);
-                    tao::ld(E,-1);
-                    s.setup(A);
+                    v_gradient_type &G = grad();
+                    return fit(s,F,G,A,U,E);
+                }
 
-                    Y_GLS_PRINTLN("init: p=" << p << ", lambda=" << lambda);
-                    if(verbose)
-                    {
-                        s.vars.display(std::cerr,aorg,used," : ","\t(*) ","");
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // cycle
-                    //
-                    //
-                    //----------------------------------------------------------
-                    size_t cycle=0;
-                CYCLE:
-                    ++cycle;
-                    ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
-                    Y_GLS_PRINTLN("<cycle> = " << cycle  );
-                    Y_GLS_PRINTLN("D2_org  = " << D2_org );
-                    Y_GLS_PRINTLN("beta    = " << beta   );
-                    Y_GLS_PRINTLN("alpha   = " << alpha  );
-
-                    //----------------------------------------------------------
-                    //
-                    // compute curvature with lamba increase
-                    //
-                    //----------------------------------------------------------
-                COMPUTE_STEP:
-                    if(!compute_step())
-                    {
-                        return false;
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // compute atry
-                    //
-                    //----------------------------------------------------------
-                    for(size_t i=M;i>0;--i)
-                    {
-                        atry[i] = aorg[i] + step[i];
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // TODO: control atry
-                    //
-                    //----------------------------------------------------------
-
-                    //----------------------------------------------------------
-                    //
-                    // recompute step and check cvg
-                    //
-                    //----------------------------------------------------------
-                    bool converged = true;
-                    for(size_t i=M;i>0;--i)
-                    {
-                        const ORDINATE a_new = atry[i];
-                        const ORDINATE a_old = aorg[i];
-                        const ORDINATE da    = fabs_of( step[i] = a_new - a_old );
-                        if( da > numeric<double>::ftol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
-                        {
-                            converged = false;
-                        }
-                    }
-                    Y_GLS_PRINTLN("converged/variable = " << converged);
-
-
-
-                    //----------------------------------------------------------
-                    //
-                    // compute trial D2
-                    //
-                    //----------------------------------------------------------
-                    const ORDINATE D2_try = s.D2(F,atry);
-                    if(verbose)
-                    {
-                        s.vars.display(std::cerr,atry,step," (","\t(*) ",")");
-                    }
-                    Y_GLS_PRINTLN("D2_try = " << D2_try << " @ <lambda=" << lambda << "> <cycle=" << cycle << ">");
-
-                    if(D2_try>D2_org)
-                    {
-                        //------------------------------------------------------
-                        // reject
-                        //------------------------------------------------------
-                        if(!increase())
-                        {
-                            return false;
-                        }
-                        goto COMPUTE_STEP;
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        // accept
-                        //------------------------------------------------------
-                        tao::set(aorg,atry);
-                        decrease();
-
-                        if(converged)
-                        {
-                            goto CONVERGED;
-                        }
-
-                        const ORDINATE dd = fabs_of(D2_org-D2_try);
-                        if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
-                        {
-                            Y_GLS_PRINTLN("<D2 convergence>");
-                            goto CONVERGED;
-                        }
-
-                        goto CYCLE;
-                    }
-
-
-                CONVERGED:
-                    //----------------------------------------------------------
-                    //
-                    //
-                    // success ?
-                    //
-                    //
-                    //----------------------------------------------------------
-                    Y_GLS_PRINTLN("lambda    = " << lambda);
-
-                    //----------------------------------------------------------
-                    //
-                    // final D2
-                    //
-                    //----------------------------------------------------------
-                    D2_org = s.D2(alpha,beta,F,G,aorg,used);
-
-                    //----------------------------------------------------------
-                    //
-                    // compute covariance
-                    //
-                    //----------------------------------------------------------
-                    if(!LU::build(alpha))
-                    {
-                        Y_GLS_PRINTLN("singular extremum");
-                        return false;
-                    }
-
-
-                    LU::inverse(alpha,covar);
-                    Y_GLS_PRINTLN("covar    = " << covar);
-
-                    //----------------------------------------------------------
-                    //
-                    // set new parameters
-                    //
-                    //----------------------------------------------------------
-                    tao::set(A,aorg);
-
-
-                    //----------------------------------------------------------
-                    //
-                    // compute d.o.f
-                    //
-                    //----------------------------------------------------------
-                    size_t ndof = s.count();
-                    size_t nuse = 0;
-                    for(size_t i=M;i>0;--i)
-                    {
-                        if(used[i]) ++nuse;
-                    }
-
-                    if(nuse>ndof)
-                    {
-                        //------------------------------------------------------
-                        //
-                        // meaningless, leave error to -1
-                        //
-                        //------------------------------------------------------
-                        Y_GLS_PRINTLN("<meaningless>" );
-                        return true;
-                    }
-                    else if(nuse==ndof)
-                    {
-                        //------------------------------------------------------
-                        //
-                        // interpolation, set error to 0
-                        //
-                        //------------------------------------------------------
-                        Y_GLS_PRINTLN("<interpolation>");
-                        tao::ld(E,s.zero);
-                        return true;
-                    }
-                    else
-                    {
-                        //------------------------------------------------------
-                        //
-                        // successfull, compute individual errors
-                        //
-                        //------------------------------------------------------
-                        assert(ndof>nuse);
-                        Y_GLS_PRINTLN("<success>");
-                        ndof -= nuse;
-                        const size_t n2 = ndof*ndof;
-                        for(size_t i=M;i>0;--i)
-                        {
-                            if(used[i])
-                            {
-                                E[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
-                            }
-                            else
-                            {
-                                E[i] = s.zero;
-                            }
-                        }
-                        if(verbose)
-                        {
-                            s.vars.display(std::cerr,A,E," \\pm ","\t(*) ","");
-                        }
-                        return true;
-                    }
-
-
+                //! fit with a regular function
+                inline bool fit(sample_api_type        &s,
+                                sequential_func        &f,
+                                addressable<ORDINATE>  &A,
+                                const accessible<bool> &U,
+                                addressable<ORDINATE>  &E)
+                {
+                    sequential_function<ABSCISSA,ORDINATE> F(f);
+                    return fit(s,F,A,U,E);
                 }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(least_squares);
+                auto_ptr<sequential_grad> grad_;
 
+                //--------------------------------------------------------------
+                //
+                // compute the fitting step
+                //
+                //--------------------------------------------------------------
                 bool compute_step() throw()
                 {
                 TRY_COMPUTE:

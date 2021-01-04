@@ -97,8 +97,15 @@ namespace upsylon
                     __alpha.make(dims,dims);
                     
                 }
-                
 
+                //! update correlation
+                inline virtual void update_correlation(correlation<ORDINATE> &corr) const
+                {
+                    for(const_iterator it=this->begin();it!=this->end();++it)
+                    {
+                        (**it).update_correlation(corr);
+                    }
+                }
                 
                 //______________________________________________________________
                 //

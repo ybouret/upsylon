@@ -164,21 +164,24 @@ Y_UTEST(fitting_diff)
     lsf.verbose = true;
 
     vector<double> e2(2,0);
+    correlation<double> corr;
     if(lsf.fit(S1,F,G,a2,u2,e2))
     {
-        
+        std::cerr << "corr1: " << S1.compute_correlation(corr) << std::endl;
+        std::cerr << std::endl;
     }
 
     if(lsf.fit(S2,F,G,a2,u2,e2))
     {
-
-
+        std::cerr << "corr2: " << S2.compute_correlation(corr) << std::endl;
+        std::cerr << std::endl;
     }
 
     vector<double> e3(3,0);
     if(lsf.fit(sa,F,G,a3,u3,e3))
     {
-
+        std::cerr << "corrA: " << sa.compute_correlation(corr) << std::endl;
+        std::cerr << std::endl;
     }
 
 

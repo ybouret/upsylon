@@ -134,7 +134,7 @@ SET(fit_share_srcs ${fit_share_decl} ${fit_share_code})
 SOURCE_GROUP( fit/share FILES ${fit_share_srcs} )
 INSTALL( FILES ${fit_share_decl} DESTINATION include/y/mkl/fit/share )
 
-FILE(GLOB fitting_decl y/mkl/fitting/*.hpp)
+FILE(GLOB fitting_decl y/mkl/fitting/*.h??)
 FILE(GLOB fitting_code y/mkl/fitting/*.cpp)
 SET(fitting_srcs ${fitting_decl} ${fitting_code})
 SOURCE_GROUP( fitting FILES ${fitting_srcs} )

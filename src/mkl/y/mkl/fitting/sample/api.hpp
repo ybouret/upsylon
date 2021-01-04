@@ -6,6 +6,7 @@
 #include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/fitting/v-gradient.hpp"
 #include "y/container/matrix.hpp"
+#include "y/mkl/stat/correlation.hpp"
 
 namespace upsylon
 {
@@ -42,8 +43,8 @@ namespace upsylon
                 //______________________________________________________________
                 inline virtual  ~sample_api()   throw() {}   //!< cleanup
                 virtual size_t   count()  const throw() = 0; //!< number of points
-                virtual void     setup(const accessible<ORDINATE> &)                 = 0; //!< prepare for a cycle and parameters
-
+                virtual void     setup(const accessible<ORDINATE> &)                   = 0; //!< prepare for a cycle and parameters
+                virtual void     update_correlation(correlation<ORDINATE> &corr) const = 0; //!< add points to correlation
                 
                 //______________________________________________________________
                 //
@@ -99,7 +100,15 @@ namespace upsylon
                 
                 //! access variables
                 inline const variables & operator*() const throw() { return vars; }
-                
+
+                //! compute total correlation
+                inline ORDINATE compute_correlation( correlation<ORDINATE> &corr) const
+                {
+                    corr.free();
+                    update_correlation(corr);
+                    return corr.compute();
+                }
+
                 //______________________________________________________________
                 //
                 // helpers

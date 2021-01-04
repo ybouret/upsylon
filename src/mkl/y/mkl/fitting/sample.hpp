@@ -145,7 +145,7 @@ namespace upsylon
                         add(x[i],y[i]);
                     }
                 }
-
+                
 
 
                 //______________________________________________________________
@@ -170,7 +170,14 @@ namespace upsylon
                 }
                 
 
-
+                //! update correlation
+                inline virtual void update_correlation(correlation<ORDINATE> &corr) const
+                {
+                    for(size_t i=count();i>0;--i)
+                    {
+                        corr.add(ordinate[i],adjusted[i]);
+                    }
+                }
 
 
 

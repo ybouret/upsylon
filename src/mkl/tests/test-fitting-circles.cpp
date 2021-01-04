@@ -105,8 +105,36 @@ Y_UTEST(fitting_circles)
     
     if( ls.fit(C1,CC.F,CC.G,a1,used,aerr) )
     {
-
+        const size_t NMAX=100;
+        const float   xc = a1[ *(*C1)["a"] ]/2;
+        const float   yc = a1[ *(*C1)["b"] ]/2;
+        const float   cc = a1[ *(*C1)["c"] ];
+        const float   r  = sqrt( max_of<float>(0,cc+xc*xc+yc*yc) );
+        ios::ocstream fp("c1fit.dat");
+        for(size_t i=0;i<=NMAX;++i)
+        {
+            const float phi = (i*numeric<float>::two_pi)/NMAX;
+            fp("%g %g\n", xc + r*cosf(phi), yc+r*sinf(phi));
+        }
     }
+
+    tao::ld(a1,0);
+    if( ls.fit(C2,CC.F,CC.G,a1,used,aerr) )
+    {
+        const size_t NMAX=100;
+        const float   xc = a1[ *(*C2)["a"] ]/2;
+        const float   yc = a1[ *(*C2)["b"] ]/2;
+        const float   cc = a1[ *(*C2)["c"] ];
+        const float   r  = sqrt( max_of<float>(0,cc+xc*xc+yc*yc) );
+        ios::ocstream fp("c2fit.dat");
+        for(size_t i=0;i<=NMAX;++i)
+        {
+            const float phi = (i*numeric<float>::two_pi)/NMAX;
+            fp("%g %g\n", xc + r*cosf(phi), yc+r*sinf(phi));
+        }
+    }
+
+
 
     
     // with the same radius, different centers

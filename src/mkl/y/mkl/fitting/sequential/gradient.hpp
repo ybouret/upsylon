@@ -44,7 +44,7 @@ namespace upsylon
                 v_gradient_type(),
                 derivative_type(),
                 F(NULL),
-                h() {}
+                h(1e-4) {}
 
                 inline virtual ~sequential_gradient() throw() {}
 
@@ -53,7 +53,7 @@ namespace upsylon
                 // members
                 //______________________________________________________________
                 sequential_type *F; //!< sequential function
-                vector<ORDINATE> h; //!< scaling to evaluate parameters
+                ORDINATE         h; //!< scaling to evaluate parameters
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_gradient);
@@ -99,7 +99,7 @@ namespace upsylon
                         const size_t    ia = (func.ia = (**it).get_index());
                         if(used[ia])
                         {
-                            dFdA[ia] = this->diff(func,aorg[ia],1e-4);
+                            dFdA[ia] = this->diff(func,aorg[ia],h);
                         }
                     }
                 }
