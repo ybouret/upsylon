@@ -98,25 +98,7 @@ namespace upsylon
                     
                 }
                 
-                //! return D2, weighted sum of samples
-                inline virtual ORDINATE D2(sequential_type            &F,
-                                           const accessible<ORDINATE> &A)
-                {
-                    assert(reserved.size()==this->size() || die("setup") );
-                    size_t sum = 0;
-                    {
-                        size_t i=0;
-                        for(iterator it=this->begin();it!=this->end();++it)
-                        {
-                            single_sample &s = (**it);
-                            const size_t   n = s.count();
-                            
-                            sum          += n;
-                            reserved[++i] = n * s.D2(F,A);
-                        }
-                    }
-                    return (sum>0) ? sorted_sum(reserved)/sum : this->zero;
-                }
+
                 
                 //______________________________________________________________
                 //
@@ -200,14 +182,34 @@ namespace upsylon
                     if(!this->insert(p)) _samples::throw_multiple_sample(this->name,p->name);
                     return *s;
                 }
+
+                //! return D2, weighted sum of samples
+                inline virtual ORDINATE D2_only(sequential_type            &F,
+                                                const accessible<ORDINATE> &A)
+                {
+                    assert(reserved.size()==this->size() || die("setup") );
+                    size_t sum = 0;
+                    {
+                        size_t i=0;
+                        for(iterator it=this->begin();it!=this->end();++it)
+                        {
+                            single_sample &s = (**it);
+                            const size_t   n = s.count();
+
+                            sum          += n;
+                            reserved[++i] = n * s.D2(F,A);
+                        }
+                    }
+                    return (sum>0) ? sorted_sum(reserved)/sum : this->zero;
+                }
                 
                 
-                virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
-                                     addressable<ORDINATE>      &beta,
-                                     sequential_type            &F,
-                                     v_gradient_type            &G,
-                                     const accessible<ORDINATE> &A,
-                                     const accessible<bool>     &used)
+                virtual ORDINATE D2_full(matrix<ORDINATE>           &alpha,
+                                         addressable<ORDINATE>      &beta,
+                                         sequential_type            &F,
+                                         v_gradient_type            &G,
+                                         const accessible<ORDINATE> &A,
+                                         const accessible<bool>     &used)
                 {
                     const size_t dims = A.size();
                     assert(dims==alpha.rows);
@@ -230,7 +232,7 @@ namespace upsylon
                             const size_t   n = s.count();
                             
                             sum          += n;
-                            reserved[++i] = n * s._D2(__alpha,__beta,F,G,A,used);
+                            reserved[++i] = n * s.D2(__alpha,__beta,F,G,A,used);
                             for(size_t j=dims;j>0;--j)
                             {
                                 beta[j] += __beta[j] * n;

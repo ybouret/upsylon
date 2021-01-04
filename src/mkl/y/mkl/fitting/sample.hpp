@@ -169,82 +169,11 @@ namespace upsylon
                     dFdA.adjust(aorg.size(),0);
                 }
                 
-                //! D2
-                inline virtual ORDINATE D2(sequential_type            &F,
-                                           const accessible<ORDINATE> &A) 
-                {
-                    assert(reserved.size()==count() || die("setup!") );
-                    const accessible<ABSCISSA> &X = *abscissa;
-                    const accessible<ORDINATE> &Y = *ordinate;
-                    addressable<ORDINATE>      &Z = *adjusted;
-                    const variables            &V = this->vars;
-                    const size_t                N = count();
-                    if(N>0)
-                    {
-                        reserved[1] = square_of(Y[1]-(Z[1]=F.start(X[1],A,V)));
-                        for(size_t i=2;i<=N;++i)
-                        {
-                            reserved[i] = square_of(Y[i]-(Z[i]=F.reach(X[i],A,V)));
-                        }
-                        return sorted_sum(reserved);
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
 
 
 
-                //! D2, beta and alpha
-                inline virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
-                                            addressable<ORDINATE>      &beta,
-                                            sequential_type            &F,
-                                            v_gradient_type            &G,
-                                            const accessible<ORDINATE> &A,
-                                            const accessible<bool>     &used)
-                {
-                    assert(dFdA.size()==A.size());
-                    assert(beta.size()==A.size());
-                    assert(beta.size()==alpha.rows);
-                    assert(beta.size()==alpha.cols);
 
-                    const accessible<ABSCISSA> &X = *abscissa;
-                    const accessible<ORDINATE> &Y = *ordinate;
-                    addressable<ORDINATE>      &Z = *adjusted;
-                    const variables            &V = this->vars;
-                    const size_t                N = count();
-                    tao::ld(beta,this->zero);
-                    alpha.ld(this->zero);
 
-                    if(N>0)
-                    {
-                        // first pass : compute reserved as dY
-                        reserved[1] = Y[1]-(Z[1]=F.start(X[1],A,V));
-                        for(size_t i=2;i<=N;++i)
-                        {
-                            reserved[i] = Y[i]-(Z[i]=F.reach(X[i],A,V));
-                        }
-                        
-                        // second pass: compute gradient and update reserved
-                        for(size_t i=N;i>0;--i)
-                        {
-                            const ABSCISSA &Xi = X[i];
-                            const ORDINATE dY  = reserved[i];
-                            G(dFdA,Xi,A,V,used);
-                            tao::muladd(beta,dY,dFdA);
-                            add_to(alpha);
-                            reserved[i] = dY*dY;
-                        }
-                        
-                        // done
-                        return sorted_sum(reserved);
-                    }
-                    else
-                    {
-                        return this->zero;
-                    }
-                }
                 
                 //______________________________________________________________
                 //
@@ -272,6 +201,81 @@ namespace upsylon
                         {
                             alpha_i[j] += df_i * df[j];
                         }
+                    }
+                }
+
+                //! D2
+                inline virtual ORDINATE D2_only(sequential_type            &F,
+                                                const accessible<ORDINATE> &A)
+                {
+                    assert(reserved.size()==count() || die("setup!") );
+                    const accessible<ABSCISSA> &X = *abscissa;
+                    const accessible<ORDINATE> &Y = *ordinate;
+                    addressable<ORDINATE>      &Z = *adjusted;
+                    const variables            &V = this->vars;
+                    const size_t                N = count();
+                    if(N>0)
+                    {
+                        reserved[1] = square_of(Y[1]-(Z[1]=F.start(X[1],A,V)));
+                        for(size_t i=2;i<=N;++i)
+                        {
+                            reserved[i] = square_of(Y[i]-(Z[i]=F.reach(X[i],A,V)));
+                        }
+                        return sorted_sum(reserved);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                //! D2, beta and alpha
+                inline virtual ORDINATE D2_full(matrix<ORDINATE>           &alpha,
+                                                addressable<ORDINATE>      &beta,
+                                                sequential_type            &F,
+                                                v_gradient_type            &G,
+                                                const accessible<ORDINATE> &A,
+                                                const accessible<bool>     &used)
+                {
+                    assert(dFdA.size()==A.size());
+                    assert(beta.size()==A.size());
+                    assert(beta.size()==alpha.rows);
+                    assert(beta.size()==alpha.cols);
+
+                    const accessible<ABSCISSA> &X = *abscissa;
+                    const accessible<ORDINATE> &Y = *ordinate;
+                    addressable<ORDINATE>      &Z = *adjusted;
+                    const variables            &V = this->vars;
+                    const size_t                N = count();
+                    tao::ld(beta,this->zero);
+                    alpha.ld(this->zero);
+
+                    if(N>0)
+                    {
+                        // first pass : compute reserved as dY
+                        reserved[1] = Y[1]-(Z[1]=F.start(X[1],A,V));
+                        for(size_t i=2;i<=N;++i)
+                        {
+                            reserved[i] = Y[i]-(Z[i]=F.reach(X[i],A,V));
+                        }
+
+                        // second pass: compute gradient and update reserved
+                        for(size_t i=N;i>0;--i)
+                        {
+                            const ABSCISSA &Xi = X[i];
+                            const ORDINATE dY  = reserved[i];
+                            G(dFdA,Xi,A,V,used);
+                            tao::muladd(beta,dY,dFdA);
+                            add_to(alpha);
+                            reserved[i] = dY*dY;
+                        }
+
+                        // done
+                        return sorted_sum(reserved);
+                    }
+                    else
+                    {
+                        return this->zero;
                     }
                 }
             };

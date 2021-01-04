@@ -84,16 +84,30 @@ namespace upsylon
                         }
                         
                     };
-                    
+
+                    //__________________________________________________________
+                    //
+                    //! compute gradient
+                    //__________________________________________________________
+                    class gradient : public v_gradient_type
+                    {
+                    public:
+                        
+
+                    private:
+                        Y_DISABLE_COPY_AND_ASSIGN(gradient);
+                    };
+
+
                     //__________________________________________________________
                     //
                     // C++
                     //__________________________________________________________
-                    
+                    //! setup
                     inline explicit circle() : func(this, & circle::call) {}
-                    inline virtual ~circle() throw()
-                    {
-                    }
+
+                    //! cleanup
+                    inline virtual ~circle() throw() {}
 
 
                     //__________________________________________________________

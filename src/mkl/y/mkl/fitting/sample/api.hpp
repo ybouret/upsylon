@@ -43,8 +43,7 @@ namespace upsylon
                 inline virtual  ~sample_api()   throw() {}   //!< cleanup
                 virtual size_t   count()  const throw() = 0; //!< number of points
                 virtual void     setup(const accessible<ORDINATE> &)                 = 0; //!< prepare for a cycle and parameters
-                virtual ORDINATE D2(sequential_type &, const accessible<ORDINATE> &) = 0; //!< compute D2 and all adjusted var
-                
+
                 
                 //______________________________________________________________
                 //
@@ -52,23 +51,29 @@ namespace upsylon
                 //______________________________________________________________
                 //! key for sets and intr_ptr
                 inline const string &key() const throw() { return name; }
-                
+
+                //! wrapper for regular function
+                inline ORDINATE D2(sequential_type &F, const accessible<ORDINATE> &a)
+                {
+                    return D2_only(F,a);
+                }
+
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_func &f, const accessible<ORDINATE> &a)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
-                    return D2(F,a);
+                    return D2_only(F,a);
                 }
                 
                 //! fullD2 with curvature and gradient
-                inline ORDINATE fullD2(matrix<ORDINATE>           &alpha,
-                                       addressable<ORDINATE>      &beta,
-                                       sequential_type            &F,
-                                       v_gradient_type            &G,
-                                       const accessible<ORDINATE> &A,
-                                       const accessible<bool>     &used)
+                inline ORDINATE D2(matrix<ORDINATE>           &alpha,
+                                   addressable<ORDINATE>      &beta,
+                                   sequential_type            &F,
+                                   v_gradient_type            &G,
+                                   const accessible<ORDINATE> &A,
+                                   const accessible<bool>     &used)
                 {
-                    const ORDINATE res = _D2(alpha,beta,F,G,A,used);
+                    const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
                     this->regularize(alpha,used);
                     return res;
                 }
@@ -129,12 +134,13 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sample_api);
-                virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
-                                     addressable<ORDINATE>      &beta,
-                                     sequential_type            &F,
-                                     v_gradient_type            &G,
-                                     const accessible<ORDINATE> &A,
-                                     const accessible<bool>     &used) = 0;
+                virtual ORDINATE D2_only(sequential_type &, const accessible<ORDINATE> &) = 0;
+                virtual ORDINATE D2_full(matrix<ORDINATE>           &alpha,
+                                         addressable<ORDINATE>      &beta,
+                                         sequential_type            &F,
+                                         v_gradient_type            &G,
+                                         const accessible<ORDINATE> &A,
+                                         const accessible<bool>     &used) = 0;
             };
             
         }

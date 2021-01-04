@@ -49,9 +49,20 @@ Y_UTEST(fitting_circles)
     
     fill(C1,12,-11,34); { ios::ocstream fp("c1.dat"); save_sample(C1,fp); }
     fill(C2,-2,7,34);   { ios::ocstream fp("c2.dat"); save_sample(C2,fp); }
-    
+    circle_type CC;
+
     *C1 << "a" << "b" << "c";
     *C2 << "c" << "a" << "b";
+
+    vector<float> a1(3,0);
+    vector<float> a2(3,0);
+
+    C1.setup(a1);
+    C2.setup(a2);
+    const float C1D2 = C1.D2(CC.func,a1); std::cerr << "C1.D2=" << C1D2 << std::endl;
+    const float C2D2 = C2.D2(CC.func,a2); std::cerr << "C2.D2=" << C2D2 << std::endl;
+
+
     
     
     

@@ -18,7 +18,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! sequential gradient interface
+            //! numerical sequential gradient
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
@@ -82,12 +82,18 @@ namespace upsylon
                                      const accessible<bool>     &used)
                 {
 
+                    //__________________________________________________________
+                    //
                     // initialize
+                    //__________________________________________________________
                     assert(F);
                     wrapper func = { 0, F, &X, &aorg, &vars }; // phony 1D function
                     size_t  nvar = vars.size();                 // number of variables
-                    
+
+                    //__________________________________________________________
+                    //
                     // run on variables
+                    //__________________________________________________________
                     for(variables::const_iterator it=vars.begin();nvar>0;--nvar,++it)
                     {
                         const size_t    ia = (func.ia = (**it).get_index());

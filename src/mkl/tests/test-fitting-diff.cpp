@@ -122,12 +122,12 @@ Y_UTEST(fitting_diff)
         const double S1_D2 = S1.D2(F,a2); std::cerr << "S1_D2=" << S1_D2 << std::endl;
         const double S2_D2 = S2.D2(F,a2); std::cerr << "S2_D2=" << S2_D2 << std::endl;
         
-        const double S1_D2a = S1.fullD2(alpha2, beta2, F, G, a2, u2);
+        const double S1_D2a = S1.D2(alpha2, beta2, F, G, a2, u2);
         std::cerr << "S1_D2a=" << S1_D2a << std::endl;
         std::cerr << "beta  =" << beta2  << std::endl;
         std::cerr << "alpha =" << alpha2 << std::endl;
         
-        const double S2_D2a = S2.fullD2(alpha2, beta2, F, G, a2, u2);
+        const double S2_D2a = S2.D2(alpha2, beta2, F, G, a2, u2);
         std::cerr << "S2_D2a=" << S2_D2a << std::endl;
         std::cerr << "beta  =" << beta2  << std::endl;
         std::cerr << "alpha =" << alpha2 << std::endl;
@@ -148,7 +148,7 @@ Y_UTEST(fitting_diff)
         const double s1_D2  = s1.D2(F,a3); std::cerr << "s1_D2=" << s1_D2 << std::endl;
         const double s2_D2  = s2.D2(F,a3); std::cerr << "s2_D2=" << s2_D2 << std::endl;
         const double sa_D2  = sa.D2(F,a3); std::cerr << "sa_D2=" << sa_D2 << std::endl;
-        const double sa_D2a = sa.fullD2(alpha3, beta3, F, G, a3, u3);
+        const double sa_D2a = sa.D2(alpha3, beta3, F, G, a3, u3);
         std::cerr << "sa_D2a=" << sa_D2a << std::endl;
         std::cerr << "beta  =" << beta3  << std::endl;
         std::cerr << "alpha =" << alpha3 << std::endl;
