@@ -104,7 +104,8 @@ namespace upsylon
                                 const accessible<bool> &U,
                                 addressable<ORDINATE>  &E)
                 {
-                    v_gradient_type &G = grad();
+                    sequential_grad &G = grad();
+                    G.F = &F;
                     return fit(s,F,G,A,U,E);
                 }
 

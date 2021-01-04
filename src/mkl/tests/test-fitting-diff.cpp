@@ -61,8 +61,8 @@ Y_UTEST(fitting_diff)
     typedef sequential_function<double,double> seq_type;
 
     Diffusion          diff;
-    seq_type::function call(&diff,&Diffusion::compute);
-    seq_type           F(call);
+    seq_type::function f(&diff,&Diffusion::compute);
+    seq_type           F(f);
     sequential_gradient<double,double> G;
 
     G.F = &F;
@@ -178,7 +178,7 @@ Y_UTEST(fitting_diff)
     }
 
     vector<double> e3(3,0);
-    if(lsf.fit(sa,F,G,a3,u3,e3))
+    if(lsf.fit(sa,f,a3,u3,e3))
     {
         std::cerr << "corrA: " << sa.compute_correlation(corr) << std::endl;
         std::cerr << std::endl;
