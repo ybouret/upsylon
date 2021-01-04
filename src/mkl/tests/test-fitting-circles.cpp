@@ -40,7 +40,7 @@ namespace
 Y_UTEST(fitting_circles)
 {
     
-   
+
     samples_type db("circles");
     
     sample_type &C1 = db( sample_type::create("C1") );
@@ -65,39 +65,92 @@ Y_UTEST(fitting_circles)
     const float C1D2 = C1.D2(CC.func,a1); std::cerr << "C1.D2=" << C1D2 << std::endl;
     const float C2D2 = C2.D2(CC.func,a2); std::cerr << "C2.D2=" << C2D2 << std::endl;
 
-    matrix<float> alpha(3,3);
-    vector<float> beta(3,0);
+    {
+        matrix<float> alpha(3,3);
+        vector<float> beta(3,0);
 
-    const float C1D2a = C1.D2(alpha, beta, CC.func, CC.grad, a1, used);
-    std::cerr << "C1.D2a=" << C1D2a << std::endl;
+        const float C1D2a = C1.D2(alpha, beta, CC.func, CC.grad, a1, used);
+        std::cerr << "C1.D2a=" << C1D2a << std::endl;
+        std::cerr << "beta  =" << beta  << std::endl;
+        std::cerr << "alpha =" << alpha << std::endl;
+        if(LU::build(alpha))
+        {
+            LU::solve(alpha,beta);
+            const double xa = beta[ *(*C1)["a"] ]/2;
+            const double ya = beta[ *(*C1)["b"] ]/2;
+            const double ca = beta[ *(*C1)["c"] ];
+            const double ra = sqrt( max_of<float>(0,ca+xa*xa+ya*ya) );
+            std::cerr << "xa=" << xa << ", ya=" << ya << ", ra=" << ra << std::endl;
+        }
+
+        const float C2D2a = C2.D2(alpha, beta, CC.func, CC.grad, a1, used);
+        std::cerr << "C2.D2a=" << C2D2a << std::endl;
+        std::cerr << "beta  =" << beta  << std::endl;
+        std::cerr << "alpha =" << alpha << std::endl;
+        if(LU::build(alpha))
+        {
+            LU::solve(alpha,beta);
+            const double xb = beta[ *(*C2)["a"] ]/2;
+            const double yb = beta[ *(*C2)["b"] ]/2;
+            const double cb = beta[ *(*C2)["c"] ];
+            const double rb = sqrt( max_of<float>(0,cb+xb*xb+yb*yb) );
+            std::cerr << "xb=" << xb << ", yb=" << yb << ", rb=" << rb << std::endl;
+        }
+    }
+
+    // with the same radius, different centers
+
+    *db << "C" << "x1" << "y1" << "x2" << "y2";
+
+    (*C1).free();
+    (*C2).free();
+
+    (*C1)("a",(*db)("x1"));
+    (*C1)("b",(*db)("y1"));
+    (*C1)("c",(*db)("C"));
+
+
+    (*C2)("a",(*db)("x2"));
+    (*C2)("b",(*db)("y2"));
+    (*C2)("c",(*db)("C"));
+
+    std::cerr << "C1: " << *C1 << std::endl;
+    std::cerr << "C2: " << *C2 << std::endl;
+
+    vector<float> a5(5,0);
+    vector<bool>  u5(5,true);
+
+    db.setup(a5);
+
+    const float dbD2 = db.D2(CC.func,a5);
+    std::cerr << "dbD2=" << dbD2 << std::endl;
+
+    matrix<float> alpha(5,5);
+    vector<float> beta(5,0);
+    const float   dbD2a = db.D2(alpha, beta, CC.func, CC.grad, a5, u5);
+    std::cerr << "dbD2a=" << dbD2a << std::endl;
     std::cerr << "beta  =" << beta  << std::endl;
     std::cerr << "alpha =" << alpha << std::endl;
     if(LU::build(alpha))
     {
         LU::solve(alpha,beta);
+        std::cerr << "found=" << beta << std::endl;
         const double xa = beta[ *(*C1)["a"] ]/2;
         const double ya = beta[ *(*C1)["b"] ]/2;
         const double ca = beta[ *(*C1)["c"] ];
-        const double ra = sqrt( max_of<float>(0,ca+xa*xa+ya*ya) );
-        std::cerr << "xa=" << xa << ", ya=" << ya << ", ra=" << ra << std::endl;
-    }
-
-    const float C2D2a = C2.D2(alpha, beta, CC.func, CC.grad, a1, used);
-    std::cerr << "C2.D2a=" << C2D2a << std::endl;
-    std::cerr << "beta  =" << beta  << std::endl;
-    std::cerr << "alpha =" << alpha << std::endl;
-    if(LU::build(alpha))
-    {
-        LU::solve(alpha,beta);
         const double xb = beta[ *(*C2)["a"] ]/2;
         const double yb = beta[ *(*C2)["b"] ]/2;
         const double cb = beta[ *(*C2)["c"] ];
+
+        std::cerr << "xa=" << xa << ", ya=" << ya << std::endl;
+        std::cerr << "xb=" << xb << ", yb=" << yb << std::endl;
+        std::cerr << "ca=" << ca << ", cb=" << cb << std::endl;
+
+        const double ra = sqrt( max_of<float>(0,ca+xa*xa+ya*ya) );
         const double rb = sqrt( max_of<float>(0,cb+xb*xb+yb*yb) );
-        std::cerr << "xb=" << xb << ", yb=" << yb << ", rb=" << rb << std::endl;
+        std::cerr << "ra=" << ra << ", rb=" << rb << std::endl;
     }
 
-
-    
 }
 Y_UTEST_DONE()
 
