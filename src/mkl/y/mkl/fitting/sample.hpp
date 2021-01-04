@@ -9,6 +9,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/type/utils.hpp"
+#include "y/mkl/tao.hpp"
 
 namespace upsylon
 {

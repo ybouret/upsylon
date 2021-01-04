@@ -3,8 +3,9 @@
 #ifndef Y_FITTING_SAMPLE_API_INCLUDED
 #define Y_FITTING_SAMPLE_API_INCLUDED 1
 
-#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
+#include "y/mkl/fitting/v-gradient.hpp"
+#include "y/container/matrix.hpp"
 
 namespace upsylon
 {
@@ -23,10 +24,7 @@ namespace upsylon
              */
             //
             //__________________________________________________________________
-            template <
-            typename ABSCISSA,
-            typename ORDINATE
-            >
+            template <typename ABSCISSA, typename ORDINATE >
             class sample_api : public object, public counted
             {
             public:
@@ -34,11 +32,10 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-                typedef sequential<ABSCISSA,ORDINATE>               sequential_type;          //!< alias
-                typedef sequential_gradient<ABSCISSA,ORDINATE>      sequential_grad;          //!< alias
-                typedef sequential_function<ABSCISSA,ORDINATE>      sequential_function_type; //!< alias
-                typedef typename sequential_function_type::function sequential_func;          //!< alias
-                
+                typedef sequential<ABSCISSA,ORDINATE>               sequential_type; //!< alias
+                typedef typename sequential_type::function          sequential_func; //!< alias
+                typedef v_gradient<ABSCISSA,ORDINATE>               v_gradient_type; //!< alias
+
                 //______________________________________________________________
                 //
                 // virtual inteface
@@ -59,7 +56,7 @@ namespace upsylon
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_func &f, const accessible<ORDINATE> &a)
                 {
-                    sequential_function_type F(f);
+                    sequential_function<ABSCISSA,ORDINATE> F(f);
                     return D2(F,a);
                 }
                 
@@ -67,7 +64,7 @@ namespace upsylon
                 inline ORDINATE fullD2(matrix<ORDINATE>           &alpha,
                                        addressable<ORDINATE>      &beta,
                                        sequential_type            &F,
-                                       sequential_grad            &G,
+                                       v_gradient_type            &G,
                                        const accessible<ORDINATE> &A,
                                        const accessible<bool>     &used)
                 {
@@ -135,7 +132,7 @@ namespace upsylon
                 virtual ORDINATE _D2(matrix<ORDINATE>           &alpha,
                                      addressable<ORDINATE>      &beta,
                                      sequential_type            &F,
-                                     sequential_grad            &G,
+                                     v_gradient_type            &G,
                                      const accessible<ORDINATE> &A,
                                      const accessible<bool>     &used) = 0;
             };

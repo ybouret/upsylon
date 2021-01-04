@@ -4,7 +4,6 @@
 #define Y_FITTING_BUILT_IN_CIRCLE_INCLUDED 1
 
 #include "y/mkl/fitting/samples.hpp"
-#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/type/point2d.hpp"
 
 namespace upsylon

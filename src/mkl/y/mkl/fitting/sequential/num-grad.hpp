@@ -4,7 +4,7 @@
 #ifndef Y_FITTING_SEQUENTIAL_NUM_GRAD_INCLUDED
 #define Y_FITTING_SEQUENTIAL_NUM_GRAD_INCLUDED 1
 
-#include "y/mkl/fitting/sequential/gradient.hpp"
+#include "y/mkl/fitting/v-gradient.hpp"
 #include "y/mkl/fcn/derivative.hpp"
 #include "y/momentary/value.hpp"
 
@@ -23,7 +23,7 @@ namespace upsylon
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class sequential_num_grad :
-            public sequential_gradient<ABSCISSA,ORDINATE>,
+            //public sequential_gradient<ABSCISSA,ORDINATE>,
             public derivative<ORDINATE>
             {
             public:
@@ -32,7 +32,7 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
                 typedef sequential<ABSCISSA,ORDINATE>          sequential_type; //!< alias
-                typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad; //!< alias
+                //typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad; //!< alias
                 typedef derivative<ORDINATE>                   derivative_type; //!< alias
 
                 //______________________________________________________________
@@ -40,7 +40,8 @@ namespace upsylon
                 // C++
                 //______________________________________________________________
                 inline explicit sequential_num_grad() :
-                sequential_grad(), derivative_type(), h() {}
+                //sequential_grad(),
+                derivative_type(), h() {}
 
                 inline virtual ~sequential_num_grad() throw() {}
 
