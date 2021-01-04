@@ -7,6 +7,7 @@
 #include "y/mkl/fitting/variable/replica.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
@@ -183,6 +184,21 @@ namespace upsylon
                 //______________________________________________________________
                 size_t max_name_length() const throw(); //!< max of name lengths
                 size_t sweep()           const throw(); //!< max of index values
+
+                template <typename ARRAY>
+                std::ostream & display( std::ostream &os, ARRAY &arr, const char *pfx=NULL ) const
+                {
+                    const size_t width = max_name_length();
+                    if(!pfx) pfx="";
+                    for(const_iterator it=begin();it!=end();++it)
+                    {
+                        const variable &v = **it;
+                        os << pfx << ios::align(v.name,ios::align::left,width) << " = " << v(arr) << std::endl;
+                    }
+                    return os;
+                }
+
+
 
 
             private:
