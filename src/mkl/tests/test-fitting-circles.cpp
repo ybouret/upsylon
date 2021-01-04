@@ -1,9 +1,9 @@
 
 #include "y/mkl/fitting/built-in/circle.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/mkl/kernel/lu.hpp"
-#include "y/type/utils.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -62,14 +62,14 @@ Y_UTEST(fitting_circles)
 
     C1.setup(a1);
     C2.setup(a2);
-    const float C1D2 = C1.D2(CC.func,a1); std::cerr << "C1.D2=" << C1D2 << std::endl;
-    const float C2D2 = C2.D2(CC.func,a2); std::cerr << "C2.D2=" << C2D2 << std::endl;
+    const float C1D2 = C1.D2(CC.F,a1); std::cerr << "C1.D2=" << C1D2 << std::endl;
+    const float C2D2 = C2.D2(CC.F,a2); std::cerr << "C2.D2=" << C2D2 << std::endl;
 
     {
         matrix<float> alpha(3,3);
         vector<float> beta(3,0);
 
-        const float C1D2a = C1.D2(alpha, beta, CC.func, CC.grad, a1, used);
+        const float C1D2a = C1.D2(alpha, beta, CC.F, CC.G, a1, used);
         std::cerr << "C1.D2a=" << C1D2a << std::endl;
         std::cerr << "beta  =" << beta  << std::endl;
         std::cerr << "alpha =" << alpha << std::endl;
@@ -83,7 +83,7 @@ Y_UTEST(fitting_circles)
             std::cerr << "xa=" << xa << ", ya=" << ya << ", ra=" << ra << std::endl;
         }
 
-        const float C2D2a = C2.D2(alpha, beta, CC.func, CC.grad, a1, used);
+        const float C2D2a = C2.D2(alpha, beta, CC.F, CC.G, a1, used);
         std::cerr << "C2.D2a=" << C2D2a << std::endl;
         std::cerr << "beta  =" << beta  << std::endl;
         std::cerr << "alpha =" << alpha << std::endl;
@@ -98,6 +98,17 @@ Y_UTEST(fitting_circles)
         }
     }
 
+    circle_type::ls_type ls;
+    vector<float> aerr(3,0);
+
+    ls.verbose = true;
+    
+    if( ls.fit(C1,CC.F,CC.G,a1,used,aerr) )
+    {
+
+    }
+
+    
     // with the same radius, different centers
 
     *db << "C" << "x1" << "y1" << "x2" << "y2";
@@ -122,12 +133,12 @@ Y_UTEST(fitting_circles)
 
     db.setup(a5);
 
-    const float dbD2 = db.D2(CC.func,a5);
+    const float dbD2 = db.D2(CC.F,a5);
     std::cerr << "dbD2=" << dbD2 << std::endl;
 
     matrix<float> alpha(5,5);
     vector<float> beta(5,0);
-    const float   dbD2a = db.D2(alpha, beta, CC.func, CC.grad, a5, u5);
+    const float   dbD2a = db.D2(alpha, beta, CC.F, CC.G, a5, u5);
     std::cerr << "dbD2a=" << dbD2a << std::endl;
     std::cerr << "beta  =" << beta  << std::endl;
     std::cerr << "alpha =" << alpha << std::endl;
@@ -150,6 +161,10 @@ Y_UTEST(fitting_circles)
         const double rb = sqrt( max_of<float>(0,cb+xb*xb+yb*yb) );
         std::cerr << "ra=" << ra << ", rb=" << rb << std::endl;
     }
+
+
+
+
 
 }
 Y_UTEST_DONE()

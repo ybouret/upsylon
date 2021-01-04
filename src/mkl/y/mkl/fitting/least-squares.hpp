@@ -5,7 +5,6 @@
 #define Y_FITTING_LEAST_SQUARES_INCLUDED 1
 
 #include "y/mkl/fitting/sample/api.hpp"
-//#include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
@@ -194,7 +193,7 @@ namespace upsylon
                     // compute trial D2
                     //
                     //----------------------------------------------------------
-                    const double D2_try = s.D2(F,atry);
+                    const ORDINATE D2_try = s.D2(F,atry);
                     if(verbose)
                     {
                         s.vars.display(std::cerr,atry,step," (","\t(*) ",")");

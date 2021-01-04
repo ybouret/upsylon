@@ -4,6 +4,7 @@
 #define Y_FITTING_BUILT_IN_CIRCLE_INCLUDED 1
 
 #include "y/mkl/fitting/samples.hpp"
+#include "y/mkl/fitting/least-squares.hpp"
 #include "y/type/point2d.hpp"
 
 namespace upsylon
@@ -48,7 +49,7 @@ namespace upsylon
                     typedef sequential<ABSCISSA,ORDINATE>      sequential_type; //!< alias
                     typedef v_gradient<ABSCISSA,ORDINATE>      v_gradient_type; //!< alias
                     typedef typename sequential_type::function sequential_func; //!< alias
-                   
+                    typedef least_squares<ABSCISSA,ORDINATE>   ls_type;         //!< alias
 
                     //__________________________________________________________
                     //
@@ -127,7 +128,7 @@ namespace upsylon
                     // C++
                     //__________________________________________________________
                     //! setup
-                    inline explicit circle() : func(this, & circle::call), grad() {}
+                    inline explicit circle() : f(this, & circle::call), F(f), G() {}
 
                     //! cleanup
                     inline virtual ~circle() throw() {}
@@ -142,16 +143,16 @@ namespace upsylon
                                          const accessible<ORDINATE> &A,
                                          const variables            &V)
                     {
-                        return V(A,__circle::name[0]) * p.x + V(A,__circle::name[0]) * p.y + V(A,__circle::name[2]);
+                        return V(A,__circle::name[0]) * p.x + V(A,__circle::name[1]) * p.y + V(A,__circle::name[2]);
                     }
 
                     //__________________________________________________________
                     //
                     // members
                     //__________________________________________________________
-                    sequential_func func; //!< call()
-                    gradient        grad; //!< to compute gradient
-
+                    sequential_func                        f; //!< call()
+                    sequential_function<ABSCISSA,ORDINATE> F;
+                    gradient                               G; //!< to compute gradient
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(circle);
                 };
