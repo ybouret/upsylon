@@ -86,6 +86,7 @@ namespace upsylon
                  \param F a sequential function
                  \param G a gradient of F
                  \param A array of parameters
+                 \param U array of flags to use parameters
                  \param E array of errors
                  */
                 //______________________________________________________________

@@ -151,8 +151,9 @@ namespace upsylon
                     // members
                     //__________________________________________________________
                     sequential_func                        f; //!< call()
-                    sequential_function<ABSCISSA,ORDINATE> F;
+                    sequential_function<ABSCISSA,ORDINATE> F; //!< wrapper
                     gradient                               G; //!< to compute gradient
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(circle);
                 };
