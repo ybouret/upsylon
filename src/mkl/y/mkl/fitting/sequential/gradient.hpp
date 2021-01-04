@@ -43,6 +43,7 @@ namespace upsylon
                 inline explicit sequential_gradient() :
                 v_gradient_type(),
                 derivative_type(),
+                F(NULL),
                 h() {}
 
                 inline virtual ~sequential_gradient() throw() {}
@@ -51,8 +52,8 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                vector<ORDINATE> h; //!< scaling to evaluate parameters
                 sequential_type *F; //!< sequential function
+                vector<ORDINATE> h; //!< scaling to evaluate parameters
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_gradient);
