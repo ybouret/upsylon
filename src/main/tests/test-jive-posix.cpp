@@ -56,6 +56,10 @@ Y_UTEST(jive_posix)
     CHECK(endl);
     CHECK(dot);
     CHECK(core);
+    CHECK(vowel);
+    CHECK(consonant);
+
+
 
     dict.get_root().graphViz("dict.dot");
 }

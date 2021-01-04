@@ -48,6 +48,9 @@ namespace upsylon {
                     Y_JIVE_POSIX(endl);
                     Y_JIVE_POSIX(dot);
                     Y_JIVE_POSIX(core);
+                    Y_JIVE_POSIX(vowel);
+                    Y_JIVE_POSIX(consonant);
+
                 }
 
                 inline virtual ~PosixDB() throw()

@@ -110,6 +110,19 @@ namespace upsylon {
             p->rework();
             return p.yield();
         }
+
+        static const char __vowels__[] = "aeiouyAEIOUY";
+
+        Pattern * posix:: vowel()
+        {
+            return Logical::Among(__vowels__);
+        }
+
+        Pattern * posix:: consonant()
+        {
+            return Logical::Avoid(__vowels__);
+        }
+
     }
 
 }

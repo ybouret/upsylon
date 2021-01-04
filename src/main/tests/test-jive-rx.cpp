@@ -40,6 +40,7 @@ std::cerr << "|_feeble: " << m->feeble() << std::endl;\
     {
         throw exception("couldn't insert INT");
     }
+    
     if(argc>1)
     {
         std::cerr << "---> compiling" << std::endl;
