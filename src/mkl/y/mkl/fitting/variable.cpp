@@ -19,11 +19,14 @@ namespace upsylon
 
             std::ostream & operator<<(std::ostream &os, const variable &v)
             {
-                os << '\'' << v.name << '\'' << '@' << v.get_index();
+                os << '\'' << v.name << '\'' << '@' << *v;
                 return os;
             }
 
-
+            size_t variable:: operator*() const throw()
+            {
+                return get_index();
+            }
         }
 
     }

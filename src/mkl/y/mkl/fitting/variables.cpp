@@ -38,11 +38,11 @@ namespace upsylon
 
             void variables:: check_add(const shared_variable &v)
             {
-                const size_t iv = v->get_index(); assert(iv>0);
+                const size_t iv = **v; assert(iv>0);
                 for(iterator i=begin();i!=end();++i)
                 {
                     const variable &tmp = **i;
-                    if(tmp.get_index()==iv) throw exception("%smultiple index #%u for '%s' and '%s'", fn, unsigned(iv), *(v->name), *(tmp.name) );
+                    if(*tmp==iv) throw exception("%smultiple index #%u for '%s' and '%s'", fn, unsigned(iv), *(v->name), *(tmp.name) );
                 }
                 local_add(v);
             }
@@ -82,7 +82,7 @@ namespace upsylon
                 size_t res = 0;
                 for(const_iterator i=begin();i!=end();++i)
                 {
-                    res = max_of(res, (**i).get_index() );
+                    res = max_of(res,***i);
                 }
                 return res;
             }

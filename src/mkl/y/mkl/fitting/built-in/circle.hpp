@@ -15,6 +15,14 @@ namespace upsylon
             
             namespace built_in
             {
+
+                //! common data for circle
+                struct __circle
+                {
+                    static const char   *name[3];                              //!< "a", "b", "c"
+                    static const size_t  nvar = sizeof(name)/sizeof(name[0]);  //!< number of active vars
+                };
+
                 //______________________________________________________________
                 //
                 //
@@ -92,10 +100,25 @@ namespace upsylon
                     class gradient : public v_gradient_type
                     {
                     public:
-                        
+                        inline explicit gradient() throw() : v_gradient_type() {} //!< setup
+                        inline virtual ~gradient() throw()                     {} //!< cleanup
 
                     private:
                         Y_DISABLE_COPY_AND_ASSIGN(gradient);
+                        inline virtual void compute(addressable<ORDINATE>      &dFdA,
+                                                    const ABSCISSA              p,
+                                                    const accessible<ORDINATE> &,
+                                                    const variables            &vars,
+                                                    const accessible<bool>     &used)
+                        {
+
+                            const ORDINATE g[3] = { ORDINATE(p.x), ORDINATE(p.y), ORDINATE(1) };
+                            for(size_t i=0;i<__circle::nvar;++i)
+                            {
+                                const size_t j = *vars[__circle::name[i]];
+                                if(used[j]) dFdA[j] = g[i];
+                            }
+                        }
                     };
 
 
@@ -119,7 +142,7 @@ namespace upsylon
                                          const accessible<ORDINATE> &A,
                                          const variables            &V)
                     {
-                        return V(A,"a") * p.x + V(A,"b") * p.y + V(A,"c");
+                        return V(A,__circle::name[0]) * p.x + V(A,__circle::name[0]) * p.y + V(A,__circle::name[2]);
                     }
 
                     //__________________________________________________________
@@ -127,6 +150,7 @@ namespace upsylon
                     // members
                     //__________________________________________________________
                     sequential_func func; //!< call()
+                    gradient        grad; //!< to compute gradient
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(circle);

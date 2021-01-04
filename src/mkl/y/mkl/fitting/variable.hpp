@@ -50,6 +50,9 @@ namespace upsylon
                     return arr[ get_index() ];
                 }
 
+                //! alias 
+                size_t operator*() const throw();
+
                 //! display 'name' and get_index()
                 friend std::ostream & operator<<(std::ostream &, const variable &);
 

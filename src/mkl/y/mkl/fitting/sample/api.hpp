@@ -65,7 +65,7 @@ namespace upsylon
                     return D2_only(F,a);
                 }
                 
-                //! fullD2 with curvature and gradient
+                //!  D2 with curvature and gradient
                 inline ORDINATE D2(matrix<ORDINATE>           &alpha,
                                    addressable<ORDINATE>      &beta,
                                    sequential_type            &F,
@@ -77,7 +77,23 @@ namespace upsylon
                     this->regularize(alpha,used);
                     return res;
                 }
-                
+
+                //!  D2 with curvature and gradient, wrapper
+                inline ORDINATE D2(matrix<ORDINATE>           &alpha,
+                                   addressable<ORDINATE>      &beta,
+                                   sequential_func            &f,
+                                   v_gradient_type            &G,
+                                   const accessible<ORDINATE> &A,
+                                   const accessible<bool>     &used)
+                {
+                    sequential_function<ABSCISSA,ORDINATE> F(f);
+                    const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
+                    this->regularize(alpha,used);
+                    return res;
+                }
+
+
+
                 //! access variables
                 inline variables       & operator*()        throw() { return vars; }
                 
