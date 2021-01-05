@@ -339,6 +339,13 @@ maxi_ = items-1
                 return *this;
             }
 
+            //! in place addition of a fill
+            inline string & fill(const T C, size_t n)
+            {
+                while(n-- > 0) add(&C,1);
+                return *this;
+            }
+
 
             //! addition
             inline friend string operator+( const string &lhs, const string &rhs )
