@@ -17,7 +17,7 @@ namespace
 {
     static void fill( sample_type &s, const float xc, const float yc, const float r )
     {
-        for(size_t i=3+alea.leq(10);i>0;--i)
+        for(size_t i=3+alea.leq(30);i>0;--i)
         {
             const float phi = numeric<float>::two_pi * alea.to<float>();
             const float x   = xc + r*cos(phi)*(1.0f+0.1f*alea.symm<float>());
@@ -136,7 +136,7 @@ Y_UTEST(fitting_circles)
     }
 
     // automated
-    ls.verbose = false;
+    ls.verbose = true;
     built_in::_circle<float> c,ce;
     if( CC.fit(C1,ls,c,ce) )
     {

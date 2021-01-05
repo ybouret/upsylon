@@ -162,6 +162,7 @@ namespace upsylon
                         const variables &V = *s;  assert(V.has("a")); assert(V.has("b")); assert(V.has("c"));
                         bzset(A);
                         bzset(E);
+                        tao::ld(__aorg,0);
                         if( ls.fit(s,F,G,__aorg,__use_,__aerr) )
                         {
                             // rebuild components

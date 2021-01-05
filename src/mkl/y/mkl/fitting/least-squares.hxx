@@ -162,13 +162,16 @@ COMPUTE_STEP:
             goto CONVERGED;
         }
 
-        const ORDINATE dd = fabs_of(D2_org-D2_try);
-        if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
+        if(decreasing)
         {
-            Y_GLS_PRINTLN("<D2 convergence>");
-            goto CONVERGED;
+            const ORDINATE dd = fabs_of(D2_org-D2_try);
+            if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
+            {
+                Y_GLS_PRINTLN("<D2 convergence>");
+                goto CONVERGED;
+            }
         }
-
+        
         decreasing = true;
         goto CYCLE;
     }
