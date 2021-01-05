@@ -18,7 +18,7 @@ namespace upsylon
                 return the_index;
             }
 
-            size_t primary_variable:: get_index() const throw()
+            size_t primary_variable:: operator*() const throw()
             {
                 return indx;
             }

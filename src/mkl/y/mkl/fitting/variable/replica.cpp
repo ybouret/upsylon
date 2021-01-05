@@ -12,9 +12,9 @@ namespace upsylon
             {
             }
 
-            size_t  replica_variable:: get_index() const throw()
+            size_t  replica_variable:: operator*() const throw()
             {
-                return source->get_index();
+                return **source;
             }
 
         }

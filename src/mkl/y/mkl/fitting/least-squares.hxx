@@ -54,10 +54,10 @@ inline bool fit(sample_api_type        &s,
     tao::ld(E,-1);
     s.setup(A);
 
-    Y_GLS_PRINTLN("init: p=" << p << ", lambda=" << lambda);
+    Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
-        s.vars.display(std::cerr,aorg,used," : ","\t(*) ","");
+        s.vars.display(std::cerr,aorg,used,", used = ","\t(--) ","");
     }
 
     //--------------------------------------------------------------------------
@@ -71,10 +71,8 @@ inline bool fit(sample_api_type        &s,
 CYCLE:
     ++cycle;
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
-    Y_GLS_PRINTLN("<cycle> = " << cycle  );
-    Y_GLS_PRINTLN("D2_org  = " << D2_org );
-    Y_GLS_PRINTLN("beta    = " << beta   );
-    Y_GLS_PRINTLN("alpha   = " << alpha  );
+    Y_GLS_PRINTLN("-------- <run@cycle=" << cycle << "> -------- " );
+    Y_GLS_PRINTLN("D2_org  = " << D2_org << " | beta=" << beta);
 
     //--------------------------------------------------------------------------
     //
@@ -105,7 +103,7 @@ COMPUTE_STEP:
 
     //--------------------------------------------------------------------------
     //
-    // recompute step and check variable convergence
+    // recompute step and check variable convergence for later
     //
     //--------------------------------------------------------------------------
     bool converged = true;
@@ -119,7 +117,7 @@ COMPUTE_STEP:
             converged = false;
         }
     }
-    Y_GLS_PRINTLN("<variables convergence: " << converged << ">");
+    //Y_GLS_PRINTLN("<variables convergence: " << converged << ">");
 
 
 
@@ -129,11 +127,7 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     const ORDINATE D2_try = s.D2(F,atry);
-    if(verbose)
-    {
-        s.vars.display(std::cerr,atry,step," (","\t(*) ",")");
-    }
-    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ <lambda=" << lambda << "> <cycle=" << cycle << ">");
+    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=" << lambda );
 
     if(D2_try>D2_org)
     {
@@ -142,6 +136,7 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         if(!increase())
         {
+            Y_GLS_PRINTLN("<reject with spurious failure>");
             return false;
         }
         goto COMPUTE_STEP;
@@ -151,11 +146,18 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         // accept
         //----------------------------------------------------------------------
+        Y_GLS_PRINTLN("<accept>");
         tao::set(aorg,atry);
         decrease();
 
+        if(verbose)
+        {
+            s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
+        }
+
         if(converged)
         {
+            Y_GLS_PRINTLN("<variables convergence>");
             goto CONVERGED;
         }
 
@@ -178,6 +180,7 @@ CONVERGED:
     //
     //
     //--------------------------------------------------------------------------
+    Y_GLS_PRINTLN("-------- <end@cycle=" << cycle << "> -------- " );
     Y_GLS_PRINTLN("lambda    = " << lambda);
 
     //--------------------------------------------------------------------------
@@ -194,13 +197,11 @@ CONVERGED:
     //--------------------------------------------------------------------------
     if(!LU::build(alpha))
     {
-        Y_GLS_PRINTLN("singular extremum");
+        Y_GLS_PRINTLN("<singular extremum>");
         return false;
     }
-
-
     LU::inverse(alpha,covar);
-    Y_GLS_PRINTLN("covar    = " << covar);
+    //Y_GLS_PRINTLN("covar    = " << covar);
 
     //--------------------------------------------------------------------------
     //

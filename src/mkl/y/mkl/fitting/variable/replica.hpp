@@ -49,7 +49,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(replica_variable);
-                virtual size_t get_index() const throw();
+                virtual size_t operator*() const throw();
             };
         }
     }

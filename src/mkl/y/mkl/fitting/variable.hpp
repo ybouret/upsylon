@@ -26,7 +26,7 @@ namespace upsylon
                 // virtual interface
                 //______________________________________________________________
                 virtual       ~variable()        throw();      //!< cleanup
-                virtual size_t get_index() const throw() = 0;  //!< final index
+                virtual size_t operator*() const throw() = 0;  //!< final index
 
                 //______________________________________________________________
                 //
@@ -38,20 +38,19 @@ namespace upsylon
                 template <typename T>
                 T & operator()(addressable<T> &arr) const throw()
                 {
-                    assert( get_index()>0 ); assert( get_index()<= arr.size() );
-                    return arr[ get_index() ];
+                    assert( **this>0 ); assert( **this <= arr.size() );
+                    return arr[ **this ];
                 }
 
                 //! get item in accessible
                 template <typename T>
                 const T & operator()(const accessible<T> &arr) const throw()
                 {
-                    assert( get_index()>0 ); assert( get_index()<= arr.size() );
-                    return arr[ get_index() ];
+                    assert( **this>0 ); assert( **this <= arr.size() );
+                    return arr[ **this ];
                 }
 
-                //! alias 
-                size_t operator*() const throw();
+
 
                 //! display 'name' and get_index()
                 friend std::ostream & operator<<(std::ostream &, const variable &);

@@ -44,7 +44,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(primary_variable);
                 size_t check_index(const size_t the_index) const;
-                virtual size_t get_index() const throw();
+                virtual size_t operator*() const throw();
             };
         }
     }

@@ -23,10 +23,7 @@ namespace upsylon
                 return os;
             }
 
-            size_t variable:: operator*() const throw()
-            {
-                return get_index();
-            }
+            
         }
 
     }
