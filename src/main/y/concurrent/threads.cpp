@@ -1,7 +1,7 @@
 
 #include "y/concurrent/threads.hpp"
 #include "y/type/utils.hpp"
-#include "y/code/utils.hpp"
+#include "y/code/textual.hpp"
 #include "y/exception.hpp"
 
 #include <iostream>
@@ -67,7 +67,7 @@ verbose(get_verbosity())
             // threads init
             //__________________________________________________________________
             const size_t count = engines.count;
-            Y_THREAD_PRINTLN("[threads.init] build " << count << " thread" << plural_s(count) << "...");
+            Y_THREAD_PRINTLN("[threads.init] build " << count << " thread" << textual::plural_s(count) << "...");
             try
             {
                 // construct with halting=true;
@@ -84,7 +84,7 @@ verbose(get_verbosity())
                 Y_MUTEX_PROBE(access,ready<=0);
                 throw;
             }
-            Y_THREAD_PRINTLN("[threads.init] built " << count << " thread" << plural_s(count));
+            Y_THREAD_PRINTLN("[threads.init] built " << count << " thread" << textual::plural_s(count));
 
             //__________________________________________________________________
             //

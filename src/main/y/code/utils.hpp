@@ -6,13 +6,7 @@
 
 namespace upsylon
 {
-
-    //! return "s" if count>1
-    inline const char * plural_s(const size_t count) throw()
-    {
-        return (count<=1) ? "" : "s";
-    }
-
+    
     //! hexadecimal helpers
     struct hexadecimal
     {

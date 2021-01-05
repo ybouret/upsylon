@@ -1,5 +1,6 @@
 //! \file
 
+
 //______________________________________________________________________________
 //
 //! generic call
@@ -67,7 +68,8 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    size_t cycle=0;
+    size_t cycle     =0;
+    bool   decreasing=true;
 CYCLE:
     ++cycle;
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
@@ -80,7 +82,7 @@ CYCLE:
     //
     //--------------------------------------------------------------------------
 COMPUTE_STEP:
-    if(!compute_step())
+    if(!compute_step(decreasing))
     {
         return false;
     }
@@ -125,13 +127,14 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     const ORDINATE D2_try = s.D2(F,atry);
-    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=" << lambda );
+    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << p << ", decreasing = " << textual::boolean(decreasing));
 
     if(D2_try>D2_org)
     {
         //----------------------------------------------------------------------
         // reject
         //----------------------------------------------------------------------
+        decreasing = false;
         if(!increase())
         {
             Y_GLS_PRINTLN("<reject with spurious failure>");
@@ -166,6 +169,7 @@ COMPUTE_STEP:
             goto CONVERGED;
         }
 
+        decreasing = true;
         goto CYCLE;
     }
 

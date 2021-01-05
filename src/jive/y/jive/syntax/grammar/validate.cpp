@@ -2,7 +2,7 @@
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
 #include "y/ios/align.hpp"
-#include "y/code/utils.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -44,14 +44,14 @@ namespace upsylon
                 if(nr<na)
                 {
                     const size_t bad = na-nr;
-                    throw exception("%s has %u orphan axiom%s",**name,unsigned(bad),plural_s(bad));
+                    throw exception("%s has %u orphan axiom%s",**name,unsigned(bad),textual::plural_s(bad));
                 }
                 else
                 {
                     if(nr>na)
                     {
                         const size_t bad = nr-na;
-                        throw exception("%s had %u foreign axiom%s",**name,unsigned(bad),plural_s(bad));
+                        throw exception("%s had %u foreign axiom%s",**name,unsigned(bad),textual::plural_s(bad));
                     }
                     else
                     {

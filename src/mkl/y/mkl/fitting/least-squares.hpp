@@ -10,6 +10,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -157,7 +158,7 @@ namespace upsylon
                 // compute the fitting step
                 //
                 //--------------------------------------------------------------
-                bool compute_step() throw()
+                bool compute_step(bool &decreasing) throw()
                 {
                 TRY_COMPUTE:
                     const ORDINATE fac = ORDINATE(1) + lambda;
@@ -171,6 +172,7 @@ namespace upsylon
                     }
                     if(!LU::build(covar))
                     {
+                        decreasing = false;
                         if(!increase())
                         {
                             Y_GLS_PRINTLN("singular curvature");
