@@ -103,6 +103,9 @@ namespace upsylon
                     return * self(id);
                 }
 
+                bool has(const string &id) const throw();
+                bool has(const char   *id) const;
+
                 //______________________________________________________________
                 //
                 //! access item by name

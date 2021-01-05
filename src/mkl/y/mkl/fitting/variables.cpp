@@ -86,6 +86,18 @@ namespace upsylon
                 }
                 return res;
             }
+
+            bool variables:: has(const string &id) const throw()
+            {
+                return 0 != search(id);
+            }
+
+            bool variables:: has(const char *id) const 
+            {
+                const string _(id);
+                return has(_);
+            }
+
         }
     }
 }

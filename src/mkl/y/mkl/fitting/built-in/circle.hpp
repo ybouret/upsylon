@@ -24,6 +24,15 @@ namespace upsylon
                     static const size_t  nvar = sizeof(name)/sizeof(name[0]);  //!< number of active vars
                 };
 
+                template <typename T>
+                struct _circle
+                {
+                    T xc;
+                    T yc;
+                    T r;
+                };
+
+
                 //______________________________________________________________
                 //
                 //
@@ -49,6 +58,7 @@ namespace upsylon
                     typedef v_gradient<ABSCISSA,ORDINATE>      v_gradient_type; //!< alias
                     typedef typename sequential_type::function sequential_func; //!< alias
                     typedef least_squares<ABSCISSA,ORDINATE>   ls_type;         //!< alias
+                    typedef _circle<ORDINATE>                  circle_params;   //!< alias
 
                     //__________________________________________________________
                     //
@@ -127,7 +137,14 @@ namespace upsylon
                     // C++
                     //__________________________________________________________
                     //! setup
-                    inline explicit circle() : f(this, & circle::call), F(f), G() {}
+                    inline explicit circle() :
+                    f(this, & circle::call), F(f), G(),
+                    __aorg( __circle::nvar, 0 ),
+                    __aerr( __circle::nvar, 0 ),
+                    __use_( __circle::nvar, true )
+                    {
+                    }
+
 
                     //! cleanup
                     inline virtual ~circle() throw() {}
@@ -137,13 +154,36 @@ namespace upsylon
                     //
                     // methods
                     //__________________________________________________________
-                    //! base call to fit
-                    inline ORDINATE call(const ABSCISSA             &p,
-                                         const accessible<ORDINATE> &A,
-                                         const variables            &V)
+                    inline bool fit(sample_type   &s,
+                                    ls_type       &ls,
+                                    circle_params &A,
+                                    circle_params &E)
                     {
-                        return V(A,__circle::name[0]) * p.x + V(A,__circle::name[1]) * p.y + V(A,__circle::name[2]);
+                        const variables &V = *s;  assert(V.has("a")); assert(V.has("b")); assert(V.has("c"));
+                        bzset(A);
+                        bzset(E);
+                        if( ls.fit(s,F,G,__aorg,__use_,__aerr) )
+                        {
+                            const ORDINATE a = V(__aorg,__circle::name[0]);
+                            const ORDINATE b = V(__aorg,__circle::name[1]);
+                            const ORDINATE c = V(__aorg,__circle::name[2]);
+                            A.xc = a/2;
+                            A.yc = b/2;
+                            A.r  = sqrt_of( max_of<ORDINATE>(0,c+square_of(A.xc)+square_of(A.yc)) );
+
+                            const ORDINATE da = V(__aerr,__circle::name[0]);
+                            const ORDINATE db = V(__aerr,__circle::name[1]);
+                            E.xc = da/2;
+                            E.yc = db/2;
+
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
+
 
                     //__________________________________________________________
                     //
@@ -152,9 +192,21 @@ namespace upsylon
                     sequential_func                        f; //!< call()
                     sequential_function<ABSCISSA,ORDINATE> F; //!< wrapper
                     gradient                               G; //!< to compute gradient
-                    
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(circle);
+                    ordinates    __aorg;
+                    ordinates    __aerr;
+                    vector<bool> __use_;
+
+                    //! base call to fit
+                    inline ORDINATE call(const ABSCISSA             &p,
+                                         const accessible<ORDINATE> &A,
+                                         const variables            &V)
+                    {
+                        return V(A,__circle::name[0]) * p.x + V(A,__circle::name[1]) * p.y + V(A,__circle::name[2]);
+                    }
+
                 };
 
                 

@@ -50,11 +50,12 @@ Y_UTEST(fitting_circles)
     std::cerr << "in " << db.name << std::endl;
     
     fill(C1,9,-4,34); { ios::ocstream fp("c1.dat"); save_sample(C1,fp); }
-    fill(C2,-2,7,34);   { ios::ocstream fp("c2.dat"); save_sample(C2,fp); }
+    fill(C2,-2,7,34); { ios::ocstream fp("c2.dat"); save_sample(C2,fp); }
     circle_type CC;
 
     *C1 << "a" << "b" << "c";
     *C2 << "c" << "a" << "b";
+
 
     vector<float> a1(3,0);
     vector<float> a2(3,0);
@@ -134,7 +135,19 @@ Y_UTEST(fitting_circles)
         }
     }
 
+    // automated
+    ls.verbose = false;
+    built_in::_circle<float> c,ce;
+    if( CC.fit(C1,ls,c,ce) )
+    {
+        std::cerr << "c1 : (" << c.xc << "," << c.yc << ") r=" << c.r << std::endl;
+        std::cerr << "err: (" << ce.xc << "," << ce.yc << ") r=" << ce.r << std::endl;
+    }
 
+    if( CC.fit(C2,ls,c,ce) )
+    {
+        std::cerr << "c2: (" << c.xc << "," << c.yc << ") r=" << c.r << std::endl;
+    }
 
     
     // with the same radius, different centers
@@ -189,6 +202,8 @@ Y_UTEST(fitting_circles)
         const double rb = sqrt( max_of<double>(0,cb+xb*xb+yb*yb) );
         std::cerr << "ra=" << ra << ", rb=" << rb << std::endl;
     }
+
+
 
 
 

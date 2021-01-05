@@ -76,7 +76,7 @@ namespace upsylon
                                    const accessible<bool>     &used)
                 {
                     const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
-                    this->regularize(alpha,used);
+                    regularize(alpha,beta,used);
                     return res;
                 }
 
@@ -90,7 +90,7 @@ namespace upsylon
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
                     const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
-                    this->regularize(alpha,used);
+                    regularize(alpha,beta,used);
                     return res;
                 }
 
@@ -103,15 +103,15 @@ namespace upsylon
                 inline const variables & operator*() const throw() { return vars; }
 
                 //! compute total correlation
-                inline ORDINATE compute_correlation( correlation<ORDINATE> &corr) const
+                inline ORDINATE compute_corr(correlation<ORDINATE> &cr) const
                 {
-                    corr.free();
-                    update_correlation(corr);
-                    return corr.compute();
+                    cr.free();
+                    update_correlation(cr);
+                    return cr.compute();
                 }
 
                 //! compute R_square
-                inline ORDINATE R_square() const
+                inline ORDINATE compute_R2() const
                 {
                     ORDINATE SSE=zero, SST=zero, one=ORDINATE(1);
                     update_SSE_and_SST(SSE,SST);
@@ -124,8 +124,9 @@ namespace upsylon
                 //______________________________________________________________
                 
                 //! make alpha symmetric and set diagonal term to 1 for unused
-                static inline void regularize(matrix<ORDINATE>       &alpha,
-                                              const accessible<bool> &used)
+                inline void regularize(matrix<ORDINATE>       &alpha,
+                                       addressable<ORDINATE>  &beta,
+                                       const accessible<bool> &used) const
                 {
                     assert(alpha.rows ==alpha.cols);
                     assert(used.size()==alpha.rows);
@@ -140,7 +141,8 @@ namespace upsylon
                         }
                         else
                         {
-                            alpha[i][i] = 1;
+                            alpha[i][i] = one;
+                            beta[i]     = zero;
                         }
                     }
                 }
@@ -152,7 +154,7 @@ namespace upsylon
                 const string   name; //!< unique identifier
                 variables      vars; //!< variables to pass to objective function
                 const ORDINATE zero; //!< a zero ordinate
-                
+                const ORDINATE one;  //!< a 1    ordinate
                 
             protected:
                 //! setup
@@ -162,7 +164,8 @@ namespace upsylon
                 counted(),
                 name(id),
                 vars(),
-                zero(0)
+                zero(0),
+                one(1)
                 {
                 }
                 

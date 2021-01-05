@@ -168,24 +168,24 @@ Y_UTEST(fitting_diff)
 
     if(lsf.fit(S1,F,G,a2,u2,e2))
     {
-        std::cerr << "corr1: " << S1.compute_correlation(corr) << std::endl;
-        std::cerr << "S1.R2: " << S1.R_square() << std::endl;
+        std::cerr << "corr1: " << S1.compute_corr(corr) << std::endl;
+        std::cerr << "S1.R2: " << S1.compute_R2()       << std::endl;
         std::cerr << std::endl;
     }
 
 
     if(lsf.fit(S2,F,G,a2,u2,e2))
     {
-        std::cerr << "corr2: " << S2.compute_correlation(corr) << std::endl;
-        std::cerr << "S2.R2: " << S2.R_square() << std::endl;
+        std::cerr << "corr2: " << S2.compute_corr(corr) << std::endl;
+        std::cerr << "S2.R2: " << S2.compute_R2() << std::endl;
         std::cerr << std::endl;
     }
 
     vector<double> e3(3,0);
     if(lsf.fit(sa,f,a3,u3,e3))
     {
-        std::cerr << "corrA: " << sa.compute_correlation(corr) << std::endl;
-        std::cerr << "sa.R2: " << sa.R_square() << std::endl;
+        std::cerr << "corrA: " << sa.compute_corr(corr) << std::endl;
+        std::cerr << "sa.R2: " << sa.compute_R2()       << std::endl;
         std::cerr << std::endl;
     }
 

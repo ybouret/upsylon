@@ -105,7 +105,7 @@ COMPUTE_STEP:
 
     //--------------------------------------------------------------------------
     //
-    // recompute step and check cvg
+    // recompute step and check variable convergence
     //
     //--------------------------------------------------------------------------
     bool converged = true;

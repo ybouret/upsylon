@@ -18,28 +18,31 @@ namespace upsylon
         namespace fitting
         {
 
-            //------------------------------------------------------------------
+            //__________________________________________________________________
             //
             //! common least squares data
-            //
-            //------------------------------------------------------------------
+            //__________________________________________________________________
             struct __least_squares
             {
                 static const char prefix[]; //!< "[fit] "
             };
 
+
             //! for verbose output
 #define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << __least_squares::prefix << MSG << std::endl; } } while(false)
 
-            //------------------------------------------------------------------
+            //__________________________________________________________________
             //
             //! least square algorithm
-            //
-            //------------------------------------------------------------------
+            //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class least_squares
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
                 typedef lambdas<ORDINATE>                      lambdas_type;     //!< alias
                 typedef matrix<ORDINATE>                       matrix_type;      //!< alias
                 typedef vector<ORDINATE>                       vector_type;      //!< alias
@@ -49,20 +52,10 @@ namespace upsylon
                 typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;  //!< alias
                 typedef typename sequential_type::function     sequential_func;  //!< alias
 
-                size_t             M;       //!< number of parameters
-                const lambdas_type lam;     //!< array of precomputed lambdas
-                ORDINATE           lambda;  //!< current lambda
-                int                p;       //!< lambda=10^p
-                matrix_type        alpha;   //!< curvature
-                matrix_type        covar;   //!< covariance
-                vector_type        beta;    //!< beta
-                vector_type        aorg;    //!< starting point
-                vector_type        atry;    //!< trial point
-                vector_type        step;    //!< computed step
-                vector<bool>       used;    //!< used parameters
-                bool               verbose; //!< output verbosity
-
-
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
                 //! setup
                 inline explicit least_squares() :
                 M(0),
@@ -84,7 +77,15 @@ namespace upsylon
                 {
                 }
 
-                //! internal gradient
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+
+                //! internal "on-the-fly" numerical gradient
+                /**
+                 the scaling has to be checked
+                 */
                 sequential_grad &grad()
                 {
                     if(grad_.is_empty())
@@ -94,10 +95,16 @@ namespace upsylon
                     return *grad_;
                 }
 
-
+                //______________________________________________________________
+                //
+                // fit methods
+                //______________________________________________________________
 #include "least-squares.hxx"
 
                 //! fit with internal gradient
+                /**
+                 the internal gradient is created or called
+                 */
                 inline bool fit(sample_api_type        &s,
                                 sequential_type        &F,
                                 addressable<ORDINATE>  &A,
@@ -110,6 +117,9 @@ namespace upsylon
                 }
 
                 //! fit with a regular function
+                /**
+                 creates a wrapper and use the internal numerical gradient
+                 */
                 inline bool fit(sample_api_type        &s,
                                 sequential_func        &f,
                                 addressable<ORDINATE>  &A,
@@ -120,10 +130,27 @@ namespace upsylon
                     return fit(s,F,A,U,E);
                 }
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                size_t                        M;       //!< number of parameters
+                const lambdas_type            lam;     //!< array of precomputed lambdas
+                ORDINATE                      lambda;  //!< current lambda
+                int                           p;       //!< lambda=10^p
+                matrix_type                   alpha;   //!< curvature
+                matrix_type                   covar;   //!< covariance
+                vector_type                   beta;    //!< beta
+                vector_type                   aorg;    //!< starting point
+                vector_type                   atry;    //!< trial point
+                vector_type                   step;    //!< computed step
+                vector<bool>                  used;    //!< used parameters
+                bool                          verbose; //!< output verbosity
+                auto_ptr<sequential_grad>     grad_;
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(least_squares);
-                auto_ptr<sequential_grad> grad_;
 
                 //--------------------------------------------------------------
                 //
