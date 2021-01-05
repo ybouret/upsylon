@@ -63,6 +63,7 @@ namespace upsylon
                 api_type(id),
                 samples_db(),
                 reserved(),
+                reserved2(),
                 __beta(),
                 __alpha()
                 {}
@@ -90,6 +91,7 @@ namespace upsylon
                 inline virtual void setup(const accessible<ORDINATE> &aorg)
                 {
                     reserved.adjust(this->size(),0);
+                    reserved2.adjust(this->size(),0);
                     for(iterator it=this->begin();it!=this->end();++it)
                     {
                         (**it).setup(aorg);
@@ -179,9 +181,10 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(samples);
-                ordinates        reserved;
-                ordinates        __beta;
-                matrix<ORDINATE> __alpha;
+                mutable ordinates reserved;
+                mutable ordinates reserved2;
+                ordinates         __beta;
+                matrix<ORDINATE>  __alpha;
                 
                 template <typename SAMPLE_TYPE>
                 SAMPLE_TYPE & use( SAMPLE_TYPE *s )
@@ -282,10 +285,20 @@ namespace upsylon
                 //______________________________________________________________
                 inline virtual void update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const
                 {
-                    for(const_iterator it=this->begin();it!=this->end();++it)
+                    assert(this->size()==reserved.size()  || die("setup") );
+                    assert(this->size()==reserved2.size() || die("setup") );
+
+                    ordinates & mySSE = reserved;
+                    ordinates & mySST = reserved2;
+
+                    size_t i=1;
+                    for(const_iterator it=this->begin();it!=this->end();++it,++i)
                     {
-                        (**it).update_SSE_and_SST(SSE,SST);
+                        (**it).update_SSE_and_SST(mySSE[i],mySST[i]);
+                        // TODO: check weight
                     }
+                    SSE += sorted_sum(mySSE);
+                    SST += sorted_sum(mySST);
                 }
             };
             
