@@ -117,9 +117,7 @@ COMPUTE_STEP:
             converged = false;
         }
     }
-    //Y_GLS_PRINTLN("<variables convergence: " << converged << ">");
-
-
+    
 
     //--------------------------------------------------------------------------
     //
