@@ -43,9 +43,10 @@ namespace upsylon
                 //______________________________________________________________
                 inline virtual  ~sample_api()   throw() {}   //!< cleanup
                 virtual size_t   count()  const throw() = 0; //!< number of points
-                virtual void     setup(const accessible<ORDINATE> &)                   = 0; //!< prepare for a cycle and parameters
-                virtual void     update_correlation(correlation<ORDINATE> &corr) const = 0; //!< add points to correlation
-                
+                virtual void     setup(const accessible<ORDINATE> &)                      = 0; //!< prepare for a cycle and parameters
+                virtual void     update_correlation(correlation<ORDINATE> &corr  )  const = 0; //!< add points to correlation
+                virtual void     update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const = 0; //!< update SSE and SST
+
                 //______________________________________________________________
                 //
                 // non-virtual inteface
@@ -107,6 +108,14 @@ namespace upsylon
                     corr.free();
                     update_correlation(corr);
                     return corr.compute();
+                }
+
+                //! compute R_square
+                inline ORDINATE R_square() const
+                {
+                    ORDINATE SSE=zero, SST=zero, one=ORDINATE(1);
+                    update_SSE_and_SST(SSE,SST);
+                    return (SST>zero) ? one-SSE/SST : one;
                 }
 
                 //______________________________________________________________

@@ -166,6 +166,8 @@ namespace upsylon
                     }
                 }
 
+
+
                 //______________________________________________________________
                 //
                 // interface
@@ -195,6 +197,28 @@ namespace upsylon
                     {
                         corr.add(ordinate[i],adjusted[i]);
                     }
+                }
+
+                //! update SSE and SST
+                inline virtual void update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const
+                {
+                    const size_t n = count();
+                    if(n>0)
+                    {
+                        const ORDINATE ybar = average_ordinate();
+                        for(size_t i=n;i>0;--i)
+                        {
+                            reserved[i] = square_of(ordinate[i] - adjusted[i]);
+                        }
+                        SSE += sorted_sum(reserved);
+
+                        for(size_t i=n;i>0;--i)
+                        {
+                            reserved[i] = square_of(ordinate[i]-ybar);
+                        }
+                        SST += sorted_sum(reserved);
+                    }
+
                 }
 
 

@@ -42,15 +42,17 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef sample_api<ABSCISSA,ORDINATE>               api_type;        //!< alias
-                typedef sample<ABSCISSA,ORDINATE>                   single_sample;   //!< alias
+                typedef          sample_api<ABSCISSA,ORDINATE>      api_type;        //!< alias
+                typedef          sample<ABSCISSA,ORDINATE>          single_sample;   //!< alias
                 typedef typename single_sample::pointer             shared_sample;   //!< alias
-                typedef hash_set<string,shared_sample>              samples_db;      //!< alias
+                typedef          hash_set<string,shared_sample>     samples_db;      //!< alias
                 typedef typename samples_db::const_iterator         const_iterator;  //!< alias
                 typedef typename samples_db::iterator               iterator;        //!< alias
                 typedef typename api_type::sequential_type          sequential_type; //!< alias
                 typedef typename api_type::v_gradient_type          v_gradient_type; //!< alias
-                
+                typedef typename single_sample::abscissae           abscissae;       //!< alias
+                typedef typename single_sample::ordinates           ordinates;       //!< alias
+
                 //______________________________________________________________
                 //
                 // C++
@@ -95,7 +97,6 @@ namespace upsylon
                     const size_t dims = aorg.size();
                     __beta.adjust(dims,this->zero);
                     __alpha.make(dims,dims);
-                    
                 }
 
                 //! update correlation
@@ -178,8 +179,8 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(samples);
-                vector<ORDINATE> reserved;
-                vector<ORDINATE> __beta;
+                ordinates        reserved;
+                ordinates        __beta;
                 matrix<ORDINATE> __alpha;
                 
                 template <typename SAMPLE_TYPE>
@@ -272,6 +273,18 @@ namespace upsylon
                     else
                     {
                         return this->zero;
+                    }
+                }
+
+                //______________________________________________________________
+                //
+                //! update SSE and SST
+                //______________________________________________________________
+                inline virtual void update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const
+                {
+                    for(const_iterator it=this->begin();it!=this->end();++it)
+                    {
+                        (**it).update_SSE_and_SST(SSE,SST);
                     }
                 }
             };
