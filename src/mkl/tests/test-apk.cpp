@@ -56,7 +56,7 @@ namespace {
             M.Id();
             for(size_t i=n;i>0;--i)
             {
-                M[i][i] *= 1+alea.leq(10);
+                M[i][i] *= 1+T(alea.leq(10));
             }
             std::cerr << "M =" << M << std::endl;
             {

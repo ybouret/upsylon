@@ -103,7 +103,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<= T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.P(tau);
                         PointType::Print(fp,P) << '\n';
@@ -120,7 +120,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<=T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.P(tau);
                         const vertex V = segment.V(tau);
@@ -141,7 +141,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<=T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.P(tau);
                         const vertex A = segment.A(tau);
@@ -167,7 +167,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<=T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.Q(tau);
                         PointType::Print(fp,P) << '\n';
@@ -184,7 +184,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<=T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.Q(tau);
                         const vertex V = segment.VQ(tau);
@@ -205,7 +205,7 @@ namespace {
                 for(size_t i=1;i<=pa.segments.size();++i)
                 {
                     const Segment<T,VTX> &segment = pa.segments[i];
-                    for(T tau=0;tau<=1.0;tau+=0.1)
+                    for(T tau=0;tau<=T(1.0);tau+=T(0.1))
                     {
                         const vertex P = segment.Q(tau);
                         const vertex A = segment.AQ(tau);

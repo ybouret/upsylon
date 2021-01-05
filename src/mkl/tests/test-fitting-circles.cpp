@@ -79,7 +79,7 @@ Y_UTEST(fitting_circles)
             const double xa = beta[ *(*C1)["a"] ]/2;
             const double ya = beta[ *(*C1)["b"] ]/2;
             const double ca = beta[ *(*C1)["c"] ];
-            const double ra = sqrt( max_of<float>(0,ca+xa*xa+ya*ya) );
+            const double ra = sqrt( max_of<double>(0,ca+xa*xa+ya*ya) );
             std::cerr << "xa=" << xa << ", ya=" << ya << ", ra=" << ra << std::endl;
         }
 
@@ -93,7 +93,7 @@ Y_UTEST(fitting_circles)
             const double xb = beta[ *(*C2)["a"] ]/2;
             const double yb = beta[ *(*C2)["b"] ]/2;
             const double cb = beta[ *(*C2)["c"] ];
-            const double rb = sqrt( max_of<float>(0,cb+xb*xb+yb*yb) );
+            const double rb = sqrt( max_of<double>(0,cb+xb*xb+yb*yb) );
             std::cerr << "xb=" << xb << ", yb=" << yb << ", rb=" << rb << std::endl;
         }
     }
@@ -185,8 +185,8 @@ Y_UTEST(fitting_circles)
         std::cerr << "xb=" << xb << ", yb=" << yb << std::endl;
         std::cerr << "ca=" << ca << ", cb=" << cb << std::endl;
 
-        const double ra = sqrt( max_of<float>(0,ca+xa*xa+ya*ya) );
-        const double rb = sqrt( max_of<float>(0,cb+xb*xb+yb*yb) );
+        const double ra = sqrt( max_of<double>(0,ca+xa*xa+ya*ya) );
+        const double rb = sqrt( max_of<double>(0,cb+xb*xb+yb*yb) );
         std::cerr << "ra=" << ra << ", rb=" << rb << std::endl;
     }
 
