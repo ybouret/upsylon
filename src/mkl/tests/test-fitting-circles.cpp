@@ -146,9 +146,12 @@ Y_UTEST(fitting_circles)
 
     if( CC.fit(C2,ls,c,ce) )
     {
-        std::cerr << "c2: (" << c.xc << "," << c.yc << ") r=" << c.r << std::endl;
+        std::cerr << "c2:  (" << c.xc << "," << c.yc << ") r=" << c.r << std::endl;
+        std::cerr << "err: (" << ce.xc << "," << ce.yc << ") r=" << ce.r << std::endl;
+
     }
 
+    return 0;
     
     // with the same radius, different centers
 

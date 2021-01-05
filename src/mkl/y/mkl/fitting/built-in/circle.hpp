@@ -173,8 +173,16 @@ namespace upsylon
 
                             const ORDINATE da = V(__aerr,__circle::name[0]);
                             const ORDINATE db = V(__aerr,__circle::name[1]);
+                            const ORDINATE dc = V(__aerr,__circle::name[2]);
                             E.xc = da/2;
                             E.yc = db/2;
+                            std::cerr << "c=" << c << ", dc=" << dc << std::endl;
+
+                            const ORDINATE r = A.r;
+                            if(r>0)
+                            {
+                                E.r = (dc+(fabs_of(a)*da+fabs_of(b)*db)/2)/(r+r);
+                            }
 
                             return true;
                         }
