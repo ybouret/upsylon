@@ -49,6 +49,8 @@ namespace upsylon
                 typedef typename series<ORDINATE>::type             ordinate_type;   //!< alias
                 typedef typename api_type::sequential_type          sequential_type; //!< alias
                 typedef typename api_type::v_gradient_type          v_gradient_type; //!< alias
+                typedef          vector<ORDINATE>                   ordinates;       //!< alias
+                typedef          vector<ABSCISSA>                   abscissae;       //!< alias
 
                 //______________________________________________________________
                 //
@@ -95,9 +97,9 @@ namespace upsylon
                 template <typename ID> static inline
                 sample * create(const ID &id, const size_t n)
                 {
-                    const abscissa_type the_abscissa = new vector<ABSCISSA>(n,as_capacity);
-                    const ordinate_type the_ordinate = new vector<ORDINATE>(n,as_capacity);
-                    const ordinate_type the_adjusted = new vector<ORDINATE>(n,as_capacity);
+                    const abscissa_type the_abscissa = new abscissae(n,as_capacity);
+                    const ordinate_type the_ordinate = new ordinates(n,as_capacity);
+                    const ordinate_type the_adjusted = new ordinates(n,as_capacity);
                     return new sample(id,the_abscissa,the_ordinate,the_adjusted);
                 }
 
@@ -145,8 +147,24 @@ namespace upsylon
                         add(x[i],y[i]);
                     }
                 }
-                
 
+                //! return average ordinate
+                inline ORDINATE average_ordinate() const
+                {
+                    const size_t n = count();
+                    if(n>0)
+                    {
+                        for(size_t i=n;i>0;--i)
+                        {
+                            reserved[i] = ordinate[i];
+                        }
+                        return sorted_sum_by_abs(reserved)/n;
+                    }
+                    else
+                    {
+                        return this->zero;
+                    }
+                }
 
                 //______________________________________________________________
                 //
@@ -180,17 +198,16 @@ namespace upsylon
                 }
 
 
-
                 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                abscissa_type    abscissa; //!< abscissa, NDim
-                ordinate_type    ordinate; //!< ordinate, 1Dim
-                ordinate_type    adjusted; //!< adjusted, 1Dim
-                vector<ORDINATE> reserved; //!< memory,   1Dim
-                vector<ORDINATE> dFdA;     //!< memory for gradient
+                abscissa_type     abscissa; //!< abscissa, NDim
+                ordinate_type     ordinate; //!< ordinate, 1Dim
+                ordinate_type     adjusted; //!< adjusted, 1Dim
+                mutable ordinates reserved; //!< memory,   1Dim
+                ordinates         dFdA;     //!< memory for gradient
                 
 
             private:

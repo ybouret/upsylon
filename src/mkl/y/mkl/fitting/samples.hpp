@@ -190,7 +190,10 @@ namespace upsylon
                     return *s;
                 }
 
+                //______________________________________________________________
+                //
                 //! return D2, weighted sum of samples
+                //______________________________________________________________
                 inline virtual ORDINATE D2_only(sequential_type            &F,
                                                 const accessible<ORDINATE> &A)
                 {
@@ -210,7 +213,10 @@ namespace upsylon
                     return (sum>0) ? sorted_sum(reserved)/sum : this->zero;
                 }
                 
-                
+                //______________________________________________________________
+                //
+                //! return weighted D2, alpha and beta
+                //______________________________________________________________
                 virtual ORDINATE D2_full(matrix<ORDINATE>           &alpha,
                                          addressable<ORDINATE>      &beta,
                                          sequential_type            &F,
@@ -228,7 +234,7 @@ namespace upsylon
                     assert(dims==__beta.size()|| die("setup"));
 
                     tao::ld(beta,this->zero);
-                    alpha.ld(this->zero);
+                    tao::ldm(alpha,this->zero);
                     
                     size_t sum = 0;
                     {

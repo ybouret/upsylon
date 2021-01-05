@@ -44,8 +44,8 @@ namespace upsylon
                     typedef point2d<UNIT>                      ABSCISSA;        //!< base type
                     typedef sample<ABSCISSA,ORDINATE>          sample_type;     //!< alias
                     typedef samples<ABSCISSA,ORDINATE>         samples_type;    //!< alias
-                    typedef vector<ABSCISSA>                   abscissae;       //!< alias
-                    typedef vector<ORDINATE>                   ordinates;       //!< alias
+                    typedef typename sample_type::abscissae    abscissae;       //!< alias
+                    typedef typename sample_type::ordinates    ordinates;       //!< alias
                     typedef sequential<ABSCISSA,ORDINATE>      sequential_type; //!< alias
                     typedef v_gradient<ABSCISSA,ORDINATE>      v_gradient_type; //!< alias
                     typedef typename sequential_type::function sequential_func; //!< alias

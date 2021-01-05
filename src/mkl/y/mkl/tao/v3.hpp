@@ -5,6 +5,13 @@
 #ifndef Y_MKL_TAO_V3_INCLUDED
 #define Y_MKL_TAO_V3_INCLUDED
 
+template <typename T> static inline
+void ldm(matrix<T> &M, typename type_traits<T>::parameter_type value )
+{
+    M.ld(value);
+}
+
+
 //==============================================================================
 //
 // MMUL matrix*matrix
