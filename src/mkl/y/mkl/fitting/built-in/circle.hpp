@@ -40,7 +40,6 @@ namespace upsylon
                     //
                     // types and definitions
                     //__________________________________________________________
-
                     typedef point2d<UNIT>                      ABSCISSA;        //!< base type
                     typedef sample<ABSCISSA,ORDINATE>          sample_type;     //!< alias
                     typedef samples<ABSCISSA,ORDINATE>         samples_type;    //!< alias
