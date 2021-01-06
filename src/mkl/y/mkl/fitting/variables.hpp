@@ -104,8 +104,8 @@ namespace upsylon
                     return * self(id);
                 }
 
-                bool has(const string &id) const throw();
-                bool has(const char   *id) const;
+                bool has(const string &id) const throw(); //!< query name
+                bool has(const char   *id) const;         //!< query name
 
                 //______________________________________________________________
                 //
@@ -252,6 +252,7 @@ namespace upsylon
                     return os;
                 }
 
+                //! format var = value +/- error (percent)ß
                 template <typename ARR>
                 inline void format_results(sequence<string>       &results,
                                            ARR                    &aorg,

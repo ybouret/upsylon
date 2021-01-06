@@ -24,12 +24,13 @@ namespace upsylon
                     static const size_t  nvar = sizeof(name)/sizeof(name[0]);  //!< number of active vars
                 };
 
+                //! parameters for a circle
                 template <typename T>
                 struct _circle
                 {
-                    T xc;
-                    T yc;
-                    T r;
+                    T xc; //!< center
+                    T yc; //!< center
+                    T r;  //!< radius
                 };
 
 
@@ -152,7 +153,7 @@ namespace upsylon
 
                     //__________________________________________________________
                     //
-                    // methods
+                    //! fit to parameters
                     //__________________________________________________________
                     inline bool fit(sample_type   &s,
                                     ls_type       &ls,

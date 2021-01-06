@@ -67,7 +67,7 @@ __ctrl(0)
                                         const adjust_ptr &shared_adjust) throw() :
                 Y_EXPLODE_CTOR(shared_solver)
                 {
-                    setup();
+                    initialize();
                 }
 
 
@@ -75,7 +75,7 @@ __ctrl(0)
                 inline explicit explode(const adjust_ptr &shared_adjust) throw() :
                 Y_EXPLODE_CTOR( default_solver::New() )
                 {
-                    setup();
+                    initialize();
                 }
 
                 //! access current state
@@ -96,7 +96,7 @@ __ctrl(0)
                 T                                __ctrl;
 
                 //! finalize object
-                void setup()
+                inline void initialize()
                 {
                     solver->start( adjust->dimensions() );
                 }

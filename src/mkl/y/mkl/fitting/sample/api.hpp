@@ -3,6 +3,7 @@
 #ifndef Y_FITTING_SAMPLE_API_INCLUDED
 #define Y_FITTING_SAMPLE_API_INCLUDED 1
 
+#include "y/mkl/fitting/sample/info.hpp"
 #include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/fitting/v-gradient.hpp"
 #include "y/container/matrix.hpp"
@@ -26,7 +27,7 @@ namespace upsylon
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE >
-            class sample_api : public object, public counted
+            class sample_api : public sample_info
             {
             public:
                 //______________________________________________________________
@@ -42,7 +43,6 @@ namespace upsylon
                 // virtual inteface
                 //______________________________________________________________
                 inline virtual  ~sample_api()   throw() {}   //!< cleanup
-                virtual size_t   count()  const throw() = 0; //!< number of points
                 virtual void     setup(const accessible<ORDINATE> &)                      = 0; //!< prepare for a cycle and parameters
                 virtual void     update_correlation(correlation<ORDINATE> &corr  )  const = 0; //!< add points to correlation
                 virtual void     update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const = 0; //!< update SSE and SST
@@ -51,8 +51,6 @@ namespace upsylon
                 //
                 // non-virtual inteface
                 //______________________________________________________________
-                //! key for sets and intr_ptr
-                inline const string &key() const throw() { return name; }
 
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_type &F, const accessible<ORDINATE> &a)
@@ -95,12 +93,6 @@ namespace upsylon
                 }
 
 
-
-                //! access variables
-                inline variables       & operator*()        throw() { return vars; }
-                
-                //! access variables
-                inline const variables & operator*() const throw() { return vars; }
 
                 //! compute total correlation
                 inline ORDINATE compute_corr(correlation<ORDINATE> &cr) const
@@ -151,19 +143,14 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const string   name; //!< unique identifier
-                variables      vars; //!< variables to pass to objective function
-                const ORDINATE zero; //!< a zero ordinate
-                const ORDINATE one;  //!< a 1    ordinate
+                const ORDINATE zero; //!< a 0 ordinate
+                const ORDINATE one;  //!< a 1 ordinate
                 
             protected:
                 //! setup
                 template <typename ID>
                 inline explicit sample_api( const ID &id):
-                object(),
-                counted(),
-                name(id),
-                vars(),
+                sample_info(id),
                 zero(0),
                 one(1)
                 {

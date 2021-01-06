@@ -147,7 +147,7 @@ namespace upsylon
                 vector_type                   step;    //!< computed step
                 vector<bool>                  used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
-                auto_ptr<sequential_grad>     grad_;
+                auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 
 
             private:
