@@ -290,6 +290,7 @@ namespace upsylon
                     }
                 }
 
+                //! display results of a fit
                 template <typename OSTREAM, typename ARR>
                 inline void display(OSTREAM                &os,
                                     ARR                    &aorg,

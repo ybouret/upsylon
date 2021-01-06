@@ -37,6 +37,8 @@ namespace upsylon
                 const string    &key()        const throw(); //!< name
                 variables       & operator*()       throw(); //!< access
                 const variables & operator*() const throw(); //!< access
+
+                //! helper to quick save
                 static void       save_triplet( ios::ostream &fp, const double, const double, const double);
 
                 //______________________________________________________________
