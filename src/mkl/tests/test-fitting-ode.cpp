@@ -1,9 +1,8 @@
 
 
-#include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/least-squares.hpp"
+#include "y/mkl/fitting/sequential/explode.hpp"
 
-#include "y/mkl/ode/explicit/adjuster.hpp"
 
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
