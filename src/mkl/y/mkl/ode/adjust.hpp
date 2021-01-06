@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MKL_ODE_ADJUSTER_INCLUDED
-#define Y_MKL_ODE_ADJUSTER_INCLUDED 1
+#ifndef Y_MKL_ODE_ADJUST_INCLUDED
+#define Y_MKL_ODE_ADJUST_INCLUDED 1
 
 #include "y/mkl/ode/types.hpp"
 #include "y/mkl/fitting/variables.hpp"
@@ -19,7 +19,7 @@ namespace upsylon {
             //
             //__________________________________________________________________
             template <typename T>
-            class Adjuster : public counted_object
+            class Adjust : public counted_object
             {
             public:
                 typedef fitting::variables variables; //!< alias
@@ -31,7 +31,7 @@ namespace upsylon {
                 //______________________________________________________________
 
                 //! cleanup
-                inline virtual ~Adjuster() throw() {}
+                inline virtual ~Adjust() throw() {}
 
                 //! get the problem state size
                 virtual size_t dimensions() const throw() = 0;
@@ -66,10 +66,10 @@ namespace upsylon {
 
             protected:
                 //! setup
-                inline explicit Adjuster() throw() : counted_object() {}
+                inline explicit Adjust() throw() : counted_object() {}
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Adjuster);
+                Y_DISABLE_COPY_AND_ASSIGN(Adjust);
             };
         }
     }

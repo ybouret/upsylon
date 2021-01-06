@@ -5,8 +5,8 @@
 #ifndef Y_MKL_FITTING_SEQUENTIAL_EXPLODE_INCLUDED
 #define Y_MKL_FITTING_SEQUENTIAL_EXPLODE_INCLUDED 1
 
-#include "y/mkl/fit/sequential.hpp"
-#include "y/mkl/ode/explicit/adjuster.hpp"
+#include "y/mkl/fitting/sequential.hpp"
+#include "y/mkl/ode/explicit/adjust.hpp"
 #include "y/mkl/ode/explicit/driver-ck.hpp"
 
 namespace upsylon {
@@ -17,11 +17,11 @@ namespace upsylon {
 
             //! constructor for ExplODE
 #define Y_EXPLODE_CTOR(SOLVER)         \
-Sequential<T>(),                       \
+sequential_type(),                     \
 solver(SOLVER),                        \
-scheme(sharedScheme),                  \
-diffEq( this, & ExplODE<T>::compute ), \
-fields( scheme->dimensions(), 0 ),     \
+adjust(shared_adjust),                 \
+diffEq( this, & explode<T>::compute ), \
+fields( adjust->dimensions(), 0 ),     \
 p_aorg(0),                             \
 p_vars(0),                             \
 __ctrl(0)
@@ -34,7 +34,7 @@ __ctrl(0)
             //
             //==================================================================
             template <typename T>
-            class explode : public sequential<T>
+            class explode : public sequential<T,T>
             {
             public:
                 //==============================================================
@@ -42,12 +42,13 @@ __ctrl(0)
                 // types and definitions
                 //
                 //==============================================================
-                typedef vector<T>                      Vector;        //!< alias for internal data
-                typedef ODE::ExplicitSolver<T>         SolverType;    //!< alias
-                typedef arc_ptr<SolverType>            SolverPointer; //!< alias
-                typedef ODE::ExplicitAdjuster<T>       AdjusterType;    //!< alias
-                typedef typename AdjusterType::Pointer AdjusterPointer; //!< alias
-                typedef ODE::DriverCK<T>               DefaultSolver; //!< default solver
+                typedef sequential<T,T>               sequential_type; //!< alias
+                typedef vector<T>                     ordinates;       //!< alias for internal data
+                typedef ODE::ExplicitSolver<T>        solver_type;     //!< alias
+                typedef arc_ptr<solver_type>          solver_ptr;      //!< alias
+                typedef ODE::ExplicitAdjust<T>        adjust_type;     //!< alias
+                typedef typename adjust_type::Pointer adjust_ptr;      //!< alias
+                typedef ODE::DriverCK<T>              default_solver;  //!< default solver
 
                 //==============================================================
                 //
@@ -62,17 +63,17 @@ __ctrl(0)
                 }
 
                 //! setup, preparing solver
-                inline explicit explode(const SolverPointer &sharedSolver,
-                                        const SchemePointer &sharedScheme) throw() :
-                Y_EXPLODE_CTOR(sharedSolver)
+                inline explicit explode(const solver_ptr &shared_solver,
+                                        const adjust_ptr &shared_adjust) throw() :
+                Y_EXPLODE_CTOR(shared_solver)
                 {
                     setup();
                 }
 
 
                 //! setup with a private default solver
-                inline explicit ExplODE(const SchemePointer &sharedScheme) throw() :
-                Y_EXPLODE_CTOR( DefaultSolver::New() )
+                inline explicit explode(const adjust_ptr &shared_adjust) throw() :
+                Y_EXPLODE_CTOR( default_solver::New() )
                 {
                     setup();
                 }
@@ -85,19 +86,19 @@ __ctrl(0)
 
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(ExplODE);
-                SolverPointer                    solver;
-                SchemePointer                    scheme;
+                Y_DISABLE_COPY_AND_ASSIGN(explode);
+                solver_ptr                       solver;
+                adjust_ptr                       adjust;
                 typename ODE::Field<T>::Equation diffEq;
-                Vector                           fields;
+                ordinates                        fields;
                 const accessible<T>             *p_aorg;
-                const Variables                 *p_vars;
+                const variables                 *p_vars;
                 T                                __ctrl;
 
                 //! finalize object
                 void setup()
                 {
-                    solver->start( scheme->dimensions() );
+                    solver->start( adjust->dimensions() );
                 }
 
 
@@ -106,29 +107,29 @@ __ctrl(0)
                 {
                     assert(p_aorg);
                     assert(p_vars);
-                    return scheme->rates(dYdx, x, Y, *p_aorg, *p_vars);
+                    return adjust->rates(dYdx, x, Y, *p_aorg, *p_vars);
                 }
 
                 //! initialize protocol
-                inline virtual T onStart(const T x1, const accessible<T> &aorg, const Variables &vars)
+                inline virtual T onStart(const T x1, const accessible<T> &aorg, const variables &vars)
                 {
                     // link
                     p_aorg = &aorg;
                     p_vars = &vars;
 
                     // setup state and step control
-                    scheme->setup(fields,aorg,vars);
-                    __ctrl = scheme->delta();
+                    adjust->setup(fields,aorg,vars);
+                    __ctrl = adjust->delta();
 
                     // differential step: up to x1
-                    (*solver)( diffEq, fields, scheme->start(), x1, __ctrl, scheme->callback() );
+                    (*solver)( diffEq, fields, adjust->start(), x1, __ctrl, adjust->callback() );
 
                     // done, return the value of interest
-                    return scheme->query(x1,fields,aorg,vars);
+                    return adjust->query(x1,fields,aorg,vars);
                 }
 
                 //! update protocol
-                inline virtual T onReach(const T x1, const accessible<T> &aorg, const Variables &vars)
+                inline virtual T onReach(const T x1, const accessible<T> &aorg, const variables &vars)
                 {
                     // link
                     p_aorg = &aorg;
@@ -136,10 +137,10 @@ __ctrl(0)
 
 
                     // differential step
-                    (*solver)( diffEq, fields, this->current, x1, __ctrl,  scheme->callback());
+                    (*solver)( diffEq, fields, this->current, x1, __ctrl,  adjust->callback());
 
                     // done, return the value of interest
-                    return scheme->query(x1,fields,aorg,vars);
+                    return adjust->query(x1,fields,aorg,vars);
                 }
             };
 
