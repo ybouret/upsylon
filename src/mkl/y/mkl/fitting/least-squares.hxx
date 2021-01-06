@@ -27,6 +27,8 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
+    static const ORDINATE vtol = numeric<ORDINATE>::ftol;
+    static const ORDINATE dtol = numeric<ORDINATE>::sqrt_ftol;
 
     //--------------------------------------------------------------------------
     //
@@ -34,9 +36,9 @@ inline bool fit(sample_api_type        &s,
     //
     //--------------------------------------------------------------------------
     assert(A.size()==U.size());
-    M      = A.size();
-    p      = 0;
-    lambda = lam[p];
+    M      = A.size();             // dimensions
+    p      = 0;                    // regularization
+    lambda = lam[p];               // matching coefficient
 
     //--------------------------------------------------------------------------
     //
@@ -118,7 +120,7 @@ COMPUTE_STEP:
             const ORDINATE a_new = atry[i];
             const ORDINATE a_old = aorg[i];
             const ORDINATE da    = fabs_of( step[i] = a_new - a_old );
-            if( da > numeric<double>::ftol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+            if( da > vtol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
             {
                 converged = false;
                 --i;
@@ -171,25 +173,19 @@ COMPUTE_STEP:
             s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
         }
 
-#if 1
+        // testing variable convergence
         if(converged)
         {
             Y_GLS_PRINTLN("<variables convergence>");
             goto CONVERGED;
         }
-#endif
 
+
+        // upon decreasing, test D2 convergence
         if(decreasing)
         {
-
-            if(converged)
-            {
-                Y_GLS_PRINTLN("<variables convergence>");
-                goto CONVERGED;
-            }
-
             const ORDINATE dd = fabs_of(D2_org-D2_try);
-            if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
+            if( dd <= dtol * max_of(D2_org,D2_try) )
             {
                 Y_GLS_PRINTLN("<D2 convergence>");
                 goto CONVERGED;
