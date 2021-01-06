@@ -68,8 +68,8 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    size_t cycle     =0;
-    bool   decreasing=true;
+    size_t cycle      = 0;
+    bool   decreasing = true;
 CYCLE:
     ++cycle;
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
@@ -87,8 +87,10 @@ COMPUTE_STEP:
         return false;
     }
 
+
     //--------------------------------------------------------------------------
     //
+    // At this point, the curvature is not singular, so
     // compute atry
     //
     //--------------------------------------------------------------------------
@@ -109,15 +111,28 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     bool converged = true;
-    for(size_t i=M;i>0;--i)
     {
-        const ORDINATE a_new = atry[i];
-        const ORDINATE a_old = aorg[i];
-        const ORDINATE da    = fabs_of( step[i] = a_new - a_old );
-        if( da > numeric<double>::ftol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+        size_t i=M;
+        for(;i>0;--i)
         {
-            converged = false;
+            const ORDINATE a_new = atry[i];
+            const ORDINATE a_old = aorg[i];
+            const ORDINATE da    = fabs_of( step[i] = a_new - a_old );
+            if( da > numeric<double>::ftol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+            {
+                converged = false;
+                --i;
+                break;
+            }
         }
+
+        for(;i>0;--i)
+        {
+            const ORDINATE a_new = atry[i];
+            const ORDINATE a_old = aorg[i];
+            step[i] = a_new - a_old;
+        }
+
     }
     
 
@@ -156,14 +171,23 @@ COMPUTE_STEP:
             s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
         }
 
+#if 1
         if(converged)
         {
             Y_GLS_PRINTLN("<variables convergence>");
             goto CONVERGED;
         }
+#endif
 
         if(decreasing)
         {
+
+            if(converged)
+            {
+                Y_GLS_PRINTLN("<variables convergence>");
+                goto CONVERGED;
+            }
+
             const ORDINATE dd = fabs_of(D2_org-D2_try);
             if( dd <= numeric<ORDINATE>::sqrt_ftol * max_of(D2_org,D2_try) )
             {

@@ -1,4 +1,4 @@
-
+if(NOT Y_SUNOS)
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12" )
 
 	find_package (Python COMPONENTS Interpreter Development)
@@ -30,3 +30,6 @@ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12" )
 	endif()
 
 endif()
+
+endif()
+
