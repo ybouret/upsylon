@@ -65,6 +65,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(fitting_sample);
     Y_UTEST(fitting_diff);
     Y_UTEST(fitting_circles);
+    Y_UTEST(fitting_ode);
 }
 Y_UTEST_EXEC()
 
