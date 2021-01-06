@@ -80,14 +80,17 @@ CYCLE:
 
     //--------------------------------------------------------------------------
     //
-    // compute curvature with lamba increase
+    // compute curvature with lamba increase, then compute the step
+    // the step has a part of errors, since it's numerical around zero
     //
     //--------------------------------------------------------------------------
 COMPUTE_STEP:
     if(!compute_step(decreasing))
     {
+        // singular curvature
         return false;
     }
+
 
 
     //--------------------------------------------------------------------------
