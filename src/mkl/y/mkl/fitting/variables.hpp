@@ -227,8 +227,8 @@ namespace upsylon
                                        ARR          &arr,
                                        BRR          &brr,
                                        const char   *sep,
-                                       const char   *pfx=NULL,
-                                       const char   *sfx=NULL) const
+                                       const char   *pfx,
+                                       const char   *sfx) const
                 {
                     assert(sep!=NULL);
                     const size_t width = max_name_length();
@@ -252,7 +252,7 @@ namespace upsylon
                     return os;
                 }
 
-                //! format var = value +/- error (percent)ß
+                //! format var = value +/- error (percent)
                 template <typename ARR>
                 inline void format_results(sequence<string>       &results,
                                            ARR                    &aorg,
@@ -289,6 +289,23 @@ namespace upsylon
                         results.push_back(output);
                     }
                 }
+
+                template <typename OSTREAM, typename ARR>
+                inline void display(OSTREAM                &os,
+                                    ARR                    &aorg,
+                                    const accessible<bool> &used,
+                                    ARR                    &aerr,
+                                    const char             *pfx = NULL) const
+                {
+                    if(!pfx) pfx="";
+                    vector<string> results;
+                    format_results(results,aorg,used,aerr);
+                    for(size_t i=1;i<=results.size();++i)
+                    {
+                        os << pfx << results[i] << '\n';
+                    }
+                }
+
 
             private:
                 void check_add(const shared_variable &v);

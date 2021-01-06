@@ -88,34 +88,26 @@ namespace {
             s->add(x,y);
         }
 
+
+        const string filename = "adjode-" + sfx + ".dat";
+        const string savename = "adjfcn-" + sfx + ".dat";
         {
-            const string filename = "adjode-" + sfx + ".dat";
             ios::ocstream fp(filename);
             s->save(fp);
         }
-#if 0
-        typename Type<T>::Series X = new vector<T>(n);
-        typename Type<T>::Series Y = new vector<T>(n);
-        typename Type<T>::Series Z = new vector<T>(n);
+        ios::ocstream::overwrite(savename);
 
 
-
-
-        Sample<T> sample( X,Y,Z );
-
-        {
-            ios::ocstream fp("adjode.dat");
-            sample.save(fp);
-        }
-
-
-        typename ODE::ExplicitScheme<T>::Pointer crunch = new Damped<T>();
+        typename ODE::ExplicitAdjust<T>::Pointer crunch = new Damped<T>();
         typename ODE::ExplicitSolver<T>::Pointer solver = ODE::DriverCK<T>::New();
+        correlation<T>                           corr;
 
-        ExplODE<T>      explode(solver,crunch);
-        LeastSquares<T> LS(true);
+        explode<T>         F(solver,crunch);
+        least_squares<T,T> ls(true);
+        variables         &vars = **s;
 
-        Variables &vars = sample.variables;
+
+
         vars << "mu" << "omega" << "y0";
 
         vector<T>    aorg( vars.sweep(),  0 );
@@ -125,8 +117,45 @@ namespace {
         vars(aorg,"mu")    = 0.5;
         vars(aorg,"omega") = 2.5;
         vars(aorg,"y0")    = 1;
-        vars(used,"y0")   = false;
+        vars(used,"y0")    = false;
 
+        const char * pass[] =
+        {
+            "mu:omega", "y0", "mu:omega:y0"
+        };
+        for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
+        {
+            vars.only_on(used,pass[k]);
+            if(ls.fit(*s, F, aorg, used, aerr) )
+            {
+                vars.display(std::cerr, aorg, used, aerr);
+                {
+                    ios::ocstream fp(filename);
+                    s->save(fp);
+                }
+                std::cerr<< "R2    = " << s->compute_R2() << std::endl;
+                std::cerr<< "corr  = " << s->compute_corr(corr) << std::endl;
+                {
+                    ios::ocstream fp(savename);
+                    T        x = 0;
+                    const T dx = T(0.02);
+
+                    fp("%g %g\n",x,F.start(x,aorg,vars));
+                    for(x+=dx;x<=s->abscissa->back();x+=dx)
+                    {
+                        fp("%g %g\n",x,F.reach(x,aorg,vars));
+                    }
+
+                }
+            }
+            else
+            {
+                std::cerr << "couldn't fit '" << pass[k] << "'" << std::endl;
+                break;
+            }
+        }
+
+#if 0
         if(LS.fit(sample, explode, aorg, used, aerr))
         {
             vars.display(std::cerr, aorg, aerr);
@@ -159,7 +188,7 @@ namespace {
                     correlation<T> corr;
                     std::cerr << "corr=" << sample.computeCorrelation(corr) << std::endl;
                     std::cerr << "R2  =" << sample.computeR2() << std::endl;
-ß
+
                     {
                         ios::ocstream fp("adjode.dat");
                         sample.save(fp);
@@ -180,7 +209,6 @@ namespace {
 
                 }
             }
-
         }
 #endif
 

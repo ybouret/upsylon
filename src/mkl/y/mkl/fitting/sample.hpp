@@ -168,15 +168,12 @@ namespace upsylon
                 }
 
                 //! quick save
-                inline void save( ios::ostream &fp ) const
+                inline void save(ios::ostream &fp) const
                 {
                     const size_t n = count();
                     for(size_t i=1;i<=n;++i)
                     {
-                        const string x = vformat("%.15g",double(abscissa[i]));
-                        const string y = vformat("%.15g",double(ordinate[i]));
-                        const string z = vformat("%.15g",double(adjusted[i]));
-                        fp << x << ' ' << y << ' ' << z << '\n';
+                        this->save_triplet(fp,abscissa[i],ordinate[i],adjusted[i]);
                     }
                 }
 

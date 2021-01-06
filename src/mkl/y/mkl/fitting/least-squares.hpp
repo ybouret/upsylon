@@ -58,7 +58,7 @@ namespace upsylon
                 // C++
                 //______________________________________________________________
                 //! setup
-                inline explicit least_squares() :
+                inline explicit least_squares(const bool verbosity=false) :
                 M(0),
                 lam(), lambda(0), p(0),
                 alpha(),
@@ -68,7 +68,7 @@ namespace upsylon
                 atry(),
                 step(),
                 used(),
-                verbose(false),
+                verbose(verbosity),
                 grad_(0)
                 {
                 }

@@ -28,6 +28,13 @@ namespace upsylon
                 return vars;
             }
 
+            void sample_info:: save_triplet( ios::ostream &fp, const double x, const double y, const double z)
+            {
+                fp("%.15g",x) << ' ';
+                fp("%.15g",y) << ' ';
+                fp("%.15g",z) << '\n';
+            }
+
 
         }
 
