@@ -14,6 +14,11 @@
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
 
+#define Y_GLS_DEBUG 1
+#if defined(Y_GLS_DEBUG) && 1 == Y_GLS_DEBUG
+#include "y/ios/ocstream.hpp"
+#endif
+
 namespace upsylon
 {
     namespace mkl
@@ -147,6 +152,7 @@ namespace upsylon
                 vector_type                   aorg;    //!< starting point
                 vector_type                   atry;    //!< trial point
                 vector_type                   step;    //!< computed step
+                vector_type                   atmp;    //!< for probing
                 vector<bool>                  used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient

@@ -282,7 +282,7 @@ namespace upsylon
                     }
                     else
                     {
-                        return 0;
+                        return this->zero;
                     }
                 }
 

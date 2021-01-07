@@ -1,5 +1,23 @@
 //! \file
 
+private:
+struct d2_wrapper
+{
+    sample_api_type            *s_;
+    sequential_type            *F_;
+    const accessible<ORDINATE> *aorg_;
+    const accessible<ORDINATE> *step_;
+    addressable<ORDINATE>      *atmp_;
+    
+    inline ORDINATE operator()(const ORDINATE u)
+    {
+        assert(s_); assert(aorg_); assert(step_); assert(atmp_);
+        tao::muladd(*atmp_, *aorg_, u, *step_);
+        return s_->D2(*F_,*atmp_);
+    }
+    
+};
+public:
 
 //______________________________________________________________________________
 //
@@ -29,7 +47,7 @@ inline bool fit(sample_api_type        &s,
     //--------------------------------------------------------------------------
     static const ORDINATE vtol = numeric<ORDINATE>::ftol;
     static const ORDINATE dtol = numeric<ORDINATE>::sqrt_ftol;
-
+    
     //--------------------------------------------------------------------------
     //
     // variables
@@ -39,7 +57,7 @@ inline bool fit(sample_api_type        &s,
     M      = A.size();             // dimensions
     p      = 0;                    // regularization
     lambda = lam[p];               // matching coefficient
-
+    
     //--------------------------------------------------------------------------
     //
     // memory
@@ -51,18 +69,22 @@ inline bool fit(sample_api_type        &s,
     aorg.adjust(M,s.zero);
     atry.adjust(M,s.zero);
     step.adjust(M,s.zero);
+    atmp.adjust(M,s.zero);
     used.adjust(M,false);
     tao::set(aorg,A);
     tao::set(used,U);
     tao::ld(E,-1);
     s.setup(A);
-
+    
+    d2_wrapper f = { &s, &F, &aorg, &step, &atmp };
+    
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
         display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
     }
-
+    
+    
     //--------------------------------------------------------------------------
     //
     //
@@ -70,6 +92,7 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
+    ios::ocstream::overwrite("d2.dat");
     size_t cycle      = 0;      // cycle indication
     bool   decreasing = true;   // is lambda decreasing?
 CYCLE:
@@ -77,7 +100,7 @@ CYCLE:
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
     Y_GLS_PRINTLN("-------- <run@cycle=" << cycle << "> -------- " );
     Y_GLS_PRINTLN("D2_org  = " << D2_org << " | beta=" << beta);
-
+    
     //--------------------------------------------------------------------------
     //
     // compute curvature with lamba increase, then compute the step.
@@ -90,26 +113,35 @@ COMPUTE_STEP:
         // here, a singular curvature is met
         return false;
     }
-
-
-
+    
+    
+    
     //--------------------------------------------------------------------------
     //
     // At this point, the curvature is not singular, so
-    // compute atry
+    // compute the descent slope
     //
     //--------------------------------------------------------------------------
-    for(size_t i=M;i>0;--i)
+    const ORDINATE sigma = 2*tao::dot<ORDINATE>::of(beta,step);
+    if(sigma<0)
     {
-        atry[i] = aorg[i] + step[i];
+        Y_GLS_PRINTLN("<negative sigma>");
+        goto COMPUTE_STEP;
     }
-
+    
+    //--------------------------------------------------------------------------
+    //
+    // OK, numerically acceptable step, compute atry
+    //
+    //--------------------------------------------------------------------------
+    tao::add(atry,aorg,step);
+    
     //--------------------------------------------------------------------------
     //
     // TODO: control atry
     //
     //--------------------------------------------------------------------------
-
+    
     //--------------------------------------------------------------------------
     //
     // recompute step and check variable convergence for later
@@ -130,17 +162,17 @@ COMPUTE_STEP:
                 break;
             }
         }
-
+        
         for(;i>0;--i)
         {
             const ORDINATE a_new = atry[i];
             const ORDINATE a_old = aorg[i];
             step[i] = a_new - a_old;
         }
-
+        
     }
     
-
+    
     //--------------------------------------------------------------------------
     //
     // compute trial D2
@@ -148,7 +180,7 @@ COMPUTE_STEP:
     //--------------------------------------------------------------------------
     const ORDINATE D2_try = s.D2(F,atry);
     Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << p << ", decreasing = " << textual::boolean(decreasing));
-
+    
     if(D2_try>D2_org)
     {
         //----------------------------------------------------------------------
@@ -172,22 +204,33 @@ COMPUTE_STEP:
         //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
+        {
+            ios::ocstream fp("d2.dat",true);
+            for(ORDINATE u=0;u<=2;u+=ORDINATE(0.02))
+            {
+                fp("%.15g %.15e %.15e\n",u,f(u),D2_org - sigma*u);
+            }
+            fp << '\n';
+        }
+        
         tao::set(aorg,atry);
         decrease();
-
+        
+        
+        
         if(verbose)
         {
-            //s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
+            display_variables::values(std::cerr, "\t(->) ", s.vars, atry, " (", step, ")");
         }
-
+        
         // testing variable convergence
         if(converged)
         {
             Y_GLS_PRINTLN("<variables convergence>");
             goto CONVERGED;
         }
-
-
+        
+        
         // upon decreasing, test D2 convergence
         if(decreasing)
         {
@@ -202,8 +245,8 @@ COMPUTE_STEP:
         decreasing = true;
         goto CYCLE;
     }
-
-
+    
+    
 CONVERGED:
     //--------------------------------------------------------------------------
     //
@@ -214,14 +257,14 @@ CONVERGED:
     //--------------------------------------------------------------------------
     Y_GLS_PRINTLN("-------- <end@cycle=" << cycle << "> -------- " );
     Y_GLS_PRINTLN("lambda    = " << lambda);
-
+    
     //--------------------------------------------------------------------------
     //
     // final D2
     //
     //--------------------------------------------------------------------------
     D2_org = s.D2(alpha,beta,F,G,aorg,used);
-
+    
     //--------------------------------------------------------------------------
     //
     // compute covariance
@@ -234,15 +277,15 @@ CONVERGED:
     }
     LU::inverse(alpha,covar);
     //Y_GLS_PRINTLN("covar    = " << covar);
-
+    
     //--------------------------------------------------------------------------
     //
     // set new parameters
     //
     //--------------------------------------------------------------------------
     tao::set(A,aorg);
-
-
+    
+    
     //--------------------------------------------------------------------------
     //
     // compute d.o.f
@@ -254,7 +297,7 @@ CONVERGED:
     {
         if(used[i]) ++nuse;
     }
-
+    
     if(nuse>ndof)
     {
         //----------------------------------------------------------------------
@@ -304,5 +347,5 @@ CONVERGED:
         }
         return true;
     }
-
+    
 }

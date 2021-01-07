@@ -101,9 +101,14 @@ Let us define:
 	f(\gamma)  =  D^2(\vec{A}+\gamma \delta\vec{A}_\lambda)
 \end{equation}
 We compute $f(1)=f_1$ (the full step) and we need to compare to $f(0)=f_0$.
+We should have:
+\begin{equation}
+	f(\gamma) \approx f_0 - 2\gamma \sigma + \gamma^2 \left(f_1-f_0\right)
+\end{equation}
+
 \begin{itemize}
-\item If $f_1\geq f_0$, we need to increase $\lambda$ and recompute the step from Eq.\eqref{start}.
-\item if $f_1<f_0$, then accept step an decrease $\lambda$.
+\item If $f_1>f_0$, we need to increase $\lambda$ and recompute the step from Eq.\eqref{start}.
+\item if $f_1\leq f_0$, then accept step an decrease $\lambda$.
 \end{itemize}
 
 \section{Scaling management}

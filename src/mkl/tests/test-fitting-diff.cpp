@@ -196,7 +196,8 @@ Y_UTEST(fitting_diff)
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
         display_sample::results(std::cerr,sa,a3,u3,e3);
 
-
+        return 0;
+        
         (*sa)(u3,"t0") = false;
         lsf.fit(sa,f,a3,u3,e3);
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
