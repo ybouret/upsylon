@@ -128,7 +128,7 @@ namespace {
             vars.only_on(used,pass[k]);
             if(ls.fit(*s, F, aorg, used, aerr) )
             {
-                vars.display(std::cerr, aorg, used, aerr);
+                display_variables::errors(std::cerr,"\t",vars,aorg,used,aerr);
                 {
                     ios::ocstream fp(filename);
                     s->save(fp);
@@ -155,62 +155,8 @@ namespace {
             }
         }
 
-#if 0
-        if(LS.fit(sample, explode, aorg, used, aerr))
-        {
-            vars.display(std::cerr, aorg, aerr);
-
-
-            vars.display(std::cerr,used,"\t (*) use ");
-
-            std::cerr << std::endl;
-
-            std::cerr << "second pass" << std::endl;
-            LS.verbose = true;
-            tao::ld(used,false);
-            vars(used,"y0")   = true;
-
-            vars.display(std::cerr,used,"\t (*) use ");
-
-            if(LS.fit(sample, explode, aorg, used, aerr))
-            {
-                vars.display(std::cerr, aorg, aerr);
-                std::cerr << std::endl;
-
-                std::cerr << "third pass" << std::endl;
-                tao::ld(used,true);
-
-                vars.display(std::cerr,used,"\t (*) use ");
-
-                if(LS.fit(sample, explode, aorg, used, aerr))
-                {
-                    vars.display(std::cerr, aorg, aerr);
-                    correlation<T> corr;
-                    std::cerr << "corr=" << sample.computeCorrelation(corr) << std::endl;
-                    std::cerr << "R2  =" << sample.computeR2() << std::endl;
-
-                    {
-                        ios::ocstream fp("adjode.dat");
-                        sample.save(fp);
-                    }
-
-                    {
-                        ios::ocstream fp("adjfcn.dat");
-                        T x = 0;
-                        const T dx = T(0.02);
-
-                        fp("%g %g\n",x,explode.start(x,aorg,vars));
-                        for(x+=dx;x<=X->back();x+=dx)
-                        {
-                            fp("%g %g\n",x,explode.reach(x,aorg,vars));
-                        }
-
-                    }
-
-                }
-            }
-        }
-#endif
+        display_variables::values(std::cerr << "aorg" << std::endl, " (*) ", vars, aorg, "//") << std::endl;
+        display_variables::values(std::cerr << "used" << std::endl, NULL,    vars, used, NULL) << std::endl;
 
     }
 
@@ -221,6 +167,7 @@ namespace {
 Y_UTEST(fitting_ode)
 {
     doAdjust<float>();
+    doAdjust<double>();
 
 }
 Y_UTEST_DONE()

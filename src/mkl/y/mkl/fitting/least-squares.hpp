@@ -7,6 +7,8 @@
 #include "y/mkl/fitting/sample/api.hpp"
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
+#include "y/mkl/fitting/variable/display.hpp"
+
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
@@ -155,12 +157,15 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
+                //
                 // compute the fitting step
+                //
                 //
                 //--------------------------------------------------------------
                 bool compute_step(bool &decreasing) throw()
                 {
                 TRY_COMPUTE:
+                    // build the modified covariance matrix
                     const ORDINATE fac = ORDINATE(1) + lambda;
                     covar.assign(alpha);
                     for(size_t i=M;i>0;--i)
@@ -170,16 +175,21 @@ namespace upsylon
                             covar[i][i] *= fac;
                         }
                     }
+
+                    // try to invert it
                     if(!LU::build(covar))
                     {
                         decreasing = false;
                         if(!increase())
                         {
-                            Y_GLS_PRINTLN("singular curvature");
+                            // well, ill conditionned problem...
+                            Y_GLS_PRINTLN("<singular curvature>");
                             return false;
                         }
                         goto TRY_COMPUTE;
                     }
+
+                    // compute step = inv(alpha)*beta
                     tao::set(step,beta);
                     LU::solve(covar,step);
                     return true;

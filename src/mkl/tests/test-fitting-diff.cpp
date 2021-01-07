@@ -190,19 +190,13 @@ Y_UTEST(fitting_diff)
         std::cerr << "sa.R2: " << sa.compute_R2()       << std::endl;
         std::cerr << std::endl;
 
-        sa.vars.format_results(results,a3,u3,e3);
-        for(size_t i=1;i<=results.size();++i)
-        {
-            std::cerr << results[i] << std::endl;
-        }
+        display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
+
 
         (*sa)(u3,"t0") = false;
         lsf.fit(sa,f,a3,u3,e3);
-        sa.vars.format_results(results,a3,u3,e3);
-        for(size_t i=1;i<=results.size();++i)
-        {
-            std::cerr << results[i] << std::endl;
-        }
+        display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
+        
     }
 
 

@@ -60,7 +60,7 @@ inline bool fit(sample_api_type        &s,
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
-        s.vars.display(std::cerr,aorg,used,", used = ","\t(--) ","");
+        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
     }
 
     //--------------------------------------------------------------------------
@@ -70,8 +70,8 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    size_t cycle      = 0;
-    bool   decreasing = true;
+    size_t cycle      = 0;      // cycle indication
+    bool   decreasing = true;   // is lambda decreasing?
 CYCLE:
     ++cycle;
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
@@ -152,7 +152,9 @@ COMPUTE_STEP:
     if(D2_try>D2_org)
     {
         //----------------------------------------------------------------------
-        // reject
+        //
+        // reject, set
+        //
         //----------------------------------------------------------------------
         decreasing = false;
         if(!increase())
@@ -165,7 +167,9 @@ COMPUTE_STEP:
     else
     {
         //----------------------------------------------------------------------
+        //
         // accept
+        //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
         tao::set(aorg,atry);
@@ -173,7 +177,7 @@ COMPUTE_STEP:
 
         if(verbose)
         {
-            s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
+            //s.vars.display(std::cerr,atry,step," (","\t(->) ",")");
         }
 
         // testing variable convergence
@@ -296,7 +300,7 @@ CONVERGED:
         }
         if(verbose)
         {
-            s.vars.display(std::cerr,A,E," \\pm ","\t(*) ","");
+            //s.vars.display(std::cerr,A,E," \\pm ","\t(*) ","");
         }
         return true;
     }
