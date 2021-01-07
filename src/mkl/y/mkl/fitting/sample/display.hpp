@@ -37,8 +37,7 @@ namespace upsylon
                     comm_line.fill(comm,line_size);
 
                     os << comm_line << '\n';
-                    os << comm << ' ' << s.name << '\n';
-
+                    os << comm << " for '" << s.name << "'\n";
                     os << comm << " #data = " << size2text(s.count())   << '\n';
                     os << comm << " #vars = " << size2text(vars.size()) << '\n';
 
@@ -88,12 +87,16 @@ namespace upsylon
 
                     os << comm << " indicators\n";
                     {
-                        correlation<ORDINATE> corr;
-                        os << '\t' << " corr = " << display_variables::real2text( double(s.compute_corr(corr)) ) << '\n';
+                        os << '\t' << "D2   = " << display_variables::real2text( double(s.last_D2) ) << std::endl;
                     }
 
                     {
-                        os << '\t' << " R2   = " << display_variables::real2text( double(s.compute_R2()) ) << '\n';
+                        correlation<ORDINATE> corr;
+                        os << '\t' << "corr = " << display_variables::real2text( double(s.compute_corr(corr)) ) << '\n';
+                    }
+
+                    {
+                        os << '\t' << "R2   = " << display_variables::real2text( double(s.compute_R2()) ) << '\n';
                     }
 
                     os << comm_line << '\n';

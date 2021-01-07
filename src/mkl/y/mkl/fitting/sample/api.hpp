@@ -55,14 +55,14 @@ namespace upsylon
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_type &F, const accessible<ORDINATE> &a)
                 {
-                    return D2_only(F,a);
+                    return save_D2( D2_only(F,a) );
                 }
 
                 //! wrapper for regular function
                 inline ORDINATE D2(sequential_func &f, const accessible<ORDINATE> &a)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
-                    return D2_only(F,a);
+                    return save_D2( D2_only(F,a) );
                 }
                 
                 //!  D2 with curvature and gradient
@@ -75,7 +75,7 @@ namespace upsylon
                 {
                     const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
                     regularize(alpha,beta,used);
-                    return res;
+                    return save_D2(res);
                 }
 
                 //!  D2 with curvature and gradient, wrapper
@@ -89,7 +89,7 @@ namespace upsylon
                     sequential_function<ABSCISSA,ORDINATE> F(f);
                     const ORDINATE res = D2_full(alpha,beta,F,G,A,used);
                     regularize(alpha,beta,used);
-                    return res;
+                    return save_D2(res);
                 }
 
 
@@ -98,6 +98,7 @@ namespace upsylon
                 inline ORDINATE compute_corr(correlation<ORDINATE> &cr) const
                 {
                     cr.free();
+                    cr.ensure( count() );
                     update_correlation(cr);
                     return cr.compute();
                 }
@@ -143,14 +144,16 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const ORDINATE zero; //!< a 0 ordinate
-                const ORDINATE one;  //!< a 1 ordinate
+                const ORDINATE last_D2; //!< saved last direct D2
+                const ORDINATE zero;    //!< a 0 ordinate
+                const ORDINATE one;     //!< a 1 ordinate
                 
             protected:
                 //! setup
                 template <typename ID>
                 inline explicit sample_api( const ID &id):
                 sample_info(id),
+                last_D2(0),
                 zero(0),
                 one(1)
                 {
@@ -165,6 +168,11 @@ namespace upsylon
                                          v_gradient_type            &G,
                                          const accessible<ORDINATE> &A,
                                          const accessible<bool>     &used) = 0;
+
+                inline ORDINATE save_D2( const ORDINATE & d2 ) throw()
+                {
+                    return ( aliasing::_(last_D2) = d2 );
+                }
             };
             
         }
