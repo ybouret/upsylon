@@ -13,8 +13,15 @@ namespace upsylon
         namespace fitting
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! display formatted output
+            //
+            //__________________________________________________________________
             struct display_sample
             {
+                //! display/save current session results
                 template <typename OSTREAM, typename ABSCISSA, typename ORDINATE> static inline
                 void results(OSTREAM                             &os,
                              const sample_api<ABSCISSA,ORDINATE> &s,
@@ -32,7 +39,7 @@ namespace upsylon
                     os << comm_line << '\n';
                     os << comm << ' ' << s.name << '\n';
 
-                    os << comm << " #data = " << size2text(s.count())     << '\n';
+                    os << comm << " #data = " << size2text(s.count())   << '\n';
                     os << comm << " #vars = " << size2text(vars.size()) << '\n';
 
 
@@ -82,16 +89,17 @@ namespace upsylon
                     os << comm << " indicators\n";
                     {
                         correlation<ORDINATE> corr;
-                        os << '\t' << " corr = " << vformat("%.15g", double(s.compute_corr(corr)) ) << '\n';
+                        os << '\t' << " corr = " << display_variables::real2text( double(s.compute_corr(corr)) ) << '\n';
                     }
 
                     {
-                        os << '\t' << " R2   = " << vformat("%.15g", double(s.compute_R2()) ) << '\n';
+                        os << '\t' << " R2   = " << display_variables::real2text( double(s.compute_R2()) ) << '\n';
                     }
 
                     os << comm_line << '\n';
                 }
 
+                //! helper
                 static string size2text(const size_t n);
 
 

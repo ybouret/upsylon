@@ -7,7 +7,7 @@
 
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/mkl/fitting/sample/display.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -158,6 +158,7 @@ namespace {
         display_variables::values(std::cerr << "aorg" << std::endl, " (*) ", vars, aorg, "//") << std::endl;
         display_variables::values(std::cerr << "used" << std::endl, NULL,    vars, used, NULL) << std::endl;
 
+        display_sample::results(std::cerr,*s, aorg, used, aerr);
     }
 
 }

@@ -42,7 +42,7 @@ namespace upsylon
                     for(iterator it=vars.begin();it!=vars.end();++it)
                     {
                         const variable &v = **it;
-                        const string    s = vformat("%.15g",double( v(arr) ) );
+                        const string    s = real2text( double( v(arr) ) );
                         os << prefix << ios::align(v.name,ios::align::left,width) << equal_separator << s << suffix << '\n';
                     }
                     return os;
@@ -126,6 +126,9 @@ namespace upsylon
                     }
                 }
 
+                //! double->string
+                static string real2text( const double );
+
             private:
                 //! make strings from values
                 template <typename ARR> static inline
@@ -136,7 +139,7 @@ namespace upsylon
                     for(iterator it=vars.begin();it!=vars.end();++it)
                     {
                         const variable &v = **it;
-                        const string    s = vformat("%.15g",double( v(arr) ) );
+                        const string    s = real2text( double(v(arr)) );
                         width             = max_of(width,s.size());
                         results << s;
                     }
