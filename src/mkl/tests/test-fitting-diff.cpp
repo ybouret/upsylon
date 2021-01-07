@@ -3,6 +3,7 @@
 #include "y/mkl/fitting/sequential/function.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/least-squares.hpp"
+#include "y/mkl/fitting/sample/display.hpp"
 
 #include "y/type/point2d.hpp"
 #include "y/ios/ocstream.hpp"
@@ -172,14 +173,16 @@ Y_UTEST(fitting_diff)
     {
         std::cerr << "corr1: " << S1.compute_corr(corr) << std::endl;
         std::cerr << "S1.R2: " << S1.compute_R2()       << std::endl;
+        display_sample::results(std::cerr,S1,a2,u2,e2);
         std::cerr << std::endl;
-    }
+     }
 
 
     if(lsf.fit(S2,F,G,a2,u2,e2))
     {
         std::cerr << "corr2: " << S2.compute_corr(corr) << std::endl;
         std::cerr << "S2.R2: " << S2.compute_R2() << std::endl;
+        display_sample::results(std::cerr,S2,a2,u2,e2);
         std::cerr << std::endl;
     }
 
@@ -191,12 +194,14 @@ Y_UTEST(fitting_diff)
         std::cerr << std::endl;
 
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
+        display_sample::results(std::cerr,sa,a3,u3,e3);
 
 
         (*sa)(u3,"t0") = false;
         lsf.fit(sa,f,a3,u3,e3);
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
-        
+        display_sample::results(std::cerr,sa,a3,u3,e3);
+
     }
 
 

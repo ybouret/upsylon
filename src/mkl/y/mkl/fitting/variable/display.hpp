@@ -1,6 +1,5 @@
-
-
 //! \file
+
 #ifndef Y_FITTING_VARIABLE_DISPLAY_INCLUDED
 #define Y_FITTING_VARIABLE_DISPLAY_INCLUDED 1
 
@@ -89,22 +88,6 @@ namespace upsylon
                     return os;
                 }
 
-            private:
-                //! make strings from values
-                template <typename ARR> static inline
-                size_t make_strings(strings &results, const variables &vars, ARR &arr)
-                {
-                    results.free();
-                    size_t width = 0;
-                    for(iterator it=vars.begin();it!=vars.end();++it)
-                    {
-                        const variable &v = **it;
-                        const string    s = vformat("%.15g",double( v(arr) ) );
-                        width             = max_of(width,s.size());
-                        results << s;
-                    }
-                    return width;
-                }
 
                 //! format var = value +/- error (percent)
                 template <typename ARR> static inline
@@ -142,6 +125,24 @@ namespace upsylon
                         results.push_back(output);
                     }
                 }
+
+            private:
+                //! make strings from values
+                template <typename ARR> static inline
+                size_t make_strings(strings &results, const variables &vars, ARR &arr)
+                {
+                    results.free();
+                    size_t width = 0;
+                    for(iterator it=vars.begin();it!=vars.end();++it)
+                    {
+                        const variable &v = **it;
+                        const string    s = vformat("%.15g",double( v(arr) ) );
+                        width             = max_of(width,s.size());
+                        results << s;
+                    }
+                    return width;
+                }
+
 
             };
 
