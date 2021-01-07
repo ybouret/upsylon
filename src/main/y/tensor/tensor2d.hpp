@@ -99,8 +99,20 @@ namespace upsylon {
         
         //! addressable interface
         inline virtual size_t size() const throw() { return rows; }
-        
-        
+
+        //----------------------------------------------------------------------
+        //
+        // other methods
+        //
+        //----------------------------------------------------------------------
+        inline void ld(param_type value)
+        {
+            tensor2d &self = *this;
+            for(size_t j=rows;j>0;--j)
+            {
+                self[j].ld(value);
+            }
+        }
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor2d);

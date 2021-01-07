@@ -32,7 +32,7 @@ namespace upsylon {
  
     //--------------------------------------------------------------------------
     //
-    //! tensor3d
+    //! tensor4d
     //
     //--------------------------------------------------------------------------
     template <typename T>
@@ -110,6 +110,21 @@ namespace upsylon {
         {
             return frames;
         }
+
+        //----------------------------------------------------------------------
+        //
+        // methods
+        //
+        //----------------------------------------------------------------------
+        inline void ld(param_type value)
+        {
+            tensor4d &self = *this;
+            for(size_t l=frames;l>0;--l)
+            {
+                self[l].ld(value);
+            }
+        }
+
         
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor4d);

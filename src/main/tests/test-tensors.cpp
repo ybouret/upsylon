@@ -22,7 +22,10 @@ namespace {
             {
                 tensor1d<T> t1( 1+alea.leq(100) );
                 std::cerr << "tensor1d<" << id << ">.bytes=" << t1.allocated() << std::endl;
-                
+
+                const T tt = support::get<T>();
+                t1.ld(tt);
+
                 collect.free();
                 for(size_t i=1;i<=t1.cols;++i)
                 {
@@ -52,14 +55,15 @@ namespace {
                     Y_ASSERT( collect.front() == k1[i] );
                     collect.pop_front();
                 }
-
-                
             }
             
             {
                 tensor2d<T> t2( 1+alea.leq(100), 1+alea.leq(100) );
                 std::cerr << "tensor2d<" << id << ">.bytes=" << t2.allocated() << std::endl;
-                
+
+                const T tt = support::get<T>();
+                t2.ld(tt);
+
                 collect.free();
                 for(size_t j=1;j<=t2.rows;++j)
                 {
@@ -109,7 +113,10 @@ namespace {
                 tensor3d<T> t3( 1+alea.leq(20), 1+alea.leq(20), 1+alea.leq(20) );
                 std::cerr << "tensor3d<" << id << ">.bytes=" << t3.allocated() << std::endl;
                 collect.free();
-                
+
+                const T tt = support::get<T>();
+                t3.ld(tt);
+
                 for(size_t k=1;k<=t3.slices;++k)
                 {
                     for(size_t j=1;j<=t3.rows;++j)
@@ -165,7 +172,10 @@ namespace {
                 tensor4d<T> t4( 1+alea.leq(10), 1+alea.leq(10), 1+alea.leq(10), 1+alea.leq(10) );
                 std::cerr << "tensor4d<" << id << ">.bytes=" << t4.allocated() << std::endl;
                 collect.free();
-                
+
+                const T tt = support::get<T>();
+                t4.ld(tt);
+
                 for(size_t l=1;l<=t4.frames;++l)
                 {
                     for(size_t k=1;k<=t4.slices;++k)

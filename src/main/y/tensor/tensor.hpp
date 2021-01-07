@@ -10,19 +10,41 @@ namespace upsylon {
 
     namespace core {
 
+        //______________________________________________________________________
+        //
+        //
         //! base class for tensors
+        //
+        //______________________________________________________________________
         class tensor
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             static const size_t max_dimensions = 4; //!< up to tensor4d
 
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
             virtual        ~tensor()           throw(); //!< cleanup
+            
+            //__________________________________________________________________
+            //
+            // public methods
+            //__________________________________________________________________
             const   size_t *lower()      const throw(); //!< lower indices
             const   size_t *upper()      const throw(); //!< upper indices
             size_t          allocated()  const throw(); //!< private bytes
 
+            //__________________________________________________________________
+            //
+            // public members
+            //__________________________________________________________________
             const size_t    dimensions; //!< current dimension
-
+            
 
         protected:
             explicit tensor() throw();                      //!< setup

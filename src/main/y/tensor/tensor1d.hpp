@@ -126,7 +126,21 @@ namespace upsylon {
         
         //! access, const
         inline virtual const_type & operator[](const size_t indx) const throw() { assert(indx>0); assert(indx<=cols); return __col[indx]; }
-        
+
+        //----------------------------------------------------------------------
+        //
+        // other methods
+        //
+        //----------------------------------------------------------------------
+        inline void ld(param_type value)
+        {
+            tensor1d &self = *this;
+            for(size_t i=cols;i>0;--i)
+            {
+               self[i]=value;
+            }
+        }
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor1d);

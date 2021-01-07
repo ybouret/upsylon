@@ -106,7 +106,22 @@ namespace upsylon {
         {
             return slices;
         }
-        
+
+        //----------------------------------------------------------------------
+        //
+        // methods
+        //
+        //----------------------------------------------------------------------
+        inline void ld(param_type value)
+        {
+            tensor3d &self = *this;
+            for(size_t k=slices;k>0;--k)
+            {
+                self[k].ld(value);
+            }
+        }
+
+
     private:
         Y_DISABLE_COPY_AND_ASSIGN(tensor3d);
         slice * __slice;
