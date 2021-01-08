@@ -6,7 +6,7 @@
 
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
-
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -31,11 +31,13 @@ namespace
         
         addressable<T> &X = s->abscissa;
         addressable<T> &Y = s->ordinate;
-        
+        addressable<T> &Z = s->adjusted;
+
         hsort(X,Y,comparison::increasing<T>);
         
-        built_in::polynomial<T> poly("a",5);
+        built_in::polynomial<T> poly("a",4);
         vector<T>               aorg(poly.coeffs,0);
+        vector<T>               aerr(poly.coeffs,0);
         vector<bool>            used(poly.coeffs,false);
         variables              &vars = **s;
         
@@ -44,20 +46,41 @@ namespace
         std::cerr << "poly: " << poly.vnames << std::endl;
         std::cerr << "vars: " << vars        << std::endl;
         
-        aorg[1] = 0;
-        aorg[2] = 1;
+        
+        
+        least_squares<T,T> ls(true);
+        const string fileName = "poly-" + type_name_of<T>() + ".dat";
         
         {
-            ios::ocstream fp("poly.dat");
+            ios::ocstream fp(fileName);
             for(size_t i=1;i<=n;++i)
             {
-                fp("%g %g %g\n", X[i], Y[i], poly.eval(X[i], aorg, vars) );
+                fp("%g %g\n", X[i], Y[i]);
             }
-            
+            fp << "\n";
         }
         
-        
-        
+        for(size_t i=1;i<=poly.coeffs;++i)
+        {
+            used[i] = true;
+            if(i>1)
+            {
+                used[1] = false;
+                aorg[1] = 0;
+            }
+            if( ls.fit(*s,poly,poly,aorg,used,aerr) )
+            {
+                display_variables::errors(std::cerr,NULL, vars, aorg, used, aerr);
+                ios::ocstream fp(fileName,true);
+                for(size_t i=1;i<=n;++i)
+                {
+                    fp("%g %g\n", X[i], Z[i]);
+                }
+                fp << "\n";
+            }
+        }
+        display_sample::results(std::cerr,*s,aorg, used, aerr);
+
         
     }
     
