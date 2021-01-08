@@ -24,22 +24,37 @@ namespace
         auto_ptr<sample_type> s = sample_type::create("poly",n);
         for(size_t i=n;i>0;--i)
         {
-            const T x = numeric<T>::two_pi * alea.to<T>();
+            const T x = T(2) * alea.to<T>();
             const T y = sin_of(x);
             s->add(x,y);
         }
         
-        hsort(s->abscissa,s->ordinate,comparison::increasing<T>);
+        addressable<T> &X = s->abscissa;
+        addressable<T> &Y = s->ordinate;
+        
+        hsort(X,Y,comparison::increasing<T>);
         
         built_in::polynomial<T> poly("a",5);
         vector<T>               aorg(poly.coeffs,0);
         vector<bool>            used(poly.coeffs,false);
+        variables              &vars = **s;
         
-        poly.make(**s);
+        poly.make(vars);
         
         std::cerr << "poly: " << poly.vnames << std::endl;
-        std::cerr << "vars: " << **s         << std::endl;
-
+        std::cerr << "vars: " << vars        << std::endl;
+        
+        aorg[1] = 0;
+        aorg[2] = 1;
+        
+        {
+            ios::ocstream fp("poly.dat");
+            for(size_t i=1;i<=n;++i)
+            {
+                fp("%g %g %g\n", X[i], Y[i], poly.eval(X[i], aorg, vars) );
+            }
+            
+        }
         
         
         
