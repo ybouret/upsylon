@@ -14,7 +14,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
  
-#include "y/ios/ocstream.hpp"
+//#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {

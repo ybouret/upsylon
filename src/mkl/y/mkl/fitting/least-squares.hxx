@@ -92,7 +92,7 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    ios::ocstream::overwrite("d2.dat");
+    //ios::ocstream::overwrite("d2.dat");
     size_t cycle      = 0;      // cycle indication
     bool   decreasing = true;   // is lambda decreasing?
 CYCLE:
@@ -136,12 +136,7 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     tao::add(atry,aorg,step);
-    
-    //--------------------------------------------------------------------------
-    //
-    // TODO: control atry
-    //
-    //--------------------------------------------------------------------------
+
     
     //--------------------------------------------------------------------------
     //
@@ -168,7 +163,7 @@ COMPUTE_STEP:
         {
             const ORDINATE a_new = atry[i];
             const ORDINATE a_old = aorg[i];
-            step[i] = a_new - a_old;
+            step[i]              = a_new - a_old;
         }
         
     }
@@ -205,6 +200,7 @@ COMPUTE_STEP:
         //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
+#if 0
         {
             ios::ocstream fp("d2.dat",true);
             for(ORDINATE u=0;u<=2;u+=ORDINATE(0.02))
@@ -213,7 +209,12 @@ COMPUTE_STEP:
             }
             fp << '\n';
         }
-        
+        if(D2_org>=sigma_over_two)
+        {
+            std::cerr << std::endl << " ---- should expand ---- " << std::endl << std::endl;
+        }
+#endif
+
         tao::set(aorg,atry);
         decrease();
         
