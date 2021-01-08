@@ -112,7 +112,8 @@ namespace upsylon {
         // methods
         //
         //----------------------------------------------------------------------
-        inline void ld(param_type value)
+        // load same value
+        inline virtual void ld(param_type value)
         {
             tensor3d &self = *this;
             for(size_t k=slices;k>0;--k)

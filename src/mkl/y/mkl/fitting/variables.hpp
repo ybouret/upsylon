@@ -187,9 +187,9 @@ namespace upsylon
                 //
                 // other methods
                 //______________________________________________________________
-                size_t max_name_length() const throw(); //!< max of name lengths
-                size_t sweep()           const throw(); //!< max of index values
-
+                size_t max_name_length() const throw();             //!< max of name lengths
+                size_t sweep()           const throw();             //!< max of index values
+                size_t used_in(const accessible<bool> &used) const; //!< check used
                 
 
 

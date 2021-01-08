@@ -105,7 +105,8 @@ namespace upsylon {
         // other methods
         //
         //----------------------------------------------------------------------
-        inline void ld(param_type value)
+        //! load same value
+        inline virtual void ld(param_type value)
         {
             tensor2d &self = *this;
             for(size_t j=rows;j>0;--j)

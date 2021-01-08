@@ -31,12 +31,13 @@ namespace upsylon
     template <typename T> inline int sign_of( const T a ) { return (a<0) ? -1 : (  (0<a) ? 1 : 0 );     }
 
     //! default clamping of value
-    template <typename T> inline T clamp( const T amin, const T a, const T amax ) { return (a<amin) ? amin : ( (amax<a) ? amax : a );     }
+    template <typename T> inline T   clamp( const T amin, const T a, const T amax ) { return (a<amin) ? amin : ( (amax<a) ? amax : a );     }
 
     //! default squared value
-    template <typename T> inline T square_of( const T a ) { return a*a; }
+    template <typename T> inline T   square_of( const T a ) { return a*a; }
 
-   
+    //! default twice value
+    template <typename T> inline T   twice( const T a ) { return a+a; }
    
    
 

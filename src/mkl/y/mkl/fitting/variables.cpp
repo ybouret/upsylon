@@ -98,6 +98,16 @@ namespace upsylon
                 return has(_);
             }
 
+            size_t variables:: used_in(const accessible<bool> &used) const
+            {
+                size_t ans = 0;
+                for(const_iterator it=begin();it!=end();++it)
+                {
+                    if( (**it)(used) ) ++ans;
+                }
+                return ans;
+            }
+
         }
     }
 }

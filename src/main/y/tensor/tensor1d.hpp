@@ -58,6 +58,8 @@ namespace upsylon {
                 return (type &)at(indices);
             }
 
+            //! load same value for all
+            virtual void ld(param_type value) = 0;
 
         protected:
             //! setup
@@ -132,7 +134,8 @@ namespace upsylon {
         // other methods
         //
         //----------------------------------------------------------------------
-        inline void ld(param_type value)
+        //! load same value
+        inline virtual void ld(param_type value)
         {
             tensor1d &self = *this;
             for(size_t i=cols;i>0;--i)

@@ -122,7 +122,8 @@ COMPUTE_STEP:
     // compute the descent slope
     //
     //--------------------------------------------------------------------------
-    const ORDINATE sigma = 2*tao::dot<ORDINATE>::of(beta,step);
+    const ORDINATE sigma_over_two = tao::dot<ORDINATE>::of(beta,step);
+    const ORDINATE sigma          = sigma_over_two + sigma_over_two;
     if(sigma<0)
     {
         Y_GLS_PRINTLN("<negative sigma>");
@@ -276,8 +277,7 @@ CONVERGED:
         return false;
     }
     LU::inverse(alpha,covar);
-    //Y_GLS_PRINTLN("covar    = " << covar);
-    
+
     //--------------------------------------------------------------------------
     //
     // set new parameters
@@ -291,12 +291,9 @@ CONVERGED:
     // compute d.o.f
     //
     //--------------------------------------------------------------------------
-    size_t ndof = s.count();
-    size_t nuse = 0;
-    for(size_t i=M;i>0;--i)
-    {
-        if(used[i]) ++nuse;
-    }
+    size_t       ndof = s.count();
+    const size_t nuse = s.vars.used_in(used);
+
     
     if(nuse>ndof)
     {

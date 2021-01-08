@@ -38,8 +38,8 @@ namespace upsylon
 
                     os << comm_line << '\n';
                     os << comm << " for '" << s.name << "'\n";
-                    os << comm << " #data = " << size2text(s.count())   << '\n';
-                    os << comm << " #vars = " << size2text(vars.size()) << '\n';
+                    os << comm << " #data       = " << size2text(s.count())   << '\n';
+                    os << comm << " #variables  = " << size2text(vars.size()) << '\n';
 
 
                     {
@@ -63,7 +63,7 @@ namespace upsylon
                         }
 
                         // display set parameters
-                        os << comm << " #set  = " << size2text(nprm)  << '\n';
+                        os << comm << " #parameters = " << size2text(nprm)  << '\n';
                         {
                             size_t j=1;
                             for(variables::const_iterator it=vars.begin();it!=vars.end();++it,++j)
@@ -74,7 +74,7 @@ namespace upsylon
                         }
 
                         // display used parameters
-                        os << comm << " #used = " << size2text(nuse) << '\n';
+                        os << comm << " #active     = " << size2text(nuse) << '\n';
                         {
                             size_t j=1;
                             for(variables::const_iterator it=vars.begin();it!=vars.end();++it,++j)

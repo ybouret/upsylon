@@ -13,11 +13,8 @@
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
-
-#define Y_GLS_DEBUG 1
-#if defined(Y_GLS_DEBUG) && 1 == Y_GLS_DEBUG
+ 
 #include "y/ios/ocstream.hpp"
-#endif
 
 namespace upsylon
 {
