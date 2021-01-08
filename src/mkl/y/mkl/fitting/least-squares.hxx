@@ -76,7 +76,7 @@ inline bool fit(sample_api_type        &s,
     tao::ld(E,-1);
     s.setup(A);
     
-    d2_wrapper f = { &s, &F, &aorg, &step, &atmp };
+    //d2_wrapper f = { &s, &F, &aorg, &step, &atmp };
     
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
