@@ -36,7 +36,8 @@ inline bool fit(sample_api_type        &s,
                 v_gradient_type        &G,
                 addressable<ORDINATE>  &A,
                 const accessible<bool> &U,
-                addressable<ORDINATE>  &E)
+                addressable<ORDINATE>  &E,
+                const unsigned          flags=0x00)
 {
     //--------------------------------------------------------------------------
     //
@@ -45,9 +46,10 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    static const ORDINATE vtol = numeric<ORDINATE>::ftol;
-    static const ORDINATE dtol = numeric<ORDINATE>::sqrt_ftol;
-    
+    static const ORDINATE vtol  = numeric<ORDINATE>::ftol;
+    static const ORDINATE dtol  = numeric<ORDINATE>::sqrt_ftol;
+    static const ORDINATE ufac  = numeric<ORDINATE>::gold;
+
     //--------------------------------------------------------------------------
     //
     // variables
@@ -76,8 +78,9 @@ inline bool fit(sample_api_type        &s,
     tao::ld(E,-1);
     s.setup(A);
     
-    //d2_wrapper f = { &s, &F, &aorg, &step, &atmp };
-    
+    d2_wrapper f1D    = { &s, &F, &aorg, &step, &atmp };
+    const bool expand = 0 != (flags&Y_GLS_EXPAND);
+
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
@@ -132,49 +135,23 @@ COMPUTE_STEP:
     
     //--------------------------------------------------------------------------
     //
-    // OK, numerically acceptable step, compute atry
+    // OK, numerically acceptable step, compute atry and recompute step
     //
     //--------------------------------------------------------------------------
-    tao::add(atry,aorg,step);
-
-    
-    //--------------------------------------------------------------------------
-    //
-    // recompute step and check variable convergence for later
-    //
-    //--------------------------------------------------------------------------
-    bool converged = true;
+    for(size_t i=M;i>0;--i)
     {
-        size_t i=M;
-        for(;i>0;--i)
-        {
-            const ORDINATE a_new = atry[i];
-            const ORDINATE a_old = aorg[i];
-            const ORDINATE da    = fabs_of( step[i] = a_new - a_old );
-            if( da > vtol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
-            {
-                converged = false;
-                --i;
-                break;
-            }
-        }
-        
-        for(;i>0;--i)
-        {
-            const ORDINATE a_new = atry[i];
-            const ORDINATE a_old = aorg[i];
-            step[i]              = a_new - a_old;
-        }
-        
+        atry[i] = aorg[i] + step[i];
+        step[i] = atry[i] - aorg[i];
     }
-    
+
+
     
     //--------------------------------------------------------------------------
     //
     // compute trial D2
     //
     //--------------------------------------------------------------------------
-    const ORDINATE D2_try = s.D2(F,atry);
+    ORDINATE       D2_try  = s.D2(F,atry);
     Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << p << ", decreasing = " << textual::boolean(decreasing));
     
     if(D2_try>D2_org)
@@ -200,31 +177,89 @@ COMPUTE_STEP:
         //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
-#if 0
+
+        //----------------------------------------------------------------------
+        // update position
+        //----------------------------------------------------------------------
+#if 1
         {
-            ios::ocstream fp("d2.dat",true);
+            ios::ocstream fp("d2.dat",false);
             for(ORDINATE u=0;u<=2;u+=ORDINATE(0.02))
             {
-                fp("%.15g %.15e %.15e\n",u,f(u),D2_org - sigma*u);
+                fp("%.15g %.15e %.15e\n",u,f1D(u),D2_org - sigma*u);
             }
             fp << '\n';
         }
-        if(D2_org>=sigma_over_two)
-        {
-            std::cerr << std::endl << " ---- should expand ---- " << std::endl << std::endl;
-        }
+
 #endif
 
-        tao::set(aorg,atry);
-        decrease();
-        
-        
-        
+        if(expand)
+        {
+            //------------------------------------------------------------------
+            // try speed up decreasing by look up
+            //------------------------------------------------------------------
+
+            // setup triplets
+            triplet<ORDINATE> u = { 0, 1, ufac };
+            triplet<ORDINATE> f = { D2_org, D2_try, f1D(u.c) };
+
+            // bracket minimum
+            while(f.c<f.b)
+            {
+                u.c *= ufac;
+                f.c  = f1D(u.c);
+            }
+
+            // reduce interval
+            do {
+                minimize::__step(f1D, u, f);
+            } while( u.c-u.a > 1e-2 );
+
+            // compute new point@ atry and recompute step
+            D2_try = f1D(u.b);
+            for(size_t i=M;i>0;--i)
+            {
+                atry[i] = atmp[i];
+                step[i] = atry[i]-aorg[i];
+            }
+            Y_GLS_PRINTLN("D2_opt  = " << D2_try);
+
+        }
+
         if(verbose)
         {
             display_variables::values(std::cerr, "\t(->) ", s.vars, atry, " (", step, ")");
         }
-        
+
+        //----------------------------------------------------------------------
+        // update algorithm status, with aorg, atry and step
+        //----------------------------------------------------------------------
+        decrease();
+
+        bool converged = true;
+        {
+            size_t i=M;
+            for(;i>0;--i)
+            {
+                const ORDINATE a_new = atry[i];
+                const ORDINATE a_old = aorg[i];
+                const ORDINATE da    = fabs_of( step[i] );
+                aorg[i] = a_new;
+                if( da > vtol * max_of( fabs_of(a_new), fabs_of(a_old) ) )
+                {
+                    converged = false;
+                    --i;
+                    break;
+                }
+            }
+
+            for(;i>0;--i)
+            {
+                aorg[i] = atry[i];
+            }
+
+        }
+
         // testing variable convergence
         if(converged)
         {

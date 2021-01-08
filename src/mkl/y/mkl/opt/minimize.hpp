@@ -91,7 +91,7 @@ namespace upsylon {
              \param how  pre-processing:
              - direct: x,f are ready
              - inside: bracket inside (x.a,x.c)
-             - expand: bracket expand frin (x.a,x.b)
+             - expand: bracket expand from (x.a,x.b)
              \param xtol stop at xtol
              */
             template <typename T, typename FUNC> static inline

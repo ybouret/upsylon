@@ -8,13 +8,12 @@
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/variable/display.hpp"
-
+#include "y/mkl/opt/minimize.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
- 
-//#include "y/ios/ocstream.hpp"
+#include "y/ios/ocstream.hpp"
 
 namespace upsylon
 {
@@ -32,6 +31,8 @@ namespace upsylon
                 static const char prefix[]; //!< "[fit] "
             };
 
+            //! flag to expand look up upon decreasing D2
+#define Y_GLS_EXPAND 0x01
 
             //! for verbose output
 #define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << __least_squares::prefix << MSG << std::endl; } } while(false)
@@ -115,11 +116,12 @@ namespace upsylon
                                 sequential_type        &F,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
-                                addressable<ORDINATE>  &E)
+                                addressable<ORDINATE>  &E,
+                                const unsigned          flags=0x00)
                 {
                     sequential_grad &G = grad();
                     G.F = &F;
-                    return fit(s,F,G,A,U,E);
+                    return fit(s,F,G,A,U,E,flags);
                 }
 
                 //! fit with a regular function
@@ -130,10 +132,11 @@ namespace upsylon
                                 sequential_func        &f,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
-                                addressable<ORDINATE>  &E)
+                                addressable<ORDINATE>  &E,
+                                const unsigned          flags=0x00)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
-                    return fit(s,F,A,U,E);
+                    return fit(s,F,A,U,E,flags);
                 }
 
                 //______________________________________________________________

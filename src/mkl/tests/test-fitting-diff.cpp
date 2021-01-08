@@ -20,12 +20,14 @@ namespace
     class Diffusion
     {
     public:
-        inline  Diffusion() throw() {}
+        size_t calls;
+        inline  Diffusion() throw() : calls(0) {}
         inline ~Diffusion() throw() {}
 
 
         inline double compute(const double t, const accessible<double> &aorg, const variables &vars)
         {
+            ++calls;
             const double t0 = vars(aorg,"t0");
             const double D  = vars(aorg,"D");
             //std::cerr << "diffusion(" << t << "," << t0 << "," << D << ")" << std::endl;
@@ -57,6 +59,15 @@ namespace
 
 Y_UTEST(fitting_diff)
 {
+    unsigned flags = 0x00;
+    if(argc>1)
+    {
+        const string s = argv[1];
+        if(s=="opt")
+        {
+            flags = Y_GLS_EXPAND;
+        }
+    }
     typedef sample<double,double>  sample_type;
     typedef samples<double,double> samples_type;
     typedef sequential_function<double,double> seq_type;
@@ -169,28 +180,35 @@ Y_UTEST(fitting_diff)
 
     vector<string> results;
 
-    if(lsf.fit(S1,F,G,a2,u2,e2))
+    diff.calls = 0;
+    if(lsf.fit(S1,F,G,a2,u2,e2,flags))
     {
         std::cerr << "corr1: " << S1.compute_corr(corr) << std::endl;
         std::cerr << "S1.R2: " << S1.compute_R2()       << std::endl;
+        std::cerr << "calls: " << diff.calls << std::endl;
         display_sample::results(std::cerr,S1,a2,u2,e2);
         std::cerr << std::endl;
      }
 
 
-    if(lsf.fit(S2,F,G,a2,u2,e2))
+    
+    diff.calls = 0;
+    if(lsf.fit(S2,F,G,a2,u2,e2,flags))
     {
         std::cerr << "corr2: " << S2.compute_corr(corr) << std::endl;
         std::cerr << "S2.R2: " << S2.compute_R2() << std::endl;
+        std::cerr << "calls: " << diff.calls << std::endl;
         display_sample::results(std::cerr,S2,a2,u2,e2);
         std::cerr << std::endl;
     }
 
+    diff.calls = 0;
     vector<double> e3(3,0);
-    if(lsf.fit(sa,f,a3,u3,e3))
+    if(lsf.fit(sa,f,a3,u3,e3,flags))
     {
         std::cerr << "corrA: " << sa.compute_corr(corr) << std::endl;
         std::cerr << "sa.R2: " << sa.compute_R2()       << std::endl;
+        std::cerr << "calls: " << diff.calls << std::endl;
         std::cerr << std::endl;
 
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);

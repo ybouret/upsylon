@@ -19,7 +19,8 @@ namespace {
     class Damped : public ODE::ExplicitAdjust<T>
     {
     public:
-        explicit Damped() throw()
+        mutable size_t calls;
+        explicit Damped() throw() : calls(0)
         {
         }
 
@@ -57,6 +58,7 @@ namespace {
             const T speed    = Y[2];
             dYdt[1] = speed;
             dYdt[2] = -mu * speed - (om*om)*position;
+            ++calls;
         }
 
         virtual T query(const T              ,
@@ -97,8 +99,8 @@ namespace {
         }
         ios::ocstream::overwrite(savename);
 
-
-        typename ODE::ExplicitAdjust<T>::Pointer crunch = new Damped<T>();
+        Damped<T> *damped = new Damped<T>();
+        typename ODE::ExplicitAdjust<T>::Pointer crunch = damped;
         typename ODE::ExplicitSolver<T>::Pointer solver = ODE::DriverCK<T>::New();
         correlation<T>                           corr;
 
@@ -114,51 +116,62 @@ namespace {
         vector<bool> used( aorg.size(), true);
         vector<T>    aerr( aorg.size() );
 
-        vars(aorg,"mu")    = 0.5;
-        vars(aorg,"omega") = 2.5;
-        vars(aorg,"y0")    = 1;
-        vars(used,"y0")    = false;
+
 
         const char * pass[] =
         {
             "mu:omega", "y0", "mu:omega:y0"
         };
-        for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
+
+        const unsigned flags[] = { 0 , Y_GLS_EXPAND };
+        vector<size_t> calls;
+        for(size_t q=0;q<sizeof(flags)/sizeof(flags[0]);++q)
         {
-            vars.only_on(used,pass[k]);
-            if(ls.fit(*s, F, aorg, used, aerr) )
+            vars(aorg,"mu")    = 0.5;
+            vars(aorg,"omega") = 2.5;
+            vars(aorg,"y0")    = 1;
+            damped->calls      = 0;
+            for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
             {
-                display_variables::errors(std::cerr,"\t",vars,aorg,used,aerr);
+                vars.only_on(used,pass[k]);
+                if(ls.fit(*s, F, aorg, used, aerr, flags[q]) )
                 {
-                    ios::ocstream fp(filename);
-                    s->save(fp);
-                }
-                std::cerr<< "R2    = " << s->compute_R2() << std::endl;
-                std::cerr<< "corr  = " << s->compute_corr(corr) << std::endl;
-                {
-                    ios::ocstream fp(savename);
-                    T        x = 0;
-                    const T dx = T(0.02);
-
-                    fp("%g %g\n",x,F.start(x,aorg,vars));
-                    for(x+=dx;x<=s->abscissa->back();x+=dx)
+                    display_variables::errors(std::cerr,"\t",vars,aorg,used,aerr);
                     {
-                        fp("%g %g\n",x,F.reach(x,aorg,vars));
+                        ios::ocstream fp(filename);
+                        s->save(fp);
                     }
+                    std::cerr<< "R2    = " << s->compute_R2() << std::endl;
+                    std::cerr<< "corr  = " << s->compute_corr(corr) << std::endl;
+                    {
+                        ios::ocstream fp(savename);
+                        T        x = 0;
+                        const T dx = T(0.02);
 
+                        fp("%g %g\n",x,F.start(x,aorg,vars));
+                        for(x+=dx;x<=s->abscissa->back();x+=dx)
+                        {
+                            fp("%g %g\n",x,F.reach(x,aorg,vars));
+                        }
+
+                    }
+                }
+                else
+                {
+                    std::cerr << "couldn't fit '" << pass[k] << "'" << std::endl;
+                    break;
                 }
             }
-            else
-            {
-                std::cerr << "couldn't fit '" << pass[k] << "'" << std::endl;
-                break;
-            }
+
+            display_variables::values(std::cerr << "aorg" << std::endl, " (*) ", vars, aorg, "//") << std::endl;
+            display_variables::values(std::cerr << "used" << std::endl, NULL,    vars, used, NULL) << std::endl;
+
+            display_sample::results(std::cerr,*s, aorg, used, aerr);
+            std::cerr << "#calls=" << damped->calls << std::endl;
+            calls.push_back(damped->calls);
         }
+        std::cerr << "calls=" << calls << std::endl;
 
-        display_variables::values(std::cerr << "aorg" << std::endl, " (*) ", vars, aorg, "//") << std::endl;
-        display_variables::values(std::cerr << "used" << std::endl, NULL,    vars, used, NULL) << std::endl;
-
-        display_sample::results(std::cerr,*s, aorg, used, aerr);
     }
 
 }
