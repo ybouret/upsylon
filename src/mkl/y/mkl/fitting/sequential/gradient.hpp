@@ -44,7 +44,7 @@ namespace upsylon
                 v_gradient_type(),
                 derivative_type(),
                 F(NULL),
-                h(1e-4) {}
+                h( ORDINATE(1e-4) ) {}
 
                 inline virtual ~sequential_gradient() throw() {}
 
