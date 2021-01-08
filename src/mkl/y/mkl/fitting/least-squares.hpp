@@ -71,6 +71,7 @@ namespace upsylon
                 aorg(),
                 atry(),
                 step(),
+                atmp(),
                 used(),
                 verbose(verbosity),
                 grad_(0)
