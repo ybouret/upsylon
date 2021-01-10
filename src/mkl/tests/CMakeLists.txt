@@ -101,7 +101,7 @@ ADD_TEST(fitting:sample  test-mkl fitting_sample)
 ADD_TEST(fitting:diff    test-mkl fitting_diff)
 ADD_TEST(fitting:circles test-mkl fitting_circles)
 ADD_TEST(fitting:ode     test-mkl fitting_ode)
-ADD_TEST(fitting:poly    test-mkl fitting-poly)
+ADD_TEST(fitting:poly    test-mkl fitting_poly)
 
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

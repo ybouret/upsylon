@@ -72,9 +72,9 @@ inline bool fit(sample_api_type        &s,
     atry.adjust(M,s.zero);
     step.adjust(M,s.zero);
     atmp.adjust(M,s.zero);
-    used.adjust(M,false);
+    //used.adjust(M,false);
     tao::set(aorg,A);
-    tao::set(used,U);
+    //tao::set(used,U);
     tao::ld(E,-1);
     s.setup(A);
     
@@ -84,7 +84,7 @@ inline bool fit(sample_api_type        &s,
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
-        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
+        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", U, NULL);
     }
     
     
@@ -95,7 +95,6 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    //ios::ocstream::overwrite("d2.dat");
     size_t cycle      = 0;      // cycle indication
     bool   decreasing = true;   // is lambda decreasing?
 CYCLE:
@@ -111,7 +110,7 @@ CYCLE:
     //
     //--------------------------------------------------------------------------
 COMPUTE_STEP:
-    if(!compute_step(decreasing))
+    if(!compute_step(decreasing,U))
     {
         // here, a singular curvature is met
         return false;
@@ -181,18 +180,6 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         // update position
         //----------------------------------------------------------------------
-#if 1
-        {
-            ios::ocstream fp("d2.dat",false);
-            for(ORDINATE u=0;u<=2;u+=ORDINATE(0.02))
-            {
-                fp("%.15g %.15e %.15e\n",u,f1D(u),D2_org - sigma*u);
-            }
-            fp << '\n';
-        }
-
-#endif
-
         if(expand)
         {
             //------------------------------------------------------------------
@@ -200,7 +187,7 @@ COMPUTE_STEP:
             //------------------------------------------------------------------
 
             // setup triplets
-            triplet<ORDINATE> u = { 0, 1, ufac };
+            triplet<ORDINATE> u = { 0,      1,      ufac     };
             triplet<ORDINATE> f = { D2_org, D2_try, f1D(u.c) };
 
             // bracket minimum
@@ -211,7 +198,8 @@ COMPUTE_STEP:
             }
 
             // reduce interval
-            do {
+            do
+            {
                 minimize::__step(f1D, u, f);
             } while( u.c-u.a > 1e-2 );
 
@@ -300,7 +288,7 @@ CONVERGED:
     // final D2
     //
     //--------------------------------------------------------------------------
-    D2_org = s.D2(alpha,beta,F,G,aorg,used);
+    D2_org = s.D2(alpha,beta,F,G,aorg,U);
     
     //--------------------------------------------------------------------------
     //
@@ -328,7 +316,7 @@ CONVERGED:
     //
     //--------------------------------------------------------------------------
     size_t       ndof = s.count();
-    const size_t nuse = s.vars.used_in(used);
+    const size_t nuse = s.vars.used_in(U);
 
     
     if(nuse>ndof)
@@ -365,7 +353,7 @@ CONVERGED:
         const size_t n2 = ndof*ndof;
         for(size_t i=M;i>0;--i)
         {
-            if(used[i])
+            if(U[i])
             {
                 E[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
             }

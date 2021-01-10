@@ -73,7 +73,6 @@ namespace upsylon
                 atry(),
                 step(),
                 atmp(),
-                used(),
                 verbose(verbosity),
                 grad_(0)
                 {
@@ -154,7 +153,7 @@ namespace upsylon
                 vector_type                   atry;    //!< trial point
                 vector_type                   step;    //!< computed step
                 vector_type                   atmp;    //!< for probing
-                vector<bool>                  used;    //!< used parameters
+                //vector<bool>                  used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 
@@ -169,7 +168,7 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                bool compute_step(bool &decreasing) throw()
+                bool compute_step(bool &decreasing, const accessible<bool> &used) throw()
                 {
                 TRY_COMPUTE:
                     // build the modified covariance matrix
