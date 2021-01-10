@@ -127,8 +127,8 @@ namespace {
         vector<size_t> calls;
         for(size_t q=0;q<sizeof(flags)/sizeof(flags[0]);++q)
         {
-            vars(aorg,"mu")    = 0.5;
-            vars(aorg,"omega") = 2.5;
+            vars(aorg,"mu")    = 0.6;
+            vars(aorg,"omega") = 2.6;
             vars(aorg,"y0")    = 1;
             damped->calls      = 0;
             for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
