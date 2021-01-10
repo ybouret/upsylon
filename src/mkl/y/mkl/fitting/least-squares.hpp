@@ -57,7 +57,7 @@ namespace upsylon
                 typedef v_gradient<ABSCISSA,ORDINATE>          v_gradient_type;  //!< alias
                 typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;  //!< alias
                 typedef typename sequential_type::function     sequential_func;  //!< alias
-
+                
                 //______________________________________________________________
                 //
                 // C++

@@ -72,9 +72,7 @@ inline bool fit(sample_api_type        &s,
     atry.adjust(M,s.zero);
     step.adjust(M,s.zero);
     atmp.adjust(M,s.zero);
-    //used.adjust(M,false);
     tao::set(aorg,A);
-    //tao::set(used,U);
     tao::ld(E,-1);
     s.setup(A);
     
