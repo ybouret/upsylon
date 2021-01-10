@@ -191,6 +191,8 @@ Y_UTEST(fitting_ode)
     doAdjust<double>();
     doAdjust<float>();
     
+    
+    
 }
 Y_UTEST_DONE()
 

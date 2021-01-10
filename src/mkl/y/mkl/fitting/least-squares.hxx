@@ -46,20 +46,20 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
-    static const ORDINATE vtol  = numeric<ORDINATE>::ftol;
-    static const ORDINATE dtol  = numeric<ORDINATE>::sqrt_ftol;
+    static const ORDINATE vtol  = get_vtol();
+    static const ORDINATE dtol  = get_dtol();
     static const ORDINATE ufac  = numeric<ORDINATE>::gold;
 
     //--------------------------------------------------------------------------
     //
-    // variables
+    // dimensions
     //
     //--------------------------------------------------------------------------
-    assert(A.size()==U.size());
-    M      = A.size();             // dimensions
-    p      = 0;                    // regularization
-    lambda = lam[p];               // matching coefficient
-    
+    const variables &vars = s.vars; // variables for this run
+    M      = vars.sweep();          // dimensions
+    p      = 0;                     // regularization
+    lambda = lam[p];                // matching coefficient
+   
     //--------------------------------------------------------------------------
     //
     // memory
@@ -72,17 +72,26 @@ inline bool fit(sample_api_type        &s,
     atry.adjust(M,s.zero);
     step.adjust(M,s.zero);
     atmp.adjust(M,s.zero);
-    tao::set(aorg,A);
-    tao::ld(E,-1);
-    s.setup(A);
+    aerr.make(M,-s.one);
+    used.adjust(M,false);
     
+    
+    //--------------------------------------------------------------------------
+    //
+    // initialize values
+    //
+    //--------------------------------------------------------------------------
+    tao::set(aorg,A);
+    tao::set(used,U);
+    vars.set(E,aerr);
+    s.setup(aorg);
     d2_wrapper f1D    = { &s, &F, &aorg, &step, &atmp };
     const bool expand = 0 != (flags&Y_GLS_EXPAND);
 
     Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
     if(verbose)
     {
-        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", U, NULL);
+        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
     }
     
     
@@ -97,7 +106,7 @@ inline bool fit(sample_api_type        &s,
     bool   decreasing = true;   // is lambda decreasing?
 CYCLE:
     ++cycle;
-    ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,U);
+    ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,used);
     Y_GLS_PRINTLN("-------- <run@cycle=" << cycle << "> -------- " );
     Y_GLS_PRINTLN("D2_org  = " << D2_org << " | beta=" << beta);
     
@@ -108,7 +117,7 @@ CYCLE:
     //
     //--------------------------------------------------------------------------
 COMPUTE_STEP:
-    if(!compute_step(decreasing,U))
+    if(!compute_step(decreasing))
     {
         // here, a singular curvature is met
         return false;
@@ -196,10 +205,9 @@ COMPUTE_STEP:
             }
 
             // reduce interval
-            do
-            {
-                minimize::__step(f1D, u, f);
-            } while( u.c-u.a > 1e-2 );
+            do {
+                minimize::__step(f1D,u,f);
+            } while( u.c-u.a > ORDINATE(0.01) );
 
             // compute new point@ atry and recompute step
             D2_try = f1D(u.b);
@@ -286,7 +294,7 @@ CONVERGED:
     // final D2
     //
     //--------------------------------------------------------------------------
-    D2_org = s.D2(alpha,beta,F,G,aorg,U);
+    D2_org = s.D2(alpha,beta,F,G,aorg,used);
     
     //--------------------------------------------------------------------------
     //
@@ -305,7 +313,7 @@ CONVERGED:
     // set new parameters
     //
     //--------------------------------------------------------------------------
-    tao::set(A,aorg);
+    vars.set(A,aorg);
     
     
     //--------------------------------------------------------------------------
@@ -351,19 +359,17 @@ CONVERGED:
         const size_t n2 = ndof*ndof;
         for(size_t i=M;i>0;--i)
         {
-            if(U[i])
+            if(used[i])
             {
-                E[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
+                aerr[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
             }
             else
             {
-                E[i] = s.zero;
+                aerr[i] = s.zero;
             }
         }
-        if(verbose)
-        {
-            //s.vars.display(std::cerr,A,E," \\pm ","\t(*) ","");
-        }
+        vars.set(E,aerr);
+        
         return true;
     }
     

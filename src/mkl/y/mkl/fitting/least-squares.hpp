@@ -73,6 +73,8 @@ namespace upsylon
                 atry(),
                 step(),
                 atmp(),
+                aerr(),
+                used(),
                 verbose(verbosity),
                 grad_(0)
                 {
@@ -101,6 +103,18 @@ namespace upsylon
                     return *grad_;
                 }
 
+                //! fractional error for variables
+                static inline ORDINATE get_vtol() throw()
+                {
+                    return numeric<ORDINATE>::ftol;
+                }
+                
+                //! fractional error for d2
+                static inline ORDINATE get_dtol() throw()
+                {
+                    return numeric<ORDINATE>::sqrt_ftol;
+                }
+                
                 //______________________________________________________________
                 //
                 // fit methods
@@ -153,7 +167,8 @@ namespace upsylon
                 vector_type                   atry;    //!< trial point
                 vector_type                   step;    //!< computed step
                 vector_type                   atmp;    //!< for probing
-                //vector<bool>                  used;    //!< used parameters
+                vector_type                   aerr;    //!< for errors
+                vector<bool>                  used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 
@@ -168,10 +183,12 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                bool compute_step(bool &decreasing, const accessible<bool> &used) throw()
+                bool compute_step(bool &decreasing) throw()
                 {
                 TRY_COMPUTE:
+                    //----------------------------------------------------------
                     // build the modified covariance matrix
+                    //----------------------------------------------------------
                     const ORDINATE fac = ORDINATE(1) + lambda;
                     covar.assign(alpha);
                     for(size_t i=M;i>0;--i)
@@ -181,21 +198,27 @@ namespace upsylon
                             covar[i][i] *= fac;
                         }
                     }
-
+                    
+                    //----------------------------------------------------------
                     // try to invert it
+                    //----------------------------------------------------------
                     if(!LU::build(covar))
                     {
                         decreasing = false;
                         if(!increase())
                         {
+                            //--------------------------------------------------
                             // well, ill conditionned problem...
+                            //--------------------------------------------------
                             Y_GLS_PRINTLN("<singular curvature>");
                             return false;
                         }
                         goto TRY_COMPUTE;
                     }
 
+                    //----------------------------------------------------------
                     // compute step = inv(alpha)*beta
+                    //----------------------------------------------------------
                     tao::set(step,beta);
                     LU::solve(covar,step);
                     return true;

@@ -125,8 +125,25 @@ namespace upsylon
                 {
                     return (*this)[id](arr);
                 }
-
+                
+                //______________________________________________________________
+                //
+                //! transfer
+                //______________________________________________________________
+                template <typename TARGET, typename SOURCE> inline
+                void set(TARGET &target, SOURCE &source) const
+                {
+                    for(const_iterator it=begin();it!=end();++it)
+                    {
+                        const size_t j = ***it;
+                        target[j] = source[j];
+                    }
+                }
+            
+                //______________________________________________________________
+                //
                 //! set all names, separated with separator, to the same value
+                //______________________________________________________________
                 template <typename T, typename ID> inline
                 void make(addressable<T> &arr,
                           const ID       &names,

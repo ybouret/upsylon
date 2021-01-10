@@ -214,7 +214,6 @@ Y_UTEST(fitting_diff)
         display_variables::errors(std::cerr,NULL, sa.vars, a3, u3, e3);
         display_sample::results(std::cerr,sa,a3,u3,e3);
 
-        return 0;
         
         (*sa)(u3,"t0") = false;
         lsf.fit(sa,f,a3,u3,e3);
@@ -223,6 +222,8 @@ Y_UTEST(fitting_diff)
 
     }
 
+    std::cerr << "float  tolerances: " << least_squares<float,float>::get_vtol() << " | " << least_squares<float,float>::get_dtol() << std::endl;
+    std::cerr << "double tolerances: " << least_squares<double,double>::get_vtol() << " | " << least_squares<double,double>::get_dtol() << std::endl;
 
 
 
