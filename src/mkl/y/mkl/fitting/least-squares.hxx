@@ -62,16 +62,16 @@ inline bool fit(sample_api_type        &s,
    
     //--------------------------------------------------------------------------
     //
-    // memory
+    // memory setup
     //
     //--------------------------------------------------------------------------
     alpha.make(M,M);
     covar.make(M,M);
-    beta.adjust(M,s.zero);
-    aorg.adjust(M,s.zero);
-    atry.adjust(M,s.zero);
-    step.adjust(M,s.zero);
-    atmp.adjust(M,s.zero);
+    beta.make(M,s.zero);
+    aorg.make(M,s.zero);
+    atry.make(M,s.zero);
+    step.make(M,s.zero);
+    atmp.make(M,s.zero);
     aerr.make(M,-s.one);
     used.adjust(M,false);
     
@@ -83,7 +83,7 @@ inline bool fit(sample_api_type        &s,
     //--------------------------------------------------------------------------
     tao::set(aorg,A);
     tao::set(used,U);
-    vars.set(E,aerr);
+    vars.set(E,aerr); // fill error values with -1
     s.setup(aorg);
     d2_wrapper f1D    = { &s, &F, &aorg, &step, &atmp };
     const bool expand = 0 != (flags&Y_GLS_EXPAND);
@@ -343,7 +343,8 @@ CONVERGED:
         //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<interpolation>");
-        tao::ld(E,s.zero);
+        tao::ld(aerr,s.zero);
+        vars.set(E,aerr);
         return true;
     }
     else
@@ -369,7 +370,11 @@ CONVERGED:
             }
         }
         vars.set(E,aerr);
-        
+        if(verbose)
+        {
+            display_variables::errors(std::cerr, "[FIT]\t", vars, A, U, E);
+        }
+            
         return true;
     }
     

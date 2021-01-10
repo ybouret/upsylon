@@ -156,7 +156,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                size_t                        M;       //!< number of parameters
+                size_t                        M;       //!< max number of parameters
                 const lambdas_type            lam;     //!< array of precomputed lambdas
                 ORDINATE                      lambda;  //!< current lambda
                 int                           p;       //!< lambda=10^p
