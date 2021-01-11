@@ -131,7 +131,7 @@ namespace {
                 vars(aorg,"mu")    = T(0.6);
                 vars(aorg,"omega") = T(2.6);
                 vars(aorg,"y0")    = T(1);
-                damped->calls      = T(0);
+                damped->calls      = 0;
                 for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
                 {
                     vars.only_on(used,pass[k]);
