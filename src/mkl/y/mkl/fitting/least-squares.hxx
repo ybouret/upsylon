@@ -1,5 +1,6 @@
 //! \file
 
+#if 0
 private:
 
 struct D2_function
@@ -20,6 +21,7 @@ struct D2_function
 };
 
 public:
+#endif
 
 //______________________________________________________________________________
 //
@@ -38,8 +40,7 @@ inline bool fit(sample_api_type        &s,
                 v_gradient_type        &G,
                 addressable<ORDINATE>  &A,
                 const accessible<bool> &U,
-                addressable<ORDINATE>  &E,
-                const unsigned          flags=0x00)
+                addressable<ORDINATE>  &E)
 {
     //--------------------------------------------------------------------------
     //
@@ -50,8 +51,6 @@ inline bool fit(sample_api_type        &s,
     //--------------------------------------------------------------------------
     static const ORDINATE vtol  = get_vtol();
     static const ORDINATE dtol  = get_dtol();
-    static const ORDINATE ufac  = numeric<ORDINATE>::gold;
-    static const ORDINATE utol  = ORDINATE(0.01);
 
     //--------------------------------------------------------------------------
     //
@@ -62,7 +61,7 @@ inline bool fit(sample_api_type        &s,
     M      = vars.sweep();          // dimensions
     p      = 0;                     // regularization
     lambda = lam[p];                // matching coefficient
-   
+
     //--------------------------------------------------------------------------
     //
     // memory setup
@@ -88,8 +87,7 @@ inline bool fit(sample_api_type        &s,
     tao::set(used,U);
     vars.set(E,aerr); // fill error values with -1
     s.setup(aorg);
-    D2_function f1D    = { &s, &F, &aorg, &step, &atmp };
-    const bool  expand = 0 != (flags&gls::expand);
+    //D2_function f1D    = { &s, &F, &aorg, &step, &atmp };
 
     Y_GLS_PRINTLN("-------- <initialized: p=" << p << ", lambda=" << lambda << "> --------");
     if(verbose)
@@ -122,7 +120,9 @@ CYCLE:
 COMPUTE_STEP:
     if(!compute_step(decreasing))
     {
+        //----------------------------------------------------------------------
         // here, a singular curvature is met
+        //----------------------------------------------------------------------
         return false;
     }
     
@@ -188,42 +188,6 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
 
-        //----------------------------------------------------------------------
-        // update position
-        //----------------------------------------------------------------------
-        if(expand)
-        {
-            //------------------------------------------------------------------
-            // try speed up decreasing by look up
-            //------------------------------------------------------------------
-
-            // setup triplets
-            triplet<ORDINATE> u = { 0,      1,      ufac     };
-            triplet<ORDINATE> f = { D2_org, D2_try, f1D(u.c) };
-
-            // bracket minimum
-            while(f.c<f.b)
-            {
-                u.c *= ufac;
-                f.c  = f1D(u.c);
-            }
-
-            // reduce interval
-            do {
-                minimize::__step(f1D,u,f);
-            } while( u.c-u.a > utol );
-
-            // compute new point@ atry and recompute step
-            D2_try = f1D(u.b);
-            for(size_t i=M;i>0;--i)
-            {
-                atry[i] = atmp[i];
-                step[i] = atry[i]-aorg[i];
-            }
-            Y_GLS_PRINTLN("D2_opt  = " << D2_try);
-
-        }
-
         if(verbose)
         {
             display_variables::values(std::cerr, "\t(->) ", s.vars, atry, " (", step, ")");
@@ -258,15 +222,19 @@ COMPUTE_STEP:
 
         }
 
+        //----------------------------------------------------------------------
         // testing variable convergence
+        //----------------------------------------------------------------------
         if(converged)
         {
             Y_GLS_PRINTLN("<variables convergence>");
             goto CONVERGED;
         }
         
-        
-        // upon decreasing, test D2 convergence
+
+        //----------------------------------------------------------------------
+        // upon already decreasing, test D2 convergence
+        //----------------------------------------------------------------------
         if(decreasing)
         {
             const ORDINATE dd = fabs_of(D2_org-D2_try);

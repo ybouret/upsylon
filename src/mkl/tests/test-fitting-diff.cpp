@@ -59,15 +59,6 @@ namespace
 
 Y_UTEST(fitting_diff)
 {
-    unsigned flags = 0x00;
-    if(argc>1)
-    {
-        const string s = argv[1];
-        if(s=="opt")
-        {
-            flags |= gls::expand;
-        }
-    }
     typedef sample<double,double>  sample_type;
     typedef samples<double,double> samples_type;
     typedef sequential_function<double,double> seq_type;
@@ -181,7 +172,7 @@ Y_UTEST(fitting_diff)
     vector<string> results;
 
     diff.calls = 0;
-    if(lsf.fit(S1,F,G,a2,u2,e2,flags))
+    if(lsf.fit(S1,F,G,a2,u2,e2))
     {
         std::cerr << "corr1: " << S1.compute_corr(corr) << std::endl;
         std::cerr << "S1.R2: " << S1.compute_R2()       << std::endl;
@@ -192,7 +183,7 @@ Y_UTEST(fitting_diff)
 
 
     
-    if(lsf.fit(S2,F,G,a2,u2,e2,flags))
+    if(lsf.fit(S2,F,G,a2,u2,e2))
     {
         std::cerr << "corr2: " << S2.compute_corr(corr) << std::endl;
         std::cerr << "S2.R2: " << S2.compute_R2() << std::endl;
@@ -202,7 +193,7 @@ Y_UTEST(fitting_diff)
     }
 
     vector<double> e3(3,0);
-    if(lsf.fit(sa,f,a3,u3,e3,flags))
+    if(lsf.fit(sa,f,a3,u3,e3))
     {
         std::cerr << "corrA: " << sa.compute_corr(corr) << std::endl;
         std::cerr << "sa.R2: " << sa.compute_R2()       << std::endl;

@@ -39,7 +39,7 @@ namespace upsylon
                 //
                 // flags
                 //______________________________________________________________
-                static const unsigned expand = 0x01; //!< try to expand upon decrease
+                //static const unsigned expand = 0x01; //!< try to expand upon decrease
             };
 
 
@@ -139,12 +139,11 @@ namespace upsylon
                                 sequential_type        &F,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
-                                addressable<ORDINATE>  &E,
-                                const unsigned          flags=0x00)
+                                addressable<ORDINATE>  &E )
                 {
                     sequential_grad &G = grad();
                     G.F = &F;
-                    return fit(s,F,G,A,U,E,flags);
+                    return fit(s,F,G,A,U,E);
                 }
 
                 //! fit with a regular function
@@ -155,11 +154,10 @@ namespace upsylon
                                 sequential_func        &f,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
-                                addressable<ORDINATE>  &E,
-                                const unsigned          flags=0x00)
+                                addressable<ORDINATE>  &E)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
-                    return fit(s,F,A,U,E,flags);
+                    return fit(s,F,A,U,E);
                 }
 
                 //______________________________________________________________

@@ -125,9 +125,8 @@ namespace {
         
         try
         {
-            const unsigned flags[] = { 0 , gls::expand };
             vector<size_t> calls;
-            for(size_t q=0;q<sizeof(flags)/sizeof(flags[0]);++q)
+            //for(size_t q=0;q<sizeof(flags)/sizeof(flags[0]);++q)
             {
                 vars(aorg,"mu")    = 0.6;
                 vars(aorg,"omega") = 2.6;
@@ -136,7 +135,7 @@ namespace {
                 for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
                 {
                     vars.only_on(used,pass[k]);
-                    if(ls.fit(*s, F, aorg, used, aerr, flags[q]) )
+                    if( ls.fit(*s,F,aorg,used,aerr) )
                     {
                         display_variables::errors(std::cerr,"\t",vars,aorg,used,aerr);
                         {
