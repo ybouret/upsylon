@@ -1,7 +1,8 @@
 //! \file
 
 private:
-struct d2_wrapper
+
+struct D2_function
 {
     sample_api_type            *s_;
     sequential_type            *F_;
@@ -17,6 +18,7 @@ struct d2_wrapper
     }
     
 };
+
 public:
 
 //______________________________________________________________________________
@@ -49,6 +51,7 @@ inline bool fit(sample_api_type        &s,
     static const ORDINATE vtol  = get_vtol();
     static const ORDINATE dtol  = get_dtol();
     static const ORDINATE ufac  = numeric<ORDINATE>::gold;
+    static const ORDINATE utol  = ORDINATE(0.01);
 
     //--------------------------------------------------------------------------
     //
@@ -85,10 +88,10 @@ inline bool fit(sample_api_type        &s,
     tao::set(used,U);
     vars.set(E,aerr); // fill error values with -1
     s.setup(aorg);
-    d2_wrapper f1D    = { &s, &F, &aorg, &step, &atmp };
-    const bool expand = 0 != (flags&Y_GLS_EXPAND);
+    D2_function f1D    = { &s, &F, &aorg, &step, &atmp };
+    const bool  expand = 0 != (flags&gls::expand);
 
-    Y_GLS_PRINTLN("####### initialized: p=" << p << ", lambda=" << lambda );
+    Y_GLS_PRINTLN("-------- <initialized: p=" << p << ", lambda=" << lambda << "> --------");
     if(verbose)
     {
         display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
@@ -173,6 +176,7 @@ COMPUTE_STEP:
             Y_GLS_PRINTLN("<reject with spurious failure>");
             return false;
         }
+
         goto COMPUTE_STEP;
     }
     else
@@ -207,7 +211,7 @@ COMPUTE_STEP:
             // reduce interval
             do {
                 minimize::__step(f1D,u,f);
-            } while( u.c-u.a > ORDINATE(0.01) );
+            } while( u.c-u.a > utol );
 
             // compute new point@ atry and recompute step
             D2_try = f1D(u.b);
@@ -372,9 +376,9 @@ CONVERGED:
         vars.set(E,aerr);
         if(verbose)
         {
-            display_variables::errors(std::cerr, "[FIT]\t", vars, A, U, E);
+            display_variables::errors(std::cerr, gls::prefix_tab, vars, A, U, E);
         }
-            
+        Y_GLS_PRINTLN("-------- <finalized> --------");
         return true;
     }
     

@@ -125,7 +125,7 @@ namespace {
         
         try
         {
-            const unsigned flags[] = { 0 , Y_GLS_EXPAND };
+            const unsigned flags[] = { 0 , gls::expand };
             vector<size_t> calls;
             for(size_t q=0;q<sizeof(flags)/sizeof(flags[0]);++q)
             {
@@ -190,8 +190,6 @@ Y_UTEST(fitting_ode)
 {
     doAdjust<double>();
     doAdjust<float>();
-    
-    
     
 }
 Y_UTEST_DONE()

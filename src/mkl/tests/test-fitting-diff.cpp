@@ -65,7 +65,7 @@ Y_UTEST(fitting_diff)
         const string s = argv[1];
         if(s=="opt")
         {
-            flags = Y_GLS_EXPAND;
+            flags |= gls::expand;
         }
     }
     typedef sample<double,double>  sample_type;
@@ -192,7 +192,6 @@ Y_UTEST(fitting_diff)
 
 
     
-    diff.calls = 0;
     if(lsf.fit(S2,F,G,a2,u2,e2,flags))
     {
         std::cerr << "corr2: " << S2.compute_corr(corr) << std::endl;
@@ -202,7 +201,6 @@ Y_UTEST(fitting_diff)
         std::cerr << std::endl;
     }
 
-    diff.calls = 0;
     vector<double> e3(3,0);
     if(lsf.fit(sa,f,a3,u3,e3,flags))
     {
@@ -225,7 +223,7 @@ Y_UTEST(fitting_diff)
     std::cerr << "float  tolerances: " << least_squares<float,float>::get_vtol() << " | " << least_squares<float,float>::get_dtol() << std::endl;
     std::cerr << "double tolerances: " << least_squares<double,double>::get_vtol() << " | " << least_squares<double,double>::get_dtol() << std::endl;
 
-
+    std::cerr << "total calls: " << diff.calls << std::endl;
 
 
     

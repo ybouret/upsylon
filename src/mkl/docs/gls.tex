@@ -108,6 +108,11 @@ We should have:
 
 \begin{itemize}
 \item If $f_1>f_0$, we need to increase $\lambda$ and recompute the step from Eq.\eqref{start}. This is the "backtracking" choice.
+In that case, 
+\begin{equation}
+		f(\gamma) \approx f_0 - \gamma \sigma + \gamma^2 \left(\sigma+f_1-f_0\right)
+\end{equation}
+
 \item if $f_1\leq f_0$, then accept step and decrease $\lambda$.
 The parabola that starts at $0$ with value $f_0$ and slope $-\sigma$ is:
 \begin{equation}

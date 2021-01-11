@@ -8,7 +8,8 @@ namespace upsylon
         namespace fitting
         {
 
-            const char __least_squares:: prefix[] = "[FIT] ";
+            const char gls:: prefix_spc[8] = "[FIT] ";
+            const char gls:: prefix_tab[8] = "[FIT]\t";
         }
 
     }

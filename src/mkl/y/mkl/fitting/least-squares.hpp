@@ -26,16 +26,26 @@ namespace upsylon
             //
             //! common least squares data
             //__________________________________________________________________
-            struct __least_squares
+            struct gls
             {
-                static const char prefix[]; //!< "[fit] "
+                //______________________________________________________________
+                //
+                // contextual info
+                //______________________________________________________________
+                static const char prefix_spc[];  //!< "[FIT] "
+                static const char prefix_tab[]; //!< "[FIT]\t";
+
+                //______________________________________________________________
+                //
+                // flags
+                //______________________________________________________________
+                static const unsigned expand = 0x01; //!< try to expand upon decrease
             };
 
-            //! flag to expand look up upon decreasing D2
-#define Y_GLS_EXPAND 0x01
+
 
             //! for verbose output
-#define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << __least_squares::prefix << MSG << std::endl; } } while(false)
+#define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << gls::prefix_spc << MSG << std::endl; } } while(false)
 
             //__________________________________________________________________
             //
