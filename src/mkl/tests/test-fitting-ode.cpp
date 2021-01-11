@@ -99,7 +99,7 @@ namespace {
         }
         ios::ocstream::overwrite(savename);
         
-        Damped<T> *damped = new Damped<T>();
+        Damped<T>                               *damped = new Damped<T>();
         typename ODE::ExplicitAdjust<T>::Pointer crunch = damped;
         typename ODE::ExplicitSolver<T>::Pointer solver = ODE::DriverCK<T>::New();
         correlation<T>                           corr;
