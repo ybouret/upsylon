@@ -13,7 +13,7 @@
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
-#include "y/ios/ocstream.hpp"
+#include <iomanip>
 
 namespace upsylon
 {

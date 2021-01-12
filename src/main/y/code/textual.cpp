@@ -11,7 +11,9 @@ namespace upsylon
 
     const char * textual:: boolean(const bool flag) throw()
     {
-        return flag ? "true" : "false";
+        return flag ?
+        "true" :
+        "false";
     }
 }
 

@@ -136,12 +136,13 @@ COMPUTE_STEP:
     //--------------------------------------------------------------------------
     const ORDINATE sigma_over_two = tao::dot<ORDINATE>::of(beta,step);
     const ORDINATE sigma          = sigma_over_two + sigma_over_two;
+#if 0
     if(sigma<0)
     {
         Y_GLS_PRINTLN("<negative sigma>");
         goto COMPUTE_STEP;
     }
-    
+#endif
     //--------------------------------------------------------------------------
     //
     // OK, numerically acceptable step, compute atry and recompute step
@@ -161,7 +162,7 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     ORDINATE       D2_try  = s.D2(F,atry);
-    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << p << ", decreasing = " << textual::boolean(decreasing));
+    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << std::setw(4) << p << ", decreasing = " << std::setw(5) << textual::boolean(decreasing) << ", sigma=" << sigma );
     
     if(D2_try>D2_org)
     {
