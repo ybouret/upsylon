@@ -345,7 +345,7 @@ CONVERGED:
         vars.set(E,aerr);
         if(verbose)
         {
-            display_variables::errors(std::cerr, gls::prefix_tab, vars, A, U, E);
+            display_variables::errors(std::cerr, least_squares_::prefix_tab, vars, A, U, E);
         }
         Y_GLS_PRINTLN("-------- <finalized> --------");
         return true;

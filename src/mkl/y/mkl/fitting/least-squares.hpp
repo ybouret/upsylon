@@ -8,7 +8,7 @@
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/variable/display.hpp"
-#include "y/mkl/opt/minimize.hpp"
+//#include "y/mkl/opt/minimize.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
@@ -26,7 +26,7 @@ namespace upsylon
             //
             //! common least squares data
             //__________________________________________________________________
-            struct gls
+            struct least_squares_
             {
                 //______________________________________________________________
                 //
@@ -34,18 +34,12 @@ namespace upsylon
                 //______________________________________________________________
                 static const char prefix_spc[];  //!< "[FIT] "
                 static const char prefix_tab[]; //!< "[FIT]\t";
-
-                //______________________________________________________________
-                //
-                // flags
-                //______________________________________________________________
-                //static const unsigned expand = 0x01; //!< try to expand upon decrease
             };
 
 
 
             //! for verbose output
-#define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << gls::prefix_spc << MSG << std::endl; } } while(false)
+#define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << least_squares_::prefix_spc << MSG << std::endl; } } while(false)
 
             //__________________________________________________________________
             //
