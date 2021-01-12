@@ -126,7 +126,8 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         return false;
     }
-    
+    Y_GLS_PRINTLN("          " << D2_org << " | step=" << step);
+
     
     
     //--------------------------------------------------------------------------
@@ -261,15 +262,21 @@ CONVERGED:
     //
     //--------------------------------------------------------------------------
     Y_GLS_PRINTLN("-------- <end@cycle=" << cycle << "> -------- " );
-    Y_GLS_PRINTLN("lambda    = " << lambda);
-    
+
     //--------------------------------------------------------------------------
     //
     // final D2
     //
     //--------------------------------------------------------------------------
     D2_org = s.D2(alpha,beta,F,G,aorg,used);
-    
+    Y_GLS_PRINTLN("D2_org    = " << D2_org << " (lambda=" << lambda << ")" );
+    Y_GLS_PRINTLN("beta      = " << beta);
+    if(verbose)
+    {
+        display_variables::values(std::cerr, "\tbeta_", vars, beta, NULL);
+    }
+    Y_GLS_PRINTLN("alpha     = " << alpha);
+
     //--------------------------------------------------------------------------
     //
     // compute covariance
@@ -281,6 +288,19 @@ CONVERGED:
         return false;
     }
     LU::inverse(alpha,covar);
+    for(size_t j=M;j>0;--j)
+    {
+        if(!used[j]) covar[j][j] = 0;
+    }
+    Y_GLS_PRINTLN("covar     = " << covar);
+    if(verbose)
+    {
+        for(size_t j=M;j>0;--j)
+        {
+            atmp[j] = covar[j][j];
+        }
+        display_variables::values(std::cerr, "\tvar_", vars, atmp, NULL);
+    }
 
     //--------------------------------------------------------------------------
     //
@@ -334,14 +354,7 @@ CONVERGED:
         const size_t n2 = ndof*ndof;
         for(size_t i=M;i>0;--i)
         {
-            if(used[i])
-            {
-                aerr[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
-            }
-            else
-            {
-                aerr[i] = s.zero;
-            }
+            aerr[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
         }
         vars.set(E,aerr);
         if(verbose)
