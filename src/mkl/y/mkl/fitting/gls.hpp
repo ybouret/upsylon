@@ -4,6 +4,7 @@
 #define Y_MKL_FITTING_GLS_INCLUDED 1
 
 #include "y/mkl/fitting/samples.hpp"
+#include "y/mkl/fitting/sequential/explode.hpp"
 
 namespace upsylon
 {
@@ -33,7 +34,7 @@ namespace upsylon
                 typedef sequential<double,double> sequential_type; //!< alias
                 typedef sequential_type::function function;        //!< alias
                 typedef v_gradient<double,double> v_gradient_type; //!< alias
-
+                
                 //______________________________________________________________
                 //
                 // C++

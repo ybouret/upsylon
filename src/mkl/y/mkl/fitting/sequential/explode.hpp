@@ -8,6 +8,7 @@
 #include "y/mkl/fitting/sequential.hpp"
 #include "y/mkl/ode/explicit/adjust.hpp"
 #include "y/mkl/ode/explicit/driver-ck.hpp"
+#include "y/momentary/link.hpp"
 
 namespace upsylon {
 
@@ -26,22 +27,20 @@ p_aorg(0),                             \
 p_vars(0),                             \
 __ctrl(0)
 
-            //==================================================================
+            //__________________________________________________________________
             //
             //
             //! Explicit ODE, sequential integration
             //
-            //
-            //==================================================================
+            //__________________________________________________________________
             template <typename T>
             class explode : public sequential<T,T>
             {
             public:
-                //==============================================================
+                //______________________________________________________________
                 //
                 // types and definitions
-                //
-                //==============================================================
+                //______________________________________________________________
                 typedef sequential<T,T>               sequential_type; //!< alias
                 typedef vector<T>                     ordinates;       //!< alias for internal data
                 typedef ODE::ExplicitSolver<T>        solver_type;     //!< alias
@@ -50,17 +49,13 @@ __ctrl(0)
                 typedef typename adjust_type::Pointer adjust_ptr;      //!< alias
                 typedef ODE::DriverCK<T>              default_solver;  //!< default solver
 
-                //==============================================================
+                //______________________________________________________________
                 //
-                //  members
-                //
-                //==================================================================
+                //  methods
+                //______________________________________________________________
 
                 //! cleanup
-                inline virtual ~explode() throw()
-                {
-
-                }
+                inline virtual ~explode() throw() {}
 
                 //! setup, preparing solver
                 inline explicit explode(const solver_ptr &shared_solver,
@@ -87,6 +82,9 @@ __ctrl(0)
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(explode);
+                typedef momentary_link< const accessible<T> > aLink;
+                typedef momentary_link< const variables     > vLink;
+
                 solver_ptr                       solver;
                 adjust_ptr                       adjust;
                 typename ODE::Field<T>::Equation diffEq;
@@ -114,13 +112,13 @@ __ctrl(0)
                 inline virtual T onStart(const T x1, const accessible<T> &aorg, const variables &vars)
                 {
                     // link
-                    p_aorg = &aorg;
-                    p_vars = &vars;
+                    const aLink alink(aorg,&p_aorg);
+                    const vLink vlink(vars,&p_vars);
 
                     // setup state and step control
                     adjust->setup(fields,aorg,vars);
                     __ctrl = adjust->delta();
-
+                    
                     // differential step: up to x1
                     (*solver)( diffEq, fields, adjust->start(), x1, __ctrl, adjust->callback() );
 
@@ -132,9 +130,8 @@ __ctrl(0)
                 inline virtual T onReach(const T x1, const accessible<T> &aorg, const variables &vars)
                 {
                     // link
-                    p_aorg = &aorg;
-                    p_vars = &vars;
-
+                    const aLink alink(aorg,&p_aorg);
+                    const vLink vlink(vars,&p_vars);
 
                     // differential step
                     (*solver)( diffEq, fields, this->current, x1, __ctrl,  adjust->callback());
