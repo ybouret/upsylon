@@ -216,6 +216,14 @@ Y_UTEST(fitting_diff)
 
     std::cerr << "total calls: " << diff.calls << std::endl;
 
+    double lower=0,upper=0;
+    S1.ordinate_range(lower,upper);
+    std::cerr << "S1 : " << lower << " -> " << upper << std::endl;
+    S2.ordinate_range(lower,upper);
+    std::cerr << "S2 : " << lower << " -> " << upper << std::endl;
+    sa.ordinate_range(lower,upper);
+    std::cerr << "ALL: " << lower << " -> " << upper << std::endl;
+
 
     
 }

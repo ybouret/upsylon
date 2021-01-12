@@ -109,7 +109,30 @@ namespace upsylon
                         (**it).update_correlation(corr);
                     }
                 }
-                
+
+                inline virtual void ordinate_range(ORDINATE &lower,
+                                                   ORDINATE &upper) const
+                {
+                    if(this->size())
+                    {
+                        const_iterator it=this->begin();
+                        (**it).ordinate_range(lower,upper);
+                        for(++it;it!=this->end();++it)
+                        {
+                            ORDINATE lo=this->zero, up=this->zero;
+                            (**it).ordinate_range(lo,up);
+                            if(lo<lower) lower=lo;
+                            if(up>upper) upper=up;
+                        }
+                    }
+                    else
+                    {
+                        lower = upper = this->zero;
+                    }
+
+                }
+
+
                 //______________________________________________________________
                 //
                 // design interface

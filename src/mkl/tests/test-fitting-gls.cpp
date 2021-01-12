@@ -9,7 +9,7 @@ using namespace fitting;
 Y_UTEST(fitting_gls)
 {
     gls         ls;
-    gls::shared s = gls::sample_type::create("trial",1024);
+    gls::shared s = gls::single::create("trial",1024);
     
 
 }

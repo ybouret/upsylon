@@ -175,7 +175,7 @@ namespace upsylon
                 vector_type                  &step;    //!< computed step
                 vector_type                  &atmp;    //!< for probing
                 vector_type                  &aerr;    //!< for errors
-                vector_type                  &utmp;
+                vector_type                  &utmp;    //!< holds memory for used
                 flags_type                    used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient

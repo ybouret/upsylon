@@ -26,10 +26,10 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-                typedef sample_api<double,double> sample_api_type; //!< alias
-                typedef sample<double,double>     sample_type;     //!< alias
-                typedef sample_type::pointer      shared;          //!< alias
-                typedef samples<double,double>    samples_type;    //!< alias
+                typedef sample_api<double,double> adjustable;      //!< alias
+                typedef sample<double,double>     single;          //!< alias
+                typedef single::pointer           shared;          //!< alias
+                typedef samples<double,double>    db;              //!< alias
                 typedef sequential<double,double> sequential_type; //!< alias
                 typedef sequential_type::function function;        //!< alias
                 typedef v_gradient<double,double> v_gradient_type; //!< alias
@@ -47,7 +47,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! fit sequential class and its v_gradient
-                bool operator()(sample_api_type        &s,
+                bool operator()(adjustable             &s,
                                 sequential_type        &F,
                                 v_gradient_type        &G,
                                 addressable<double>    &A,
@@ -55,14 +55,14 @@ namespace upsylon
                                 addressable<double>    &E);
 
                 //! fit sequential class with internal gradient
-                bool operator()(sample_api_type        &s,
+                bool operator()(adjustable             &s,
                                 sequential_type        &F,
                                 addressable<double>    &A,
                                 const accessible<bool> &U,
                                 addressable<double>    &E);
 
                 //! fit regular function with intenal gradient
-                bool operator()(sample_api_type        &s,
+                bool operator()(adjustable             &s,
                                 function               &f,
                                 addressable<double>    &A,
                                 const accessible<bool> &U,

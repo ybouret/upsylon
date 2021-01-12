@@ -170,6 +170,11 @@ namespace {
                 display_sample::results(std::cerr,*s, aorg, used, aerr);
                 std::cerr << "#calls=" << damped->calls << std::endl;
                 calls.push_back(damped->calls);
+
+                T lower = 0, upper=0;
+                s->ordinate_range(lower,upper);
+                std::cerr << "lower: " << lower << " | upper:" << upper << std::endl;
+
             }
             std::cerr << "calls=" << calls << std::endl;
         }
