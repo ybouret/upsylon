@@ -8,11 +8,11 @@
 #include "y/mkl/fitting/lambda.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/variable/display.hpp"
-//#include "y/mkl/opt/minimize.hpp"
-#include "y/sequence/vector.hpp"
+#include "y/sequence/arrays.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
+#include "y/os/static-check.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -55,7 +55,9 @@ namespace upsylon
                 //______________________________________________________________
                 typedef lambdas<ORDINATE>                      lambdas_type;     //!< alias
                 typedef matrix<ORDINATE>                       matrix_type;      //!< alias
-                typedef vector<ORDINATE>                       vector_type;      //!< alias
+                typedef arrays<ORDINATE>                       arrays_type;      //!< alias
+                typedef typename arrays_type::array_type       vector_type;      //!< alias
+                typedef lightweight_array<bool>                flags_type;       //!< alias
                 typedef sample_api<ABSCISSA,ORDINATE>          sample_api_type;  //!< alias
                 typedef sequential<ABSCISSA,ORDINATE>          sequential_type;  //!< alias
                 typedef v_gradient<ABSCISSA,ORDINATE>          v_gradient_type;  //!< alias
@@ -72,12 +74,14 @@ namespace upsylon
                 lam(), lambda(0), p(0),
                 alpha(),
                 covar(),
-                beta(),
-                aorg(),
-                atry(),
-                step(),
-                atmp(),
-                aerr(),
+                space(7),
+                beta( space.next() ),
+                aorg( space.next() ),
+                atry( space.next() ),
+                step( space.next() ),
+                atmp( space.next() ),
+                aerr( space.next() ),
+                utmp( space.next() ),
                 used(),
                 verbose(verbosity),
                 grad_(0)
@@ -164,13 +168,15 @@ namespace upsylon
                 int                           p;       //!< lambda=10^p
                 matrix_type                   alpha;   //!< curvature
                 matrix_type                   covar;   //!< covariance
-                vector_type                   beta;    //!< beta
-                vector_type                   aorg;    //!< starting point
-                vector_type                   atry;    //!< trial point
-                vector_type                   step;    //!< computed step
-                vector_type                   atmp;    //!< for probing
-                vector_type                   aerr;    //!< for errors
-                vector<bool>                  used;    //!< used parameters
+                arrays_type                   space;   //!< all vectors
+                vector_type                  &beta;    //!< beta
+                vector_type                  &aorg;    //!< starting point
+                vector_type                  &atry;    //!< trial point
+                vector_type                  &step;    //!< computed step
+                vector_type                  &atmp;    //!< for probing
+                vector_type                  &aerr;    //!< for errors
+                vector_type                  &utmp;
+                flags_type                    used;    //!< used parameters
                 bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 

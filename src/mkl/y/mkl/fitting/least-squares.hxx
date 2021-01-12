@@ -49,6 +49,7 @@ inline bool fit(sample_api_type        &s,
     //
     //
     //--------------------------------------------------------------------------
+    Y_STATIC_CHECK(sizeof(bool)<=sizeof(ORDINATE),boolean_too_large);
     static const ORDINATE vtol  = get_vtol();
     static const ORDINATE dtol  = get_dtol();
 
@@ -69,26 +70,26 @@ inline bool fit(sample_api_type        &s,
     //--------------------------------------------------------------------------
     alpha.make(M,M);
     covar.make(M,M);
-    beta.make(M,s.zero);
-    aorg.make(M,s.zero);
-    atry.make(M,s.zero);
-    step.make(M,s.zero);
-    atmp.make(M,s.zero);
-    aerr.make(M,-s.one);
-    used.adjust(M,false);
-    
+    space.acquire(M);
+    {
+        ORDINATE *tmp = *utmp;
+        new ( &used ) flags_type( (bool *)tmp, M );
+    }
+
+
     
     //--------------------------------------------------------------------------
     //
     // initialize values
     //
     //--------------------------------------------------------------------------
-    tao::set(aorg,A);
-    tao::set(used,U);
-    vars.set(E,aerr); // fill error values with -1
+    tao::set(aorg,A);     // setup aorg
+    tao::ld(aerr,-s.one); // setup aerr
+    tao::ld(used,false);  // setup used
+    tao::set(used,U);     // fill used
+    vars.set(E,aerr);     // fill error values with -1
     s.setup(aorg);
-    //D2_function f1D    = { &s, &F, &aorg, &step, &atmp };
-
+    
     Y_GLS_PRINTLN("-------- <initialized: p=" << p << ", lambda=" << lambda << "> --------");
     if(verbose)
     {
