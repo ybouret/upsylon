@@ -18,6 +18,7 @@ namespace upsylon
         //! optimized argument conversion
 #define Y_TAO_CAST(TARGET,SOURCE,VALUE) (auto_cast<typename TARGET::mutable_type,typename SOURCE::mutable_type>::_(VALUE))
 
+        //! Templated Algebraic Operations
         struct tao
         {
             

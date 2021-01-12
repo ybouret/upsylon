@@ -233,27 +233,7 @@ namespace upsylon
                 inline virtual void ordinate_range(ORDINATE &lower,
                                                    ORDINATE &upper) const
                 {
-                    const size_t n = count();
-                    if(n>0)
-                    {
-                        lower = upper  = ordinate[1];
-                        for(size_t i=n;i>1;--i)
-                        {
-                            const ORDINATE &tmp = ordinate[i];
-                            if(tmp<lower)
-                            {
-                                lower = tmp;
-                            }
-                            else if(upper<tmp)
-                            {
-                                upper = tmp;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        lower = upper = this->zero;
-                    }
+                    tao::range(lower,upper,ordinate);
                 }
 
                 

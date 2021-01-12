@@ -129,7 +129,6 @@ namespace upsylon
                     {
                         lower = upper = this->zero;
                     }
-
                 }
 
 

@@ -182,7 +182,11 @@ void mulset(TARGET &target, typename TARGET::param_type value)
     }
 }
 
-
+//==============================================================================
+//
+// DIV
+//
+//==============================================================================
 
 //! target = (1/value)* lhs
 template <typename TARGET, typename LHS> static inline
@@ -216,6 +220,11 @@ void divall(TARGET &target, LHS &lhs )
     }
 }
 
+//==============================================================================
+//
+// MULADD
+//
+//==============================================================================
 
 //! target = lhs + value * lhs, based on target.size()
 template <typename TARGET, typename LHS, typename RHS> static inline
@@ -237,6 +246,37 @@ void muladd(TARGET &target, typename TARGET::param_type value, LHS &lhs )
     for(size_t i=target.size();i>0;--i)
     {
         target[i] += value * Y_TAO_CAST(TARGET,LHS,lhs[i]);
+    }
+}
+
+//==============================================================================
+//
+// RANGE
+//
+//==============================================================================
+template <typename T, typename U, typename SOURCE> static inline
+void range(T &lower, U &upper, SOURCE &source)
+{
+    lower    = 0;
+    upper    = 0;
+    size_t n = source.size();
+    if(n>0)
+    {
+        typename SOURCE::mutable_type lo = source[n], up = source[n];
+        for(--n;n>0;--n)
+        {
+            const typename SOURCE::const_type &tmp = source[n];
+            if(tmp<lo)
+            {
+                lo = tmp;
+            }
+            else if(up<tmp)
+            {
+                up = tmp;
+            }
+        }
+        lower = auto_cast<T,typename SOURCE::type>::_(lo);
+        upper = auto_cast<U,typename SOURCE::type>::_(up);
     }
 }
 

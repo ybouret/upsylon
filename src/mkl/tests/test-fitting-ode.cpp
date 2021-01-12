@@ -114,7 +114,7 @@ namespace {
         
         vector<T>    aorg( vars.sweep(),  0 );
         vector<bool> used( aorg.size(), true);
-        vector<T>    aerr( aorg.size() );
+        vector<T>    aerr( aorg.size(), 0 );
         
         
         
