@@ -1,6 +1,7 @@
 
 #include "y/mkl/fitting/gls.hpp"
 #include "y/mkl/fitting/least-squares.hpp"
+#include "y/mkl/fitting/sequential/explode.hpp"
 
 namespace upsylon
 {
@@ -12,7 +13,30 @@ namespace upsylon
 
             namespace {
 
-                typedef least_squares<double,double> gls_type;
+                typedef least_squares<double,double> gls_base;
+
+                class gls_type : public object, public gls_base
+                {
+                public:
+                    typedef explode<double> _explode;
+
+                    inline explicit gls_type(const bool v) :
+                    object(),
+                    gls_base(v),
+                    solver( _explode::default_solver::New() )
+                    {
+                    }
+
+                    inline virtual ~gls_type() throw()
+                    {
+                    }
+
+                    _explode::solver_ptr solver;
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(gls_type);
+                };
+
 
             }
 
@@ -26,7 +50,8 @@ namespace upsylon
             gls:: gls(const bool verb) :
             impl( new gls_type(verb) ),
             verbose( static_cast<gls_type *>(impl)->verbose  ),
-            scaling( static_cast<gls_type *>(impl)->grad().h )
+            scaling( static_cast<gls_type *>(impl)->grad().h ),
+            solver(  static_cast<gls_type *>(impl)->solver   )
             {
             }
 

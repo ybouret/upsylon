@@ -27,14 +27,16 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-                typedef sample_api<double,double> adjustable;      //!< alias
-                typedef sample<double,double>     single;          //!< alias
-                typedef single::pointer           shared;          //!< alias
-                typedef samples<double,double>    db;              //!< alias
-                typedef sequential<double,double> sequential_type; //!< alias
-                typedef sequential_type::function function;        //!< alias
-                typedef v_gradient<double,double> v_gradient_type; //!< alias
-                
+                typedef sample_api<double,double>            adjustable;      //!< alias
+                typedef sample<double,double>                single;          //!< alias
+                typedef single::pointer                      shared;          //!< alias
+                typedef samples<double,double>               db;              //!< alias
+                typedef sequential<double,double>            sequential_type; //!< alias
+                typedef sequential_type::function            function;        //!< alias
+                typedef v_gradient<double,double>            v_gradient_type; //!< alias
+                typedef explode<double>::solver_ptr          solver_type;     //!< alias
+                typedef ODE::ExplicitAdjust<double>::Pointer crunch_type;     //!< alias
+
                 //______________________________________________________________
                 //
                 // C++
@@ -74,8 +76,9 @@ namespace upsylon
                 void *impl; //!< private implementation
 
             public:
-                bool   &verbose; //!< reference to least_squares verbosity
-                double &scaling; //!< for internal gradient
+                bool         &verbose; //!< reference to least_squares verbosity
+                double       &scaling; //!< internal gradient
+                solver_type  &solver;  //!< internal explicit driver
             };
 
         }

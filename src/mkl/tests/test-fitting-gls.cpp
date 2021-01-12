@@ -90,11 +90,12 @@ Y_UTEST(fitting_gls)
         }
     }
 
-    Damped                              *damped = new Damped();
-    ODE::ExplicitAdjust<double>::Pointer crunch = damped;
-    correlation<double>                           corr;
+    Damped             *damped = new Damped();
+    gls::crunch_type    crunch = damped;
+    correlation<double> corr;
 
-    explode<double>    F(crunch);
+    ls.solver->eps = 1e-6;
+    explode<double>    F(ls.solver,crunch);
     variables         &vars = **s;
 
 
