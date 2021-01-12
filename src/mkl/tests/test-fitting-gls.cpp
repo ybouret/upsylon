@@ -8,9 +8,9 @@ using namespace fitting;
 
 Y_UTEST(fitting_gls)
 {
-    gls ls;
-    gls::shared s = gls::sample::create("trial",1024);
-
+    gls         ls;
+    gls::shared s = gls::sample_type::create("trial",1024);
+    
 
 }
 Y_UTEST_DONE()

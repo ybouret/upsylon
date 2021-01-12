@@ -31,9 +31,9 @@ namespace upsylon
             }
 
 
-            bool gls:: operator()(sample_api             &s,
-                                  sequential             &F,
-                                  v_gradient             &G,
+            bool gls:: operator()(sample_api_type        &s,
+                                  sequential_type        &F,
+                                  v_gradient_type        &G,
                                   addressable<double>    &A,
                                   const accessible<bool> &U,
                                   addressable<double>    &E)
@@ -41,8 +41,8 @@ namespace upsylon
                 return static_cast<gls_type *>(impl)->fit(s,F,G,A,U,E);
             }
 
-            bool gls:: operator()(sample_api             &s,
-                                  sequential             &F,
+            bool gls:: operator()(sample_api_type        &s,
+                                  sequential_type        &F,
                                   addressable<double>    &A,
                                   const accessible<bool> &U,
                                   addressable<double>    &E)
@@ -50,7 +50,7 @@ namespace upsylon
                 return static_cast<gls_type *>(impl)->fit(s,F,A,U,E);
             }
 
-            bool gls:: operator()(sample_api             &s,
+            bool gls:: operator()(sample_api_type        &s,
                                   function               &f,
                                   addressable<double>    &A,
                                   const accessible<bool> &U,
