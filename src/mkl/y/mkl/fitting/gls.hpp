@@ -32,6 +32,7 @@ namespace upsylon
                 typedef samples<double,double>    samples;    //!< alias
                 typedef sequential<double,double> sequential; //!< alias
                 typedef sequential::function      function;   //!< alias
+                typedef v_gradient<double,double> v_gradient; //!< alias
 
                 //______________________________________________________________
                 //
@@ -40,7 +41,32 @@ namespace upsylon
                 explicit gls(const bool verb=false); //!< create
                 virtual ~gls() throw();              //!< cleanup
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
+                //! fit sequential class and its v_gradient
+                bool operator()(sample_api             &s,
+                                sequential             &F,
+                                v_gradient             &G,
+                                addressable<double>    &A,
+                                const accessible<bool> &U,
+                                addressable<double>    &E);
+
+                //! fit sequential class with internal gradient
+                bool operator()(sample_api             &s,
+                                sequential             &F,
+                                addressable<double>    &A,
+                                const accessible<bool> &U,
+                                addressable<double>    &E);
+
+                //! fit regular function with intenal gradient
+                bool operator()(sample_api             &s,
+                                function               &f,
+                                addressable<double>    &A,
+                                const accessible<bool> &U,
+                                addressable<double>    &E);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gls);

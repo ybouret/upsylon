@@ -29,6 +29,36 @@ namespace upsylon
             scaling( static_cast<gls_type *>(impl)->grad().h )
             {
             }
+
+
+            bool gls:: operator()(sample_api             &s,
+                                  sequential             &F,
+                                  v_gradient             &G,
+                                  addressable<double>    &A,
+                                  const accessible<bool> &U,
+                                  addressable<double>    &E)
+            {
+                return static_cast<gls_type *>(impl)->fit(s,F,G,A,U,E);
+            }
+
+            bool gls:: operator()(sample_api             &s,
+                                  sequential             &F,
+                                  addressable<double>    &A,
+                                  const accessible<bool> &U,
+                                  addressable<double>    &E)
+            {
+                return static_cast<gls_type *>(impl)->fit(s,F,A,U,E);
+            }
+
+            bool gls:: operator()(sample_api             &s,
+                                  function               &f,
+                                  addressable<double>    &A,
+                                  const accessible<bool> &U,
+                                  addressable<double>    &E)
+            {
+                return static_cast<gls_type *>(impl)->fit(s,f,A,U,E);
+            }
+
         }
 
     }
