@@ -41,13 +41,14 @@ namespace upsylon
                 virtual ~gls() throw();              //!< cleanup
 
 
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gls);
                 void *impl; //!< private implementation
 
             public:
-                bool &verbose; //!< reference to least_squares verbosity
-
+                bool   &verbose; //!< reference to least_squares verbosity
+                double &scaling; //!< for internal gradient
             };
 
         }

@@ -25,7 +25,8 @@ namespace upsylon
 
             gls:: gls(const bool verb) :
             impl( new gls_type(verb) ),
-            verbose( static_cast<gls_type *>(impl)->verbose )
+            verbose( static_cast<gls_type *>(impl)->verbose  ),
+            scaling( static_cast<gls_type *>(impl)->grad().h )
             {
             }
         }
