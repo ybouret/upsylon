@@ -131,6 +131,15 @@ namespace upsylon
                     }
                 }
 
+                //! free all
+                inline virtual void free() throw()
+                {
+                    for(iterator it=this->begin();it!=this->end();++it)
+                    {
+                        (**it).free();
+                    }
+                }
+
 
                 //______________________________________________________________
                 //

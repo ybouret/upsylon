@@ -230,13 +230,21 @@ namespace upsylon
 
                 }
 
+                //! range in ordinate
                 inline virtual void ordinate_range(ORDINATE &lower,
                                                    ORDINATE &upper) const
                 {
                     tao::range(lower,upper,ordinate);
                 }
 
-                
+                //! free all
+                inline virtual void free() throw()
+                {
+                    reserved.free();
+                    adjusted->free();
+                    ordinate->free();
+                    abscissa->free();
+                }
 
 
                 

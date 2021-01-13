@@ -53,6 +53,8 @@ Y_UTEST(fitting_circles)
 
 
     ios::ocstream::overwrite("cdat.dat");
+    vector<double> X;
+    vector<double> Y;
     for(size_t i=3+alea.leq(30);i>0;--i)
     {
         const double phi = numeric<float>::two_pi * alea.to<double>();
@@ -62,6 +64,8 @@ Y_UTEST(fitting_circles)
         i_circle.add(x,y);
         d_circle.add(x,y);
         ios::ocstream::echo("cdat.dat", "%ld %ld\n", long(x), long(y));
+        X.push_back(x);
+        Y.push_back(y);
     }
 
     point2d<double> ic,dc;
@@ -84,6 +88,31 @@ Y_UTEST(fitting_circles)
         const double y   = dc.y + dr * sin(phi);
         ios::ocstream::echo("cfit.dat","%g %g\n",x,y);
     }
+
+    built_in::circle          C;
+    built_in::circle::ls_type ls;
+
+    vector<double> aorg(3,0);
+    vector<double> aerr(3,0);
+    vector<bool>   used(3,true);
+
+    std::cerr << std::endl;
+    std::cerr << "Fitting 1" << std::endl;
+    if( C(ls, X, Y, aorg, used, aerr,  built_in::circle::with_ints) )
+    {
+        display_variables::errors(std::cerr, NULL, *C, aorg, used, aerr);
+    }
+
+    std::cerr << std::endl;
+    std::cerr << "Fitting 2" << std::endl;
+
+    if( C(ls, X, Y, aorg, used, aerr,  built_in::circle::with_reals) )
+    {
+        display_variables::errors(std::cerr, NULL, *C, aorg, used, aerr);
+    }
+
+
+
 
 
 

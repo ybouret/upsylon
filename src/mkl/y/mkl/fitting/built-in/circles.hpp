@@ -6,8 +6,10 @@
 #include "y/sequence/list.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/yap/rational.hpp"
-#include "y/container/matrix.hpp"
-#include "y/mkl/tao.hpp"
+#include "y/mkl/fitting/v-gradient.hpp"
+#include "y/mkl/fitting/sequential.hpp"
+#include "y/mkl/fitting/sample.hpp"
+#include "y/mkl/fitting/least-squares.hpp"
 #include "y/type/point2d.hpp"
 
 namespace upsylon
@@ -20,6 +22,24 @@ namespace upsylon
             namespace built_in
             {
 
+                class __circle : public object
+                {
+                public:
+                    typedef point2d<double>           vertex;
+                    typedef sequential<vertex,double> sequential_type;
+                    typedef v_gradient<vertex,double> v_gradient_type;
+                    typedef sample<vertex,double>     sample_type;
+
+                    virtual ~__circle() throw();
+
+                protected:
+                    explicit __circle() throw();
+                    virtual bool solve_(vertex &center, double &radius) = 0;
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(__circle);
+                };
+
                 //______________________________________________________________
                 //
                 //
@@ -27,18 +47,18 @@ namespace upsylon
                 //
                 //______________________________________________________________
                 template <typename T>
-                class _circle
+                class _circle : public releasable, public __circle
                 {
                 public:
-                    typedef _circle<T> circle_type;      //!< alias
+                    typedef __circle::vertex vertex;
+                    typedef _circle<T>       circle_type;      //!< alias
 
-                    inline virtual ~_circle() throw() {} //!< cleanup
-
-                    virtual void free() throw() = 0;     //!< free all
+                    inline virtual ~_circle() throw() {}   //!< cleanup
+                    virtual void    free()    throw() = 0; //!< free all
 
                     //! interface to compute center/radius as floating point
-                    inline bool solve(point2d<double> &center,
-                                      double          &radius)
+                    inline bool solve(vertex &center,
+                                      double &radius)
                     {
                         // initialize
                         assert( x.size() == y.size() );
@@ -47,7 +67,7 @@ namespace upsylon
                         center.x = center.y = radius = 0;
 
                         // call specialized
-                        return solve_(center,radius);
+                        return this->solve_(center,radius);
                     }
 
                 protected:
@@ -75,9 +95,15 @@ namespace upsylon
                         y.free();
                     }
 
+                    //! release x and y
+                    void release_xy() throw()
+                    {
+                        x.release();
+                        y.release();
+                    }
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(_circle);
-                    virtual bool solve_(point2d<double> &center, double &radius) = 0;
 
                 };
 
@@ -94,11 +120,12 @@ namespace upsylon
                     virtual ~iCircle() throw();   //!< cleanup
 
                     void         add(const unit_t X, const unit_t Y); //!< converted to rational
-                    virtual void free() throw();                      //!< free all
+                    virtual void free()    throw();                   //!< free all
+                    virtual void release() throw();                   //!< release all
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(iCircle);
-                    virtual bool solve_(point2d<double> &center, double &radius) ;
+                    virtual bool solve_(vertex &center, double &radius) ;
                     list<apq> z;
 
                 };
@@ -117,10 +144,58 @@ namespace upsylon
 
                     void         add(const double X, const double Y); //!< stored as double
                     virtual void free() throw();                      //!< free all
+                    virtual void release() throw();                   //!< release all
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(dCircle);
-                    virtual bool solve_(point2d<double> &center, double &radius);
+                    virtual bool solve_(vertex &center, double &radius);
+                };
+
+                class circle :
+                public __circle::sequential_type,
+                public __circle::v_gradient_type
+                {
+                public:
+                    typedef __circle::vertex             vertex;
+                    typedef __circle::sample_type        sample_type;
+                    static const char * const            name[3];
+                    typedef least_squares<vertex,double> ls_type;
+
+                    enum method
+                    {
+                        with_ints,
+                        with_reals
+                    };
+
+                    virtual ~circle() throw();
+                    explicit circle(const size_t n=0);
+
+                    const variables  &operator *() const throw();
+
+                    bool operator()(ls_type                  &ls,
+                                    const accessible<double> &X,
+                                    const accessible<double> &Y,
+                                    addressable<double>      &aorg,
+                                    const accessible<bool>   &used,
+                                    addressable<double>      &aerr,
+                                    const method              how);
+
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(circle);
+                    sample_type::pointer data;
+                    auto_ptr<dCircle>    dptr;
+                    auto_ptr<iCircle>    iptr;
+
+                    double         get2D(const vertex &v,const accessible<double> &aorg,const variables &vars);
+                    virtual double onStart(const vertex,const accessible<double> &,const variables &);
+                    virtual double onReach(const vertex,const accessible<double> &,const variables &);
+                    virtual void   compute(addressable<double>       &dFdA,
+                                           const vertex                v,
+                                           const accessible<double>   &aorg,
+                                           const variables            &vars,
+                                           const accessible<bool>     &used);
+
                 };
 
             }

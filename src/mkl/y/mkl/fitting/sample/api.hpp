@@ -47,6 +47,7 @@ namespace upsylon
                 virtual void     update_correlation(correlation<ORDINATE> &corr  )  const = 0; //!< add points to correlation
                 virtual void     update_SSE_and_SST( ORDINATE &SSE, ORDINATE &SST ) const = 0; //!< update SSE and SST
                 virtual void     ordinate_range(ORDINATE &lower, ORDINATE &upper)   const = 0; //!< find lower/upper ordinates
+                virtual void     free() throw() = 0; //!< free all data
 
                 //______________________________________________________________
                 //
