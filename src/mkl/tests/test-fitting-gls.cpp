@@ -169,8 +169,7 @@ Y_UTEST(fitting_gls)
         std::cerr << "something went wrong: " << e.what() << std::endl;
         std::cerr << e.when() << std::endl;
     }
-
-
+    
 
 }
 Y_UTEST_DONE()

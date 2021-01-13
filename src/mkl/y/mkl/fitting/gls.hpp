@@ -71,6 +71,7 @@ namespace upsylon
                                 const accessible<bool> &U,
                                 addressable<double>    &E);
 
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gls);
                 void *impl; //!< private implementation

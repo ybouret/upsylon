@@ -84,6 +84,7 @@ namespace upsylon
                 return static_cast<gls_type *>(impl)->fit(s,f,A,U,E);
             }
 
+            
         }
 
     }

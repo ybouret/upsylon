@@ -100,8 +100,8 @@ __ctrl(0)
                 }
 
 
-                //! ODE wrapper
-                inline void compute( array<T> &dYdx, const T x, const array<T> &Y)
+                //! ODE integrator wrapper
+                inline void compute(array<T> &dYdx, const T x, const array<T> &Y)
                 {
                     assert(p_aorg);
                     assert(p_vars);
@@ -120,7 +120,7 @@ __ctrl(0)
                     __ctrl = adjust->delta();
                     
                     // differential step: up to x1
-                    (*solver)( diffEq, fields, adjust->start(), x1, __ctrl, adjust->callback() );
+                    (*solver)(diffEq,fields,adjust->start(),x1,__ctrl,adjust->callback());
 
                     // done, return the value of interest
                     return adjust->query(x1,fields,aorg,vars);
@@ -134,7 +134,7 @@ __ctrl(0)
                     const vLink vlink(vars,&p_vars);
 
                     // differential step
-                    (*solver)( diffEq, fields, this->current, x1, __ctrl,  adjust->callback());
+                    (*solver)(diffEq,fields,this->current,x1,__ctrl,adjust->callback());
 
                     // done, return the value of interest
                     return adjust->query(x1,fields,aorg,vars);
