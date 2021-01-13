@@ -388,6 +388,14 @@ namespace upsylon
                     return ls.fit(*data, F, G, aorg, used, aerr);
 
                 }
+
+                void circle:: free() throw()
+                {
+                    data->free();
+                    if(iptr.is_valid()) iptr->free();
+                    if(dptr.is_valid()) dptr->free();
+                }
+
             }
 
         }

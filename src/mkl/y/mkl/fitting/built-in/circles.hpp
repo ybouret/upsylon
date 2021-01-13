@@ -22,18 +22,34 @@ namespace upsylon
             namespace built_in
             {
 
+                //______________________________________________________________
+                //
+                //
+                //! common parts for circle fitting
+                //
+                //______________________________________________________________
                 class __circle : public object
                 {
                 public:
-                    typedef point2d<double>           vertex;
-                    typedef sequential<vertex,double> sequential_type;
-                    typedef v_gradient<vertex,double> v_gradient_type;
-                    typedef sample<vertex,double>     sample_type;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    typedef point2d<double>           vertex;          //!< internal vertex
+                    typedef sequential<vertex,double> sequential_type; //!< sequential interface
+                    typedef v_gradient<vertex,double> v_gradient_type; //!< gradient interface
+                    typedef sample<vertex,double>     sample_type;     //!< internal sample
 
-                    virtual ~__circle() throw();
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
+                    virtual ~__circle() throw(); //!< cleanup
 
                 protected:
                     explicit __circle() throw();
+
+                    //! perform effective computation
                     virtual bool solve_(vertex &center, double &radius) = 0;
 
                 private:
@@ -43,16 +59,24 @@ namespace upsylon
                 //______________________________________________________________
                 //
                 //
-                //! interface to circle computation
+                //! interface to circle computation for rational/double
                 //
                 //______________________________________________________________
                 template <typename T>
                 class _circle : public releasable, public __circle
                 {
                 public:
-                    typedef __circle::vertex vertex;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    typedef __circle::vertex vertex;           //!< alias
                     typedef _circle<T>       circle_type;      //!< alias
 
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
                     inline virtual ~_circle() throw() {}   //!< cleanup
                     virtual void    free()    throw() = 0; //!< free all
 
@@ -66,11 +90,12 @@ namespace upsylon
                         tao::ld(rhs,zero);
                         center.x = center.y = radius = 0;
 
-                        // call specialized
+                        // call specialized proc
                         return this->solve_(center,radius);
                     }
 
                 protected:
+                    //! setup
                     inline explicit _circle() :
                     zero(0), x(), y(), mu(3,3), rhs(3,zero) {}
 
@@ -139,9 +164,8 @@ namespace upsylon
                 class dCircle : public _circle<double>
                 {
                 public:
-                    explicit dCircle();          //!< setup
-                    virtual ~dCircle() throw();  //!< cleanup
-
+                    explicit     dCircle();                           //!< setup
+                    virtual     ~dCircle() throw();                   //!< cleanup
                     void         add(const double X, const double Y); //!< stored as double
                     virtual void free() throw();                      //!< free all
                     virtual void release() throw();                   //!< release all
@@ -151,27 +175,44 @@ namespace upsylon
                     virtual bool solve_(vertex &center, double &radius);
                 };
 
+
+                //______________________________________________________________
+                //
+                //
+                //! fit circle with algebraic starting point then distance
+                //
+                //______________________________________________________________
                 class circle :
                 public __circle::sequential_type,
                 public __circle::v_gradient_type
                 {
                 public:
-                    typedef __circle::vertex             vertex;
-                    typedef __circle::sample_type        sample_type;
-                    static const char * const            name[3];
-                    typedef least_squares<vertex,double> ls_type;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    typedef __circle::vertex             vertex;       //!< alias
+                    typedef __circle::sample_type        sample_type;  //!< alias
+                    static const char * const            name[3];      //!< center.x, center.y, radius
+                    typedef least_squares<vertex,double> ls_type;      //!< to fit a circle
 
+                    //! algebraic methods to use
                     enum method
                     {
-                        with_ints,
-                        with_reals
+                        with_ints, //!< using iCircle
+                        with_reals //!< using dCircle
                     };
 
-                    virtual ~circle() throw();
-                    explicit circle(const size_t n=0);
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
+                    virtual ~circle() throw();         //!< cleanup
+                    explicit circle(const size_t n=0); //!< setup
 
-                    const variables  &operator *() const throw();
+                    const variables  &operator *() const throw(); //!< data variables
 
+                    //! full fit
                     bool operator()(ls_type                  &ls,
                                     const accessible<double> &X,
                                     const accessible<double> &Y,
@@ -180,6 +221,8 @@ namespace upsylon
                                     addressable<double>      &aerr,
                                     const method              how);
 
+                    //! free data and auxiliary
+                    void free() throw();
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(circle);
