@@ -156,7 +156,8 @@ and the standard error is:
 
 \end{itemize}
 
-\section{Application to Algebraic Circle Fit}
+\section{Circle Fit}
+\subsection{Algebraic}
 We have one sample of $N$ points $\vec{X}_{i\in[1:N]}$ with:
 \begin{equation}
 	\vec{X}_i = \begin{bmatrix}x_i\\y_i\\\end{bmatrix}
@@ -173,44 +174,47 @@ and
 \begin{equation}
 	\vec{A} = \begin{bmatrix} a\\b\\c\\ \end{bmatrix}.
 \end{equation}
-Then:
+Then the algebraic solution is:
 \begin{equation}
-	\bm{\alpha}_0 = 
-	\begin{bmatrix}
+\begin{bmatrix}
 	\sum x_i^2 & \sum x_iy_i & \sum x_i\\
 	\sum x_iy_i & \sum y_i^2 & \sum y_i\\
 	\sum x_i & \sum y_i & N \\
 	\end{bmatrix}
-\end{equation}
-and the algebraic solution is:
-\begin{equation}
-\bm{\alpha}_0 \vec{A} = \begin{bmatrix}
+\vec{A} = \begin{bmatrix}
 	\sum z_i x_i\\
 	\sum z_i y_i\\
 	\sum z_i\\
 \end{bmatrix}
 \end{equation}
-Using:
-\begin{equation}
-	D^2(\vec{A}) = \sum_i \left[z_i - (ax_i+by_i+c)\right]^2, \;\; M'=3,
-\end{equation}
-we directly find:
-\begin{equation}
-	\vec{A} = \bm{\alpha}_0^{-1} \begin{bmatrix}
-	\sum z_i x_i\\
-	\sum z_i y_i\\
-	\sum z_i\\
-\end{bmatrix}
-+ \delta \vec{A}
-\end{equation}
-and we get:
+Then we deduce 
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	x_c & = & \frac{a}{2} + \frac{\delta a}{2}\\
-	y_c & = & \frac{b}{2} + \frac{\delta b}{2}\\
-	r   & = & \sqrt{c+x_c^2+y_c^2} + \dfrac{1}{2r}\left[ \delta{c} + \dfrac{1}{2}\left(|a|\delta a + |b| \delta b\right)\right]\
+	x_c & = & \frac{a}{2}  \\
+	y_c & = & \frac{b}{2} \\
+	r   & = & \sqrt{c+x_c^2+y_c^2}\\
 \end{array}
 \right.
 \end{equation}
+\subsection{Euclidean}
+We use the set of equations:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{X}_i & = &\begin{bmatrix} x_i\\ y_i \\ \end{bmatrix}\\
+ Y_i & = & 0\\
+ F(\vec{X}_i) & = & \sqrt{ (x_i-x_c)^2 + (y_i-y_c)^2} - r\\
+ \\
+ \hline
+ \\
+ \partial_{x_c} F & = & \dfrac{x_c-x_i}{\sqrt{ (x_i-x_c)^2 + (y_i-y_c)^2}}\\
+ \\
+  \partial_{y_c} F & = & \dfrac{x_c-x_i}{\sqrt{ (x_i-x_c)^2 + (y_i-y_c)^2}}\\
+  \\
+ \partial_{r} F & = & -1\\
+\end{array}
+\right.
+\end{equation}
+
 \end{document}
