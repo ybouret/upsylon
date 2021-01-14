@@ -64,10 +64,12 @@ Y_UTEST_INIT(64)
     Y_UTEST(fitting_lam);
     Y_UTEST(fitting_sample);
     Y_UTEST(fitting_diff);
-    Y_UTEST(fitting_circles);
     Y_UTEST(fitting_ode);
     Y_UTEST(fitting_poly);
     Y_UTEST(fitting_gls);
+    Y_UTEST(fitting_circles);
+    Y_UTEST(fitting_conics);
+
 }
 Y_UTEST_EXEC()
 

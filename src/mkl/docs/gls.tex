@@ -176,6 +176,7 @@ and
 \end{equation}
 Then the algebraic solution is:
 \begin{equation}
+\label{eq:algebraic_circle}
 \begin{bmatrix}
 	\sum x_i^2 & \sum x_iy_i & \sum x_i\\
 	\sum x_iy_i & \sum y_i^2 & \sum y_i\\
@@ -187,6 +188,7 @@ Then the algebraic solution is:
 	\sum z_i\\
 \end{bmatrix}
 \end{equation}
+The system \eqref{eq:algebraic_circle} may be solved using floating point or rational coordinates.
 Then we deduce 
 \begin{equation}
 \left\lbrace
@@ -217,4 +219,82 @@ We use the set of equations:
 \right.
 \end{equation}
 
+\section{Conic Fit}
+\subsection{Algebraic}
+We have one sample of $N$ points $\vec{X}_{i\in[1:N]}$ with:
+\begin{equation}
+	\vec{X}_i = \begin{bmatrix}x_i\\y_i\\\end{bmatrix}
+\end{equation}
+and we want to match the equation:
+\begin{equation}
+	ax^2+bxy+cy^2+dx+ey+f=0
+\end{equation}
+with some constraint on the coefficients to ensure uniqueness.
+We set
+\begin{equation}
+	\vec{Z}_i = \begin{bmatrix}
+	x_i^2\\
+	x_iy_i\\
+	y_i^2\\
+	x_i\\
+	y_i\\
+	1\\
+	\end{bmatrix}
+	, \;\;
+	\vec{A} =
+	\begin{bmatrix}
+	a\\
+	b\\
+	c\\
+	d\\
+	e\\
+	f\\
+	\end{bmatrix},\;\;
+	\bm{C} \in \mathcal{M}_6,
+\end{equation}
+and we want to minimize
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\mathcal{L}(\vec{A},\lambda) & = & \sum_i (\vec{A}\cdot\vec{Z}_i)^2 - \lambda \left(\vec{A} \bm{C} \vec{A}-1\right)\\
+	\\
+	 & = & \displaystyle \vec{A} \cdot \underbrace{\left( \sum_i \vec{Z}_i \otimes \vec{Z}_i \right)}_{\bm{S}} \cdot \vec{A} - \lambda \left(\vec{A} \bm{C} \vec{A}-1\right)\\
+\end{array}
+\right.
+\end{equation}
+We compute the gradient of $\mathcal{L}$:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\partial_\lambda \mathcal{L} & = & 1 - \vec{A} \bm{C} \vec{A}\\
+\\
+\partial_{\vec{A}} \mathcal{L} & = & \bm{S} \vec{A} - \lambda \bm{C}\vec{A}\\
+\end{array}
+\right.
+\end{equation}
+We end up with:
+\begin{equation}
+	\underbrace{\bm{S}^{-1} \bm{C}}_{\bm{W}} \vec{A} = \dfrac{1}{\lambda} \vec{A}
+\end{equation}
+Let $\vec{U}_\mu\not=\vec{0}$ be an eigenvector of $\bm{W}$ and $\mu$ its eigenvalue.
+We need
+\begin{itemize}
+\item $\mu\not=0$
+\item $\vec{U}_\mu\cdot\bm{C}\cdot\vec{U}_\mu>0$
+\end{itemize}
+and we have a guess
+\begin{equation}
+\label{eq:Amu}
+	\vec{A}_\mu = \dfrac{ \vec{U}_\mu}{\sqrt{\vec{U}_\mu\cdot\bm{C}\cdot\vec{U}_\mu}} \Rightarrow \vec{A}_\mu \bm{C} \vec{A}_\mu-1 = 0.
+\end{equation}
+We evaluate:
+\begin{equation}
+\mathcal{L}(\vec{A}_\mu,\lambda) = \vec{A}_\mu \cdot \bm{S} \cdot \vec{A}_\mu 
+= \vec{A}_\mu \cdot \bm{S} \left( \lambda \bm{S}^{-1} \bm{C} \vec{A}_\mu \right) = \lambda = \dfrac{1}{\mu}
+\end{equation}
+
+To minimize $\mathcal{L}$, we need to take the \textbf{highest positive $\mu$} such that its eigenvector $\vec{U}_\mu$ verifies
+ $\vec{U}_\mu\cdot\bm{C}\cdot\vec{U}_\mu>0$, and deduce $\vec{A}_\mu$ from \eqref{eq:Amu}.
+
+ 
 \end{document}
