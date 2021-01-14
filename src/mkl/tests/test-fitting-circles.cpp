@@ -1,5 +1,5 @@
 
-#include "y/mkl/fitting/built-in/circles.hpp"
+#include "y/mkl/fitting/built-in/circle.hpp"
 #include "y/mkl/types.hpp"
 
 #include "y/utest/run.hpp"
@@ -8,34 +8,6 @@
 using namespace upsylon;
 using namespace mkl;
 using namespace fitting;
-
-
-#if 0
-namespace
-{
-    static void fill( sample_type &s, const float xc, const float yc, const float r )
-    {
-        for(size_t i=3+alea.leq(30);i>0;--i)
-        {
-            const float phi = numeric<float>::two_pi * alea.to<float>();
-            const float x   = xc + r*cos(phi)*(1.0f+0.1f*alea.symm<float>());
-            const float y   = yc + r*sin(phi)*(1.0f+0.1f*alea.symm<float>());
-            s.append( unit_t(x), unit_t(y) );
-        }
-    }
-    
-    static inline void save_sample(const sample_type &s, ios::ostream &fp)
-    {
-        for(size_t i=1;i<=s.count();++i)
-        {
-            const point2d<unit_t> &p = s.abscissa[i];
-            fp("%ld %ld\n", long(p.x), long(p.y));
-        }
-    }
-    
-}
-#endif
-
 
 
 
