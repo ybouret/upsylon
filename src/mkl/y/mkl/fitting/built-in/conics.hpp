@@ -217,9 +217,10 @@ namespace upsylon
                 class dConics : public _conics<double>
                 {
                 public:
-                    explicit dConics();
-                    virtual ~dConics() throw();
+                    explicit dConics();          //!< setup
+                    virtual ~dConics() throw();  //!< cleanup
                     
+                    //! add floating point coordinates
                     void add(const double X, const double Y);
                     
                 private:
