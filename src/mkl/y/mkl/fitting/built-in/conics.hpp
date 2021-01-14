@@ -35,13 +35,29 @@ namespace upsylon
                 {
                 public:
                     static const size_t nvar = 6;
+
                     virtual ~__conics() throw();
 
+                    virtual bool build_shape() = 0; //!< build and transfer W
+
+                    bool find( );
+
+
+
                 protected:
-                    explicit __conics() throw();
+                    explicit __conics();
+
+                    matrix<double> W;  //!< workspace   matrix
+                    matrix<double> C;  //!< constraints matrix
+                    vector<double> wr; //!< eigv re
+                    vector<double> wi; //!< eigv im
+                    vector<double> sp; //!< possible values
+
+                    double compute_UCU(const accessible<double> &u) throw();
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(__conics);
+
                 };
 
 
@@ -54,11 +70,11 @@ namespace upsylon
                     inline virtual ~_conics() throw() {}
 
 
-                    inline bool build()
+                    inline virtual bool build_shape()
                     {
                         assert(x.size()==y.size());
                         S.ld(zero);
-                        build_();
+                        assemble();
                         regularize();
                         std::cerr << "S=" << S << std::endl;
                         if( !LU::build(S) )
@@ -67,20 +83,20 @@ namespace upsylon
                         }
                         else
                         {
-                            _W.assign(C);
-                            LU::solve(S,_W);
-                            update();
+                            _W.assign(_C);
+                            LU::solve(S,_W); // _W = inv(S)*C
+                            transfer();
                             return true;
                         }
                     }
 
                     const T        zero; //!< a zero value
-                    matrix<T>      C;    //!< constraint matrix
+                    matrix<T>      _C;   //!< constraint matrix
 
                 protected:
                     //! setup
                     inline explicit _conics() :
-                    zero(0), C(nvar,nvar), x(), y(), S(nvar,nvar), _W(nvar,nvar)
+                    zero(0), _C(nvar,nvar), x(), y(), S(nvar,nvar), _W(nvar,nvar)
                     {
                     }
 
@@ -116,9 +132,8 @@ namespace upsylon
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(_conics);
-
-                    virtual void build_() = 0; //!< build S from x and y
-                    virtual void update() = 0; //!< _W -> W
+                    virtual void assemble() = 0; //!< build S from x and y
+                    virtual void transfer() = 0; //!< _W and _C to W and C
                 };
 
 
@@ -130,11 +145,11 @@ namespace upsylon
 
                     void add(unit_t X, unit_t Y);
 
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(iConics);
-                    matrix<double> W;
-                    virtual void build_();
-                    virtual void update(); //!< _W -> W
+                    virtual void assemble();
+                    virtual void transfer();
                 };
 
 
@@ -146,9 +161,8 @@ namespace upsylon
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(dConics);
-                    matrix<double> &W;
-                    virtual void build_(); //!< 
-                    virtual void update(); //!< do nothing
+                    virtual void assemble();
+                    virtual void transfer();
                 };
             }
 

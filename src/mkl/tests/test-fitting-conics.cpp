@@ -16,10 +16,10 @@ Y_UTEST(fitting_conics)
 
     built_in::iConics IC;
 
-    IC.C[1][3] = IC.C[3][1] = 2;
-    IC.C[2][2] = -1;
+    IC._C[1][3] = IC._C[3][1] = 2;
+    IC._C[2][2] = -1;
 
-    std::cerr << "C=" << IC.C << std::endl;
+    std::cerr << "C=" << IC._C << std::endl;
 
     const double ra = 10 + 100 * alea.to<double>();
     const double rb = (0.1+0.85*alea.to<double>()) * ra;
@@ -42,7 +42,11 @@ Y_UTEST(fitting_conics)
 
 
 
-    IC.build();
+    if( IC.build_shape() )
+    {
+        std::cerr << "built shape" << std::endl;
+        IC.find();
+    }
 
 }
 Y_UTEST_DONE()
