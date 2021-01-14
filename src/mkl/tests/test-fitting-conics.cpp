@@ -10,6 +10,33 @@ using namespace upsylon;
 using namespace mkl;
 using namespace fitting;
 
+namespace  {
+    
+    static inline
+    void save_ellipse(const char *filename,
+                      const point2d<double> &center,
+                      const point2d<double> &radius,
+                      const matrix<double>  &rotate)
+    {
+        ios::ocstream fp(filename);
+        
+        const size_t N = 100;
+        for(size_t i=0;i<=N;++i)
+        {
+            const double theta = (numeric<double>::two_pi * i)/N;
+            const double c     = cos(theta);
+            const double s     = sin(theta);
+            
+            point2d<double> r(c*radius.x,s*radius.y);
+            
+            r += center;
+            fp("%g %g\n",r.x,r.y);
+        }
+    
+    }
+    
+    
+}
 
 Y_UTEST(fitting_conics)
 {
@@ -52,20 +79,30 @@ Y_UTEST(fitting_conics)
         DC.add(double(X),double(Y));
     }
 
-
-
-    if( IC.build_shape() )
+    point2d<double> center;
+    point2d<double> radius;
+    matrix<double>  rotate;
+    
+    if( IC.ellipse(center,radius,rotate) )
     {
-        std::cerr << "i-built shape" << std::endl;
-        IC.find_values();
+        std::cerr << "center: " << center << std::endl;
+        std::cerr << "radius: " << radius << std::endl;
+        std::cerr << "rotate: " << rotate << std::endl;
+        std::cerr << std::endl;
+        save_ellipse("iell.dat",center,radius,rotate);
+        
     }
     
-    if( DC.build_shape() )
+    if( DC.ellipse(center,radius,rotate) )
     {
-        std::cerr << "d-built shape" << std::endl;
-        DC.find_values();
+        std::cerr << "center: " << center << std::endl;
+        std::cerr << "radius: " << radius << std::endl;
+        std::cerr << "rotate: " << rotate << std::endl;
+        std::cerr << std::endl;
+        save_ellipse("dell.dat",center,radius,rotate);
     }
-
+    
+    
 }
 Y_UTEST_DONE()
 

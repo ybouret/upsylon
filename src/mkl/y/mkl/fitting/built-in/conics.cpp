@@ -28,11 +28,11 @@ namespace upsylon
 
                 void __conics:: ellipse()
                 {
-                    __ellipse();
-                    _ellipse();
+                    ellipse_primary();
+                    ellipse_replica();
                 }
                 
-                void  __conics:: __ellipse() throw()
+                void  __conics:: ellipse_primary() throw()
                 {
                     C.ld(0);
                     C[1][3] =  2;
@@ -95,8 +95,8 @@ namespace upsylon
                         L[1]    = J[1] = A[4];
                         L[2]    = J[2] = A[5];
 
-                        std::cerr << "Q=" << Q << std::endl;
-                        std::cerr << "L=" << L << std::endl;
+                        //std::cerr << "Q=" << Q << std::endl;
+                        //std::cerr << "L=" << L << std::endl;
 
                         if(!LU::build(R))
                         {
@@ -117,7 +117,7 @@ namespace upsylon
                         std::cerr << "R="   << R << std::endl;
 
                         // find rhs by change of coordinates
-                        rhs = - 0.5 * tao::dot<double>::of(L,J) - A[6];
+                        rhs = - (0.5 * tao::dot<double>::of(L,J) + A[6]);
                         std::cerr << "rhs=" << rhs << std::endl;
 
                         double rx2 = rhs/lam[1];
@@ -133,7 +133,32 @@ namespace upsylon
                     return false;
                 }
 
+                bool __conics:: ellipse(vertex         &center,
+                                        vertex         &radius,
+                                        matrix<double> &rotate)
+                {
+                    bzset(center);
+                    bzset(radius);
+                    rotate.ld(0);
+                    
+                    if( build_shape() && find_values() )
+                    {
+                        center.x = J[1];
+                        center.y = J[2];
+                        
+                        radius.x = sqrt(fabs(rhs/lam[1]));
+                        radius.y = sqrt(fabs(rhs/lam[2]));
 
+                        rotate.make(2,2);
+                        rotate.assign(R);
+                        
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
 
             }
             

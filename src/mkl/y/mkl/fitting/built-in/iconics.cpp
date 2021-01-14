@@ -21,7 +21,7 @@ namespace upsylon
                 {
                 }
                 
-                void iConics:: _ellipse()
+                void iConics:: ellipse_replica()
                 {
                     _C.ld(zero);
                     const apq two(2);
@@ -29,7 +29,6 @@ namespace upsylon
                     _C[1][3] = two;
                     _C[3][1] = two;
                     _C[2][2] = minus_one;
-                    
                 }
                 
                 

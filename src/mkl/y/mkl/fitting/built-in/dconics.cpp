@@ -20,7 +20,7 @@ namespace upsylon
                 {
                 }
                 
-                void dConics:: _ellipse()
+                void dConics:: ellipse_replica()
                 {
                     
                 }

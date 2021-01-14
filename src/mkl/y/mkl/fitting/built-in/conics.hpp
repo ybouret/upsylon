@@ -37,8 +37,8 @@ namespace upsylon
                     //
                     // types and definitions
                     //__________________________________________________________
-                    static const size_t nvar = 6; //!< number of variables
-
+                    static const size_t     nvar = 6; //!< number of variables
+                    typedef point2d<double> vertex;   //!< alias
                     //__________________________________________________________
                     //
                     // virtual interface
@@ -50,9 +50,13 @@ namespace upsylon
                     //
                     // non virtual interface
                     //__________________________________________________________
-                    bool                       find_values( );            //!< compute 6 values after build_shape()
-                    const accessible<double> & operator*() const throw(); //!< where the values are computed
-                    void                       ellipse();                 //!< __ellipse and _ellipse
+                    bool find_values(); //!< compute 6 values after build_shape()
+                    void ellipse();     //!< ellipse_primary() and ellipse_replica()
+                    
+                    //! build_shape && find_values && extract parameters
+                    bool ellipse(vertex         &center,
+                                 vertex         &radius,
+                                 matrix<double> &rotate);
                     
                 protected:
                     explicit __conics();
@@ -75,8 +79,8 @@ namespace upsylon
                     //! using wi as temporary
                     double compute_UCU(const accessible<double> &u) throw();
                     
-                    void         __ellipse() throw();
-                    virtual void _ellipse() = 0;
+                    void         ellipse_primary() throw();
+                    virtual void ellipse_replica() = 0;
                     
                 };
 
@@ -175,7 +179,7 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(iConics);
                     virtual void assemble();
-                    virtual void _ellipse();
+                    virtual void ellipse_replica();
 
                     matrix<apq> _W;
                     matrix<apq> _C;
@@ -202,7 +206,7 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(dConics);
                     virtual void assemble();
-                    virtual void _ellipse(); //!< do nothing
+                    virtual void ellipse_replica(); //!< do nothing
 
                 };
             }
