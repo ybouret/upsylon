@@ -16,7 +16,7 @@ namespace upsylon
                 C(nvar,nvar),
                 wr(nvar,0),
                 wi(nvar,0),
-                sp(nvar,0)
+                Wd(nvar,nvar)
                 {}
 
                 __conics:: ~__conics() throw() {}
@@ -28,15 +28,15 @@ namespace upsylon
                 }
 
 
-                bool __conics:: find( )  
+                bool __conics:: find_values( )
                 {
                     size_t         nr = W.rows;
-                    sp.free();
-                    matrix<double> Wd(W);
+                    Wd.assign(W);
                     if(!diagonalize::eig(Wd,wr,wi,nr))
                     {
                         return false;
                     }
+
 
                     if(nr<=0)
                     {
@@ -159,7 +159,7 @@ namespace upsylon
                         throw;
                     }
                 }
-
+                
 
             }
 

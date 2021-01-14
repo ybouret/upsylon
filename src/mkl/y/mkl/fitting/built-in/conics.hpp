@@ -30,19 +30,28 @@ namespace upsylon
                 //! common parts for conics fitting
                 //
                 //______________________________________________________________
-
                 class __conics
                 {
                 public:
-                    static const size_t nvar = 6;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    static const size_t nvar = 6; //!< number of variables
 
-                    virtual ~__conics() throw();
+                    //__________________________________________________________
+                    //
+                    // virtual interface
+                    //__________________________________________________________
+                    virtual     ~__conics() throw(); //!< cleanup
+                    virtual bool build_shape() = 0;  //!< build and transfer W
 
-                    virtual bool build_shape() = 0; //!< build and transfer W
-
-                    bool find( );
-
-
+                    //__________________________________________________________
+                    //
+                    // non virtual interface
+                    //__________________________________________________________
+                    bool                       find_values( );            //!< compute 6 values after build_shape()
+                    const accessible<double> & operator*() const throw(); //!< where the values are computed
 
                 protected:
                     explicit __conics();
@@ -50,26 +59,38 @@ namespace upsylon
                     matrix<double> W;  //!< workspace   matrix
                     matrix<double> C;  //!< constraints matrix
                     vector<double> wr; //!< eigv re
-                    vector<double> wi; //!< eigv im
-                    vector<double> sp; //!< possible values
-
-                    double compute_UCU(const accessible<double> &u) throw();
+                    vector<double> wi; //!< eigv im, holds final result
+                    matrix<double> Wd; //!< temporary
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(__conics);
-
+                    double compute_UCU(const accessible<double> &u) throw();
                 };
 
-
+                //______________________________________________________________
+                //
+                //
+                //! common parts to compute shape matrix
+                //
+                //______________________________________________________________
                 template <typename T>
                 class _conics  : public __conics
                 {
                 public:
-                    typedef _conics<T> conics_type;
-                    
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    typedef _conics<T> conics_type; //!< alias
+
+                    //__________________________________________________________
+                    //
+                    // interface
+                    //__________________________________________________________
+                    //! cleanup
                     inline virtual ~_conics() throw() {}
 
-
+                    //! build shape
                     inline virtual bool build_shape()
                     {
                         assert(x.size()==y.size());
@@ -90,13 +111,33 @@ namespace upsylon
                         }
                     }
 
+                    //__________________________________________________________
+                    //
+                    // interface
+                    //__________________________________________________________
+                    //! set _C for ellipse
+                    inline void ellipse()
+                    {
+                        _C.ld(zero);
+                        const T two(2);
+                        const T minus_one(-1);
+                        _C[1][3] = two;
+                        _C[3][1] = two;
+                        _C[2][2] = minus_one;
+                    }
+
+                    //__________________________________________________________
+                    //
+                    // members
+                    //__________________________________________________________
                     const T        zero; //!< a zero value
-                    matrix<T>      _C;   //!< constraint matrix
+
+
 
                 protected:
                     //! setup
                     inline explicit _conics() :
-                    zero(0), _C(nvar,nvar), x(), y(), S(nvar,nvar), _W(nvar,nvar)
+                    zero(0), x(), y(), S(nvar,nvar), _W(nvar,nvar), _C(nvar,nvar)
                     {
                     }
 
@@ -104,9 +145,10 @@ namespace upsylon
                     list<T>        y;    //!< store coordinate
                     matrix<T>      S;    //!< shape matrix
                     matrix<T>     _W;    //!< inv(S)*C
+                    matrix<T>     _C;    //!< constraint matrix
 
                     //! make symmetric matrix
-                    void regularize()
+                    inline void regularize()
                     {
                         S[2][1] = S[1][2];
 
@@ -136,13 +178,19 @@ namespace upsylon
                     virtual void transfer() = 0; //!< _W and _C to W and C
                 };
 
-
+                //______________________________________________________________
+                //
+                //
+                //! compute shape with rational, for integer coordinates
+                //
+                //______________________________________________________________
                 class iConics : public _conics<apq>
                 {
                 public:
-                    explicit iConics();
-                    virtual ~iConics() throw();
+                    explicit iConics();          //!< setup
+                    virtual ~iConics() throw();  //!< cleanup
 
+                    //! add integer coordinates
                     void add(unit_t X, unit_t Y);
 
 
@@ -152,7 +200,12 @@ namespace upsylon
                     virtual void transfer();
                 };
 
-
+                //______________________________________________________________
+                //
+                //
+                //! compute shape with reals
+                //
+                //______________________________________________________________
                 class dConics : public _conics<double>
                 {
                 public:
