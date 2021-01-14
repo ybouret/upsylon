@@ -25,6 +25,9 @@ Y_UTEST(fitting_conics)
     const double xc = 200 * alea.symm<double>();
     const double yc = 200 * alea.symm<double>();
 
+    const double th = numeric<double>::two_pi * alea.to<double>();
+    const double cc = cos(th);
+    const double ss = sin(th);
 
 
     std::cerr << "xc=" << xc << std::endl;
@@ -40,8 +43,8 @@ Y_UTEST(fitting_conics)
         const double phi = numeric<double>::two_pi * alea.to<double>();
         const double x0  = ra * cos(phi);
         const double y0  = rb * sin(phi);
-        const double x   = xc + x0;
-        const double y   = yc + y0;
+        const double x   = xc + cc*x0 - ss * x0;
+        const double y   = yc + ss*x0 + cc * y0;
         const unit_t X   = unit_t(x);
         const unit_t Y   = unit_t(y);
         ios::ocstream::echo("edat.dat","%ld %ld\n", long(X), long(Y) );

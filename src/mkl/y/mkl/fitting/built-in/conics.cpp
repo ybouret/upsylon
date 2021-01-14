@@ -104,7 +104,10 @@ namespace upsylon
                         std::cerr << "J=" << J << std::endl;
 
                         // find eigenvalue
-                        eigen::build(Q,lam,R);
+                        if(!eigen::build(Q,lam,R))
+                        {
+                            return false;
+                        }
                         std::cerr << "lam=" << lam << std::endl;
                         std::cerr << "R="   << R << std::endl;
 

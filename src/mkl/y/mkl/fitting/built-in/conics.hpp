@@ -70,6 +70,8 @@ namespace upsylon
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(__conics);
+
+                    //! using wi as temporary
                     double compute_UCU(const accessible<double> &u) throw();
                 };
 
