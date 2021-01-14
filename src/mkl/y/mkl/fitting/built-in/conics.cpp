@@ -26,6 +26,21 @@ namespace upsylon
                 rhs(0)
                 {}
 
+                void __conics:: ellipse()
+                {
+                    __ellipse();
+                    _ellipse();
+                }
+                
+                void  __conics:: __ellipse() throw()
+                {
+                    C.ld(0);
+                    C[1][3] =  2;
+                    C[3][1] =  2;
+                    C[2][2] = -1;
+                }
+
+                
                 __conics:: ~__conics() throw() {}
 
                 double __conics:: compute_UCU(const accessible<double> &u) throw()
@@ -50,16 +65,10 @@ namespace upsylon
                     {
                         return false;
                     }
-
-                    std::cerr << "#nr=" << nr << std::endl;
-                    std::cerr << "wr=" << wr << std::endl;
-                    std::cerr << "wi=" << wi << std::endl;
-
                     // compute real eigenvectors
                     matrix<double> ev(nr,6);
-                    diagonalize::eigv(ev, W, wr);
-                    std::cerr << "ev=" << ev << std::endl;
-
+                    diagonalize::eigv(ev,W,wr);
+                    
 
                     // find optimal eigenvalue
                     for(size_t k=nr;k>0;--k)
@@ -68,10 +77,6 @@ namespace upsylon
                         if(mu<=0) break;
                         const array<double> &U   = ev[k];
                         const double         UCU = compute_UCU(U);
-
-                        std::cerr << "trying mu  = " << mu << std::endl;
-                        std::cerr << "       U   = " << U << std::endl;
-                        std::cerr << "       UCU = " << UCU << std::endl;
                         if(UCU<=0) continue;
 
                         // success!

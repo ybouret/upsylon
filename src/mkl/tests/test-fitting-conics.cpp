@@ -15,7 +15,7 @@ Y_UTEST(fitting_conics)
 {
 
     built_in::iConics IC;
-    built_in::iConics DC;
+    built_in::dConics DC;
 
     IC.ellipse();
     DC.ellipse();

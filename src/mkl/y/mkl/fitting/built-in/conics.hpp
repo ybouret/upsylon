@@ -45,14 +45,15 @@ namespace upsylon
                     //__________________________________________________________
                     virtual     ~__conics() throw(); //!< cleanup
                     virtual bool build_shape() = 0;  //!< build and transfer W
-
+                    
                     //__________________________________________________________
                     //
                     // non virtual interface
                     //__________________________________________________________
                     bool                       find_values( );            //!< compute 6 values after build_shape()
                     const accessible<double> & operator*() const throw(); //!< where the values are computed
-
+                    void                       ellipse();                 //!< __ellipse and _ellipse
+                    
                 protected:
                     explicit __conics();
 
@@ -73,6 +74,10 @@ namespace upsylon
 
                     //! using wi as temporary
                     double compute_UCU(const accessible<double> &u) throw();
+                    
+                    void         __ellipse() throw();
+                    virtual void _ellipse() = 0;
+                    
                 };
 
                 //______________________________________________________________
@@ -97,43 +102,8 @@ namespace upsylon
                     //__________________________________________________________
                     //! cleanup
                     inline virtual ~_conics() throw() {}
-
-                    //! build shape
-                    inline virtual bool build_shape()
-                    {
-                        assert(x.size()==y.size());
-                        S.ld(zero);
-                        assemble();
-                        regularize();
-                        std::cerr << "S=" << S << std::endl;
-                        if( !LU::build(S) )
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            _W.assign(_C);
-                            LU::solve(S,_W); // _W = inv(S)*C
-                            transfer();
-                            return true;
-                        }
-                    }
-
-                    //__________________________________________________________
-                    //
-                    // interface
-                    //__________________________________________________________
-                    //! set _C for ellipse
-                    inline void ellipse()
-                    {
-                        _C.ld(zero);
-                        const T two(2);
-                        const T minus_one(-1);
-                        _C[1][3] = two;
-                        _C[3][1] = two;
-                        _C[2][2] = minus_one;
-                    }
-
+                    
+                    
                     //__________________________________________________________
                     //
                     // members
@@ -145,15 +115,14 @@ namespace upsylon
                 protected:
                     //! setup
                     inline explicit _conics() :
-                    zero(0), x(), y(), S(nvar,nvar), _W(nvar,nvar), _C(nvar,nvar)
+                    zero(0), x(), y(), S(nvar,nvar)
                     {
                     }
 
                     list<T>        x;    //!< store coordinate
                     list<T>        y;    //!< store coordinate
                     matrix<T>      S;    //!< shape matrix
-                    matrix<T>     _W;    //!< inv(S)*C
-                    matrix<T>     _C;    //!< constraint matrix
+                    
 
                     //! make symmetric matrix
                     inline void regularize()
@@ -183,7 +152,6 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(_conics);
                     virtual void assemble() = 0; //!< build S from x and y
-                    virtual void transfer() = 0; //!< _W and _C to W and C
                 };
 
                 //______________________________________________________________
@@ -200,12 +168,17 @@ namespace upsylon
 
                     //! add integer coordinates
                     void add(const unit_t X, const unit_t Y);
-
-
+                    
+                    //! with integers
+                    virtual bool build_shape();
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(iConics);
                     virtual void assemble();
-                    virtual void transfer();
+                    virtual void _ellipse();
+
+                    matrix<apq> _W;
+                    matrix<apq> _C;
                 };
 
                 //______________________________________________________________
@@ -223,10 +196,14 @@ namespace upsylon
                     //! add floating point coordinates
                     void add(const double X, const double Y);
                     
+                    //! using floating point
+                    virtual bool build_shape();
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(dConics);
                     virtual void assemble();
-                    virtual void transfer();
+                    virtual void _ellipse(); //!< do nothing
+
                 };
             }
 

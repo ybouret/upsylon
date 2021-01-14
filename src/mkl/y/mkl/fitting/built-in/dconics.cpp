@@ -20,6 +20,11 @@ namespace upsylon
                 {
                 }
                 
+                void dConics:: _ellipse()
+                {
+                    
+                }
+                
                 void dConics:: assemble()
                 {
                     size_t n = x.size();
@@ -40,12 +45,12 @@ namespace upsylon
                         {
                             list<double>::iterator it = x.begin();
                             list<double>::iterator jt = y.begin();
-                            for(size_t i=n;i>0;--i)
+                            for(size_t i=n;i>0;--i,++it,++jt)
                             {
                                 const double xx = *it;
                                 const double yy = *jt;
-                                X[i] = xx;
-                                Y[i] = yy;
+                                X[i]  = xx;
+                                Y[i]  = yy;
                                 X2[i] = xx * xx;
                                 Y2[i] = yy * yy;
                                 XY[i] = xx * yy;
@@ -77,7 +82,7 @@ namespace upsylon
                         Y_CONIC(S[2][3],_XYY2);
                         Y_CONIC(S[2][4],_XYX);
                         Y_CONIC(S[2][5],_XYY);
-                        Y_CONIC(S[2][5],_XY);
+                        Y_CONIC(S[2][6],_XY);
                         
 #define _Y2Y2(i) square_of(Y2[i])
 #define _Y2X(i)  Y2[i] * X[i]
@@ -101,11 +106,26 @@ namespace upsylon
                     }
                 }
                 
-                void dConics:: transfer()
+               
+                //! build shape
+                bool dConics:: build_shape()
                 {
-                    
+                    assert(x.size()==y.size());
+                    S.ld(zero);
+                    assemble();
+                    regularize();
+                    std::cerr << "Sd=" << S << std::endl;
+                    if( !LU::build(S) )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        W.assign(C);
+                        LU::solve(S,W); // W = inv(S)*C
+                        return true;
+                    }
                 }
-                
                 
                 void dConics:: add(const double X, const double Y)
                 {

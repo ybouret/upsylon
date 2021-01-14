@@ -11,12 +11,51 @@ namespace upsylon
         {
             namespace built_in
             {
-                iConics:: iConics() : conics_type()
+                iConics:: iConics() : conics_type(),
+                _W(nvar,nvar),
+                _C(nvar,nvar)
                 {
                 }
                 
                 iConics:: ~iConics() throw()
                 {
+                }
+                
+                void iConics:: _ellipse()
+                {
+                    _C.ld(zero);
+                    const apq two(2);
+                    const apq minus_one(-1);
+                    _C[1][3] = two;
+                    _C[3][1] = two;
+                    _C[2][2] = minus_one;
+                    
+                }
+                
+                
+                bool iConics:: build_shape()
+                {
+                    S.ld(zero);
+                    assemble();
+                    regularize();
+                    std::cerr << "S=" << S << std::endl;
+                    if( !LU::build(S) )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        _W.assign(_C);
+                        LU::solve(S,_W); // _W = inv(S)*C
+                        for(size_t i=1;i<=nvar;++i)
+                        {
+                            for(size_t j=1;j<=nvar;++j)
+                            {
+                                W[i][j] = _W[i][j].to_double();
+                            }
+                        }
+                        return true;
+                    }
                 }
                 
                 void iConics:: assemble()
@@ -56,22 +95,8 @@ namespace upsylon
                         S[5][5] += square_of(Y);
                         S[5][6] += Y;
                     }
-                    
                 }
                 
-                void iConics:: transfer()
-                {
-                    
-                    for(size_t i=1;i<=nvar;++i)
-                    {
-                        for(size_t j=1;j<=nvar;++j)
-                        {
-                            W[i][j] = _W[i][j].to_double();
-                            C[i][j] = _C[i][j].to_double();
-                        }
-                    }
-                    std::cerr << "W=" << W << std::endl;
-                }
                 
                 void iConics:: add(const unit_t X, const unit_t Y)
                 {
