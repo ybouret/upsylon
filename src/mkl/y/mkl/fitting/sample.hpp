@@ -94,6 +94,14 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
+
+                //! ensure validity
+                inline void validate()
+                {
+                    assert( abscissa.size() == ordinate.size() );
+                    adjusted->adjust(abscissa.size(), this->zero);
+                }
+
                 //! create an empty sample with capacity
                 template <typename ID> static inline
                 sample * create(const ID &id, const size_t n)

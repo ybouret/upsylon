@@ -69,7 +69,7 @@ Y_UTEST_INIT(64)
     Y_UTEST(fitting_gls);
     Y_UTEST(fitting_circles);
     Y_UTEST(fitting_conics);
-
+    Y_UTEST(fitting_load);
 }
 Y_UTEST_EXEC()
 
