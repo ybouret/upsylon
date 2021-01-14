@@ -49,14 +49,21 @@ Y_UTEST(fitting_conics)
         const unit_t Y   = unit_t(y);
         ios::ocstream::echo("edat.dat","%ld %ld\n", long(X), long(Y) );
         IC.add(X,Y);
+        DC.add(double(X),double(Y));
     }
 
 
 
     if( IC.build_shape() )
     {
-        std::cerr << "built shape" << std::endl;
+        std::cerr << "i-built shape" << std::endl;
         IC.find_values();
+    }
+    
+    if( DC.build_shape() )
+    {
+        std::cerr << "d-built shape" << std::endl;
+        DC.find_values();
     }
 
 }

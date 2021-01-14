@@ -199,7 +199,7 @@ namespace upsylon
                     virtual ~iConics() throw();  //!< cleanup
 
                     //! add integer coordinates
-                    void add(unit_t X, unit_t Y);
+                    void add(const unit_t X, const unit_t Y);
 
 
                 private:
@@ -219,7 +219,9 @@ namespace upsylon
                 public:
                     explicit dConics();
                     virtual ~dConics() throw();
-
+                    
+                    void add(const double X, const double Y);
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(dConics);
                     virtual void assemble();
