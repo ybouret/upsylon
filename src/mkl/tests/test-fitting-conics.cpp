@@ -25,6 +25,9 @@ Y_UTEST(fitting_conics)
     const double xc = 200 * alea.symm<double>();
     const double yc = 200 * alea.symm<double>();
 
+    std::cerr << "xc=" << xc << std::endl;
+    std::cerr << "yc=" << yc << std::endl;
+
     ios::ocstream::overwrite("edat.dat");
     for(size_t i=10+alea.leq(10);i>0;--i)
     {

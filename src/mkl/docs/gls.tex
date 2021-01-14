@@ -221,6 +221,7 @@ We use the set of equations:
 
 \section{Conic Fit}
 \subsection{Algebraic}
+\subsubsection{Coefficients}
 We have one sample of $N$ points $\vec{X}_{i\in[1:N]}$ with:
 \begin{equation}
 	\vec{X}_i = \begin{bmatrix}x_i\\y_i\\\end{bmatrix}
@@ -295,6 +296,41 @@ We evaluate:
 
 To minimize $\mathcal{L}$, we need to take the \textbf{highest positive $\mu$} such that its eigenvector $\vec{U}_\mu$ verifies
  $\vec{U}_\mu\cdot\bm{C}\cdot\vec{U}_\mu>0$, and deduce $\vec{A}_\mu$ from \eqref{eq:Amu}.
+
+\subsubsection{Center}
+We can rewrite the quadratic form with
+\begin{equation}
+	\vec{P} = \begin{bmatrix}
+		x\\
+		y
+		\end{bmatrix},
+		\;
+		\bm{Q} = \begin{bmatrix}
+		a & \dfrac{b}{2}\\
+		\dfrac{b}{2} & c
+		\end{bmatrix},\;
+		\vec{L} = \begin{bmatrix}
+		d\\
+		e
+		\end{bmatrix}
+\end{equation}
+as
+\begin{equation}
+	\vec{P}^t \bm{Q} \vec{P} + \vec{L}\cdot\vec{P} + f = 0.
+\end{equation}
+At the center $\vec{J}$ of the ellipse, the gradient of the quadratic form 
+vanishes, so that formally
+\begin{equation}
+	\bm{Q}\vec{J} = -\dfrac{1}{2}\vec{L} \Rightarrow \vec{J} = -\dfrac{1}{2} \bm{Q}^{-1} \vec{L}.
+\end{equation}
+We now translate the quadratic form with
+\begin{equation}
+	\vec{P} = \vec{P}' + \vec{J},
+\end{equation}
+to find
+\begin{equation}
+	\vec{P}'^t \bm{Q} \vec{P}'= - \dfrac{1}{2} \vec{L}\cdot\vec{J} - f
+\end{equation}
 
  
 \end{document}

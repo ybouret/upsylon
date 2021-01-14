@@ -56,12 +56,18 @@ namespace upsylon
                 protected:
                     explicit __conics();
 
-                    matrix<double> W;  //!< workspace   matrix
-                    matrix<double> C;  //!< constraints matrix
-                    vector<double> wr; //!< eigv re
-                    vector<double> wi; //!< eigv im, holds final result
-                    matrix<double> Wd; //!< temporary
-
+                    matrix<double> W;   //!< workspace   matrix
+                    matrix<double> C;   //!< constraints matrix
+                    vector<double> wr;  //!< eigv re
+                    vector<double> wi;  //!< eigv im, holds final result
+                    matrix<double> Wd;  //!< temporary
+                    matrix<double> Q;   //!< quadratic form
+                    matrix<double> R;   //!< rotation
+                    vector<double> L;   //!< linear  form
+                    vector<double> J;   //!< center
+                    vector<double> lam; //!< 2D scalings
+                    double         rhs; //!< rhs for reduced form
+                    
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(__conics);
                     double compute_UCU(const accessible<double> &u) throw();

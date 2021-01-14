@@ -1,6 +1,7 @@
 
 #include "y/mkl/fitting/built-in/conics.hpp"
 #include "y/mkl/kernel/diagonalize.hpp"
+#include "y/mkl/kernel/eigen.hpp"
 
 namespace upsylon
 {
@@ -16,7 +17,13 @@ namespace upsylon
                 C(nvar,nvar),
                 wr(nvar,0),
                 wi(nvar,0),
-                Wd(nvar,nvar)
+                Wd(nvar,nvar),
+                Q(2,2),
+                R(2,2),
+                L(2,0),
+                J(2,0),
+                lam(2,0),
+                rhs(0)
                 {}
 
                 __conics:: ~__conics() throw() {}
@@ -30,6 +37,7 @@ namespace upsylon
 
                 bool __conics:: find_values( )
                 {
+                    // diagonalize
                     size_t         nr = W.rows;
                     Wd.assign(W);
                     if(!diagonalize::eig(Wd,wr,wi,nr))
@@ -47,11 +55,13 @@ namespace upsylon
                     std::cerr << "wr=" << wr << std::endl;
                     std::cerr << "wi=" << wi << std::endl;
 
+                    // compute real eigenvectors
                     matrix<double> ev(nr,6);
-
                     diagonalize::eigv(ev, W, wr);
                     std::cerr << "ev=" << ev << std::endl;
 
+
+                    // find optimal eigenvalue
                     for(size_t k=nr;k>0;--k)
                     {
                         const double mu = wr[k];
@@ -64,9 +74,44 @@ namespace upsylon
                         std::cerr << "       UCU = " << UCU << std::endl;
                         if(UCU<=0) continue;
 
-                        const double den = sqrt(UCU);
-                        tao::divset(wi,den,U);
-                        std::cerr << "A=" << wi << std::endl;
+                        // success!
+                        const accessible<double> &A = wi;
+                        tao::divset(wi,sqrt(UCU),U);
+
+                        std::cerr << "A=" << A << std::endl;
+
+                        // build quadratic form
+                        Q[1][1] = A[1];
+                        Q[1][2] = Q[2][1] = A[2]/2;
+                        Q[2][2] = A[3];
+                        R.assign(Q); // to keep Q after LU
+
+                        // build linear form
+                        L[1]    = J[1] = A[4];
+                        L[2]    = J[2] = A[5];
+
+                        std::cerr << "Q=" << Q << std::endl;
+                        std::cerr << "L=" << L << std::endl;
+
+                        if(!LU::build(R))
+                        {
+                            return false;
+                        }
+
+                        // find center
+                        LU::solve(R,J);
+                        tao::mulset(J,-0.5);
+                        std::cerr << "J=" << J << std::endl;
+
+                        // find eigenvalue
+                        eigen::build(Q,lam,R);
+                        std::cerr << "lam=" << lam << std::endl;
+                        std::cerr << "R="   << R << std::endl;
+
+                        // find rhs by change of coordinates
+                        rhs = - 0.5 * tao::dot<double>::of(L,J) - A[6];
+                        std::cerr << "rhs=" << rhs << std::endl;
+                        return true;
                     }
 
 
