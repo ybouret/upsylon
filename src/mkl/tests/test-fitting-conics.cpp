@@ -21,13 +21,19 @@ Y_UTEST(fitting_conics)
     DC.ellipse();
 
     const double ra = 10 + 100 * alea.to<double>();
-    const double rb = (0.1+0.85*alea.to<double>()) * ra;
+    const double rb = 10 + 100 * alea.to<double>();
     const double xc = 200 * alea.symm<double>();
     const double yc = 200 * alea.symm<double>();
+
+
 
     std::cerr << "xc=" << xc << std::endl;
     std::cerr << "yc=" << yc << std::endl;
 
+    std::cerr << "ra=" << ra << std::endl;
+    std::cerr << "rb=" << rb << std::endl;
+    std::cerr << std::endl;
+    
     ios::ocstream::overwrite("edat.dat");
     for(size_t i=10+alea.leq(10);i>0;--i)
     {

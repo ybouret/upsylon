@@ -111,6 +111,12 @@ namespace upsylon
                         // find rhs by change of coordinates
                         rhs = - 0.5 * tao::dot<double>::of(L,J) - A[6];
                         std::cerr << "rhs=" << rhs << std::endl;
+
+                        double rx2 = rhs/lam[1];
+                        double ry2 = rhs/lam[2];
+                        std::cerr << "rx2=" << rx2 << " => " << sqrt(fabs(rx2)) << std::endl;
+                        std::cerr << "ry2=" << ry2 << " => " << sqrt(fabs(ry2)) << std::endl;
+
                         return true;
                     }
 
