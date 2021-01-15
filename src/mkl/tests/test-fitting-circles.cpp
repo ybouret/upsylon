@@ -34,10 +34,10 @@ Y_UTEST(fitting_circles)
         const unit_t y   = unit_t(yc + r*sin(phi)*(1.0f+0.1f*alea.symm<double>()));
 
         i_circle.add(x,y);
-        d_circle.add(x,y);
+        d_circle.add(double(x),double(y));
         ios::ocstream::echo("cdat.dat", "%ld %ld\n", long(x), long(y));
-        X.push_back(x);
-        Y.push_back(y);
+        X.push_back(double(x));
+        Y.push_back(double(y));
     }
 
     point2d<double> ic,dc;
