@@ -35,7 +35,8 @@ namespace upsylon
                 typedef sequential_type::function            function;        //!< alias
                 typedef v_gradient<double,double>            v_gradient_type; //!< alias
                 typedef explode<double>::solver_ptr          solver_type;     //!< alias
-                typedef ODE::ExplicitAdjust<double>::Pointer crunch_type;     //!< alias
+                typedef ODE::ExplicitAdjust<double>          scheme_type;     //!< alias
+                typedef scheme_type::Pointer                 crunch_type;     //!< alias
 
                 //______________________________________________________________
                 //

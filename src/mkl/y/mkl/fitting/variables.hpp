@@ -148,10 +148,10 @@ namespace upsylon
                 void make(addressable<T> &arr,
                           const ID       &names,
                           const T         value,
-                          const char      separator = default_separator)
+                          const char      separator = default_separator) const
                 {
-                    variables      &self = *this;
-                    tokenizer<char> t(names);
+                    const variables &self = *this;
+                    tokenizer<char>  t(names);
                     while( t.next_with(separator) )
                     {
                         const string id( t.token(), t.units() );
@@ -163,7 +163,7 @@ namespace upsylon
                 template <typename ID> inline
                 void on(addressable<bool> &flags,
                         const ID          &names,
-                        const char         separator = default_separator )
+                        const char         separator = default_separator) const
                 {
                     make(flags,names,true,separator);
                 }
@@ -172,10 +172,10 @@ namespace upsylon
                 template <typename ID> inline
                 void only_on(addressable<bool> &flags,
                              const ID          &names,
-                             const char         separator = default_separator )
+                             const char         separator = default_separator) const
                 {
                     for(size_t i=flags.size();i>0;--i) flags[i] = false;
-                    make(flags,names,true,separator);
+                    on(flags,names,separator);
                 }
 
 
@@ -183,7 +183,7 @@ namespace upsylon
                 template <typename ID> inline
                 void off(addressable<bool> &flags,
                          const ID          &names,
-                         const char         separator = default_separator )
+                         const char         separator = default_separator) const
                 {
                     make(flags,names,false,separator);
                 }
@@ -192,10 +192,10 @@ namespace upsylon
                 template <typename ID> inline
                 void only_off(addressable<bool> &flags,
                               const ID          &names,
-                              const char         separator = default_separator )
+                              const char         separator = default_separator) const
                 {
                     for(size_t i=flags.size();i>0;--i) flags[i] = true;
-                    make(flags,names,false,separator);
+                    off(flags,names,separator);
                 }
 
 
