@@ -70,6 +70,7 @@ namespace upsylon
                 //______________________________________________________________
                 //! setup
                 inline explicit least_squares(const bool verbosity=false) :
+                verbose(verbosity),
                 M(0),
                 lam(), lambda(0), p(0),
                 alpha(),
@@ -83,7 +84,6 @@ namespace upsylon
                 aerr( space.next() ),
                 utmp( space.next() ),
                 used(),
-                verbose(verbosity),
                 grad_(0)
                 {
                 }
@@ -160,8 +160,44 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                // solo errors methods
+                //______________________________________________________________
+
+                //! solo errors with internal gradient
+                inline void solo_errors(sample_api_type        &s,
+                                        sequential_type        &F,
+                                        addressable<ORDINATE>  &A,
+                                        const accessible<bool> &U,
+                                        addressable<ORDINATE>  &E)
+                {
+                    sequential_grad &G = grad();
+                    G.F = &F;
+                    solo_errors(s,F,G,A,U,E);
+                }
+
+
+                //! fit with a regular function
+                inline void solo_errors(sample_api_type        &s,
+                                        sequential_func        &f,
+                                        addressable<ORDINATE>  &A,
+                                        const accessible<bool> &U,
+                                        addressable<ORDINATE>  &E)
+                {
+                    sequential_function<ABSCISSA,ORDINATE> F(f);
+                    solo_errors(s,F,A,U,E);
+                }
+
+                //______________________________________________________________
+                //
                 // members
                 //______________________________________________________________
+                bool verbose; //!< output verbosity
+
+
+
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(least_squares);
                 size_t                        M;       //!< max number of parameters
                 const lambdas_type            lam;     //!< array of precomputed lambdas
                 ORDINATE                      lambda;  //!< current lambda
@@ -177,12 +213,44 @@ namespace upsylon
                 vector_type                  &aerr;    //!< for errors
                 vector_type                  &utmp;    //!< holds memory for used
                 flags_type                    used;    //!< used parameters
-                bool                          verbose; //!< output verbosity
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 
+                //--------------------------------------------------------------
+                //
+                //
+                // setup memory and values
+                //
+                //
+                //--------------------------------------------------------------
+                inline void setup_fields(sample_api_type        &s,
+                                         addressable<ORDINATE>  &A,
+                                         const accessible<bool> &U,
+                                         addressable<ORDINATE>  &E)
+                {
+                    const variables &vars = s.vars; // variables for this run
+                    M      = vars.sweep();          // dimensions
 
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(least_squares);
+                    //----------------------------------------------------------
+                    // memory
+                    //----------------------------------------------------------
+                    alpha.make(M,M);
+                    covar.make(M,M);
+                    space.acquire(M);
+                    {
+                        ORDINATE *tmp = *utmp;
+                        new ( &used ) flags_type( (bool *)tmp, M );
+                    }
+
+                    //----------------------------------------------------------
+                    // initialize values
+                    //----------------------------------------------------------
+                    tao::set(aorg,A);     // setup aorg
+                    tao::ld(aerr,-s.one); // setup aerr
+                    tao::ld(used,false);  // setup used
+                    tao::set(used,U);     // fill used
+                    vars.set(E,aerr);     // fill error values with -1
+                    s.setup(aorg);        // and prepare sample(s)
+                }
 
                 //--------------------------------------------------------------
                 //

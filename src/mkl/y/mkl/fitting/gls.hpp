@@ -51,7 +51,7 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                // methods
+                // fit methods
                 //______________________________________________________________
 
                 //! fit sequential class and its v_gradient
@@ -76,7 +76,35 @@ namespace upsylon
                                 const accessible<bool> &U,
                                 addressable<double>    &E);
 
-                
+
+                //______________________________________________________________
+                //
+                // solo errors methods
+                //______________________________________________________________
+
+                //! solo errors
+                void solo(sample_api_type        &s,
+                          sequential_type        &F,
+                          v_gradient_type        &G,
+                          addressable<double>    &A,
+                          const accessible<bool> &U,
+                          addressable<double>    &E);
+
+
+                //! solo errors
+                void solo(sample_api_type        &s,
+                          sequential_type        &F,
+                          addressable<double>    &A,
+                          const accessible<bool> &U,
+                          addressable<double>    &E);
+
+                //! solo errors
+                void solo(sample_api_type        &s,
+                          function               &f,
+                          addressable<double>    &A,
+                          const accessible<bool> &U,
+                          addressable<double>    &E);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gls);
                 void *impl; //!< private implementation

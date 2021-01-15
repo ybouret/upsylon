@@ -163,6 +163,10 @@ Y_UTEST(fitting_gls)
         s->ordinate_range(lower,upper);
         std::cerr << "lower: " << lower << " | upper:" << upper << std::endl;
 
+        tao::ld(used,true);
+        ls.solo(*s, F,aorg,used,aerr);
+        display_sample::results(std::cerr,*s, aorg, used, aerr);
+        
     }
     catch(const exception &e)
     {

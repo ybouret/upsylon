@@ -225,6 +225,11 @@ Y_UTEST(fitting_diff)
     std::cerr << "ALL: " << lower << " -> " << upper << std::endl;
 
 
+    tao::ld(u3,true);
+    lsf.solo_errors(sa,F,G,a3,u3,e3);
+    display_sample::results(std::cerr,sa,a3,u3,e3);
+    
+
     
 }
 Y_UTEST_DONE()

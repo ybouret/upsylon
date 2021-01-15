@@ -1,28 +1,5 @@
 //! \file
 
-#if 0
-private:
-
-struct D2_function
-{
-    sample_api_type            *s_;
-    sequential_type            *F_;
-    const accessible<ORDINATE> *aorg_;
-    const accessible<ORDINATE> *step_;
-    addressable<ORDINATE>      *atmp_;
-    
-    inline ORDINATE operator()(const ORDINATE u)
-    {
-        assert(s_); assert(aorg_); assert(step_); assert(atmp_);
-        tao::muladd(*atmp_, *aorg_, u, *step_);
-        return s_->D2(*F_,*atmp_);
-    }
-    
-};
-
-public:
-#endif
-
 //______________________________________________________________________________
 //
 //! generic call
@@ -55,41 +32,14 @@ inline bool fit(sample_api_type        &s,
 
     //--------------------------------------------------------------------------
     //
-    // dimensions
+    // initialize memory and local variables
     //
     //--------------------------------------------------------------------------
+    setup_fields(s,A,U,E);
     const variables &vars = s.vars; // variables for this run
-    M      = vars.sweep();          // dimensions
-    p      = 0;                     // regularization
-    lambda = lam[p];                // matching coefficient
+    p                     = 0;      // regularization
+    lambda                = lam[p]; // matching coefficient
 
-    //--------------------------------------------------------------------------
-    //
-    // memory setup
-    //
-    //--------------------------------------------------------------------------
-    alpha.make(M,M);
-    covar.make(M,M);
-    space.acquire(M);
-    {
-        ORDINATE *tmp = *utmp;
-        new ( &used ) flags_type( (bool *)tmp, M );
-    }
-
-
-    
-    //--------------------------------------------------------------------------
-    //
-    // initialize values
-    //
-    //--------------------------------------------------------------------------
-    tao::set(aorg,A);     // setup aorg
-    tao::ld(aerr,-s.one); // setup aerr
-    tao::ld(used,false);  // setup used
-    tao::set(used,U);     // fill used
-    vars.set(E,aerr);     // fill error values with -1
-    s.setup(aorg);
-    
     Y_GLS_PRINTLN("-------- <initialized: p=" << p << ", lambda=" << lambda << "> --------");
     if(verbose)
     {
@@ -126,7 +76,6 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         return false;
     }
-    //Y_GLS_PRINTLN("          " << D2_org << " | step=" << step);
 
     
     
@@ -365,4 +314,47 @@ CONVERGED:
         return true;
     }
     
+}
+
+//______________________________________________________________________________
+//
+//! compute solo/unlinked errors when at fit value
+/**
+ \param s a sample interface
+ \param F a sequential function
+ \param G a gradient of F
+ \param A array of parameters
+ \param U array of flags to use parameters
+ \param E array of errors
+ */
+//______________________________________________________________________________
+inline void solo_errors(sample_api_type        &s,
+                        sequential_type        &F,
+                        v_gradient_type        &G,
+                        addressable<ORDINATE>  &A,
+                        const accessible<bool> &U,
+                        addressable<ORDINATE>  &E)
+{
+    setup_fields(s,A,U,E);
+    size_t ndof = s.count();
+    if(ndof<=1) return;
+    --ndof;
+    for(variables::iterator it=s.vars.begin();it!=s.vars.end();++it)
+    {
+        const variable &v = **it;
+        const size_t    i = *v;
+        if(U[i])
+        {
+            tao::ld(used,false);
+            used[i] = true;
+            const ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,used);
+            const ORDINATE err2   = max_of<ORDINATE>(s.zero,D2_org/alpha[i][i])/(ndof*ndof);
+            aerr[i] = sqrt_of(err2);
+        }
+        else
+        {
+            aerr[i] = s.zero;
+        }
+    }
+    s.vars.set(E,aerr);
 }

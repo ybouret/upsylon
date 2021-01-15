@@ -84,7 +84,35 @@ namespace upsylon
                 return static_cast<gls_type *>(impl)->fit(s,f,A,U,E);
             }
 
-            
+
+            void gls:: solo(sample_api_type        &s,
+                            sequential_type        &F,
+                            v_gradient_type        &G,
+                            addressable<double>    &A,
+                            const accessible<bool> &U,
+                            addressable<double>    &E)
+            {
+                static_cast<gls_type *>(impl)->solo_errors(s,F,G,A,U,E);
+            }
+
+            void gls:: solo(sample_api_type        &s,
+                            sequential_type        &F,
+                            addressable<double>    &A,
+                            const accessible<bool> &U,
+                            addressable<double>    &E)
+            {
+                static_cast<gls_type *>(impl)->solo_errors(s,F,A,U,E);
+            }
+
+            void gls:: solo(sample_api_type        &s,
+                            function               &F,
+                            addressable<double>    &A,
+                            const accessible<bool> &U,
+                            addressable<double>    &E)
+            {
+                static_cast<gls_type *>(impl)->solo_errors(s,F,A,U,E);
+            }
+
         }
 
     }

@@ -33,7 +33,7 @@ namespace upsylon
                 //
                 // definition
                 //______________________________________________________________
-                static char  separator;
+                static char  separator; //!< default global separator
 
 
                 //______________________________________________________________
