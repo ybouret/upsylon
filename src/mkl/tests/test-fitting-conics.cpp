@@ -13,7 +13,7 @@ using namespace fitting;
 namespace  {
     
     static inline
-    void save_ellipse(const char *filename,
+    void save_ellipse(const char           *filename,
                       const point2d<double> &center,
                       const point2d<double> &radius,
                       const matrix<double>  &rotate)
@@ -28,7 +28,8 @@ namespace  {
             const double s     = sin(theta);
             
             point2d<double> r(c*radius.x,s*radius.y);
-            
+            rotate(r);
+
             r += center;
             fp("%g %g\n",r.x,r.y);
         }
@@ -52,7 +53,7 @@ Y_UTEST(fitting_conics)
     const double xc = 200 * alea.symm<double>();
     const double yc = 200 * alea.symm<double>();
 
-    const double th = 0; //numeric<double>::two_pi * alea.to<double>();
+    const double th =  numeric<double>::two_pi * alea.to<double>();
     const double cc = cos(th);
     const double ss = sin(th);
 
@@ -70,7 +71,7 @@ Y_UTEST(fitting_conics)
         const double phi = numeric<double>::two_pi * alea.to<double>();
         const double x0  = ra * cos(phi);
         const double y0  = rb * sin(phi);
-        const double x   = xc + cc*x0 - ss * x0;
+        const double x   = xc + cc*x0 - ss * y0;
         const double y   = yc + ss*x0 + cc * y0;
         const unit_t X   = unit_t(x);
         const unit_t Y   = unit_t(y);
@@ -90,7 +91,21 @@ Y_UTEST(fitting_conics)
         std::cerr << "rotate: " << rotate << std::endl;
         std::cerr << std::endl;
         save_ellipse("iell.dat",center,radius,rotate);
-        
+
+        if(false)
+        {
+            ios::ocstream fp("gell.dat");
+            for(int x=-300;x<=300;++x)
+            {
+                for(int y=-300;y<=300;++y)
+                {
+                    if( IC.at(x,y) >= 0)
+                    {
+                        fp("%d %d\n",x,y);
+                    }
+                }
+            }
+        }
     }
 
     

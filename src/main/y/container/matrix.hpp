@@ -425,6 +425,34 @@ namespace upsylon
             swap_cols(i,j);
         }
 
+        //! apply to a vector of same type, using internal backup
+        template <typename TARGET>
+        inline void operator()(TARGET &v) const
+        {
+            const size_t     nr   = rows;
+            const size_t     nc   = cols;
+            row             &u    = r_aux2;
+            const matrix<T> &self = *this;
+
+            assert(u.size()==rows);
+            assert(v.size()==rows);
+
+            for(size_t i=nr;i>0;--i)
+            {
+                mutable_type    sum = 0;
+                const array<T> &r_i = self[i];
+                for(size_t j=nc;j>0;--j)
+                {
+                    sum += v[j] * r_i[j];
+                }
+                u[i] = sum;
+            }
+            for(size_t i=nr;i>0;--i)
+            {
+                v[i]=u[i];
+            }
+        }
+
     private:
         row *row_ptr; //! [1..rows]
 
@@ -500,8 +528,8 @@ namespace upsylon
     public:
         mutable row r_aux1;  //!< size() = rows
         mutable row c_aux1;  //!< size() = cols
-        row         r_aux2;  //!< size() = rows
-        row         c_aux2;  //!< size() = cols
+        mutable row r_aux2;  //!< size() = rows
+        mutable row c_aux2;  //!< size() = cols
     };
 
 }

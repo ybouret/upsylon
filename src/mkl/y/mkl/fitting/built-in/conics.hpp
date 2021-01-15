@@ -57,6 +57,9 @@ namespace upsylon
                     bool ellipse(vertex         &center,
                                  vertex         &radius,
                                  matrix<double> &rotate);
+
+                    //! evaluate conic form
+                    double at(const double x, const double y) const throw();
                     
                 protected:
                     explicit conics();

@@ -101,11 +101,11 @@ namespace upsylon
                         const accessible<double> &A = wi;
                         tao::divset(wi,sqrt(UCU),U);
 
-                        //std::cerr << "A=" << A << std::endl;
+                        std::cerr << "A=" << A << std::endl;
 
                         // build quadratic form
                         Q[1][1] = A[1];
-                        Q[1][2] = Q[2][1] = A[2]/2;
+                        Q[1][2] = Q[2][1] = 0.5*A[2];
                         Q[2][2] = A[3];
                         R.assign(Q); // to keep Q after LU
 
@@ -114,7 +114,7 @@ namespace upsylon
                         L[2]    = J[2] = A[5];
 
                         std::cerr << "Q=" << Q << std::endl;
-                        //std::cerr << "L=" << L << std::endl;
+                        std::cerr << "L=" << L << std::endl;
 
                         if(!LU::build(R))
                         {
@@ -125,15 +125,15 @@ namespace upsylon
                         // find center
                         LU::solve(R,J);
                         tao::mulset(J,-0.5);
-                        //std::cerr << "J=" << J << std::endl;
+                        std::cerr << "J=" << J << std::endl;
 
                         // find eigenvalue
-                        if(!eigen::build(Q,lam,R))
+                        if(!eigen::build(Q,lam,R,sort_eigv_by_module))
                         {
                             return false;
                         }
                         std::cerr << "lam=" << lam << std::endl;
-                        std::cerr << "R="   << R << std::endl;
+                        std::cerr << "Rot=" << R << std::endl;
 
                         // find rhs by change of coordinates
                         rhs = - (0.5 * tao::dot<double>::of(L,J) + A[6]);
@@ -144,6 +144,8 @@ namespace upsylon
                         std::cerr << "rx2=" << rx2 << " => " << sqrt(fabs(rx2)) << std::endl;
                         std::cerr << "ry2=" << ry2 << " => " << sqrt(fabs(ry2)) << std::endl;
 
+                        if(at(J[1],J[2])<=0) tao::neg(wi);
+
                         return true;
                     }
 
@@ -151,6 +153,14 @@ namespace upsylon
 
                     return false;
                 }
+
+                double conics:: at(const double x, const double y) const throw()
+                {
+                    const accessible<double> &A = wi;
+                    return A[1]*x*x + A[2]*x*y + A[3]*y*y + A[4]*x + A[5]*y + A[6];
+                }
+
+
 
                 bool conics:: ellipse(vertex         &center,
                                       vertex         &radius,
