@@ -114,7 +114,7 @@ namespace upsylon
                     S.ld(zero);
                     assemble();
                     regularize();
-                    std::cerr << "Sd=" << S << std::endl;
+                    //std::cerr << "Sd=" << S << std::endl;
                     if( !LU::build(S) )
                     {
                         return false;

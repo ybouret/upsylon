@@ -30,7 +30,7 @@ namespace upsylon
                 //! common parts for conics fitting
                 //
                 //______________________________________________________________
-                class __conics
+                class conics
                 {
                 public:
                     //__________________________________________________________
@@ -43,7 +43,7 @@ namespace upsylon
                     //
                     // virtual interface
                     //__________________________________________________________
-                    virtual     ~__conics() throw(); //!< cleanup
+                    virtual     ~conics() throw(); //!< cleanup
                     virtual bool build_shape() = 0;  //!< build and transfer W
                     
                     //__________________________________________________________
@@ -59,7 +59,7 @@ namespace upsylon
                                  matrix<double> &rotate);
                     
                 protected:
-                    explicit __conics();
+                    explicit conics();
 
                     matrix<double> W;   //!< workspace   matrix
                     matrix<double> C;   //!< constraints matrix
@@ -74,7 +74,7 @@ namespace upsylon
                     double         rhs; //!< rhs for reduced form
                     
                 private:
-                    Y_DISABLE_COPY_AND_ASSIGN(__conics);
+                    Y_DISABLE_COPY_AND_ASSIGN(conics);
 
                     //! using wi as temporary
                     double compute_UCU(const accessible<double> &u) throw();
@@ -91,7 +91,7 @@ namespace upsylon
                 //
                 //______________________________________________________________
                 template <typename T>
-                class _conics  : public __conics
+                class _conics  : public conics
                 {
                 public:
                     //__________________________________________________________

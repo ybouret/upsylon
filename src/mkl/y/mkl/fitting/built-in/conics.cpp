@@ -12,7 +12,7 @@ namespace upsylon
 
             namespace built_in
             {
-                __conics::  __conics() :
+                conics::  conics() :
                 W(nvar,nvar),
                 C(nvar,nvar),
                 wr(nvar,0),
@@ -26,13 +26,13 @@ namespace upsylon
                 rhs(0)
                 {}
 
-                void __conics:: ellipse()
+                void conics:: ellipse()
                 {
                     ellipse_primary();
                     ellipse_replica();
                 }
                 
-                void  __conics:: ellipse_primary() throw()
+                void  conics:: ellipse_primary() throw()
                 {
                     C.ld(0);
                     C[1][3] =  2;
@@ -41,16 +41,16 @@ namespace upsylon
                 }
 
                 
-                __conics:: ~__conics() throw() {}
+                conics:: ~conics() throw() {}
 
-                double __conics:: compute_UCU(const accessible<double> &u) throw()
+                double conics:: compute_UCU(const accessible<double> &u) throw()
                 {
                     tao::mul(wi, C, u);
                     return tao::dot<double>::of(wi,u);
                 }
 
 
-                bool __conics:: find_values( )
+                bool conics:: find_values( )
                 {
                     //----------------------------------------------------------
                     // diagonalize
@@ -101,7 +101,7 @@ namespace upsylon
                         const accessible<double> &A = wi;
                         tao::divset(wi,sqrt(UCU),U);
 
-                        std::cerr << "A=" << A << std::endl;
+                        //std::cerr << "A=" << A << std::endl;
 
                         // build quadratic form
                         Q[1][1] = A[1];
@@ -114,7 +114,7 @@ namespace upsylon
                         L[2]    = J[2] = A[5];
 
                         std::cerr << "Q=" << Q << std::endl;
-                        std::cerr << "L=" << L << std::endl;
+                        //std::cerr << "L=" << L << std::endl;
 
                         if(!LU::build(R))
                         {
@@ -125,7 +125,7 @@ namespace upsylon
                         // find center
                         LU::solve(R,J);
                         tao::mulset(J,-0.5);
-                        std::cerr << "J=" << J << std::endl;
+                        //std::cerr << "J=" << J << std::endl;
 
                         // find eigenvalue
                         if(!eigen::build(Q,lam,R))
@@ -152,9 +152,9 @@ namespace upsylon
                     return false;
                 }
 
-                bool __conics:: ellipse(vertex         &center,
-                                        vertex         &radius,
-                                        matrix<double> &rotate)
+                bool conics:: ellipse(vertex         &center,
+                                      vertex         &radius,
+                                      matrix<double> &rotate)
                 {
                     bzset(center);
                     bzset(radius);

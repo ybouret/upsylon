@@ -93,8 +93,7 @@ Y_UTEST(fitting_conics)
         
     }
 
-    return 0;
-
+    
     if( DC.ellipse(center,radius,rotate) )
     {
         std::cerr << "center: " << center << std::endl;
