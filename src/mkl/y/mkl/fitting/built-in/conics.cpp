@@ -52,7 +52,9 @@ namespace upsylon
 
                 bool __conics:: find_values( )
                 {
+                    //----------------------------------------------------------
                     // diagonalize
+                    //----------------------------------------------------------
                     size_t         nr = W.rows;
                     Wd.assign(W);
                     if(!diagonalize::eig(Wd,wr,wi,nr))
@@ -63,23 +65,39 @@ namespace upsylon
 
                     if(nr<=0)
                     {
+                        // no real eigenvalue
                         return false;
                     }
+
+                    //----------------------------------------------------------
                     // compute real eigenvectors
+                    //----------------------------------------------------------
                     matrix<double> ev(nr,6);
                     diagonalize::eigv(ev,W,wr);
                     
 
+                    //----------------------------------------------------------
                     // find optimal eigenvalue
+                    //----------------------------------------------------------
                     for(size_t k=nr;k>0;--k)
                     {
                         const double mu = wr[k];
-                        if(mu<=0) break;
+                        if(mu<=0)
+                        {
+                            // incompatible
+                            break;
+                        }
                         const array<double> &U   = ev[k];
                         const double         UCU = compute_UCU(U);
-                        if(UCU<=0) continue;
+                        if(UCU<=0)
+                        {
+                            // incompatible
+                            continue;
+                        }
 
+                        //------------------------------------------------------
                         // success!
+                        //------------------------------------------------------
                         const accessible<double> &A = wi;
                         tao::divset(wi,sqrt(UCU),U);
 
@@ -95,11 +113,12 @@ namespace upsylon
                         L[1]    = J[1] = A[4];
                         L[2]    = J[2] = A[5];
 
-                        //std::cerr << "Q=" << Q << std::endl;
-                        //std::cerr << "L=" << L << std::endl;
+                        std::cerr << "Q=" << Q << std::endl;
+                        std::cerr << "L=" << L << std::endl;
 
                         if(!LU::build(R))
                         {
+                            // singular quadratic form
                             return false;
                         }
 

@@ -8,7 +8,7 @@
 \usepackage{xfrac}
 \usepackage{bookman}
  
-\newcommand{\trn}[1]{~^t{#1}}
+\newcommand{\trn}[1]{~^{\mathtt{t}}{#1}}
  
 \begin{document}
 \title{General Least Squares}
@@ -316,12 +316,18 @@ We can rewrite the quadratic form with
 \end{equation}
 as
 \begin{equation}
-	\vec{P}^t \bm{Q} \vec{P} + \vec{L}\cdot\vec{P} + f = 0.
+	\trn{\vec{P}} \bm{Q} \vec{P} + \vec{L}\cdot\vec{P} + f = 0.
 \end{equation}
 At the center $\vec{J}$ of the ellipse, the gradient of the quadratic form 
 vanishes, so that formally
 \begin{equation}
-	\bm{Q}\vec{J} = -\dfrac{1}{2}\vec{L} \Rightarrow \vec{J} = -\dfrac{1}{2} \bm{Q}^{-1} \vec{L}.
+\left\lbrace
+\begin{array}{rcl}
+	\bm{Q}\vec{J} & = & -\dfrac{1}{2}\vec{L}\\
+	\\
+	\vec{J}       & = & -\dfrac{1}{2} \bm{Q}^{-1} \vec{L}\\
+\end{array}
+\right.
 \end{equation}
 We now translate the quadratic form with
 \begin{equation}
@@ -329,10 +335,22 @@ We now translate the quadratic form with
 \end{equation}
 to find
 \begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	0 & = & \trn{(\vec{P}' + \vec{J})} \bm{Q} (\vec{P}' + \vec{J}) + \vec{L}\cdot(\vec{P}' + \vec{J}) + f \\
+	0 & = & \trn{\vec{P}'} \bm{Q} \vec{P}' + \underbrace{2 \trn{\vec{P}'} \bm{Q} \vec{J} + \vec{L}\cdot\vec{P}'}_{\vec{0}}+ \trn{\vec{J}} \bm{Q} \vec{J}  + \vec{L}\cdot\vec{J} + f\\
+	0 & = & \trn{\vec{P}'} \bm{Q} \vec{P}' + \dfrac{1}{2} \vec{L}\cdot\vec{J} + f\\
+\end{array}
+\right.
+\end{equation}
+
+And the equation in the translated framework is:
+\begin{equation}
 	\vec{P}'^t \bm{Q} \vec{P}'= - \dfrac{1}{2} \vec{L}\cdot\vec{J} - f = \rho
 \end{equation}
 
- There exist $\bm{R}\in\mathbb{O}^2$ such that
+\subsubsection{Reduction}
+There exist $\bm{R}\in\mathbb{O}^2$ such that
 \begin{equation}
 \bm{R}^tQ\bm{R} = \begin{bmatrix}
 \Lambda_X & 0 \\
@@ -342,6 +360,10 @@ to find
 and in the rotated framework:
 \begin{equation}
 \Lambda_X X^2 + \Lambda_Y Y^2 = \rho
+\end{equation}
+
+\begin{equation}
+	\rho\not=0 \Rightarrow \dfrac{X^2}{\dfrac{\rho}{\Lambda_X}} + \dfrac{Y^2}{\dfrac{\rho}{\Lambda_Y}} = 1
 \end{equation}
 
 \end{document}

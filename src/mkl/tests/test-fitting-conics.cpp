@@ -52,7 +52,7 @@ Y_UTEST(fitting_conics)
     const double xc = 200 * alea.symm<double>();
     const double yc = 200 * alea.symm<double>();
 
-    const double th = numeric<double>::two_pi * alea.to<double>();
+    const double th = 0; //numeric<double>::two_pi * alea.to<double>();
     const double cc = cos(th);
     const double ss = sin(th);
 
@@ -92,7 +92,9 @@ Y_UTEST(fitting_conics)
         save_ellipse("iell.dat",center,radius,rotate);
         
     }
-    
+
+    return 0;
+
     if( DC.ellipse(center,radius,rotate) )
     {
         std::cerr << "center: " << center << std::endl;
