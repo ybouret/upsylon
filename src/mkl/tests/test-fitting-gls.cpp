@@ -12,12 +12,12 @@ using namespace fitting;
 
 namespace
 {
-    class Damped : public ODE::ExplicitAdjust<double>
+    class Damped : public gls::scheme_type
     {
     public:
         mutable size_t calls;
 
-        inline Damped() : ODE::ExplicitAdjust<double>(), calls(0)
+        inline Damped() : gls::scheme_type(), calls(0)
         {
         }
 
@@ -74,8 +74,8 @@ namespace
 
 Y_UTEST(fitting_gls)
 {
-    gls          ls(true);
-    gls::shared  s = gls::single::create("trial",1024);
+    gls                 ls(true);
+    gls::shared_sample  s = gls::sample_type::create("trial",1024);
 
     const size_t n = 10 + alea.leq(10);
 
@@ -91,7 +91,7 @@ Y_UTEST(fitting_gls)
     }
 
     Damped             *damped = new Damped();
-    gls::crunch_type    crunch = damped;
+    gls::scheme_ptr     crunch = damped;
     correlation<double> corr;
 
     ls.solver->eps = 1e-6;

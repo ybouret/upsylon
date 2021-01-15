@@ -27,16 +27,20 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-                typedef sample_api<double,double>            adjustable;      //!< alias
-                typedef sample<double,double>                single;          //!< alias
-                typedef single::pointer                      shared;          //!< alias
-                typedef samples<double,double>               db;              //!< alias
+                typedef sample_api<double,double>            sample_api_type; //!< alias
+                typedef sample<double,double>                sample_type;     //!< alias
+                typedef sample_type::pointer                 shared_sample;   //!< alias
+                typedef samples<double,double>               samples_type;    //!< alias
+
                 typedef sequential<double,double>            sequential_type; //!< alias
                 typedef sequential_type::function            function;        //!< alias
                 typedef v_gradient<double,double>            v_gradient_type; //!< alias
-                typedef explode<double>::solver_ptr          solver_type;     //!< alias
-                typedef ODE::ExplicitAdjust<double>          scheme_type;     //!< alias
-                typedef scheme_type::Pointer                 crunch_type;     //!< alias
+
+                typedef explode<double>                      explode_type;        //!< alias
+                typedef explode_type::solver_ptr             explode_solver_ptr;  //!< alias
+
+                typedef ODE::ExplicitAdjust<double>          scheme_type;    //!< alias
+                typedef scheme_type::Pointer                 scheme_ptr;     //!< alias
 
                 //______________________________________________________________
                 //
@@ -51,7 +55,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! fit sequential class and its v_gradient
-                bool operator()(adjustable             &s,
+                bool operator()(sample_api_type        &s,
                                 sequential_type        &F,
                                 v_gradient_type        &G,
                                 addressable<double>    &A,
@@ -59,14 +63,14 @@ namespace upsylon
                                 addressable<double>    &E);
 
                 //! fit sequential class with internal gradient
-                bool operator()(adjustable             &s,
+                bool operator()(sample_api_type        &s,
                                 sequential_type        &F,
                                 addressable<double>    &A,
                                 const accessible<bool> &U,
                                 addressable<double>    &E);
 
                 //! fit regular function with intenal gradient
-                bool operator()(adjustable             &s,
+                bool operator()(sample_api_type        &s,
                                 function               &f,
                                 addressable<double>    &A,
                                 const accessible<bool> &U,
@@ -78,9 +82,9 @@ namespace upsylon
                 void *impl; //!< private implementation
 
             public:
-                bool         &verbose; //!< reference to least_squares verbosity
-                double       &scaling; //!< internal gradient
-                solver_type  &solver;  //!< internal explicit driver
+                bool                &verbose; //!< reference to least_squares verbosity
+                double              &scaling; //!< internal gradient
+                explode_solver_ptr  &solver;  //!< internal explicit driver
             };
 
         }
