@@ -105,8 +105,8 @@ namespace upsylon
                             break;
 
                         case with_reals: if(dptr.is_empty()) dptr = new dCircle();
-                            for(size_t i=n;i>0;--i) iptr->add(X[i],Y[i]);
-                            success = iptr->solve(center,radius);
+                            for(size_t i=n;i>0;--i) dptr->add(X[i],Y[i]);
+                            success = dptr->solve(center,radius);
                             break;
                     }
                     if(!success)
