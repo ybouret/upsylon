@@ -74,8 +74,8 @@ namespace
 
 Y_UTEST(fitting_gls)
 {
-    gls                 ls(true);
-    gls::shared_sample  s = gls::sample_type::create("trial",1024);
+    gls             ls(true);
+    gls::sample_ptr s = gls::sample_type::create("trial",1024);
 
     const size_t n = 10 + alea.leq(10);
 

@@ -29,7 +29,7 @@ namespace upsylon
                 //______________________________________________________________
                 typedef sample_api<double,double>            sample_api_type; //!< alias
                 typedef sample<double,double>                sample_type;     //!< alias
-                typedef sample_type::pointer                 shared_sample;   //!< alias
+                typedef sample_type::pointer                 sample_ptr;      //!< alias
                 typedef samples<double,double>               samples_type;    //!< alias
 
                 typedef sequential<double,double>            sequential_type; //!< alias
