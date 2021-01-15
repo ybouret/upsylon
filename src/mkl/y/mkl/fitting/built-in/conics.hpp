@@ -43,8 +43,8 @@ namespace upsylon
                     //
                     // virtual interface
                     //__________________________________________________________
-                    virtual     ~conics() throw(); //!< cleanup
-                    virtual bool build_shape() = 0;  //!< build and transfer W
+                    virtual     ~conics() throw();  //!< cleanup
+                    virtual bool build_shape() = 0; //!< build and transfer W
                     
                     //__________________________________________________________
                     //
@@ -75,7 +75,7 @@ namespace upsylon
                     vector<double> J;   //!< center
                     vector<double> lam; //!< 2D scalings
                     double         rhs; //!< rhs for reduced form
-                    
+
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(conics);
 
