@@ -87,7 +87,7 @@ namespace upsylon
 
                     os << comm << " indicators\n";
                     {
-                        os << '\t' << "D2   = " << display_variables::real2text( double(s.last_D2) ) << std::endl;
+                        os << '\t' << "D2   = " << display_variables::real2text( double(s.last_D2) ) << '\n';
                     }
 
                     {

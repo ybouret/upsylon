@@ -75,8 +75,8 @@ namespace upsylon
                 }
 
                 //! os << prefix << var << equal_separator << aorg << +/- << aerr << (%) << '\n'
-                template <typename OSTREAM, typename ARR> static inline
-                OSTREAM & errors(OSTREAM &os, const char *prefix, const variables &vars, ARR &aorg, const accessible<bool> &used, ARR &aerr)
+                template <typename OSTREAM, typename ARR, typename BRR> static inline
+                OSTREAM & errors(OSTREAM &os, const char *prefix, const variables &vars, ARR &aorg, const accessible<bool> &used, BRR &aerr)
                 {
                     strings results(vars.size(),as_capacity);
                     format_results(results,vars,aorg,used,aerr);
@@ -90,12 +90,12 @@ namespace upsylon
 
 
                 //! format var = value +/- error (percent)
-                template <typename ARR> static inline
+                template <typename ARR, typename BRR> static inline
                 void format_results(sequence<string>       &results,
                                     const variables        &vars,
                                     ARR                    &aorg,
                                     const accessible<bool> &used,
-                                    ARR                    &aerr)
+                                    BRR                    &aerr)
                 {
                     // initialize
                     results.free();
