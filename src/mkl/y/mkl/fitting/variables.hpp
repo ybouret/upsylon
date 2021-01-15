@@ -33,7 +33,7 @@ namespace upsylon
                 //
                 // definition
                 //______________________________________________________________
-                static const char default_separator = ':'; //!< for groups of variables
+                static char  separator;
 
 
                 //______________________________________________________________
@@ -44,6 +44,9 @@ namespace upsylon
                 explicit variables();                     //!< setup
                 variables(const variables &);             //!< copy
                 variables & operator=(const variables &); //!< assign
+
+                variables(const char   *); //!< parse variables
+                variables(const string &); //!< parse variables
 
                 //______________________________________________________________
                 //
@@ -147,8 +150,7 @@ namespace upsylon
                 template <typename T, typename ID> inline
                 void make(addressable<T> &arr,
                           const ID       &names,
-                          const T         value,
-                          const char      separator = default_separator) const
+                          const T         value) const
                 {
                     const variables &self = *this;
                     tokenizer<char>  t(names);
@@ -162,37 +164,33 @@ namespace upsylon
                 //! turn on specific flags, leave others untouched
                 template <typename ID> inline
                 void on(addressable<bool> &flags,
-                        const ID          &names,
-                        const char         separator = default_separator) const
+                        const ID          &names) const
                 {
-                    make(flags,names,true,separator);
+                    make(flags,names,true);
                 }
 
                 //! turn on specific flags, make other 'off'
                 template <typename ID> inline
                 void only_on(addressable<bool> &flags,
-                             const ID          &names,
-                             const char         separator = default_separator) const
+                             const ID          &names) const
                 {
                     for(size_t i=flags.size();i>0;--i) flags[i] = false;
-                    on(flags,names,separator);
+                    on(flags,names);
                 }
 
 
                 //! turn off specific flags, leave others untouched
                 template <typename ID> inline
                 void off(addressable<bool> &flags,
-                         const ID          &names,
-                         const char         separator = default_separator) const
+                         const ID          &names) const
                 {
-                    make(flags,names,false,separator);
+                    make(flags,names,false);
                 }
 
                 //! turn off specific flags, make other 'on'
                 template <typename ID> inline
                 void only_off(addressable<bool> &flags,
-                              const ID          &names,
-                              const char         separator = default_separator) const
+                              const ID          &names) const
                 {
                     for(size_t i=flags.size();i>0;--i) flags[i] = true;
                     off(flags,names,separator);

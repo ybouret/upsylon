@@ -9,6 +9,7 @@ namespace upsylon
     {
         namespace fitting
         {
+            char variables::separator = ':';
 
             variables:: ~variables() throw()
             {
@@ -23,6 +24,28 @@ namespace upsylon
             collection(), variables_(other)
             {
             }
+
+            template <typename ID> static inline
+            void __parse_variables(variables &self, const ID &names)
+            {
+                tokenizer<char>  t(names);
+                while( t.next_with(variables::separator) )
+                {
+                    const string id( t.token(), t.units() );
+                    self << id;
+                }
+            }
+
+            variables:: variables(const string &names) : variables_()
+            {
+                __parse_variables(*this,names);
+            }
+
+            variables:: variables(const char *names) : variables_()
+            {
+                __parse_variables(*this,names);
+            }
+
 
             variables & variables:: operator=(const variables &other)
             {
@@ -92,7 +115,7 @@ namespace upsylon
                 return 0 != search(id);
             }
 
-            bool variables:: has(const char *id) const 
+            bool variables:: has(const char *id) const
             {
                 const string _(id);
                 return has(_);
