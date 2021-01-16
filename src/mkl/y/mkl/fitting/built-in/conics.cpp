@@ -101,7 +101,7 @@ namespace upsylon
                         const accessible<double> &A = wi;
                         tao::divset(wi,sqrt(UCU),U);
 
-                        std::cerr << "A=" << A << std::endl;
+                        //std::cerr << "A=" << A << std::endl;
 
                         // build quadratic form
                         Q[1][1] = A[1];
@@ -113,8 +113,8 @@ namespace upsylon
                         L[1]    = J[1] = A[4];
                         L[2]    = J[2] = A[5];
 
-                        std::cerr << "Q=" << Q << std::endl;
-                        std::cerr << "L=" << L << std::endl;
+                        //std::cerr << "Q=" << Q << std::endl;
+                        //std::cerr << "L=" << L << std::endl;
 
                         if(!LU::build(R))
                         {
@@ -125,24 +125,24 @@ namespace upsylon
                         // find center
                         LU::solve(R,J);
                         tao::mulset(J,-0.5);
-                        std::cerr << "J=" << J << std::endl;
+                        //std::cerr << "J=" << J << std::endl;
 
                         // find eigenvalue
                         if(!eigen::build(Q,lam,R,sort_eigv_by_module))
                         {
                             return false;
                         }
-                        std::cerr << "lam=" << lam << std::endl;
-                        std::cerr << "Rot=" << R << std::endl;
+                        //std::cerr << "lam=" << lam << std::endl;
+                        //std::cerr << "Rot=" << R << std::endl;
 
                         // find rhs by change of coordinates
                         rhs = - (0.5 * tao::dot<double>::of(L,J) + A[6]);
-                        std::cerr << "rhs=" << rhs << std::endl;
+                        //std::cerr << "rhs=" << rhs << std::endl;
 
-                        double rx2 = rhs/lam[1];
-                        double ry2 = rhs/lam[2];
-                        std::cerr << "rx2=" << rx2 << " => " << sqrt(fabs(rx2)) << std::endl;
-                        std::cerr << "ry2=" << ry2 << " => " << sqrt(fabs(ry2)) << std::endl;
+                        //double rx2 = rhs/lam[1];
+                        //double ry2 = rhs/lam[2];
+                        //std::cerr << "rx2=" << rx2 << " => " << sqrt(fabs(rx2)) << std::endl;
+                        //std::cerr << "ry2=" << ry2 << " => " << sqrt(fabs(ry2)) << std::endl;
 
                         if(at(J[1],J[2])<=0) tao::neg(wi);
 

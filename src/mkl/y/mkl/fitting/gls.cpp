@@ -1,7 +1,5 @@
 
 #include "y/mkl/fitting/gls.hpp"
-#include "y/mkl/fitting/least-squares.hpp"
-#include "y/mkl/fitting/sequential/explode.hpp"
 
 namespace upsylon
 {
@@ -11,108 +9,21 @@ namespace upsylon
         namespace fitting
         {
 
-            namespace {
-
-                typedef least_squares<double,double> gls_base;
-
-                class gls_type : public object, public gls_base
-                {
-                public:
-                    typedef explode<double> _explode;
-
-                    inline explicit gls_type(const bool v) :
-                    object(),
-                    gls_base(v),
-                    solver( _explode::default_solver::New() )
-                    {
-                    }
-
-                    inline virtual ~gls_type() throw()
-                    {
-                    }
-
-                    _explode::solver_ptr solver;
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(gls_type);
-                };
-
-
-            }
+            
 
             gls:: ~gls() throw()
             {
-                assert(impl);
-                delete static_cast<gls_type *>(impl);
-                impl = 0;
+                
             }
 
             gls:: gls(const bool verb) :
-            impl( new gls_type(verb) ),
-            verbose( static_cast<gls_type *>(impl)->verbose  ),
-            scaling( static_cast<gls_type *>(impl)->grad().h ),
-            solver(  static_cast<gls_type *>(impl)->solver   )
+            gls_type(verb),
+            solver( explode_type::default_solver::New() )
             {
             }
 
-
-            bool gls:: operator()(sample_api_type        &s,
-                                  sequential_type        &F,
-                                  v_gradient_type        &G,
-                                  addressable<double>    &A,
-                                  const accessible<bool> &U,
-                                  addressable<double>    &E)
-            {
-                return static_cast<gls_type *>(impl)->fit(s,F,G,A,U,E);
-            }
-
-            bool gls:: operator()(sample_api_type        &s,
-                                  sequential_type        &F,
-                                  addressable<double>    &A,
-                                  const accessible<bool> &U,
-                                  addressable<double>    &E)
-            {
-                return static_cast<gls_type *>(impl)->fit(s,F,A,U,E);
-            }
-
-            bool gls:: operator()(sample_api_type        &s,
-                                  function               &f,
-                                  addressable<double>    &A,
-                                  const accessible<bool> &U,
-                                  addressable<double>    &E)
-            {
-                return static_cast<gls_type *>(impl)->fit(s,f,A,U,E);
-            }
-
-
-            void gls:: solo(sample_api_type        &s,
-                            sequential_type        &F,
-                            v_gradient_type        &G,
-                            addressable<double>    &A,
-                            const accessible<bool> &U,
-                            addressable<double>    &E)
-            {
-                static_cast<gls_type *>(impl)->solo_errors(s,F,G,A,U,E);
-            }
-
-            void gls:: solo(sample_api_type        &s,
-                            sequential_type        &F,
-                            addressable<double>    &A,
-                            const accessible<bool> &U,
-                            addressable<double>    &E)
-            {
-                static_cast<gls_type *>(impl)->solo_errors(s,F,A,U,E);
-            }
-
-            void gls:: solo(sample_api_type        &s,
-                            function               &F,
-                            addressable<double>    &A,
-                            const accessible<bool> &U,
-                            addressable<double>    &E)
-            {
-                static_cast<gls_type *>(impl)->solo_errors(s,F,A,U,E);
-            }
-
+            
+            
         }
 
     }

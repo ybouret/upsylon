@@ -124,7 +124,7 @@ Y_UTEST(fitting_gls)
         for(size_t k=0;k<sizeof(pass)/sizeof(pass[0]);++k)
         {
             vars.only_on(used,pass[k]);
-            if( ls(*s,F,aorg,used,aerr) )
+            if( ls.fit(*s,F,aorg,used,aerr) )
             {
                 display_variables::errors(std::cerr,"\t",vars,aorg,used,aerr);
                 {
@@ -163,8 +163,10 @@ Y_UTEST(fitting_gls)
         s->ordinate_range(lower,upper);
         std::cerr << "lower: " << lower << " | upper:" << upper << std::endl;
 
+        std::cerr << std::endl;
+        std::cerr << "computing solo errors" << std::endl;
         tao::ld(used,true);
-        ls.solo(*s, F,aorg,used,aerr);
+        ls.solo_errors(*s, F,aorg,used,aerr);
         display_sample::results(std::cerr,*s, aorg, used, aerr);
         
     }

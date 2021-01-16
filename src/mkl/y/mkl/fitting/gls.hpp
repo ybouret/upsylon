@@ -5,6 +5,7 @@
 
 #include "y/mkl/fitting/samples.hpp"
 #include "y/mkl/fitting/sequential/explode.hpp"
+#include "y/mkl/fitting/least-squares.hpp"
 
 namespace upsylon
 {
@@ -14,13 +15,16 @@ namespace upsylon
         namespace fitting
         {
 
+            //! default general least square type
+            typedef least_squares<double,double> gls_type;
+            
             //__________________________________________________________________
             //
             //
             //! specialized, pre-compiled least squares
             //
             //__________________________________________________________________
-            class gls
+            class gls : public gls_type
             {
             public:
                 //______________________________________________________________
@@ -51,68 +55,13 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
-                // fit methods
+                // member
                 //______________________________________________________________
-
-                //! fit sequential class and its v_gradient
-                bool operator()(sample_api_type        &s,
-                                sequential_type        &F,
-                                v_gradient_type        &G,
-                                addressable<double>    &A,
-                                const accessible<bool> &U,
-                                addressable<double>    &E);
-
-                //! fit sequential class with internal gradient
-                bool operator()(sample_api_type        &s,
-                                sequential_type        &F,
-                                addressable<double>    &A,
-                                const accessible<bool> &U,
-                                addressable<double>    &E);
-
-                //! fit regular function with intenal gradient
-                bool operator()(sample_api_type        &s,
-                                function               &f,
-                                addressable<double>    &A,
-                                const accessible<bool> &U,
-                                addressable<double>    &E);
-
-
-                //______________________________________________________________
-                //
-                // solo errors methods
-                //______________________________________________________________
-
-                //! solo errors
-                void solo(sample_api_type        &s,
-                          sequential_type        &F,
-                          v_gradient_type        &G,
-                          addressable<double>    &A,
-                          const accessible<bool> &U,
-                          addressable<double>    &E);
-
-
-                //! solo errors
-                void solo(sample_api_type        &s,
-                          sequential_type        &F,
-                          addressable<double>    &A,
-                          const accessible<bool> &U,
-                          addressable<double>    &E);
-
-                //! solo errors
-                void solo(sample_api_type        &s,
-                          function               &f,
-                          addressable<double>    &A,
-                          const accessible<bool> &U,
-                          addressable<double>    &E);
-
+                explode_solver_ptr solver; //!< available solver
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gls);
-                void *impl; //!< private implementation
-
-            public:
-                bool                &verbose; //!< reference to least_squares verbosity
-                double              &scaling; //!< internal gradient
-                explode_solver_ptr  &solver;  //!< internal explicit driver
+                
             };
 
         }
