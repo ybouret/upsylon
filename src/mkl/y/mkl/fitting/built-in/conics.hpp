@@ -184,8 +184,8 @@ namespace upsylon
                     virtual void assemble();
                     virtual void ellipse_replica();
 
-                    matrix<apq> _W;
-                    matrix<apq> _C;
+                    matrix<apq> apW;
+                    matrix<apq> apC;
                 };
 
                 //______________________________________________________________

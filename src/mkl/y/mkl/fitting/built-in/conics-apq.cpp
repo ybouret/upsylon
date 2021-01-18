@@ -12,8 +12,8 @@ namespace upsylon
             namespace built_in
             {
                 iConics:: iConics() : conics_type(),
-                _W(nvar,nvar),
-                _C(nvar,nvar)
+                apW(nvar,nvar),
+                apC(nvar,nvar)
                 {
                 }
                 
@@ -23,12 +23,12 @@ namespace upsylon
                 
                 void iConics:: ellipse_replica()
                 {
-                    _C.ld(zero);
+                    apC.ld(zero);
                     const apq two(2);
                     const apq minus_one(-1);
-                    _C[1][3] = two;
-                    _C[3][1] = two;
-                    _C[2][2] = minus_one;
+                    apC[1][3] = two;
+                    apC[3][1] = two;
+                    apC[2][2] = minus_one;
                 }
                 
                 
@@ -37,20 +37,19 @@ namespace upsylon
                     S.ld(zero);
                     assemble();
                     regularize();
-                    //std::cerr << "S=" << S << std::endl;
                     if( !LU::build(S) )
                     {
                         return false;
                     }
                     else
                     {
-                        _W.assign(_C);
-                        LU::solve(S,_W); // _W = inv(S)*C
+                        apW.assign(apC);
+                        LU::solve(S,apW); // apW = inv(S)*C
                         for(size_t i=1;i<=nvar;++i)
                         {
                             for(size_t j=1;j<=nvar;++j)
                             {
-                                W[i][j] = _W[i][j].to_double();
+                                W[i][j] = apW[i][j].to_double();
                             }
                         }
                         return true;
