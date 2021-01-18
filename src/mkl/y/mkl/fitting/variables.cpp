@@ -131,6 +131,16 @@ namespace upsylon
                 return ans;
             }
 
+            void variables:: on(addressable<bool> &flags)
+            {
+                make_all(flags,true);
+            }
+
+            void variables:: off(addressable<bool> &flags)
+            {
+                make_all(flags,false);
+            }
+
         }
     }
 }

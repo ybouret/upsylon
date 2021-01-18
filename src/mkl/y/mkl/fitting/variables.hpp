@@ -142,7 +142,8 @@ namespace upsylon
                         target[j] = source[j];
                     }
                 }
-            
+
+
                 //______________________________________________________________
                 //
                 //! set all names, separated with separator, to the same value
@@ -196,7 +197,25 @@ namespace upsylon
                     off(flags,names,separator);
                 }
 
+                //______________________________________________________________
+                //
+                //! set all  to the same value
+                //______________________________________________________________
+                template <typename T> inline
+                void make_all(addressable<T>                     &arr,
+                              typename addressable<T>::param_type value) const
+                {
+                    for(const_iterator it=begin();it!=end();++it)
+                    {
+                        (**it)(arr) = value;
+                    }
+                }
 
+                //! all matching flags to true
+                void on(addressable<bool> &flags);
+
+                //! all matching flags to false
+                void off(addressable<bool> &flags);
 
                 //______________________________________________________________
                 //
