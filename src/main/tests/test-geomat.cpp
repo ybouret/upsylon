@@ -1,6 +1,6 @@
 #include "y/type/mat2x2.hpp"
 #include "y/type/mat3x3.hpp"
-#include "y/yap/rational.hpp"
+#include "y/yap.hpp"
 #include "y/type/spec.hpp"
 #include "y/utest/run.hpp"
 
