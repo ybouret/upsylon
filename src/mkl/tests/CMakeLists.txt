@@ -64,15 +64,7 @@ ADD_TEST(stat:corr    test-mkl correlation)
 ADD_TEST(stat:k-means test-mkl k_means)
 
 SOURCE_GROUP(io FILES test-data-set.cpp)
-ADD_TEST(io:ds   test-mkl data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
-
-SOURCE_GROUP(fit FILES test-fit.cpp test-fit-ode.cpp test-fit-poly.cpp test-fit-gauss.cpp)
-ADD_TEST(fit       test-mkl fit)
-ADD_TEST(fit2      test-mkl fit2 ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
-ADD_TEST(fit:ode   test-mkl fit_ode)
-ADD_TEST(fit:poly  test-mkl fit_poly)
-ADD_TEST(fit:gauss test-mkl fit_gauss)
-
+ADD_TEST(io:ds test-mkl data_set ${CMAKE_CURRENT_SOURCE_DIR}/sample.txt)
 
 SOURCE_GROUP(euclidean FILES test-euclidean.cpp)
 ADD_TEST(euclidean test-mkl euclidean)
@@ -80,13 +72,13 @@ ADD_TEST(euclidean test-mkl euclidean)
 SOURCE_GROUP(geometric FILES test-geometric.cpp)
 ADD_TEST(geometric test-mkl geometric)
 
-SOURCE_GROUP( tao FILES
+SOURCE_GROUP(tao FILES
 test-tao.cpp
 test-simplify.cpp)
 ADD_TEST(tao test-mkl tao)
 ADD_TEST(simplify test-mkl simplify)
 
-SOURCE_GROUP( fitting FILES
+SOURCE_GROUP(fitting FILES
 test-fitting-vars.cpp 
 test-fitting-lam.cpp
 test-fitting-sample.cpp

@@ -103,37 +103,6 @@ SET(geometric_arc_srcs ${geometric_arc_decl} ${geometric_arc_code})
 SOURCE_GROUP( geometric/arc FILES ${geometric_arc_srcs} )
 INSTALL( FILES ${geometric_arc_decl} DESTINATION include/y/mkl/geometric/arc )
 
-
-FILE(GLOB fit_decl y/mkl/fit/*.h??)
-FILE(GLOB fit_code y/mkl/fit/*.cpp)
-SET(fit_srcs ${fit_decl} ${fit_code})
-SOURCE_GROUP( fit FILES ${fit_srcs} )
-INSTALL( FILES ${fit_decl} DESTINATION include/y/mkl/fit )
-
-FILE(GLOB fit_sample_decl y/mkl/fit/sample/*.hpp)
-FILE(GLOB fit_sample_code y/mkl/fit/sample/*.cpp)
-SET(fit_sample_srcs ${fit_sample_decl} ${fit_sample_code})
-SOURCE_GROUP( fit/sample FILES ${fit_sample_srcs} )
-INSTALL( FILES ${fit_sample_decl} DESTINATION include/y/mkl/fit/sample )
-
-FILE(GLOB fit_variable_decl y/mkl/fit/variable/*.hpp)
-FILE(GLOB fit_variable_code y/mkl/fit/variable/*.cpp)
-SET(fit_variable_srcs ${fit_variable_decl} ${fit_variable_code})
-SOURCE_GROUP( fit/variable FILES ${fit_variable_srcs} )
-INSTALL( FILES ${fit_variable_decl} DESTINATION include/y/mkl/fit/variable )
-
-FILE(GLOB fit_sequential_decl y/mkl/fit/sequential/*.hpp)
-FILE(GLOB fit_sequential_code y/mkl/fit/sequential/*.cpp)
-SET(fit_sequential_srcs ${fit_sequential_decl} ${fit_sequential_code})
-SOURCE_GROUP( fit/sequential FILES ${fit_sequential_srcs} )
-INSTALL( FILES ${fit_sequential_decl} DESTINATION include/y/mkl/fit/sequential )
-
-FILE(GLOB fit_share_decl y/mkl/fit/share/*.hpp)
-FILE(GLOB fit_share_code y/mkl/fit/share/*.cpp)
-SET(fit_share_srcs ${fit_share_decl} ${fit_share_code})
-SOURCE_GROUP( fit/share FILES ${fit_share_srcs} )
-INSTALL( FILES ${fit_share_decl} DESTINATION include/y/mkl/fit/share )
-
 FILE(GLOB fitting_decl y/mkl/fitting/*.h??)
 FILE(GLOB fitting_code y/mkl/fitting/*.cpp)
 SET(fitting_srcs ${fitting_decl} ${fitting_code})
