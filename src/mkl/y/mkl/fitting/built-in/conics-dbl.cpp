@@ -94,14 +94,14 @@ namespace upsylon
                         Y_CONIC(S[3][5],_Y2Y);
                         Y_CONIC(S[3][6],_Y2);
 
- #define _X(i)  X[i]
+ #define get_X(i)  X[i]
                         Y_CONIC(S[4][4],_X2);
                         Y_CONIC(S[4][5],_XY);
-                        Y_CONIC(S[4][6],_X);
+                        Y_CONIC(S[4][6],get_X);
                     
-#define _Y(i)  Y[i]
+#define get_Y(i)  Y[i]
                         Y_CONIC(S[5][5],_Y2);
-                        Y_CONIC(S[5][6],_Y);
+                        Y_CONIC(S[5][6],get_Y);
                         
                     }
                 }
