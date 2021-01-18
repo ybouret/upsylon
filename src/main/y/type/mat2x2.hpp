@@ -8,6 +8,10 @@
 namespace upsylon
 {
 
+    namespace core
+    {
+
+    }
     //__________________________________________________________________________
     //
     //
@@ -22,10 +26,10 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);        //!< alias
-        typedef point2d<T>  vertex; //!< alias
-        static const size_t rows=2; //!< alias
-        static const size_t cols=2; //!< alias
+        Y_DECL_ARGS(T,type);               //!< alias
+        typedef point2d<T>       vertex;   //!< alias
+        static const size_t      rows=2;   //!< alias
+        static const size_t      cols=2;   //!< alias
 
         //______________________________________________________________________
         //
@@ -64,6 +68,7 @@ namespace upsylon
             os << ']';
             return os;
         }
+
 
         //______________________________________________________________________
         //
