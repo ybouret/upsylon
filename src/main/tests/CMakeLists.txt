@@ -209,7 +209,7 @@ ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 
-SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp)
+SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp)
 ADD_TEST(mk:xbitrev     test-main xbitrev 0.0)
 ADD_TEST(mk:fft         test-main fft)
 ADD_TEST(mk:triplet     test-main triplet)
@@ -218,6 +218,7 @@ ADD_TEST(mk:primality   test-main primality)
 ADD_TEST(mk:complex     test-main complex)
 ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
+ADD_TEST(mk:geomat      test-main geomat)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
 test-sort-merge.cpp)

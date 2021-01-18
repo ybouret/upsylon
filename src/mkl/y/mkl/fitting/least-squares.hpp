@@ -32,7 +32,7 @@ namespace upsylon
                 //
                 // contextual info
                 //______________________________________________________________
-                static const char prefix_spc[];  //!< "[FIT] "
+                static const char prefix_spc[]; //!< "[FIT] "
                 static const char prefix_tab[]; //!< "[FIT]\t";
             };
 
@@ -164,27 +164,27 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! solo errors with internal gradient
-                inline void solo_errors(sample_api_type        &s,
-                                        sequential_type        &F,
-                                        addressable<ORDINATE>  &A,
-                                        const accessible<bool> &U,
-                                        addressable<ORDINATE>  &E)
+                inline void errors(sample_api_type        &s,
+                                   sequential_type        &F,
+                                   addressable<ORDINATE>  &A,
+                                   const accessible<bool> &U,
+                                   addressable<ORDINATE>  &E)
                 {
                     sequential_grad &G = grad();
                     G.F = &F;
-                    solo_errors(s,F,G,A,U,E);
+                    errors(s,F,G,A,U,E);
                 }
 
 
                 //! fit with a regular function
-                inline void solo_errors(sample_api_type        &s,
-                                        sequential_func        &f,
-                                        addressable<ORDINATE>  &A,
-                                        const accessible<bool> &U,
-                                        addressable<ORDINATE>  &E)
+                inline void errors(sample_api_type        &s,
+                                   sequential_func        &f,
+                                   addressable<ORDINATE>  &A,
+                                   const accessible<bool> &U,
+                                   addressable<ORDINATE>  &E)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
-                    solo_errors(s,F,A,U,E);
+                    errors(s,F,A,U,E);
                 }
 
                 //______________________________________________________________

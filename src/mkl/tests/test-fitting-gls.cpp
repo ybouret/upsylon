@@ -166,7 +166,7 @@ Y_UTEST(fitting_gls)
         std::cerr << std::endl;
         std::cerr << "computing solo errors" << std::endl;
         tao::ld(used,true);
-        ls.solo_errors(*s, F,aorg,used,aerr);
+        ls.errors(*s, F,aorg,used,aerr);
         display_sample::results(std::cerr,*s, aorg, used, aerr);
         
     }

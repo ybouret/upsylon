@@ -69,8 +69,8 @@ namespace upsylon
                     inline ORDINATE operator()(const ORDINATE a)
                     {
                         assert(ia>0); assert(F_); assert(X_); assert(aorg_); assert(vars_);
-                        const accessible<ORDINATE> &aorg = *aorg_;
-                        momentary_value<ORDINATE>   link( aliasing::_( aorg[ia]), a );
+                        const accessible<ORDINATE>     &aorg = *aorg_;
+                        const momentary_value<ORDINATE> link( aliasing::_( aorg[ia]), a );
                         return F_->start(*X_,aorg,*vars_);
                     }
                 };
@@ -88,7 +88,7 @@ namespace upsylon
                     //__________________________________________________________
                     assert(F);
                     wrapper func = { 0, F, &X, &aorg, &vars }; // phony 1D function
-                    size_t  nvar = vars.size();                 // number of variables
+                    size_t  nvar = vars.size();                // number of variables
 
                     //__________________________________________________________
                     //

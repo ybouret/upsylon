@@ -226,7 +226,7 @@ Y_UTEST(fitting_diff)
 
 
     tao::ld(u3,true);
-    lsf.solo_errors(sa,F,G,a3,u3,e3);
+    lsf.errors(sa,F,G,a3,u3,e3);
     display_sample::results(std::cerr,sa,a3,u3,e3);
     
 

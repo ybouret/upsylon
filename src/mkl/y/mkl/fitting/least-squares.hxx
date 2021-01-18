@@ -328,12 +328,12 @@ CONVERGED:
  \param E array of errors
  */
 //______________________________________________________________________________
-inline void solo_errors(sample_api_type        &s,
-                        sequential_type        &F,
-                        v_gradient_type        &G,
-                        addressable<ORDINATE>  &A,
-                        const accessible<bool> &U,
-                        addressable<ORDINATE>  &E)
+inline void errors(sample_api_type        &s,
+                   sequential_type        &F,
+                   v_gradient_type        &G,
+                   addressable<ORDINATE>  &A,
+                   const accessible<bool> &U,
+                   addressable<ORDINATE>  &E)
 {
     setup_fields(s,A,U,E);
     size_t ndof = s.count();
