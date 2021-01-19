@@ -23,7 +23,7 @@ SET(KNOW_BUILD_TYPE OFF)
 
 #default
 IF("" STREQUAL "${BUILD_TYPE}")
-	SET(BUILD_TYPE "Debug")
+	SET(BUILD_TYPE "Release")
 ENDIF()
 
 IF("Debug" STREQUAL "${BUILD_TYPE}")
@@ -52,7 +52,12 @@ SET(TRACE_COMPILERS ON)  #if trace of compiler version may be kept (gcc,clang...
 
 #default
 IF( "" STREQUAL "${GENERATOR}" )
-	SET(GENERATOR "Unix Makefiles")
+    FIND_PROGRAM(Y_NINJA ninja)
+    IF( "Y_NINJA-NOTFOUND" STREQUAL "${Y_NINJA}")
+		SET(GENERATOR "Unix Makefiles")
+	ELSE()
+		SET(GENERATOR "Ninja")
+	ENDIF()
 ENDIF()
 
 ########################################################################
