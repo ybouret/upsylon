@@ -1,8 +1,13 @@
-all: lsf.pdf shapes.pdf zero.pdf vspline.pdf
+all:
 
 %.pdf:%.tex
 	pdflatex $< && pdflatex $<
 
 clean:
-	rm -f *.aux *.log *.synctex.gz lsf.pdf shapes.pdf ilog.pdf spline.pdf  drvs.pdf conics.pdf zero.pdf newt.pdf vspline.pdf trajectories.pdf *.bbl *.blg diffusion.pdf protodiff.pdf gls.pdf
+	rm -f *.aux *.log *.synctex.gz lsf.pdf
+	rm -f gls.pdf
+	rm -f newt.pdf
+	rm -f protodiff.pdf
+	rm -f spline.pdf
+	rm -f zero.pdf
 
