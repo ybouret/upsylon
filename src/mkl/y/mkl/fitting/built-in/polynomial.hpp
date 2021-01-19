@@ -6,8 +6,7 @@
 
 #include "y/mkl/fitting/v-gradient.hpp"
 #include "y/mkl/fitting/sequential.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/allocator/pooled.hpp"
+#include "y/mkl/fitting/built-in/qualified.hpp"
 #include "y/core/ipower.hpp"
 
 namespace upsylon
@@ -20,63 +19,53 @@ namespace upsylon
             namespace built_in
             {
 
-                //______________________________________________________________
-                //
-                //
-                //! base class for polynomial fits
-                //
-                //______________________________________________________________
-                class __polynomial
+                namespace bulk
                 {
-                public:
                     //__________________________________________________________
                     //
-                    // types and definitions
-                    //__________________________________________________________
-                    typedef vector<string,memory::pooled> strings; //!< alias
-
-                    //__________________________________________________________
                     //
-                    // C++
+                    //! base class for polynomial fits
+                    //
                     //__________________________________________________________
-                   
-                    //! cleanup
-                    virtual ~__polynomial() throw();
-
-                    //! setup with base id
-                    template <typename ID> inline
-                    explicit __polynomial(const ID &id, const size_t d) :
-                    var_id(id),
-                    degree(d),
-                    coeffs(degree+1),
-                    vnames(coeffs,as_capacity)
+                    class polynomial : public qualified
                     {
-                        setup();
-                    }
-                    
-                    //__________________________________________________________
-                    //
-                    // methods
-                    //__________________________________________________________
-
-                    //! make primary variables
-                    void make(variables &vars) const;
-
-                    //__________________________________________________________
-                    //
-                    // members
-                    //__________________________________________________________
-                    const string    var_id; //!< variable base name
-                    const size_t    degree; //!< degree
-                    const size_t    coeffs; //!< degree+1
-                    const strings   vnames; //!< var_id[1...coeffs] = var_id[0..degree]
+                    public:
+                        //______________________________________________________
 
 
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(__polynomial);
-                    void setup();
-                };
+                        //______________________________________________________
+                        //
+                        // C++
+                        //______________________________________________________
 
+                        //! cleanup
+                        virtual ~polynomial() throw();
+
+                        //! setup with base id
+                        template <typename ID> inline
+                        explicit polynomial(const ID &id, const size_t d) :
+                        qualified(d+1),
+                        var_id(id),
+                        degree(d),
+                        coeffs(degree+1)
+                        {
+                            setup();
+                        }
+
+                        //______________________________________________________
+                        //
+                        // members
+                        //______________________________________________________
+                        const string    var_id; //!< variable base name
+                        const size_t    degree; //!< degree
+                        const size_t    coeffs; //!< degree+1
+
+
+                    private:
+                        Y_DISABLE_COPY_AND_ASSIGN(polynomial);
+                        void setup();
+                    };
+                }
                 
                 //______________________________________________________________
                 //
@@ -85,7 +74,7 @@ namespace upsylon
                 //
                 //______________________________________________________________
                 template <typename T>
-                class polynomial : public __polynomial,
+                class polynomial : public bulk::polynomial,
                 public sequential<T,T>,
                 public v_gradient<T,T>
                 {
@@ -104,7 +93,7 @@ namespace upsylon
                     //! setup
                     template <typename ID> inline
                     explicit polynomial(const ID &id, const size_t degree) :
-                    __polynomial(id,degree)
+                    bulk::polynomial(id,degree)
                     {
                     }
 
@@ -118,11 +107,11 @@ namespace upsylon
                     inline T eval(const T X, const accessible<T> &aorg, const variables &vars) const
                     {
                         size_t n = coeffs;
-                        T      p = vars(aorg,vnames[n--]);
+                        T      p = vars(aorg,names[n--]);
                         while(n>0)
                         {
                             p *= X;
-                            p += vars(aorg,vnames[n--]);
+                            p += vars(aorg,names[n--]);
                         }
                         return p;
                     }
@@ -149,7 +138,7 @@ namespace upsylon
                     {
                         for(size_t i=1,d=0;i<=coeffs;++i,++d)
                         {
-                            const string   &vid = vnames[i];
+                            const string   &vid = names[i];
                             const variable &var = vars[vid];
                             if(var(used))
                             {

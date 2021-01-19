@@ -43,8 +43,8 @@ namespace
         
         poly.make(vars);
         
-        std::cerr << "poly: " << poly.vnames << std::endl;
-        std::cerr << "vars: " << vars        << std::endl;
+        std::cerr << "poly: " << poly.names << std::endl;
+        std::cerr << "vars: " << vars       << std::endl;
         
         
         
@@ -90,7 +90,8 @@ Y_UTEST(fitting_poly)
 {
     
     do_poly<float>();
-    
+    do_poly<double>();
+
 }
 Y_UTEST_DONE()
 
