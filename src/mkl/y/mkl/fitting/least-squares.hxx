@@ -1,5 +1,25 @@
 //! \file
 
+private:
+
+struct F1D
+{
+    sample_api_type     *        _data;
+    sequential_type     *        _func;
+    const accessible<ORDINATE> * _aorg;
+    const accessible<ORDINATE> * _step;
+    addressable<ORDINATE>      * _atmp;
+
+    inline ORDINATE operator()(const ORDINATE u)
+    {
+        tao::muladd(*_atmp, *_aorg, u, *_step);
+        return _data->D2(*_func, *_atmp);
+    }
+
+};
+
+
+public:
 //______________________________________________________________________________
 //
 //! generic call
@@ -45,7 +65,8 @@ inline bool fit(sample_api_type        &s,
     {
         display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
     }
-    
+
+    F1D g = { &s, &F, &aorg, &step, &atmp };
     
     //--------------------------------------------------------------------------
     //
@@ -56,6 +77,10 @@ inline bool fit(sample_api_type        &s,
     //--------------------------------------------------------------------------
     size_t cycle      = 0;      // cycle indication
     bool   decreasing = true;   // is lambda decreasing?
+    if(writing)
+    {
+        ios::ocstream::overwrite(least_squares_::writing_id);
+    }
 CYCLE:
     ++cycle;
     ORDINATE D2_org = s.D2(alpha,beta,F,G,aorg,used);
@@ -105,7 +130,17 @@ COMPUTE_STEP:
         step[i] = atry[i] - aorg[i];
     }
 
-
+    if(writing)
+    {
+        //const ORDINATE D2_new = g(1);
+        for( ORDINATE u=0; u<=2; u += ORDINATE(0.01) )
+        {
+            const ORDINATE tmp = D2_org - sigma * u + 0.5 * u * sigma * u;
+            //const ORDINATE tmp = D2_org - sigma * u + 0.25 * u * sigma * u;
+            ios::ocstream::echo( least_squares_::writing_id, "%.15g %.15g %.15g\n", u, g(u), tmp );
+        }
+        ios::ocstream::echo( least_squares_::writing_id, "\n");
+    }
     
     //--------------------------------------------------------------------------
     //
@@ -113,8 +148,7 @@ COMPUTE_STEP:
     //
     //--------------------------------------------------------------------------
     ORDINATE       D2_try  = s.D2(F,atry);
-    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << std::setw(4) << p << ", decreasing = " << std::setw(5) << textual::boolean(decreasing) << ", sigma=" << sigma );
-    
+    Y_GLS_PRINTLN("D2_try  = " << D2_try << " @ lambda=10^" << std::setw(4) << p << "; decreasing = " << std::setw(5) << textual::boolean(decreasing) << "; sigma=" << sigma );
     if(D2_try>D2_org)
     {
         //----------------------------------------------------------------------

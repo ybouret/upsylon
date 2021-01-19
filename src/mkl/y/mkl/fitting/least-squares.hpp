@@ -13,6 +13,7 @@
 #include "y/ptr/auto.hpp"
 #include "y/code/textual.hpp"
 #include "y/os/static-check.hpp"
+#include "y/ios/ocstream.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -33,7 +34,8 @@ namespace upsylon
                 // contextual info
                 //______________________________________________________________
                 static const char prefix_spc[]; //!< "[FIT] "
-                static const char prefix_tab[]; //!< "[FIT]\t";
+                static const char prefix_tab[]; //!< "[FIT]\t"
+                static const char writing_id[]; //!< "gls-log.dat"
             };
 
 
@@ -70,7 +72,6 @@ namespace upsylon
                 //______________________________________________________________
                 //! setup
                 inline explicit least_squares(const bool verbosity=false) :
-                verbose(verbosity),
                 M(0),
                 lam(), lambda(0), p(0),
                 alpha(),
@@ -84,7 +85,9 @@ namespace upsylon
                 aerr( space.next() ),
                 utmp( space.next() ),
                 used(),
-                grad_(0)
+                grad_(0),
+                verbose(verbosity),
+                writing(false)
                 {
                 }
 
@@ -187,11 +190,6 @@ namespace upsylon
                     errors(s,F,A,U,E);
                 }
 
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                bool verbose; //!< output verbosity
 
 
 
@@ -215,6 +213,15 @@ namespace upsylon
                 flags_type                    used;    //!< used parameters
                 auto_ptr<sequential_grad>     grad_;   //!< internal gradient
 
+            public:
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                bool verbose; //!< output verbosity
+                bool writing; //!< save lookup profiles
+
+            private:
                 //--------------------------------------------------------------
                 //
                 //
@@ -274,7 +281,8 @@ namespace upsylon
                             covar[i][i] *= fac;
                         }
                     }
-                    
+
+
                     //----------------------------------------------------------
                     // try to invert it
                     //----------------------------------------------------------

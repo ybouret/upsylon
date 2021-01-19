@@ -42,12 +42,12 @@ and the total least square is:
 \section{Descent direction(s)}
 Let us compute the local descent direction:
 \begin{equation}
-	\vec{\beta}_s = - \vec{\nabla}_{\vec{A}_s} D^2_s =  \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F(\vec{X}_{si},\vec{A}_s)
+	\vec{\beta}_s = - \dfrac{1}{2} \vec{\nabla}_{\vec{A}_s} D^2_s = \sum_{i=1}^{N_s} \left[ Y_{si} - F(\vec{X}_{si},\vec{A}_s) \right] \vec{\nabla} F(\vec{X}_{si},\vec{A}_s)
 \end{equation}
 
 Let us compute the descent direction:
 \begin{equation}
- 	\vec{\beta}    = - \vec{\nabla}_{\vec{A}} D^2 
+ 	\vec{\beta}    = - \dfrac{1}{2}\vec{\nabla}_{\vec{A}} D^2 
 	 =  \dfrac{1}{N} \sum_s N_s \trn{\bm{\Gamma}}_s \vec{\beta}_s
 \end{equation}
 
@@ -103,7 +103,7 @@ Let us define:
 We compute $f(1)=f_1$ (the full step) and we need to compare to $f(0)=f_0$.
 We should have:
 \begin{equation}
-	f(\gamma) \approx f_0 - \gamma \sigma %+ \gamma^2 \left(\sigma+f_1-f_0\right)
+	f(\gamma) \approx f_0 - \gamma \sigma + \sigma\dfrac{\gamma^2}{4} 
 \end{equation}
 
 \begin{itemize}

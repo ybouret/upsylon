@@ -122,7 +122,8 @@ namespace {
         {
             "mu:omega", "y0", "mu:omega:y0"
         };
-        
+
+        ls.writing = true;
         try
         {
             vector<size_t> calls;
@@ -156,6 +157,7 @@ namespace {
                             }
                             
                         }
+                        ls.writing = false;
                     }
                     else
                     {
