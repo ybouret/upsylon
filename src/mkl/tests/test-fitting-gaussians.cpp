@@ -77,6 +77,18 @@ namespace {
 
         least_squares<T,T> ls(true);
 
+        if(ls.fit(s,G,G,aorg,used,aerr))
+        {
+            display_variables::errors(std::cerr, NULL, vars, aorg, used, aerr);
+            {
+                const string  filename = "gauss-" + id + ".dat";
+                ios::ocstream fp(filename);
+                for(size_t i=1;i<=s.count();++i)
+                {
+                    fp("%g %g %g\n", s.abscissa[i], s.ordinate[i], s.adjusted[i]);
+                }
+            }
+        }
 
 
 

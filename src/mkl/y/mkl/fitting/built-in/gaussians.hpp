@@ -20,28 +20,29 @@ namespace upsylon
                 
                 namespace bulk
                 {
-                    //______________________________________________________________
+                    //__________________________________________________________
                     //
                     //
                     //! base class for gaussians fits
                     //
-                    //______________________________________________________________
+                    //__________________________________________________________
                     class gaussians : public qualified
                     {
                     public:
-
-                        
-                        //__________________________________________________________
+                        //______________________________________________________
                         //
                         // C++
-                        //__________________________________________________________
-                        
+                        //______________________________________________________
                         //! setup
                         explicit gaussians(size_t num);
                         
                         //! cleanup
                         virtual ~gaussians() throw();
-                        
+
+                        //______________________________________________________
+                        //
+                        // members
+                        //______________________________________________________
                         const size_t count; //!< number of gaussians
                         
                     private:
@@ -81,7 +82,8 @@ namespace upsylon
 
                     //! cleanup
                     inline virtual ~gaussians() throw() {}
-                    
+
+                    //! compute expression
                     static inline T at(const T X, const T A, const T k, const T m)
                     {
                         return A * exp_of( -square_of( k*(X-m) ));
@@ -115,13 +117,37 @@ namespace upsylon
                         return eval(X,a,v);
                     }
 
-                    inline virtual void compute(addressable<T>         &dFdA,
+                    inline virtual void compute(addressable<T>         &dF,
                                                 const T                 X,
-                                                const accessible<T>    &,
+                                                const accessible<T>    &aorg,
                                                 const variables        &vars,
                                                 const accessible<bool> &used)
                     {
-                        
+                        for(size_t i=count,j=0;i>0;--i)
+                        {
+                            const variable &A = vars[ names[++j] ];
+                            const variable &k = vars[ names[++j] ];
+                            const variable &m = vars[ names[++j] ];
+                            const T         dX  = (X-m(aorg));
+                            const T         kdX = k(aorg) * dX;
+                            const T         E   = exp_of( -square_of(kdX) );
+                            if( A(used) )
+                            {
+                                A(dF) = E;
+                            }
+
+                            if( k(used) )
+                            {
+                                const T tmp = A(aorg) * kdX * dX * E;
+                                k(dF) = -(tmp+tmp);
+                            }
+
+                            if( m(used) )
+                            {
+                                const T tmp = A(aorg) * k(aorg) * kdX * E;
+                                m(dF) = tmp+tmp;
+                            }
+                        }
                     }
                 };
                 

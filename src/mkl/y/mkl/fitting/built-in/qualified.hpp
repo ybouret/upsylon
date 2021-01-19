@@ -19,19 +19,36 @@ namespace upsylon
             namespace built_in
             {
 
+                //______________________________________________________________
+                //
+                //
+                //! build qualified variable names
+                //
+                //______________________________________________________________
                 class qualified
                 {
                 public:
-                    typedef vector<string,memory::pooled> strings;
+                    //__________________________________________________________
+                    //
+                    // types and definitions
+                    //__________________________________________________________
+                    typedef vector<string,memory::pooled> strings; //!< alias
 
-                    virtual ~qualified() throw();
-                    void make(variables &vars) const; //!< make primary variables
+                    //__________________________________________________________
+                    //
+                    // methods
+                    //__________________________________________________________
+                    virtual ~qualified()         throw(); //!< cleanup
+                    void     make(variables &vars) const; //!< make primary variables
 
-                    
-                    const strings names;
+                    //__________________________________________________________
+                    //
+                    // members
+                    //__________________________________________________________
+                    const strings names; //!< built by derived class
                     
                 protected:
-                    explicit qualified(const size_t nvar);
+                    explicit qualified(const size_t nvar); //!< reserve space for nvar
 
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(qualified);
