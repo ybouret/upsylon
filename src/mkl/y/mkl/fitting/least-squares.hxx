@@ -174,6 +174,10 @@ COMPUTE_STEP:
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
 
+        const ORDINATE mu = sigma + 2*(D2_try - D2_org);
+        std::cerr << "mu=" << mu << std::endl;
+        exit(1);
+        
         if(verbose)
         {
             display_variables::values(std::cerr, "\t(->) ", s.vars, atry, " (", step, ")");
