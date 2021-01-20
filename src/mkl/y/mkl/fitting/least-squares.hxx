@@ -248,7 +248,7 @@ CONVERGED:
     //--------------------------------------------------------------------------
     D2_org = s.D2(alpha,beta,F,G,aorg,used);
     Y_GLS_PRINTLN("D2_org    = " << D2_org << " (lambda=" << lambda << ")" );
-    Y_GLS_VERBOSE(display_variables::values(std::cerr, "\tgradient/", vars, beta, NULL) << std::endl);
+    Y_GLS_VERBOSE(display_variables::values(std::cerr, "\tgradient/",vars,beta,NULL) << std::endl);
 
 
     //--------------------------------------------------------------------------
