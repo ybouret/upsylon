@@ -43,6 +43,11 @@ namespace
         b  = a/2;     std::cerr << b << std::endl;
         c  = 2/a;     std::cerr << c << std::endl;
         cplx d = b*c; std::cerr << d << std::endl;
+        std::cerr << "-- sqr" << std::endl;
+        cplx f(2,3), g=f;
+        std::cerr << f << std::endl;
+        f.__square();
+        std::cerr << "->" << f << " | " << g*g << std::endl;
     }
 
 }
