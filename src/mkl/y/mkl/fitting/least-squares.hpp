@@ -39,13 +39,24 @@ namespace upsylon
             };
 
 
-
-            //! for verbose output
-#define Y_GLS_PRINTLN(MSG) do { if(verbose) { std::cerr << least_squares_::prefix_spc << MSG << std::endl; } } while(false)
+            //__________________________________________________________________
+            //
+            //! verbosity block
+            //__________________________________________________________________
+#define Y_GLS_VERBOSE(CODE) do { if(verbose) { CODE; } } while(false)
 
             //__________________________________________________________________
             //
+            //! for verbose output
+            //__________________________________________________________________
+#define Y_GLS_PRINTLN(MSG) Y_GLS_VERBOSE(std::cerr << least_squares_::prefix_spc << MSG << std::endl)
+
+
+            //__________________________________________________________________
+            //
+            //
             //! least square algorithm
+            //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
             class least_squares
