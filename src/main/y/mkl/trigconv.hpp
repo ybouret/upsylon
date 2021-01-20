@@ -2,7 +2,8 @@
 #ifndef Y_MKL_TRIGCONV_INCLUDED
 #define Y_MKL_TRIGCONV_INCLUDED
 
-#include "y/math/types.hpp"
+#include "y/mkl/types.hpp"
+#include "y/type/point2d.hpp"
 
 namespace upsylon {
 
@@ -25,6 +26,13 @@ namespace upsylon {
             static const T full_deg = 180;
             return (full_rad*angle_deg)/full_deg;
         }
+
+        template <typename T>
+        inline T argument(const point2d<T> &v) throw()
+        {
+            return atan2_of(v.y,v.x);
+        }
+        
 
     }
 }

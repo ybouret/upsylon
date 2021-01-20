@@ -167,6 +167,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(triplet);
     Y_UTEST(points);
     Y_UTEST(geomat);
+    Y_UTEST(trigo);
     Y_UTEST(tuple);
     Y_UTEST(release);
     Y_UTEST(spec);
