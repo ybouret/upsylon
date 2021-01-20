@@ -17,17 +17,7 @@ namespace upsylon
                 return name;
             }
 
-            variables & sample_info:: operator*() throw()
-            {
-                return vars;
-            }
-
-
-            const variables & sample_info:: operator*() const throw()
-            {
-                return vars;
-            }
-
+            
             void sample_info:: save_triplet( ios::ostream &fp, const double x, const double y, const double z)
             {
                 fp("%.15g",x) << ' ';
@@ -35,7 +25,10 @@ namespace upsylon
                 fp("%.15g",z) << '\n';
             }
 
-
+            const variables & sample_info:: bulk() const throw()
+            {
+                return vars;
+            }
         }
 
     }

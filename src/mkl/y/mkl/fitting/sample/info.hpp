@@ -6,6 +6,7 @@
 
 #include "y/mkl/fitting/variables.hpp"
 #include "y/ios/ostream.hpp"
+#include "y/type/gateway.hpp"
 
 namespace upsylon
 {
@@ -20,7 +21,7 @@ namespace upsylon
             //! sample info
             //
             //__________________________________________________________________
-            class sample_info : public counted, public object
+            class sample_info : public counted, public object, public gateway<variables>
             {
             public:
                 //______________________________________________________________
@@ -35,8 +36,7 @@ namespace upsylon
                 // non-virtual interface
                 //______________________________________________________________
                 const string    &key()        const throw(); //!< name
-                variables       & operator*()       throw(); //!< access
-                const variables & operator*() const throw(); //!< access
+                
 
                 //! helper to quick save
                 static void       save_triplet( ios::ostream &fp, const double, const double, const double);
@@ -62,6 +62,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sample_info);
+                virtual const variables & bulk() const throw();
             };
         }
 
