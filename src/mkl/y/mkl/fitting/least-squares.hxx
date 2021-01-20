@@ -324,10 +324,7 @@ CONVERGED:
             aerr[i] = sqrt_of( D2_org * max_of<ORDINATE>(0,covar[i][i]) / n2 );
         }
         vars.set(E,aerr);
-        if(verbose)
-        {
-            display_variables::errors(std::cerr, least_squares_::prefix_tab, vars, A, U, E);
-        }
+        Y_GLS_VERBOSE(display_variables::errors(std::cerr, least_squares_::prefix_tab,vars,A,U,E));
         Y_GLS_PRINTLN("-------- <finalized> --------");
         return true;
     }
