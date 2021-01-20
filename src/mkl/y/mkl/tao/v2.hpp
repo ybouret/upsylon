@@ -100,6 +100,28 @@ struct rms
     }
 };
 
+
+//==============================================================================
+//
+//! diagonal operations
+//
+//==============================================================================
+struct diag
+{
+    //! get diagonal items
+    template <typename TARGET, typename T> static inline
+    void get(TARGET &diag, const matrix<T> &M)
+    {
+        assert(M.rows<=diag.size());assert(M.cols>=M.rows);
+        for(size_t i=M.rows;i>0;--i)
+        {
+            diag[i] =  auto_cast<typename TARGET::type,T>::_(M[i][i]);
+        }
+    }
+};
+
+
+
 //==============================================================================
 //
 // MUL matrix*vector

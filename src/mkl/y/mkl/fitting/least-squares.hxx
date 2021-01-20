@@ -61,10 +61,8 @@ inline bool fit(sample_api_type        &s,
     lambda                = lam[p]; // matching coefficient
 
     Y_GLS_PRINTLN("-------- <initialized: p=" << p << ", lambda=" << lambda << "> --------");
-    if(verbose)
-    {
-        display_variables::values(std::cerr, "\t(--) ", s.vars, aorg, ", used=", used, NULL);
-    }
+    Y_GLS_VERBOSE(display_variables::values(std::cerr, "\t(--) ",s.vars,aorg,", used=",used,NULL));
+
 
     F1D g = { &s, &F, &aorg, &step, &atmp };
     
@@ -173,11 +171,8 @@ COMPUTE_STEP:
         //
         //----------------------------------------------------------------------
         Y_GLS_PRINTLN("<accept>");
+        Y_GLS_VERBOSE(display_variables::values(std::cerr, "\t(->) ",s.vars,atry," (", step,")"));
 
-        if(verbose)
-        {
-            display_variables::values(std::cerr, "\t(->) ", s.vars, atry, " (", step, ")");
-        }
 
         //----------------------------------------------------------------------
         // update algorithm status, with aorg, atry and step
@@ -253,11 +248,7 @@ CONVERGED:
     //--------------------------------------------------------------------------
     D2_org = s.D2(alpha,beta,F,G,aorg,used);
     Y_GLS_PRINTLN("D2_org    = " << D2_org << " (lambda=" << lambda << ")" );
-    if(verbose)
-    {
-        display_variables::values(std::cerr, "\tgradient/", vars, beta, NULL);
-        std::cerr << std::endl;
-    }
+    Y_GLS_VERBOSE(display_variables::values(std::cerr, "\tgradient/", vars, beta, NULL) << std::endl);
 
 
     //--------------------------------------------------------------------------
@@ -275,15 +266,8 @@ CONVERGED:
     {
         if(!used[j]) covar[j][j] = 0;
     }
-    //Y_GLS_PRINTLN("covar     = " << covar);
-    if(verbose)
-    {
-        for(size_t j=M;j>0;--j)
-        {
-            atmp[j] = covar[j][j];
-        }
-        display_variables::values(std::cerr, "\tvariance@", vars, atmp, NULL);
-    }
+    Y_GLS_VERBOSE(tao::diag::get(atmp,covar);
+                  display_variables::values(std::cerr, "\tvariance@", vars, atmp, NULL) );
 
     //--------------------------------------------------------------------------
     //
