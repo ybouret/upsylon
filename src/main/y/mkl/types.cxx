@@ -28,7 +28,7 @@ namespace upsylon
         template <> const real_t numeric<real_t>::inv_gold     = REAL(0.5) * ( REAL(sqrt)( REAL(5.0) ) - REAL(1.0) );
 
 
-        real_t atan2_of( real_t y, real_t x )
+        real_t atan2_of( real_t y, real_t x ) throw()
         {
             static const real_t full_pi = numeric<real_t>::pi;
             static const real_t half_pi = numeric<real_t>::half_pi;

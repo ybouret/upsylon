@@ -126,8 +126,8 @@ namespace upsylon {
         inline float  atan_of(const float  x) { return atanf(x); } //!< arc tangent
         inline double atan_of(const double x) { return atan(x); }  //!< arc tangent
 
-        float  atan2_of(float y,float x);     //!< in \f$]-\pi,\pi]\f$
-        double atan2_of(double y,double x);   //!< in \f$]-\pi,\pi]\f$
+        float  atan2_of(float  y,float  x) throw();     //!< in \f$]-\pi,\pi]\f$
+        double atan2_of(double y,double x) throw();    //!< in \f$]-\pi,\pi]\f$
 
         template <typename T>
         static inline bool almost_equal( const T X, const T Y) throw()

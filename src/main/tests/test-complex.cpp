@@ -48,6 +48,10 @@ namespace
         std::cerr << f << std::endl;
         f.__square();
         std::cerr << "->" << f << " | " << g*g << std::endl;
+        std::cerr << "-- arg" << std::endl;
+        std::cerr << "g ->" << g.arg() << std::endl;
+        std::cerr << "g2->" << f.arg() << std::endl;
+
     }
 
 }

@@ -7,6 +7,11 @@
 
 namespace upsylon
 {
+    namespace mkl
+    {
+        double atan2_of(double,double) throw(); //!< forward
+        float  atan2_of(float,float)   throw(); //!< forward
+    }
 
     //! complex numbers
     template <typename T>
@@ -180,7 +185,7 @@ namespace upsylon
         //______________________________________________________________________
         //! squared modulus
         inline real_type mod2() const throw() { return re*re+im*im; }
-
+        
         //! in place div
         inline complex & operator/=(const complex c) throw()
         {
@@ -230,6 +235,12 @@ namespace upsylon
         inline friend bool operator!=( const complex &lhs, const complex &rhs ) throw()
         {
             return (lhs.re!=rhs.re) || (lhs.im!=rhs.im);
+        }
+
+        // argument
+        inline T arg() throw()
+        {
+            return mkl::atan2_of(im,re);
         }
     };
 
