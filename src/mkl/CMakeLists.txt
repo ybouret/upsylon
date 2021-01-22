@@ -41,6 +41,12 @@ SET(root_srcs ${root_decl} ${root_code})
 SOURCE_GROUP( root FILES ${root_srcs} )
 INSTALL( FILES ${root_decl} DESTINATION include/y/mkl/root )
 
+FILE(GLOB solve_decl y/mkl/solve/*.hpp)
+FILE(GLOB solve_code y/mkl/solve/*.cpp)
+SET(solve_srcs ${solve_decl} ${solve_code})
+SOURCE_GROUP( solve FILES ${solve_srcs} )
+INSTALL( FILES ${solve_decl} DESTINATION include/y/mkl/solve )
+
 FILE(GLOB ode_decl y/mkl/ode/*.hpp)
 FILE(GLOB ode_code y/mkl/ode/*.cpp)
 SET(ode_srcs ${ode_decl} ${ode_code})
@@ -141,6 +147,7 @@ ${kernel_srcs}
 ${io_srcs}
 ${fcn_srcs}
 ${root_srcs}
+${solve_srcs}
 ${ode_srcs} ${ode_expl_srcs} ${ode_impl_srcs}
 ${opt_srcs}
 ${signal_srcs}

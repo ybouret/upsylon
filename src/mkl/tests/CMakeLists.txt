@@ -41,7 +41,7 @@ ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
 ADD_TEST(opt:optimize    test-mkl opt)
 
-SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zroot.cpp test-jacobian.cpp test-znewt.cpp test-zircon.cpp)
+SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-zroot.cpp test-jacobian.cpp test-znewt.cpp test-zircon.cpp test-zeroes.cpp)
 ADD_TEST(fcn:drvs     test-mkl drvs)
 ADD_TEST(fcn:intg     test-mkl intg)
 ADD_TEST(fcn:func     test-mkl functions)
@@ -49,6 +49,8 @@ ADD_TEST(fcn:zroot    test-mkl zroot)
 ADD_TEST(fcn:jacobian test-mkl jacobian)
 ADD_TEST(fcn:znewt    test-mkl znewt)
 ADD_TEST(fcn:zircon   test-mkl zircon)
+ADD_TEST(fcn:zeroes   test-mkl zeroes)
+
 
 SOURCE_GROUP(sig FILES test-bspl.cpp test-extend.cpp test-linear.cpp test-smooth.cpp test-spline.cpp)
 ADD_TEST(sig:linear      test-mkl linear)
