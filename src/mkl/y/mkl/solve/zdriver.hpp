@@ -20,20 +20,32 @@ namespace upsylon
         class zdriver : public ZALGO<T>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             Y_DECL_ARGS(T,type);                                   //!< aliases
             typedef ZALGO<T> algo_type;                            //!< alias
             typedef typename algo_type::triplet_type triplet_type; //!< alias
 
+            //! wrapper to solve F(x) = y
             template <typename FUNC>
             struct zcall
             {
-                FUNC      &F;
-                const_type y;
+                FUNC      &F; //!< function reference
+                const_type y; //!< value to match
+
+                //! call wrapper
                 inline mutable_type operator()(param_type x)
                 {
                     return F(x)-y;
                 }
             };
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
             inline explicit zdriver() : algo_type()
             {
@@ -43,10 +55,10 @@ namespace upsylon
             {
             }
             
-            //______________________________________________________________________
+            //__________________________________________________________________
             //
             // wrappers
-            //______________________________________________________________________
+            //__________________________________________________________________
 
             //! solve F(x) = 0 between x1 and x2
             template <typename FUNC> inline

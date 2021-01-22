@@ -12,7 +12,12 @@ namespace upsylon
     namespace mkl
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! common interface for algorithms
+        //
+        //______________________________________________________________________
         template <typename T>
         class zalgo : public zseek
         {
@@ -38,6 +43,7 @@ namespace upsylon
                 f.ld(0);
             }
 
+            //! setup initial points
             static inline
             result setup(sign_t       &s_a,
                          sign_t       &s_c,

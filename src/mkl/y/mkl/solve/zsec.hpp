@@ -59,8 +59,14 @@ namespace upsylon {
             template <typename FUNC> inline
             bool operator()(FUNC &F, triplet_type &x, triplet_type &f)
             {
-                static const_type half(0.5);
+                // reordering for clamping
+                if(x.c<x.a)
+                {
+                    cswap(x.a,x.c);
+                    cswap(f.a,f.c);
+                }
 
+                // initialize
                 zseek::sign_t s_a = zseek::__zero__;
                 zseek::sign_t s_c = zseek::__zero__;
                 switch(this->setup(s_a,s_c,x,f))
@@ -73,13 +79,27 @@ namespace upsylon {
                 assert(s_c!=zseek::__zero__);
                 assert(s_a!=s_c);
 
-                mutable_type width = fabs_of(x.c-x.a);
+                assert(x.c>=x.a);
+                mutable_type width = fabs_of(x.c-x.a); //!< round-off security
                 while(true)
                 {
-                    const zseek::sign_t  s_b = zseek::sign_of( f.b = F( x.b=half*(x.a+x.c) ) );
+                    mutable_type num = f.a;
+                    mutable_type den = f.c - f.a;
+                    if(den<=0)
+                    {
+                        num = -num;
+                        den = -den + numeric<T>::tiny;
+                    }
+                    else
+                    {
+                        den += numeric<T>::tiny;
+                    }
+                    x.b = clamp<T>(x.a,x.a-(width*num)/den,x.c);
+                    const zseek::sign_t s_b = zseek::sign_of( f.b = F(x.b) );
                     if( zseek::__zero__ == s_b)
                     {
-                        this->exactly(x.b,x,f); return true;
+                        this->exactly(x.b,x,f);
+                        return true;
                     }
                     else
                     {
@@ -102,7 +122,6 @@ namespace upsylon {
                         width = new_width;
                     }
                 }
-                // never get here
                 return false;
             }
 
