@@ -36,14 +36,14 @@ namespace upsylon
 
             public:
                 //! call operator, initialize dFdA and call compute
-                inline void operator()(addressable<ORDINATE>      &dFdA,
+                inline void operator()(addressable<ORDINATE>      &gradient,
                                        const ABSCISSA              X,
                                        const accessible<ORDINATE> &aorg,
                                        const variables            &vars,
                                        const accessible<bool>     &used)
                 {
-                    tao::ld(dFdA,0);
-                    compute(dFdA,X,aorg,vars,used);
+                    tao::ld(gradient,0);
+                    compute(gradient,X,aorg,vars,used);
                 }
 
             private:

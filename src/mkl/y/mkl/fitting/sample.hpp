@@ -73,8 +73,10 @@ namespace upsylon
                 ordinate(the_ordinate),
                 adjusted(the_adjusted),
                 reserved(),
-                dFdA()
+                gradient()
                 {}
+
+
 
                 //! make a copy with a different name
                 template <typename ID>
@@ -83,9 +85,9 @@ namespace upsylon
                 api_type(the_name),
                 abscissa(the_data.abscissa),
                 ordinate(the_data.ordinate),
-                adjusted( new vector<ORDINATE>( the_data.count(), the_data.zero) ),
+                adjusted( new ordinates( the_data.count(), the_data.zero) ),
                 reserved(),
-                dFdA()
+                gradient()
                 {
                     
                 }
@@ -204,7 +206,7 @@ namespace upsylon
                 inline virtual void setup(const accessible<ORDINATE> &aorg)
                 {
                     reserved.adjust(count(),0);
-                    dFdA.adjust(aorg.size(),0);
+                    gradient.adjust(aorg.size(),0);
                 }
                 
 
@@ -265,7 +267,7 @@ namespace upsylon
                 ordinate_type     ordinate; //!< ordinate, 1Dim
                 ordinate_type     adjusted; //!< adjusted, 1Dim
                 mutable ordinates reserved; //!< memory,   1Dim
-                ordinates         dFdA;     //!< memory for gradient
+                ordinates         gradient; //!< memory for gradient
                 
 
             private:
@@ -273,7 +275,7 @@ namespace upsylon
                 
                 inline void add_to(matrix<ORDINATE> &alpha) const throw()
                 {
-                    const accessible<ORDINATE> &df = dFdA;
+                    const accessible<ORDINATE> &df = gradient;
                     for(size_t i=df.size();i>0;--i)
                     {
                         const ORDINATE         df_i    = df[i];
@@ -319,7 +321,7 @@ namespace upsylon
                                                 const accessible<ORDINATE> &A,
                                                 const accessible<bool>     &used)
                 {
-                    assert(dFdA.size()==A.size());
+                    assert(gradient.size()==A.size());
                     assert(beta.size()==A.size());
                     assert(beta.size()==alpha.rows);
                     assert(beta.size()==alpha.cols);
@@ -334,25 +336,32 @@ namespace upsylon
 
                     if(N>0)
                     {
+                        //------------------------------------------------------
                         // first pass : compute reserved as dY
+                        //------------------------------------------------------
                         reserved[1] = Y[1]-(Z[1]=F.start(X[1],A,V));
                         for(size_t i=2;i<=N;++i)
                         {
                             reserved[i] = Y[i]-(Z[i]=F.reach(X[i],A,V));
                         }
 
-                        // second pass: compute gradient and update reserved
+                        //------------------------------------------------------
+                        // second pass: compute gradient
+                        // and update reserved to dY^2
+                        //------------------------------------------------------
                         for(size_t i=N;i>0;--i)
                         {
                             const ABSCISSA &Xi = X[i];
                             const ORDINATE dY  = reserved[i];
-                            G(dFdA,Xi,A,V,used);
-                            tao::muladd(beta,dY,dFdA);
+                            G(gradient,Xi,A,V,used);
+                            tao::muladd(beta,dY,gradient);
                             add_to(alpha);
                             reserved[i] = dY*dY;
                         }
 
+                        //------------------------------------------------------
                         // done
+                        //------------------------------------------------------
                         return sorted_sum(reserved);
                     }
                     else
