@@ -25,7 +25,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! named sign
-            enum sign_type
+            enum sign_t
             {
                 negative=-1, //!< f<0
                 __zero__=0,  //!< f==0
@@ -33,20 +33,20 @@ namespace upsylon
             };
 
             //! setup result
-            enum result_type
+            enum result
             {
                 success,       //!< bracketed
                 failure,       //!< ill-bracketed
                 early_return   //!< one point is zero
             };
-
+            
             //! generic sign computation
             template <typename T> static inline
-            sign_type __sign( const T x ) throw()
+            sign_t sign_of( const T x ) throw()
             {
                 return (x<0) ? negative : ( (0<x) ? positive : __zero__ );
             }
-            
+
             //__________________________________________________________________
             //
             // C++
