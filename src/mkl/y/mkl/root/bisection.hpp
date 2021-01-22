@@ -108,8 +108,10 @@ namespace upsylon {
             Y_ZROOT_API()
 
 
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bisection);
+            
         };
 
     }
