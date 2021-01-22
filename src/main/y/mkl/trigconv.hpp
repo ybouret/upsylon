@@ -27,6 +27,7 @@ namespace upsylon {
             return (full_rad*angle_deg)/full_deg;
         }
 
+        //! compute angle/argument
         template <typename T>
         inline T argument(const point2d<T> &v) throw()
         {

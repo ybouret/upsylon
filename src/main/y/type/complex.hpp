@@ -237,7 +237,7 @@ namespace upsylon
             return (lhs.re!=rhs.re) || (lhs.im!=rhs.im);
         }
 
-        // argument
+        //! argument
         inline T arg() throw()
         {
             return mkl::atan2_of(im,re);
