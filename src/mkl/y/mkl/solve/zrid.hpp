@@ -87,24 +87,34 @@ namespace upsylon {
                 //--------------------------------------------------------------
                 // take the middle point
                 //--------------------------------------------------------------
-                const zseek::sign_t s_b = zseek::sign_of( f.b = F( x.b = half * (x.a+x.c) ));
-                if(zseek::__zero__==s_b)
+                mutable_type        width      = fabs_of(x.c-x.a);
+                const_type          slope_sign =(zseek::positive == s_c) ? 1 : -1;
                 {
-                    this->exactly(x.b,x,f); return true;
-                }
-                else
-                {
-                    if(s_b==s_a)
+                    const zseek::sign_t s_b = zseek::sign_of( f.b = F( x.b = half * (x.a+x.c) ));
+                    if(zseek::__zero__==s_b)
                     {
-                        // between x.b and x.c
+                        this->exactly(x.b,x,f); return true;
                     }
                     else
                     {
-                        assert(s_b==s_c)
-                        // between x.a and x.b
+                        const_type   factor = sqrt_of( max_of<mutable_type>(0,f.b * f.b - f.a*f.c) );
+                        const_type   slope  = slope_sign * twice(factor/(width+numeric<mutable_type>::tiny));
+                        mutable_type x_r    = x.b - f.b/slope;
+                        if(s_b==s_a)
+                        {
+                            // between x.b and x.c
+                            x_r = clamp(x.b,x_r,x.c);
+                        }
+                        else
+                        {
+                            assert(s_b==s_c);
+                            // between x.a and x.b
+                            x_r = clamp(x.a,x_r,x.b);
+                        }
+                        
                     }
+
                 }
-                //const_type sd = sqrt_of( max_of<mutable_type>(0,f.b * f.b - f.a*f.c) );
 
                 return false;
             }
