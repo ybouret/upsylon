@@ -14,7 +14,7 @@ We have a continuous function $f(x)$ on $[a;c]$ such that:
  $$f(a)f(c)<0.$$
 Let us define:
 $$
-	b = \dfrac{a+b}{2}
+	b = \dfrac{a+c}{2}
 $$
 We define $h(x)=f(x)e^{\alpha(x-b)}$ that linearizes $f$ on the interval.
 $$
@@ -23,7 +23,7 @@ $$
 	h(a) & = & f(a)e^{\alpha(a-b)}\\
 	h(b) & = & f(b)\\
 	h(c) & = & f(c) e^{\alpha(c-b)}\\
-	h(b) & = & \dfrac{h(a)+h(b)}{2}\\
+	h(b) & = & \dfrac{h(a)+h(c)}{2}\\
 \end{array}
 \right.
 $$
@@ -57,6 +57,9 @@ $$
 \end{array}
 \right.
 $$
+
+\end{document}
+
 Since the three $h$ values are aligned with $h(a)h(c)=f(a)f(b)$, we express the secant value from $b$:
 $$
 	h(x) \simeq h(b) + \dfrac{x-b}{a-b} \left( h(a) - h(b) \right)

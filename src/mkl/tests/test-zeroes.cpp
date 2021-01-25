@@ -1,6 +1,7 @@
 #include "y/mkl/solve/zdriver.hpp"
 #include "y/mkl/solve/zbis.hpp"
 #include "y/mkl/solve/zsec.hpp"
+#include "y/mkl/solve/zridder.hpp"
 
 #include "y/type/spec.hpp"
 

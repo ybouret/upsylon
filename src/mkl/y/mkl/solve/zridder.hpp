@@ -1,7 +1,8 @@
+
 //! \file
 
-#ifndef Y_MKL_ROOT_SECANT_INCLUDED
-#define Y_MKL_ROOT_SECANT_INCLUDED 1
+#ifndef Y_MKL_ROOT_RIDDER_INCLUDED
+#define Y_MKL_ROOT_RIDDER_INCLUDED 1
 
 #include "y/mkl/solve/zalgo.hpp"
 
@@ -12,8 +13,8 @@ namespace upsylon {
         namespace kernel {
 
             //! common content
-            struct zsec {
-                static const char name[]; //!< "bisection"
+            struct zridder {
+                static const char name[]; //!< "ridder"
             };
         }
 
@@ -24,7 +25,7 @@ namespace upsylon {
         //
         //______________________________________________________________________
         template <typename T>
-        class zsec : public zalgo<T>
+        class zridder : public zalgo<T>
         {
         public:
             //__________________________________________________________________
@@ -40,13 +41,13 @@ namespace upsylon {
             //__________________________________________________________________
 
             //! cleanup
-            inline virtual ~zsec() throw() {}
+            inline virtual ~zridder() throw() {}
 
             //! setup
-            inline explicit zsec() : zalgo<T>() {}
+            inline explicit zridder() : zalgo<T>() {}
 
             //! name
-            inline virtual const char * method() const throw() { return kernel::zsec::name; }
+            inline virtual const char * method() const throw() { return kernel::zridder::name; }
 
             //__________________________________________________________________
             //
@@ -127,7 +128,7 @@ namespace upsylon {
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(zsec);
+            Y_DISABLE_COPY_AND_ASSIGN(zridder);
 
         };
 
