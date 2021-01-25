@@ -4,7 +4,7 @@
 #include "y/exceptions.hpp"
 
 #include "y/mkl/solve/zbis.hpp"
-#include "y/mkl/solve/zrid.hpp"
+//#include "y/mkl/solve/zsec.hpp"
 
 
 #include <cerrno>
@@ -58,7 +58,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            zrid<real_t> solve;
+            zbis<real_t> solve;
             if(!solve(zqerf,x,f))
             {
                 throw exception("iqerf didn't converge!!!");
@@ -95,7 +95,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            zrid<real_t> solve;
+            zbis<real_t> solve;
             if(!solve(zqerfc,x,f))
             {
                 throw exception("iqerfc didn't converge!!!");
