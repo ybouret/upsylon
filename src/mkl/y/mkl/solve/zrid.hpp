@@ -87,7 +87,7 @@ namespace upsylon {
                 assert(s_a!=s_c);
 
 
-                mutable_type        width = fabs_of(x.c-x.a);
+                mutable_type width = fabs_of(x.c-x.a);
                 while(true)
                 {
                     //----------------------------------------------------------
@@ -107,7 +107,7 @@ namespace upsylon {
                         const_type fbfb = f.b*f.b;           // > 0
                         const_type fafc = f.a*f.c;           // < 0
                         {
-                            mutable_type x_r    = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
+                            mutable_type x_r = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
                             if(s_b==s_a)
                             {
                                 // between x.b and x.c
