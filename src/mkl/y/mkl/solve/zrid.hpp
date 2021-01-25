@@ -13,7 +13,7 @@ namespace upsylon {
         namespace kernel {
 
             //! common content
-            struct zridder {
+            struct zrid {
                 static const char name[]; //!< "ridder"
             };
         }
@@ -25,7 +25,7 @@ namespace upsylon {
         //
         //______________________________________________________________________
         template <typename T>
-        class zridder : public zalgo<T>
+        class zrid : public zalgo<T>
         {
         public:
             //__________________________________________________________________
@@ -41,13 +41,13 @@ namespace upsylon {
             //__________________________________________________________________
 
             //! cleanup
-            inline virtual ~zridder() throw() {}
+            inline virtual ~zrid() throw() {}
 
             //! setup
-            inline explicit zridder() : zalgo<T>() {}
+            inline explicit zrid() : zalgo<T>() {}
 
             //! name
-            inline virtual const char * method() const throw() { return kernel::zridder::name; }
+            inline virtual const char * method() const throw() { return kernel::zrid::name; }
 
             //__________________________________________________________________
             //
@@ -128,7 +128,7 @@ namespace upsylon {
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(zridder);
+            Y_DISABLE_COPY_AND_ASSIGN(zrid);
 
         };
 

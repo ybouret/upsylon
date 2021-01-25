@@ -1,5 +1,5 @@
 
-#include "y/mkl/solve/zridder.hpp"
+#include "y/mkl/solve/zrid.hpp"
 
 namespace upsylon {
 
@@ -8,7 +8,7 @@ namespace upsylon {
         namespace kernel {
 
 
-            const char zridder::name[] = "ridder";
+            const char zrid::name[] = "ridder";
 
         }
     }

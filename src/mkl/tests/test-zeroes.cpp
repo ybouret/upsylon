@@ -1,7 +1,7 @@
 #include "y/mkl/solve/zdriver.hpp"
 #include "y/mkl/solve/zbis.hpp"
 #include "y/mkl/solve/zsec.hpp"
-#include "y/mkl/solve/zridder.hpp"
+#include "y/mkl/solve/zrid.hpp"
 
 #include "y/type/spec.hpp"
 
@@ -64,6 +64,7 @@ Y_UTEST(zeroes)
 {
     doZeros<zbis>();
     doZeros<zsec>();
+    doZeros<zrid>();
 
 }
 Y_UTEST_DONE()
