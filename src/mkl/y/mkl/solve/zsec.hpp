@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_MKL_ROOT_SECANT_INCLUDED
-#define Y_MKL_ROOT_SECANT_INCLUDED 1
+#ifndef Y_MKL_SOLVE_SECANT_INCLUDED
+#define Y_MKL_SOLVE_SECANT_INCLUDED 1
 
 #include "y/mkl/solve/zalgo.hpp"
 

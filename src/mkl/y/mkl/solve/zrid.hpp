@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_MKL_ROOT_RIDDER_INCLUDED
-#define Y_MKL_ROOT_RIDDER_INCLUDED 1
+#ifndef Y_MKL_SOLVE_RIDDER_INCLUDED
+#define Y_MKL_SOLVE_RIDDER_INCLUDED 1
 
 #include "y/mkl/solve/zalgo.hpp"
 
@@ -59,6 +59,8 @@ namespace upsylon {
             bool operator()(FUNC &F, triplet_type &x, triplet_type &f)
             {
                 static const_type half(0.5);
+                static const_type one(1);
+                static const_type tiny = numeric<mutable_type>::tiny;
 
                 //--------------------------------------------------------------
                 // reordering for clamping
@@ -84,46 +86,108 @@ namespace upsylon {
                 assert(s_c!=zseek::__zero__);
                 assert(s_a!=s_c);
 
-                //--------------------------------------------------------------
-                // take the middle point
-                //--------------------------------------------------------------
-                mutable_type        width      = fabs_of(x.c-x.a);
-                const_type          slope_sign =(zseek::positive == s_c) ? 1 : -1;
+
+                mutable_type        width = fabs_of(x.c-x.a);
+                while(true)
                 {
-                    const zseek::sign_t s_b = zseek::sign_of( f.b = F( x.b = half * (x.a+x.c) ));
+                    //----------------------------------------------------------
+                    // take the middle point
+                    //----------------------------------------------------------
+                    zseek::sign_t s_b = zseek::sign_of( f.b = F( x.b = half * (x.a+x.c) ));
                     if(zseek::__zero__==s_b)
                     {
                         this->exactly(x.b,x,f); return true;
                     }
                     else
                     {
-                        const_type   factor = sqrt_of( max_of<mutable_type>(0,f.b * f.b - f.a*f.c) );
-                        const_type   slope  = slope_sign * twice(factor/(width+numeric<mutable_type>::tiny));
-                        mutable_type x_r    = x.b - f.b/slope;
-                        if(s_b==s_a)
+                        //------------------------------------------------------
+                        // update middle point to Ridder's extrapolation
+                        //------------------------------------------------------
+                        const int  eps  = int(s_c)*int(s_b); // compound sign
+                        const_type fbfb = f.b*f.b;           // > 0
+                        const_type fafc = f.a*f.c;           // < 0
                         {
-                            // between x.b and x.c
-                            x_r = clamp(x.b,x_r,x.c);
+                            mutable_type x_r    = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
+                            if(s_b==s_a)
+                            {
+                                // between x.b and x.c
+                                f.b = update(F,x_r,x.b,f.b,x.c,f.c);
+                                x.b = x_r;
+                            }
+                            else
+                            {
+                                assert(s_b==s_c);
+                                // between x.a and x.b
+                                f.b = update(F,x_r,x.a,f.a,x.c,f.c);
+                                x.b = x_r;
+                            }
+                        }
+
+                        //------------------------------------------------------
+                        // update status
+                        //------------------------------------------------------
+                        s_b = zseek::sign_of(f.b);
+                        if(zseek::__zero__==s_b)
+                        {
+                            this->exactly(x.b,x,f); return true;
                         }
                         else
                         {
-                            assert(s_b==s_c);
-                            // between x.a and x.b
-                            x_r = clamp(x.a,x_r,x.b);
+                            if(s_b==s_a)
+                            {
+                                x.a = x.b;
+                                f.a = f.b;
+                            }
+                            else
+                            {
+                                assert(s_b==s_c);
+                                x.c = x.b;
+                                f.c = f.b;
+                            }
+                            const_type new_width = fabs_of(x.c-x.a);
+                            if(new_width>=width)
+                            {
+                                return true;
+                            }
+                            width = new_width;
                         }
-                        
+
                     }
 
                 }
 
-                return false;
             }
-
-
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zrid);
+            template <typename FUNC> static inline
+            mutable_type update(FUNC         &F,
+                                mutable_type &x,
+                                const_type    x_lo,
+                                const_type    f_lo,
+                                const_type    x_up,
+                                const_type    f_up)
+            {
+                assert(x_lo<=x_up);
+                if(x<=x_lo)
+                {
+                    x=x_lo;
+                    return f_lo;
+                }
+                else
+                {
+                    if(x>=x_up)
+                    {
+                        x=x_up;
+                        return f_up;
+                    }
+                    else
+                    {
+                        return F(x);
+                    }
+                }
+            }
 
         };
 

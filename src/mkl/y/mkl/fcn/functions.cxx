@@ -2,8 +2,9 @@
 #include "y/mkl/ztype.hpp"
 #include "y/type/utils.hpp"
 #include "y/exceptions.hpp"
-#include "y/mkl/root/secant.hpp"
-#include "y/mkl/root/bisection.hpp"
+
+#include "y/mkl/solve/zbis.hpp"
+#include "y/mkl/solve/zrid.hpp"
 
 
 #include <cerrno>
@@ -44,8 +45,8 @@ namespace upsylon {
 
         real_t iqerf( real_t p )
         {
-            assert(p>-1);
-            assert(p<1);
+            assert(p> -1);
+            assert(p < 1);
             triplet<real_t> x     = { -1, 0, 1 };
             triplet<real_t> f     = { 0,  0, 0 };
             const zqerf_t   zqerf = { p };
@@ -57,7 +58,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            bisection<real_t> solve;
+            zrid<real_t> solve;
             if(!solve(zqerf,x,f))
             {
                 throw exception("iqerf didn't converge!!!");
@@ -94,7 +95,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            bisection<real_t> solve;
+            zrid<real_t> solve;
             if(!solve(zqerfc,x,f))
             {
                 throw exception("iqerfc didn't converge!!!");
