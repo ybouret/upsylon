@@ -58,14 +58,20 @@ namespace upsylon {
             template <typename FUNC> inline
             bool operator()(FUNC &F, triplet_type &x, triplet_type &f)
             {
+                static const_type half(0.5);
+
+                //--------------------------------------------------------------
                 // reordering for clamping
+                //--------------------------------------------------------------
                 if(x.c<x.a)
                 {
                     cswap(x.a,x.c);
                     cswap(f.a,f.c);
                 }
 
+                //--------------------------------------------------------------
                 // initialize
+                //--------------------------------------------------------------
                 zseek::sign_t s_a = zseek::__zero__;
                 zseek::sign_t s_c = zseek::__zero__;
                 switch(this->setup(s_a,s_c,x,f))
@@ -78,49 +84,28 @@ namespace upsylon {
                 assert(s_c!=zseek::__zero__);
                 assert(s_a!=s_c);
 
-                assert(x.c>=x.a);
-                mutable_type width = fabs_of(x.c-x.a); //!< round-off security
-                while(true)
+                //--------------------------------------------------------------
+                // take the middle point
+                //--------------------------------------------------------------
+                const zseek::sign_t s_b = zseek::sign_of( f.b = F( x.b = half * (x.a+x.c) ));
+                if(zseek::__zero__==s_b)
                 {
-                    mutable_type num = f.a;
-                    mutable_type den = f.c - f.a;
-                    if(den<=0)
+                    this->exactly(x.b,x,f); return true;
+                }
+                else
+                {
+                    if(s_b==s_a)
                     {
-                        num = -num;
-                        den = -den + numeric<T>::tiny;
+                        // between x.b and x.c
                     }
                     else
                     {
-                        den += numeric<T>::tiny;
-                    }
-                    x.b = clamp<T>(x.a,x.a-(width*num)/den,x.c);
-                    const zseek::sign_t s_b = zseek::sign_of( f.b = F(x.b) );
-                    if( zseek::__zero__ == s_b)
-                    {
-                        this->exactly(x.b,x,f);
-                        return true;
-                    }
-                    else
-                    {
-                        if(s_b==s_a)
-                        {
-                            x.a = x.b;
-                            f.a = f.b;
-                        }
-                        else
-                        {
-                            assert(s_b==s_c);
-                            x.c = x.b;
-                            f.c = f.b;
-                        }
-                        const T new_width = fabs_of(x.c-x.a);
-                        if(new_width>=width)
-                        {
-                            return true;
-                        }
-                        width = new_width;
+                        assert(s_b==s_c)
+                        // between x.a and x.b
                     }
                 }
+                //const_type sd = sqrt_of( max_of<mutable_type>(0,f.b * f.b - f.a*f.c) );
+
                 return false;
             }
 
