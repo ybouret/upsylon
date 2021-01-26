@@ -88,6 +88,7 @@ namespace upsylon
             }
 
 
+
             //__________________________________________________________________
             //
             // C++
@@ -96,10 +97,27 @@ namespace upsylon
             //! cleanup
             inline virtual ~zalgo() throw() {}
 
+
+
         protected:
             //! setup
             inline explicit zalgo() throw() : zseek() {}
 
+            //! check convergence
+            static inline bool has_converged(mutable_type       &width,
+                                             const triplet_type &x) throw()
+            {
+                const_type new_width = fabs_of(x.c-x.a);
+                if(new_width>=width)
+                {
+                    return true;
+                }
+                else
+                {
+                    return (width=new_width) <= fabs_of(x.b) * numeric<mutable_type>::ftol ;
+                }
+
+            }
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zalgo);
 

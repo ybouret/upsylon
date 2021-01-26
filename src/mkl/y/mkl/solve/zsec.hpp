@@ -112,12 +112,8 @@ namespace upsylon {
                             x.c = x.b;
                             f.c = f.b;
                         }
-                        const T new_width = fabs_of(x.c-x.a);
-                        if(new_width>=width)
-                        {
+                        if(this->has_converged(width,x))
                             return true;
-                        }
-                        width = new_width;
                     }
                 }
                 return false;
