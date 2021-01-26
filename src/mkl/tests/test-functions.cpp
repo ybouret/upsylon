@@ -43,8 +43,8 @@ namespace {
 
 Y_UTEST(functions)
 {
-    do_test<float>();
     do_test<double>();
+    do_test<float>();
 
 }
 Y_UTEST_DONE()
