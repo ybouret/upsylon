@@ -1,8 +1,6 @@
 #include "y/mkl/solve/zdriver.hpp"
 #include "y/mkl/solve/zbis.hpp"
-#include "y/mkl/solve/zsec.hpp"
 #include "y/mkl/solve/zrid.hpp"
-
 #include "y/type/spec.hpp"
 
 #include "y/utest/run.hpp"
@@ -67,7 +65,6 @@ Y_UTEST(zeroes)
         for(int i=1;i<argc;++i)
         {
             const string arg = argv[i];
-            if(arg=="sec") doZeros<zsec>();
             if(arg=="bis") doZeros<zbis>();
             if(arg=="rid") doZeros<zrid>();
 
@@ -76,7 +73,6 @@ Y_UTEST(zeroes)
     else
     {
         doZeros<zbis>();
-        doZeros<zsec>();
         doZeros<zrid>();
     }
 

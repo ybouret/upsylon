@@ -6,7 +6,6 @@
 
 #include "y/mkl/solve/zdriver.hpp"
 #include "y/mkl/solve/zbis.hpp"
-#include "y/mkl/solve/zsec.hpp"
 #include "y/mkl/solve/zrid.hpp"
 
 namespace upsylon
@@ -19,7 +18,6 @@ namespace upsylon
         struct zroot
         {
             typedef zdriver<T,zbis> bisection; //!< bisection algorithm
-            typedef zdriver<T,zsec> secant;    //!< secant method
             typedef zdriver<T,zrid> ridder;    //!< ridder's method
         };
 
