@@ -252,7 +252,7 @@ namespace upsylon {
 }
 
 #include "y/mkl/tao.hpp"
-#include "y/mkl/root/bisection.hpp"
+#include "y/mkl/solve/zbis.hpp"
 
 namespace upsylon
 {
@@ -347,7 +347,7 @@ namespace upsylon
 
             triplet<double>   x = { xmin, 0, xmax };
             triplet<double>   f = { Fmin, 0, Fmax };
-            bisection<double> zsolve;
+            zbis<double> zsolve;
 
             if( !zsolve(F,x,f) )
             {
