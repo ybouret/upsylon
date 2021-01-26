@@ -108,6 +108,7 @@ namespace upsylon {
                         // start populating new values
                         //
                         //------------------------------------------------------
+                        assert(s_b!=zseek::__zero__);
                         xx[0] = x.a; ff[0] = f.a; ss[0] = s_a;
                         xx[3] = x.c; ff[3] = f.c; ss[3] = s_c;
                         {
@@ -132,11 +133,13 @@ namespace upsylon {
                                 ff[i_r=1] = update(F,x_r,x.a,f.a,x.c,f.c);
                             }
 
-                            // check sign
+                            // update sign
                             if( zseek::__zero__ == (ss[i_r] = zseek::sign_of(ff[i_r]) ) )
                             {
                                 this->exactly(x_r,x,f); return true;
                             }
+
+                            // final update of ridder's position
                             xx[i_r] = x_r;
 
                         }
@@ -144,11 +147,12 @@ namespace upsylon {
 
                         //------------------------------------------------------
                         //
-                        // find bracketing interval
+                        // find optimal bracketing interval
                         //
                         //------------------------------------------------------
                         int          iopt = -1;
                         {
+                            // find a first interval
                             mutable_type wopt = -1;
                             int          i    = 0;
                             for(;i<3;++i)
@@ -162,7 +166,9 @@ namespace upsylon {
                                     break;
                                 }
                             }
-                            if(iopt<0) return false;
+                            if(iopt<0) return false; // failure
+
+                            // find a better one?
                             for(;i<3;++i)
                             {
                                 const int ip = i+1;
@@ -180,7 +186,7 @@ namespace upsylon {
 
                         //------------------------------------------------------
                         //
-                        // update
+                        // update triplets
                         //
                         //------------------------------------------------------
                         {
