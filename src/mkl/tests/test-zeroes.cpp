@@ -15,7 +15,7 @@ namespace {
     class dummy
     {
     public:
-        size_t calls = 0;
+        size_t calls;
 
         inline  dummy() throw() : calls(0) {}
         inline ~dummy() throw() {}
