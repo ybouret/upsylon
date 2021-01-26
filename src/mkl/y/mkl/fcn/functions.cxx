@@ -11,8 +11,8 @@ namespace upsylon {
 	
 	namespace mkl {
 
-        //typedef zroot<real_t>::bisection solver;
-        typedef zroot<real_t>::ridder solver;
+        typedef zroot<real_t>::bisection solver;
+        //typedef zroot<real_t>::ridder solver;
 
 		real_t qerfc( real_t x) throw()
         {
