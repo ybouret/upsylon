@@ -60,11 +60,7 @@ namespace upsylon {
                 x.c+=x.c;
             }
             solver solve;
-            if(!solve(zqerf,x,f))
-            {
-                throw exception("iqerf didn't converge!!!");
-            }
-            return x.b;
+            return solve(zqerf,x,f);
         }
 
         namespace
@@ -97,11 +93,7 @@ namespace upsylon {
                 x.c+=x.c;
             }
             solver solve;
-            if(!solve(zqerfc,x,f))
-            {
-                throw exception("iqerfc didn't converge!!!");
-            }
-            return x.b;
+            return solve(zqerfc,x,f);
         }
 
 
