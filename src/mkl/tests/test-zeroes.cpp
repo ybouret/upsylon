@@ -62,9 +62,23 @@ namespace {
 
 Y_UTEST(zeroes)
 {
-    doZeros<zbis>();
-    doZeros<zsec>();
-    doZeros<zrid>();
+    if(argc>1)
+    {
+        for(int i=1;i<argc;++i)
+        {
+            const string arg = argv[i];
+            if(arg=="sec") doZeros<zsec>();
+            if(arg=="bis") doZeros<zbis>();
+            if(arg=="rid") doZeros<zrid>();
+
+        }
+    }
+    else
+    {
+        doZeros<zbis>();
+        doZeros<zsec>();
+        doZeros<zrid>();
+    }
 
 }
 Y_UTEST_DONE()

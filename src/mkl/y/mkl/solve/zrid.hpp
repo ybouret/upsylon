@@ -108,7 +108,7 @@ namespace upsylon {
                         const_type fafc = f.a*f.c;           // < 0
                         {
                             mutable_type x_r = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
-                            if(s_b==s_a)
+                            if(eps<0)
                             {
                                 // between x.b and x.c
                                 f.b = update(F,x_r,x.b,f.b,x.c,f.c);
@@ -116,7 +116,6 @@ namespace upsylon {
                             }
                             else
                             {
-                                assert(s_b==s_c);
                                 // between x.a and x.b
                                 f.b = update(F,x_r,x.a,f.a,x.c,f.c);
                                 x.b = x_r;
@@ -144,8 +143,8 @@ namespace upsylon {
                                 x.c = x.b;
                                 f.c = f.b;
                             }
+                            std::cerr << "x=" << x << "; f=" << f << std::endl;
                             if(this->stop(width,x)) return true;
-                            std::cerr << "x=" <<  "; f=" << f << std::endl;
                         }
 
                     }

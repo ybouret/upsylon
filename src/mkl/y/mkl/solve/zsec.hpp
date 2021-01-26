@@ -79,8 +79,12 @@ namespace upsylon {
 
                 assert(x.c>=x.a);
                 mutable_type width = fabs_of(x.c-x.a); //!< round-off security
+                std::cerr << "ini x=" << x << "; f=" << f << std::endl;
                 while(true)
                 {
+                    //----------------------------------------------------------
+                    // compute secant point: x.b
+                    //----------------------------------------------------------
                     mutable_type num = f.a;
                     mutable_type den = f.c - f.a;
                     if(den<=0)
@@ -93,7 +97,12 @@ namespace upsylon {
                         den += numeric<T>::tiny;
                     }
                     x.b = clamp<T>(x.a,x.a-(width*num)/den,x.c);
+                    
+                    //----------------------------------------------------------
+                    // comput f.b and its sign
+                    //----------------------------------------------------------
                     const zseek::sign_t s_b = zseek::sign_of( f.b = F(x.b) );
+                    std::cerr << "run x=" << x << "; f=" << f << std::endl;
                     if( zseek::__zero__ == s_b)
                     {
                         this->exactly(x.b,x,f);
@@ -112,11 +121,11 @@ namespace upsylon {
                             x.c = x.b;
                             f.c = f.b;
                         }
+                        std::cerr << "out x=" << x << "; f=" << f << std::endl;
                         if(this->stop(width,x))
                             return true;
                     }
                 }
-                return false;
             }
 
 
