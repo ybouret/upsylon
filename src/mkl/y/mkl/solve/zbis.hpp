@@ -94,7 +94,7 @@ namespace upsylon {
                             x.c = x.b;
                             f.c = f.b;
                         }
-                        if(this->has_converged(width,x))
+                        if(this->stop(width,x))
                             return true;
                     }
                 }

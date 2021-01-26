@@ -144,12 +144,7 @@ namespace upsylon {
                                 x.c = x.b;
                                 f.c = f.b;
                             }
-                            const_type new_width = fabs_of(x.c-x.a);
-                            if(new_width>=width)
-                            {
-                                return true;
-                            }
-                            width = new_width;
+                            if(this->stop(width,x)) return true;
                         }
 
                     }

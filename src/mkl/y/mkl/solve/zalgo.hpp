@@ -104,8 +104,8 @@ namespace upsylon
             inline explicit zalgo() throw() : zseek() {}
 
             //! check convergence
-            static inline bool has_converged(mutable_type       &width,
-                                             const triplet_type &x) throw()
+            static inline bool stop(mutable_type       &width,
+                                    const triplet_type &x) throw()
             {
                 const_type new_width = fabs_of(x.c-x.a);
                 if(new_width>=width)
