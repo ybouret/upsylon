@@ -3,16 +3,16 @@
 #include "y/type/utils.hpp"
 #include "y/exceptions.hpp"
 
-#include "y/mkl/solve/zbis.hpp"
-//#include "y/mkl/solve/zsec.hpp"
-
+#include "y/mkl/solve/zroot.hpp"
 
 #include <cerrno>
 
 namespace upsylon {
 	
 	namespace mkl {
-		
+
+        typedef zroot<real_t>::bisection solver;
+
 		real_t qerfc( real_t x) throw()
         {
 			const real_t z  = REAL(fabs)(x);
@@ -58,7 +58,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            zbis<real_t> solve;
+            solver solve;
             if(!solve(zqerf,x,f))
             {
                 throw exception("iqerf didn't converge!!!");
@@ -95,7 +95,7 @@ namespace upsylon {
             {
                 x.c+=x.c;
             }
-            zbis<real_t> solve;
+            solver solve;
             if(!solve(zqerfc,x,f))
             {
                 throw exception("iqerfc didn't converge!!!");

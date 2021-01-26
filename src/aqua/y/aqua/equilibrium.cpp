@@ -349,7 +349,7 @@ namespace upsylon
             triplet<double>   f = { Fmin, 0, Fmax };
             zbis<double> zsolve;
 
-            if( !zsolve(F,x,f) )
+            if( !zsolve.run(F,x,f) )
             {
                 Y_AQUA_PRINTLN("failure");
                 return false;

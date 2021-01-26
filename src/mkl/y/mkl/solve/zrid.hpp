@@ -56,7 +56,7 @@ namespace upsylon {
 
             //! solve f.b=F(x.b)=0
             template <typename FUNC> inline
-            bool operator()(FUNC &F, triplet_type &x, triplet_type &f)
+            bool run(FUNC &F, triplet_type &x, triplet_type &f)
             {
                 static const_type half(0.5);
                 static const_type one(1);

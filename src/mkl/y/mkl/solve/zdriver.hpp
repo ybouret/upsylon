@@ -60,6 +60,16 @@ namespace upsylon
             // wrappers
             //__________________________________________________________________
 
+
+            //! solve F(x) = 0 for precomputed triplets
+            template <typename FUNC> inline
+            mutable_type operator()(FUNC &F, triplet_type &x, triplet_type &f)
+            {
+                algo_type   &z  = *this;
+                if(!z.run(F,x,f)) this->error_not_bracketed();
+                return x.b;
+            }
+
             //! solve F(x) = 0 between x1 and x2
             template <typename FUNC> inline
             mutable_type operator()(FUNC &F, param_type x1, param_type x2)
@@ -67,17 +77,17 @@ namespace upsylon
                 algo_type   &z  = *this;
                 triplet_type x  = { x1,0,x2};
                 triplet_type f  = { F(x.a), 0, F(x.c) };
-                if(!z(F,x,f)) this->error_not_bracketed();
+                if(!z.run(F,x,f)) this->error_not_bracketed();
                 return x.b;
             }
 
             //! solve F(x)=y for precomputed value
             template <typename FUNC> inline
-            bool operator()(param_type y, FUNC &F, triplet_type &x, triplet_type &f)
+            mutable_type operator()(param_type y, FUNC &F, triplet_type &x, triplet_type &f)
             {
                 zcall<FUNC>  w  = { F, y };
                 algo_type   &z  = *this;
-                if(!z(w,x,f)) this->error_not_bracketed();
+                if(!z.run(w,x,f)) this->error_not_bracketed();
                 return x.b;
             }
 
