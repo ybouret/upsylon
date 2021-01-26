@@ -36,13 +36,13 @@ namespace {
         zdriver<T,ALGO> solver;
         std::cerr << "[" << solver.method() << "]/" << type_name_of<T>() << std::endl;
         dummy<T>     F;
-        const double x0 = solver(F,0,2);
+        const T      x0 = solver(F,0,2);
         std::cerr << "x0="    << x0      << std::endl;
         std::cerr << "F0="    << F(x0)   << std::endl;
         std::cerr << "\tcalls=" << F.calls << std::endl;
 
 
-        const double xh = solver(T(0.5),F,0,1.5);
+        const T xh = solver(T(0.5),F,0,T(1.5));
         std::cerr << "xh="    << xh      << std::endl;
         std::cerr << "Fh="    << F(xh)   << std::endl;
         std::cerr << "\tcalls=" << F.calls << std::endl;

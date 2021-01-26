@@ -133,9 +133,9 @@ COMPUTE_STEP:
         //const ORDINATE D2_new = g(1);
         for( ORDINATE u=0; u<=2; u += ORDINATE(0.01) )
         {
-            const ORDINATE tmp = D2_org - sigma * u + 0.5 * u * sigma * u;
+            const ORDINATE tmp = D2_org - sigma * u + ORDINATE(0.5) * u * sigma * u;
             //const ORDINATE tmp = D2_org - sigma * u + 0.25 * u * sigma * u;
-            ios::ocstream::echo( least_squares_::writing_id, "%.15g %.15g %.15g\n", u, g(u), tmp );
+            ios::ocstream::echo( least_squares_::writing_id, "%.15g %.15g %.15g\n", double(u), double(g(u)), double(tmp) );
         }
         ios::ocstream::echo( least_squares_::writing_id, "\n");
     }
