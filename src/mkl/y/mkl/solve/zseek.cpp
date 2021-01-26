@@ -20,6 +20,11 @@ namespace upsylon {
             throw libc::exception( EDOM, "%s(zero is not bracketed)", method() );
         }
 
+        bool zseek:: are_opposite(const sign_t lhs, const sign_t rhs) throw()
+        {
+            return (lhs==negative&&rhs==positive) || (lhs==positive&&rhs==negative);
+        }
+
     }
 
 }

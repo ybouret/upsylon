@@ -97,7 +97,7 @@ namespace upsylon {
                         den += numeric<T>::tiny;
                     }
                     x.b = clamp<T>(x.a,x.a-(width*num)/den,x.c);
-                    
+
                     //----------------------------------------------------------
                     // comput f.b and its sign
                     //----------------------------------------------------------

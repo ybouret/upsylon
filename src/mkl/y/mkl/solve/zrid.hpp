@@ -87,7 +87,11 @@ namespace upsylon {
                 assert(s_a!=s_c);
 
 
-                mutable_type width = fabs_of(x.c-x.a);
+                mutable_type  width = fabs_of(x.c-x.a);
+                mutable_type  xx[4] = { 0, 0, 0, 0 };
+                mutable_type  ff[4] = { 0, 0, 0, 0 };
+                zseek::sign_t ss[4] = { zseek::__zero__ };
+                //std::cerr << "ini x=" << x << "; f=" << f << std::endl;
                 while(true)
                 {
                     //----------------------------------------------------------
@@ -101,51 +105,92 @@ namespace upsylon {
                     else
                     {
                         //------------------------------------------------------
-                        // update middle point to Ridder's extrapolation
+                        // start populating new values
                         //------------------------------------------------------
-                        const int  eps  = int(s_c)*int(s_b); // compound sign
-                        const_type fbfb = f.b*f.b;           // > 0
-                        const_type fafc = f.a*f.c;           // < 0
+                        xx[0] = x.a; ff[0] = f.a; ss[0] = s_a;
+                        xx[3] = x.c; ff[3] = f.c; ss[3] = s_c;
                         {
-                            mutable_type x_r = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
+                            //------------------------------------------------------
+                            // update ridder's value
+                            //------------------------------------------------------
+                            const int    eps  = int(s_c)*int(s_b); // compound sign
+                            const_type   fbfb = f.b*f.b;           // > 0
+                            const_type   fafc = f.a*f.c;           // < 0
+                            mutable_type x_r  = x.b - half*width*eps*sqrt_of(one+fafc/(tiny+fbfb-fafc));
+                            int          i_r  = 0;
                             if(eps<0)
                             {
-                                // between x.b and x.c
-                                f.b = update(F,x_r,x.b,f.b,x.c,f.c);
-                                x.b = x_r;
+                                // between x.b and x.c:
+                                xx[1] = x.b; ff[1] = f.b; ss[1] = s_b;
+                                ff[i_r=2] = update(F,x_r,x.b,f.b,x.c,f.c);
                             }
                             else
                             {
                                 // between x.a and x.b
-                                f.b = update(F,x_r,x.a,f.a,x.c,f.c);
-                                x.b = x_r;
+                                xx[2] = x.b; ff[2] = f.b; ss[2] = s_b;
+                                ff[i_r=1] = update(F,x_r,x.a,f.a,x.c,f.c);
+                            }
+
+                            // check sign
+                            if( zseek::__zero__ == (ss[i_r] = zseek::sign_of(ff[i_r]) ) )
+                            {
+                                this->exactly(x_r,x,f); return true;
+                            }
+                            xx[i_r] = x_r;
+
+                        }
+                        assert(xx[0]<=xx[1]); assert(xx[1]<=xx[2]); assert(xx[2]<=xx[3]);
+                        //std::cerr << xx[0] << ' ' << xx[1] << ' ' << xx[2] << ' ' << xx[3] << std::endl;
+                        //std::cerr << ff[0] << ' ' << ff[1] << ' ' << ff[2] << ' ' << ff[3] << std::endl;
+                        //std::cerr << ss[0] << ' ' << ss[1] << ' ' << ss[2] << ' ' << ss[3] << std::endl;
+
+                        int          iopt = -1;
+                        {
+                            mutable_type wopt = -1;
+                            int          i    = 0;
+                            for(;i<3;++i)
+                            {
+                                const int ip = i+1;
+                                if(zseek::are_opposite(ss[i],ss[ip]))
+                                {
+                                    iopt = i;
+                                    wopt = fabs_of(xx[ip]-xx[i]);
+                                    ++i;
+                                    break;
+                                }
+                            }
+                            if(iopt<0) return false;
+                            for(;i<3;++i)
+                            {
+                                const int ip = i+1;
+                                if(zseek::are_opposite(ss[i],ss[ip]))
+                                {
+                                    const mutable_type wtmp = fabs_of(xx[ip]-xx[i]);
+                                    if(wtmp<wopt)
+                                    {
+                                        iopt=i;
+                                        wopt=wtmp;
+                                    }
+                                }
                             }
                         }
 
-                        //------------------------------------------------------
-                        // update status
-                        //------------------------------------------------------
-                        s_b = zseek::sign_of(f.b);
-                        if(zseek::__zero__==s_b)
+                        const int jopt = iopt+1;
+                        x.a = xx[iopt]; f.a = ff[iopt];
+                        x.c = xx[jopt]; f.c = ff[jopt];
+                        if(fabs_of(f.a)<fabs_of(f.c))
                         {
-                            this->exactly(x.b,x,f); return true;
+                            x.b = x.a;
+                            f.b = f.a;
                         }
                         else
                         {
-                            if(s_b==s_a)
-                            {
-                                x.a = x.b;
-                                f.a = f.b;
-                            }
-                            else
-                            {
-                                assert(s_b==s_c);
-                                x.c = x.b;
-                                f.c = f.b;
-                            }
-                            std::cerr << "x=" << x << "; f=" << f << std::endl;
-                            if(this->stop(width,x)) return true;
+                            x.b = x.c;
+                            f.b = f.c;
                         }
+                        //std::cerr << "out x=" << x << "; f=" << f << std::endl;
+                        if(this->stop(width,x))
+                            return true;
 
                     }
 

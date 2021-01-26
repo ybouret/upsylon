@@ -39,7 +39,9 @@ namespace upsylon
                 failure,       //!< ill-bracketed
                 early_return   //!< one point is zero
             };
-            
+
+            static bool are_opposite(const sign_t lhs, const sign_t rhs) throw();
+
             //! generic sign computation
             template <typename T> static inline
             sign_t sign_of( const T x ) throw()
