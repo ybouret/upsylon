@@ -30,6 +30,19 @@ namespace upsylon
             typedef triplet<mutable_type> triplet_type; //!< alias
 
 
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            
+            //! cleanup
+            inline virtual ~zalgo() throw() {}
+            
+        protected:
+            //! setup
+            inline explicit zalgo() throw() : zseek() {}
+
             //__________________________________________________________________
             //
             // static methods
@@ -87,22 +100,6 @@ namespace upsylon
                 return failure;
             }
 
-
-
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            
-            //! cleanup
-            inline virtual ~zalgo() throw() {}
-
-
-
-        protected:
-            //! setup
-            inline explicit zalgo() throw() : zseek() {}
-
             //! check convergence
             static inline bool stop(mutable_type       &width,
                                     const triplet_type &x) throw()
@@ -116,8 +113,8 @@ namespace upsylon
                 {
                     return (width=new_width) <= fabs_of(x.b) * numeric<mutable_type>::ftol ;
                 }
-
             }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zalgo);
 
