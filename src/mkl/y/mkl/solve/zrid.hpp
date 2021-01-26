@@ -145,6 +145,7 @@ namespace upsylon {
                                 f.c = f.b;
                             }
                             if(this->stop(width,x)) return true;
+                            std::cerr << "x=" <<  "; f=" << f << std::endl;
                         }
 
                     }
