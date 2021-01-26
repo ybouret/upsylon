@@ -14,12 +14,13 @@ namespace upsylon
     namespace mkl
     {
 
+        //! types definition
         template <typename T>
         struct zroot
         {
-            typedef zdriver<T,zbis> bisection;
-            typedef zdriver<T,zsec> secant;
-            typedef zdriver<T,zrid> ridder;
+            typedef zdriver<T,zbis> bisection; //!< bisection algorithm
+            typedef zdriver<T,zsec> secant;    //!< secant method
+            typedef zdriver<T,zrid> ridder;    //!< ridder's method
         };
 
     }

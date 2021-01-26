@@ -88,10 +88,9 @@ namespace upsylon {
 
 
                 mutable_type  width = fabs_of(x.c-x.a);
-                mutable_type  xx[4] = { 0, 0, 0, 0 };
-                mutable_type  ff[4] = { 0, 0, 0, 0 };
+                mutable_type  xx[4] = { 0 };
+                mutable_type  ff[4] = { 0 };
                 zseek::sign_t ss[4] = { zseek::__zero__ };
-                //std::cerr << "ini x=" << x << "; f=" << f << std::endl;
                 while(true)
                 {
                     //----------------------------------------------------------
@@ -105,14 +104,16 @@ namespace upsylon {
                     else
                     {
                         //------------------------------------------------------
+                        //
                         // start populating new values
+                        //
                         //------------------------------------------------------
                         xx[0] = x.a; ff[0] = f.a; ss[0] = s_a;
                         xx[3] = x.c; ff[3] = f.c; ss[3] = s_c;
                         {
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             // update ridder's value
-                            //------------------------------------------------------
+                            //--------------------------------------------------
                             const int    eps  = int(s_c)*int(s_b); // compound sign
                             const_type   fbfb = f.b*f.b;           // > 0
                             const_type   fafc = f.a*f.c;           // < 0
@@ -121,7 +122,7 @@ namespace upsylon {
                             if(eps<0)
                             {
                                 // between x.b and x.c:
-                                xx[1] = x.b; ff[1] = f.b; ss[1] = s_b;
+                                xx[1]     = x.b; ff[1] = f.b; ss[1] = s_b;
                                 ff[i_r=2] = update(F,x_r,x.b,f.b,x.c,f.c);
                             }
                             else
@@ -140,10 +141,12 @@ namespace upsylon {
 
                         }
                         assert(xx[0]<=xx[1]); assert(xx[1]<=xx[2]); assert(xx[2]<=xx[3]);
-                        //std::cerr << xx[0] << ' ' << xx[1] << ' ' << xx[2] << ' ' << xx[3] << std::endl;
-                        //std::cerr << ff[0] << ' ' << ff[1] << ' ' << ff[2] << ' ' << ff[3] << std::endl;
-                        //std::cerr << ss[0] << ' ' << ss[1] << ' ' << ss[2] << ' ' << ss[3] << std::endl;
 
+                        //------------------------------------------------------
+                        //
+                        // find bracketing interval
+                        //
+                        //------------------------------------------------------
                         int          iopt = -1;
                         {
                             mutable_type wopt = -1;
@@ -175,9 +178,16 @@ namespace upsylon {
                             }
                         }
 
-                        const int jopt = iopt+1;
-                        x.a = xx[iopt]; f.a = ff[iopt];
-                        x.c = xx[jopt]; f.c = ff[jopt];
+                        //------------------------------------------------------
+                        //
+                        // update
+                        //
+                        //------------------------------------------------------
+                        {
+                            const int jopt = iopt+1;
+                            x.a = xx[iopt]; f.a = ff[iopt];
+                            x.c = xx[jopt]; f.c = ff[jopt];
+                        }
                         if(fabs_of(f.a)<fabs_of(f.c))
                         {
                             x.b = x.a;
@@ -188,10 +198,8 @@ namespace upsylon {
                             x.b = x.c;
                             f.b = f.c;
                         }
-                        //std::cerr << "out x=" << x << "; f=" << f << std::endl;
                         if(this->stop(width,x))
                             return true;
-
                     }
 
                 }
@@ -228,6 +236,7 @@ namespace upsylon {
                     }
                 }
             }
+
 
         };
 

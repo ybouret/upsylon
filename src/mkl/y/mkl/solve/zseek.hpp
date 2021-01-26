@@ -40,6 +40,7 @@ namespace upsylon
                 early_return   //!< one point is zero
             };
 
+            //! true if opposite signs
             static bool are_opposite(const sign_t lhs, const sign_t rhs) throw();
 
             //! generic sign computation
