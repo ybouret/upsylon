@@ -12,7 +12,7 @@
 
 \section{Expression}
 
-Let us define an arc by a set of $N$ points of $\mathbb{R}^d$:
+Let us define an arc by a set of $N$ points of $\mathbb{R}^d$ at times $t_1<\ldots<t_i<\ldots<t_N$:
 \begin{equation}
 	\forall i \in [1:N],\;	(t_i,\vec{P}_i).
 \end{equation}
@@ -46,9 +46,51 @@ We get the local arc:
 \section{Continuity}
 
 \subsection{Bulk}
-
+\begin{equation}
+\dot{\vec{Q}}_{i-1}(\tau=1) =  \dot{\vec{Q}}_i(\tau=0) \Leftrightarrow 
+\dfrac{1}{\delta_{i-1}} \left[ \vec{P}_{i} - \vec{P}_{i-1} + \dfrac{1}{6}\vec{A}_{i-1} + \dfrac{1}{3} \vec{A}_{i}\right]
+ = 
+\dfrac{1}{\delta_i} \left[ \vec{P}_{i+1} - \vec{P}_i - \dfrac{1}{3}\vec{A}_i - \dfrac{1}{6} \vec{A}_{i+1}\right]
+\end{equation}
+Leading to:
+\begin{equation}
+	\dfrac{\delta_i}{6} \vec{A}_{i-1} + \dfrac{1}{3} \left(\delta_i + \delta_{i-1} \right) \vec{A}_i + \dfrac{\delta_{i-1}}{6} \vec{A}_{i+1} =
+	\delta_{i-1} \left[ \vec{P}_{i+1} - \vec{P}_i \right] - \delta_i \left[ \vec{P}_i - \vec{P}_{i-1}\right ]
+\end{equation}
 
 \subsection{Boundaries}
+
+\subsubsection{Periodic}
+\begin{equation}
+\dot{\vec{Q}}_{N-1}(\tau=1) =  \dot{\vec{Q}}_1(\tau=0)
+\end{equation}
+
+\subsubsection{Standard}
+
+\begin{itemize}
+\item Natural:
+	\begin{itemize}
+	\item at $t_1$ : $\vec{A}_1=\vec{0}$,
+	\item at $t_N$ : $\vec{A}_N=\vec{0}$.
+	\end{itemize}
+\item Fixed:
+	\begin{itemize}
+	\item at $t_1$ : $\dot{\vec{Q}}_1(\tau=0) = \vec{V}_1$,
+	\item at $t_N$ : $\dot{\vec{Q}}_{N-1}(\tau=1) = \vec{V}_N$.
+	\end{itemize}	
+	
+\end{itemize}
+
+\subsection{Computation}
+We obtain a tridiagonal matrix for the standard case and a cyclic tridiagonal matrix for the periodic case.
+The matrix is the same for each dimension, and the right hand side is to be computed for each dimension.
+
+\section{Evaluation}
+\subsection{Standard}
+
+
+\subsection{Periodic}
+
 
 
 \end{document}
