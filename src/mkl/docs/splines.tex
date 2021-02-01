@@ -1,0 +1,36 @@
+\documentclass[aps,onecolumn]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{bookman}
+
+\begin{document}
+
+\title{Splines}
+\maketitle
+
+Let us define an arc by a set of $N$ points of $\mathbb{R}^d$:
+\begin{equation}
+	\forall i \in [1:N],\;	(t_i,\vec{P}_i).
+\end{equation}
+For each time $t_i$, we assume that the arc has a velocity $\vec{V}_i$ and and acceleration $\vec{A}_i$.
+We define:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\delta_i & = & t_{i+1}-t_{i}\\
+	\\
+	\tau     & = & \dfrac{t-t_{i}}{\delta_i}\\
+	\\
+	1-\tau   & = & \dfrac{t_{i+1}-t}{\delta_i}\\
+\end{array}
+\right.
+\end{equation}
+		
+We get the local arc:
+\begin{equation}
+	\vec{P}(t) = (1-\tau) \vec{P}_i + \tau \vec{P}_{i+1} + \dfrac{ (1-\tau)^3 - (1-\tau) }{6} \vec{A}_{i} + \dfrac{\tau^3-\tau}{6} \vec{A}_{i+1}
+\end{equation}	
+
+\end{document}

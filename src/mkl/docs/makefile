@@ -10,4 +10,5 @@ clean:
 	rm -f protodiff.pdf
 	rm -f spline.pdf
 	rm -f zero.pdf
+	rm -f splines.pdf
 
