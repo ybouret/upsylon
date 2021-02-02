@@ -1,5 +1,5 @@
 
-#include "y/mkl/fitting/lambda.hpp"
+#include "y/mkl/kernel/lambda.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -9,12 +9,11 @@
 
 using namespace upsylon;
 using namespace mkl;
-using namespace fitting;
 
 namespace
 {
     template <typename T>
-    static inline void show_lambda( const lambdas<T> &l )
+    static inline void show_lambda( const kernel::lambdas<T> &l )
     {
         std::cerr << "pmin=" << l.pmin << std::endl;
         std::cerr << "pmax=" << l.pmax << std::endl;
@@ -29,8 +28,8 @@ namespace
 Y_UTEST(fitting_lam)
 {
 
-    lambdas<double> ld; show_lambda(ld);
-    lambdas<float>  lf; show_lambda(lf);
+    kernel::lambdas<double> ld; show_lambda(ld);
+    kernel::lambdas<float>  lf; show_lambda(lf);
 
     typedef arr_ptr< sequence<double>, arc_ptr> ptr_type;
     ptr_type v = new vector<double>(1000,as_capacity),

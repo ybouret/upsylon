@@ -33,7 +33,7 @@ namespace upsylon
             typedef array<type>  array_type;
             typedef matrix<type> matrix_type;
 
-            explicit zircon() :
+            explicit zircon(const bool verbosity=false) :
             N(0),
             _(8),
             F( _.next() ),
@@ -47,7 +47,8 @@ namespace upsylon
             J(),
             K(),
             H(),
-            P()
+            P(),
+            verbose(verbosity)
             {
             }
 
@@ -69,7 +70,6 @@ namespace upsylon
             matrix_type K;    //!< transpose(J)
             matrix_type H;    //!< K*J
             matrix_type P;    //!< H=P*U*transpose(P)
-
             bool        verbose;
 
             template <

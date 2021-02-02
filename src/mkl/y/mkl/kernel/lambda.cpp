@@ -1,5 +1,5 @@
 
-#include "y/mkl/fitting/lambda.hpp"
+#include "y/mkl/kernel/lambda.hpp"
 #include "y/mkl/types.hpp"
 
 namespace upsylon
@@ -7,7 +7,7 @@ namespace upsylon
     namespace mkl
     {
 
-        namespace fitting
+        namespace kernel
         {
             template <> const int lambdas<float>::pmin = -int(numeric<float>::dig)-1;
             template <> const int lambdas<float>::pmax =  int(numeric<float>::max_10_exp);

@@ -1,7 +1,7 @@
 //! \file
 
-#ifndef Y_FITTING_LAMBDA_INCLUDED
-#define Y_FITTING_LAMBDA_INCLUDED 1
+#ifndef Y_MKL_LAMBDAS_INCLUDED
+#define Y_MKL_LAMBDAS_INCLUDED 1
 
 #include "y/memory/allocator/global.hpp"
 #include "y/core/ipower.hpp"
@@ -11,7 +11,7 @@ namespace upsylon
     namespace mkl
     {
 
-        namespace fitting
+        namespace kernel
         {
 
             //__________________________________________________________________

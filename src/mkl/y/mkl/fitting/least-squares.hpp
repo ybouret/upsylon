@@ -5,7 +5,7 @@
 #define Y_FITTING_LEAST_SQUARES_INCLUDED 1
 
 #include "y/mkl/fitting/sample/api.hpp"
-#include "y/mkl/fitting/lambda.hpp"
+#include "y/mkl/kernel/lambda.hpp"
 #include "y/mkl/fitting/sequential/gradient.hpp"
 #include "y/mkl/fitting/variable/display.hpp"
 #include "y/sequence/arrays.hpp"
@@ -66,7 +66,7 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef lambdas<ORDINATE>                      lambdas_type;     //!< alias
+                typedef kernel::lambdas<ORDINATE>              lambdas_type;     //!< alias
                 typedef matrix<ORDINATE>                       matrix_type;      //!< alias
                 typedef arrays<ORDINATE>                       arrays_type;      //!< alias
                 typedef typename arrays_type::array_type       vector_type;      //!< alias

@@ -48,7 +48,7 @@ namespace
         fcn<T> f    = { 0.5 };
         jac<T> fjac;
 
-        zircon<T> zrc;
+        zircon<T> zrc(true);
 
         zrc.cycle(X,f,fjac);
 
