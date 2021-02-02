@@ -6,7 +6,10 @@ Y_UTEST_INIT(64)
     Y_UTEST(LU);
     Y_UTEST(data_set);
     Y_UTEST(drvs);
+
     Y_UTEST(zeroes);
+    Y_UTEST(zircon);
+
     Y_UTEST(adjoint);
     Y_UTEST(diag_symm);
     Y_UTEST(svd);

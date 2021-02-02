@@ -33,7 +33,7 @@ namespace upsylon {
              \param d    are the eigenvalues
              \param v    columns are the eigenvectors
              \param kind how to sort vectors/values afterwards
-             \return a =  v'* d * v
+             \return a =  v * d * v'
              */
             template <typename T> static inline
             bool build( matrix<T> &a, addressable<T> &d, matrix<T> &v, sort_eigv_by kind = sort_eigv_none )

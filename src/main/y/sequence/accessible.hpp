@@ -23,16 +23,16 @@ namespace upsylon {
         virtual const_type & operator[](const size_t) const = 0; //!< const access
 
 
-        //! default display function
+        //! default display function, julia style
         inline std::ostream & display( std::ostream &os ) const
         {
             os << '[';
             for(size_t i=1;i<=size();++i)
             {
-                if(i>1) os << ' ';
+                if(i>1) os << ';';
                 os << (*this)[i];
             }
-            os << ']' << '\'';
+            os << ']';
             return os;
         }
 

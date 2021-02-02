@@ -39,7 +39,10 @@ ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
 ADD_TEST(opt:optimize    test-mkl opt)
 
-SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-jacobian.cpp test-znewt.cpp test-zeroes.cpp)
+SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-jacobian.cpp test-znewt.cpp 
+test-zeroes.cpp
+test-zircon.cpp
+)
 ADD_TEST(fcn:drvs     test-mkl drvs)
 ADD_TEST(fcn:intg     test-mkl intg)
 ADD_TEST(fcn:func     test-mkl functions)
