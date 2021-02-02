@@ -64,9 +64,16 @@ namespace
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(zircon)
 {
     float y0 = 0.5f;
+
+    if(argc>1)
+    {
+        y0 = string_convert::to<float>(argv[1],"y0");
+    }
     runZircon<float>(y0);
     runZircon<double>(y0);
 

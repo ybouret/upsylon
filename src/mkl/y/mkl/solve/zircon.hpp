@@ -294,7 +294,7 @@ namespace upsylon
                 K.assign_transpose(J);      // K = transpose(J)
                 tao::mul(G,K,F);            // G = transpose(J)*F
                 tao::mmul(H,K,J);           // H = transpose(J)*J
-                if( eigen::build(H,U,P) ) // H = P * U * transpose(P)
+                if( eigen::build(H,U,P) )   // H = P * U * transpose(P)
                 {
                     tao::mul_trn(S,P,G);
                     return true;
