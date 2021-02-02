@@ -17,6 +17,7 @@ namespace upsylon
 
         namespace kernel
         {
+            //! common zircon stuff
             struct zircon
             {
                 static const char label[]; //!< "[zircon] "
@@ -24,17 +25,34 @@ namespace upsylon
         }
 
 
+        //! display info
 #define Y_ZIRCON_PRINTLN(MSG) do { if(verbose) { std::cerr << kernel::zircon::label << MSG << std::endl; } } while(false)
 
+        //______________________________________________________________________
+        //
+        //
+        //! Zircon Is Repetitive Controled Operating Newton
+        //
+        //______________________________________________________________________
         template <typename T>
         class zircon : public kernel::lambdas<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef arrays<type> arrays_type;
-            typedef array<type>  array_type;
-            typedef matrix<type> matrix_type;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            Y_DECL_ARGS(T,type);                //!< aliases
+            typedef arrays<type> arrays_type;   //!< alias
+            typedef array<type>  array_type;    //!< alias
+            typedef matrix<type> matrix_type;   //!< alias
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! initialize
             explicit zircon(const bool verbosity=false) :
             kernel::lambdas<T>(),
             N(0),
@@ -57,30 +75,13 @@ namespace upsylon
             {
             }
 
-            virtual ~zircon() throw()
-            {
-            }
+            //! cleanup
+            virtual ~zircon() throw() {}
 
-            size_t      N;
-            arrays_type _;
-            array_type &F;       //!< function value
-            array_type &X;       //!< current  position
-            array_type &Ftry;    //!< trial F
-            array_type &Xtry;    //!< trial X
-            array_type &G;       //!< gradient of F^2/2:  K*F
-            array_type &U;       //!< H eigenvalues
-            array_type &V;       //!< H modified eigenvalues
-            array_type &S;       //!< - transpose(P)*G
-            array_type &Fsqr;    //!< to compute F^2/2
-            array_type &step;    //!< estimated step
-
-            matrix_type J;       //!< Jacobian
-            matrix_type K;       //!< transpose(J)
-            matrix_type H;       //!< K*J
-            matrix_type P;       //!< H=P*U*transpose(P)
-            int         p;       //!< for lambdas
-            bool        verbose; //!< for verbosity
-
+            //__________________________________________________________________
+            //
+            //! cycle function
+            //__________________________________________________________________
             template <
             typename FUNCTION,
             typename JACOBIAN>
@@ -92,26 +93,44 @@ namespace upsylon
             {
                 assert(p>=this->pmin);
                 assert(p<=this->pmax);
-                
-                // init
+
+                //--------------------------------------------------------------
+                //
+                // initialize memory
+                //
+                //--------------------------------------------------------------
                 N = x.size();
                 _  .acquire(N);
                 J.make(N,N);
                 K.make(N,N);
                 H.make(N,N);
                 P.make(N,N);
-
                 call_g<FUNCTION> g = { f, X, step, Xtry, Ftry, Fsqr };
 
-                // initialize
+                //--------------------------------------------------------------
+                //
+                // initialize value
+                //
+                //--------------------------------------------------------------
                 tao::set(X,x);
-                f(F,x);
+                f(F,X);
                 type   g0    = f2g(Fsqr,F);
                 size_t count = 0;
                 save(trace,X);
+
+                //--------------------------------------------------------------
+                //
+                // Loop...
+                //
+                //--------------------------------------------------------------
                 while(true)
                 {
-                    // start from F(X)
+
+                    //----------------------------------------------------------
+                    //
+                    // start from F(X) => compute topology
+                    //
+                    //----------------------------------------------------------
                     ++count;
                     if(!topology(fjac))
                     {
@@ -129,16 +148,27 @@ namespace upsylon
                     Y_ZIRCON_PRINTLN("P=" << P);
                     Y_ZIRCON_PRINTLN("S=" << S);
 
+                    //----------------------------------------------------------
+                    //
+                    // try to compute a valid step from there
+                    //
+                    //----------------------------------------------------------
                     if(compute_step(p))
                     {
                         Y_ZIRCON_PRINTLN("step=" << step);
-
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // step must be decreasing
+                    //
+                    //----------------------------------------------------------
                     type g1 = g(1);
                     Y_ZIRCON_PRINTLN("g1 = " << g1);
+                    bool decreasing = true;
                     while(g1>g0)
                     {
+                        decreasing=false;
                         if(++p>this->pmax)
                         {
                             Y_ZIRCON_PRINTLN("<stuck>");
@@ -149,6 +179,11 @@ namespace upsylon
                         Y_ZIRCON_PRINTLN("g1 = " << g1 << "@p=" << p );
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // update
+                    //
+                    //----------------------------------------------------------
                     g0 = g1;
                     for(size_t i=N;i>0;--i)
                     {
@@ -156,6 +191,13 @@ namespace upsylon
                         X[i] = Xtry[i];
                     }
                     save(trace,X);
+                    if(decreasing)
+                    {
+                        if(--p<=this->pmin)
+                        {
+                            p = this->pmin;
+                        }
+                    }
 
 
                     if(count>=12) break;
@@ -167,11 +209,34 @@ namespace upsylon
                 return true;
             }
 
-            
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            size_t      N;       //!< variables size
+            arrays_type _;       //!< memory for linear arrays
+            array_type &F;       //!< function value
+            array_type &X;       //!< current  position
+            array_type &Ftry;    //!< trial F
+            array_type &Xtry;    //!< trial X
+            array_type &G;       //!< gradient of F^2/2:  K*F
+            array_type &U;       //!< H eigenvalues
+            array_type &V;       //!< H modified eigenvalues
+            array_type &S;       //!< - transpose(P)*G
+            array_type &Fsqr;    //!< to compute F^2/2
+            array_type &step;    //!< estimated step
+            matrix_type J;       //!< Jacobian
+            matrix_type K;       //!< transpose(J)
+            matrix_type H;       //!< K*J
+            matrix_type P;       //!< H=P*U*transpose(P)
+            int         p;       //!< for lambdas
+            bool        verbose; //!< for verbosity
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zircon);
+
 
             static inline void save(const char *trace, const accessible<type> &v)
             {
