@@ -30,7 +30,6 @@ Y_UTEST_INIT(64)
     Y_UTEST(bracket);
     Y_UTEST(min);
     Y_UTEST(opt);
-    Y_UTEST(precond);    
 
     Y_UTEST(linear);
     Y_UTEST(spline);
@@ -49,7 +48,6 @@ Y_UTEST_INIT(64)
     Y_UTEST(k_means);
     Y_UTEST(jacobian);
     Y_UTEST(znewt);
-    Y_UTEST(zircon);
 
     Y_UTEST(tao);
     Y_UTEST(simplify);

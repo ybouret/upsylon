@@ -10,7 +10,6 @@ SOURCE_GROUP(mk FILES test-types.cpp test-adjoint.cpp test-cholesky.cpp
 test-diag-symm.cpp test-diag.cpp test-lu.cpp test-svd.cpp 
 test-tridiag.cpp test-cyclic.cpp test-sparse.cpp
 test-gram-schmidt.cpp
-test-precond.cpp
 test-apk.cpp
 )
 ADD_TEST(mkl:types    test-mkl types)
@@ -25,7 +24,6 @@ ADD_TEST(mkl:cyclic   test-mkl cyclic)
 ADD_TEST(mkl:sparse   test-mkl sparse)
 ADD_TEST(mkl:gram-schmidt test-mkl gram_schmidt)
 ADD_TEST(mkl:jacobian  test-mkl jacobian)
-ADD_TEST(mkl:precond   test-mkl precond)
 ADD_TEST(mkl:apk       test-mkl apk)
 
 SOURCE_GROUP(ode FILES test-michaelis.cpp test-ode.cpp test-rk4.cpp
@@ -41,7 +39,7 @@ ADD_TEST(opt:bracket     test-mkl bracket)
 ADD_TEST(opt:minimize    test-mkl min)
 ADD_TEST(opt:optimize    test-mkl opt)
 
-SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-jacobian.cpp test-znewt.cpp test-zircon.cpp test-zeroes.cpp)
+SOURCE_GROUP(fcn FILES test-drvs.cpp test-intg.cpp test-functions.cpp test-jacobian.cpp test-znewt.cpp test-zeroes.cpp)
 ADD_TEST(fcn:drvs     test-mkl drvs)
 ADD_TEST(fcn:intg     test-mkl intg)
 ADD_TEST(fcn:func     test-mkl functions)

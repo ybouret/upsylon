@@ -16,19 +16,19 @@
 We define $\vec{F} : \mathbb{R}^N \rightarrow \mathbb{R}^N$ and we want to solve $\vec{F}(\vec{X})=\vec{0}$.
 Starting from $\vec{X}_n$:
 \begin{equation}
-	\vec{F}(\vec{X}_n + \vec{h}) \simeq \vec{F}_n + \bm{J}_n \vec{h}
+	\vec{F}(\vec{X} + \vec{h}) \simeq \vec{F} + \bm{J} \vec{h}
 \end{equation}
 We defined the associated problem using:
 \begin{equation}
-	g(\vec{X}) = \frac{1}{2} \vec{F}^2 
+	g(\vec{X}) = \frac{1}{2} \vec{F}^2(\vec{X}) 
 \end{equation}
 so that:
 \begin{equation}
-	g(\vec{X}_n+\vec{h}) \simeq g_n + \vec{\nabla}g_n \cdot \vec{h} + \frac{1}{2} \trn{\vec{h}} \bm{H}_n \vec{h}
+	g(\vec{X}+\vec{h}) \simeq g(\vec{X}) + \vec{\nabla}g \cdot \vec{h} + \frac{1}{2} \trn{\vec{h}} \bm{H} \vec{h}
 \end{equation}
 with:
 \begin{equation}
-	\vec{\nabla}g_n =  \trn{\bm{J}}_n \vec{F}_n
+	\vec{\nabla}g =  \trn{\bm{J}} \vec{F}
 \end{equation}
 and:
 \begin{equation}
@@ -36,16 +36,16 @@ and:
 \end{equation}
 With $\vec{F}\approx\vec0$,
 \begin{equation}
-	\bm{H}_n \simeq \bm{C}_n = \trn{\bm{J}}_n\bm{J}_n
+	\bm{H} \simeq \bm{C}  = \trn{\bm{J}} \bm{J}
 \end{equation}
 Finally, we want to minimize towards $0$:
 \begin{equation}
-	g(\vec{X}_n+\vec{h}) \simeq g_n + \trn{\vec{F}}_n \bm{J}_n \vec{h} + \frac{1}{2} \trn{\vec{h}} \bm{C}_n(\lambda) \vec{h}
+	g(\vec{X} +\vec{h}) \simeq g(\vec{X}) + \trn{\vec{F}} \bm{J}  \vec{h} + \frac{1}{2} \trn{\vec{h}} \bm{C} (\lambda) \vec{h}
 \end{equation}
-where $\bm{C}_n(\lambda)$ is a regularised matrix such that $\bm{C}_n(0)=\trn{\bm{J}}_n\bm{J}_n$.
+where $\bm{C}(\lambda)$ is a regularised matrix such that $\bm{C}(0)=\trn{\bm{J}}\bm{J}$.
 A solution is
 \begin{equation}
-	\vec{h}_n = -\vec{C}_n^{-1}(\lambda) \trn{\bm{J}}_n \vec{F}_n
+	\vec{h} = -\vec{C}^{-1}(\lambda) \trn{\bm{J}} \vec{F}
 \end{equation}
 
 \end{document}

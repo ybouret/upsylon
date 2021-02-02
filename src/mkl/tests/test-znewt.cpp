@@ -1,7 +1,6 @@
 
 #include "y/utest/run.hpp"
 #include "y/mkl/root/znewt.hpp"
-#include "y/mkl/root/zircon.hpp"
 
 #include "y/mkl/fcn/djacobian.hpp"
 #include "y/sequence/vector.hpp"
@@ -63,6 +62,7 @@ namespace {
     }
 #endif
 
+#if 0
     static inline
     double solve_zircon(addressable<double>           &F,
                         addressable<double>           &X,
@@ -80,7 +80,7 @@ namespace {
         }
         return X[2];
     }
-
+#endif
 
 
 }
@@ -112,6 +112,7 @@ Y_UTEST(znewt)
     vector<double> F(2,0);
     vector<double> X(2,0);
 
+#if 0
     // initialize
     X[1] = 30;
     X[2] = 10;
@@ -147,7 +148,7 @@ Y_UTEST(znewt)
     std::cerr << "dk=" << dk << "/k0=" << k0 << std::endl;
 
     std::cerr << "kappa=" << 1.0 + k0/scale << " \\pm " << dk/scale << std::endl;
-
+#endif
 
 
 
