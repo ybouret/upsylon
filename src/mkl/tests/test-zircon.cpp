@@ -1,6 +1,7 @@
 #include "y/mkl/solve/zircon.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -39,18 +40,25 @@ namespace
     };
 
     template <typename T>
-    void runZircon()
+    void runZircon(const T y0)
     {
+        const string trace = "zircon-" + type_name_of<T>()  + ".dat";
+        ios::ocstream::overwrite(trace);
         vector<T> X(2,0);
-        X[1] = alea.symm<T>();
-        X[2] = alea.symm<T>();
 
-        fcn<T> f    = { 0.5 };
-        jac<T> fjac;
+        for(size_t iter=0;iter<80;++iter)
+        {
+            X[1] = 2*alea.symm<T>();
+            X[2] = 2*alea.symm<T>();
 
-        zircon<T> zrc(true);
+            fcn<T> f    = { y0 };
+            jac<T> fjac;
 
-        zrc.cycle(X,f,fjac);
+            zircon<T> zrc(true);
+            int       p = zrc.pmin;
+            zrc.cycle(X,f,fjac,p,*trace);
+            ios::ocstream::echo(trace,"\n");
+        }
 
     }
 
@@ -58,8 +66,10 @@ namespace
 
 Y_UTEST(zircon)
 {
+    float y0 = 0.5f;
+    runZircon<float>(y0);
+    runZircon<double>(y0);
 
-    runZircon<float>();
 }
 Y_UTEST_DONE();
 
