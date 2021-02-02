@@ -11,4 +11,5 @@ clean:
 	rm -f spline.pdf
 	rm -f zero.pdf
 	rm -f splines.pdf
+	rm -f zircon.pdf
 
