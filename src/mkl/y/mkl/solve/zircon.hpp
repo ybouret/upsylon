@@ -289,6 +289,7 @@ namespace upsylon
                 addressable<type>      &Xtry;
                 addressable<type>      &Ftry;
                 addressable<type>      &Fsqr;
+                
                 inline type operator()(const_type u)
                 {
                     tao::muladd(Xtry,Xorg,u,step);

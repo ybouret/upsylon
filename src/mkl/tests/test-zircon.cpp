@@ -46,7 +46,7 @@ namespace
         ios::ocstream::overwrite(trace);
         vector<T> X(2,0);
 
-        for(size_t iter=0;iter<4;++iter)
+        for(size_t iter=0;iter<80;++iter)
         {
             X[1] = 2*alea.symm<T>();
             X[2] = 2*alea.symm<T>();
