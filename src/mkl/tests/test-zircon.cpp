@@ -46,7 +46,7 @@ namespace
         ios::ocstream::overwrite(trace);
         vector<T> X(2,0);
 
-        for(size_t iter=0;iter<80;++iter)
+        for(size_t iter=0;iter<4;++iter)
         {
             X[1] = 2*alea.symm<T>();
             X[2] = 2*alea.symm<T>();
@@ -54,10 +54,13 @@ namespace
             fcn<T> f    = { y0 };
             jac<T> fjac;
 
-            zircon<T> zrc(true);
-            int       p = zrc.pmin;
-            zrc.cycle(X,f,fjac,p,*trace);
+            Zircon<T> zrc(true);
+            int       p  = zrc.pmin+3;
+            T         g0 = -1;
+            const zircon::status result = zrc.cycle(X,f,fjac,p,g0,*trace);
             ios::ocstream::echo(trace,"\n");
+            std::cerr << "\t" << zircon::status_name(result) << std::endl;
+            std::cerr << "\t" << g0 << "@" << X << std::endl;
         }
 
     }

@@ -3,7 +3,7 @@
 #ifndef Y_MKL_SOLVE_ZIRCON_INCLUDED
 #define Y_MKL_SOLVE_ZIRCON_INCLUDED 1
 
-#include "y/mkl/kernel/eigen.hpp"
+#include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/lambda.hpp"
 #include "y/sequence/arrays.hpp"
 #include "y/mkl/tao.hpp"
@@ -15,18 +15,47 @@ namespace upsylon
     namespace mkl
     {
 
-        namespace kernel
+        //______________________________________________________________________
+        //
+        //
+        //! zircon common stuff
+        //
+        //______________________________________________________________________
+        class zircon
         {
-            //! common zircon stuff
-            struct zircon
+        public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            enum status
             {
-                static const char label[]; //!< "[zircon] "
+                success,  //!< numeric 0
+                stalled,  //!< numeric convergence
+                singular, //!< singular jacobian
+                spurious  //!< not singular but no decreasing
             };
-        }
+            static const char  label[]; //!< "[zircon] "
+            static const char *status_name(const status) throw();
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~zircon() throw();
+
+        protected:
+            explicit zircon() throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(zircon);
+        };
+
+
 
 
         //! display info
-#define Y_ZIRCON_PRINTLN(MSG) do { if(verbose) { std::cerr << kernel::zircon::label << MSG << std::endl; } } while(false)
+#define Y_ZIRCON_PRINTLN(MSG) do { if(verbose) { std::cerr << label << MSG << std::endl; } } while(false)
 
         //______________________________________________________________________
         //
@@ -35,7 +64,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class zircon : public kernel::lambdas<T>
+        class Zircon : public zircon, public kernel::lambdas<T>
         {
         public:
             //__________________________________________________________________
@@ -53,7 +82,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! initialize
-            explicit zircon(const bool verbosity=false) :
+            explicit Zircon(const bool verbosity=false) :
             kernel::lambdas<T>(),
             N(0),
             _(10),
@@ -62,38 +91,34 @@ namespace upsylon
             Ftry( _.next() ),
             Xtry( _.next() ),
             G( _.next() ),
-            U( _.next() ),
-            V( _.next() ),
-            S( _.next() ),
             Fsqr( _.next() ),
             step( _.next() ),
             J(),
             K(),
             H(),
-            P(),
+            C(),
             verbose(verbosity)
             {
             }
 
             //! cleanup
-            virtual ~zircon() throw() {}
+            virtual ~Zircon() throw() {}
 
             //__________________________________________________________________
             //
             //! cycle function
             //__________________________________________________________________
-            template <
-            typename FUNCTION,
-            typename JACOBIAN>
-            bool cycle(addressable<type> &x,
-                       FUNCTION          &f,
-                       JACOBIAN          &fjac,
-                       int               &p,
-                       const char        *trace= 0)
+            template < typename FUNCTION, typename JACOBIAN>
+            status cycle(addressable<type> &x,
+                         FUNCTION          &f,
+                         JACOBIAN          &fjac,
+                         int               &p,
+                         type              &g0,
+                         const char        *trace=0)
             {
-                assert(p>=this->pmin);
-                assert(p<=this->pmax);
-
+                p  = clamp(this->pmin,p,this->pmax);
+                g0 = -1;
+                
                 //--------------------------------------------------------------
                 //
                 // initialize memory
@@ -104,7 +129,7 @@ namespace upsylon
                 J.make(N,N);
                 K.make(N,N);
                 H.make(N,N);
-                P.make(N,N);
+                C.make(N,N);
                 call_g<FUNCTION> g = { f, X, step, Xtry, Ftry, Fsqr };
 
                 //--------------------------------------------------------------
@@ -114,7 +139,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 tao::set(X,x);
                 f(F,X);
-                type   g0    = f2g(Fsqr,F);
+                g0 = f2g(Fsqr,F);
                 size_t count = 0;
                 save(trace,X);
 
@@ -132,35 +157,30 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     ++count;
-                    if(!topology(fjac))
-                    {
-                        Y_ZIRCON_PRINTLN("<singular>");
-                        return false;
-                    }
+                    topology(fjac);
 
-
+                    Y_ZIRCON_PRINTLN("---- cycle=" << count);
                     Y_ZIRCON_PRINTLN("F=" << F);
                     Y_ZIRCON_PRINTLN("g0 = " << g0 << "/" << g(0));
                     Y_ZIRCON_PRINTLN("J=" << J);
                     Y_ZIRCON_PRINTLN("G=" << G);
                     Y_ZIRCON_PRINTLN("H=" << H);
-                    Y_ZIRCON_PRINTLN("U=" << U);
-                    Y_ZIRCON_PRINTLN("P=" << P);
-                    Y_ZIRCON_PRINTLN("S=" << S);
 
                     //----------------------------------------------------------
                     //
                     // try to compute a valid step from there
                     //
                     //----------------------------------------------------------
-                    if(compute_step(p))
+                    if(!compute_step(p))
                     {
-                        Y_ZIRCON_PRINTLN("step=" << step);
+                        Y_ZIRCON_PRINTLN("<singular>");
+                        return singular;
                     }
+                    Y_ZIRCON_PRINTLN("step=" << step);
 
                     //----------------------------------------------------------
                     //
-                    // step must be decreasing
+                    // step must decrease the value
                     //
                     //----------------------------------------------------------
                     type g1 = g(1);
@@ -169,12 +189,11 @@ namespace upsylon
                     while(g1>g0)
                     {
                         decreasing=false;
-                        if(++p>this->pmax)
+                        if(!increase(p) && !compute_step(p))
                         {
-                            Y_ZIRCON_PRINTLN("<stuck>");
-                            return false;
+                            Y_ZIRCON_PRINTLN("<spurious>");
+                            return spurious;
                         }
-                        upgrade_step(p);
                         g1 = g(1);
                         Y_ZIRCON_PRINTLN("g1 = " << g1 << "@p=" << p );
                     }
@@ -185,28 +204,28 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     g0 = g1;
-                    for(size_t i=N;i>0;--i)
-                    {
-                        F[i] = Ftry[i];
-                        X[i] = Xtry[i];
-                    }
+                    const bool converged = has_converged();
                     save(trace,X);
-                    if(decreasing)
+
+                    if(g0<=0)
                     {
-                        if(--p<=this->pmin)
-                        {
-                            p = this->pmin;
-                        }
+                        tao::upload(x,X);
+                        Y_ZIRCON_PRINTLN("<success>");
+                        return success;
                     }
 
+                    if(converged)
+                    {
+                        tao::upload(x,X);
+                        Y_ZIRCON_PRINTLN("<converged>");
+                        return stalled;
+                    }
 
-                    if(count>=12) break;
-
+                    if(decreasing) decrease(p);
                 }
 
 
 
-                return true;
             }
 
 
@@ -221,21 +240,18 @@ namespace upsylon
             array_type &Ftry;    //!< trial F
             array_type &Xtry;    //!< trial X
             array_type &G;       //!< gradient of F^2/2:  K*F
-            array_type &U;       //!< H eigenvalues
-            array_type &V;       //!< H modified eigenvalues
-            array_type &S;       //!< - transpose(P)*G
             array_type &Fsqr;    //!< to compute F^2/2
             array_type &step;    //!< estimated step
             matrix_type J;       //!< Jacobian
             matrix_type K;       //!< transpose(J)
-            matrix_type H;       //!< K*J
-            matrix_type P;       //!< H=P*U*transpose(P)
+            matrix_type H;       //!< transpose(J)*J
+            matrix_type C;       //!< copy of H
             int         p;       //!< for lambdas
             bool        verbose; //!< for verbosity
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(zircon);
+            Y_DISABLE_COPY_AND_ASSIGN(Zircon);
 
 
             static inline void save(const char *trace, const accessible<type> &v)
@@ -283,64 +299,95 @@ namespace upsylon
 
 
 
-
-
             template <typename JACOBIAN> inline
-            bool topology(JACOBIAN &fjac)
+            void topology(JACOBIAN &fjac)
             {
 
                 J.ld(0);                    // J = 0
                 fjac(J,X);                  // user's J
                 K.assign_transpose(J);      // K = transpose(J)
                 tao::mul(G,K,F);            // G = transpose(J)*F
-                tao::mmul(H,K,J);           // H = transpose(J)*J
-                if( eigen::build(H,U,P) )   // H = P * U * transpose(P)
+                tao::gram(H,K);             // H = transpose(J)*J
+            }
+
+
+            inline bool build_with(const int p)
+            {
+                static const_type         one = type(1);
+                const kernel::lambdas<T> &lam = *this;
+                const_type                lambda = lam[p];
+                const_type                factor = one+lambda;
+                Y_ZIRCON_PRINTLN("step_from(p=" << p << ",lam=" << lambda << ")");
+                for(size_t i=N;i>0;--i)
                 {
-                    tao::mul_trn(S,P,G);
-                    return true;
+                    array<type>       &C_i =  C[i];
+                    const array<type> &H_i =  H[i];
+                    for(size_t j=N;j>0;--j) C_i[j] = H_i[j];
+                    C_i[i] *= factor;
                 }
-                else
+                if( !LU::build(C) )
                 {
                     return false;
                 }
+                else
+                {
+                    tao::neg(step,G);
+                    LU::solve(C,step);
+                    return true;
+                }
             }
 
-            inline void upgrade_step(const int p)
+            inline bool increase(int &p) const throw()
             {
-                assert(p>=this->pmin);
-                assert(p<=this->pmax);
-                const kernel::lambdas<T> &lam    = *this;
-                array_type               &rhs    = Fsqr;
-                const_type                lambda = lam[p];
-                for(size_t i=N;i>0;--i)
-                {
-                    rhs[i] =  -S[i]/(U[i]+lambda);
-                }
-                tao::mul(step,P,rhs);
+                static const int PMAX = this->pmax;
+                return (++p>PMAX);
+            }
+
+            inline void decrease(int &p) const throw()
+            {
+                static const int PMIN = this->pmin;
+                --p;
+                if(p<=PMIN) p=PMIN;
             }
 
             inline bool compute_step(int &p) throw()
             {
-                const kernel::lambdas<T> &lam = *this;
-                array_type               &rhs = Fsqr;
-            TRY_STEP:
-                const_type  lambda = lam[p];
-                Y_ZIRCON_PRINTLN("step_from(p=" << p << ", lam=" << lambda << ")");
-                for(size_t i=N;i>0;--i)
+            BUILD:
+                if(!build_with(p))
                 {
-                    V[i]   = U[i] + lambda;
-                    if(V[i]<=numeric<mutable_type>::tiny)
-                    {
-                        if(++p>lam.pmax)
-                        {
-                            return false;
-                        }
-                        goto TRY_STEP;
-                    }
-                    rhs[i] = -S[i]/V[i];
+                    if(!increase(p)) return false;
+                    goto BUILD;
                 }
-                tao::mul(step,P,rhs);
                 return true;
+            }
+
+            inline bool has_converged() throw()
+            {
+                static const_type xtol = numeric<type>::sqrt_ftol;
+                size_t i=N;
+                bool   converged = true;
+                for(;i>0;--i)
+                {
+                    const_type Xold = X[i];
+                    const_type Xnew = Xtry[i];
+                    const_type dX   = fabs_of(Xnew-Xold);
+                    F[i] = Ftry[i];
+                    X[i] = Xnew;
+                    if( dX >  xtol * max_of(fabs_of(Xold),fabs_of(Xnew)))
+                    {
+                        converged = false;
+                        --i;
+                        break;
+                    }
+                }
+
+                for(;i>0;--i)
+                {
+                    F[i] = Ftry[i];
+                    X[i] = Xtry[i];
+                }
+
+                return converged;
             }
 
         };
