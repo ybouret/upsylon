@@ -14,6 +14,7 @@
 #if defined(Y_BSD)
 #include <sys/mman.h>
 #include <cerrno>
+#include <cstdlib>
 #endif
 
 namespace upsylon

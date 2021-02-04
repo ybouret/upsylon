@@ -1,20 +1,8 @@
 
 #include "y/os/page-size.hpp"
-
 #include "y/memory/locked.hpp"
 #include "y/utest/run.hpp"
-#include "y/exceptions.hpp"
-#include <cstdio>
-#include <cstring>
 
-#if defined(Y_BSD)
-#include <sys/mman.h>
-#endif
-
-#if defined(Y_WIN)
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
 
 
 
@@ -35,7 +23,7 @@ Y_UTEST(mlock)
     std::cerr << "block_size = " << block_size << std::endl;
     memory::locked_area blk( block_size );
     std::cerr << "blk.bytes  = " << blk.bytes << std::endl;
-    
+
 
 #if 0
 #if defined(Y_WIN)
