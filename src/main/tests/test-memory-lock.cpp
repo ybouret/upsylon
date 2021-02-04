@@ -1,7 +1,7 @@
 #include "y/utest/run.hpp"
+#include <cstdio>
 
 #if defined(Y_BSD)
-#include <cstdio>
 #include <sys/mman.h>
 #else
 
@@ -39,6 +39,13 @@ Y_UTEST(mlock)
     {
         perror("no memory");
     }
+#endif
+
+#if defined(Y_WIN)
+    SYSTEM_INFO sSysInfo;         // useful information about the system
+    GetSystemInfo(&sSysInfo);     // initialize the structure
+    printf("This computer has page size %d.\n", sSysInfo.dwPageSize);
+
 #endif
 
 }
