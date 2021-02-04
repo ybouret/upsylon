@@ -64,6 +64,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(joint_section);
     Y_UTEST(joint_ward);
     Y_UTEST(joint_compact);
+    
+    Y_UTEST(mlock);
 
     Y_UTEST(mloops);
     Y_UTEST(comb); Y_UTEST(Comb);
