@@ -49,7 +49,7 @@ Y_UTEST(mlock)
 #if defined(Y_WIN)
     SYSTEM_INFO sSysInfo;         // useful information about the system
     GetSystemInfo(&sSysInfo);     // initialize the structure
-    printf("This computer has page size %d.\n", sSysInfo.dwPageSize);
+    printf("This computer has page size %u.\n", sSysInfo.dwPageSize);
 
 #endif
 
