@@ -1,3 +1,7 @@
+
+#include "y/os/page-size.hpp"
+
+#include "y/memory/locked.hpp"
 #include "y/utest/run.hpp"
 #include "y/exceptions.hpp"
 #include <cstdio>
@@ -19,6 +23,8 @@ using namespace upsylon;
 
 Y_UTEST(mlock)
 {
+
+    std::cerr << "page_size=" << page_size::get() << std::endl;
 
 	int block_size = 1024;
 	if (argc > 1)
