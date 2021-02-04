@@ -3,9 +3,14 @@
 
 #if defined(Y_BSD)
 #include <sys/mman.h>
-#else
-
 #endif
+
+#if defined(Y_WIN)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+
 
 using namespace upsylon;
 
