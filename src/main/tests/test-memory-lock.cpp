@@ -1,6 +1,7 @@
 #include "y/utest/run.hpp"
 
 #if defined(Y_BSD)
+#include <cstdio>
 #include <sys/mman.h>
 #else
 
