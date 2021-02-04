@@ -245,8 +245,7 @@ namespace upsylon
             matrix_type J;       //!< Jacobian
             matrix_type K;       //!< transpose(J)
             matrix_type H;       //!< transpose(J)*J
-            matrix_type C;       //!< copy of H
-            int         p;       //!< for lambdas
+            matrix_type C;       //!< copy of H, regularise
             bool        verbose; //!< for verbosity
 
 
