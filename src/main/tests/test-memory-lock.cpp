@@ -26,11 +26,15 @@ Y_UTEST(mlock)
 
     std::cerr << "page_size=" << page_size::get() << std::endl;
 
-	int block_size = 1024;
+	int block_size = 5000;
 	if (argc > 1)
 	{
 		block_size = atoi(argv[1]);
 	}
+
+    std::cerr << "block_size = " << block_size << std::endl;
+    memory::locked_area blk( block_size );
+    std::cerr << "blk.bytes  = " << blk.bytes << std::endl;
 
 #if defined(Y_BSD)
 	std::cerr << "+" << block_size << std::endl;
