@@ -24,7 +24,6 @@ using namespace upsylon;
 Y_UTEST(mlock)
 {
 
-    std::cerr << "page_size=" << page_size::get() << std::endl;
 
 	int block_size = 5000;
 	if (argc > 1)
@@ -32,6 +31,7 @@ Y_UTEST(mlock)
 		block_size = atoi(argv[1]);
 	}
 
+    std::cerr << "page_size  = " << page_size::get() << std::endl;
     std::cerr << "block_size = " << block_size << std::endl;
     memory::locked_area blk( block_size );
     std::cerr << "blk.bytes  = " << blk.bytes << std::endl;
@@ -61,9 +61,7 @@ Y_UTEST(mlock)
 #if defined(Y_WIN)
 	SYSTEM_INFO sSysInfo;         // useful information about the system
 	GetSystemInfo(&sSysInfo);     // initialize the structure
-	printf("This computer has page size %u.\n", sSysInfo.dwPageSize);
-	//block_size = sSysInfo.dwPageSize;
-	void *addr = VirtualAlloc(NULL, block_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    void *addr = VirtualAlloc(NULL, block_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	if (!addr)
 	{
 		throw win32::exception(GetLastError(), "VirtualAlloc");
