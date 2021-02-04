@@ -85,13 +85,13 @@ namespace upsylon
             explicit Zircon(const bool verbosity=false) :
             kernel::lambdas<T>(),
             N(0),
-            _(10),
-            F( _.next() ),
-            X( _.next() ),
+            _(7),
+            F(    _.next() ),
+            X(    _.next() ),
             Ftry( _.next() ),
             Xtry( _.next() ),
-            G( _.next() ),
-            Fsqr( _.next() ),
+            G(    _.next() ),
+            temp( _.next() ),
             step( _.next() ),
             J(),
             K(),
@@ -130,7 +130,7 @@ namespace upsylon
                 K.make(N,N);
                 H.make(N,N);
                 C.make(N,N);
-                call_g<FUNCTION> g = { f, X, step, Xtry, Ftry, Fsqr };
+                call_g<FUNCTION> g = { f, X, step, Xtry, Ftry, temp };
 
                 //--------------------------------------------------------------
                 //
@@ -139,7 +139,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 tao::set(X,x);
                 f(F,X);
-                g0 = f2g(Fsqr,F);
+                g0 = f2g(temp,F);
                 size_t count = 0;
                 save(trace,X);
 
@@ -171,7 +171,7 @@ namespace upsylon
                     // try to compute a valid step from there
                     //
                     //----------------------------------------------------------
-                    if(!compute_step(p))
+                    if(!compute_step_with(p))
                     {
                         Y_ZIRCON_PRINTLN("<singular>");
                         return singular;
@@ -189,13 +189,28 @@ namespace upsylon
                     while(g1>g0)
                     {
                         decreasing=false;
-                        if(!increase(p) && !compute_step(p))
+                        if(!increase(p) && !compute_step_with(p))
                         {
                             Y_ZIRCON_PRINTLN("<spurious>");
                             return spurious;
                         }
                         g1 = g(1);
                         Y_ZIRCON_PRINTLN("g1 = " << g1 << "@p=" << p );
+                    }
+                    const_type sigma = - tao::dot<type>::of(step,G);
+                    Y_ZIRCON_PRINTLN("step  = " << step);
+                    Y_ZIRCON_PRINTLN("sigma = " << sigma);
+
+                    {
+                        if(1==count)
+                        {
+                            ios::ocstream fp("zircon.dat");
+                            for(type u=0;u<=2;u+=type(0.01))
+                            {
+                                fp("%g %g %g\n", u, g(u), g0-sigma*u );
+                            }
+                            g1=g(1);
+                        }
                     }
 
                     //----------------------------------------------------------
@@ -240,7 +255,7 @@ namespace upsylon
             array_type &Ftry;    //!< trial F
             array_type &Xtry;    //!< trial X
             array_type &G;       //!< gradient of F^2/2:  K*F
-            array_type &Fsqr;    //!< to compute F^2/2
+            array_type &temp;    //!< to compute auxiliary
             array_type &step;    //!< estimated step
             matrix_type J;       //!< Jacobian
             matrix_type K;       //!< transpose(J)
@@ -248,18 +263,21 @@ namespace upsylon
             matrix_type C;       //!< copy of H, regularise
             bool        verbose; //!< for verbosity
 
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Zircon);
 
-
+            //__________________________________________________________________
+            //
+            //! append coordinates to a file
+            //__________________________________________________________________
             static inline void save(const char *trace, const accessible<type> &v)
             {
-                if(trace)
+                const size_t n = v.size();
+                if(trace&&n>0)
                 {
                     ios::ocstream fp(trace,true);
                     fp("%.15g",v[1]);
-                    for(size_t i=2;i<=v.size();++i)
+                    for(size_t i=2;i<=n;++i)
                     {
                         fp(" %.15g", v[i]);
                     }
@@ -267,6 +285,10 @@ namespace upsylon
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! sq[i] = v[i]^2, sorted_sum(sq)/2
+            //__________________________________________________________________
             static inline type f2g(addressable<type> &sq, const accessible<type> &v) throw()
             {
                 static const_type half(0.5);
@@ -278,7 +300,10 @@ namespace upsylon
                 return half * sorted_sum(sq);
             }
 
-
+            //__________________________________________________________________
+            //
+            //! wrapper for objective function
+            //__________________________________________________________________
             template <typename FUNC>
             struct call_g
             {
@@ -298,7 +323,10 @@ namespace upsylon
             };
 
 
-
+            //__________________________________________________________________
+            //
+            //! compute jacobian and derived quantities
+            //__________________________________________________________________
             template <typename JACOBIAN> inline
             void topology(JACOBIAN &fjac)
             {
@@ -310,9 +338,14 @@ namespace upsylon
                 tao::gram(H,K);             // H = transpose(J)*J
             }
 
-
-            inline bool build_with(const int p)
+            //__________________________________________________________________
+            //
+            //! compute step from curvature and parameter
+            //__________________________________________________________________
+            inline bool __build_step_with(const int p)
             {
+                assert(p>=this->pmin);
+                assert(p<=this->pmax);
                 static const_type         one = type(1);
                 const kernel::lambdas<T> &lam = *this;
                 const_type                lambda = lam[p];
@@ -337,12 +370,20 @@ namespace upsylon
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! increase parameter if possible
+            //__________________________________________________________________
             inline bool increase(int &p) const throw()
             {
                 static const int PMAX = this->pmax;
                 return (++p>PMAX);
             }
 
+            //__________________________________________________________________
+            //
+            //! decrease parameter
+            //__________________________________________________________________
             inline void decrease(int &p) const throw()
             {
                 static const int PMIN = this->pmin;
@@ -350,10 +391,14 @@ namespace upsylon
                 if(p<=PMIN) p=PMIN;
             }
 
-            inline bool compute_step(int &p) throw()
+            //__________________________________________________________________
+            //
+            //! best effort step
+            //__________________________________________________________________
+            inline bool compute_step_with(int &p) throw()
             {
             BUILD:
-                if(!build_with(p))
+                if(!__build_step_with(p))
                 {
                     if(!increase(p)) return false;
                     goto BUILD;
@@ -361,6 +406,11 @@ namespace upsylon
                 return true;
             }
 
+
+            //__________________________________________________________________
+            //
+            //! update (Ftry,Xtry) -> (F,X) with convergence checking
+            //__________________________________________________________________
             inline bool has_converged() throw()
             {
                 static const_type xtol = numeric<type>::sqrt_ftol;
