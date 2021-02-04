@@ -1,5 +1,7 @@
 #include "y/utest/run.hpp"
+#include "y/exceptions.hpp"
 #include <cstdio>
+#include <cstring>
 
 #if defined(Y_BSD)
 #include <sys/mman.h>
@@ -50,6 +52,25 @@ Y_UTEST(mlock)
     SYSTEM_INFO sSysInfo;         // useful information about the system
     GetSystemInfo(&sSysInfo);     // initialize the structure
     printf("This computer has page size %u.\n", sSysInfo.dwPageSize);
+	//block_size = sSysInfo.dwPageSize;
+	void *addr = VirtualAlloc(NULL, block_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	if (!addr)
+	{
+		throw win32::exception(GetLastError(), "VirtualAlloc");
+	}
+
+	memset(addr, 0, block_size);
+	char *tgt = (char *)addr;
+	const size_t num = alea.leq(block_size);
+	for (size_t i = 0; i < num; ++i)
+	{
+		tgt[i] = alea.range<char>('a', 'z');
+	}
+	std::cerr << tgt << std::endl;
+	if (!VirtualFree(addr, 0, MEM_RELEASE))
+	{
+		throw win32::exception(GetLastError(), "VirtualFree");
+	}
 
 #endif
 
