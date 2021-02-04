@@ -125,7 +125,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 N = x.size();
-                _  .acquire(N);
+                _.acquire(N);
                 J.make(N,N);
                 K.make(N,N);
                 H.make(N,N);
@@ -312,13 +312,13 @@ namespace upsylon
                 const accessible<type> &step;
                 addressable<type>      &Xtry;
                 addressable<type>      &Ftry;
-                addressable<type>      &Fsqr;
+                addressable<type>      &temp;
                 
                 inline type operator()(const_type u)
                 {
                     tao::muladd(Xtry,Xorg,u,step);
                     f(Ftry,Xtry);
-                    return f2g(Fsqr,Ftry);
+                    return f2g(temp,Ftry);
                 }
             };
 
