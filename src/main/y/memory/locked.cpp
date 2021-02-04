@@ -2,6 +2,8 @@
 #include "y/os/page-size.hpp"
 #include "y/concurrent/mutex.hpp"
 #include "y/exceptions.hpp"
+#include "y/type/block/zset.hpp"
+
 #include <cstring>
 
 #if defined(Y_WIN)
@@ -18,9 +20,7 @@ namespace upsylon
 {
     namespace memory
     {
-        locked_area:: ~locked_area() throw()
-        {
-        }
+
 
         static inline size_t locked_bytes(size_t desiredBytes)
         {
@@ -62,7 +62,23 @@ namespace upsylon
 #endif
             memset(addr,0,bs);
             return addr;
+        }
 
+
+        locked_area:: ~locked_area() throw()
+        {
+            memset(entry,0,bytes);
+#if defined(Y_BSD)
+            (void) munlock(entry, bytes);
+            free(entry);
+#endif
+
+#if defined(Y_WIN)
+            (void) VirtualUnlock(entry,bytes);
+            (void) VirtualFree(entry,0,MEM_RELEASE);
+#endif
+            _bzset(bytes);
+            entry = NULL;
         }
 
 
@@ -70,7 +86,6 @@ namespace upsylon
         bytes( locked_bytes(desiredBytes) ),
         entry( acquire_locked(bytes)      )
         {
-
         }
 
     }

@@ -35,29 +35,9 @@ Y_UTEST(mlock)
     std::cerr << "block_size = " << block_size << std::endl;
     memory::locked_area blk( block_size );
     std::cerr << "blk.bytes  = " << blk.bytes << std::endl;
+    
 
-#if defined(Y_BSD)
-	std::cerr << "+" << block_size << std::endl;
-	void * addr = calloc(block_size, 1);
-	if (addr)
-	{
-		const int status = mlock(addr, block_size);
-		if (status != 0)
-		{
-			perror("mlock");
-		}
-		else
-		{
-			munlock(addr, block_size);
-		}
-		free(addr);
-	}
-	else
-	{
-		perror("no memory");
-	}
-#endif
-
+#if 0
 #if defined(Y_WIN)
 	SYSTEM_INFO sSysInfo;         // useful information about the system
 	GetSystemInfo(&sSysInfo);     // initialize the structure
@@ -96,6 +76,8 @@ Y_UTEST(mlock)
 	}
 
 #endif
+#endif
+
 
 }
 Y_UTEST_DONE()
