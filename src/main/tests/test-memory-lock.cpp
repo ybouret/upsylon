@@ -21,6 +21,8 @@ Y_UTEST(mlock)
 
     std::cerr << "page_size  = " << page_size::get() << std::endl;
     std::cerr << "block_size = " << block_size << std::endl;
+
+#if !defined(Y_SUNOS)
     memory::locked_area blk( block_size );
     std::cerr << "blk.bytes  = " << blk.bytes << std::endl;
 
@@ -30,7 +32,7 @@ Y_UTEST(mlock)
     {
         s[i] = alea.range<char>('a','z');
     }
-    
+#endif
 
 
 
