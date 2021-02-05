@@ -21,7 +21,7 @@ namespace upsylon
         //! output
         friend inline std::ostream & operator<< ( std::ostream &os, const point2d &p )
         {
-            return (os << '[' << p.x << ' ' << p.y << ']' << '\'');
+            return (os << '[' << p.x << ';' << p.y << ']');
         }
         
         //! zero

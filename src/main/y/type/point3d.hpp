@@ -20,7 +20,7 @@ namespace upsylon
         //! output
         friend inline std::ostream & operator<< ( std::ostream &os, const point3d &p )
         {
-            return (os << '[' << p.x << ' ' << p.y << ' ' << p.z << ']' << '\'');
+            return (os << '[' << p.x << ';' << p.y << ';' << p.z << ']');
         }
 
         //! default constructor, zero
