@@ -28,6 +28,8 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
+
+            //! cycle result
             enum status
             {
                 success,  //!< numeric 0
@@ -36,16 +38,16 @@ namespace upsylon
                 spurious  //!< not singular but no decreasing
             };
             static const char  label[]; //!< "[zircon] "
-            static const char *status_name(const status) throw();
+            static const char *readable(const status) throw(); //!< human readable status
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~zircon() throw();
+            virtual ~zircon() throw(); //!< cleanup
 
         protected:
-            explicit zircon() throw();
+            explicit zircon() throw(); //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(zircon);

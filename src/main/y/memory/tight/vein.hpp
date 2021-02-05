@@ -36,8 +36,8 @@ namespace upsylon {
                 //______________________________________________________________
                 typedef core::pool_of<ingot> chest_type;                 //!< alias
                 static  const size_t one      = 1;                       //!< alias
-                static  const size_t min_exp2 = ilog2_of<ingot>::value;  //!< to hold a stone
-                static  const size_t min_size = one << min_exp2;         //!< to hold a stone
+                static  const size_t min_exp2 = ilog2_of<ingot>::value;  //!< to hold an ingot
+                static  const size_t min_size = one << min_exp2;         //!< to hold an ingot
                 static  const size_t max_exp2 = (sizeof(size_t)<<3)-1;   //!< theoretical
                 static  const size_t max_size = one << max_exp2;         //!< theoretical
 
@@ -68,7 +68,7 @@ namespace upsylon {
             private:
                 chest_type       chest;      //!< available ingots
             public:
-                const size_t     count;      //!< bookkeeping of allocated ingot
+                const size_t     count;      //!< bookeeping of allocated ingot
 
                 //______________________________________________________________
                 //

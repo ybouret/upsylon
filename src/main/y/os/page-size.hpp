@@ -8,9 +8,16 @@
 namespace upsylon
 {
 
+
+    //__________________________________________________________________________
+    //
+    //
+    //! system page size
+    //
+    //__________________________________________________________________________
     struct page_size
     {
-        static size_t get();
+        static size_t get(); //!< query page size from system
     };
 
 }

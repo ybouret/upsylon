@@ -10,7 +10,7 @@ namespace upsylon
         zircon::  zircon() throw() {}
 
 #define Y_ZIRCON_STATUS(NAME) case NAME: return #NAME
-        const char * zircon:: status_name(const status s) throw()
+        const char * zircon:: readable(const status s) throw()
         {
             switch (s)
             {

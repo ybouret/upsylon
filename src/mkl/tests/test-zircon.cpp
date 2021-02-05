@@ -59,7 +59,7 @@ namespace
             T         g0 = -1;
             const zircon::status result = zrc.cycle(X,f,fjac,p,g0,*trace);
             ios::ocstream::echo(trace,"\n");
-            std::cerr << "\t" << zircon::status_name(result) << std::endl;
+            std::cerr << "\t" << zircon::readable(result) << std::endl;
             std::cerr << "\t" << g0 << "@" << X << std::endl;
         }
 

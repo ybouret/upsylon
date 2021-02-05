@@ -8,15 +8,22 @@ namespace upsylon
 {
     namespace memory
     {
-        
+
+        //______________________________________________________________________
+        //
+        //
+        //! locked area
+        //
+        //______________________________________________________________________
         class locked_area
         {
         public:
-            explicit locked_area(const size_t desiredBytes);
-            virtual ~locked_area() throw();
 
-            const size_t bytes;
-            void        *entry;
+            explicit locked_area(const size_t desiredBytes); //!< initialize
+            virtual ~locked_area() throw();                  //!< cleanup
+
+            const size_t bytes; //!< locked bytes
+            void        *entry; //!< address of first locked byte
 
 
         private:
