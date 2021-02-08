@@ -27,9 +27,9 @@ namespace upsylon
             virtual ~SubArea() throw();
             SubArea(const SubArea &) throw();
 
-            const unsigned position;
+            const unsigned position; //!< flag
 
-
+            //! base class to hold data
             class Holder
             {
             public:

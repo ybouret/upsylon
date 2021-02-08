@@ -53,8 +53,6 @@ namespace upsylon
                         new (stretch+size) Stretch(*topology,cpus,rank);
                         aliasing::_(size)++;
                         std::cerr << "s[" << rank << "]=" << stretch[rank] << std::endl;
-                        //const Stretch::Pointer s = new Stretch(*topology,cpus,rank);
-                        //std::cerr << "s[" << rank << "]=" << *s << std::endl;
                     }
                 }
                 catch(...)
@@ -64,6 +62,13 @@ namespace upsylon
                 }
             }
 
+        }
+
+        
+        const Stretch & Tiles:: operator[](const size_t rank) const throw()
+        {
+            assert(rank<size);
+            return stretch[rank];
         }
 
     }

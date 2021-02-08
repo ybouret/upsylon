@@ -27,10 +27,11 @@ namespace upsylon
             virtual ~Topology() throw();
 
             const SubAreaHandle core;     //!< optional core
-            const unit_t        inside;   //!< #core
+            const unit_t        inside;   //!< in core
             const Borders       borders;  //!< all borders
             const Corners       corners;  //!< all corners
-
+            const unit_t        outside;  //!< outside core
+            
             friend std::ostream & operator<<(std::ostream &os, const Topology &topo);
 
         private:

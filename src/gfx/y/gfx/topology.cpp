@@ -18,9 +18,9 @@ namespace upsylon
         core( hasCore() ? new SubArea(area,Position::Core) : NULL ),
         inside( core.is_valid() ? core->n : 0 ),
         borders(*this),
-        corners(*this)
+        corners(*this),
+        outside(borders.count+corners.count)
         {
-            //assert(n==inside+borders.count+corners.count);
         }
 
         static inline void display(const SubAreaHandle &h, std::ostream &os)
@@ -33,8 +33,8 @@ namespace upsylon
             os << "topology.area         : " << static_cast<const Area &>(topo) << std::endl;
             os << "topology.inside       : #" << topo.inside << std::endl;
             os << "topology.core         : "; display(topo.core,os); std::cerr << std::endl;
-
-            os << "topology:borders      : #" << topo.borders.count << std::endl;
+            os << "topology.outside      : #" << topo.outside << std::endl;
+            os << "topology.borders      : #" << topo.borders.count << std::endl;
             os << "topology.bottom       : "; display(topo.borders.bottom,os); std::cerr << std::endl;
             os << "topology.top          : "; display(topo.borders.top,os);    std::cerr << std::endl;
             os << "topology.left         : "; display(topo.borders.left,os);   std::cerr << std::endl;

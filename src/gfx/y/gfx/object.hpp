@@ -12,6 +12,7 @@ namespace upsylon
     namespace GFX
     {
 
+        //! base class for dynamic objects
         class Object : public object, public counted
         {
         public:
