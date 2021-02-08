@@ -5,7 +5,6 @@
 
 #include "y/type/point2d.hpp"
 #include "y/core/zero-flux-index.hpp"
-#include "y/concurrent/singleton.hpp"
 
 namespace upsylon
 {
@@ -45,39 +44,6 @@ namespace upsylon
         Y_GFX_POSITION_DECL(Right,AtRight);
 
 
-
-
-#if 0
-        class Stretch
-        {
-        public:
-            Stretch(const Area   &area,
-                    const size_t  size,
-                    const size_t  rank) throw();
-            ~Stretch() throw();
-            Stretch(const Stretch &) throw();
-
-            const unit_t work;
-            const Point  begin;
-            const Point  end;
-
-        private:
-            Y_DISABLE_ASSIGN(Stretch);
-
-        };
-
-
-        class Manager : public singleton<Manager>
-        {
-        public:
-            Y_SINGLETON_DECL_WITH(0,Manager);
-
-        private:
-            virtual ~Manager() throw();
-            explicit Manager();
-            Y_DISABLE_COPY_AND_ASSIGN(Manager);
-        };
-#endif
         
     }
 }
