@@ -17,14 +17,25 @@ namespace upsylon
 
         static const char fn[] = "Area";
 
-        Area:: Area(const unit_t X, const unit_t Y, const unit_t W, const unit_t H) :
+        Area:: Area(const unit_t X, const unit_t Y, unit_t W, unit_t H) :
         x(X),
         y(Y),
         w( Check::GEQZ(W, Check::Width, fn) ),
         h( Check::GEQZ(H, Check::Height,fn) ),
+        xm(x+ --W),
+        ym(y+ --H),
         n(w*h)
         {
             
+        }
+
+        std::ostream & operator<<(std::ostream &os, const Area &a)
+        {
+            const Point ini(a.x,a.y);
+            const Point end(a.xm,a.ym);
+            const Point len(a.w,a.h);
+            os << '(' << ini << '-' << '>' << end << ':' << len << ')';
+            return os;
         }
     }
 }
