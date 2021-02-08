@@ -10,7 +10,7 @@ ${CMAKE_CURRENT_BINARY_DIR}/../ext/y/tiff/libtiff)
 FILE(GLOB main_decl y/gfx/*.hpp)
 FILE(GLOB main_code y/gfx/*.cpp)
 SET(main_srcs ${main_decl} ${main_code})
-SOURCE_GROUP( graphic FILES ${main_srcs} )
+SOURCE_GROUP( gfx FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/gfx )
 
  

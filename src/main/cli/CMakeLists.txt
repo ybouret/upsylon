@@ -20,13 +20,13 @@ CLI(y_nwsrt)
 #add_custom_command(TARGET y_nwsrt POST_BUILD COMMAND y_nwsrt ${HERE}/../y/sort/nwsrt.db)
 ENDIF()
 
-CLI(y_uniq)
+#CLI(y_uniq)
 CLI(y_bin2dat)
 CLI(y_hexdump)
 CLI(y_grep)
-INCLUDE_DIRECTORIES(../../jive)
-CLI(y_patch_conviv)
-TARGET_LINK_LIBRARIES(y_patch_conviv y-jive)
+#INCLUDE_DIRECTORIES(../../jive)
+#CLI(y_patch_conviv)
+#TARGET_LINK_LIBRARIES(y_patch_conviv y-jive)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl
