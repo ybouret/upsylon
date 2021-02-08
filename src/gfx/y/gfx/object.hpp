@@ -1,0 +1,28 @@
+
+//! \file
+
+#ifndef Y_GFX_OBJECT_INCLUDED
+#define Y_GFX_OBJECT_INCLUDED 1
+
+#include "y/ptr/counted.hpp"
+
+
+namespace upsylon
+{
+    namespace GFX
+    {
+
+        class Object : public counted_object
+        {
+        public:
+            virtual ~Object() throw();
+            Object()          throw();
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Object);
+        };
+
+    }
+
+}
+
+#endif
