@@ -20,10 +20,10 @@ namespace upsylon
             Borders(const Borders &);           //!< setup
             virtual ~Borders() throw();         //!< cleanup
 
-            const Area bottom;
-            const Area top;
-            const Area left;
-            const Area right;
+            const AreaHandle bottom;
+            const AreaHandle top;
+            const AreaHandle left;
+            const AreaHandle right;
 
         private:
             Y_DISABLE_ASSIGN(Borders);

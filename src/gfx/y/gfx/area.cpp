@@ -150,5 +150,11 @@ namespace upsylon
             return (sub.x>=x) && (sub.xm<=xm) && (sub.y>=y) && (sub.ym<=ym);
         }
 
+        bool Area:: hasCore() const throw()
+        {
+            return w>2 && h>2;
+        }
+
+
     }
 }

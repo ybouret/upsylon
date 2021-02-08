@@ -6,6 +6,8 @@
 
 #include "y/gfx/area.hpp"
 #include "y/gfx/object.hpp"
+#include "y/ptr/arc.hpp"
+#include "y/ptr/auto.hpp"
 
 
 namespace upsylon
@@ -21,6 +23,7 @@ namespace upsylon
         class SubArea : public Object, public Area
         {
         public:
+            typedef arc_ptr<SubArea> Pointer;
             explicit SubArea(const Area &area, const unsigned flag);
             virtual ~SubArea() throw();
             SubArea(const SubArea &) throw();
@@ -31,6 +34,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(SubArea);
         };
 
+        typedef auto_ptr<const SubArea::Pointer> AreaHandle;
 
     }
 

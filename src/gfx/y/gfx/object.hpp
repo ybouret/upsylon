@@ -12,7 +12,7 @@ namespace upsylon
     namespace GFX
     {
 
-        class Object : public counted_object
+        class Object : public object, public counted
         {
         public:
             virtual ~Object() throw();

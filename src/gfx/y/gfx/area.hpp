@@ -49,6 +49,8 @@ namespace upsylon
             Area getTopRight()    const;          //!< top|right
             Area get(const unsigned flags) const; //!< uses flag
 
+            bool hasCore() const throw(); //!< w>2 and h>2
+
             //! used named method
             template <int IDX> inline
             Area get(const int2type<IDX> &)
