@@ -23,7 +23,14 @@ namespace upsylon
         {
 
         }
-        
+
+        SubArea::Pointer * SubArea:: CreatePointer(const Area &area, const unsigned flag)
+        {
+            auto_ptr<SubArea> s = new SubArea(area,flag);
+            Pointer          *p = new Pointer( & *s );
+            s.dismiss();
+            return p;
+        }
 
     }
 }

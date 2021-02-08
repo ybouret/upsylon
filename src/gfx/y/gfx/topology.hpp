@@ -4,27 +4,35 @@
 #ifndef Y_GFX_TOPOLOGY_INCLUDED
 #define Y_GFX_TOPOLOGY_INCLUDED 1
 
-#include "y/gfx/sub-area.hpp"
+#include "y/gfx/borders.hpp"
+#include "y/gfx/corners.hpp"
 
 
 namespace upsylon
 {
     namespace GFX
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Topology is an area with core, borders and corners
+        //
+        //______________________________________________________________________
         class Topology : public Object, public Area
         {
         public:
 
             explicit Topology(const Area &area);
             virtual ~Topology() throw();
-            Topology(const Topology &); //!< copy
 
             const AreaHandle core;
-            
+            const Borders    borders;
+            const Corners    corners;
 
+            friend std::ostream & operator<<(std::ostream &os, const Topology &topo);
 
         private:
-            Y_DISABLE_ASSIGN(Topology);
+            Y_DISABLE_COPY_AND_ASSIGN(Topology);
 
         };
     }

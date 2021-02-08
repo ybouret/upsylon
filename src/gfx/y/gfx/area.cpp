@@ -27,9 +27,23 @@ namespace upsylon
         ym(y+ --H),
         n(w*h)
         {
-            
+            if( (w>0&&h<=0) || (h>0&&w<=0) )
+            {
+                throw exception("%s(invalid %s=%ld and %s=%ld",afn, Check::Width, long(w), Check::Height, long(h) );
+            }
         }
 
+        Area:: Area(const Area &a) throw() :
+        x(a.x),
+        y(a.y),
+        w(a.w),
+        h(a.h),
+        xm(a.xm),
+        ym(a.ym),
+        n(w*h)
+        {
+        }
+        
         std::ostream & operator<<(std::ostream &os, const Area &a)
         {
             const Point ini(a.x,a.y);

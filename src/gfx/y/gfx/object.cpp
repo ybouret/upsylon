@@ -4,6 +4,13 @@ namespace upsylon
 {
     namespace GFX
     {
+        Object:: Object() throw()
+        {
+        }
 
+        Object:: ~Object() throw()
+        {
+        }
+        
     }
 }

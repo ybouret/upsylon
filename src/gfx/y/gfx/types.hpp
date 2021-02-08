@@ -64,7 +64,7 @@ namespace upsylon
         Y_GFX_POSITION_DECL(Left,AtLeft);        //!< AtLeft
         Y_GFX_POSITION_DECL(Right,AtRight);      //!< AtRight
 
-
+        
         
     }
 }

@@ -50,6 +50,7 @@ namespace upsylon
             Area get(const unsigned flags) const; //!< uses flag
 
             bool hasCore() const throw(); //!< w>2 and h>2
+            
 
             //! used named method
             template <int IDX> inline

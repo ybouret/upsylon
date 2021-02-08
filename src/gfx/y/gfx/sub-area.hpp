@@ -30,6 +30,9 @@ namespace upsylon
 
             const unsigned position;
 
+            static SubArea::Pointer *CreatePointer(const Area &area, const unsigned flag);
+
+
         private:
             Y_DISABLE_ASSIGN(SubArea);
         };
