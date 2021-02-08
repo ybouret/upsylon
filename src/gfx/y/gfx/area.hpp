@@ -39,15 +39,29 @@ namespace upsylon
             //! display
             friend std::ostream & operator<<(std::ostream &os, const Area &);
 
-            Area getCore()        const; //!< core   content
-            Area getLeft()        const; //!< left   content
-            Area getRight()       const; //!< right  content
-            Area getTop()         const; //!< top    content
-            Area getBottom()      const; //!< bottom content
-            Area getBottomLeft()  const; //!< bottom|left
-            Area getBottomRight() const; //!< bottom|right
-            Area getTopLeft()     const; //!< top|left
-            Area getTopRight()    const; //!< top|right
+            Area getCore()        const;          //!< core   content
+            Area getLeft()        const;          //!< left   content
+            Area getRight()       const;          //!< right  content
+            Area getTop()         const;          //!< top    content
+            Area getBottom()      const;          //!< bottom content
+            Area getBottomLeft()  const;          //!< bottom|left
+            Area getBottomRight() const;          //!< bottom|right
+            Area getTopLeft()     const;          //!< top|left
+            Area getTopRight()    const;          //!< top|right
+            Area get(const unsigned flags) const; //!< uses flag
+
+            //! used named method
+            template <int IDX> inline
+            Area get(const int2type<IDX> &)
+            {
+                return get( unsigned(IDX) );
+            }
+
+            
+            bool owns(const unit_t X,  const unit_t Y) const throw(); //!< ownership
+            bool owns(const Point  p)  const throw();                 //!< ownership
+            bool owns(const Area &sub) const throw();                 //!< ownership
+            
 
             //__________________________________________________________________
             //

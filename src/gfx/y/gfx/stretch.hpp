@@ -45,9 +45,7 @@ namespace upsylon
             const size_t items; //!< items to work with
             const Point  lower; //!< position of first item
             const Point  upper; //!< position of last item
-
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stretch);
         };

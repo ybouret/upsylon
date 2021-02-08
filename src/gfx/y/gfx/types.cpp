@@ -23,6 +23,21 @@ namespace upsylon
         const char Check:: Width[] = "width";
         const char Check:: Height[] = "height";
 
+        const unsigned Position :: At[9] =
+        {
+            Core,
+
+            Top,
+            Bottom,
+            Left,
+            Right,
+
+            Top|Left,
+            Top|Right,
+            Bottom|Left,
+            Bottom|Right
+        };
+
 #define Y_GFX_POS(NAME) case NAME : return #NAME
         const char * Position::Text(const unsigned p) throw()
         {

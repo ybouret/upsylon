@@ -49,6 +49,7 @@ namespace upsylon
             static const unsigned Left   = 0x04; //!< left
             static const unsigned Right  = 0x08; //!< right
             static const char *   Text(const unsigned) throw(); //!< human readable position
+            static const unsigned At[9]; //! possible positions
         };
 
         //! declare a named position

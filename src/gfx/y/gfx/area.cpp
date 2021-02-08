@@ -64,8 +64,91 @@ namespace upsylon
             return Area(xm,y+1,1,h-2);
         }
 
+        Area Area:: getBottom() const
+        {
+            static const char fn[] = "Area::getBottom";
+            if(w<=2) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x+1,y,w-2,1);
+        }
         
+        Area Area:: getTop() const
+        {
+            static const char fn[] = "Area::getTop";
+            if(w<=2) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x+1,ym,w-2,1);
+        }
 
+        Area Area:: getBottomLeft() const
+        {
+            static const char fn[] = "Area::getBottomLeft";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x,y,1,1);
+        }
+
+        Area Area:: getBottomRight() const
+        {
+            static const char fn[] = "Area::getBottomRight";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(xm,y,1,1);
+        }
+
+        Area Area:: getTopLeft() const
+        {
+            static const char fn[] = "Area::getTopLeft";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x,ym,1,1);
+        }
+
+        Area Area:: getTopRight() const
+        {
+            static const char fn[] = "Area::getTopRight";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=0) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(xm,ym,1,1);
+        }
+
+        Area Area:: get(const unsigned flags) const
+        {
+            static const char fn[] = "Area:get";
+            switch(flags)
+            {
+                case Position::Core   : return getCore();
+                case Position::Left   : return getLeft();
+                case Position::Right  : return getRight();
+                case Position::Top    : return getTop();
+                case Position::Bottom : return getBottom();
+
+                case Position::Top | Position::Left:  return getTopLeft();
+                case Position::Top | Position::Right: return getTopRight();
+
+                case Position::Bottom | Position::Left:  return getBottomLeft();
+                case Position::Bottom | Position::Right: return getBottomRight();
+
+                default:
+                    break;
+            }
+            throw exception("%s(invalid flags=%u)",fn,flags);
+        }
+
+        bool Area:: owns(const unit_t X, const unit_t Y) const throw()
+        {
+            return (X>=x) && (X<=xm) && (Y>=y) && (Y<=ym);
+        }
+
+        bool Area:: owns(const Point p) const throw()
+        {
+            return owns(p.x,p.y);
+        }
+
+        bool Area:: owns(const Area &sub) const throw()
+        {
+            return (sub.x>=x) && (sub.xm<=xm) && (sub.y>=y) && (sub.ym<=ym);
+        }
 
     }
 }
