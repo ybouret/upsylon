@@ -12,27 +12,32 @@ namespace upsylon
     namespace GFX
     {
 
-        typedef point2d<unit_t>          Point;
-        typedef core::zero_flux_index<0> ZeroFlux;
+        typedef point2d<unit_t>          Point;        //!< logical coordinate
+        typedef core::zero_flux_index<0> ZeroFlux;     //!< for operators
 
-        class Area
+
+        //! internal checking
+        struct Check
         {
-        public:
-            const unit_t x;
-            const unit_t y;
-            const unit_t w;
-            const unit_t h;
-            const unit_t n;
-
-            Area(const unit_t W, const unit_t H); //!< W>=0, H>=0
-            Area(const unit_t X, const unit_t Y, const unit_t W, const unit_t H);
-            Area(const Area &) throw();
-            virtual ~Area() throw();
-
-        private:
-            Y_DISABLE_ASSIGN(Area);
+            static unit_t GTZ(const unit_t  w, const char *id, const char *fn); //!< raise exception if w<=0
+            static unit_t GEQZ(const unit_t w, const char *id, const char *fn); //!< raise exception if w<0
+            static const char Width[];  //!< "width"
+            static const char Height[]; //!< "height"
         };
 
+        struct Position
+        {
+            static const unsigned Core   = 0x00;
+            static const unsigned Top    = 0x01;
+            static const unsigned Bottom = 0x02;
+            static const unsigned Left   = 0x04;
+            static const unsigned Right  = 0x08;
+            static const char *   Text(const unsigned) throw();
+        };
+        
+
+
+#if 0
         class Stretch
         {
         public:
@@ -62,7 +67,8 @@ namespace upsylon
             explicit Manager();
             Y_DISABLE_COPY_AND_ASSIGN(Manager);
         };
-
+#endif
+        
     }
 }
 

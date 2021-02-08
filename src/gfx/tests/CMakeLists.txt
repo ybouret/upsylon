@@ -7,6 +7,7 @@ TARGET_LINK_Y(test-gfx gfx)
  
 ENABLE_TESTING()
 ADD_TEST(types test-gfx types)
+ADD_TEST(area  test-gfx area)
  
 
 ADD_CUSTOM_TARGET(utest-gfx

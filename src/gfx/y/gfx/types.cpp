@@ -1,44 +1,60 @@
-
 #include "y/gfx/types.hpp"
-#include "y/type/aliasing.hpp"
-#include "y/type/block/zset.hpp"
+#include "y/exceptions.hpp"
 
 namespace upsylon
 {
 
     namespace GFX
     {
-        Area:: ~Area() throw()
+        unit_t Check:: GTZ(const unit_t w, const char *id, const char *fn)
         {
-            _bzset(x);
-            _bzset(y);
-            _bzset(w);
-            _bzset(h);
-            _bzset(n);
+            assert(id); assert(fn);
+            if(w<=0) throw exception("in %s: %s=%ld<=0", fn, id, long(w) );
+            return w;
         }
 
-        Area::  Area(const unit_t W, const unit_t H):
-        x(0),
-        y(0),
-        w(W), h(H), n(w*h)
+        unit_t Check:: GEQZ(const unit_t w, const char *id, const char *fn)
         {
-            assert(w>=0);
-            assert(h>=0);
+            assert(id); assert(fn);
+            if(w<0) throw exception("in %s: %s=%ld<0", fn, id, long(w) );
+            return w;
         }
 
-        Area:: Area(const unit_t X, const unit_t Y, const unit_t W, const unit_t H) :
-        x(X),
-        y(Y),
-        w(W),
-        h(H),
-        n(w*h)
+        const char Check:: Width[] = "width";
+        const char Check:: Height[] = "height";
+
+#define Y_GFX_POS(NAME) case NAME : return #NAME
+        const char * Position::Text(const unsigned p) throw()
         {
-            assert(w>=0);
-            assert(h>=0);
+            switch(p)
+            {
+                    Y_GFX_POS(Core);
+                    
+                    Y_GFX_POS(Top);
+                    Y_GFX_POS(Bottom);
+                    Y_GFX_POS(Left);
+                    Y_GFX_POS(Right);
+
+                    Y_GFX_POS(Top|Left);
+                    Y_GFX_POS(Top|Right);
+
+                    Y_GFX_POS(Bottom|Left);
+                    Y_GFX_POS(Bottom|Right);
+
+                default:
+                    break;
+            }
+            return "Invalid";
         }
+
+
     }
 
 }
+
+#if 0
+#include "y/type/aliasing.hpp"
+#include "y/type/block/zset.hpp"
 
 #include "y/parops.hpp"
 #include "y/type/standard.hpp"
@@ -101,3 +117,4 @@ namespace upsylon
     }
 
 }
+#endif

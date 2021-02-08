@@ -866,6 +866,7 @@ WARN_LOGFILE           =
 
 INPUT                  = src/main/y \
                          src/mkl/y \
+			 src/gfx/y \
                          src/graphic/y \
                          src/aqua/y \
                          src/jive/y \
