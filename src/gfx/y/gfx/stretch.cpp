@@ -2,7 +2,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/parops.hpp"
-
+#include "y/memory/allocator/dyadic.hpp"
 
 
 namespace upsylon
@@ -11,6 +11,10 @@ namespace upsylon
     {
         Stretch:: ~Stretch() throw()
         {
+            static memory::allocator &mgr = memory::dyadic::location();
+            
+            width += lower.y;
+            mgr.release_as<unit_t>(width,count,bytes);
         }
 
 
@@ -20,8 +24,12 @@ namespace upsylon
                           const size_t rank) throw() :
         items(0),
         lower(),
-        upper()
+        upper(),
+        count(0),
+        bytes(0),
+        width(0)
         {
+            static memory::allocator &mgr = memory::dyadic::instance();
             assert(size>0);
             assert(rank<size);
             if(area.n>0)
@@ -48,8 +56,36 @@ namespace upsylon
                         const unit_t         dx = l.rem;
                         aliasing::_(upper)      = Point(area.x+dx,area.y+dy);
                     }
-
-
+                    const unit_t height = 1+(upper.y-lower.y);
+                    count  = height;
+                    width  = mgr.acquire_as<unit_t>(count,bytes);
+                    width -= lower.y;
+                    
+                    if(height<=1)
+                    {
+                        assert(1==height);
+                        width[lower.y] = 1+upper.x-lower.x;
+                    }
+                    else
+                    {
+                        width[lower.y] = 1+area.xm-lower.x;
+                        for(unit_t j=lower.y+1;j<upper.y;++j)
+                        {
+                            width[j] = area.w;
+                        }
+                        width[upper.y] = 1+upper.x-area.x;
+                    }
+                    
+                    
+#if !defined(NDEBUG)
+                    unit_t chk = 0;
+                    for(unit_t j=lower.y;j<=upper.y;++j)
+                    {
+                        assert(width[j]>0);
+                        chk += width[j];
+                    }
+                    assert(chk==items);
+#endif
                 }
 
             }
@@ -62,6 +98,12 @@ namespace upsylon
             return os;
         }
 
+        unit_t Stretch:: operator[](const unit_t j) const throw()
+        {
+            assert(j>=lower.y);
+            assert(j<=upper.y);
+            return width[j];
+        }
 
     }
 }

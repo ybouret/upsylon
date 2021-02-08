@@ -8,6 +8,8 @@ using namespace GFX;
 
 Y_UTEST(stretch)
 {
+    std::cerr << "sizeof(Stretch)=" << sizeof(Stretch) << std::endl;
+    
     Area a(0,0,17,11);    std::cerr << "area = " << a << std::endl;
     Area c = a.getCore(); std::cerr << "core = " << c << std::endl;
 
