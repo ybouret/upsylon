@@ -16,6 +16,30 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
+        //! Horizontal Tile
+        //
+        //______________________________________________________________________
+        
+        class HTile
+        {
+        public:
+            const Point  begin; //!< x,y
+            const unit_t width; //!< x<=i<x+w
+            const unit_t x_top; //!< x <=i<=x_top
+            
+            Point end() const throw(); //!< x_top, y
+            
+           
+            HTile(const unit_t x, const unit_t y, const unit_t w) throw(); //!< setup
+            ~HTile() throw();                                              //!< cleanup
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(HTile);
+        };
+        
+        //______________________________________________________________________
+        //
+        //
         //! computation of a stretch of area for parallel computation
         //
         //______________________________________________________________________
@@ -41,7 +65,9 @@ namespace upsylon
             //__________________________________________________________________
             //! display
             friend std::ostream & operator<<(std::ostream &, const Stretch &);
-            unit_t operator[](const unit_t j) const throw(); //!< width[lower.y<=j<=upper.y]
+            
+            //! HTile in [lower.y,upper.y]
+            const HTile &operator[](const unit_t j) const throw();
 
             //__________________________________________________________________
             //
@@ -53,9 +79,9 @@ namespace upsylon
             
             
         private:
-            size_t  count;
-            size_t  bytes;
-            unit_t *width;
+            size_t     count;
+            size_t     bytes;
+            HTile     *htile;
             
             Y_DISABLE_COPY_AND_ASSIGN(Stretch);
         };

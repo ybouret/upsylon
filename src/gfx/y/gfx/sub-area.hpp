@@ -17,38 +17,40 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! basic sub-area
+        //! named sub-area fron an area and a position flag
         //
         //______________________________________________________________________
         class SubArea : public object, public Area
         {
         public:
-            explicit SubArea(const Area &area, const unsigned flag);
-            virtual ~SubArea() throw();
-            SubArea(const SubArea &) throw();
+            typedef auto_ptr<const SubArea> Handle; //!< alias
 
+            //! setup
+            explicit SubArea(const Area &area, const unsigned flag);
+            //! cleanup
+            virtual ~SubArea() throw();
+            
             const unsigned position; //!< flag
 
-            //! base class to hold data
+            //! base class to hold a set of sub-areas
             class Holder
             {
             public:
-                virtual ~Holder() throw();
-
-                const unit_t count;
+                virtual ~Holder() throw(); //!< cleanup
+                const unit_t items;        //!< sum of hold items
                 
             protected:
-                explicit Holder() throw();
-
+                explicit Holder() throw(); //!< setup
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Holder);
             };
 
         private:
-            Y_DISABLE_ASSIGN(SubArea);
+            Y_DISABLE_COPY_AND_ASSIGN(SubArea);
         };
 
-        typedef auto_ptr<const SubArea> SubAreaHandle;
+        
 
     }
 

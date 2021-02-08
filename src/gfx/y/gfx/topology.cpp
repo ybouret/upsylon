@@ -19,32 +19,29 @@ namespace upsylon
         inside( core.is_valid() ? core->n : 0 ),
         borders(*this),
         corners(*this),
-        outside(borders.count+corners.count)
+        outside(borders.items+corners.items)
         {
         }
 
-        static inline void display(const SubAreaHandle &h, std::ostream &os)
-        {
-            if(h.is_empty()) os << "<emtpy>"; else os << *h;
-        }
+        
 
         std::ostream & operator<<(std::ostream &os, const Topology &topo)
         {
-            os << "topology.area         : " << static_cast<const Area &>(topo) << std::endl;
+            os << "topology.area         : "  << static_cast<const Area &>(topo) << std::endl;
             os << "topology.inside       : #" << topo.inside << std::endl;
-            os << "topology.core         : "; display(topo.core,os); std::cerr << std::endl;
+            os << "topology.core         : "  << topo.core   << std::endl;
             os << "topology.outside      : #" << topo.outside << std::endl;
-            os << "topology.borders      : #" << topo.borders.count << std::endl;
-            os << "topology.bottom       : "; display(topo.borders.bottom,os); std::cerr << std::endl;
-            os << "topology.top          : "; display(topo.borders.top,os);    std::cerr << std::endl;
-            os << "topology.left         : "; display(topo.borders.left,os);   std::cerr << std::endl;
-            os << "topology.right        : "; display(topo.borders.right,os);  std::cerr << std::endl;
+            os << "topology.borders      : #" << topo.borders.items << std::endl;
+            os << "topology.bottom       : "  << topo.borders.bottom << std::endl;
+            os << "topology.top          : "  << topo.borders.top    << std::endl;
+            os << "topology.left         : "  << topo.borders.left   << std::endl;
+            os << "topology.right        : "  << topo.borders.right  << std::endl;
 
-            os << "topology:corners      : #" << topo.corners.count << std::endl;
-            os << "topology.bottom_left  : "; display(topo.corners.bottom_left,os); std::cerr << std::endl;
-            os << "topology.bottom_right : "; display(topo.corners.bottom_right,os); std::cerr << std::endl;
-            os << "topology.top_left     : "; display(topo.corners.top_left,os); std::cerr << std::endl;
-            os << "topology.top_right    : "; display(topo.corners.top_right,os);  
+            os << "topology:corners      : #" << topo.corners.items        << std::endl;
+            os << "topology.bottom_left  : "  << topo.corners.bottom_left  << std::endl;
+            os << "topology.bottom_right : "  << topo.corners.bottom_right << std::endl;
+            os << "topology.top_left     : "  << topo.corners.top_left     << std::endl;
+            os << "topology.top_right    : "  << topo.corners.top_right;
 
             return os;
         }

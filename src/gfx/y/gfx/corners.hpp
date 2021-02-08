@@ -21,10 +21,10 @@ namespace upsylon
             explicit Corners(const Area &area); //!< setup
             virtual ~Corners() throw();         //!< cleanup
 
-            const SubAreaHandle bottom_left;
-            const SubAreaHandle bottom_right;
-            const SubAreaHandle top_left;
-            const SubAreaHandle top_right;
+            const SubArea::Handle bottom_left;  //!< corner at bottom|left
+            const SubArea::Handle bottom_right; //!< corner at bottom|right
+            const SubArea::Handle top_left;     //!< corner at top|left
+            const SubArea::Handle top_right;    //!< corner at top|right
 
             
         private:

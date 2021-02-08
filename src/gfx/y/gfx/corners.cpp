@@ -33,10 +33,10 @@ namespace upsylon
                     }
                 }
 
-                if(bottom_left.is_valid())  aliasing::_(count) += bottom_left->n;
-                if(top_left.is_valid())     aliasing::_(count) += top_left->n;
-                if(bottom_right.is_valid()) aliasing::_(count) += bottom_right->n;
-                if(top_right.is_valid())    aliasing::_(count) += top_right->n;
+                if(bottom_left.is_valid())  aliasing::_(items) += bottom_left->n;
+                if(top_left.is_valid())     aliasing::_(items) += top_left->n;
+                if(bottom_right.is_valid()) aliasing::_(items) += bottom_right->n;
+                if(top_right.is_valid())    aliasing::_(items) += top_right->n;
             }
         }
 

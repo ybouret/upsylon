@@ -12,18 +12,24 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! Tiles of Stretches
+        //
+        //______________________________________________________________________
         class Tiles
         {
         public:
             virtual ~Tiles() throw(); //!< cleanup
             explicit Tiles(const size_t          cores,
-                           const Topology::Pointer &topo);
+                           const Topology::Pointer &topo); //!< setup
 
-            const Topology::Pointer topology;
-            const size_t            size;
+            //! access stretch in 0<=rank<size
             const Stretch & operator[](const size_t rank) const throw();
+
+            const Topology::Pointer topology; //!< shared topopolgy
+            const size_t            size;     //!< number of stretches
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);

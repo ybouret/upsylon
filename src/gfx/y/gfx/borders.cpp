@@ -40,10 +40,10 @@ namespace upsylon
 
             }
 
-            if(bottom.is_valid()) aliasing::_(count) += bottom->n;
-            if(top.is_valid())    aliasing::_(count) += top->n;
-            if(left.is_valid())   aliasing::_(count) += left->n;
-            if(right.is_valid())  aliasing::_(count) += right->n;
+            if(bottom.is_valid()) aliasing::_(items) += bottom->n;
+            if(top.is_valid())    aliasing::_(items) += top->n;
+            if(left.is_valid())   aliasing::_(items) += left->n;
+            if(right.is_valid())  aliasing::_(items) += right->n;
 
         }
 

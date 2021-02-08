@@ -16,18 +16,11 @@ namespace upsylon
         {
         }
 
-        SubArea:: SubArea(const SubArea &sub) throw() :
-        object(),
-        Area(sub),
-        position(sub.position)
-        {
-
-        }
-
+        
 
 
         SubArea:: Holder:: ~Holder() throw() {}
-        SubArea:: Holder::  Holder() throw() : count(0) {}
+        SubArea:: Holder::  Holder() throw() : items(0) {}
 
     }
 }

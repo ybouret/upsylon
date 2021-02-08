@@ -21,17 +21,19 @@ namespace upsylon
         class Topology : public Object, public Area
         {
         public:
-            typedef arc_ptr<const Topology> Pointer;
+            typedef arc_ptr<const Topology> Pointer; //!< alias
 
-            explicit Topology(const Area &area);
-            virtual ~Topology() throw();
-
-            const SubAreaHandle core;     //!< optional core
-            const unit_t        inside;   //!< in core
-            const Borders       borders;  //!< all borders
-            const Corners       corners;  //!< all corners
-            const unit_t        outside;  //!< outside core
             
+            explicit Topology(const Area &area); //!< setup
+            virtual ~Topology() throw();         //!< cleanup
+
+            const SubArea::Handle core;     //!< optional core
+            const unit_t          inside;   //!< in core
+            const Borders         borders;  //!< all borders
+            const Corners         corners;  //!< all corners
+            const unit_t          outside;  //!< outside core
+            
+            //! show
             friend std::ostream & operator<<(std::ostream &os, const Topology &topo);
 
         private:
