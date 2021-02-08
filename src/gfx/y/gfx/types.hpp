@@ -34,7 +34,17 @@ namespace upsylon
             static const unsigned Right  = 0x08;
             static const char *   Text(const unsigned) throw();
         };
-        
+
+#define Y_GFX_POSITION_DECL(FLAG,NAME) typedef int2type<Position::FLAG> NAME##_; extern const NAME##_ NAME
+#define Y_GFX_POSITION_IMPL(NAME) const NAME##_ NAME = {}
+
+        Y_GFX_POSITION_DECL(Core,InCore);
+        Y_GFX_POSITION_DECL(Top,AtTop);
+        Y_GFX_POSITION_DECL(Bottom,AtBottom);
+        Y_GFX_POSITION_DECL(Left,AtLeft);
+        Y_GFX_POSITION_DECL(Right,AtRight);
+
+
 
 
 #if 0

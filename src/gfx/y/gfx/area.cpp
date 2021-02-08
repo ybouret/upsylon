@@ -1,6 +1,7 @@
 #include "y/gfx/area.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -15,13 +16,13 @@ namespace upsylon
             _bzset(n);
         }
 
-        static const char fn[] = "Area";
+        static const char afn[] = "Area";
 
         Area:: Area(const unit_t X, const unit_t Y, unit_t W, unit_t H) :
         x(X),
         y(Y),
-        w( Check::GEQZ(W, Check::Width, fn) ),
-        h( Check::GEQZ(H, Check::Height,fn) ),
+        w( Check::GEQZ(W, Check::Width, afn) ),
+        h( Check::GEQZ(H, Check::Height,afn) ),
         xm(x+ --W),
         ym(y+ --H),
         n(w*h)
@@ -37,5 +38,16 @@ namespace upsylon
             os << '(' << ini << '-' << '>' << end << ':' << len << ')';
             return os;
         }
+
+
+        Area Area:: getCore() const
+        {
+            static const char fn[] = "Area::getCore";
+            if(w<=2) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=2) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x+1,y+1,w-2,h-2);
+        }
+
+
     }
 }

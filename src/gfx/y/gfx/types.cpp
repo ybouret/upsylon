@@ -47,6 +47,11 @@ namespace upsylon
             return "Invalid";
         }
 
+        Y_GFX_POSITION_IMPL(InCore);
+        Y_GFX_POSITION_IMPL(AtTop);
+        Y_GFX_POSITION_IMPL(AtBottom);
+        Y_GFX_POSITION_IMPL(AtLeft);
+        Y_GFX_POSITION_IMPL(AtRight);
 
     }
 
