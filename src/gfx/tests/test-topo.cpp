@@ -15,9 +15,11 @@ Y_UTEST(topo)
     {
         for(unit_t h=1;h<=10;++h)
         {
-            Area     area(0,0,w,h);      std::cerr << "area   = " << area << std::endl;
+            Area     area(alea.range<unit_t>(-100,100),
+                          alea.range<unit_t>(-100,100),
+                          w,h);
+            std::cerr << "area   = " << area << std::endl;
             Topology topo(area);
-
 
             std::cerr << topo << std::endl;
             Y_CHECK(topo.n==topo.inside+topo.borders.count+topo.corners.count);

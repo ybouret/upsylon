@@ -7,7 +7,9 @@ using namespace GFX;
 
 Y_UTEST(area)
 {
-    Area a(0,0,10,20);      std::cerr << "area   = " << a << std::endl;
+    Area a(alea.range<unit_t>(-100,100),
+           alea.range<unit_t>(-100,100),
+           10,20);      std::cerr << "area   = " << a << std::endl;
 
     Area c = a.getCore();   std::cerr << "core   = " << c << std::endl;
     Area l = a.getLeft();   std::cerr << "left   = " << l << std::endl; Y_CHECK(l.w==1);

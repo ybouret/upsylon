@@ -20,17 +20,15 @@ namespace upsylon
         //! basic sub-area
         //
         //______________________________________________________________________
-        class SubArea : public Object, public Area
+        class SubArea : public object, public Area
         {
         public:
-            typedef arc_ptr<SubArea> Pointer;
             explicit SubArea(const Area &area, const unsigned flag);
             virtual ~SubArea() throw();
             SubArea(const SubArea &) throw();
 
             const unsigned position;
 
-            static SubArea::Pointer *CreatePointer(const Area &area, const unsigned flag);
 
             class Holder
             {
@@ -50,7 +48,7 @@ namespace upsylon
             Y_DISABLE_ASSIGN(SubArea);
         };
 
-        typedef auto_ptr<const SubArea::Pointer> AreaHandle;
+        typedef auto_ptr<const SubArea> SubAreaHandle;
 
     }
 

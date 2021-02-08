@@ -15,15 +15,15 @@ namespace upsylon
         Topology:: Topology(const Area &area) :
         Object(),
         Area(area),
-        core( hasCore() ? SubArea::CreatePointer(area,Position::Core) : NULL ),
-        inside( core.is_valid() ? (**core).n : 0 ),
+        core( hasCore() ? new SubArea(area,Position::Core) : NULL ),
+        inside( core.is_valid() ? core->n : 0 ),
         borders(*this),
         corners(*this)
         {
             //assert(n==inside+borders.count+corners.count);
         }
 
-        static inline void display(const AreaHandle &h, std::ostream &os)
+        static inline void display(const SubAreaHandle &h, std::ostream &os)
         {
             if(h.is_empty()) os << "<emtpy>"; else os << *h;
         }

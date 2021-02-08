@@ -10,31 +10,24 @@ namespace upsylon
         }
 
         SubArea:: SubArea(const Area &area, const unsigned flag) :
-        Object(),
+        object(),
         Area( area.get(flag) ),
         position(flag)
         {
         }
 
         SubArea:: SubArea(const SubArea &sub) throw() :
-        Object(),
+        object(),
         Area(sub),
         position(sub.position)
         {
 
         }
 
-        SubArea::Pointer * SubArea:: CreatePointer(const Area &area, const unsigned flag)
-        {
-            auto_ptr<SubArea> s = new SubArea(area,flag);
-            Pointer          *p = new Pointer( & *s );
-            s.dismiss();
-            return p;
-        }
+
 
         SubArea:: Holder:: ~Holder() throw() {}
-
-        SubArea:: Holder:: Holder() throw() : count(0) {}
+        SubArea:: Holder::  Holder() throw() : count(0) {}
 
     }
 }

@@ -6,7 +6,8 @@
 #define Y_GFX_STRETCH_INCLUDED 1
 
 #include "y/gfx/area.hpp"
-
+#include "y/gfx/object.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
@@ -21,15 +22,18 @@ namespace upsylon
         class Stretch
         {
         public:
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             //! cleanup
-            virtual ~Stretch() throw(); //!< cleanup
+            ~Stretch() throw(); //!< cleanup
 
             //! setup, MPI style
-            explicit Stretch(const Area &area, const size_t size, const size_t rank) throw();
+            Stretch(const Area &area, const size_t size, const size_t rank) throw();
+
+
 
             //__________________________________________________________________
             //
@@ -45,7 +49,8 @@ namespace upsylon
             const size_t items; //!< items to work with
             const Point  lower; //!< position of first item
             const Point  upper; //!< position of last item
-            
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Stretch);
         };

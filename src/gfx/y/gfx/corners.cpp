@@ -18,25 +18,25 @@ namespace upsylon
             if(area.n>0)
             {
 
-                aliasing::_(bottom_left) = SubArea::CreatePointer(area,Position::Bottom|Position::Left);
+                aliasing::_(bottom_left) = new SubArea(area,Position::Bottom|Position::Left);
                 if(area.w>1)
                 {
-                    aliasing::_(bottom_right) = SubArea::CreatePointer(area,Position::Bottom|Position::Right);
+                    aliasing::_(bottom_right) = new SubArea(area,Position::Bottom|Position::Right);
                 }
 
                 if(area.h>1)
                 {
-                    aliasing::_(top_left) = SubArea::CreatePointer(area,Position::Top|Position::Left);
+                    aliasing::_(top_left) = new SubArea(area,Position::Top|Position::Left);
                     if(area.w>1)
                     {
-                        aliasing::_(top_right) = SubArea::CreatePointer(area,Position::Top|Position::Right);
+                        aliasing::_(top_right) = new SubArea(area,Position::Top|Position::Right);
                     }
                 }
 
-                if(bottom_left.is_valid())  aliasing::_(count) += (*bottom_left)->n;
-                if(top_left.is_valid())     aliasing::_(count) += (*top_left)->n;
-                if(bottom_right.is_valid()) aliasing::_(count) += (*bottom_right)->n;
-                if(top_right.is_valid())    aliasing::_(count) += (*top_right)->n;
+                if(bottom_left.is_valid())  aliasing::_(count) += bottom_left->n;
+                if(top_left.is_valid())     aliasing::_(count) += top_left->n;
+                if(bottom_right.is_valid()) aliasing::_(count) += bottom_right->n;
+                if(top_right.is_valid())    aliasing::_(count) += top_right->n;
             }
         }
 

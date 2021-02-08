@@ -13,6 +13,8 @@ namespace upsylon
         {
         }
 
+
+
         Stretch:: Stretch(const Area  &area,
                           const size_t size,
                           const size_t rank) throw() :

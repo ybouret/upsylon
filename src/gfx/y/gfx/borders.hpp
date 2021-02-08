@@ -21,10 +21,10 @@ namespace upsylon
             explicit Borders(const Area &area); //!< setup
             virtual ~Borders() throw();         //!< cleanup
 
-            const AreaHandle bottom;
-            const AreaHandle top;
-            const AreaHandle left;
-            const AreaHandle right;
+            const SubAreaHandle bottom;
+            const SubAreaHandle top;
+            const SubAreaHandle left;
+            const SubAreaHandle right;
 
             
         private:
