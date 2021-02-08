@@ -48,6 +48,24 @@ namespace upsylon
             return Area(x+1,y+1,w-2,h-2);
         }
 
+        Area Area:: getLeft() const
+        {
+            static const char fn[] = "Area::getLeft";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=2) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(x,y+1,1,h-2);
+        }
+
+        Area Area:: getRight() const
+        {
+            static const char fn[] = "Area::getLeft";
+            if(w<=0) throw exception("%s(%s=%ld)",fn, Check::Width,  long(w));
+            if(h<=2) throw exception("%s(%s=%ld)",fn, Check::Height, long(h));
+            return Area(xm,y+1,1,h-2);
+        }
+
+        
+
 
     }
 }

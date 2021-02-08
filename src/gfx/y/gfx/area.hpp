@@ -39,8 +39,15 @@ namespace upsylon
             //! display
             friend std::ostream & operator<<(std::ostream &os, const Area &);
 
-            Area getCore() const;
-
+            Area getCore()        const; //!< core   content
+            Area getLeft()        const; //!< left   content
+            Area getRight()       const; //!< right  content
+            Area getTop()         const; //!< top    content
+            Area getBottom()      const; //!< bottom content
+            Area getBottomLeft()  const; //!< bottom|left
+            Area getBottomRight() const; //!< bottom|right
+            Area getTopLeft()     const; //!< top|left
+            Area getTopRight()    const; //!< top|right
 
             //__________________________________________________________________
             //
