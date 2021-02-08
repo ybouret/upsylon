@@ -5,8 +5,8 @@
 #ifndef Y_GFX_BORDERS_INCLUDED
 #define Y_GFX_BORDERS_INCLUDED 1
 
-#include "y/gfx/area.hpp"
-
+#include "y/gfx/sub-area.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
