@@ -15,7 +15,7 @@ namespace upsylon
         //! pre-computed corners
         //
         //______________________________________________________________________
-        class Corners
+        class Corners : public SubArea::Holder
         {
         public:
             explicit Corners(const Area &area); //!< setup
@@ -26,6 +26,7 @@ namespace upsylon
             const AreaHandle top_left;
             const AreaHandle top_right;
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Corners);
         };

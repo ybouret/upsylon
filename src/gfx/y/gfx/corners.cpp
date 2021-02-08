@@ -17,6 +17,7 @@ namespace upsylon
         {
             if(area.n>0)
             {
+
                 aliasing::_(bottom_left) = SubArea::CreatePointer(area,Position::Bottom|Position::Left);
                 if(area.w>1)
                 {
@@ -32,6 +33,10 @@ namespace upsylon
                     }
                 }
 
+                if(bottom_left.is_valid())  aliasing::_(count) += (*bottom_left)->n;
+                if(top_left.is_valid())     aliasing::_(count) += (*top_left)->n;
+                if(bottom_right.is_valid()) aliasing::_(count) += (*bottom_right)->n;
+                if(top_right.is_valid())    aliasing::_(count) += (*top_right)->n;
             }
         }
 

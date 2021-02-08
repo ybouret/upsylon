@@ -25,9 +25,10 @@ namespace upsylon
             explicit Topology(const Area &area);
             virtual ~Topology() throw();
 
-            const AreaHandle core;
-            const Borders    borders;
-            const Corners    corners;
+            const AreaHandle core;     //!< optional core
+            const unit_t     inside;   //!< #core
+            const Borders    borders;  //!< all borders
+            const Corners    corners;  //!< all corners
 
             friend std::ostream & operator<<(std::ostream &os, const Topology &topo);
 

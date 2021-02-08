@@ -15,7 +15,7 @@ namespace upsylon
         //! pre-computed borders
         //
         //______________________________________________________________________
-        class Borders
+        class Borders : public SubArea::Holder
         {
         public:
             explicit Borders(const Area &area); //!< setup
@@ -26,6 +26,7 @@ namespace upsylon
             const AreaHandle left;
             const AreaHandle right;
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Borders);
         };

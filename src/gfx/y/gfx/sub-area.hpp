@@ -32,6 +32,19 @@ namespace upsylon
 
             static SubArea::Pointer *CreatePointer(const Area &area, const unsigned flag);
 
+            class Holder
+            {
+            public:
+                virtual ~Holder() throw();
+
+                const unit_t count;
+                
+            protected:
+                explicit Holder() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Holder);
+            };
 
         private:
             Y_DISABLE_ASSIGN(SubArea);

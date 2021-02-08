@@ -32,5 +32,9 @@ namespace upsylon
             return p;
         }
 
+        SubArea:: Holder:: ~Holder() throw() {}
+
+        SubArea:: Holder:: Holder() throw() : count(0) {}
+
     }
 }

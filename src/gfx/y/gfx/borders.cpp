@@ -8,15 +8,9 @@ namespace upsylon
         {
         }
 
-        Borders:: Borders(const Borders &borders) :
-        bottom( borders.bottom ),
-        top(    borders.top    ),
-        left(   borders.left   ),
-        right(  borders.right  )
-        {
 
-        }
 
+         
         Borders:: Borders(const Area &area) :
         bottom(NULL),
         top(NULL),
@@ -25,6 +19,7 @@ namespace upsylon
         {
             if(area.n>0)
             {
+
                 if(area.w>2)
                 {
                     aliasing::_(bottom) = SubArea::CreatePointer(area,Position::Bottom);
@@ -44,6 +39,12 @@ namespace upsylon
                 }
 
             }
+
+            if(bottom.is_valid()) aliasing::_(count) += (*bottom)->n;
+            if(top.is_valid())    aliasing::_(count) += (*top)->n;
+            if(left.is_valid())   aliasing::_(count) += (*left)->n;
+            if(right.is_valid())  aliasing::_(count) += (*right)->n;
+
         }
 
 

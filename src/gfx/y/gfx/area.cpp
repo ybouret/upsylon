@@ -49,7 +49,7 @@ namespace upsylon
             const Point ini(a.x,a.y);
             const Point end(a.xm,a.ym);
             const Point len(a.w,a.h);
-            os << '(' << ini << '-' << '>' << end << ':' << len << ')';
+            os << '(' << ini << '-' << '>' << end << ':' << len << '=' << '#' <<  a.n << ')';
             return os;
         }
 
