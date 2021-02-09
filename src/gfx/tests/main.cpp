@@ -10,5 +10,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(engine);
     Y_UTEST(pixels);
     Y_UTEST(bitmap);
+    Y_UTEST(pixmap);
 }
 Y_UTEST_EXEC()

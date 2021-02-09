@@ -12,7 +12,7 @@ namespace upsylon
         {
             _bzset(w);
             _bzset(h);;
-            _bzset(bpp);
+            _bzset(depth);
             _bzset(scanline);
             _bzset(stride);
         }
@@ -22,8 +22,8 @@ namespace upsylon
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const size_t BPP) :
         w( Check::GTZ(W, Check::Width, bfn) ),
         h( Check::GTZ(H, Check::Width, bfn) ),
-        bpp( Check::GTZ(BPP, "BPP", bfn)),
-        scanline(w*bpp),
+        depth( Check::GTZ(BPP, "depth", bfn)),
+        scanline(w*depth),
         stride(scanline),
         pixels( new Pixels_(h*stride) ),
         rows(w,h,pixels->entry,stride)
@@ -33,7 +33,7 @@ namespace upsylon
 
         std::ostream & operator<<(std::ostream &os, const Bitmap &bmp)
         {
-            os << '[' << bmp.w << 'x' << bmp.h << 'x' << bmp.bpp << ' ' << bmp.pixels << ']';
+            os << '[' << bmp.w << 'x' << bmp.h << 'x' << bmp.depth << ' ' << bmp.pixels << ']';
             return os;
         }
 
@@ -65,12 +65,17 @@ namespace upsylon
         Bitmap:: Bitmap(const Bitmap &bmp, const Area &area) :
         w( checkArea(bmp,area).w ),
         h( area.h ),
-        bpp( bmp.bpp ),
-        scanline(w*bpp),
+        depth( bmp.depth ),
+        scanline(w*depth),
         stride( bmp.stride ),
         pixels( bmp.pixels ),
-        rows(w,h,bmp.rows[area.y].at(area.x,bpp),stride)
+        rows(w,h,bmp.rows[area.y].at(area.x,depth),stride)
         {
+        }
+
+        void *Bitmap:: oor_rows() throw()
+        {
+            return &rows[0];
         }
     }
 }

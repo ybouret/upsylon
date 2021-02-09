@@ -17,9 +17,8 @@ Y_UTEST(bitmap)
             {
                 Bitmap bmp(w,h,bpp);
                 std::cerr << bmp << std::endl;
-                
             }
-
+            
         }
 
     }
