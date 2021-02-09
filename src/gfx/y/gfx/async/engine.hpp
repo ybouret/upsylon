@@ -5,8 +5,9 @@
 
 
 #include "y/gfx/area/tiles.hpp"
+#include "y/gfx/async/inner-worker.hpp"
+#include "y/gfx/async/outer-worker.hpp"
 #include "y/concurrent/scheme/server.hpp"
-#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -14,59 +15,29 @@ namespace upsylon
     {
         namespace Async
         {
+            //__________________________________________________________________
+            //
+            //! alias for Sequential/Parallel server
+            //__________________________________________________________________
             typedef arc_ptr<concurrent::server> Server;
 
-            class Worker
-            {
-            public:
-                virtual ~Worker() throw();
-                virtual  void compute(parallel&,lockable&) = 0;
-
-            protected:
-                explicit Worker();
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Worker);
-            };
-
-            class InnerWorker : public Worker
-            {
-            public:
-                virtual ~InnerWorker() throw();
-                explicit InnerWorker(const Tile &);
-                virtual  void compute(parallel&,lockable&);
-
-                const Tile &tile;
-
-
-
-            private:
-                Y_DISABLE_ASSIGN(InnerWorker);
-            };
-
-            class OuterWorker : public Worker
-            {
-            public:
-                explicit OuterWorker(const Boundaries &);
-                virtual ~OuterWorker() throw();
-                virtual  void compute(parallel&,lockable&);
-
-                const Boundaries &boundaries;
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(OuterWorker);
-            };
-
+            //__________________________________________________________________
+            //
+            //! Engine to dispatch inner tiles and outer boundaries work
+            //__________________________________________________________________
             class Engine : public Tiles
             {
             public:
+                //! setup tiles from topology, and create workers
                 explicit Engine(const size_t             cpus,
                                 const Topology::Pointer &topo);
+
+                //! cleanup
                 virtual ~Engine() throw();
 
-
+                //! load all tasks on the server, then flush
                 void cycle(concurrent::server &server);
-
+                
 
             protected:
                 void            *impl;          //!< tasks

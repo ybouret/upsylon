@@ -1,90 +1,7 @@
 
 #include "y/gfx/async/engine.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-
-namespace upsylon
-{
-    namespace GFX
-    {
-
-        namespace Async
-        {
-
-            Worker:: Worker()
-            {
-            }
-
-            Worker:: ~Worker() throw()
-            {
-            }
-        }
-
-    }
-
-}
-
-namespace upsylon
-{
-    namespace GFX
-    {
-
-        namespace Async
-        {
-
-            InnerWorker:: InnerWorker(const Tile &t) :
-            Worker(),
-            tile(t)
-            {
-            }
-
-
-            InnerWorker:: ~InnerWorker() throw()
-            {
-            }
-
-
-            void InnerWorker:: compute(parallel &, lockable &sync)
-            {
-                Y_LOCK(sync);
-                std::cerr << "InnerWorker@rank=" << tile.rank << std::endl;
-            }
-        }
-
-    }
-
-}
-
-namespace upsylon
-{
-    namespace GFX
-    {
-
-        namespace Async
-        {
-
-            OuterWorker:: OuterWorker(const Boundaries &b) :
-            Worker(),
-            boundaries(b)
-            {
-            }
-
-
-            OuterWorker:: ~OuterWorker() throw()
-            {
-            }
-
-
-            void OuterWorker:: compute(parallel &, lockable &sync)
-            {
-                Y_LOCK(sync);
-                std::cerr << "OuterWorker" << std::endl;
-            }
-
-        }
-
-    }
-
-}
+#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {
@@ -180,17 +97,16 @@ namespace upsylon
                     auto_ptr<Batch> batch     = new Batch(num_tasks);
                     std::cerr << "#tasks=" << num_tasks << std::endl;
                     {
-                        const concurrent::job_type J( &outsideWorker, & OuterWorker::compute );
+                        const concurrent::job_type J( &outsideWorker, & OuterWorker::run );
                         batch->tasks.push_back_(J);
                     }
                     for(size_t i=0;i<iwBuilt;++i)
                     {
-                        const concurrent::job_type J( insideWorkers+i, & InnerWorker::compute );
+                        const concurrent::job_type J( insideWorkers+i, & InnerWorker::run );
                         batch->tasks.push_back_(J);
                     }
                     assert( batch->tasks.size() == batch->uuids.size() );
                     impl = batch.yield();
-
                 }
                 catch(...)
                 {
