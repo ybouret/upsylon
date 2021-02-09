@@ -11,38 +11,73 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! anonymous row of pixels
+        //
+        //______________________________________________________________________
         class PixRow
         {
         public:
-            PixRow(void        *entry,
-                   const unit_t width) throw();
-            ~PixRow() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            PixRow(void *entry, const unit_t width) throw(); //!< setup
+            ~PixRow() throw();                               //!< cleanup
 
-            void *       const p;
-            const unit_t       w;
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void       *at(const unit_t i, const unit_t bpp)       throw(); //!< shifted address
+            const void *at(const unit_t i, const unit_t bpp) const throw(); //!< shifted address
 
-            void       *at(const unit_t i, const unit_t bpp)       throw();
-            const void *at(const unit_t i, const unit_t bpp) const throw();
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            void *       const p; //!< first item
+            const unit_t       w; //!< width
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixRow);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! smart pointers of rows
+        //
+        //______________________________________________________________________
         class PixRows
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            //! setup
             PixRows(const unit_t width,
                     const unit_t height,
                     const void  *entry,
                     const unit_t stride);
+            //! cleanup
             ~PixRows() throw();
 
-            const unit_t  h;
-
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             PixRow       & operator[](const unit_t j) throw();
             const PixRow & operator[](const unit_t j) const throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const unit_t  h;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixRows);
