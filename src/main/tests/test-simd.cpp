@@ -58,7 +58,7 @@ Y_UTEST(simd)
         (*blk), n
     };
 
-    environment::set(Y_THREADS_VERBOSITY,"1");
+    environment::set(Y_VERBOSE_THREADS,"1");
 
     {
         std::cerr << "-- testing no ops simd" << std::endl;
@@ -78,7 +78,7 @@ Y_UTEST(simd)
     
 #if 1
     std::cerr << "-- testing parallelization" << std::endl;
-    environment::set(Y_THREADS_VERBOSITY,"0");
+    environment::set(Y_VERBOSE_THREADS,"0");
     double           par_speed = 0;
     concurrent::simd par;
     {

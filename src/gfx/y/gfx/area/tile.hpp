@@ -55,7 +55,7 @@ namespace upsylon
             ~Tile() throw(); //!< cleanup
 
             //! setup, MPI style
-            Tile(const Area &area, const size_t size, const size_t rank) throw();
+            Tile(const Area &area, const size_t size, const size_t r) throw();
 
 
 
@@ -69,11 +69,14 @@ namespace upsylon
             //! HTile in [lower.y,upper.y]
             const HScan &operator[](const unit_t j) const throw();
 
+            //! count items
+            unit_t items() const throw();
+
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const unit_t items; //!< items to work with
+            const size_t rank;  //!< rank
             const Point  lower; //!< position of first item
             const Point  upper; //!< position of last item
             

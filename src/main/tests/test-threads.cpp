@@ -52,7 +52,7 @@ Y_UTEST(threads)
         run = false;
     }
 
-    environment::set(Y_THREADS_VERBOSITY, "1");
+    environment::set(Y_VERBOSE_THREADS, "1");
     concurrent::threads engine;
 
     if(run)

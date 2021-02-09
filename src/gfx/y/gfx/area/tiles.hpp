@@ -20,13 +20,25 @@ namespace upsylon
         class Tiles
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~Tiles() throw(); //!< cleanup
-            explicit Tiles(const size_t          cores,
+            explicit Tiles(const size_t             cores,
                            const Topology::Pointer &topo); //!< setup
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             //! access stretch in 0<=rank<size
             const Tile & operator[](const size_t rank) const throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const Topology::Pointer topology; //!< shared topopolgy
             const size_t            size;     //!< number of stretches
             

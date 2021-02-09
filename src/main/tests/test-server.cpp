@@ -59,7 +59,7 @@ Y_UTEST(server)
     std::cerr << "sizeof(job_type)      =" << sizeof(concurrent::job_type) << std::endl;
     std::cerr << "sizeof(nexus::jnode)  =" << sizeof(concurrent::nexus::jnode) << std::endl;
 
-    environment::set(Y_THREADS_VERBOSITY, "1");
+    environment::set(Y_VERBOSE_THREADS, "1");
     
     concurrent::nexus srv;
 

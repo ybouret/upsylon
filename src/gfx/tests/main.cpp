@@ -7,5 +7,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(tile);
     Y_UTEST(topo);
     Y_UTEST(tiles);
+    Y_UTEST(engine);
 }
 Y_UTEST_EXEC()

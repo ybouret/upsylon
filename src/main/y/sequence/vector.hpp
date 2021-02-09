@@ -106,14 +106,14 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
 
         //! vector with construction of each item with func(1...n)
         template <typename FUNC>
-        inline vector(const size_t n, FUNC &func) : Y_VECTOR_CTOR(n)
+        inline vector(const size_t n, FUNC &func, const size_t OFFSET=1) : Y_VECTOR_CTOR(n)
         {
             post_init();
             try
             {
                 while(this->size_<n)
                 {
-                    const size_t i = (this->size_)+1;
+                    const size_t i = (this->size_)+OFFSET;
                     new (addr_+this->size_) T( func(i) );
                     this->size_ = i;
                 }

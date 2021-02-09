@@ -12,7 +12,7 @@ namespace upsylon
         
         bool threads:: get_verbosity()
         {
-            if(  environment::flag(Y_THREADS_VERBOSITY) )
+            if(  environment::flag(Y_VERBOSE_THREADS) )
             {
                 return true;
             }

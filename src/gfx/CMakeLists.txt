@@ -19,9 +19,16 @@ SET(area_srcs ${area_decl} ${area_code})
 SOURCE_GROUP( gfx/area FILES ${area_srcs} )
 INSTALL( FILES ${area_decl} DESTINATION include/y/gfx/area )
 
+FILE(GLOB async_decl y/gfx/async/*.hpp)
+FILE(GLOB async_code y/gfx/async/*.cpp)
+SET(async_srcs ${async_decl} ${async_code})
+SOURCE_GROUP( gfx/async FILES ${async_srcs} )
+INSTALL( FILES ${async_decl} DESTINATION include/y/gfx/async )
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
+${async_srcs}
 )
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
  

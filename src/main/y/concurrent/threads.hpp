@@ -14,7 +14,7 @@ namespace upsylon {
     namespace concurrent {
 
         //! environment variable to set/get verbosity
-#define Y_THREADS_VERBOSITY "Y_THREADS_VERBOSITY"
+#define Y_VERBOSE_THREADS "Y_VERBOSE_THREADS"
 
         typedef auto_ptr<const layout>       __topology;  //!< topology for threads
         typedef slots<thread,memory::global> __threads;   //!< memory for threads

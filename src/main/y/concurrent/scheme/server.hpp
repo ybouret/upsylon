@@ -16,16 +16,16 @@ namespace upsylon
         typedef accessible<job_type>                   job_batch; //!< r/o jobs
 
         //! jobs server interface
-        class server : public gateway<executor>
+        class server : public counted_object, public gateway<executor>
         {
         public:
-            virtual ~server() throw(); //!< destructor
 
             //------------------------------------------------------------------
             //
             // virtual interface
             //
             //------------------------------------------------------------------
+            virtual           ~server() throw();                            //!< destructor
             virtual job_uuid   enqueue(const job_type &job)            = 0; //!< enqueue a job
             virtual void       flush()  throw()                        = 0; //!< wait for all enqueued jobs to complete
             virtual void       process(job_uuids &, const job_batch &) = 0; //!< for batch processing

@@ -11,6 +11,7 @@ ADD_TEST(area    test-gfx area)
 ADD_TEST(tile    test-gfx tile)
 ADD_TEST(topo    test-gfx topo)
 ADD_TEST(tiles   test-gfx tiles)
+ADD_TEST(engine  test-gfx engine)
  
 
 ADD_CUSTOM_TARGET(utest-gfx

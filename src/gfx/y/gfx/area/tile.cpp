@@ -26,17 +26,26 @@ namespace upsylon
         Tile:: ~Tile() throw()
         {
             static memory::allocator &mgr = memory::dyadic::location();
-            
             hscan += lower.y;
             mgr.release_as(hscan,count,bytes);
         }
 
 
+        unit_t Tile:: items() const throw()
+        {
+            unit_t sum = 0;
+            for(unit_t j=lower.y;j<=upper.y;++j)
+            {
+                assert(hscan[j].width>0);
+                sum += hscan[j].width;
+            }
+            return sum;
+        }
 
         Tile:: Tile(const Area  &area,
                     const size_t size,
-                    const size_t rank) throw() :
-        items(0),
+                    const size_t r) throw() :
+        rank(r),
         lower(),
         upper(),
         count(0),
@@ -56,7 +65,6 @@ namespace upsylon
                 parops::split_any(length,offset,size,rank);
                 if(length>0)
                 {
-                    aliasing::_(items) = length;
                     {
                         const ustd::div_type l  = ustd::div_call(offset,area.w);
                         const unit_t         dy = l.quot;
@@ -90,25 +98,15 @@ namespace upsylon
                         new (&hscan[upper.y]) HScan(upper.x, upper.y, 1+upper.x-area.x);
                     }
                     
-                    
-#if !defined(NDEBUG)
-                    unit_t chk = 0;
-                    for(unit_t j=lower.y;j<=upper.y;++j)
-                    {
-                        assert(hscan[j].width>0);
-                        chk += hscan[j].width;
-                    }
-                    assert(chk==items);
-#endif
+                    assert(items()==length);
                 }
-
             }
         }
 
 
         std::ostream & operator<<(std::ostream &os, const Tile &s)
         {
-            os << '(' << s.lower << '=' << '>' << s.upper << ':' << s.items << ')';
+            os << '(' << s.lower << '=' << '>' << s.upper << ':' << s.items() << ')';
             return os;
         }
 
