@@ -13,10 +13,15 @@ SET(main_srcs ${main_decl} ${main_code})
 SOURCE_GROUP( gfx FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/gfx )
 
- 
+FILE(GLOB area_decl y/gfx/area/*.hpp)
+FILE(GLOB area_code y/gfx/area/*.cpp)
+SET(area_srcs ${area_decl} ${area_code})
+SOURCE_GROUP( gfx/area FILES ${area_srcs} )
+INSTALL( FILES ${area_decl} DESTINATION include/y/gfx/area )
 
 ADD_LIBRARY(y-gfx STATIC 
-${main_srcs} 
+${main_srcs}
+${area_srcs}
 )
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
  

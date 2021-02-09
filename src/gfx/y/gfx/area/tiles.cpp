@@ -1,6 +1,7 @@
-#include "y/gfx/tiles.hpp"
+#include "y/gfx/area/tiles.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {

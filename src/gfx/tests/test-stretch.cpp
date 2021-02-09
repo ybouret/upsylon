@@ -1,6 +1,6 @@
 
 
-#include "y/gfx/stretch.hpp"
+#include "y/gfx/area/stretch.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

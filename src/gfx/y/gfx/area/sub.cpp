@@ -1,4 +1,4 @@
-#include "y/gfx/sub-area.hpp"
+#include "y/gfx/area/sub.hpp"
 
 namespace upsylon
 {

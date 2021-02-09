@@ -3,8 +3,8 @@
 #ifndef Y_GFX_BOUNDARIES_INCLUDED
 #define Y_GFX_BOUNDARIES_INCLUDED 1
 
-#include "y/gfx/borders.hpp"
-#include "y/gfx/corners.hpp"
+#include "y/gfx/area/borders.hpp"
+#include "y/gfx/area/corners.hpp"
 
 namespace upsylon
 {

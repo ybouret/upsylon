@@ -5,7 +5,7 @@
 #ifndef Y_GFX_CRATE_INCLUDED
 #define Y_GFX_CRATE_INCLUDED 1
 
-#include "y/gfx/sub-area.hpp"
+#include "y/gfx/area/sub.hpp"
 
 
 namespace upsylon

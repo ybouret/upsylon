@@ -1,5 +1,5 @@
 
-#include "y/gfx/topology.hpp"
+#include "y/gfx/area/topology.hpp"
 
 
 namespace upsylon

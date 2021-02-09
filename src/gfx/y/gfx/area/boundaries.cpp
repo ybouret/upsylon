@@ -1,4 +1,4 @@
-#include "y/gfx/boundaries.hpp"
+#include "y/gfx/area/boundaries.hpp"
 
 
 namespace upsylon

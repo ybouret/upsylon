@@ -1,4 +1,4 @@
-#include "y/gfx/stretch.hpp"
+#include "y/gfx/area/stretch.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/parops.hpp"

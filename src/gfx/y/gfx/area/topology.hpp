@@ -4,7 +4,7 @@
 #ifndef Y_GFX_TOPOLOGY_INCLUDED
 #define Y_GFX_TOPOLOGY_INCLUDED 1
 
-#include "y/gfx/boundaries.hpp"
+#include "y/gfx/area/boundaries.hpp"
 
 
 namespace upsylon

@@ -1,4 +1,4 @@
-#include "y/gfx/corners.hpp"
+#include "y/gfx/area/corners.hpp"
 
 namespace upsylon
 {

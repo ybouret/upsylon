@@ -4,9 +4,8 @@
 #ifndef Y_GFX_TILES_INCLUDED
 #define Y_GFX_TILES_INCLUDED 1
 
-#include "y/gfx/topology.hpp"
-#include "y/gfx/stretch.hpp"
-#include "y/sequence/slots.hpp"
+#include "y/gfx/area/topology.hpp"
+#include "y/gfx/area/stretch.hpp"
 
 namespace upsylon
 {

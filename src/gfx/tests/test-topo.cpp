@@ -1,6 +1,6 @@
 
 
-#include "y/gfx/topology.hpp"
+#include "y/gfx/area/topology.hpp"
 #include "y/utest/run.hpp"
 #include <cstdlib>
 

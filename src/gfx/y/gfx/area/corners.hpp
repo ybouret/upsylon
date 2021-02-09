@@ -3,7 +3,7 @@
 #ifndef Y_GFX_CORNERS_INCLUDED
 #define Y_GFX_CORNERS_INCLUDED 1
 
-#include "y/gfx/crate.hpp"
+#include "y/gfx/area/crate.hpp"
 
 namespace upsylon
 {
