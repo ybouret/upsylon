@@ -4,8 +4,9 @@
 #ifndef Y_GFX_BITMAP_INCLUDED
 #define Y_GFX_BITMAP_INCLUDED 1
 
-#include "y/gfx/types.hpp"
+#include "y/gfx/area.hpp"
 #include "y/gfx/bitmap/pixels.hpp"
+#include "y/gfx/bitmap/pixrow.hpp"
 
 namespace upsylon
 {
@@ -21,7 +22,7 @@ namespace upsylon
         class Bitmap : public Object
         {
         public:
-            
+            typedef PixRow Row;
 
 
             //__________________________________________________________________
@@ -35,12 +36,19 @@ namespace upsylon
             //! cleanup
             virtual ~Bitmap() throw();
 
+            //! sub-bitmap, shared pixels
+            explicit Bitmap(const Bitmap &bmp, const Area &area);
+
+
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
             //! display
             friend std::ostream & operator<<(std::ostream &, const Bitmap &);
+
+            void ldz() throw();
+
 
             //__________________________________________________________________
             //
@@ -52,9 +60,7 @@ namespace upsylon
             const unit_t scanline;   //!< w*bpp
             const unit_t stride;     //!< >= scanline
             const Pixels pixels;     //!< shared memory
-
-
-        protected:
+            PixRows      rows;
 
 
 
