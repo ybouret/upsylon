@@ -12,7 +12,7 @@ ADD_TEST(tile    test-gfx tile)
 ADD_TEST(topo    test-gfx topo)
 ADD_TEST(tiles   test-gfx tiles)
 ADD_TEST(engine  test-gfx engine)
- 
+ADD_TEST(pixels  test-gfx pixels) 
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

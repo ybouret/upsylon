@@ -25,10 +25,18 @@ SET(async_srcs ${async_decl} ${async_code})
 SOURCE_GROUP( gfx/async FILES ${async_srcs} )
 INSTALL( FILES ${async_decl} DESTINATION include/y/gfx/async )
 
+
+FILE(GLOB bitmap_decl y/gfx/bitmap/*.hpp)
+FILE(GLOB bitmap_code y/gfx/bitmap/*.cpp)
+SET(bitmap_srcs ${bitmap_decl} ${bitmap_code})
+SOURCE_GROUP( gfx/bitmap FILES ${bitmap_srcs} )
+INSTALL( FILES ${bitmap_decl} DESTINATION include/y/gfx/bitmap )
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
 ${async_srcs}
+${bitmap_srcs}
 )
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
  
