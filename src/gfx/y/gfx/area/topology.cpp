@@ -14,11 +14,9 @@ namespace upsylon
 
         Topology:: Topology(const Area &area) :
         Object(),
-        Boundaries(area),
         Area(area),
-        core( hasCore() ? new SubArea(area,Position::Core) : NULL ),
-        inner( core.is_valid() ? core->n : 0 ),
-        outer( Boundaries::items() )
+        Core(area),
+        Boundaries(area)
         {
         }
 
@@ -27,14 +25,10 @@ namespace upsylon
         std::ostream & operator<<(std::ostream &os, const Topology &topo)
         {
             os << "topology.area         : "  << static_cast<const Area &>(topo) << std::endl;
-            os << "topology.inside       : #" << topo.inner << std::endl;
-            os << "topology.core         : "  << topo.core   << std::endl;
-
-            os << "topology.outside      : #" << topo.outer << std::endl;
+            const Core       &core       = topo;
+            os << core << std::endl;
             const Boundaries &boundaries = topo;
             os << boundaries;
-            
-
             return os;
         }
 

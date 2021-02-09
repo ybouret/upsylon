@@ -9,21 +9,13 @@ namespace upsylon
         {
         }
 
-        unit_t Corners:: items() const throw()
-        {
-            unit_t sum = 0;
-            sum += Items(bottom_left);
-            sum += Items(bottom_right);
-            sum += Items(top_left);
-            sum += Items(top_right);
-            return sum;
-        }
 
         Corners:: Corners(const Area &area) :
         bottom_left(0),
         bottom_right(0),
         top_left(0),
-        top_right(0)
+        top_right(0),
+        on_vertex(0)
         {
             if(area.n>0)
             {
@@ -43,13 +35,13 @@ namespace upsylon
                     }
                 }
 
-                
+                aliasing::_(on_vertex) = Items(bottom_left) + Items(bottom_right) + Items(top_left) + Items(top_right);
             }
         }
 
         std::ostream & operator <<(std::ostream &os, const Corners &corners)
         {
-            std::cerr << "corners.items         : " << corners.Corners::items() << std::endl;
+            std::cerr << "corners.on_vertex     : +" << corners.on_vertex    << std::endl;
             std::cerr << "       |_bottom_left  : " << corners.bottom_left  << std::endl;
             std::cerr << "       |_bottom_right : " << corners.bottom_right << std::endl;
             std::cerr << "       |_top_left     : " << corners.top_left     << std::endl;

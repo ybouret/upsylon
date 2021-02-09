@@ -5,6 +5,7 @@
 #define Y_GFX_TOPOLOGY_INCLUDED 1
 
 #include "y/gfx/area/boundaries.hpp"
+#include "y/gfx/area/core.hpp"
 
 
 namespace upsylon
@@ -19,8 +20,9 @@ namespace upsylon
         //______________________________________________________________________
         class Topology :
         public Object,
-        public Boundaries,
-        public Area
+        public Area,
+        public Core,
+        public Boundaries
         {
         public:
             typedef arc_ptr<const Topology> Pointer; //!< alias
@@ -28,10 +30,6 @@ namespace upsylon
             
             explicit Topology(const Area &area); //!< setup
             virtual ~Topology() throw();         //!< cleanup
-
-            const SubArea::Handle core;   //!< optional core
-            const unit_t          inner;  //!< in core
-            const unit_t          outer;  //!< outside core
             
             //! show
             friend std::ostream & operator<<(std::ostream &os, const Topology &topo);

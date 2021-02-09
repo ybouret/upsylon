@@ -26,16 +26,16 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            virtual unit_t items() const throw() = 0;              //!< get hold items
             static  unit_t Items(const SubArea::Handle &) throw(); //!< 0 or n
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~Crate() throw();
+            virtual ~Crate() throw(); //!< cleanup
+
         protected:
-            explicit Crate() throw();
+            explicit Crate() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Crate);

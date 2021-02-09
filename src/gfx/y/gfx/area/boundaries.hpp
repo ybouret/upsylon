@@ -16,7 +16,7 @@ namespace upsylon
         public:
             explicit Boundaries(const Area &area);
             virtual ~Boundaries() throw();
-            virtual  unit_t items() const throw();
+            const    unit_t outer;
 
             friend std::ostream & operator<<(std::ostream &, const Boundaries &);
 

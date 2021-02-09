@@ -20,12 +20,12 @@ namespace upsylon
         public:
             explicit Corners(const Area &area); //!< setup
             virtual ~Corners() throw();         //!< cleanup
-            virtual unit_t items() const throw();
 
             const SubArea::Handle bottom_left;  //!< corner at bottom|left
             const SubArea::Handle bottom_right; //!< corner at bottom|right
             const SubArea::Handle top_left;     //!< corner at top|left
             const SubArea::Handle top_right;    //!< corner at top|right
+            const unit_t          on_vertex;    //!< 0,1,2,4
 
             friend std::ostream & operator <<(std::ostream &, const Corners &);
             

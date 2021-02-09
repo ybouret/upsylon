@@ -20,16 +20,16 @@ namespace upsylon
         public:
             explicit Borders(const Area &area); //!< setup
             virtual ~Borders() throw();         //!< cleanup
-            virtual unit_t items() const throw();
-
+            
             friend std::ostream & operator <<(std::ostream &, const Borders &);
 
 
-            const SubArea::Handle bottom; //!< bottom area
-            const SubArea::Handle top;    //!< top    area
-            const SubArea::Handle left;   //!< left   area
-            const SubArea::Handle right;  //!< right  area
-
+            const SubArea::Handle bottom;  //!< bottom area
+            const SubArea::Handle top;     //!< top    area
+            const SubArea::Handle left;    //!< left   area
+            const SubArea::Handle right;   //!< right  area
+            const unit_t          on_edge; //!< 0..
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Borders);
         };
