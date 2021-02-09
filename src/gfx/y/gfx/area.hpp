@@ -8,6 +8,11 @@
 
 namespace upsylon
 {
+    namespace randomized
+    {
+        class bits;
+    }
+
     namespace GFX
     {
         //______________________________________________________________________
@@ -59,6 +64,9 @@ namespace upsylon
                 return get( unsigned(IDX) );
             }
 
+            //! get a sub area
+            Area rand(randomized::bits &) const;
+
             
             bool owns(const unit_t X,  const unit_t Y) const throw(); //!< ownership
             bool owns(const Point  p)  const throw();                 //!< ownership
@@ -82,7 +90,6 @@ namespace upsylon
             const unit_t xm; //!< x+w-1
             const unit_t ym; //!< y+h-1
             const unit_t n;  //!< width*height >= 0
-
 
 
 

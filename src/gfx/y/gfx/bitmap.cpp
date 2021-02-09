@@ -45,7 +45,7 @@ namespace upsylon
             {
                 throw exception("%sempty area",fn);
             }
-            const Area b(0,0,bmp.w-1,bmp.h-1);
+            const Area b = bmp.area();
             if(!b.owns(area))
             {
                 throw exception("%sinvalid area",fn);
@@ -77,6 +77,12 @@ namespace upsylon
         {
             return &rows[0];
         }
+
+        Area Bitmap:: area() const throw()
+        {
+            return Area(0,0,w,h);
+        }
+
     }
 }
 

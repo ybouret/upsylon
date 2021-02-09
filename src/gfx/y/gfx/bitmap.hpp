@@ -46,6 +46,7 @@ namespace upsylon
 
             void ldz() throw();
 
+            Area area() const throw();
 
             //__________________________________________________________________
             //

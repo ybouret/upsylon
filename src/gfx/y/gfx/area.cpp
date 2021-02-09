@@ -189,5 +189,39 @@ namespace upsylon
             return !lhs.equals(rhs);
         }
 
+
+
     }
 }
+
+#include "y/randomized/bits.hpp"
+
+namespace upsylon
+{
+    namespace GFX
+    {
+
+        Area Area:: rand(randomized::bits &ran) const
+        {
+            if(n<=0)
+            {
+                return *this;
+            }
+            else
+            {
+                const unit_t W  = ran.range<unit_t>(1,w);
+                const unit_t H  = ran.range<unit_t>(1,h);
+                const unit_t dx = ran.range<unit_t>(0,w-W);
+                const unit_t dy = ran.range<unit_t>(0,h-H);
+
+                const Area sub(x+dx,y+dy,W,H);
+                assert(owns(sub));
+                return sub;
+            }
+
+        }
+
+    }
+
+}
+

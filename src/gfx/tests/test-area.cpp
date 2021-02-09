@@ -31,6 +31,20 @@ Y_UTEST(area)
         Y_ASSERT(a.owns(sub));
     }
 
+    for(unit_t w=1;w<=100;++w)
+    {
+        for(unit_t h=1;h<=100;++h)
+        {
+            for(size_t iter=0;iter<16;++iter)
+            {
+                Area a(alea.range<unit_t>(-100,100),
+                       alea.range<unit_t>(-100,100),
+                       w,h);
+                Area b = a.rand(alea);
+                Y_ASSERT(a.owns(b));
+            }
+        }
+    }
 
 
 
