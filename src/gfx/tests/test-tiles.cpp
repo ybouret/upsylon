@@ -60,7 +60,7 @@ Y_UTEST(tiles)
 
     Area              area(0,0,w,h);
     Topology::Pointer topo = new Topology(area);
-    concurrent::nexus engine(true);
+    concurrent::nexus engine;
 
     for(size_t cpus=1;cpus<=8;++cpus)
     {

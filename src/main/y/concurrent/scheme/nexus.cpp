@@ -89,7 +89,7 @@ namespace upsylon
 
 
 
-        nexus:: nexus(const bool v) :
+        nexus:: nexus( ) :
         pending(),
         current(),
         aborted(),
@@ -102,7 +102,6 @@ namespace upsylon
         flushing(),
         verbose( workers.verbose )
         {
-            verbose = v;
             //__________________________________________________________________
             //
             // and start
