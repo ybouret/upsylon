@@ -21,6 +21,9 @@ namespace upsylon
         class Bitmap : public Object
         {
         public:
+            
+
+
             //__________________________________________________________________
             //
             // C++
@@ -49,6 +52,9 @@ namespace upsylon
             const unit_t scanline;   //!< w*bpp
             const unit_t stride;     //!< >= scanline
             const Pixels pixels;     //!< shared memory
+
+
+        protected:
 
 
 
