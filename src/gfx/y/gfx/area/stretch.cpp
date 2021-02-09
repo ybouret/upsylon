@@ -10,7 +10,7 @@ namespace upsylon
     namespace GFX
     {
         
-        HTile:: HTile(const unit_t x, const unit_t y, const unit_t w) throw() :
+        HScan:: HScan(const unit_t x, const unit_t y, const unit_t w) throw() :
         begin(x,y),
         width(w),
         x_top(x+w-1)
@@ -18,7 +18,7 @@ namespace upsylon
             assert(w>0);
         }
         
-        HTile:: ~HTile() throw()
+        HScan:: ~HScan() throw()
         {
         }
         
@@ -27,8 +27,8 @@ namespace upsylon
         {
             static memory::allocator &mgr = memory::dyadic::location();
             
-            htile += lower.y;
-            mgr.release_as(htile,count,bytes);
+            hscan += lower.y;
+            mgr.release_as(hscan,count,bytes);
         }
 
 
@@ -41,7 +41,7 @@ namespace upsylon
         upper(),
         count(0),
         bytes(0),
-        htile(0)
+        hscan(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
             assert(size>0);
@@ -72,22 +72,22 @@ namespace upsylon
                     }
                     const unit_t height = 1+(upper.y-lower.y);
                     count  = height;
-                    htile  = mgr.acquire_as<HTile>(count,bytes);
-                    htile -= lower.y;
+                    hscan  = mgr.acquire_as<HScan>(count,bytes);
+                    hscan -= lower.y;
                     
                     if(height<=1)
                     {
                         assert(1==height);
-                        new ( &htile[lower.y] ) HTile(lower.x,lower.y,1+upper.x-lower.x);
+                        new ( &hscan[lower.y] ) HScan(lower.x,lower.y,1+upper.x-lower.x);
                     }
                     else
                     {
-                        new (&htile[lower.y]) HTile(lower.x,lower.y,1+area.xm-lower.x);
+                        new (&hscan[lower.y]) HScan(lower.x,lower.y,1+area.xm-lower.x);
                         for(unit_t j=lower.y+1;j<upper.y;++j)
                         {
-                            new (&htile[j]) HTile(area.x,j,area.w);
+                            new (&hscan[j]) HScan(area.x,j,area.w);
                         }
-                        new (&htile[upper.y]) HTile(upper.x, upper.y, 1+upper.x-area.x);
+                        new (&hscan[upper.y]) HScan(upper.x, upper.y, 1+upper.x-area.x);
                     }
                     
                     
@@ -95,8 +95,8 @@ namespace upsylon
                     unit_t chk = 0;
                     for(unit_t j=lower.y;j<=upper.y;++j)
                     {
-                        assert(htile[j].width>0);
-                        chk += htile[j].width;
+                        assert(hscan[j].width>0);
+                        chk += hscan[j].width;
                     }
                     assert(chk==items);
 #endif
@@ -112,11 +112,11 @@ namespace upsylon
             return os;
         }
 
-        const HTile & Stretch:: operator[](const unit_t j) const throw()
+        const HScan & Stretch:: operator[](const unit_t j) const throw()
         {
             assert(j>=lower.y);
             assert(j<=upper.y);
-            return htile[j];
+            return hscan[j];
         }
         
     }

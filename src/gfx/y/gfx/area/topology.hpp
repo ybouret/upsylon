@@ -15,7 +15,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! Topology is an area with core, borders and corners
+        //! Topology is an area with core and boudaries
         //
         //______________________________________________________________________
         class Topology :
@@ -27,7 +27,6 @@ namespace upsylon
         public:
             typedef arc_ptr<const Topology> Pointer; //!< alias
 
-            
             explicit Topology(const Area &area); //!< setup
             virtual ~Topology() throw();         //!< cleanup
             

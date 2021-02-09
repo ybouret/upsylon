@@ -16,11 +16,11 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! Horizontal Tile
+        //! Horizontal Scan
         //
         //______________________________________________________________________
         
-        class HTile
+        class HScan
         {
         public:
             const Point  begin; //!< x,y
@@ -30,11 +30,11 @@ namespace upsylon
             Point end() const throw(); //!< x_top, y
             
            
-            HTile(const unit_t x, const unit_t y, const unit_t w) throw(); //!< setup
-            ~HTile() throw();                                              //!< cleanup
+            HScan(const unit_t x, const unit_t y, const unit_t w) throw(); //!< setup
+            ~HScan() throw();                                              //!< cleanup
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(HTile);
+            Y_DISABLE_COPY_AND_ASSIGN(HScan);
         };
         
         //______________________________________________________________________
@@ -67,7 +67,7 @@ namespace upsylon
             friend std::ostream & operator<<(std::ostream &, const Stretch &);
             
             //! HTile in [lower.y,upper.y]
-            const HTile &operator[](const unit_t j) const throw();
+            const HScan &operator[](const unit_t j) const throw();
 
             //__________________________________________________________________
             //
@@ -81,7 +81,7 @@ namespace upsylon
         private:
             size_t     count;
             size_t     bytes;
-            HTile     *htile;
+            HScan     *hscan;
             
             Y_DISABLE_COPY_AND_ASSIGN(Stretch);
         };
