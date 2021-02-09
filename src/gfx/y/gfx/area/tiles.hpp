@@ -5,7 +5,7 @@
 #define Y_GFX_TILES_INCLUDED 1
 
 #include "y/gfx/area/topology.hpp"
-#include "y/gfx/area/stretch.hpp"
+#include "y/gfx/area/tile.hpp"
 
 namespace upsylon
 {
@@ -25,7 +25,7 @@ namespace upsylon
                            const Topology::Pointer &topo); //!< setup
 
             //! access stretch in 0<=rank<size
-            const Stretch & operator[](const size_t rank) const throw();
+            const Tile & operator[](const size_t rank) const throw();
 
             const Topology::Pointer topology; //!< shared topopolgy
             const size_t            size;     //!< number of stretches
@@ -34,7 +34,8 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
             size_t   count;
             size_t   bytes;
-            Stretch *stretch;
+            Tile    *tile;
+            
             void clear() throw();
         };
 

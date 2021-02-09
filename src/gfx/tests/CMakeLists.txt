@@ -6,9 +6,9 @@ TARGET_LINK_Y(test-gfx gfx)
 
  
 ENABLE_TESTING()
-ADD_TEST(types test-gfx types)
-ADD_TEST(area  test-gfx area)
-ADD_TEST(stretch test-gfx stretch)
+ADD_TEST(types  test-gfx types)
+ADD_TEST(area    test-gfx area)
+ADD_TEST(tile    test-gfx tile)
 ADD_TEST(topo    test-gfx topo)
 ADD_TEST(tiles   test-gfx tiles)
  

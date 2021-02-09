@@ -2,8 +2,8 @@
 
 //! \file
 
-#ifndef Y_GFX_STRETCH_INCLUDED
-#define Y_GFX_STRETCH_INCLUDED 1
+#ifndef Y_GFX_AREA_TILE_INCLUDED
+#define Y_GFX_AREA_TILE_INCLUDED 1
 
 #include "y/gfx/area.hpp"
 #include "y/gfx/object.hpp"
@@ -40,10 +40,10 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! computation of a stretch of area for parallel computation
+        //! computation of a Tile of area for parallel computation
         //
         //______________________________________________________________________
-        class Stretch
+        class Tile
         {
         public:
 
@@ -52,10 +52,10 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             //! cleanup
-            ~Stretch() throw(); //!< cleanup
+            ~Tile() throw(); //!< cleanup
 
             //! setup, MPI style
-            Stretch(const Area &area, const size_t size, const size_t rank) throw();
+            Tile(const Area &area, const size_t size, const size_t rank) throw();
 
 
 
@@ -64,7 +64,7 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             //! display
-            friend std::ostream & operator<<(std::ostream &, const Stretch &);
+            friend std::ostream & operator<<(std::ostream &, const Tile &);
             
             //! HTile in [lower.y,upper.y]
             const HScan &operator[](const unit_t j) const throw();
@@ -83,7 +83,7 @@ namespace upsylon
             size_t     bytes;
             HScan     *hscan;
             
-            Y_DISABLE_COPY_AND_ASSIGN(Stretch);
+            Y_DISABLE_COPY_AND_ASSIGN(Tile);
         };
 
     }

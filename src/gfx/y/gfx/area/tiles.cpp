@@ -19,11 +19,11 @@ namespace upsylon
 
             while(size>0)
             {
-                self_destruct( stretch[--aliasing::_(size)] );
+                self_destruct( tile[--aliasing::_(size)] );
 
             }
 
-            mgr.release_as<Stretch>(stretch,count,bytes);
+            mgr.release_as(tile,count,bytes);
         }
 
         Tiles:: Tiles(const size_t             cores,
@@ -32,7 +32,7 @@ namespace upsylon
         size(0),
         count(0),
         bytes(0),
-        stretch(0)
+        tile(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
             const size_t items = static_cast<size_t>(topology->inner);
@@ -45,15 +45,15 @@ namespace upsylon
                 const size_t cpus  = clamp<size_t>(1,cores,items);
                 count   = cpus;
                 bytes   = 0;
-                stretch = mgr.acquire_as<Stretch>(count,bytes);
+                tile    = mgr.acquire_as<Tile>(count,bytes);
 
                 try
                 {
                     for(size_t rank=0;rank<cpus;++rank)
                     {
-                        new (stretch+size) Stretch(*topology,cpus,rank);
+                        new (tile+size) Tile(*topology,cpus,rank);
                         aliasing::_(size)++;
-                        std::cerr << "s[" << rank << "]=" << stretch[rank] << std::endl;
+                        std::cerr << "s[" << rank << "]=" << tile[rank] << std::endl;
                     }
                 }
                 catch(...)
@@ -66,10 +66,10 @@ namespace upsylon
         }
 
         
-        const Stretch & Tiles:: operator[](const size_t rank) const throw()
+        const Tile & Tiles:: operator[](const size_t rank) const throw()
         {
             assert(rank<size);
-            return stretch[rank];
+            return tile[rank];
         }
 
     }

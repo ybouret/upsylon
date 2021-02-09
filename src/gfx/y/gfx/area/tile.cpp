@@ -1,4 +1,4 @@
-#include "y/gfx/area/stretch.hpp"
+#include "y/gfx/area/tile.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/standard.hpp"
 #include "y/parops.hpp"
@@ -23,7 +23,7 @@ namespace upsylon
         }
         
         
-        Stretch:: ~Stretch() throw()
+        Tile:: ~Tile() throw()
         {
             static memory::allocator &mgr = memory::dyadic::location();
             
@@ -33,9 +33,9 @@ namespace upsylon
 
 
 
-        Stretch:: Stretch(const Area  &area,
-                          const size_t size,
-                          const size_t rank) throw() :
+        Tile:: Tile(const Area  &area,
+                    const size_t size,
+                    const size_t rank) throw() :
         items(0),
         lower(),
         upper(),
@@ -106,13 +106,13 @@ namespace upsylon
         }
 
 
-        std::ostream & operator<<(std::ostream &os, const Stretch &s)
+        std::ostream & operator<<(std::ostream &os, const Tile &s)
         {
             os << '(' << s.lower << '=' << '>' << s.upper << ':' << s.items << ')';
             return os;
         }
 
-        const HScan & Stretch:: operator[](const unit_t j) const throw()
+        const HScan & Tile:: operator[](const unit_t j) const throw()
         {
             assert(j>=lower.y);
             assert(j<=upper.y);
