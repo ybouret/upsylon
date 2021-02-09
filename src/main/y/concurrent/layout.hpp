@@ -8,6 +8,8 @@ namespace upsylon
 {
     namespace concurrent
     {
+        //! environment variable
+#define Y_NUM_THREADS "Y_NUM_THREADS"
 
         //______________________________________________________________________
         //
@@ -51,7 +53,7 @@ namespace upsylon
             //! compute where to put the thread w.r.t its index
             size_t core_index_of(const size_t thread_index) const throw();
 
-            static layout *create(); //!< layout(nprocs,nprocs,0) or Y_THREADING=cores[:shift]
+            static layout *create(); //!< layout(nprocs,nprocs,0) or Y_NUM_THREADS=cores[:shift]
 
             //! layout(nprocs,replica,primary)
             static layout *create(const size_t replica,
