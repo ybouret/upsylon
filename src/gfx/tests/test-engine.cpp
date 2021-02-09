@@ -25,6 +25,8 @@ Y_UTEST(engine)
     concurrent::sequential_server seq;
     concurrent::nexus             par;
 
+    engine.cache<float>(1);
+
     engine.cycle(seq);
     engine.cycle(par);
 

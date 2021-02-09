@@ -5,7 +5,7 @@
 #define Y_GFX_ASYNC_OUTER_WORKER_INCLUDED 1
 
 #include "y/gfx/area/boundaries.hpp"
-#include "y/parallel.hpp"
+#include "y/gfx/async/worker.hpp"
 
 namespace upsylon
 {
@@ -17,7 +17,7 @@ namespace upsylon
             //
             //! working on outer boundaries
             //__________________________________________________________________
-            class OuterWorker
+            class OuterWorker : public Worker
             {
             public:
                 explicit OuterWorker(const Boundaries &); //!< setup

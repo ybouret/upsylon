@@ -39,6 +39,17 @@ namespace upsylon
                 void cycle(concurrent::server &server);
                 
 
+                //! cache setup
+                template <typename T>
+                void cache(size_t n)
+                {
+                    outsideWorker.make<T>(n);
+                    for(size_t i=0;i<iwBuilt;++i)
+                    {
+                        insideWorkers[i].make<T>(n);
+                    }
+                }
+
             protected:
                 void            *impl;          //!< tasks
                 OuterWorker      outsideWorker; //!< 1 for boundaries

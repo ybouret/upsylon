@@ -44,7 +44,7 @@ namespace upsylon {
             // buffer interface
             //__________________________________________________________________
             size_t      length() const throw(); //!< block_size
-            const void *ro()     const throw(); //!< block_adrr
+            const void *ro()     const throw(); //!< block_addr
 
             //__________________________________________________________________
             //
