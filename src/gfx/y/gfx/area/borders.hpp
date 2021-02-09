@@ -20,7 +20,8 @@ namespace upsylon
         public:
             explicit Borders(const Area &area); //!< setup
             virtual ~Borders() throw();         //!< cleanup
-            
+
+            //! display
             friend std::ostream & operator <<(std::ostream &, const Borders &);
 
 
@@ -28,7 +29,7 @@ namespace upsylon
             const SubArea::Handle top;     //!< top    area
             const SubArea::Handle left;    //!< left   area
             const SubArea::Handle right;   //!< right  area
-            const unit_t          on_edge; //!< 0..
+            const unit_t          on_edge; //!< all items on edges
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Borders);

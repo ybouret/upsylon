@@ -10,16 +10,22 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! pre-computed core
+        //
+        //______________________________________________________________________
         class Core : public virtual Crate
         {
         public:
-            explicit Core(const Area &);
-            virtual ~Core() throw();
+            explicit Core(const Area &); //!< setup
+            virtual ~Core() throw();    //!< cleanup
             
             const SubArea::Handle core;   //!< optional core from area
-            const unit_t          inner;  //!< inner items
+            const unit_t          inner;  //!< all inner items
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Core &);
 
 

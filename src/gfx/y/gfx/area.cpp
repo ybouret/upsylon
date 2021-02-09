@@ -169,6 +169,25 @@ namespace upsylon
             return w>2 && h>2;
         }
 
+        bool Area:: matches(const Area &rhs) const throw()
+        {
+            return (rhs.w == w) && (rhs.h == h);
+        }
+
+        bool Area:: equals(const Area &rhs) const throw()
+        {
+            return matches(rhs) && (rhs.x == x) && (rhs.y == y);
+        }
+
+        bool operator==(const Area &lhs, const Area &rhs) throw()
+        {
+            return lhs.equals(rhs);
+        }
+
+        bool operator!=(const Area &lhs, const Area &rhs) throw()
+        {
+            return !lhs.equals(rhs);
+        }
 
     }
 }

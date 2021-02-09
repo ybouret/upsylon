@@ -65,10 +65,16 @@ namespace upsylon
         Y_GFX_POSITION_DECL(Left,AtLeft);        //!< AtLeft
         Y_GFX_POSITION_DECL(Right,AtRight);      //!< AtRight
 
+        //______________________________________________________________________
+        //
+        //
+        //! Parse helpers
+        //
+        //______________________________________________________________________
         struct Parse
         {
-            static Point WxH(const string &);
-            static Point WxH(const char   *);
+            static Point WxH(const string &); //!< parse 'w x h'
+            static Point WxH(const char   *); //!< wrapper
         };
         
     }

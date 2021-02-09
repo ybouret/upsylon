@@ -27,6 +27,7 @@ namespace upsylon
             const SubArea::Handle top_right;    //!< corner at top|right
             const unit_t          on_vertex;    //!< 0,1,2,4
 
+            //! display
             friend std::ostream & operator <<(std::ostream &, const Corners &);
             
         private:

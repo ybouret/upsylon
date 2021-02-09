@@ -63,7 +63,13 @@ namespace upsylon
             bool owns(const unit_t X,  const unit_t Y) const throw(); //!< ownership
             bool owns(const Point  p)  const throw();                 //!< ownership
             bool owns(const Area &sub) const throw();                 //!< ownership
-            
+
+            bool matches(const Area &rhs) const throw(); //!< width and height
+            bool equals(const Area &rhs)  const throw(); //!< width, height and position
+
+            friend bool operator==(const Area &lhs, const Area &rhs) throw(); //!< equality
+            friend bool operator!=(const Area &lhs, const Area &rhs) throw(); //!< difference
+
 
             //__________________________________________________________________
             //

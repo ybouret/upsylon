@@ -10,14 +10,20 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! pre-computed boundaries
+        //
+        //______________________________________________________________________
         class Boundaries : public Borders, public Corners
         {
         public:
-            explicit Boundaries(const Area &area);
-            virtual ~Boundaries() throw();
-            const    unit_t outer;
+            explicit Boundaries(const Area &area); //!< setup
+            virtual ~Boundaries() throw();         //!< cleanup
+            const    unit_t outer;                 //!< all items on outer shell
 
+            //! display
             friend std::ostream & operator<<(std::ostream &, const Boundaries &);
 
         private:
