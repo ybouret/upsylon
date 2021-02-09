@@ -72,4 +72,39 @@ namespace upsylon
 
 }
 
+#include "y/string/tokenizer.hpp"
+#include "y/string/convert.hpp"
 
+namespace upsylon
+{
+    namespace GFX
+    {
+        Point Parse::WxH(const string &s)
+        {
+            static const char blanks[] = " \t";
+            static const char fn[]     = "Parse::WxH: ";
+
+            tokenizer<char> tkn(s);
+            if(!tkn.next_with(":x"))  throw exception("%smissing w",fn);
+            string ws(tkn.token(),tkn.units()); ws.clean_with(blanks);
+
+            if(!tkn.next_with(blanks)) throw exception("%smissing h",fn);
+            string hs(tkn.token(),tkn.units()); hs.clean_with(blanks);
+
+
+            const unit_t w = string_convert::to<unit_t>(ws,"w");
+            if(w<0) throw exception("%sw<0",fn);
+
+            const unit_t h = string_convert::to<unit_t>(hs,"h");
+            if(h<0) throw exception("%sh<0",fn);
+
+            return Point(w,h);
+        }
+
+        Point Parse::WxH(const char *s)
+        {
+            const string _(s);
+            return WxH(_);
+        }
+    }
+}

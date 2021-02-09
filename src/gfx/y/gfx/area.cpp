@@ -29,7 +29,7 @@ namespace upsylon
         {
             if( (w>0&&h<=0) || (h>0&&w<=0) )
             {
-                throw exception("%s(invalid %s=%ld and %s=%ld",afn, Check::Width, long(w), Check::Height, long(h) );
+                throw exception("%s(invalid %s=%ld and %s=%ld)",afn, Check::Width, long(w), Check::Height, long(h) );
             }
         }
 

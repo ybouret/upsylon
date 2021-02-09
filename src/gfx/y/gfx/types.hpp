@@ -5,6 +5,7 @@
 
 #include "y/type/point2d.hpp"
 #include "y/core/zero-flux-index.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
@@ -64,7 +65,11 @@ namespace upsylon
         Y_GFX_POSITION_DECL(Left,AtLeft);        //!< AtLeft
         Y_GFX_POSITION_DECL(Right,AtRight);      //!< AtRight
 
-        
+        struct Parse
+        {
+            static Point WxH(const string &);
+            static Point WxH(const char   *);
+        };
         
     }
 }
