@@ -9,7 +9,15 @@ namespace upsylon
         }
 
 
-
+        unit_t Borders:: items() const throw()
+        {
+            unit_t sum = 0;
+            sum += Items(bottom);
+            sum += Items(top);
+            sum += Items(left);
+            sum += Items(right);
+            return sum;
+        }
          
         Borders:: Borders(const Area &area) :
         bottom(NULL),
@@ -37,16 +45,20 @@ namespace upsylon
                         aliasing::_(right) = new SubArea(area,Position::Right);
                     }
                 }
-
             }
-
-            if(bottom.is_valid()) aliasing::_(items) += bottom->n;
-            if(top.is_valid())    aliasing::_(items) += top->n;
-            if(left.is_valid())   aliasing::_(items) += left->n;
-            if(right.is_valid())  aliasing::_(items) += right->n;
-
         }
 
+
+
+        std::ostream & operator <<(std::ostream &os, const Borders &borders)
+        {
+            std::cerr << "borders.items         : " << borders.Borders::items() << std::endl;
+            std::cerr << "       |_bottom       : " << borders.bottom     << std::endl;
+            std::cerr << "       |_top          : " << borders.top        << std::endl;
+            std::cerr << "       |_left         : " << borders.left       << std::endl;
+            std::cerr << "       |_right        : " << borders.right;
+            return os;
+        }
 
     }
 

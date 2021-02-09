@@ -17,10 +17,5 @@ namespace upsylon
         }
 
         
-
-
-        SubArea:: Holder:: ~Holder() throw() {}
-        SubArea:: Holder::  Holder() throw() : items(0) {}
-
     }
 }

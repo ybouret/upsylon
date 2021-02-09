@@ -23,28 +23,28 @@ namespace upsylon
         class SubArea : public object, public Area
         {
         public:
+            //__________________________________________________________________
+            //
+            // Types and definitions
+            //__________________________________________________________________
             typedef auto_ptr<const SubArea> Handle; //!< alias
-
-            //! setup
-            explicit SubArea(const Area &area, const unsigned flag);
-            //! cleanup
-            virtual ~SubArea() throw();
             
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit SubArea(const Area &area, const unsigned flag);  //!< setup
+            virtual ~SubArea() throw();                               //!< cleanup
+
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const unsigned position; //!< flag
 
-            //! base class to hold a set of sub-areas
-            class Holder
-            {
-            public:
-                virtual ~Holder() throw(); //!< cleanup
-                const unit_t items;        //!< sum of hold items
-                
-            protected:
-                explicit Holder() throw(); //!< setup
-                
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Holder);
-            };
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(SubArea);

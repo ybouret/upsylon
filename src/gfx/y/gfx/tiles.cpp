@@ -34,7 +34,7 @@ namespace upsylon
         stretch(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
-            const size_t items = static_cast<size_t>(topology->inside);
+            const size_t items = static_cast<size_t>(topology->inner);
             if(items<=0)
             {
 

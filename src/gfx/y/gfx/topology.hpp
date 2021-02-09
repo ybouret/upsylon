@@ -4,8 +4,7 @@
 #ifndef Y_GFX_TOPOLOGY_INCLUDED
 #define Y_GFX_TOPOLOGY_INCLUDED 1
 
-#include "y/gfx/borders.hpp"
-#include "y/gfx/corners.hpp"
+#include "y/gfx/boundaries.hpp"
 
 
 namespace upsylon
@@ -18,7 +17,10 @@ namespace upsylon
         //! Topology is an area with core, borders and corners
         //
         //______________________________________________________________________
-        class Topology : public Object, public Area
+        class Topology :
+        public Object,
+        public Boundaries,
+        public Area
         {
         public:
             typedef arc_ptr<const Topology> Pointer; //!< alias
@@ -27,11 +29,9 @@ namespace upsylon
             explicit Topology(const Area &area); //!< setup
             virtual ~Topology() throw();         //!< cleanup
 
-            const SubArea::Handle core;     //!< optional core
-            const unit_t          inside;   //!< in core
-            const Borders         borders;  //!< all borders
-            const Corners         corners;  //!< all corners
-            const unit_t          outside;  //!< outside core
+            const SubArea::Handle core;   //!< optional core
+            const unit_t          inner;  //!< in core
+            const unit_t          outer;  //!< outside core
             
             //! show
             friend std::ostream & operator<<(std::ostream &os, const Topology &topo);
