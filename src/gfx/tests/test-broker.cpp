@@ -12,6 +12,9 @@
 #include "y/utest/timings.hpp"
 #include <cmath>
 
+#include "y/gfx/async/ops/minmax.hpp"
+
+
 using namespace upsylon;
 using namespace GFX;
 
@@ -85,6 +88,27 @@ Y_UTEST(broker)
         const digest md3 = pfp.hashWith(H).md();
         Y_CHECK(md0==md3);
 
+        std::cerr << "MinMax" << std::endl;
+        
+        double dMaxSeq = 0;
+        double dMaxPar = 0;
+        double dMinSeq = 0;
+        double dMinPar = 0;
+
+        const Point pmaxSeq = Async::FindMax(dMaxSeq,pf,id<float>,seqBrk);
+        const Point pmaxPar = Async::FindMax(dMaxPar,pf,id<float>,parBrk);
+        
+        std::cerr << "pmaxSeq=" << pmaxSeq << " -> " << dMaxSeq << std::endl;
+        std::cerr << "pmaxPar=" << pmaxPar << " -> " << dMaxPar << std::endl;
+
+        
+        const Point pminSeq = Async::FindMin(dMinSeq,pf,id<float>,seqBrk);
+        const Point pminPar = Async::FindMin(dMinPar,pf,id<float>,parBrk);
+
+        std::cerr << "pminSeq=" << pminSeq << " -> " << dMinSeq << std::endl;
+        std::cerr << "pminPar=" << pminPar << " -> " << dMinPar << std::endl;
+
+        std::cerr << "Chrono Apply" << std::endl;
         double seq_speed = 0;
         Y_TIMINGS(seq_speed,1, pfs.apply(pf, sample<float>, seqBrk) );
         std::cerr << "seq_speed=" << seq_speed << std::endl;
@@ -92,6 +116,9 @@ Y_UTEST(broker)
         double par_speed = 0;
         Y_TIMINGS(par_speed,1, pfp.apply(pf, sample<float>, parBrk) );
         std::cerr << "par_speed=" << par_speed << std::endl;
+        
+        
+        
     }
 
 

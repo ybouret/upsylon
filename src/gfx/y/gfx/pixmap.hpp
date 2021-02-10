@@ -111,6 +111,16 @@ namespace upsylon
                 return _row[j];
             }
 
+            inline T & operator[](const Point p) throw()
+            {
+                return  (*this)[p.y][p.x];
+            }
+            
+            inline const T & operator[](const Point p) const throw()
+            {
+                return  (*this)[p.y][p.x];
+            }
+            
             //! apply a 1:1 function
             template <typename U, typename FUNC>
             void apply(const Pixmap<U> &source,

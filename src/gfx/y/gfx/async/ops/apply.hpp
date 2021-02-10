@@ -5,6 +5,7 @@
 
 #include "y/gfx/async/broker.hpp"
 
+
 namespace upsylon
 {
     namespace GFX
@@ -25,17 +26,20 @@ namespace upsylon
                                        void          *data)
                 {
                     assert(data);
-                    Apply      &self = *static_cast<Apply *>(data);
-                    const Tile &tile = worker.tile;
+                    Apply           &self   = *static_cast<Apply *>(data);
+                    Pixmap<T>       &target = self.target;
+                    const Pixmap<U> &source = self.source;
+                    const Tile      &tile   = worker.tile;
+                    FUNC            &func   = self.func;
                     for(size_t t=tile.size();t>0;--t)
                     {
-                        const HScan &hs = tile[t];
-                        Point        p  = hs.begin;
-                        const typename Pixmap<U>::Row &src = self.source[p.y];
-                        typename Pixmap<T>::Row       &tgt = self.target[p.y];
-                        for(unit_t i=hs.width;i>0;--i,++p.x)
+                        const HScan                   &s   = tile[t];
+                        Point                          p   = s.begin;
+                        const typename Pixmap<U>::Row &src = source[p.y];
+                        typename Pixmap<T>::Row       &tgt = target[p.y];
+                        for(unit_t i=s.width;i>0;--i,++p.x)
                         {
-                            tgt[p.x] = self.func(src[p.x]);
+                            tgt[p.x] = func(src[p.x]);
                         }
                     }
                 }
