@@ -52,7 +52,7 @@ namespace upsylon
                     {
                         new (tile+count) Tile(area,cpus,rank);
                         aliasing::_(count)++;
-                        std::cerr << "s[" << rank << "]=" << tile[rank] << std::endl;
+                        //std::cerr << "s[" << rank << "]=" << tile[rank] << std::endl;
                     }
                 }
                 catch(...)

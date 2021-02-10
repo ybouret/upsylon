@@ -43,7 +43,17 @@ namespace upsylon
                 memset(rows[j].p,0,scanline);
             }
         }
-        
+
+        void * Bitmap:: addressOf(const Point p) throw()
+        {
+            return rows[p.y](p.x,depth);
+        }
+
+        const void * Bitmap:: addressOf(const Point p) const throw()
+        {
+            return rows[p.y](p.x,depth);
+        }
+
 
         Bitmap:: Bitmap(const Bitmap &bmp, const Area &area) :
         Area(0,0,Check::GTZ(area.w, Check::Width, bfn) ,Check::GTZ(area.h, Check::Width, bfn)),
@@ -65,4 +75,27 @@ namespace upsylon
     }
 }
 
+#include "y/hashing/function.hpp"
+
+namespace upsylon
+{
+    namespace GFX
+    {
+        void Bitmap:: run(hashing::function &H) const throw()
+        {
+            for(unit_t j=0;j<h;++j)
+            {
+                H(rows[j].p,scanline);
+            }
+        }
+
+        hashing::function & Bitmap:: hashWith(hashing::function&H) const throw()
+        {
+            H.set();
+            run(H);
+            return H;
+        }
+
+    }
+}
 

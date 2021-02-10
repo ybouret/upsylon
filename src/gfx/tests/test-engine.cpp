@@ -24,7 +24,7 @@ Y_UTEST(engine)
 
     concurrent::nexus srv;
 
-    engine.cycle(srv);
+    engine.cycle(srv,Async::Worker::None,NULL);
 
 }
 Y_UTEST_DONE()

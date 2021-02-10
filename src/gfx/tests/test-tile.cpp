@@ -8,10 +8,8 @@ using namespace GFX;
 
 Y_UTEST(tile)
 {
-    std::cerr << "sizeof(Tile)=" << sizeof(Tile) << std::endl;
-    
+
     Area a(0,0,17,11);    std::cerr << "area = " << a << std::endl;
-    Area c = a.getCore(); std::cerr << "core = " << c << std::endl;
 
     for(size_t size=1;size<=3;++size)
     {
@@ -19,7 +17,7 @@ Y_UTEST(tile)
         for(size_t rank=0; rank<size; ++rank)
         {
             std::cerr << "\trank=" << rank << ":" << std::endl;
-            Tile s(c,size,rank);
+            Tile s(a,size,rank);
             std::cerr << "\t" <<s  << std::endl;
         }
         std::cerr << "<size=" << size << "/>" << std::endl << std::endl;

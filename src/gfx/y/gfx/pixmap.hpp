@@ -64,6 +64,16 @@ namespace upsylon
             {
             }
 
+            //! hard copy
+            inline explicit Pixmap(const Pixmap &pxm, Async::Broker &broker) :
+            Bitmap(pxm,broker),
+            _row( static_cast<Row *>(oor_rows()) )
+            {
+
+            }
+
+            
+
             //! Zero Flux Row[j]
             inline Row & operator()(const unit_t j) throw()
             {

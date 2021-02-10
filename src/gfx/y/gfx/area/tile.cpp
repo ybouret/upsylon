@@ -21,20 +21,24 @@ namespace upsylon
         HScan:: ~HScan() throw()
         {
         }
-        
+
+        Point HScan:: end() const throw()
+        {
+            return Point(x_top,begin.y);
+        }
+
         
         Tile:: ~Tile() throw()
         {
             static memory::allocator &mgr = memory::dyadic::location();
-            hscan += lower.y;
-            mgr.release_as(hscan,count,bytes);
+            mgr.release_as(++hscan,count,bytes);
         }
 
 
         unit_t Tile:: items() const throw()
         {
             unit_t sum = 0;
-            for(unit_t j=lower.y;j<=upper.y;++j)
+            for(unit_t j=height;j>0;--j)
             {
                 assert(hscan[j].width>0);
                 sum += hscan[j].width;
@@ -42,18 +46,22 @@ namespace upsylon
             return sum;
         }
 
+        size_t Tile:: size() const throw()
+        {
+            return height;
+        }
+
         Tile:: Tile(const Area  &area,
-                    const size_t size,
-                    const size_t rank) throw() :
-        lower(),
-        upper(),
+                    const size_t sz,
+                    const size_t rk) throw() :
+        height(0),
         count(0),
         bytes(0),
         hscan(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
-            assert(size>0);
-            assert(rank<size);
+            assert(sz>0);
+            assert(rk<sz);
             if(area.n>0)
             {
                 typedef core::standard<unit_t> ustd;
@@ -61,60 +69,99 @@ namespace upsylon
                 unit_t length = area.n;
                 unit_t offset = 0;
 
-                parops::split_any(length,offset,size,rank);
+                parops::split_any(length,offset,sz,rk);
                 if(length>0)
                 {
+                    Point lo;
                     {
                         const ustd::div_type l  = ustd::div_call(offset,area.w);
                         const unit_t         dy = l.quot;
                         const unit_t         dx = l.rem;
-                        aliasing::_(lower)      = Point(area.x+dx,area.y+dy);
+                        lo = Point(area.x+dx,area.y+dy);
                     }
 
+                    Point up;
                     {
                         const ustd::div_type l  = ustd::div_call(--offset+length,area.w);
                         const unit_t         dy = l.quot;
                         const unit_t         dx = l.rem;
-                        aliasing::_(upper)      = Point(area.x+dx,area.y+dy);
+                        up = Point(area.x+dx,area.y+dy);
                     }
-                    const unit_t height = 1+(upper.y-lower.y);
+
+                    const unit_t h      = 1+(up.y-lo.y);
+                    aliasing::_(height) = size_t(h);
                     count  = height;
                     hscan  = mgr.acquire_as<HScan>(count,bytes);
-                    hscan -= lower.y;
+                    --hscan;
                     
                     if(height<=1)
                     {
                         assert(1==height);
-                        new ( &hscan[lower.y] ) HScan(lower.x,lower.y,1+upper.x-lower.x);
+                        new ( &hscan[1] ) HScan(lo.x,lo.y,1+up.x-lo.x);
                     }
                     else
                     {
-                        new (&hscan[lower.y]) HScan(lower.x,lower.y,1+area.xm-lower.x);
-                        for(unit_t j=lower.y+1;j<upper.y;++j)
+                        new (&hscan[1]) HScan(lo.x,lo.y,1+area.xm-lo.x);
+                        for(unit_t j=2,y=lo.y+1;j<h;++j,++y)
                         {
-                            new (&hscan[j]) HScan(area.x,j,area.w);
+                            new (&hscan[j])  HScan(area.x,y,area.w);
                         }
-                        new (&hscan[upper.y]) HScan(upper.x, upper.y, 1+upper.x-area.x);
+                        new (&hscan[height]) HScan(area.x,up.y,1+up.x-area.x);
                     }
-                    
+                    assert(lower()==lo);
+                    assert(upper()==up);
                     assert(items()==length);
+                    assert(area.owns(lower()));
+                    assert(area.owns(upper()));
                 }
+                else
+                {
+                    // data but no length
+                    --hscan;
+                }
+            }
+            else
+            {
+                // no data
+                --hscan;
+            }
+        }
+
+        Point Tile:: lower() const throw()
+        {
+            if(height)
+            {
+                return hscan[1].begin;
+            }
+            else
+            {
+                return Point();
+            }
+        }
+
+        Point Tile:: upper() const throw()
+        {
+            if(height)
+            {
+                return hscan[height].end();
+            }
+            else
+            {
+                return Point();
             }
         }
 
 
         std::ostream & operator<<(std::ostream &os, const Tile &s)
         {
-            os << '(' << s.lower << '=' << '>' << s.upper << ':' << s.items() << ')';
+            os << '(' << s.lower() << '=' << '>' << s.upper() << ':' << s.items() << ')';
             return os;
         }
 
-        const HScan & Tile:: operator[](const unit_t j) const throw()
+        const HScan & Tile:: operator[](const size_t j) const throw()
         {
-            assert(j>=lower.y);
-            assert(j<=upper.y);
             return hscan[j];
         }
-        
+
     }
 }

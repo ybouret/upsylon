@@ -38,7 +38,7 @@ namespace upsylon
                 //
                 // addressable<parallel>
                 //______________________________________________________________
-                virtual size_t size() const throw(); //!< count
+                virtual size_t size() const throw(); //!< count=number of tiles
                 virtual parallel       & operator[](const size_t)       throw(); //!< [1..size]
                 virtual const parallel & operator[](const size_t) const throw(); //!< [1..size]
 
@@ -48,7 +48,9 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! load all tasks on the server, then flush
-                void cycle(concurrent::server &server);
+                void cycle(concurrent::server &server,
+                           Worker::Kernel      kproc,
+                           void               *kdata);
                 
 
 

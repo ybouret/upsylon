@@ -10,8 +10,19 @@
 
 namespace upsylon
 {
+    namespace hashing
+    {
+        class function; //!< forward declaration
+    }
+
     namespace GFX
     {
+        namespace Async
+        {
+            class Broker; //!< forward declaration
+        }
+
+
 
         //______________________________________________________________________
         //
@@ -36,6 +47,9 @@ namespace upsylon
             //! sub-bitmap, shared pixels
             explicit Bitmap(const Bitmap &bmp, const Area &area);
 
+            //! hard copy
+            explicit Bitmap(const Bitmap  &bmp,
+                            Async::Broker &broker);
 
             //__________________________________________________________________
             //
@@ -47,7 +61,11 @@ namespace upsylon
             //! memory to 0
             void ldz() throw();
 
-            
+            void *       addressOf(const Point p)       throw(); //!< agnostic address of
+            const void * addressOf(const Point p) const throw(); //!< agnostic address of
+            void         run(hashing::function&)  const throw(); //!< run on data
+            hashing::function & hashWith(hashing::function&) const throw(); //!< set/run
+
             //__________________________________________________________________
             //
             // members

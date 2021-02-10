@@ -37,9 +37,10 @@ namespace {
 
 Y_UTEST(pixmap)
 {
-
     testPxm<float>();
     testPxm<double>();
     testPxm< complex<double> >();
+
+
 }
 Y_UTEST_DONE()

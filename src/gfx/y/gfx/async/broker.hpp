@@ -39,6 +39,9 @@ namespace upsylon
                 SharedEngine engine; //!< shared engine
                 SharedServer server; //!< shared server
 
+                //! dispatch the kernel and cycle engine
+                void operator()( Worker::Kernel kproc, void *kdata );
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Broker);
             };

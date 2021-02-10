@@ -14,6 +14,7 @@ ADD_TEST(engine  test-gfx engine)
 ADD_TEST(pixels  test-gfx pixels) 
 ADD_TEST(bitmap  test-gfx bitmap)
 ADD_TEST(pixmap  test-gfx pixmap)
+ADD_TEST(broker  test-gfx broker)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

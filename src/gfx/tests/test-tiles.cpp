@@ -25,6 +25,10 @@ Y_UTEST(tiles)
         std::cerr << "<cpus=" << cpus << ">" << std::endl;
         const Tiles tiles(area,cpus);
         std::cerr << "count=" << tiles.count << std::endl;
+        for(size_t i=0;i<tiles.count;++i)
+        {
+            std::cerr << "\ttile[" << i << "]=" << tiles[i] << std::endl;
+        }
         std::cerr << "<cpus=" << cpus << "/>" << std::endl << std::endl;
 
     }

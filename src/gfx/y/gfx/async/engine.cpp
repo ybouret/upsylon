@@ -129,9 +129,15 @@ namespace upsylon
                 
             }
 
-            void Engine:: cycle(concurrent::server &srv)
+            void Engine:: cycle(concurrent::server &srv,
+                                Worker::Kernel      kproc,
+                                void               *kdata)
             {
                 assert(impl);
+                for(size_t i=count;i>0;--i)
+                {
+                    wShift[i].load(kproc,kdata);
+                }
                 Batch &batch = *static_cast<Batch *>(impl);
                 srv.process(batch.uuids,batch.tasks);
                 srv.flush();

@@ -19,7 +19,6 @@ namespace upsylon
         //! Horizontal Scan
         //
         //______________________________________________________________________
-        
         class HScan
         {
         public:
@@ -43,7 +42,7 @@ namespace upsylon
         //! computation of a Tile of area for parallel computation
         //
         //______________________________________________________________________
-        class Tile
+        class Tile : public accessible<HScan>
         {
         public:
 
@@ -56,8 +55,8 @@ namespace upsylon
 
             //! setup, MPI style
             Tile(const Area  &area,
-                 const size_t size,
-                 const size_t rank) throw();
+                 const size_t sz,
+                 const size_t rk) throw();
 
 
 
@@ -65,27 +64,28 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+            virtual size_t size() const throw();
+            virtual const HScan &operator[](const size_t) const throw();
+
             //! display
             friend std::ostream & operator<<(std::ostream &, const Tile &);
             
-            //! HTile in [lower.y,upper.y]
-            const HScan &operator[](const unit_t j) const throw();
+            
 
-            //! count items
-            unit_t items() const throw();
-
+            unit_t items() const throw(); //!< count items
+            Point  lower() const throw(); //!< lower point
+            Point  upper() const throw(); //!< upper point
+            
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const Point  lower; //!< position of first item
-            const Point  upper; //!< position of last item
-            
-            
+
         private:
-            size_t     count;
-            size_t     bytes;
-            HScan     *hscan;
+            const size_t height;
+            size_t       count;
+            size_t       bytes;
+            HScan       *hscan;
             
             Y_DISABLE_COPY_AND_ASSIGN(Tile);
         };
