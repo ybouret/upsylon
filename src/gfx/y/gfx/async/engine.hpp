@@ -5,8 +5,7 @@
 
 
 #include "y/gfx/area/tiles.hpp"
-#include "y/gfx/async/inner-worker.hpp"
-#include "y/gfx/async/outer-worker.hpp"
+#include "y/gfx/async/worker.hpp"
 #include "y/concurrent/scheme/server.hpp"
 
 namespace upsylon
@@ -25,12 +24,11 @@ namespace upsylon
             //
             //! Engine to dispatch inner tiles and outer boundaries work
             //__________________________________________________________________
-            class Engine : public Tiles
+            class Engine : public Tiling
             {
             public:
                 //! setup tiles from topology, and create workers
-                explicit Engine(const size_t             cpus,
-                                const Topology::Pointer &topo);
+                explicit Engine(const Tiling &tiling);
 
                 //! cleanup
                 virtual ~Engine() throw();
@@ -38,29 +36,18 @@ namespace upsylon
                 //! load all tasks on the server, then flush
                 void cycle(concurrent::server &server);
                 
+                
 
-                //! cache setup
-                template <typename T>
-                void cache(size_t n)
-                {
-                    outsideWorker.make<T>(n);
-                    for(size_t i=0;i<iwBuilt;++i)
-                    {
-                        insideWorkers[i].make<T>(n);
-                    }
-                }
-
-            protected:
-                void            *impl;          //!< tasks
-                OuterWorker      outsideWorker; //!< 1 for boundaries
-                InnerWorker     *insideWorkers; //!< min_of(size,inner)
-                size_t           iwBuilt;       //!< built insideWorkers
-                size_t           iwCount;       //!< allocated insideWorkers
-                size_t           iwBytes;       //!< bytes for insideWorkers
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Engine);
                 void releaseAll() throw();
+
+                void            *impl;   //!< tasks
+                Worker          *worker; //!< workers [0..size-1]
+                size_t           wBuilt; //!< built workers
+                size_t           wCount; //!< memory
+                size_t           wBytes; //!< memory
             };
 
         }

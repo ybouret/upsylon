@@ -5,6 +5,7 @@
 #define Y_GFX_ASYNC_WORKER_INCLUDED 1
 
 #include "y/parallel.hpp"
+#include "y/gfx/area/tile.hpp"
 
 namespace upsylon
 {
@@ -25,11 +26,11 @@ namespace upsylon
             class Worker : public Cache
             {
             public:
-                virtual ~Worker() throw(); //!< cleanup
-                virtual void run(parallel &, lockable &) = 0; //!< entry point
+                explicit Worker(const Tile &); //!< setup
+                virtual ~Worker() throw();     //!< cleanup
+                virtual void run(parallel &, lockable &);//!< entry point
 
-            protected:
-                explicit Worker(); //!< setup
+                const Tile &tile; //!< working tile
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);

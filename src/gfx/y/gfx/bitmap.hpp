@@ -19,7 +19,7 @@ namespace upsylon
         //! binary bitmap
         //
         //______________________________________________________________________
-        class Bitmap : public Object
+        class Bitmap : public Object, public Area
         {
         public:
             //__________________________________________________________________
@@ -46,14 +46,11 @@ namespace upsylon
 
             void ldz() throw();
 
-            Area area() const throw();
-
+            
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const unit_t   w;          //!< width
-            const unit_t   h;          //!< height
             const unit_t   depth;      //!< bytes per pixel
             const unit_t   scanline;   //!< w*bpp
             const unit_t   stride;     //!< >= scanline

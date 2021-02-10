@@ -17,7 +17,7 @@ Y_UTEST(bitmap)
             {
                 Bitmap bmp(w,h,bpp);
                 std::cerr << bmp << std::endl;
-                const Area a   = bmp.area();
+                const Area a   = bmp;
                 const Area sub = a.rand(alea);
                 Bitmap bmp2(bmp,sub);
             }

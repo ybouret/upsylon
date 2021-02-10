@@ -19,17 +19,10 @@ Y_UTEST(engine)
         h=p.y;
     }
 
-    Area                          area(0,0,w,h);
-    Topology::Pointer             topo = new Topology(area);
-    Async::Engine                 engine(4,topo);
-    concurrent::sequential_server seq;
-    concurrent::nexus             par;
-
-    engine.cache<float>(1);
-
-    engine.cycle(seq);
-    engine.cycle(par);
-
+    Area           area(0,0,w,h);
+    const Tiling   tiling = Tiles::Create(area,2);
+    Async::Engine  engine(tiling);
+    
 }
 Y_UTEST_DONE()
 

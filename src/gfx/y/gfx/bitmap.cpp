@@ -20,8 +20,7 @@ namespace upsylon
         static const char bfn[] = "Bitmap";
 
         Bitmap:: Bitmap(const unit_t W, const unit_t H, const size_t BPP) :
-        w( Check::GTZ(W, Check::Width, bfn) ),
-        h( Check::GTZ(H, Check::Width, bfn) ),
+        Area(0,0,Check::GTZ(W, Check::Width, bfn) ,Check::GTZ(H, Check::Width, bfn)),
         depth( Check::GTZ(BPP, "depth", bfn)),
         scanline(w*depth),
         stride(scanline),
@@ -37,22 +36,6 @@ namespace upsylon
             return os;
         }
 
-        static inline
-        const Area &checkArea(const Bitmap &bmp, const Area &area)
-        {
-            static const char fn[] = "SubBitmap: ";
-            if(area.n<=0)
-            {
-                throw exception("%sempty area",fn);
-            }
-            const Area b = bmp.area();
-            if(!b.owns(area))
-            {
-                throw exception("%sinvalid area",fn);
-            }
-            return area;
-        }
-
         void Bitmap:: ldz() throw()
         {
             for(unit_t j=0;j<h;++j)
@@ -63,14 +46,14 @@ namespace upsylon
         
 
         Bitmap:: Bitmap(const Bitmap &bmp, const Area &area) :
-        w( checkArea(bmp,area).w ),
-        h( area.h ),
+        Area(0,0,Check::GTZ(area.w, Check::Width, bfn) ,Check::GTZ(area.h, Check::Width, bfn)),
         depth( bmp.depth ),
         scanline(w*depth),
         stride( bmp.stride ),
         pixels( bmp.pixels ),
         rows(w,h,bmp.rows[area.y](area.x,depth),stride)
         {
+            if(!bmp.owns(area) ) throw exception("SubBitmap invalid area");
         }
 
         void *Bitmap:: oor_rows() throw()
@@ -78,11 +61,7 @@ namespace upsylon
             return &rows[0];
         }
 
-        Area Bitmap:: area() const throw()
-        {
-            return Area(0,0,w,h);
-        }
-
+        
     }
 }
 

@@ -2,6 +2,7 @@
 #include "y/gfx/async/engine.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -41,68 +42,58 @@ namespace upsylon
 
             void Engine:: releaseAll() throw()
             {
+                static memory::allocator &mgr = memory::dyadic::location();
+
                 if(impl)
                 {
                     delete static_cast<Batch *>(impl);
                     impl = 0;
                 }
 
-                static memory::allocator &mgr = memory::dyadic::location();
-                while(iwBuilt>0)
+                while(wBuilt>0)
                 {
-                    self_destruct( insideWorkers[--iwBuilt] );
+                    self_destruct(worker[--wBuilt]);
                 }
-                mgr.release_as(insideWorkers,iwCount,iwBytes);
+
+                mgr.release_as(worker, wCount, wBytes);
             }
 
-            Engine:: Engine(const size_t             cpus,
-                            const Topology::Pointer &topo) :
-            Tiles(cpus,topo),
+            Engine:: Engine(const Tiling &tiling) :
+            Tiling(tiling),
             impl(0),
-            outsideWorker(*topo),
-            insideWorkers(NULL),
-            iwBuilt(0),
-            iwCount(0),
-            iwBytes(0)
+            worker(0),
+            wBuilt(0),
+            wCount(0),
+            wBytes(0)
             {
                 static memory::allocator &mgr = memory::dyadic::instance();
-                if(topology->inner)
-                {
-                    iwCount       = size;
-                    insideWorkers = mgr.acquire_as<InnerWorker>(iwCount,iwBytes);
-                    try
-                    {
-                        const Tiles &self = *this;
-                        while(iwBuilt<size)
-                        {
-                            new (insideWorkers+iwBuilt) InnerWorker( self[iwBuilt] );
-                            ++iwBuilt;
-                        }
-                    }
-                    catch(...)
-                    {
-                        releaseAll();
-                        throw;
-                    }
+                const Tiles              &self = **this;
+                const size_t              size = self.size;
 
-                }
-                else
-                {
-                    // no inner worker!
-                }
-
+                // building workers
+                wCount = size;
+                worker = mgr.acquire_as<Worker>(wCount,wBytes);
                 try
                 {
-                    const size_t    num_tasks = iwBuilt+1;
-                    auto_ptr<Batch> batch     = new Batch(num_tasks);
-                    std::cerr << "#tasks=" << num_tasks << std::endl;
+                    while(wBuilt<size)
                     {
-                        const concurrent::job_type J( &outsideWorker, & OuterWorker::run );
-                        batch->tasks.push_back_(J);
+                        new (worker+wBuilt) Worker(self[wBuilt]);
+                        ++wBuilt;
                     }
-                    for(size_t i=0;i<iwBuilt;++i)
+                }
+                catch(...)
+                {
+                    releaseAll();
+                    throw;
+                }
+
+                // building batch
+                try
+                {
+                    auto_ptr<Batch> batch     = new Batch(size);
+                    for(size_t i=0;i<size;++i)
                     {
-                        const concurrent::job_type J( insideWorkers+i, & InnerWorker::run );
+                        const concurrent::job_type J(worker+i, &Worker::run );
                         batch->tasks.push_back_(J);
                     }
                     assert( batch->tasks.size() == batch->uuids.size() );
@@ -114,6 +105,7 @@ namespace upsylon
                     throw;
                 }
 
+                
             }
 
             void Engine:: cycle(concurrent::server &srv)

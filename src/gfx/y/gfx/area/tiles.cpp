@@ -26,32 +26,31 @@ namespace upsylon
             mgr.release_as(tile,count,bytes);
         }
 
-        Tiles:: Tiles(const size_t             cores,
-                      const Topology::Pointer &topo) :
-        topology(topo),
+        Tiles:: Tiles(const Area  &area,
+                      const size_t maxThreads) :
+        Area(area),
         size(0),
         count(0),
         bytes(0),
         tile(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
-            const size_t items = static_cast<size_t>(topology->inner);
+            const size_t items = static_cast<size_t>(n);
             if(items<=0)
             {
 
             }
             else
             {
-                const size_t cpus  = clamp<size_t>(1,cores,items);
+                const size_t cpus  = clamp<size_t>(1,maxThreads,items);
                 count   = cpus;
                 bytes   = 0;
                 tile    = mgr.acquire_as<Tile>(count,bytes);
-
                 try
                 {
                     for(size_t rank=0;rank<cpus;++rank)
                     {
-                        new (tile+size) Tile(*topology,cpus,rank);
+                        new (tile+size) Tile(area,cpus,rank);
                         aliasing::_(size)++;
                         std::cerr << "s[" << rank << "]=" << tile[rank] << std::endl;
                     }
@@ -71,6 +70,12 @@ namespace upsylon
             assert(rank<size);
             return tile[rank];
         }
+
+        Tiles * Tiles:: Create(const Area &area, const size_t maxThreads)
+        {
+            return new Tiles(area,maxThreads);
+        }
+
 
     }
 }

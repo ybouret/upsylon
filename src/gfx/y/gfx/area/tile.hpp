@@ -55,7 +55,9 @@ namespace upsylon
             ~Tile() throw(); //!< cleanup
 
             //! setup, MPI style
-            Tile(const Area &area, const size_t size, const size_t r) throw();
+            Tile(const Area  &area,
+                 const size_t size,
+                 const size_t r) throw();
 
 
 
