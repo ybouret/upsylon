@@ -57,7 +57,7 @@ namespace upsylon
             //! setup, MPI style
             Tile(const Area  &area,
                  const size_t size,
-                 const size_t r) throw();
+                 const size_t rank) throw();
 
 
 
@@ -78,7 +78,6 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t rank;  //!< rank
             const Point  lower; //!< position of first item
             const Point  upper; //!< position of last item
             

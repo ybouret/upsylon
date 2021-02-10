@@ -44,8 +44,7 @@ namespace upsylon
 
         Tile:: Tile(const Area  &area,
                     const size_t size,
-                    const size_t r) throw() :
-        rank(r),
+                    const size_t rank) throw() :
         lower(),
         upper(),
         count(0),

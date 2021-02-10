@@ -96,7 +96,7 @@ namespace upsylon
                 {
                     while(wBuilt<count)
                     {
-                        new (worker+wBuilt) Worker(count,self[wBuilt]);
+                        new (worker+wBuilt) Worker(count,wBuilt,self[wBuilt]);
                         ++wBuilt;
                     }
                 }
@@ -124,6 +124,7 @@ namespace upsylon
                     throw;
                 }
 
+                // adjust
                 wShift = worker-1;
                 
             }
