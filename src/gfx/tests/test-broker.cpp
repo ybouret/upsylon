@@ -10,10 +10,26 @@
 #include "y/hashing/sha1.hpp"
 
 #include "y/utest/timings.hpp"
+#include <cmath>
 
 using namespace upsylon;
 using namespace GFX;
 
+namespace
+{
+    template <typename T>
+    T id(const T &x)
+    {
+        return (x);
+    }
+
+    template <typename T>
+    T sample(const T &x)
+    {
+        return cos(x);
+    }
+
+}
 
 Y_UTEST(broker)
 {
@@ -56,7 +72,26 @@ Y_UTEST(broker)
 
         Y_CHECK(md0==mds);
         Y_CHECK(md0==mdp);
-        
+
+        pfs.ldz();
+        Y_CHECK( pfs.hashWith(H).md() != md0);
+        pfs.apply(pf, id<float>, seqBrk);
+        const digest md2 = pfs.hashWith(H).md();
+        Y_CHECK(md0==md2);
+
+        pfp.ldz();
+        Y_CHECK( pfp.hashWith(H).md() != md0);
+        pfp.apply(pf, id<float>, parBrk);
+        const digest md3 = pfp.hashWith(H).md();
+        Y_CHECK(md0==md3);
+
+        double seq_speed = 0;
+        Y_TIMINGS(seq_speed,1, pfs.apply(pf, sample<float>, seqBrk) );
+        std::cerr << "seq_speed=" << seq_speed << std::endl;
+
+        double par_speed = 0;
+        Y_TIMINGS(par_speed,1, pfp.apply(pf, sample<float>, parBrk) );
+        std::cerr << "par_speed=" << par_speed << std::endl;
     }
 
 

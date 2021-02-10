@@ -1,7 +1,7 @@
 
 #include "y/gfx/bitmap.hpp"
 #include "y/gfx/async/broker.hpp"
-
+#include <cstring>
 
 namespace upsylon
 {
