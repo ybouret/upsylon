@@ -20,6 +20,73 @@ namespace upsylon
     class parallel : public parallel_cache
     {
     public:
+        //______________________________________________________________________
+        //
+        //! group of parallel contexts
+        //______________________________________________________________________
+        class group : public addressable<parallel>
+        {
+        public:
+            //! cleanup
+            virtual ~group() throw() {}
+
+            //! make ONE type per context
+            template <typename T> inline
+            void make()
+            {
+                for(size_t i=size();i>0;--i) (*this)[i].make<T>();
+            }
+
+            //! make n types per context
+            template <typename T> inline
+            void make(const size_t n)
+            {
+                for(size_t i=size();i>0;--i) (*this)[i].make<T>(n);
+            }
+
+
+            //! access default first item
+            template <typename T>
+            T & _(const size_t indx) throw()
+            {
+                addressable<parallel> &self = *this;
+                return                 self[indx]._<T>();
+            }
+
+            //! access default first const item
+            template <typename T>
+            const T & _(const size_t indx) const throw()
+            {
+                const accessible<parallel> &self = *this;
+                return self[indx]._<T>();
+            }
+
+            //! access for multiple index
+            template <typename T>
+            T & _(const size_t i, const size_t j) throw()
+            {
+                addressable<parallel> &self = *this;
+                return                 self[i]._<T>(j);
+            }
+
+            //! access for multiple index, const
+            template <typename T>
+            const T & _(const size_t i, const size_t j) const throw()
+            {
+                const accessible<parallel> &self = *this;
+                return                      self[i]._<T>(j);
+            }
+
+
+        protected:
+            //! setup
+            explicit group() throw()
+            {
+            }
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(group);
+        };
 
         //______________________________________________________________________
         //
@@ -49,13 +116,18 @@ namespace upsylon
         //
         // members
         //______________________________________________________________________
-
-    public:
         const size_t   size;     //!< the family size
         const size_t   rank;     //!< 0..size-1
         const size_t   indx;     //!< 1..size
         const char     label[8]; //!< size.rank or "too big"
         
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(parallel);

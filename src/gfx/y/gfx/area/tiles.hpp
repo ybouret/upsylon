@@ -39,12 +39,12 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t            size;     //!< number of stretches
+            const size_t count;     //!< number of tiles
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
-            size_t   count;
-            size_t   bytes;
+            size_t   tCount;
+            size_t   tBytes;
             Tile    *tile;
             
             void clear() throw();

@@ -21,7 +21,7 @@ namespace upsylon
             //! Engine to dispatch inner tiles and outer boundaries work
             //
             //__________________________________________________________________
-            class Engine : public Object, public Tiles
+            class Engine : public Object, public Tiles, public parallel::group
             {
             public:
                 //______________________________________________________________
@@ -36,21 +36,20 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                // addressable<parallel>
+                //______________________________________________________________
+                virtual size_t size() const throw(); //!< count
+                virtual parallel       & operator[](const size_t)       throw(); //!< [1..size]
+                virtual const parallel & operator[](const size_t) const throw(); //!< [1..size]
+
+                //______________________________________________________________
+                //
                 // methods
                 //______________________________________________________________
 
                 //! load all tasks on the server, then flush
                 void cycle(concurrent::server &server);
-
-                //! prepare cache for workers
-                template <typename T> inline
-                void cache(const size_t n)
-                {
-                    for(size_t i=0;i<size;++i)
-                    {
-                        worker[i].make<T>(n);
-                    }
-                }
+                
 
 
             private:
@@ -59,12 +58,13 @@ namespace upsylon
 
                 void            *impl;   //!< tasks
                 Worker          *worker; //!< workers [0..size-1]
+                Worker          *wShift; //!< workers [1..size];
                 size_t           wBuilt; //!< built workers
                 size_t           wCount; //!< memory
                 size_t           wBytes; //!< memory
             };
 
-            typedef arc_ptr<Engine> Tiling;
+            typedef arc_ptr<Engine> SharedEngine;
 
         }
     }

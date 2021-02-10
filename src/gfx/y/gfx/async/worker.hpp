@@ -15,27 +15,18 @@ namespace upsylon
         {
             //__________________________________________________________________
             //
-            //! Cache for local computations
-            //__________________________________________________________________
-            typedef memory::shack Cache;
-
-            //__________________________________________________________________
-            //
             //! worker interface, with local cache
             //__________________________________________________________________
-            class Worker : public Cache
+            class Worker : public parallel
             {
             public:
-                explicit Worker(const Tile &); //!< setup
+                explicit Worker(const size_t sz, const Tile &); //!< setup
                 virtual ~Worker() throw();     //!< cleanup
-                virtual void run(parallel &, lockable &);//!< entry point
+                virtual void run(lockable &);//!< entry point
                 const Tile &tile; //!< working tile
-
-                typedef void (*Kernel)(const Worker &,
-                                       lockable     &,
-                                       void         *args);
-
                 
+                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);
             };

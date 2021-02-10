@@ -26,18 +26,25 @@ namespace {
         {
         }
 
+#if 0
         inline void operator()( parallel &context, lockable &access )
         {
             work(context,access);
         }
+#endif
 
-        inline void work(parallel &context, lockable &access )
+        inline void operator()(lockable &access )
+        {
+            work(access);
+        }
+
+        inline void work(lockable &access)
         {
             double dt = 0.05;
             {
                 Y_LOCK(access);
                 ++data;
-                std::cerr << "\t@thread#" << context.rank << ", data=" << data <<  std::endl;
+                //std::cerr << "\t@thread#" << context.rank << ", data=" << data <<  std::endl;
                 std::cerr << "\twaiting..." << std::endl;
                 dt += alea.to<double>()*0.1;
             }
@@ -111,7 +118,7 @@ namespace
         {
         }
 
-        inline void operator()(parallel &, lockable &access)
+        inline void operator()(lockable &access)
         {
             const size_t nmin = 1+rank * Count;
             const size_t nmax = nmin + Count;

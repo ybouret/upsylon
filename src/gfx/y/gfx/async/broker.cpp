@@ -12,6 +12,12 @@ namespace upsylon
             {
             }
 
+            Broker:: Broker(const SharedEngine &eng,
+                            const SharedServer &srv) throw()
+            : engine(eng), server(srv)
+            {
+
+            }
             
         }
     }

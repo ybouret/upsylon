@@ -12,12 +12,30 @@ namespace upsylon
         namespace Async
         {
 
+            size_t Engine:: size() const throw()
+            {
+                return count;
+            }
+
             Engine:: ~Engine() throw()
             {
                 releaseAll();
             }
 
+            parallel & Engine:: operator[](const size_t i) throw()
+            {
+                assert(i>0);
+                assert(i<=count);
+                return wShift[i];
+            }
 
+
+            const parallel & Engine:: operator[](const size_t i) const throw()
+            {
+                assert(i>0);
+                assert(i<=count);
+                return wShift[i];
+            }
 
             class Batch : public object
             {
@@ -56,12 +74,14 @@ namespace upsylon
                 }
 
                 mgr.release_as(worker, wCount, wBytes);
+                wShift = 0;
             }
 
             Engine:: Engine(const Area &area, const size_t maxThreads) :
             Tiles(area,maxThreads),
             impl(0),
             worker(0),
+            wShift(0),
             wBuilt(0),
             wCount(0),
             wBytes(0)
@@ -70,13 +90,13 @@ namespace upsylon
                 const Tiles              &self = *this;
                 
                 // building workers
-                wCount = size;
+                wCount = count;
                 worker = mgr.acquire_as<Worker>(wCount,wBytes);
                 try
                 {
-                    while(wBuilt<size)
+                    while(wBuilt<count)
                     {
-                        new (worker+wBuilt) Worker(self[wBuilt]);
+                        new (worker+wBuilt) Worker(count,self[wBuilt]);
                         ++wBuilt;
                     }
                 }
@@ -89,8 +109,8 @@ namespace upsylon
                 // building batch
                 try
                 {
-                    auto_ptr<Batch> batch     = new Batch(size);
-                    for(size_t i=0;i<size;++i)
+                    auto_ptr<Batch> batch     = new Batch(count);
+                    for(size_t i=0;i<count;++i)
                     {
                         const concurrent::job_type J(worker+i, &Worker::run );
                         batch->tasks.push_back_(J);
@@ -104,6 +124,7 @@ namespace upsylon
                     throw;
                 }
 
+                wShift = worker-1;
                 
             }
 

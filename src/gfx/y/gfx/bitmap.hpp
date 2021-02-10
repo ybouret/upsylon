@@ -44,6 +44,7 @@ namespace upsylon
             //! display
             friend std::ostream & operator<<(std::ostream &, const Bitmap &);
 
+            //! memory to 0
             void ldz() throw();
 
             
@@ -55,10 +56,10 @@ namespace upsylon
             const unit_t   scanline;   //!< w*bpp
             const unit_t   stride;     //!< >= scanline
             const Pixels   pixels;     //!< shared memory
-            PixRows        rows;
+            PixRows        rows;       //!< precomputed rows
 
         protected:
-            void *oor_rows() throw();
+            void *oor_rows() throw(); //!< out of reach first rows
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Bitmap);

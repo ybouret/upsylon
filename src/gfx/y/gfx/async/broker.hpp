@@ -18,7 +18,7 @@ namespace upsylon
             //
             //! alias for Sequential/Parallel server
             //__________________________________________________________________
-            typedef arc_ptr<concurrent::server> Server;
+            typedef arc_ptr<concurrent::server> SharedServer;
 
 
             //__________________________________________________________________
@@ -30,12 +30,14 @@ namespace upsylon
             class Broker
             {
             public:
+                //! cleanup
                 virtual ~Broker() throw();
-                explicit Broker(const Tiling &tiling,
-                                const Server &server) throw();
+                //! setup
+                explicit Broker(const SharedEngine &eng,
+                                const SharedServer &srv) throw();
 
-                Tiling tiling;
-                Server server;
+                SharedEngine engine; //!< shared engine
+                SharedServer server; //!< shared server
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Broker);

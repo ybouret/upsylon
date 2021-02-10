@@ -80,9 +80,9 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const unit_t    h;
-            const ZeroFlux  zfh;
-            const ZeroFlux  zfw;
+            const unit_t    h;     //!< height
+            const ZeroFlux  zfh;   //!< zero flux height
+            const ZeroFlux  zfw;   //!< zero flux width
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixRows);

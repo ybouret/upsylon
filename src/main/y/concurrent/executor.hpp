@@ -23,7 +23,7 @@ namespace upsylon
         //! interface to run kernels
         //
         //__________________________________________________________________
-        class executor : public addressable<parallel>
+        class executor : public parallel::group
         {
         public:
             //__________________________________________________________________
@@ -50,69 +50,7 @@ namespace upsylon
             void free()    throw();       //!< for all contexts
             void release() throw();       //!< for all contexts
 
-            //__________________________________________________________________
-            //
-            //
-            // objects per threads
-            //
-            //__________________________________________________________________
-
-            //! build ONE default T for each context
-            template <typename T> inline
-            void make()
-            {
-                executor    &self = *this;
-                const size_t nthr = size();
-                for(size_t i=1;i<=nthr;++i)
-                {
-                    (void) self[i].make<T>();
-                }
-            }
-
-            //! build n default T for each context
-            template <typename T> inline
-            void make(size_t n)
-            {
-                executor    &self = *this;
-                const size_t nthr = size();
-                for(size_t i=1;i<=nthr;++i)
-                {
-                    (void) self[i].make<T>(n);
-                }
-            }
-
-            //! access default first item
-            template <typename T>
-            T & _(const size_t indx) throw()
-            {
-                executor &self = *this;
-                return    self[indx]._<T>();
-            }
-
-            //! access default first const item
-            template <typename T>
-            const T & _(const size_t indx) const throw()
-            {
-                const accessible<parallel> &self = *this;
-                return self[indx]._<T>();
-            }
-
-            //! access for multiple index
-            template <typename T>
-            T & _(const size_t i, const size_t j) throw()
-            {
-                executor &self = *this;
-                return    self[i]._<T>(j);
-            }
-
-            //! access for multiple index, const
-            template <typename T>
-            const T & _(const size_t i, const size_t j) const throw()
-            {
-                const accessible<parallel> &self = *this;
-                return    self[i]._<T>(j);
-            }
-
+           
             
 
         protected:

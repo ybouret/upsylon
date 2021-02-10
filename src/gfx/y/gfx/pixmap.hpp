@@ -28,8 +28,8 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Row);
                 T *p;
             public:
-                const unit_t    w;
-                const ZeroFlux &z;
+                const unit_t    w; //!< width
+                const ZeroFlux &z; //!< zero flux width
 
                 //! Zero Flux pixel[i], const
                 inline T & operator()(const unit_t i)             throw() { assert(p); return p[z(i)]; }
@@ -52,12 +52,14 @@ namespace upsylon
 
             };
 
+            //! default constructor
             inline explicit Pixmap(const unit_t W, const unit_t H) :
             Bitmap(W,H,sizeof(T)),
             _row( static_cast<Row *>(oor_rows()) )
             {
             }
 
+            //! cleanup
             inline virtual ~Pixmap() throw()
             {
             }

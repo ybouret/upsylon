@@ -30,7 +30,8 @@ namespace upsylon
 
         job_uuid sequential_server:: enqueue(const job_type &job)
         {
-            ((job_type&)job)(impl[0],impl.access);
+            //((job_type&)job)(impl[0],impl.access);
+            ((job_type&)job)(impl.access);
             return ++uuid;
         }
 

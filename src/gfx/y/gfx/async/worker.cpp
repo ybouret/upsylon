@@ -7,7 +7,7 @@ namespace upsylon
         namespace Async
         {
 
-            Worker:: Worker(const Tile &t) : Cache(), tile(t)
+            Worker:: Worker(const size_t sz, const Tile &t) : parallel(sz,t.rank), tile(t)
             {
             }
 
@@ -15,10 +15,10 @@ namespace upsylon
             {
             }
 
-            void Worker:: run(parallel &, lockable &sync)
+            void Worker:: run(lockable &sync)
             {
                 Y_LOCK(sync);
-                std::cerr << "worker@tile#" << tile.rank << std::endl;
+                std::cerr << "worker@tile#" << label << std::endl;
             }
             
         }

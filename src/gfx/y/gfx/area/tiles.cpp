@@ -17,21 +17,21 @@ namespace upsylon
         {
             static memory::allocator &mgr = memory::dyadic::location();
 
-            while(size>0)
+            while(count>0)
             {
-                self_destruct( tile[--aliasing::_(size)] );
+                self_destruct( tile[--aliasing::_(count)] );
 
             }
 
-            mgr.release_as(tile,count,bytes);
+            mgr.release_as(tile,tCount,tBytes);
         }
 
         Tiles:: Tiles(const Area  &area,
                       const size_t maxThreads) :
         Area(area),
-        size(0),
         count(0),
-        bytes(0),
+        tCount(0),
+        tBytes(0),
         tile(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
@@ -43,15 +43,15 @@ namespace upsylon
             else
             {
                 const size_t cpus  = clamp<size_t>(1,maxThreads,items);
-                count   = cpus;
-                bytes   = 0;
-                tile    = mgr.acquire_as<Tile>(count,bytes);
+                tCount  = cpus;
+                tBytes  = 0;
+                tile    = mgr.acquire_as<Tile>(tCount,tBytes);
                 try
                 {
                     for(size_t rank=0;rank<cpus;++rank)
                     {
-                        new (tile+size) Tile(area,cpus,rank);
-                        aliasing::_(size)++;
+                        new (tile+count) Tile(area,cpus,rank);
+                        aliasing::_(count)++;
                         std::cerr << "s[" << rank << "]=" << tile[rank] << std::endl;
                     }
                 }
@@ -67,7 +67,7 @@ namespace upsylon
         
         const Tile & Tiles:: operator[](const size_t rank) const throw()
         {
-            assert(rank<size);
+            assert(rank<count);
             return tile[rank];
         }
 
