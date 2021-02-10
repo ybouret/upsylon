@@ -5,7 +5,7 @@
 #define Y_GFX_PIXMAP_INCLUDED 1
 
 #include "y/gfx/bitmap.hpp"
-#include "y/gfx/async/broker.hpp"
+#include "y/gfx/async/ops/apply.hpp"
 
 namespace upsylon
 {
@@ -119,42 +119,15 @@ namespace upsylon
             {
                 assert(this->equals(source));
                 assert(this->equals( * broker.engine ));
-
-                wrapper<U,FUNC> op = { *this, source, func };
+                
+                Async::Apply<T,U,FUNC> op = { *this, source, func };
                 broker(op.run,&op);
             }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);
             Row *_row;
-
-            template <typename U,typename FUNC>
-            struct wrapper
-            {
-                Pixmap          &target;
-                const Pixmap<U> &source;
-                FUNC            &func;
-
-                static inline void run(Async::Worker &worker,
-                                       lockable      &,
-                                       void          *data)
-                {
-                    assert(data);
-                    wrapper      &_    = *static_cast<wrapper *>(data);
-                    const   Tile &tile = worker.tile;
-                    for(size_t t=tile.size();t>0;--t)
-                    {
-                        const HScan &hs = tile[t];
-                        Point        p  = hs.begin;
-                        const Row   &src = _.source[p.y];
-                        Row         &tgt = _.target[p.y];
-                        for(unit_t i=hs.width;i>0;--i,++p.x)
-                        {
-                            tgt[p.x] = _.func(src[p.x]);
-                        }
-                    }
-                }
-            };
+            
         };
 
     }
