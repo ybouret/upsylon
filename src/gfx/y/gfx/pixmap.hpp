@@ -10,11 +10,17 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! named Pixmap
+        //
+        //______________________________________________________________________
         template <typename T>
         class Pixmap : public Bitmap
         {
         public:
+            //! ABI of PixRow
             class Row
             {
             private:
@@ -22,41 +28,63 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Row);
                 T *p;
             public:
-                const unit_t w;
+                const unit_t    w;
+                const ZeroFlux &z;
 
-                inline T & operator[](unit_t i) throw()
+                //! Zero Flux pixel[i], const
+                inline T & operator()(const unit_t i)             throw() { assert(p); return p[z(i)]; }
+
+                //! Zero Flux pixel[i]
+                inline const T & operator()(const unit_t i) const throw() { assert(p); return p[z(i)]; }
+
+                //! Raw pixel[i]
+                inline T & operator[](const unit_t i) throw()
                 {
                     assert(p); assert(i>=0); assert(i<w); return p[i];
                 }
 
-                inline const T & operator[](unit_t i) const throw()
+                //! Raw pixel[i], const
+                inline const T & operator[](const unit_t i) const throw()
                 {
                     assert(p); assert(i>=0); assert(i<w); return p[i];
                 }
+
 
             };
 
-            explicit Pixmap(const unit_t W, const unit_t H) :
+            inline explicit Pixmap(const unit_t W, const unit_t H) :
             Bitmap(W,H,sizeof(T)),
             _row( static_cast<Row *>(oor_rows()) )
             {
             }
 
-            virtual ~Pixmap() throw()
+            inline virtual ~Pixmap() throw()
             {
             }
 
+            //! Zero Flux Row[j]
+            inline Row & operator()(const unit_t j) throw()
+            {
+                return _row[ rows.zfh(j) ];
+            }
+
+            //! Zero Flux Row[j], const
+            inline const Row & operator()(const unit_t j) const throw()
+            {
+                return _row[ rows.zfh(j) ];
+            }
+
+            //! Raw Row[j]
             inline Row & operator[](const unit_t j) throw()
             {
-                assert(j>=0);
-                assert(j<h);
+                assert(j>=0); assert(j<h);
                 return _row[j];
             }
 
+            //! Raw Row[j], const
             inline const Row & operator[](const unit_t j) const throw()
             {
-                assert(j>=0);
-                assert(j<h);
+                assert(j>=0); assert(j<h);
                 return _row[j];
             }
 

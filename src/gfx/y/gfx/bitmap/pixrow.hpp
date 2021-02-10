@@ -24,15 +24,17 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            PixRow(void *entry, const unit_t width) throw(); //!< setup
+            PixRow(void           *entry,
+                   const unit_t    width,
+                   const ZeroFlux &zflux) throw(); //!< setup
             ~PixRow() throw();                               //!< cleanup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void       *at(const unit_t i, const unit_t bpp)       throw(); //!< shifted address
-            const void *at(const unit_t i, const unit_t bpp) const throw(); //!< shifted address
+            void       * operator()(const unit_t i, const unit_t depth)       throw(); //!< shifted address
+            const void * operator()(const unit_t i, const unit_t depth) const throw(); //!< shifted address
 
             //__________________________________________________________________
             //
@@ -40,6 +42,7 @@ namespace upsylon
             //__________________________________________________________________
             void *       const p; //!< first item
             const unit_t       w; //!< width
+            const ZeroFlux    &z; //!< zero flux
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixRow);
@@ -70,15 +73,17 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            PixRow       & operator[](const unit_t j) throw();
-            const PixRow & operator[](const unit_t j) const throw();
+            PixRow       & operator[](const unit_t j) throw();        //!< raw row
+            const PixRow & operator[](const unit_t j) const throw();  //!< raw row
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const unit_t  h;
-
+            const unit_t    h;
+            const ZeroFlux  zfh;
+            const ZeroFlux  zfw;
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(PixRows);
             size_t  count;

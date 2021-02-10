@@ -25,6 +25,7 @@ namespace {
                     for(unit_t i=0;i<w;++i)
                     {
                         pxm[j][i] = support::get<T>();
+                        pxm(j)(i) = support::get<T>();
                     }
                 }
             }

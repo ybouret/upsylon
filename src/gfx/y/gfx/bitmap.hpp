@@ -52,13 +52,13 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const unit_t w;          //!< width
-            const unit_t h;          //!< height
-            const unit_t depth;      //!< bytes per pixel
-            const unit_t scanline;   //!< w*bpp
-            const unit_t stride;     //!< >= scanline
-            const Pixels pixels;     //!< shared memory
-            PixRows      rows;
+            const unit_t   w;          //!< width
+            const unit_t   h;          //!< height
+            const unit_t   depth;      //!< bytes per pixel
+            const unit_t   scanline;   //!< w*bpp
+            const unit_t   stride;     //!< >= scanline
+            const Pixels   pixels;     //!< shared memory
+            PixRows        rows;
 
         protected:
             void *oor_rows() throw();

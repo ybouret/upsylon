@@ -7,9 +7,12 @@ namespace upsylon
 {
     namespace GFX
     {
-        PixRow:: PixRow(void *entry, const unit_t width) throw() :
+        PixRow:: PixRow(void           *entry,
+                        const unit_t    width,
+                        const ZeroFlux &zflux) throw() :
         p(entry),
-        w(width)
+        w(width),
+        z(zflux)
         {
         }
 
@@ -19,20 +22,20 @@ namespace upsylon
             _bzset(w);
         }
 
-        void * PixRow:: at(const unit_t i, const unit_t bpp) throw()
+        void * PixRow:: operator()(const unit_t i, const unit_t depth) throw()
         {
             assert(i>=0);
             assert(i<w);
-            assert(bpp>0);
-            return ((uint8_t *)p)+i*bpp;
+            assert(depth>0);
+            return ((uint8_t *)p)+i*depth;
         }
 
-        const void * PixRow:: at(const unit_t i, const unit_t bpp) const throw()
+        const void * PixRow:: operator()(const unit_t i, const unit_t depth) const throw()
         {
             assert(i>=0);
             assert(i<w);
-            assert(bpp>0);
-            return ((const uint8_t *)p)+i*bpp;
+            assert(depth>0);
+            return ((const uint8_t *)p)+i*depth;
         }
 
 
@@ -69,6 +72,8 @@ namespace upsylon
                           const void   *entry,
                           const unit_t stride) :
         h(height),
+        zfh(height),
+        zfw(width),
         count(h),
         bytes(0),
         row( acquire_rows(count,bytes) )
@@ -77,22 +82,20 @@ namespace upsylon
             uint8_t *p = (uint8_t *)entry;
             for(unit_t j=0;j<h;++j)
             {
-                new (row+j) PixRow(p,width);
+                new (row+j) PixRow(p,width,zfw);
                 p += stride;
             }
         }
 
         PixRow & PixRows:: operator[](const unit_t j) throw()
         {
-            assert(j>=0);
-            assert(j<h);
+            assert(j>=0); assert(j<h);
             return row[j];
         }
 
         const PixRow & PixRows:: operator[](const unit_t j) const throw()
         {
-            assert(j>=0);
-            assert(j<h);
+            assert(j>=0); assert(j<h);
             return row[j];
         }
 

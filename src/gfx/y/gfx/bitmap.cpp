@@ -69,7 +69,7 @@ namespace upsylon
         scanline(w*depth),
         stride( bmp.stride ),
         pixels( bmp.pixels ),
-        rows(w,h,bmp.rows[area.y].at(area.x,depth),stride)
+        rows(w,h,bmp.rows[area.y](area.x,depth),stride)
         {
         }
 
