@@ -155,25 +155,21 @@ namespace upsylon
             template <typename T, typename U, typename FUNC>
             inline Point FindMax( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
-                typedef MinMax::Info<T> info_type;
-                parallel::group        &cache = *(broker.engine);
-                cache.make<info_type>();
-                MinMax::Ops<T,U,FUNC> op = { pixmap, func };
-                value = 0;
+                typedef MinMax::Info<T> InfoType;
+                parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
+                MinMax::Ops<T,U,FUNC>   op    = { pixmap, func };
                 broker(op.runMax,&op);
-                return info_type::FindMax(value,cache);
+                return InfoType::FindMax(value,cache);
             }
             
             template <typename T, typename U, typename FUNC>
             inline Point FindMin( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
-                typedef MinMax::Info<T> info_type;
-                parallel::group        &cache = *(broker.engine);
-                cache.make<info_type>();
-                MinMax::Ops<T,U,FUNC> op = { pixmap, func };
-                value = 0;
+                typedef MinMax::Info<T> InfoType;
+                parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
+                MinMax::Ops<T,U,FUNC>   op = { pixmap, func };
                 broker(op.runMin,&op);
-                return info_type::FindMin(value,cache);
+                return InfoType::FindMin(value,cache);
             }
             
         }
