@@ -64,7 +64,7 @@ namespace upsylon
                 size_t           wBytes; //!< memory
             };
 
-            typedef arc_ptr<Engine> SharedEngine;
+            typedef arc_ptr<Engine> SharedEngine; //!< alias
 
         }
     }
