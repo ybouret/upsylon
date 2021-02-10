@@ -20,9 +20,12 @@ Y_UTEST(engine)
     }
 
     Area           area(0,0,w,h);
-    const Tiling   tiling = Tiles::Create(area,2);
-    Async::Engine  engine(tiling);
-    
+    Async::Engine  engine(area,2);
+
+    concurrent::nexus srv;
+
+    engine.cycle(srv);
+
 }
 Y_UTEST_DONE()
 

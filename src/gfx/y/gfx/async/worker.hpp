@@ -29,9 +29,13 @@ namespace upsylon
                 explicit Worker(const Tile &); //!< setup
                 virtual ~Worker() throw();     //!< cleanup
                 virtual void run(parallel &, lockable &);//!< entry point
-
                 const Tile &tile; //!< working tile
 
+                typedef void (*Kernel)(const Worker &,
+                                       lockable     &,
+                                       void         *args);
+
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);
             };

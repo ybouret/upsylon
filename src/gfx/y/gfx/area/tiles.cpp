@@ -71,11 +71,6 @@ namespace upsylon
             return tile[rank];
         }
 
-        Tiles * Tiles:: Create(const Area &area, const size_t maxThreads)
-        {
-            return new Tiles(area,maxThreads);
-        }
-
-
+        
     }
 }

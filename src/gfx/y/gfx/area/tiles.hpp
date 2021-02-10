@@ -17,7 +17,7 @@ namespace upsylon
         //! Tiles  
         //
         //______________________________________________________________________
-        class Tiles : public Object, public Area
+        class Tiles : public Area
         {
         public:
             //__________________________________________________________________
@@ -25,8 +25,8 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             virtual ~Tiles() throw();            //!< cleanup
-            static Tiles *Create(const Area  &area,
-                                 const size_t maxThreads);
+            explicit Tiles(const Area   &area,
+                           const size_t  maxThread); //!< setup
 
             //__________________________________________________________________
             //
@@ -43,8 +43,6 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Tiles);
-            explicit Tiles(const Area   &area,
-                           const size_t  maxThread); //!< setup
             size_t   count;
             size_t   bytes;
             Tile    *tile;
@@ -52,7 +50,6 @@ namespace upsylon
             void clear() throw();
         };
 
-        typedef arc_ptr<const Tiles> Tiling;
 
     }
 

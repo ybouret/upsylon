@@ -58,8 +58,8 @@ namespace upsylon
                 mgr.release_as(worker, wCount, wBytes);
             }
 
-            Engine:: Engine(const Tiling &tiling) :
-            Tiling(tiling),
+            Engine:: Engine(const Area &area, const size_t maxThreads) :
+            Tiles(area,maxThreads),
             impl(0),
             worker(0),
             wBuilt(0),
@@ -67,9 +67,8 @@ namespace upsylon
             wBytes(0)
             {
                 static memory::allocator &mgr = memory::dyadic::instance();
-                const Tiles              &self = **this;
-                const size_t              size = self.size;
-
+                const Tiles              &self = *this;
+                
                 // building workers
                 wCount = size;
                 worker = mgr.acquire_as<Worker>(wCount,wBytes);

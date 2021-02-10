@@ -23,8 +23,8 @@ Y_UTEST(tiles)
     for(size_t cpus=1;cpus<=8;++cpus)
     {
         std::cerr << "<cpus=" << cpus << ">" << std::endl;
-        const Tiling tiling = Tiles::Create(area,cpus);
-        std::cerr << "size=" << tiling->size << std::endl;
+        const Tiles tiles(area,cpus);
+        std::cerr << "size=" << tiles.size << std::endl;
         std::cerr << "<cpus=" << cpus << "/>" << std::endl << std::endl;
 
     }
