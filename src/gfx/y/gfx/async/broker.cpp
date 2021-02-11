@@ -24,6 +24,11 @@ namespace upsylon
                 assert(kproc);
                 engine->cycle(*server,kproc,kdata);
             }
+            
+            const Team & Broker:: bulk() const throw()
+            {
+                return *engine;
+            }
 
         }
     }

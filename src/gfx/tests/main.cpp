@@ -11,5 +11,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(bitmap);
     Y_UTEST(pixmap);
     Y_UTEST(broker);
+    Y_UTEST(grad);
 }
 Y_UTEST_EXEC()

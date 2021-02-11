@@ -21,9 +21,9 @@ namespace upsylon
                 const Pixmap<U> &source;
                 FUNC            &func;
                 
-                static inline void run(Async::Worker &worker,
-                                       lockable      &,
-                                       void          *data)
+                static inline void runFunc(Async::Worker &worker,
+                                           lockable      &,
+                                           void          *data)
                 {
                     assert(data);
                     Apply           &self   = *static_cast<Apply *>(data);
@@ -43,6 +43,30 @@ namespace upsylon
                         }
                     }
                 }
+                
+                static inline void runProc(Async::Worker &worker,
+                                           lockable      &,
+                                           void          *data)
+                {
+                    assert(data);
+                    Apply           &self   = *static_cast<Apply *>(data);
+                    Pixmap<T>       &target = self.target;
+                    const Pixmap<U> &source = self.source;
+                    const Tile      &tile   = worker.tile;
+                    FUNC            &func   = self.func;
+                    for(size_t t=tile.size();t>0;--t)
+                    {
+                        const HScan                   &s   = tile[t];
+                        Point                          p   = s.begin;
+                        const typename Pixmap<U>::Row &src = source[p.y];
+                        typename Pixmap<T>::Row       &tgt = target[p.y];
+                        for(unit_t i=s.width;i>0;--i,++p.x)
+                        {
+                            func(tgt[p.x],src[p.x]);
+                        }
+                    }
+                }
+                
             
             };
         }

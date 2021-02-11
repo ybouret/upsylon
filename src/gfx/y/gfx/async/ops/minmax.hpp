@@ -66,7 +66,41 @@ namespace upsylon
                         return p;
                     }
                     
-                    
+                    static inline void FindMinMax(Info &result, const accessible<parallel> &arr)
+                    {
+                        const Info *info = & arr[1]._<Info>();
+                        Point       pmax = info->pmax;
+                        T           vmax = info->vmax;
+                        Point       pmin = info->pmin;
+                        T           vmin = info->vmin;
+                        
+                        for(size_t i=arr.size();i>1;--i)
+                        {
+                            info = & arr[i]._<Info>();
+                            {
+                                const T temp = info->vmin;
+                                if(temp<vmin)
+                                {
+                                    vmin = temp;
+                                    pmin = info->pmin;
+                                }
+                            }
+                            {
+                                const T temp = info->vmax;
+                                if(temp>vmax)
+                                {
+                                    vmax = temp;
+                                    pmax = info->pmax;
+                                }
+                            }
+                            
+                        }
+                        result.vmax = vmax;
+                        result.pmax = pmax;
+                        
+                        result.vmin = vmin;
+                        result.pmin = pmin;
+                    }
                     
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Info);
@@ -108,8 +142,8 @@ namespace upsylon
                             }
                         }
                         
-                        typedef Info<T> info_type;
-                        info_type &result = worker._<info_type>();
+                        typedef Info<T> InfoType;
+                        InfoType  &result = worker._<InfoType>();
                         result.vmax       = vmax;
                         result.pmax       = pmax;
                     }
@@ -142,10 +176,56 @@ namespace upsylon
                             }
                         }
                         
-                        typedef Info<T> info_type;
-                        info_type &result = worker._<info_type>();
-                        result.vmin       = vmin;
-                        result.pmin       = pmin;
+                        typedef Info<T> InfoType;
+                        InfoType &result = worker._<InfoType>();
+                        result.vmin      = vmin;
+                        result.pmin      = pmin;
+                    }
+                    
+                    static inline void runMinMax(Async::Worker &worker,
+                                                 lockable      &,
+                                                 void          *data)
+                    {
+                        assert(data);
+                        Ops             &self   = *static_cast<Ops *>(data);
+                        const Pixmap<U> &source = self.source;
+                        const Tile      &tile   = worker.tile;
+                        FUNC            &func   = self.func;
+                        Point            pmin   = tile[1].begin;
+                        T                vmin   = func( source[pmin] );
+                        Point            pmax   = pmin;
+                        T                vmax   = vmin;
+                        
+                        for(size_t t=tile.size();t>0;--t)
+                        {
+                            const HScan                   &s   = tile[t];
+                            Point                          p   = s.begin;
+                            const typename Pixmap<U>::Row &src = source[p.y];
+                            for(unit_t i=s.width;i>0;--i,++p.x)
+                            {
+                                const T temp = func(src[p.x]);
+                                if(temp<vmin)
+                                {
+                                    vmin = temp;
+                                    pmin = p;
+                                }
+                                else
+                                {
+                                    if(temp>vmax)
+                                    {
+                                        vmax = temp;
+                                        pmax = p;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        typedef Info<T> InfoType;
+                        InfoType &result = worker._<InfoType>();
+                        result.vmin      = vmin;
+                        result.pmin      = pmin;
+                        result.vmax      = vmax;
+                        result.pmax      = pmax;
                     }
                     
                 };
@@ -156,7 +236,7 @@ namespace upsylon
             inline Point FindMax( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
                 typedef MinMax::Info<T> InfoType;
-                parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
+                Team                   &cache = *broker; cache.make<InfoType>();
                 MinMax::Ops<T,U,FUNC>   op    = { pixmap, func };
                 broker(op.runMax,&op);
                 return InfoType::FindMax(value,cache);
@@ -166,10 +246,20 @@ namespace upsylon
             inline Point FindMin( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
                 typedef MinMax::Info<T> InfoType;
-                parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
+                parallel::group        &cache = *broker; cache.make<InfoType>();
                 MinMax::Ops<T,U,FUNC>   op = { pixmap, func };
                 broker(op.runMin,&op);
                 return InfoType::FindMin(value,cache);
+            }
+            
+            template <typename T, typename U, typename FUNC>
+            inline void FindMinMax( MinMax::Info<T> &info, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
+            {
+                typedef MinMax::Info<T> InfoType;
+                parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
+                MinMax::Ops<T,U,FUNC>   op = { pixmap, func };
+                broker(op.runMinMax,&op);
+                InfoType::FindMinMax(info,cache);
             }
             
         }

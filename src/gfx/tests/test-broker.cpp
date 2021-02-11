@@ -98,16 +98,27 @@ Y_UTEST(broker)
         const Point pmaxSeq = Async::FindMax(dMaxSeq,pf,id<float>,seqBrk);
         const Point pmaxPar = Async::FindMax(dMaxPar,pf,id<float>,parBrk);
         
-        std::cerr << "pmaxSeq=" << pmaxSeq << " -> " << dMaxSeq << std::endl;
-        std::cerr << "pmaxPar=" << pmaxPar << " -> " << dMaxPar << std::endl;
-
+        //std::cerr << "pmaxSeq=" << pmaxSeq << " -> " << dMaxSeq << std::endl;
+        //std::cerr << "pmaxPar=" << pmaxPar << " -> " << dMaxPar << std::endl;
+        Y_CHECK(pmaxSeq==pmaxPar);
         
         const Point pminSeq = Async::FindMin(dMinSeq,pf,id<float>,seqBrk);
         const Point pminPar = Async::FindMin(dMinPar,pf,id<float>,parBrk);
 
-        std::cerr << "pminSeq=" << pminSeq << " -> " << dMinSeq << std::endl;
-        std::cerr << "pminPar=" << pminPar << " -> " << dMinPar << std::endl;
+        //std::cerr << "pminSeq=" << pminSeq << " -> " << dMinSeq << std::endl;
+        //std::cerr << "pminPar=" << pminPar << " -> " << dMinPar << std::endl;
+        Y_CHECK(pminSeq==pminPar);
 
+        const Point pmax = pmaxSeq;
+        const Point pmin = pminSeq;
+        Async::MinMax::Info<double> infoSeq, infoPar;
+        Async::FindMinMax(infoSeq,pf,id<float>,seqBrk);
+        Async::FindMinMax(infoPar,pf,id<float>,parBrk);
+        
+        Y_CHECK(infoSeq.pmax==pmax);
+        Y_CHECK(infoSeq.pmin==pmin);
+
+        
         std::cerr << "Chrono Apply" << std::endl;
         double seq_speed = 0;
         Y_TIMINGS(seq_speed,1, pfs.apply(pf, sample<float>, seqBrk) );

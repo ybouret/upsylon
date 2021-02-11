@@ -27,7 +27,7 @@ namespace upsylon
             //! gather a Tiling and a Server for ops
             //
             //__________________________________________________________________
-            class Broker
+            class Broker : public gateway<Team>
             {
             public:
                 //! cleanup
@@ -42,8 +42,10 @@ namespace upsylon
                 //! dispatch the kernel and cycle engine
                 void operator()( Worker::Kernel kproc, void *kdata );
 
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Broker);
+                virtual const Team & bulk() const throw();
             };
 
         }

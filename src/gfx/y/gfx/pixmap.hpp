@@ -131,7 +131,7 @@ namespace upsylon
                 assert(this->equals( * broker.engine ));
                 
                 Async::Apply<T,U,FUNC> op = { *this, source, func };
-                broker(op.run,&op);
+                broker(op.runFunc,&op);
             }
 
         private:
