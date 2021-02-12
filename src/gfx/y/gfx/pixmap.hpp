@@ -5,7 +5,7 @@
 #define Y_GFX_PIXMAP_INCLUDED 1
 
 #include "y/gfx/bitmap.hpp"
-#include "y/gfx/async/ops/apply.hpp"
+#include "y/gfx/async/ops/execute.hpp"
 
 namespace upsylon
 {
@@ -124,15 +124,25 @@ namespace upsylon
             //! apply a 1:1 function
             template <typename U, typename FUNC>
             void apply(const Pixmap<U> &source,
-                       FUNC            &func,
-                       Async::Broker   &broker)
+                         FUNC            &func,
+                         Async::Broker   &broker)
             {
-                assert(this->equals(source));
-                assert(this->equals( * broker.engine ));
-                
-                Async::Apply<T,U,FUNC> op = { *this, source, func };
-                broker(op.runFunc,&op);
+                assert(this->equals(source) );
+                assert(this->equals(*(broker.engine)));
+                Async::Execute::Function(*this,source,func,broker);
             }
+
+            template <typename U, typename PROC>
+            void compute(const Pixmap<U> &source,
+                         PROC            &proc,
+                         Async::Broker   &broker)
+            {
+                assert(this->equals(source) );
+                assert(this->equals(*(broker.engine)));
+                Async::Execute::Procedure(*this,source,proc,broker);
+            }
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Pixmap);

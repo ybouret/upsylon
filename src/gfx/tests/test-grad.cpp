@@ -37,7 +37,34 @@ Y_UTEST(grad)
         Pixmap<float> pf(w,h);
         Async::SharedEngine seqEng = new Async::Engine(pf,(**seq).size());
         Async::SharedEngine parEng = new Async::Engine(pf,(**par).size());
-        
+
+
+        Async::Broker seqBrk(seqEng,seq);
+        Async::Broker parBrk(parEng,par);
+
+
+        for(unit_t j=0;j<h;++j)
+        {
+            for(unit_t i=0;i<w;++i)
+            {
+                pf[j][i] = support::get<float>();
+            }
+        }
+
+
+        Async::Gradient<double> G(pf.w,pf.h);
+        G.compute(pf,seqBrk);
+        G.compute(pf,parBrk);
+
+        std::cerr << "Chrono Grad..." << std::endl;
+        double seq_speed = 0;
+        Y_TIMINGS(seq_speed,1, G.compute(pf,seqBrk); );
+        std::cerr << "seq_speed=" << seq_speed << std::endl;
+
+        double par_speed = 0;
+        Y_TIMINGS(par_speed,1, G.compute(pf,parBrk) );
+        std::cerr << "par_speed=" << par_speed << std::endl;
+
     }
     
 }

@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include "y/gfx/async/ops/minmax.hpp"
+#include "y/gfx/async/ops/gradient.hpp"
 
 
 using namespace upsylon;
@@ -98,16 +99,14 @@ Y_UTEST(broker)
         const Point pmaxSeq = Async::FindMax(dMaxSeq,pf,id<float>,seqBrk);
         const Point pmaxPar = Async::FindMax(dMaxPar,pf,id<float>,parBrk);
         
-        //std::cerr << "pmaxSeq=" << pmaxSeq << " -> " << dMaxSeq << std::endl;
-        //std::cerr << "pmaxPar=" << pmaxPar << " -> " << dMaxPar << std::endl;
         Y_CHECK(pmaxSeq==pmaxPar);
-        
+        Y_CHECK(fabs(dMaxSeq-dMaxPar)<=0);
+
         const Point pminSeq = Async::FindMin(dMinSeq,pf,id<float>,seqBrk);
         const Point pminPar = Async::FindMin(dMinPar,pf,id<float>,parBrk);
 
-        //std::cerr << "pminSeq=" << pminSeq << " -> " << dMinSeq << std::endl;
-        //std::cerr << "pminPar=" << pminPar << " -> " << dMinPar << std::endl;
         Y_CHECK(pminSeq==pminPar);
+        Y_CHECK(fabs(dMinSeq-dMinPar)<=0);
 
         const Point pmax = pmaxSeq;
         const Point pmin = pminSeq;
@@ -117,6 +116,7 @@ Y_UTEST(broker)
         
         Y_CHECK(infoSeq.pmax==pmax);
         Y_CHECK(infoSeq.pmin==pmin);
+
 
         
         std::cerr << "Chrono Apply" << std::endl;

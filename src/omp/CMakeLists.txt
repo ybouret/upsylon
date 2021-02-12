@@ -6,6 +6,10 @@ ADD_EXECUTABLE(y_pi_driver y_pi_driver.cpp)
 TARGET_LINK_Y(y_pi_driver)
 INSTALL( TARGETS y_pi_driver RUNTIME DESTINATION bin )
 
+IF( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
+	#Bypass Xcode testing, not supported by apple clang so far
+	MESSAGE( STATUS "Skipping OpenMP for Xcode" )
+ELSE()
 FIND_PACKAGE(OpenMP)
 
 
@@ -40,3 +44,5 @@ IF(OpenMP_C_FOUND)
 
 
 ENDIF(OpenMP_C_FOUND)
+
+ENDIF()

@@ -315,3 +315,5 @@ ENDMACRO(TARGET_LINK_Y)
 ##
 ########################################################################
 
+MESSAGE( STATUS "CMAKE_GENERATOR=${CMAKE_GENERATOR}" )
+
