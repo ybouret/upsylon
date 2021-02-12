@@ -41,29 +41,19 @@ namespace upsylon
         //! built-in conversion
         //
         //______________________________________________________________________
-        template <typename T>
-        class Convert
+        template <typename U, typename T>
+        struct Convert
         {
-        public:
-            template <typename U> struct As
-            {
-                static U Get(const T&) throw();
-            };
-            
-            template <> struct As<T>
-            {
-                static inline T Get(const T &x) throw() { return x; }
-            };
-            
-            //! generic call
-            template <typename U> static inline
-            U To(const T &x) throw()
-            {
-                return As<U>::Get(x);
-            }
-            
+            static U From(const T &x) throw();
         };
         
+        template <typename T>
+        struct Convert<T,T>
+        {
+            static const T & From(const T &x) throw() { return x; }
+        };
+        
+ 
         
     }
     

@@ -6,27 +6,27 @@ namespace upsylon
     namespace GFX
     {
         
-        template <> template <>
-        float Convert<uint8_t>:: As<float>::Get(const uint8_t &u) throw()
+        template <>
+        float Convert<float,uint8_t>::From(const uint8_t &u) throw()
         {
             return Conv::UnitFloat[u];
         }
         
-        template <> template <>
-        rgb Convert<uint8_t>:: As<rgb>::Get(const uint8_t &u) throw()
+        template <>
+        rgb Convert<rgb,uint8_t>:: From(const uint8_t &u) throw()
         {
             return rgb(u,u,u);
         }
         
-        template <> template <>
-        rgba Convert<uint8_t>:: As<rgba>::Get(const uint8_t &u) throw()
+        template <>
+        rgba Convert<rgba,uint8_t>:: From(const uint8_t &u) throw()
         {
             return rgba(u,u,u);
         }
         
         
-        template <> template <>
-        YUV Convert<uint8_t>:: As<YUV>::Get(const uint8_t &u) throw()
+        template <>
+        YUV Convert<YUV,uint8_t>::From(const uint8_t &u) throw()
         {
             return YUV(Conv::UnitFloat[u],0,0);
         }

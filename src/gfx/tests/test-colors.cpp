@@ -11,7 +11,7 @@ namespace
     static inline void  Check(const T &value)
     {
         std::cerr << "Convert<" << type_name_of<T>() << ">::From<" << type_name_of<U>() << ">" << std::endl;
-        std::cerr << value << " -> " << Convert<T>::template To<U>(value) << std::endl;
+        std::cerr << value << " -> " << Convert<U,T>::From(value) << std::endl;
     }
     
     template <typename T>
