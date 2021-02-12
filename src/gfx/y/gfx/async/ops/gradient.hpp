@@ -54,7 +54,7 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                //! minimum is always zero on a corber
+                //! minimum is always zero on a corner
                 template <typename U>
                 T compute(const Pixmap<U> &source,
                           Broker          &broker,

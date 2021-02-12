@@ -17,17 +17,29 @@ namespace upsylon
         struct Convert
         {
 
-            static inline uint8_t ToByte(const float f) throw()
+            //__________________________________________________________________
+            //
+            //!  conversions
+            //__________________________________________________________________
+            struct Greyscale
             {
-                assert(f>=0.0f); assert(f<=1.0f);
-                return floorf(f*255.0f+0.5f);
-            }
+                //! float -> byte
+                static inline uint8_t Float2Byte(const float f) throw()
+                {
+                    assert(f>=0.0f); assert(f<=1.0f);
+                    return floorf(f*255.0f+0.5f);
+                }
+                
+                //! byte -> float
+                static const float UnitFloat[256]; //!< precomputed levels
+                
+                //! (byte,byte,byte)->byte
+                static uint8_t Compress(const uint8_t r, const uint8_t g, const uint8_t b) throw();
+            };
+            
+            
 
-
-            //! convertion of a triplet to a byte
-            static uint8_t RGB2GS(const uint8_t r, const uint8_t g, const uint8_t b) throw();
-
-
+            
             static const rgbF YScale; //!<  0.299     0.587     0.114
             static const rgbF UScale; //!< -0.147    -0.289     0.436
             static const rgbF VScale; //!<  0.615    -0.515    -0.100
@@ -51,11 +63,6 @@ namespace upsylon
 
             template <typename T> static
             Kernel::rgb<T> YUV2RGB( const YUV & ) throw();
-
-
-
-
-            static const float UnitFloat[256];
             
 
         };
