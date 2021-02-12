@@ -105,6 +105,12 @@ namespace upsylon
                     assert(i<4);
                     return *((&r)+i);
                 }
+                
+                friend inline std::ostream & operator<<(std::ostream &os, const rgba &c)
+                {
+                    os << '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ',' << double(c.a) << ')';
+                    return os;
+                }
 
             };
 

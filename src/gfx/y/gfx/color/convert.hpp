@@ -13,27 +13,34 @@ namespace upsylon
 {
     namespace GFX
     {
-
+        
+        namespace Kernel
+        {
+            struct Conv
+            {
+                static const  float   UnitFloat[256];
+                static inline uint8_t ToByte(const float f) throw()
+                {
+                    return uint8_t( floorf(255.0f*f+0.5f) );
+                }
+                static  const uint8_t Table[255*3+1];
+                static  uint8_t       Alpha(const uint8_t x, const uint8_t alpha) throw();
+                
+            };
+        };
+        
         template <typename T>
         class Convert
         {
         public:            
             template <typename U> static
-            T From(const U &) throw();
+            U To(const T &) throw();
             
             template <> static
-            T From(const T &x) throw() { return x; }
+            T To(const T &x) throw() { return x; }
         };
         
         
-        class ConvertMono : public Convert<uint8_t>
-        {
-        public:
-            static const   float UnitFloat[256]; //!< precomputed levels
-            static uint8_t Compress(const uint8_t r, const uint8_t g, const uint8_t b) throw();
-        };
-        
-
         
     }
 
