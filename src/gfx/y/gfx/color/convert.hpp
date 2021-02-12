@@ -7,35 +7,49 @@
 
 #include "y/gfx/color/rgb.hpp"
 #include "y/gfx/color/yuv.hpp"
-
+#include <cmath>
 
 namespace upsylon
 {
     namespace GFX
     {
         
-        namespace Kernel
+        //______________________________________________________________________
+        //
+        //! basic conversion helpers
+        //______________________________________________________________________
+        struct Conv
         {
-            struct Conv
+            static const  float   UnitFloat[256]; //!< 0/255,...255/255
+            //! [0:1] -> [0:255]
+            static inline uint8_t ToByte(const float f) throw()
             {
-                static const  float   UnitFloat[256];
-                static inline uint8_t ToByte(const float f) throw()
-                {
-                    return uint8_t( floorf(255.0f*f+0.5f) );
-                }
-                static  const uint8_t Table[255*3+1];
-                static  uint8_t       Alpha(const uint8_t x, const uint8_t alpha) throw();
-                
-            };
+                return uint8_t( floorf(255.0f*f+0.5f) );
+            }
+            
+            //! compression table
+            static  const uint8_t Table[255*3+1];
+            
+            //! alpha function
+            static  uint8_t       Alpha(const uint8_t x, const uint8_t alpha) throw();
         };
         
+        
+        //______________________________________________________________________
+        //
+        //
+        //! built-in conversion
+        //
+        //______________________________________________________________________
         template <typename T>
         class Convert
         {
-        public:            
+        public:
+            //! generic call
             template <typename U> static
             U To(const T &) throw();
             
+            //! identity
             template <> static
             T To(const T &x) throw() { return x; }
         };
@@ -43,7 +57,7 @@ namespace upsylon
         
         
     }
-
+    
 }
 
 #endif

@@ -8,7 +8,7 @@ namespace upsylon
         template <> template <>
         uint8_t Convert<float>:: To<uint8_t>(const float &f) throw()
         {
-            return Kernel::Conv::ToByte(f);
+            return Conv::ToByte(f);
         }
         
         template <> template <>
@@ -23,6 +23,12 @@ namespace upsylon
         {
             const uint8_t u = Convert<float>::To<uint8_t>(f);
             return rgba(u,u,u);
+        }
+        
+        template <> template <>
+        YUV Convert<float>:: To<YUV>(const float &f) throw()
+        {
+             return YUV(f,0,0);
         }
         
         

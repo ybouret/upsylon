@@ -55,6 +55,12 @@ namespace upsylon
             return *this;
         }
 
+        std::ostream & operator<<(std::ostream &os, const YUV &yuv)
+        {
+            os << '{' << yuv.y << ',' << yuv.u << ',' << yuv.v << '}';
+            return os;
+        }
+        
     }
 
 }

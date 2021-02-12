@@ -24,6 +24,7 @@ namespace upsylon
                 T g; //!< green
                 T b; //!< blue
 
+                //! default setup
                 inline  rgb( T R=0, T G=0, T B=0) throw() : r(R), g(G), b(B) {}
                 //! cleanup
                 inline ~rgb() throw() {}
@@ -54,6 +55,7 @@ namespace upsylon
                     return *((&r)+i);
                 }
                 
+                //! display
                 friend inline std::ostream & operator<<(std::ostream &os, const rgb &c)
                 {
                     os << '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ')';
@@ -106,6 +108,7 @@ namespace upsylon
                     return *((&r)+i);
                 }
                 
+                //! display
                 friend inline std::ostream & operator<<(std::ostream &os, const rgba &c)
                 {
                     os << '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ',' << double(c.a) << ')';

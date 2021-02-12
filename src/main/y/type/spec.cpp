@@ -355,10 +355,15 @@ namespace upsylon {
 
 #include "y/yap/rational.hpp"
 
+#include "../../../gfx/y/gfx/color/rgb.hpp"
+#include "../../../gfx/y/gfx/color/yuv.hpp"
+
 namespace upsylon {
 
 #define TS(TYPE) (void) name( typeid(TYPE), #TYPE )
 
+    using namespace GFX;
+    
     void type_specs::initialize()
     {
         TS(uint8_t);
@@ -420,6 +425,10 @@ namespace upsylon {
         TS(point3d<unit_t>);
 
         TS(null_type);
+        
+        TS(rgb);
+        TS(rgba);
+        TS(YUV);
     }
 
 }

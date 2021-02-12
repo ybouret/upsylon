@@ -5,6 +5,7 @@
 #define Y_GRAPHIC_COLOR_YUV_INCLUDED 1
 
 #include "y/os/platform.hpp"
+#include <iostream>
 
 namespace upsylon {
 
@@ -31,7 +32,9 @@ namespace upsylon {
             static float toY(const float) throw(); //!< check Y
             static float toU(const float) throw(); //!< check U
             static float toV(const float) throw(); //!< check V
-
+            
+            //! display
+            friend std::ostream & operator<<(std::ostream &, const YUV &);
         };
 
     }
