@@ -4,6 +4,7 @@
 #define Y_GFX_COLOR_RGB_INCLUDED 1
 
 #include "y/os/platform.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -51,6 +52,12 @@ namespace upsylon
                 {
                     assert(i<3);
                     return *((&r)+i);
+                }
+                
+                friend inline std::ostream & operator<<(std::ostream &os, const rgb &c)
+                {
+                    os << '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ')';
+                    return os;
                 }
 
             };

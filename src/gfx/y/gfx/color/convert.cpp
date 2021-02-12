@@ -61,11 +61,7 @@ namespace upsylon
 #endif
 
         
-        template <>
-        rgbF Convert:: YUV2RGB<float>( const YUV &yuv ) throw()
-        {
-            return rgbF( YUV2R(yuv), YUV2G(yuv), YUV2B(yuv) );
-        }
+       
 
     }
 

@@ -6,9 +6,24 @@ namespace upsylon
 {
     namespace GFX
     {
+        
+        template <> template <>
+        uint8_t Convert<uint8_t>:: From<float>(const float &f) throw()
+        {
+            return floorf( 255.0f * f + 0.5f );
+        }
+        
+        template <> template <>
+        uint8_t Convert<uint8_t>:: From<rgb>(const rgb &c) throw()
+        {
+            return ConvertMono::Compress(c.r, c.g, c.b);
+        }
+        
+        
 #define _F(X) (X##.0f/255.0f)
         
-        const float Convert:: Greyscale:: UnitFloat[256] =
+        
+        const float ConvertMono:: UnitFloat[256] =
         {
             _F(  0),_F(  1),_F(  2),_F(  3),_F(  4),_F(  5),_F(  6),_F(  7),_F(  8),_F(  9),_F( 10),_F( 11),_F( 12),_F( 13),_F( 14),_F( 15),
             _F( 16),_F( 17),_F( 18),_F( 19),_F( 20),_F( 21),_F( 22),_F( 23),_F( 24),_F( 25),_F( 26),_F( 27),_F( 28),_F( 29),_F( 30),_F( 31),
@@ -81,7 +96,7 @@ namespace upsylon
             0xfa, 0xfb, 0xfb, 0xfb, 0xfc, 0xfc, 0xfc, 0xfd, 0xfd, 0xfd, 0xfe, 0xfe, 0xfe, 0xff
         };
         
-        uint8_t Convert:: Greyscale:: Compress(const uint8_t r, const uint8_t g, const uint8_t b) throw()
+        uint8_t ConvertMono:: Compress(const uint8_t r, const uint8_t g, const uint8_t b) throw()
         {
             return GreyscaleTable[ unsigned(r) + unsigned(g) + unsigned(b) ];
         }
