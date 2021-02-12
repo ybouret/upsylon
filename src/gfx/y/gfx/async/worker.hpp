@@ -24,8 +24,8 @@ namespace upsylon
             class Worker : public parallel
             {
             public:
-                //! runnable kernel
-                typedef void (*Kernel)(Worker &,lockable &,void *);
+                //! runnable routine
+                typedef void (*Routine)(Worker &,lockable &,void *);
 
                 explicit Worker(const size_t sz, const size_t rk, const Tile &); //!< setup
                 virtual ~Worker() throw();     //!< cleanup
@@ -36,13 +36,13 @@ namespace upsylon
                 Point        begin() const throw(); //!< first point
 
                 //! set internal kernel
-                void load(Kernel,void*) throw();
+                void load(Routine,void*) throw();
                 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Worker);
-                Kernel kproc;
-                void  *kdata;
+                Routine kproc;
+                void   *kdata;
 
             };
 

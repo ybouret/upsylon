@@ -51,7 +51,7 @@ namespace upsylon
 
                 //! load all tasks on the server, then flush
                 void cycle(concurrent::server &server,
-                           Worker::Kernel      kproc,
+                           Worker::Routine     kproc,
                            void               *kdata);
                 
 

@@ -40,7 +40,7 @@ namespace upsylon
                 SharedServer server; //!< shared server
 
                 //! dispatch the kernel and cycle engine
-                void operator()( Worker::Kernel kproc, void *kdata );
+                void operator()( Worker::Routine kproc, void *kdata );
 
                 
             private:

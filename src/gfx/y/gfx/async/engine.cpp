@@ -130,7 +130,7 @@ namespace upsylon
             }
 
             void Engine:: cycle(concurrent::server &srv,
-                                Worker::Kernel      kproc,
+                                Worker::Routine     kproc,
                                 void               *kdata)
             {
                 assert(impl);

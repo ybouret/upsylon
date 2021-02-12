@@ -19,7 +19,7 @@ namespace upsylon
 
             }
 
-            void Broker:: operator()( Worker::Kernel kproc, void *kdata )
+            void Broker:: operator()( Worker::Routine kproc, void *kdata )
             {
                 assert(kproc);
                 engine->cycle(*server,kproc,kdata);

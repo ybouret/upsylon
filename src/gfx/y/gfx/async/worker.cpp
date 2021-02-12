@@ -35,7 +35,7 @@ namespace upsylon
                 return tile[1].begin;
             }
 
-            void Worker:: load(Kernel k,void *d) throw()
+            void Worker:: load(Routine k,void *d) throw()
             {
                 assert(k);
                 kproc = k;
