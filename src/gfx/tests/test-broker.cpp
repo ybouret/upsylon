@@ -128,7 +128,8 @@ Y_UTEST(broker)
         Y_TIMINGS(par_speed,1, pfp.apply(pf, sample<float>, parBrk) );
         std::cerr << "par_speed=" << par_speed << std::endl;
         
-        
+        std::cerr << "efficiency: " <<  parBrk.engine->efficiency(par_speed/seq_speed) << "%" << std::endl;
+
         
     }
 

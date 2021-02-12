@@ -68,6 +68,7 @@ Y_UTEST(grad)
         Y_TIMINGS(par_speed,1, G.compute(pf,parBrk) );
         std::cerr << "par_speed=" << par_speed << std::endl;
 
+        std::cerr << "efficiency: " <<  parBrk.engine->efficiency(par_speed/seq_speed) << "%" << std::endl;
     }
     
 }

@@ -77,6 +77,11 @@ namespace upsylon
                 return                      self[i]._<T>(j);
             }
 
+            double efficiency(const double speed_up) const throw()
+            {
+                const accessible<parallel> &self = *this;
+                return self[1].efficiency(speed_up);
+            }
 
         protected:
             //! setup
