@@ -10,6 +10,7 @@
 #include <cmath>
 
 #include "y/gfx/async/ops/gradient.hpp"
+#include "y/gfx/async/ops/minmax.hpp"
 
 
 using namespace upsylon;
@@ -53,12 +54,23 @@ Y_UTEST(grad)
 
 
         Async::Gradient<double> G(pf.w,pf.h);
-        G.compute(pf,seqBrk);
-        G.compute(pf,parBrk);
+        const double vmaxSeq = G.compute(pf,seqBrk,true);
+        const double vmaxPar = G.compute(pf,parBrk,true);
+        Y_CHECK(fabs(vmaxSeq-vmaxPar)<=0);
+        Async::MinMax::Info<double> infoSeq, infoPar;
+        Async::FindMinMax(infoSeq,G,id<float>,seqBrk);
+        Async::FindMinMax(infoPar,G,id<float>,parBrk);
+        Y_CHECK(fabs(infoSeq.vmin)<=0);
+        Y_CHECK(fabs(infoPar.vmin)<=0);
+        Y_CHECK(fabs(infoSeq.vmax-1)<=0);
+        Y_CHECK(fabs(infoPar.vmax-1)<=0);
+
+
 
         std::cerr << "seq: " << (*seqBrk).size() << std::endl;
         std::cerr << "par: " << (*parBrk).size() << std::endl;
 
+        
         std::cerr << "Chrono Grad..." << std::endl;
         double seq_speed = 0;
         Y_TIMINGS(seq_speed,1, G.compute(pf,seqBrk); );

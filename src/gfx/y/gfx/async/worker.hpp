@@ -13,6 +13,8 @@ namespace upsylon
     {
         namespace Async
         {
+            typedef parallel_cache Cache;
+            
             //__________________________________________________________________
             //
             //
@@ -30,7 +32,7 @@ namespace upsylon
                 virtual void run(lockable &);//!< entry point
                 static  void None(Worker &,lockable &,void*); //!< default kernel, display tile info
 
-                const Tile  &tile; //!< working tile
+                const Tile  &tile;                  //!< working tile
                 Point        begin() const throw(); //!< first point
 
                 //! set internal kernel

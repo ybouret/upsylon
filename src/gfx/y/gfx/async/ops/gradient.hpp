@@ -4,7 +4,7 @@
 #ifndef Y_GFX_ASYNC_GRADIENT_INCLUDED
 #define Y_GFX_ASYNC_GRADIENT_INCLUDED 1
 
-#include "y/gfx/async/broker.hpp"
+#include "y/gfx/async/ops/execute.hpp"
 #include "y/mkl/types.hpp"
 
 namespace upsylon
@@ -15,7 +15,7 @@ namespace upsylon
         
         namespace Async
         {
-         
+
             template <typename T>
             class Gradient : public Pixmap<T>
             {
@@ -35,13 +35,32 @@ namespace upsylon
                 
                 Vertices grad;
 
+                //! min if 0 on a corner
                 template <typename U>
-                void compute(const Pixmap<U> &source, Broker &broker)
+                T compute(const Pixmap<U> &source,
+                          Broker          &broker,
+                          bool            normalize=false)
                 {
-                    Compute<U> op = { *this, source };
-                    Team     &team = *broker;
-                    team.make<T>(2);
+                    Compute<U> op   = { *this, source };
+                    Team      &team = *broker;
+                    team.make<T>();
                     broker(op.run,&op);
+
+                    T vmax = team[1]._<T>();
+                    for(size_t i=team.size();i>0;--i)
+                    {
+                        const T temp = team[i]._<T>();
+                        if(temp>vmax) vmax=temp;
+                    }
+                    if(normalize)
+                    {
+                        if(vmax>0)
+                        {
+                            Rescale rescale = { vmax };
+                            Execute::Function(*this,*this,rescale,broker);
+                        }
+                    }
+                    return vmax;
                 }
 
             private:
@@ -54,21 +73,16 @@ namespace upsylon
                     const Pixmap<U> &source;
 
                     static inline void run(Worker   &w,
-                                           lockable &sync,
+                                           lockable &,
                                            void     *args )
                     {
                         assert(args);
-                        if(false)
-                        {
-                            Y_LOCK(sync);
-                            std::cerr << "gradient@" << w.label << "/#" << w.tile.items() << std::endl;
-                        }
+
                         Compute         &self   = *static_cast<Compute *>(args);
                         Pixmap<T>       &norm   = self.gradient;
                         Pixmap<Vertex>  &grad   = self.gradient.grad;
                         const Tile      &tile   = w.tile;
                         const Pixmap<U> &source = self.source;
-                        T                vmin=0;
                         T                vmax=0;
 
                         {
@@ -77,7 +91,7 @@ namespace upsylon
                             const typename Pixmap<U>::Row &src_y = source(y);
                             const T dx = T(src_y(x+1))     - T(src_y(x-1));
                             const T dy = T(source(y+1)(x)) - T(source(y-1)(x));
-                            vmin = vmax = mkl::sqrt_of(dx*dx+dy*dy);
+                            vmax = mkl::sqrt_of(dx*dx+dy*dy);
                         }
 
                         for(size_t t=tile.size();t>0;--t)
@@ -98,16 +112,39 @@ namespace upsylon
                                 const T dy   = T(source(yp)(x)) - T(source(ym)(x));
                                 g[x]         = Vertex(dx,dy);
                                 const T temp = n[x] = mkl::sqrt_of(dx*dx+dy*dy);
-                                if(temp<vmin)      vmin = temp;
-                                else if(temp>vmax) vmax = temp;
+                                if(temp>vmax) vmax = temp;
                                 xm = x;
                                 x  = xp;
                                 ++xp;
                             }
                         }
+                        w._<T>()=vmax;
                     }
 
+                };
 
+                struct Rescale
+                {
+                    T vmax;
+                    inline T operator()(const T v)
+                    {
+                        if(v<=0)
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            if(v>=vmax)
+                            {
+                                return 1;
+                            }
+                            else
+                            {
+                                return v/vmax;
+                            }
+                        }
+
+                    }
                 };
 
             };
