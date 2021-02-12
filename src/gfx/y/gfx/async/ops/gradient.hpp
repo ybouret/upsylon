@@ -16,42 +16,67 @@ namespace upsylon
         namespace Async
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! numerical gradient computation
+            //
+            //__________________________________________________________________
             template <typename T>
             class Gradient : public Pixmap<T>
             {
             public:
-                typedef point2d<T>     Vertex;
-                typedef Pixmap<Vertex> Vertices;
-                
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef point2d<T>     Vertex;    //!< alias for coordinate
+                typedef Pixmap<Vertex> Vertices;  //!< alias for vertices
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                //! setup
                 explicit Gradient(const unit_t W, const unit_t H) :
                 Pixmap<T>(W,H),
                 grad(W,H)
                 {
                 }
-                
+
+                //! cleanup
                 virtual ~Gradient() throw()
                 {
                 }
                 
-                Vertices grad;
 
-                //! min if 0 on a corner
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                //! minimum is always zero on a corber
                 template <typename U>
                 T compute(const Pixmap<U> &source,
                           Broker          &broker,
                           bool            normalize=false)
                 {
+                    // prepare aync context
                     Compute<U> op   = { *this, source };
                     Team      &team = *broker;
                     team.make<T>();
+
+                    // run
                     broker(op.run,&op);
 
+                    // collect vmax
                     T vmax = team[1]._<T>();
                     for(size_t i=team.size();i>0;--i)
                     {
                         const T temp = team[i]._<T>();
                         if(temp>vmax) vmax=temp;
                     }
+
+                    // optional vmax
                     if(normalize)
                     {
                         if(vmax>0)
@@ -62,6 +87,12 @@ namespace upsylon
                     }
                     return vmax;
                 }
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                Vertices grad; //!< gradient field
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Gradient);

@@ -111,11 +111,13 @@ namespace upsylon
                 return _row[j];
             }
 
+            //! Raw item at [p.y][p.x]
             inline T & operator[](const Point p) throw()
             {
                 return  (*this)[p.y][p.x];
             }
-            
+
+            //! Raw item at [p.y][p.x], const
             inline const T & operator[](const Point p) const throw()
             {
                 return  (*this)[p.y][p.x];
@@ -124,22 +126,12 @@ namespace upsylon
             //! apply a 1:1 function
             template <typename U, typename FUNC>
             void apply(const Pixmap<U> &source,
-                         FUNC            &func,
-                         Async::Broker   &broker)
+                       FUNC            &func,
+                       Async::Broker   &broker)
             {
                 assert(this->equals(source) );
                 assert(this->equals(*(broker.engine)));
                 Async::Execute::Function(*this,source,func,broker);
-            }
-
-            template <typename U, typename PROC>
-            void compute(const Pixmap<U> &source,
-                         PROC            &proc,
-                         Async::Broker   &broker)
-            {
-                assert(this->equals(source) );
-                assert(this->equals(*(broker.engine)));
-                Async::Execute::Procedure(*this,source,proc,broker);
             }
 
 

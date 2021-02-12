@@ -14,13 +14,17 @@ namespace upsylon
     {
         namespace Async
         {
-           
+
+            //__________________________________________________________________
+            //
+            //! alias for Engine base class
+            //__________________________________________________________________
             typedef parallel::group Team;
             
             //__________________________________________________________________
             //
             //
-            //! Engine to dispatch inner tiles and outer boundaries work
+            //! Engine to dispatch inner tiles 
             //
             //__________________________________________________________________
             class Engine : public Object, public Tiles, public Team

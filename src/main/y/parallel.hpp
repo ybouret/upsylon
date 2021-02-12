@@ -28,7 +28,7 @@ namespace upsylon
         {
         public:
             //! cleanup
-            virtual ~group() throw() {}
+            virtual ~group() throw();
 
             //! make ONE type per context
             template <typename T> inline
@@ -77,17 +77,13 @@ namespace upsylon
                 return                      self[i]._<T>(j);
             }
 
-            double efficiency(const double speed_up) const throw()
-            {
-                const accessible<parallel> &self = *this;
-                return self[1].efficiency(speed_up);
-            }
+            //! compute efficiency of speed up
+            double efficiency(const double speed_up) const throw();
+
 
         protected:
             //! setup
-            explicit group() throw()
-            {
-            }
+            explicit group() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(group);

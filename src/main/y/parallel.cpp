@@ -6,6 +6,21 @@
 
 namespace upsylon
 {
+
+    parallel::group:: group() throw()
+    {
+    }
+
+    parallel::group:: ~group() throw()
+    {
+    }
+
+    double parallel::group:: efficiency(const double speed_up) const throw()
+    {
+        const accessible<parallel> &self = *this;
+        return self[1].efficiency(speed_up);
+    }
+
     parallel:: ~parallel() throw() { }
 
     parallel:: parallel() throw() :

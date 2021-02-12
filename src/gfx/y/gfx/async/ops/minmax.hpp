@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_GFX_ASYNC_MINMAX_INCLUDED
 #define Y_GFX_ASYNC_MINMAX_INCLUDED 1
@@ -9,26 +10,39 @@ namespace upsylon
 {
     namespace GFX
     {
-        template <typename T> class Pixmap;
+        template <typename T> class Pixmap; //!< forward declaration
         
         namespace Async
         {
-            
+
+            //__________________________________________________________________
+            //
+            //
+            //! Find Min/Max on a pixmap
+            //
+            //__________________________________________________________________
             struct MinMax
             {
-                
+
+                //______________________________________________________________
+                //
+                //! info to locate min/max
+                //______________________________________________________________
                 template <typename T>
                 class Info
                 {
                 public:
-                    inline  Info() throw() : vmax(0), pmax(), vmin(0), pmin() {}
-                    inline ~Info() throw() {}
-                    T      vmax;
-                    Point  pmax;
-                    T      vmin;
-                    Point  pmin;
-                    
-                    static inline Point FindMin( T &value, const accessible<parallel> &arr)
+
+                    inline  Info() throw() : vmax(0), pmax(), vmin(0), pmin() {} //!< setup
+                    inline ~Info() throw() {}                                    //!< cleanup
+
+                    T      vmax; //!< max value
+                    Point  pmax; //!< max position
+                    T      vmin; //!< min value
+                    Point  pmin; //!< min position
+
+                    //! Reduction after FindMin per Tile
+                    static inline Point FindMinReduce(T &value, const accessible<parallel> &arr)
                     {
                         const Info *info = & arr[1]._<Info>();
                         Point       p    = info->pmin;
@@ -46,8 +60,9 @@ namespace upsylon
                         value = v;
                         return p;
                     }
-                    
-                    static inline Point FindMax( T &value, const accessible<parallel> &arr)
+
+                    //! Reduction after FindMax per Tile
+                    static inline Point FindMaxReduce(T &value, const accessible<parallel> &arr)
                     {
                         const Info *info = & arr[1]._<Info>();
                         Point       p = info->pmax;
@@ -65,8 +80,9 @@ namespace upsylon
                         value = v;
                         return p;
                     }
-                    
-                    static inline void FindMinMax(Info &result, const accessible<parallel> &arr)
+
+                    //! Reduction after FindMinMax per Tile
+                    static inline void FindMinMaxReduce(Info &result, const accessible<parallel> &arr)
                     {
                         const Info *info = & arr[1]._<Info>();
                         Point       pmax = info->pmax;
@@ -106,14 +122,19 @@ namespace upsylon
                     Y_DISABLE_COPY_AND_ASSIGN(Info);
                     
                 };
-                
+
+                //______________________________________________________________
+                //
+                //! parallel operations
+                //______________________________________________________________
                 template <typename T,typename U, typename FUNC>
                 struct Ops
                 {
-                    const Pixmap<U> &source;
-                    FUNC            &func;
+                    const Pixmap<U> &source; //!< mapped source
+                    FUNC            &func;   //!< function per pixel
                     
-                    
+
+                    //! find max per tile, store in cache
                     static inline void runMax(Async::Worker &worker,
                                               lockable      &,
                                               void          *data)
@@ -147,7 +168,8 @@ namespace upsylon
                         result.vmax       = vmax;
                         result.pmax       = pmax;
                     }
-                    
+
+                    //! find min per tile, store in cache
                     static inline void runMin(Async::Worker &worker,
                                               lockable      &,
                                               void          *data)
@@ -181,7 +203,8 @@ namespace upsylon
                         result.vmin      = vmin;
                         result.pmin      = pmin;
                     }
-                    
+
+                    //! find min/max per tile, store in cache
                     static inline void runMinMax(Async::Worker &worker,
                                                  lockable      &,
                                                  void          *data)
@@ -231,7 +254,11 @@ namespace upsylon
                 };
             };
             
-            
+
+            //__________________________________________________________________
+            //
+            //! Find Max of func(pixmap)
+            //__________________________________________________________________
             template <typename T, typename U, typename FUNC>
             inline Point FindMax( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
@@ -239,9 +266,13 @@ namespace upsylon
                 Team                   &cache = *broker; cache.make<InfoType>();
                 MinMax::Ops<T,U,FUNC>   op    = { pixmap, func };
                 broker(op.runMax,&op);
-                return InfoType::FindMax(value,cache);
+                return InfoType::FindMaxReduce(value,cache);
             }
-            
+
+            //__________________________________________________________________
+            //
+            //! Find Min of func(pixmap)
+            //__________________________________________________________________
             template <typename T, typename U, typename FUNC>
             inline Point FindMin( T &value, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
@@ -249,9 +280,13 @@ namespace upsylon
                 parallel::group        &cache = *broker; cache.make<InfoType>();
                 MinMax::Ops<T,U,FUNC>   op = { pixmap, func };
                 broker(op.runMin,&op);
-                return InfoType::FindMin(value,cache);
+                return InfoType::FindMinReduce(value,cache);
             }
-            
+
+            //__________________________________________________________________
+            //
+            //! Find Min/Max of func(pixmap)
+            //__________________________________________________________________
             template <typename T, typename U, typename FUNC>
             inline void FindMinMax( MinMax::Info<T> &info, const Pixmap<U> &pixmap, FUNC &func, Async::Broker &broker)
             {
@@ -259,7 +294,7 @@ namespace upsylon
                 parallel::group        &cache = *(broker.engine); cache.make<InfoType>();
                 MinMax::Ops<T,U,FUNC>   op = { pixmap, func };
                 broker(op.runMinMax,&op);
-                InfoType::FindMinMax(info,cache);
+                InfoType::FindMinMaxReduce(info,cache);
             }
             
         }

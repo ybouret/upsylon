@@ -11,15 +11,24 @@ namespace upsylon
 {
     namespace GFX
     {
-        template <typename T> class Pixmap;
+        template <typename T> class Pixmap; //!< forward declaration
 
         namespace Async
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Executing pixel-wise operations
+            //
+            //__________________________________________________________________
             struct Execute
             {
             public:
+                //______________________________________________________________
+                //
                 //! pixel = func(pixel)
+                //__________________________________________________________________
                 template <typename TARGET, typename SOURCE, typename FUNC>  static inline
                 void Function(TARGET &target, const SOURCE &source, FUNC &func, Broker &broker)
                 {
