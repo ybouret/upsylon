@@ -39,11 +39,19 @@ SET(bitmap_srcs ${bitmap_decl} ${bitmap_code})
 SOURCE_GROUP( gfx/bitmap FILES ${bitmap_srcs} )
 INSTALL( FILES ${bitmap_decl} DESTINATION include/y/gfx/bitmap )
 
+FILE(GLOB color_decl y/gfx/color/*.hpp)
+FILE(GLOB color_code y/gfx/color/*.cpp)
+SET(color_srcs ${color_decl} ${color_code})
+SOURCE_GROUP( gfx/color FILES ${color_srcs} )
+INSTALL( FILES ${color_decl} DESTINATION include/y/gfx/color )
+
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
 ${async_srcs} ${async_ops_srcs}
 ${bitmap_srcs}
+${color_srcs}
 )
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
  
