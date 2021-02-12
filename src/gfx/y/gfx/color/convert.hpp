@@ -45,15 +45,24 @@ namespace upsylon
         class Convert
         {
         public:
-            //! generic call
-            template <typename U> static
-            U To(const T &) throw();
+            template <typename U> struct As
+            {
+                static U Get(const T&) throw();
+            };
             
-            //! identity
-            template <> static
-            T To(const T &x) throw() { return x; }
+            template <> struct As<T>
+            {
+                static inline T Get(const T &x) throw() { return x; }
+            };
+            
+            //! generic call
+            template <typename U> static inline
+            U To(const T &x) throw()
+            {
+                return As<U>::Get(x);
+            }
+            
         };
-        
         
         
     }

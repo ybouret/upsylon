@@ -5,6 +5,7 @@ namespace upsylon
     namespace GFX
     {
         
+#if 0
         template <> template <>
         uint8_t Convert<float>:: To<uint8_t>(const float &f) throw()
         {
@@ -30,7 +31,7 @@ namespace upsylon
         {
              return YUV(f,0,0);
         }
-        
+#endif
         
         
     }

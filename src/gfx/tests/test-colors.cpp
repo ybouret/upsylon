@@ -36,12 +36,12 @@ Y_UTEST(colors)
     
     {
         const float     f = 0.22f;
-        CheckAll<float>(f);
+        //CheckAll<float>(f);
     }
     
     {
         const rgb     c(10,20,30);
-        CheckAll<rgb>(c);
+        //CheckAll<rgb>(c);
     }
     
     

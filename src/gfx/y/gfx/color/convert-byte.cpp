@@ -7,26 +7,26 @@ namespace upsylon
     {
         
         template <> template <>
-        float Convert<uint8_t>:: To<float>(const uint8_t &u) throw()
+        float Convert<uint8_t>:: As<float>::Get(const uint8_t &u) throw()
         {
             return Conv::UnitFloat[u];
         }
         
         template <> template <>
-        rgb Convert<uint8_t>:: To<rgb>(const uint8_t &u) throw()
+        rgb Convert<uint8_t>:: As<rgb>::Get(const uint8_t &u) throw()
         {
             return rgb(u,u,u);
         }
         
         template <> template <>
-        rgba Convert<uint8_t>:: To<rgba>(const uint8_t &u) throw()
+        rgba Convert<uint8_t>:: As<rgba>::Get(const uint8_t &u) throw()
         {
             return rgba(u,u,u);
         }
         
         
         template <> template <>
-        YUV Convert<uint8_t>:: To<YUV>(const uint8_t &u) throw()
+        YUV Convert<uint8_t>:: As<YUV>::Get(const uint8_t &u) throw()
         {
             return YUV(Conv::UnitFloat[u],0,0);
         }

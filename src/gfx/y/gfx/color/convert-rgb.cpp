@@ -6,6 +6,7 @@ namespace upsylon
     namespace GFX
     {
         
+#if 0
         template <> template <>
         uint8_t Convert<rgb>:: To<uint8_t>(const rgb &c) throw()
         {
@@ -35,6 +36,7 @@ namespace upsylon
                        -0.147f*r-0.289f*g+0.436f*b,
                         0.615f*r-0.515f*g-0.100f*b);
         }
+#endif
     }
     
 }
