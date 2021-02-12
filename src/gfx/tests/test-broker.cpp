@@ -118,7 +118,9 @@ Y_UTEST(broker)
         Y_CHECK(infoSeq.pmin==pmin);
 
 
-        
+
+        std::cerr << "seq: " << (*seqBrk).size() << std::endl;
+        std::cerr << "par: " << (*parBrk).size() << std::endl;
         std::cerr << "Chrono Apply" << std::endl;
         double seq_speed = 0;
         Y_TIMINGS(seq_speed,1, pfs.apply(pf, sample<float>, seqBrk) );

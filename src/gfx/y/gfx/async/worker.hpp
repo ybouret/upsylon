@@ -31,6 +31,7 @@ namespace upsylon
                 static  void None(Worker &,lockable &,void*); //!< default kernel, display tile info
 
                 const Tile  &tile; //!< working tile
+                Point        begin() const throw(); //!< first point
 
                 //! set internal kernel
                 void load(Kernel,void*) throw();

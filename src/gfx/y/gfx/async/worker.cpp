@@ -30,6 +30,11 @@ namespace upsylon
                 kproc(*this,sync,kdata);
             }
 
+            Point Worker:: begin() const throw()
+            {
+                return tile[1].begin;
+            }
+
             void Worker:: load(Kernel k,void *d) throw()
             {
                 assert(k);

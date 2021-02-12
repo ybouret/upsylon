@@ -39,6 +39,8 @@ namespace upsylon
                 void compute(const Pixmap<U> &source, Broker &broker)
                 {
                     Compute<U> op = { *this, source };
+                    Team     &team = *broker;
+                    team.make<T>(2);
                     broker(op.run,&op);
                 }
 
@@ -56,7 +58,7 @@ namespace upsylon
                                            void     *args )
                     {
                         assert(args);
-                        if(true)
+                        if(false)
                         {
                             Y_LOCK(sync);
                             std::cerr << "gradient@" << w.label << "/#" << w.tile.items() << std::endl;
@@ -66,6 +68,17 @@ namespace upsylon
                         Pixmap<Vertex>  &grad   = self.gradient.grad;
                         const Tile      &tile   = w.tile;
                         const Pixmap<U> &source = self.source;
+                        T                vmin=0;
+                        T                vmax=0;
+
+                        {
+                            const Point  p = w.begin();
+                            const unit_t y = p.y, x=p.x;
+                            const typename Pixmap<U>::Row &src_y = source(y);
+                            const T dx = T(src_y(x+1))     - T(src_y(x-1));
+                            const T dy = T(source(y+1)(x)) - T(source(y-1)(x));
+                            vmin = vmax = mkl::sqrt_of(dx*dx+dy*dy);
+                        }
 
                         for(size_t t=tile.size();t>0;--t)
                         {
@@ -81,16 +94,19 @@ namespace upsylon
                             const typename Pixmap<U>::Row &src_y = source(y);
                             for(unit_t i=s.width;i>0;--i)
                             {
-                                const T dx = T(src_y(xp))     - T(src_y(xm));
-                                const T dy = T(source(yp)(x)) - T(source(ym)(x));
-                                g[x] = Vertex(dx,dy);
-                                n[x] = mkl::sqrt_of(dx*dx+dy*dy);
+                                const T dx   = T(src_y(xp))     - T(src_y(xm));
+                                const T dy   = T(source(yp)(x)) - T(source(ym)(x));
+                                g[x]         = Vertex(dx,dy);
+                                const T temp = n[x] = mkl::sqrt_of(dx*dx+dy*dy);
+                                if(temp<vmin)      vmin = temp;
+                                else if(temp>vmax) vmax = temp;
                                 xm = x;
                                 x  = xp;
                                 ++xp;
                             }
                         }
                     }
+
 
                 };
 

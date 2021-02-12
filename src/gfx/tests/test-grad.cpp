@@ -59,7 +59,6 @@ Y_UTEST(grad)
         std::cerr << "seq: " << (*seqBrk).size() << std::endl;
         std::cerr << "par: " << (*parBrk).size() << std::endl;
 
-        return 0;
         std::cerr << "Chrono Grad..." << std::endl;
         double seq_speed = 0;
         Y_TIMINGS(seq_speed,1, G.compute(pf,seqBrk); );
