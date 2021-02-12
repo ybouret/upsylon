@@ -11,7 +11,7 @@ namespace
     static inline void  Check(const T &value)
     {
         std::cerr << "Convert<" << type_name_of<T>() << ">::From<" << type_name_of<U>() << ">" << std::endl;
-        std::cerr << value << " -> " << Convert<U,T>::From(value) << std::endl;
+        std::cerr << "\t" << value << " -> " << Convert<U,T>::From(value) << std::endl;
     }
     
     template <typename T>
@@ -22,6 +22,7 @@ namespace
         Check<T,rgb>(value);
         Check<T,rgba>(value);
         Check<T,YUV>(value);
+        std::cerr << std::endl;
     }
 }
 
@@ -36,12 +37,12 @@ Y_UTEST(colors)
     
     {
         const float     f = 0.22f;
-        //CheckAll<float>(f);
+        CheckAll<float>(f);
     }
     
     {
-        const rgb     c(10,20,30);
-        //CheckAll<rgb>(c);
+        const rgb     c(50,100,150);
+        CheckAll<rgb>(c);
     }
     
     
