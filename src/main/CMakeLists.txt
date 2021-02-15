@@ -174,12 +174,17 @@ SET(concurrent_sync_srcs ${concurrent_sync_decl} ${concurrent_sync_code})
 SOURCE_GROUP( concurrent/sync FILES ${concurrent_sync_srcs} )
 INSTALL( FILES ${concurrent_sync_decl} DESTINATION include/y/concurrent/sync )
 
-
 FILE(GLOB concurrent_scheme_decl y/concurrent/scheme/*.hpp)
 FILE(GLOB concurrent_scheme_code y/concurrent/scheme/*.cpp)
 SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
 SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
 INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
+
+FILE(GLOB concurrent_device_decl y/concurrent/device/*.hpp)
+FILE(GLOB concurrent_device_code y/concurrent/device/*.cpp)
+SET(concurrent_device_srcs ${concurrent_device_decl} ${concurrent_device_code})
+SOURCE_GROUP( concurrent/device FILES ${concurrent_device_srcs} )
+INSTALL( FILES ${concurrent_device_decl} DESTINATION include/y/concurrent/device )
 
 FILE(GLOB ios_decl y/ios/*.hpp)
 FILE(GLOB ios_code y/ios/*.cpp)
@@ -422,7 +427,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
-${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_scheme_srcs}  
+${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_device_srcs}  ${concurrent_scheme_srcs}  
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
