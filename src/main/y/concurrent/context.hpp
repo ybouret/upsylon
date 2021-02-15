@@ -41,6 +41,8 @@ namespace upsylon
             void fmt() throw();
         };
 
+        typedef void (*executable)(void *, const context &, lockable &);
+        
     }
 
 }

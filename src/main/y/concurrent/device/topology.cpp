@@ -68,6 +68,10 @@ namespace upsylon
             }
         }
 
+        size_t topology:: size() const throw()
+        {
+            return nodes.size;
+        }
         
         topology:: topology(const size_t start,
                             const size_t width,

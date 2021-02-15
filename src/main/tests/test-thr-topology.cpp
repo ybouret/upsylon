@@ -17,6 +17,8 @@ Y_UTEST(thr_topology)
     {
         std::cerr << "-> " << node->rank << std::endl;
     }
+    
+    std::cerr << "sizeof(topology)=" << sizeof(concurrent::topology) << std::endl;
 }
 Y_UTEST_DONE()
 

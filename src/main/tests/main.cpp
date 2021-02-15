@@ -121,6 +121,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_context);
     Y_UTEST(thr_worker);
     Y_UTEST(thr_topology);
+    Y_UTEST(thr_crew);
     Y_UTEST(threads);
     Y_UTEST(simd);
     Y_UTEST(server);

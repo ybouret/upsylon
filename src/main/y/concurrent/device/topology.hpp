@@ -47,11 +47,13 @@ namespace upsylon
 
             void add(const string &description);
             void add(const char   *description);
-
+            
+            size_t size() const throw();
+            
             friend std::ostream & operator<<(std::ostream &, const topology &);
 
 
-            const core::list_of_cpp<node>  nodes;
+            const core::list_of_cpp<node>  nodes;    //!< all nodes
             const nucleus::cluster::list   clusters; //!< all clusters
 
             

@@ -147,9 +147,11 @@ ADD_TEST(mem:lock          test-main mlock)
 SOURCE_GROUP(thr FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp test-skimp.cpp
 test-thr-context.cpp
 test-thr-worker.cpp
-test-thr-topology.cpp)
+test-thr-topology.cpp
+test-thr-crew.cpp)
 ADD_TEST(thr:context     test-main thr_context)
 ADD_TEST(thr:worker      test-main thr_worker)
+ADD_TEST(thr:crew        test-main thr_crew)
 ADD_TEST(thr:parallel    test-main parallel)
 ADD_TEST(thr:threads     test-main threads)
 ADD_TEST(thr:simd        test-main simd)
