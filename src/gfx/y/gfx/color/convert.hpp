@@ -27,7 +27,7 @@ namespace upsylon
                 return uint8_t( floorf(255.0f*f+0.5f) );
             }
             
-            //! compression table
+            //! greyscale compression table
             static  const uint8_t Table[255*3+1];
             
             //! alpha function

@@ -1,6 +1,7 @@
 #include "y/gfx/color/convert.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
+#include "y/ios/align.hpp"
 
 using namespace upsylon;
 using namespace GFX;
@@ -10,7 +11,7 @@ namespace
     template <typename T, typename U>
     static inline void  Check(const T &value)
     {
-        std::cerr << "Convert<" << type_name_of<T>() << ">::From<" << type_name_of<U>() << ">" << std::endl;
+        std::cerr << "Convert<" << type_name_of<T>() << "," << type_name_of<U>() << ">::From" << std::endl;
         std::cerr << "\t" << value << " -> " << Convert<U,T>::From(value) << std::endl;
     }
     
@@ -28,7 +29,6 @@ namespace
 
 Y_UTEST(colors)
 {
-    //const float   f = 0.2f;
     
     {
         const uint8_t     u = 'A';
@@ -45,7 +45,10 @@ Y_UTEST(colors)
         CheckAll<rgb>(c);
     }
     
-    
+    {
+        const YUV   yuv(0.5f,0.1f,-0.1f);
+        CheckAll<YUV>(yuv);
+    }
     
         
     
