@@ -118,6 +118,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(for_each);
 
     Y_UTEST(parallel);
+    Y_UTEST(thr_context);
     Y_UTEST(threads);
     Y_UTEST(simd);
     Y_UTEST(server);
