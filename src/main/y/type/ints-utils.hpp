@@ -16,7 +16,7 @@ namespace upsylon {
         {
 
             template <typename T>
-            static inline size_t base10(const T &x) throw()
+            static inline unsigned base10(const T &x) throw()
             {
                 static const int2type< is_signed<T>::value > selector = {};
                 return base10<T>(x,selector);
@@ -24,10 +24,10 @@ namespace upsylon {
 
             //! unsigned
             template <typename T>
-            static inline size_t base10(T value, int2type<false> ) throw()
+            static inline unsigned base10(T value, int2type<false> ) throw()
             {
                 Y_STATIC_CHECK(false==is_signed<T>::value,signed_type);
-                size_t count = 0;
+                unsigned count = 0;
                 do
                 {
                     ++count;
@@ -39,10 +39,10 @@ namespace upsylon {
 
             //! signed
             template <typename T>
-            static inline size_t base10(T value, int2type<true> ) throw()
+            static inline unsigned base10(T value, int2type<true> ) throw()
             {
                 Y_STATIC_CHECK(true==is_signed<T>::value,signed_type);
-                size_t count = 0;
+                unsigned count = 0;
                 if(value<0)
                 {
                     ++count;

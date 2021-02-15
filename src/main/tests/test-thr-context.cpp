@@ -1,6 +1,5 @@
 #include "y/concurrent/context.hpp"
 #include "y/utest/run.hpp"
-
 #include "y/type/ints-utils.hpp"
 
 using namespace upsylon;
@@ -45,6 +44,8 @@ Y_UTEST(thr_context)
         {
             const unsigned u = unsigned(s);
             std::cerr << "unsigned digits for " << u << " : " << core::count_digits::base10(u,int2type<false>()) << std::endl;
+
+            const concurrent::context ctx(u,0);
         }
         std::cerr << "auto     digits for " << s << " : " << core::count_digits::base10(s) << std::endl;
 

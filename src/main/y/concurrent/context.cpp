@@ -1,6 +1,7 @@
 #include "y/concurrent/context.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/ints-utils.hpp"
+#include "y/os/error.hpp"
 #include <cstring>
 #include <cstdio>
 
@@ -42,9 +43,21 @@ namespace upsylon
 
         void context:: fmt() throw()
         {
+            static const size_t max_width = sizeof(label);
+
             char *str = (char *)label;
             memset(str,0,sizeof(label));
-            snprintf(str,sizeof(label)-1,"%u.%u", unsigned(size), unsigned(rank) );
+            const unsigned digits = core::count_digits::base10(size);
+            const unsigned width  = (1+digits) * 2; // digits + '.' + digits + 0
+            if(width>max_width)
+            {
+                fatal_error("concurrent::context(size is too big)");
+            }
+
+            char fmtstr[32] = { 0 };
+            sprintf(fmtstr,"%%0%uu.%%0%uu",digits,digits);
+            snprintf(str,max_width-1,fmtstr,unsigned(size),unsigned(rank));
+
         }
 
     }
