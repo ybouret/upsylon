@@ -3,6 +3,7 @@
 #define Y_CONCURRENT_THREAD_INCLUDED 1
 
 #include "y/concurrent/mutex.hpp"
+#include "y/concurrent/context.hpp"
 #include "y/parallel.hpp"
 
 namespace upsylon
@@ -64,7 +65,7 @@ namespace upsylon
             const nucleus::thread::ID     id;     //!< thread ID
             const nucleus::thread::handle handle; //!< thread handle
 
-            bool is_current() const throw();      //!< checking against get_current_...
+            bool is_current() const throw();      //!< checking against get_current_id
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(thread);

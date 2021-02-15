@@ -2,6 +2,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/type/ints-utils.hpp"
 #include "y/os/error.hpp"
+#include "y/os/real-time-clock.hpp"
 #include <cstring>
 #include <cstdio>
 
@@ -59,6 +60,13 @@ namespace upsylon
             snprintf(str,max_width-1,fmtstr,unsigned(size),unsigned(rank));
 
         }
+
+        uint64_t context:: ticks(lockable &sync) const throw()
+        {
+            Y_LOCK(sync);
+            return real_time_clock::ticks();
+        }
+
 
     }
 
