@@ -1,4 +1,4 @@
-#include "y/concurrent/barrier.hpp"
+#include "y/concurrent/sync/barrier.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon

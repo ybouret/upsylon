@@ -4,7 +4,7 @@
 
 #include "y/concurrent/executor.hpp"
 #include "y/concurrent/thread.hpp"
-#include "y/concurrent/condition.hpp"
+#include "y/concurrent/sync/condition.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/concurrent/layout.hpp"
 #include "y/ptr/auto.hpp"

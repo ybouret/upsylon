@@ -1,4 +1,4 @@
-#include "y/concurrent/semaphore.hpp"
+#include "y/concurrent/sync/semaphore.hpp"
 
 namespace upsylon {
 	

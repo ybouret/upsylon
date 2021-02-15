@@ -3,7 +3,7 @@
 #ifndef Y_CONCURRENT_SEMAPHORE_INCLUDED
 #define Y_CONCURRENT_SEMAPHORE_INCLUDED 1
 
-#include "y/concurrent/condition.hpp"
+#include "y/concurrent/sync/condition.hpp"
 
 
 namespace upsylon {

@@ -168,6 +168,13 @@ SET(concurrent_nucleus_srcs ${concurrent_nucleus_decl} ${concurrent_nucleus_code
 SOURCE_GROUP( concurrent/nucleus FILES ${concurrent_nucleus_srcs} )
 INSTALL( FILES ${concurrent_nucleus_decl} DESTINATION include/y/concurrent/nucleus )
 
+FILE(GLOB concurrent_sync_decl y/concurrent/sync/*.hpp)
+FILE(GLOB concurrent_sync_code y/concurrent/sync/*.cpp)
+SET(concurrent_sync_srcs ${concurrent_sync_decl} ${concurrent_sync_code})
+SOURCE_GROUP( concurrent/sync FILES ${concurrent_sync_srcs} )
+INSTALL( FILES ${concurrent_sync_decl} DESTINATION include/y/concurrent/sync )
+
+
 FILE(GLOB concurrent_scheme_decl y/concurrent/scheme/*.hpp)
 FILE(GLOB concurrent_scheme_code y/concurrent/scheme/*.cpp)
 SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
@@ -415,7 +422,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
-${concurrent_srcs}  ${concurrent_scheme_srcs}  ${concurrent_nucleus_srcs}
+${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_scheme_srcs}  
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 

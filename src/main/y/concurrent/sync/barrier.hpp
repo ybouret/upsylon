@@ -3,7 +3,7 @@
 #ifndef Y_CONCURRENT_BARRIER_INCLUDED
 #define Y_CONCURRENT_BARRIER_INCLUDED 1
 
-#include "y/concurrent/condition.hpp"
+#include "y/concurrent/sync/condition.hpp"
 
 namespace upsylon
 {

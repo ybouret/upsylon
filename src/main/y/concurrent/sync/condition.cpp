@@ -1,4 +1,4 @@
-#include "y/concurrent/condition.hpp"
+#include "y/concurrent/sync/condition.hpp"
 #include "y/os/error.hpp"
 
 #if defined(Y_WIN)
