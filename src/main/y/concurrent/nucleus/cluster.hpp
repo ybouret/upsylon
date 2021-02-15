@@ -34,6 +34,8 @@ namespace upsylon
                                        const size_t width_,
                                        const size_t every_);
 
+                size_t core_of(const size_t worker_rank) const;
+
                 static cluster *create(const string &description);
                 friend std::ostream & operator<<(std::ostream &, const cluster &);
 

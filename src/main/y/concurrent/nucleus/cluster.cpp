@@ -72,7 +72,7 @@ namespace upsylon
                 {
                     case 1: return create(0, string_convert::to<size_t>(words[1],width), 1);
                     case 2: return create( string_convert::to<size_t>(words[1],start), string_convert::to<size_t>(words[2],width), 1);
-                    case 3: return create( string_convert::to<size_t>(words[1],start), string_convert::to<size_t>(words[2],width),string_convert::to<size_t>(words[3],every));
+                    case 3: return create( string_convert::to<size_t>(words[1],start), string_convert::to<size_t>(words[2],width), string_convert::to<size_t>(words[3],every));
 
                     default:
                         throw exception("%sinvalid #fields=%u",fn,unsigned(n));
@@ -85,6 +85,13 @@ namespace upsylon
                 os << '{' << '#' << cls.count << '<' << '-' << cls.start << ':' << cls.width << ':' << cls.every << '}';
                 return os;
             }
+
+            size_t cluster:: core_of(const size_t worker_rank) const
+            {
+                assert(worker_rank<count);
+                return start + every*worker_rank;
+            }
+
 
         }
 

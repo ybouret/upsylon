@@ -33,7 +33,7 @@ namespace upsylon
 
             const nucleus::cluster::list clusters;
             const size_t                 size; //!< total size
-
+            size_t core_of(const size_t rank) const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(topology);

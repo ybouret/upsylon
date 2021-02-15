@@ -61,16 +61,16 @@ namespace upsylon
                 {
                     add(descriptions[i]);
                 }
-                if(size<=0)
-                {
-                    throw exception("empty topology!");
-                }
             }
             else
             {
                 add(0,hardware::nprocs(),1);
             }
 
+            if(size<=0)
+            {
+                throw exception("empty topology!");
+            }
         }
 
         std::ostream & operator<<(std::ostream &os, const topology &topo)
@@ -84,6 +84,25 @@ namespace upsylon
             return os;
         }
 
+        size_t topology:: core_of(const size_t rank) const throw()
+        {
+            assert(rank<size);
+            assert(clusters.size>0);
+            const nucleus::cluster *cls = clusters.head;
+            size_t lo=0;
+            size_t up=lo+cls->count;
+
+            while(rank>=up)
+            {
+                cls  = cls->next;
+                lo   = up;
+                up  += cls->count;
+            }
+
+            //std::cerr << "found rank between " << lo << " and " << up << std::endl;
+
+            return cls->core_of(rank-lo);
+        }
 
     }
 
