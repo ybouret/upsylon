@@ -14,13 +14,22 @@ namespace upsylon
     namespace concurrent
     {
 
+        topology:: node:: ~node() throw()
+        {
+        }
+        
+        topology:: node:: node(const size_t r) throw() :
+        next(0), prev(0), rank(r)
+        {
+        }
+        
+        
+        
         topology:: ~topology() throw()
         {
-            aliasing::_(size)=0;
         }
 
-
-
+        
         void topology:: add(const size_t start, const size_t width, const size_t every)
         {
             add_( nucleus::cluster::create(start,width,every) );
@@ -41,15 +50,35 @@ namespace upsylon
         {
             assert(cls);
             aliasing::_(clusters).push_back(cls);
-            aliasing::_(size)   += cls->count;
+            const size_t old_size = nodes.size;
+            try
+            {
+                for(size_t rank=0;rank<cls->count;++rank)
+                {
+                    aliasing::_(nodes).push_back( new node( cls->core_of(rank) ) );
+                }
+            }
+            catch(...)
+            {
+                while(nodes.size>old_size)
+                {
+                    delete aliasing::_(nodes).pop_back();
+                }
+                throw;
+            }
         }
 
         
-
+        topology:: topology(const size_t start,
+                            const size_t width,
+                            const size_t every)
+        {
+            add(start,width,every);
+        }
 
         topology:: topology() :
-        clusters(),
-        size(0)
+        nodes(),
+        clusters()
         {
             string info;
             if( environment::get(info,Y_NUM_THREADS) )
@@ -67,7 +96,7 @@ namespace upsylon
                 add(0,hardware::nprocs(),1);
             }
 
-            if(size<=0)
+            if(nodes.size<=0)
             {
                 throw exception("empty topology!");
             }
@@ -75,7 +104,7 @@ namespace upsylon
 
         std::ostream & operator<<(std::ostream &os, const topology &topo)
         {
-            os << "<topology size='" << topo.size << "' clusters='" << topo.clusters.size << "'>" << std::endl;
+            os << "<topology nodes='" << topo.nodes.size << "' clusters='" << topo.clusters.size << "'>" << std::endl;
             for(const nucleus::cluster *cls=topo.clusters.head;cls;cls=cls->next)
             {
                 os << '\t' << *cls << std::endl;
@@ -84,25 +113,7 @@ namespace upsylon
             return os;
         }
 
-        size_t topology:: core_of(const size_t rank) const throw()
-        {
-            assert(rank<size);
-            assert(clusters.size>0);
-            const nucleus::cluster *cls = clusters.head;
-            size_t lo=0;
-            size_t up=lo+cls->count;
-
-            while(rank>=up)
-            {
-                cls  = cls->next;
-                lo   = up;
-                up  += cls->count;
-            }
-
-            //std::cerr << "found rank between " << lo << " and " << up << std::endl;
-
-            return cls->core_of(rank-lo);
-        }
+       
 
     }
 

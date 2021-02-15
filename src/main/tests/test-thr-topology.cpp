@@ -3,16 +3,20 @@
 
 using namespace upsylon;
 
+namespace
+{
+   
+}
+
 Y_UTEST(thr_topology)
 {
     concurrent::topology topo;
 
     std::cerr << topo << std::endl;
-    for(size_t i=0;i<topo.size;++i)
+    for(const concurrent::topology::node *node=topo.nodes.head;node;node=node->next)
     {
-        std::cerr << i << " -> core#" << topo.core_of(i) << std::endl;
+        std::cerr << "-> " << node->rank << std::endl;
     }
-
 }
 Y_UTEST_DONE()
 

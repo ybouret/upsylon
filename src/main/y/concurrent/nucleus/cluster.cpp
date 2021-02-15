@@ -83,6 +83,11 @@ namespace upsylon
             std::ostream & operator<<(std::ostream &os, const cluster &cls)
             {
                 os << '{' << '#' << cls.count << '<' << '-' << cls.start << ':' << cls.width << ':' << cls.every << '}';
+                os << '=' << '[';
+                size_t rank = 0;
+                os << cls.core_of(rank);
+                for(rank=1;rank<cls.count;++rank) os << ',' << cls.core_of(rank);
+                os << ']';
                 return os;
             }
 
