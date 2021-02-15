@@ -27,6 +27,7 @@ namespace upsylon
         ready(0),
         start(),
         stall(),
+        yoked(0),
         state(anchored),
         kcode(0),
         kdata(0),
@@ -80,9 +81,8 @@ namespace upsylon
         
         crew:: ~crew() throw()
         {
-            Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
-
             synchronize.lock();
+            Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
             switch(state)
             {
                 case anchored:
@@ -92,6 +92,18 @@ namespace upsylon
                     break;
                     
                 case launched:
+                    if(++yoked>topo->size())
+                    {
+                        Y_CREW_PRINTLN(pfx << ".done] @primary");
+                        stall.broadcast();
+                        synchronize.unlock();
+                    }
+                    else
+                    {
+                        Y_CREW_PRINTLN(pfx << ".wait] @primary");
+                        stall.wait(synchronize);
+                        synchronize.unlock();
+                    }
                     break;
             }
         }
@@ -107,6 +119,7 @@ namespace upsylon
             // LOCK shared mutex
             synchronize.lock();
             const worker &agent = squad.back();
+            const size_t  limit = topo->size();
             Y_CREW_PRINTLN(pfx<<".run!] "<< agent.label);
             ++ready;
             
@@ -114,8 +127,6 @@ namespace upsylon
             start.wait(synchronize);
             
             // wake up on a LOCKED mutex
-            //Y_CREW_PRINTLN(pfx<<".wake] "<< agent.label);
-            
             switch(state)
             {
                 case anchored:
@@ -134,6 +145,20 @@ namespace upsylon
                     
                     // and wait on loked
                     synchronize.lock();
+                    if(++yoked>limit)
+                    {
+                        Y_CREW_PRINTLN(pfx<<".end!]  " << agent.label);
+                        stall.broadcast();
+                        synchronize.unlock();
+                        return;
+                    }
+                    else
+                    {
+                        Y_CREW_PRINTLN(pfx<<".wait] " << agent.label);
+                        stall.wait(synchronize);
+                        synchronize.unlock();
+                        return;
+                    }
                     
             }
             

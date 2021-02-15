@@ -18,15 +18,21 @@ namespace upsylon
 
         namespace nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //! a cluster is a set of cpus
+            //
+            //__________________________________________________________________
             class cluster : public object, public inode<cluster>
             {
             public:
                 typedef core::list_of_cpp<cluster> list;
 
-                const size_t start;
-                const size_t width;
-                const size_t every;
-                const size_t count;
+                const size_t start; //!< start index
+                const size_t width; //!< width <= nprocs-start
+                const size_t every; //!< clamp(1,every,width)
+                const size_t count; //!< width/every
 
                 virtual ~cluster() throw();
 

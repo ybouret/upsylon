@@ -47,6 +47,13 @@ namespace upsylon
             static U From(const T &x) throw();
         };
         
+        //______________________________________________________________________
+        //
+        //
+        //! built-in auto-conversion
+        //
+        //______________________________________________________________________
+        
         template <typename T>
         struct Convert<T,T>
         {

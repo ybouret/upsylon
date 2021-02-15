@@ -87,7 +87,7 @@ namespace upsylon
             string info;
             if( environment::get(info,Y_NUM_THREADS) )
             {
-                std::cerr << "Y_NUM_THREADS=<" << info << ">" << std::endl;
+                //std::cerr << "Y_NUM_THREADS=<" << info << ">" << std::endl;
                 vector<string,memory::pooled> descriptions(4,as_capacity);
                 tokenizer<char>::split_with(descriptions,info,',');
                 for(size_t i=1;i<=descriptions.size();++i)

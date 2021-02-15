@@ -56,13 +56,14 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(crew);
-            slots<worker> squad;
-            size_t        ready;
-            condition     start;
-            condition     stall;
-            status        state;
-            executable    kcode;
-            void         *kdata;
+            slots<worker> squad; //!< threads
+            size_t        ready; //!< num ready
+            condition     start; //!< waiting to start
+            condition     stall; //!< waiting to end
+            size_t        yoked; //!< joined after run
+            status        state; //!< current state
+            executable    kcode; //!< kernel code
+            void         *kdata; //!< kernel data
             
             void        initialize();               //!< setup all waiting
             static void entry_stub(void *) throw(); //!< call entry()

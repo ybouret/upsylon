@@ -66,8 +66,7 @@ namespace upsylon
                 tokenizer<char>::split_with(words,description,':');
                 const size_t n = words.size();
                 for(size_t i=n;i>0;--i) words[i].clean_with(" \t");
-                std::cerr << "words=" << words << std::endl;
-
+                
                 switch(n)
                 {
                     case 1: return create(0, string_convert::to<size_t>(words[1],width), 1);
