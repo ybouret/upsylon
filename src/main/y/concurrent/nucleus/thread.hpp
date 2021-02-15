@@ -34,7 +34,11 @@ namespace upsylon
 #endif
 
                 //! low level launch, info points at a concurrent::thread
-                static handle launch(void *info, ID &tid );
+                static handle launch_thread(void *info, ID &tid );
+
+                //! low level launch, info points at a concurrent::worker
+                static handle launch_worker(void *info, ID &tid );
+
                 //! low level finish
                 static void   finish(handle &h) throw();
                 //! query system current thread handle

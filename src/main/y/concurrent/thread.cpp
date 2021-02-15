@@ -1,20 +1,21 @@
 
 #include "y/concurrent/thread.hpp"
 #include "y/exceptions.hpp"
-#include "y/os/error.hpp"
 #include "y/type/block/zset.hpp"
 
 #include <iostream>
 
+
 namespace upsylon
 {
 
+    
     namespace concurrent
     {
 
-        namespace  nucleus
+        namespace nucleus
         {
-            Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
+            static inline Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
             {
                 assert(args);
                 concurrent::thread & thr = *static_cast<concurrent::thread*>(args);
@@ -23,9 +24,7 @@ namespace upsylon
                 return 0;
             }
 
-
-
-            thread::handle thread::launch( void *args, ID &tid)
+            thread::handle thread:: launch_thread( void *args, ID &tid)
             {
                 assert(args);
                 bzset(tid);
@@ -55,72 +54,9 @@ namespace upsylon
 #endif
             }
 
-            void thread::finish(handle &h) throw()
-            {
-#if defined(Y_BSD)
-                const int res = pthread_join( h, 0 );
-                if( res != 0 )
-                {
-                    libc::critical_error( res, "pthread_join" );
-                }
-
-#endif
-
-#if defined(Y_WIN)
-                Y_GIANT_LOCK();
-                if( ::WaitForSingleObject( h , INFINITE ) != WAIT_OBJECT_0 )
-                {
-                    win32::critical_error( ::GetLastError(), "WaitForSingleObject" );
-                }
-                ::CloseHandle( h );
-#endif
-                bzset(h);
-            }
-
-            thread::handle thread::get_current_handle() throw()
-            {
-#if defined(Y_BSD)
-                return pthread_self();
-#endif
-
-#if defined(Y_WIN)
-                return ::GetCurrentThread();
-#endif
-            }
-
-            thread::ID thread::get_current_id() throw()
-            {
-#if defined(Y_BSD)
-                return pthread_self();
-#endif
-
-#if defined(Y_WIN)
-                return ::GetCurrentThreadId();
-#endif
-            }
-
-            bool thread::equal( const ID &lhs, const ID &rhs ) throw()
-            {
-#if defined(Y_BSD)
-                return pthread_equal(lhs,rhs)!=0;
-#endif
-#if defined(Y_WIN)
-                return lhs==rhs;
-#endif
-            }
-
         }
 
 
-    }
-
-}
-
-namespace upsylon
-{
-
-    namespace concurrent
-    {
         thread:: thread(thread_proc  user_proc,
                         void        *user_data,
                         const size_t user_size,
@@ -129,7 +65,7 @@ namespace upsylon
         proc(user_proc),
         data(user_data),
         id(),
-        handle( nucleus::thread::launch(this,(nucleus::thread::ID &)id) )
+        handle( nucleus::thread::launch_thread(this,(nucleus::thread::ID &)id) )
         {
         }
 
