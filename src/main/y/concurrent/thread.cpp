@@ -138,6 +138,12 @@ namespace upsylon
             nucleus::thread::finish((nucleus::thread::handle&)handle);
             bzset( (nucleus::thread::ID &)id );
         }
+
+        bool thread:: is_current() const throw()
+        {
+            const nucleus::thread::ID __curr_id = nucleus:: thread:: get_current_id();
+            return nucleus::thread::equal(id,__curr_id);
+        }
     }
 }
 
