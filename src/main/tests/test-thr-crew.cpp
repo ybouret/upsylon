@@ -17,8 +17,8 @@ namespace
 Y_UTEST(thr_crew)
 {
     concurrent::crew Crew;
-    std::cerr << "Will Run..." << std::endl;
-    Crew.run(doNothing,NULL);
+    //std::cerr << "Will Run..." << std::endl;
+    //Crew.run(doNothing,NULL);
     
     
     

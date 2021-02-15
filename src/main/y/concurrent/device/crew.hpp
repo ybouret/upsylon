@@ -41,21 +41,26 @@ namespace upsylon
         class crew : public nucleus::crew
         {
         public:
+            enum status
+            {
+                anchored,
+                launched
+            };
             explicit crew();
             virtual ~crew() throw();
-            
             
             mutex synchronize;
             void  run(executable code, void *data);
             
-            static bool query_threads_verbosity();
+            static bool query_threads_verbosity(); //!< from Y_VERBOSE_THREADS
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(crew);
             slots<worker> squad;
             size_t        ready;
             condition     start;
-            bool          halting;
+            condition     stall;
+            status        state;
             executable    kcode;
             void         *kdata;
             

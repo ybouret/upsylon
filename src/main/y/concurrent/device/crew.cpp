@@ -25,7 +25,9 @@ namespace upsylon
         nucleus::crew(),
         squad(topo->size()),
         ready(0),
-        halting(true),
+        start(),
+        stall(),
+        state(anchored),
         kcode(0),
         kdata(0),
         verbose( query_threads_verbosity() )
@@ -37,7 +39,7 @@ namespace upsylon
 
         void crew:: initialize()
         {
-            assert(halting==true);
+            assert(anchored==state);
             Y_CREW_PRINTLN(pfx << ".init] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
             
             try
@@ -63,11 +65,12 @@ namespace upsylon
                     }
                 }
                 
+                // ok, successfully anchored and placed
                 
             }
             catch(...)
             {
-                assert(halting);
+                assert(anchored==state);
                 start.broadcast();
                 Y_MUTEX_PROBE(synchronize,ready<=0);
                 throw;
@@ -77,24 +80,20 @@ namespace upsylon
         
         crew:: ~crew() throw()
         {
+            Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
+
+            synchronize.lock();
+            switch(state)
             {
-                Y_LOCK(synchronize);
-                if(!halting)
-                {
-                    halting = true;
+                case anchored:
                     start.broadcast();
-                }
+                    synchronize.unlock();
+                    Y_MUTEX_PROBE(synchronize,ready<=0);
+                    break;
+                    
+                case launched:
+                    break;
             }
-            
-#if 0
-            {
-                Y_LOCK(synchronize);
-                Y_CREW_PRINTLN(pfx << ".halt] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
-                halting=true;
-            }
-            start.broadcast();
-            Y_MUTEX_PROBE(synchronize,ready<=0);
-#endif
         }
         
         void crew:: entry_stub(void *args) throw()
@@ -105,6 +104,7 @@ namespace upsylon
         
         void crew:: entry() throw()
         {
+            // LOCK shared mutex
             synchronize.lock();
             const worker &agent = squad.back();
             Y_CREW_PRINTLN(pfx<<".run!] "<< agent.label);
@@ -114,29 +114,30 @@ namespace upsylon
             start.wait(synchronize);
             
             // wake up on a LOCKED mutex
-            Y_CREW_PRINTLN(pfx<<".wake] "<< agent.label);
-
-            if(halting)
+            //Y_CREW_PRINTLN(pfx<<".wake] "<< agent.label);
+            
+            switch(state)
             {
-                Y_CREW_PRINTLN(pfx<<".nope] "<< agent.label);
-                --ready;
-                synchronize.unlock();
-                return;
+                case anchored:
+                    Y_CREW_PRINTLN(pfx<<".nope] "<< agent.label);
+                    --ready;
+                    synchronize.unlock();
+                    return;
+                    
+                case launched:
+                    Y_CREW_PRINTLN(pfx<<".call] "<< agent.label);
+                    assert(kcode);
+                    synchronize.unlock();
+                    
+                    // perform code
+                    kcode(kdata,agent,synchronize);
+                    
+                    // and wait on loked
+                    synchronize.lock();
+                    
             }
             
-            // not halting, perform the code
-            Y_CREW_PRINTLN(pfx<<".call] "<< agent.label);
-            assert(kcode);
-            synchronize.unlock();
             
-            kcode(kdata,agent,synchronize);
-            
-            {
-                Y_LOCK(synchronize);
-                assert(ready>0);
-                Y_CREW_PRINTLN(pfx<<".quit] "<< agent.label);
-                --ready;
-            }
          }
         
         void crew:: run(executable code, void *data)
@@ -146,12 +147,9 @@ namespace upsylon
                 Y_LOCK(synchronize);
                 kcode   = code;
                 kdata   = data;
-                halting = false;
-                std::cerr << "will run halting=" << halting << std::endl;
+                state   = launched;
                 start.broadcast();
             }
-            
-
         }
         
         
