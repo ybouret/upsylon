@@ -1,4 +1,4 @@
-#include "y/concurrent/thread.hpp"
+#include "y/concurrent/nucleus/thread.hpp"
 #include "y/exceptions.hpp"
 #include <iostream>
 
