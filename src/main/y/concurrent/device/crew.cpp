@@ -100,22 +100,20 @@ namespace upsylon
 
         void crew:: off() throw()
         {
+            //------------------------------------------------------------------
+            // wake up any waiting thread
+            //------------------------------------------------------------------
             start.broadcast();
 
+            //------------------------------------------------------------------
+            // take control
+            //------------------------------------------------------------------
             synchronize.lock();
             Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
 
-#if 0
-            if(!kcode)
-            {
-                start.broadcast();
-                synchronize.unlock();
-
-                synchronize.lock();
-            }
-#endif
-
-
+            //------------------------------------------------------------------
+            // apply barrier pattern
+            //------------------------------------------------------------------
             if(++yoked>ready)
             {
                 Y_CREW_PRINTLN(pfx << ".done] @primary");
