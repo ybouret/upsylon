@@ -2,6 +2,7 @@
 
 #include "y/concurrent/device/crew.hpp"
 #include "y/code/textual.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -28,33 +29,39 @@ namespace upsylon
         start(),
         stall(),
         yoked(0),
-        state(anchored),
         kcode(0),
         kdata(0),
         verbose( query_threads_verbosity() )
         {
-            initialize();
+            on();
         }
         
         
 
-        void crew:: initialize()
+        void crew:: on()
         {
-            assert(anchored==state);
             Y_CREW_PRINTLN(pfx << ".init] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
-            
             try
             {
-                // create all threads
+                //--------------------------------------------------------------
+                //
+                // create all threads by calling entry()
+                // using the probe to ensure proper return
+                //
+                //--------------------------------------------------------------
                 const size_t count = topo->size();
-                for(size_t rank=0, target=1;rank<count;++rank,++target)
+                for(size_t rank=0;rank<count;++rank)
                 {
                     squad.build<worker::call,void *,size_t,size_t>(entry_stub,this,count,rank);
-                    Y_MUTEX_PROBE(synchronize,ready>=target);
+                    Y_MUTEX_PROBE(synchronize,ready>rank);
                 }
                 Y_CREW_PRINTLN(pfx << ".done] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
-                
-                // thread placement
+
+                //--------------------------------------------------------------
+                //
+                // thread placement, everyone waits on start
+                //
+                //--------------------------------------------------------------
                 {
                     size_t                    rank = 0;
                     for(const topology::node *node = topo->nodes.head;node;node=node->next,++rank)
@@ -66,46 +73,43 @@ namespace upsylon
                     }
                 }
                 
-                // ok, successfully anchored and placed
-                
+
             }
             catch(...)
             {
-                assert(anchored==state);
-                start.broadcast();
-                Y_MUTEX_PROBE(synchronize,ready<=0);
+                //--------------------------------------------------------------
+                // emergency exit...
+                //--------------------------------------------------------------
+                off();
                 throw;
             }
             
         }
-        
-        crew:: ~crew() throw()
+
+
+        void crew:: off() throw()
         {
             synchronize.lock();
             Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
-            switch(state)
+
+            if(++yoked>ready)
             {
-                case anchored:
-                    start.broadcast();
-                    synchronize.unlock();
-                    Y_MUTEX_PROBE(synchronize,ready<=0);
-                    break;
-                    
-                case launched:
-                    if(++yoked>topo->size())
-                    {
-                        Y_CREW_PRINTLN(pfx << ".done] @primary");
-                        stall.broadcast();
-                        synchronize.unlock();
-                    }
-                    else
-                    {
-                        Y_CREW_PRINTLN(pfx << ".wait] @primary");
-                        stall.wait(synchronize);
-                        synchronize.unlock();
-                    }
-                    break;
+                Y_CREW_PRINTLN(pfx << ".done] @primary");
+                stall.broadcast();
+                synchronize.unlock();
             }
+            else
+            {
+                Y_CREW_PRINTLN(pfx << ".wait] @primary");
+                stall.wait(synchronize);
+                synchronize.unlock();
+            }
+
+        }
+
+        crew:: ~crew() throw()
+        {
+            off();
         }
         
         void crew:: entry_stub(void *args) throw()
@@ -116,65 +120,71 @@ namespace upsylon
         
         void crew:: entry() throw()
         {
+            //------------------------------------------------------------------
+            //
             // LOCK shared mutex
+            //
+            //------------------------------------------------------------------
             synchronize.lock();
-            const worker &agent = squad.back();
-            const size_t  limit = topo->size();
+            const worker &agent = squad.back();            // newly created
             Y_CREW_PRINTLN(pfx<<".run!] "<< agent.label);
             ++ready;
-            
-            // wait on a LOCKED mutex
+
+            //------------------------------------------------------------------
+            //
+            // wait on a LOCKED mutex and return to setup function
+            //
+            //------------------------------------------------------------------
             start.wait(synchronize);
-            
-            // wake up on a LOCKED mutex
-            switch(state)
+
+            //------------------------------------------------------------------
+            //
+            // wake-up on a LOCKED mutex
+            //
+            //------------------------------------------------------------------
+            if(kcode)
             {
-                case anchored:
-                    Y_CREW_PRINTLN(pfx<<".nope] "<< agent.label);
-                    --ready;
-                    synchronize.unlock();
-                    return;
-                    
-                case launched:
-                    Y_CREW_PRINTLN(pfx<<".call] "<< agent.label);
-                    assert(kcode);
-                    synchronize.unlock();
-                    
-                    // perform code
-                    kcode(kdata,agent,synchronize);
-                    
-                    // and wait on loked
-                    synchronize.lock();
-                    if(++yoked>limit)
-                    {
-                        Y_CREW_PRINTLN(pfx<<".end!]  " << agent.label);
-                        stall.broadcast();
-                        synchronize.unlock();
-                        return;
-                    }
-                    else
-                    {
-                        Y_CREW_PRINTLN(pfx<<".wait] " << agent.label);
-                        stall.wait(synchronize);
-                        synchronize.unlock();
-                        return;
-                    }
-                    
+                Y_CREW_PRINTLN(pfx<<".call] @"<< agent.label);
+                synchronize.unlock();
+                kcode(kdata,agent,synchronize);
+                synchronize.lock();
             }
-            
+            else
+            {
+                Y_CREW_PRINTLN(pfx<<".nope] @"<< agent.label);
+            }
+
+
+            //------------------------------------------------------------------
+            //
+            // end of loop, use barrier pattern
+            //
+            //------------------------------------------------------------------
+            if(++yoked>ready)
+            {
+                Y_CREW_PRINTLN(pfx<<".done] @" << agent.label);
+                stall.broadcast();
+                synchronize.unlock();
+                return;
+            }
+            else
+            {
+                Y_CREW_PRINTLN(pfx<<".wait] @" << agent.label);
+                stall.wait(synchronize);
+                synchronize.unlock();
+                return;
+            }
             
          }
         
         void crew:: run(executable code, void *data)
         {
             assert(code);
-            {
-                Y_LOCK(synchronize);
-                kcode   = code;
-                kdata   = data;
-                state   = launched;
-                start.broadcast();
-            }
+            Y_LOCK(synchronize);
+            if(kcode) throw exception("concurrent::crew already running!");
+            kcode   = code;
+            kdata   = data;
+            start.broadcast();
         }
         
         

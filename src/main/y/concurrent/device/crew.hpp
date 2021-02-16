@@ -76,12 +76,6 @@ namespace upsylon
         class crew : public nucleus::crew
         {
         public:
-            enum status
-            {
-                anchored,
-                launched
-            };
-
             //__________________________________________________________________
             //
             // C++
@@ -117,11 +111,12 @@ namespace upsylon
             condition     start; //!< waiting to start
             condition     stall; //!< waiting to end
             size_t        yoked; //!< joined after run
-            status        state; //!< current state
             executable    kcode; //!< kernel code
             void         *kdata; //!< kernel data
             
-            void        initialize();               //!< setup all waiting
+            void        on();                 //!< setup all waiting
+            void        off() throw();        //!< waiting yoked>ready
+
             static void entry_stub(void *) throw(); //!< call entry()
             void        entry() throw();            //!< threaded function
             
