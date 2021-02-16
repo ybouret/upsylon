@@ -4,10 +4,10 @@
 #ifndef Y_CONCURRENT_CREW_INCLUDED
 #define Y_CONCURRENT_CREW_INCLUDED 1
 
-
-#include "y/concurrent/device/topology.hpp"
 #include "y/concurrent/worker.hpp"
 #include "y/concurrent/sync/condition.hpp"
+#include "y/concurrent/device/topology.hpp"
+#include "y/concurrent/device/engine.hpp"
 
 #include "y/ptr/auto.hpp"
 #include "y/sequence/slots.hpp"
@@ -73,7 +73,7 @@ namespace upsylon
         //! low level crew of "one time" workers
         //
         //______________________________________________________________________
-        class crew : public nucleus::crew
+        class crew : public engine, public nucleus::crew
         {
         public:
             //__________________________________________________________________
@@ -85,9 +85,16 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            // engine
+            //__________________________________________________________________
+            virtual size_t    size() const throw();
+            virtual lockable &sync()       throw();
+            virtual void      once(executable,void *);     //!< run the same code in all threads
+
+            //__________________________________________________________________
+            //
             // methods
             //__________________________________________________________________
-            void        run(executable,void *);     //!< run the same code in all threads
             static bool query_threads_verbosity();  //!< from Y_VERBOSE_THREADS
 
             //__________________________________________________________________

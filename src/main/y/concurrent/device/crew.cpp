@@ -19,7 +19,17 @@ namespace upsylon
             }
             
         }
-        
+
+        lockable & crew:: sync() throw()
+        {
+            return synchronize;
+        }
+
+        size_t crew:: size() const throw()
+        {
+            return squad.size();
+        }
+
         static const char pfx[] = "[crew";
         
         crew:: crew() :
@@ -178,7 +188,7 @@ namespace upsylon
             
          }
         
-        void crew:: run(executable code, void *data)
+        void crew:: once(executable code, void *data)
         {
             assert(code);
             Y_LOCK(synchronize);

@@ -1,5 +1,6 @@
 
 #include "y/concurrent/device/crew.hpp"
+ 
 #include "y/utest/run.hpp"
 #include "y/os/real-time-clock.hpp"
 
@@ -34,7 +35,7 @@ Y_UTEST(thr_crew)
     }
     
     concurrent::crew Crew;
-    Crew.run(doNothing,NULL);
+    Crew.once(doNothing,NULL);
     real_time_clock clk;
     if(argc>2)
     {
