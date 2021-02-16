@@ -12,16 +12,35 @@ namespace upsylon {
     namespace concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! solo engine to test code
+        //
+        //______________________________________________________________________
         class solo : public engine
         {
         public:
-            virtual ~solo() throw();
-            explicit solo() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~solo() throw(); //!< cleanup
+            explicit solo() throw(); //!< setup
 
-            virtual lockable & sync()       throw();
-            virtual size_t     size() const throw();
-            virtual void       once(executable,void*);
+            //__________________________________________________________________
+            //
+            // engine
+            //__________________________________________________________________
+            virtual lockable &     sync()       throw();   //!< a fake lock
+            virtual void           once(executable,void*); //!< local run
 
+            //__________________________________________________________________
+            //
+            // accessible<context>
+            //__________________________________________________________________
+            virtual size_t         size() const throw(); //!< 1
+            virtual const context &operator[](const size_t) const throw(); //!< only context
 
 
         private:

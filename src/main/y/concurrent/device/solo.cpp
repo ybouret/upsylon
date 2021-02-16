@@ -29,6 +29,11 @@ namespace upsylon {
             return synchronize;
         }
 
+        const context & solo:: operator[](const size_t) const throw()
+        {
+            return here;
+        }
+
         void solo:: once(executable code, void *args)
         {
             assert(code);

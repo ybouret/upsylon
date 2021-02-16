@@ -11,15 +11,29 @@ namespace upsylon
 
     namespace concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! MPI style context for threads
+        //
+        //______________________________________________________________________
         class context
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
             explicit context() throw(); //! size=1
             explicit context(const size_t sz,
                              const size_t rk) throw();
             virtual ~context() throw();
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! get the work portion according to rank/size
             template <typename T> inline
@@ -31,6 +45,10 @@ namespace upsylon
             //! get system ticks with lock
             uint64_t     ticks(lockable &) const throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const size_t size;      //!< size>=1
             const size_t rank;      //!< 0<=rank<size
             const size_t indx;      //!< rank+1

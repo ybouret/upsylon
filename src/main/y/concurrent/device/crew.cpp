@@ -100,8 +100,21 @@ namespace upsylon
 
         void crew:: off() throw()
         {
+            start.broadcast();
+
             synchronize.lock();
             Y_CREW_PRINTLN(pfx << ".kill] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
+
+#if 0
+            if(!kcode)
+            {
+                start.broadcast();
+                synchronize.unlock();
+
+                synchronize.lock();
+            }
+#endif
+
 
             if(++yoked>ready)
             {
@@ -138,7 +151,7 @@ namespace upsylon
             //------------------------------------------------------------------
             synchronize.lock();
             const worker &agent = squad.back();            // newly created
-            Y_CREW_PRINTLN(pfx<<".run!] "<< agent.label);
+            Y_CREW_PRINTLN(pfx<<".(ok)] "<< agent.label);
             ++ready;
 
             //------------------------------------------------------------------
@@ -197,7 +210,13 @@ namespace upsylon
             kdata   = data;
             start.broadcast();
         }
-        
+
+        const context & crew:: operator[](const size_t indx) const throw()
+        {
+            assert(indx>0);
+            assert(indx<=squad.size());
+            return squad[indx-1];
+        }
         
     }
     

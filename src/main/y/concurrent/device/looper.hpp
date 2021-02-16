@@ -1,11 +1,11 @@
 //! \file
 
-#ifndef Y_CONCURRENT_ENGINE_INCLUDED
-#define Y_CONCURRENT_ENGINE_INCLUDED 1
+#ifndef Y_CONCURRENT_LOOPER_INCLUDED
+#define Y_CONCURRENT_LOOPER_INCLUDED 1
 
 #include "y/concurrent/context.hpp"
-#include "y/sequence/accessible.hpp"
-#include "y/object.hpp"
+#include "y/concurrent/device/engine.hpp"
+#include "y/type/gateway.hpp"
 
 namespace upsylon {
 
@@ -15,29 +15,30 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! engine interface to run one time code
+        //! looper interface for single instruction
         //
         //______________________________________________________________________
-        class engine : public object, public accessible<context>
+        class looper : public gateway<engine>
         {
         public:
             //__________________________________________________________________
             //
             // interface
             //__________________________________________________________________
-            virtual lockable & sync()       throw()   = 0; //!< internal lock
-            virtual void       once(executable,void*) = 0; //!< run once the code
+            virtual void loop(executable code, void *args) = 0; //!< start a new cycle
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~engine() throw(); //!< cleanup
+            virtual ~looper() throw(); //!< cleanup
+
         protected:
-            explicit engine() throw(); //!< setup
+            explicit looper() throw(); //!< setup
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(engine);
+            Y_DISABLE_COPY_AND_ASSIGN(looper);
+
         };
 
     }

@@ -13,7 +13,7 @@ namespace
     static size_t delta = 0;
     
     static inline
-    void doNothing(void*,const concurrent::context &ctx, lockable &sync)
+    void doNothing(void *,const concurrent::context &ctx, lockable &sync)
     {
         {
             Y_LOCK(sync);
@@ -40,6 +40,12 @@ Y_UTEST(thr_crew)
     }
 
     {
+        std::cerr << "nope Crew" << std::endl;
+        concurrent::crew Crew;
+    }
+
+    {
+        std::cerr << "used Crew" << std::endl;
         concurrent::crew Crew;
         Crew.once(doNothing,NULL);
         real_time_clock clk;

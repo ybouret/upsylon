@@ -87,10 +87,16 @@ namespace upsylon
             //
             // engine
             //__________________________________________________________________
-            virtual size_t    size() const throw();
-            virtual lockable &sync()       throw();
-            virtual void      once(executable,void *);     //!< run the same code in all threads
+            virtual lockable &     sync()       throw();    //!< synchronize
+            virtual void           once(executable,void*);  //!< send on squad
 
+            //__________________________________________________________________
+            //
+            // accessible<context>
+            //__________________________________________________________________
+            virtual size_t         size() const throw();                   //!< topo->size() == squad.size()
+            virtual const context &operator[](const size_t) const throw(); //!< 1..size
+            
             //__________________________________________________________________
             //
             // methods
