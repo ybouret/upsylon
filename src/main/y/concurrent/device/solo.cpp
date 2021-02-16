@@ -1,6 +1,6 @@
 
 
-#include "y/concurrent/device/serial.hpp"
+#include "y/concurrent/device/solo.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -8,33 +8,33 @@ namespace upsylon {
     namespace concurrent
     {
 
-        serial:: ~serial() throw()
+        solo:: ~solo() throw()
         {
         }
 
-        serial:: serial() throw() :
+        solo:: solo() throw() :
         synchronize(),
-        solo(),
+        here(),
         done(false)
         {
         }
 
-        size_t serial:: size() const throw()
+        size_t solo:: size() const throw()
         {
             return 1;
         }
 
-        lockable & serial:: sync() throw()
+        lockable & solo:: sync() throw()
         {
             return synchronize;
         }
 
-        void serial:: once(executable code, void *args)
+        void solo:: once(executable code, void *args)
         {
             assert(code);
             if(done) throw exception("concurrent::serial already done");
             done = true;
-            code(args,solo,synchronize);
+            code(args,here,synchronize);
         }
     }
 

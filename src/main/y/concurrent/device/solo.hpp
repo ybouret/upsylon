@@ -1,8 +1,8 @@
 
 //! \file
 
-#ifndef Y_CONCURRENT_SERIAL_INCLUDED
-#define Y_CONCURRENT_SERIAL_INCLUDED 1
+#ifndef Y_CONCURRENT_SOLO_INCLUDED
+#define Y_CONCURRENT_SOLO_INCLUDED 1
 
 #include "y/concurrent/device/engine.hpp"
 #include "y/concurrent/fake-lock.hpp"
@@ -12,23 +12,22 @@ namespace upsylon {
     namespace concurrent
     {
 
-        class serial
+        class solo : public engine
         {
         public:
-            virtual ~serial() throw();
+            virtual ~solo() throw();
+            explicit solo() throw();
 
             virtual lockable & sync()       throw();
             virtual size_t     size() const throw();
             virtual void       once(executable,void*);
 
 
-        protected:
-            explicit serial() throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(serial);
+            Y_DISABLE_COPY_AND_ASSIGN(solo);
             fake_lock     synchronize;
-            const context solo;
+            const context here;
             bool          done;
         };
 

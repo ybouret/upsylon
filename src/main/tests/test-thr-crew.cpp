@@ -1,8 +1,10 @@
 
 #include "y/concurrent/device/crew.hpp"
- 
-#include "y/utest/run.hpp"
+#include "y/concurrent/device/solo.hpp"
+
 #include "y/os/real-time-clock.hpp"
+#include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 
 using namespace upsylon;
 
@@ -29,20 +31,27 @@ namespace
 
 Y_UTEST(thr_crew)
 {
+    concurrent::solo Solo;
+    Solo.once(doNothing,NULL);
+    
     if(argc>1)
     {
         delta = atol(argv[1]);
     }
-    
-    concurrent::crew Crew;
-    Crew.once(doNothing,NULL);
-    real_time_clock clk;
-    if(argc>2)
+
     {
-        clk.sleep(atof(argv[2]));
+        concurrent::crew Crew;
+        Crew.once(doNothing,NULL);
+        real_time_clock clk;
+        if(argc>2)
+        {
+            clk.sleep(atof(argv[2]));
+        }
     }
-    
-    
+
+    Y_UTEST_SIZEOF(concurrent::solo);
+    Y_UTEST_SIZEOF(concurrent::crew);
+
     
 }
 Y_UTEST_DONE()
