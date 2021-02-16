@@ -11,9 +11,7 @@ namespace upsylon
 
     namespace concurrent
     {
-        //! user low-level concurrent procedure
-        typedef void (*thread_proc)(void*);
-
+        
         namespace nucleus
         {
             //! wraps low-level system calls
@@ -48,7 +46,11 @@ namespace upsylon
                 //! test two system thread IDs
                 static bool   equal( const ID &lhs, const ID &rhs ) throw();
                 //! try to bind handle to a given cpu
-                static void   assign( handle h, const size_t cpu );
+                static void   assign(handle       h,
+                                     const size_t cpu,
+                                     const char  *who);
+                //! display info per cpu
+                static void   display(const char *who, const size_t);
             };
             
         }

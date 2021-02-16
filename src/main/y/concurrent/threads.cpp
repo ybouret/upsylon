@@ -93,7 +93,7 @@ verbose(get_verbosity())
 
             // place leading thread
             Y_THREAD_PRINTLN("[threads.init.affinity] main@cpu" << topology->core_index_of(0));
-            nucleus::thread::assign(nucleus::thread::get_current_handle(),topology->core_index_of(0));
+            nucleus::thread::assign(nucleus::thread::get_current_handle(),topology->core_index_of(0),NULL);
 
             // place other threads
             __threads &thr = engines;
@@ -101,7 +101,7 @@ verbose(get_verbosity())
             {
                 const size_t icpu = topology->core_index_of(i);
                 Y_THREAD_PRINTLN("[threads.init.affinity]   #" << i << "@cpu" << icpu);
-                nucleus::thread::assign(thr[i].handle,icpu);
+                nucleus::thread::assign(thr[i].handle,icpu,NULL);
             }
             Y_THREAD_PRINTLN("[threads.init] ready to work...");
         }

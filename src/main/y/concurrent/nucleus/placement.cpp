@@ -1,6 +1,7 @@
 #include "y/concurrent/nucleus/thread.hpp"
 #include "y/exceptions.hpp"
 #include <iostream>
+#include <iomanip>
 
 #if defined(Y_THREAD_AFFINITY)
 #     undef Y_THREAD_AFFINITY
@@ -14,6 +15,7 @@ namespace upsylon
         namespace nucleus
         {
 
+
 #if defined(Y_LINUX)|| defined(Y_FREEBSD)
 #   define Y_THREAD_AFFINITY 1
 #   if defined(Y_FREEBSD)
@@ -23,7 +25,7 @@ namespace upsylon
 #      define Y_CPU_SET cpu_set_t
 #endif
 
-            void   thread:: assign(handle h,const size_t j)
+            void   thread:: assign(handle h,const size_t j, const char *who)
             {
                 Y_CPU_SET the_cpu_set;
                 CPU_ZERO(  &the_cpu_set );
@@ -31,12 +33,13 @@ namespace upsylon
                 const int err = pthread_setaffinity_np( h, sizeof(Y_CPU_SET), &the_cpu_set );
                 if( err != 0 )
                     throw libc::exception( err, "pthread_setaffinity_np" );
+                if(who) display(who,j);
             }
 #endif
 
 #if defined(Y_WIN)
 #define Y_THREAD_AFFINITY 1
-            void thread:: assign( handle h, const size_t j )
+            void thread:: assign( handle h, const size_t j, const char *who)
             {
                 const DWORD_PTR mask = DWORD_PTR(1) << j;
                 if( ! ::SetThreadAffinityMask( h, mask ) )
@@ -44,6 +47,7 @@ namespace upsylon
                     const DWORD err = ::GetLastError();
                     throw win32::exception( err, "::SetThreadAffinityMask" );
                 }
+                if(who) display(who,j);
             }
 #endif
 
@@ -80,7 +84,7 @@ namespace upsylon
 #define Y_THREAD_AFFINITY 1
 #include <mach/thread_policy.h>
 #include <mach/thread_act.h>
-            void thread::assign(handle h, const size_t j)
+            void thread::assign(handle h, const size_t j, const char *who)
             {
                 thread_affinity_policy_data_t policy_data = { int(j) };
                 mach_port_t                   mach_thread = pthread_mach_thread_np(h);
@@ -88,6 +92,7 @@ namespace upsylon
                 {
                     throw exception("thread_policy_set failure");
                 }
+                if(who) display(who,j);
             }
 #endif
 
@@ -96,21 +101,33 @@ namespace upsylon
 #include <sys/processor.h>
 #include <sys/procset.h>
 #define Y_THREAD_AFFINITY 1
-            void thread::assign(handle h, const size_t j)
+            void thread::assign(handle h, const size_t j, const char *who)
             {
                 const int res = processor_bind(P_LWPID,idtype_t(h),j,NULL);
                 if(0!=res)
                     throw exception("processor_bind failure");
+                if(who) display(who,j);
             }
 
 #endif
 
 #if !defined(Y_THREAD_AFFINITY)
             // fallback
-            void   thread:: assign(handle,const size_t)
+            void   thread:: assign(handle,const size_t j, const char  *who)
             {
+                if(who) display(who,j);
             }
 #endif
+
+
+            void thread::display(const char  *who, const size_t j)
+            {
+                std::cerr << "[placement] @" << who << "->core#" << std::setw(4) << j << ' ' << '(' << Y_PLATFORM;
+#if !defined(Y_THREAD_AFFINITY)
+                std::cerr << "/unsupported";
+#endif
+                std::cerr << ')' << std::endl;
+            }
 
         }
 

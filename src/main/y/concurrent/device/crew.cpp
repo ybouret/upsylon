@@ -68,8 +68,8 @@ namespace upsylon
                     {
                         worker       &mate = squad[rank];
                         const size_t  core = node->rank;
-                        Y_CREW_PRINTLN(pfx << ".move] @" << mate.label << "->core#" << core);
-                        nucleus::thread::assign(mate.handle,core);
+                        //Y_CREW_PRINTLN(pfx << ".move] @" << mate.label << "->core#" << core);
+                        nucleus::thread::assign(mate.handle,core,mate.label);
                     }
                 }
                 
