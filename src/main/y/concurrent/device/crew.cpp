@@ -24,6 +24,7 @@ namespace upsylon
         
         crew:: crew() :
         nucleus::crew(),
+        synchronize(),
         squad(topo->size()),
         ready(0),
         start(),
@@ -68,8 +69,8 @@ namespace upsylon
                     {
                         worker       &mate = squad[rank];
                         const size_t  core = node->rank;
-                        //Y_CREW_PRINTLN(pfx << ".move] @" << mate.label << "->core#" << core);
-                        nucleus::thread::assign(mate.handle,core,mate.label);
+                        const char   *who  = verbose ? mate.label : NULL;
+                        nucleus::thread::assign(mate.handle,core,who);
                     }
                 }
                 

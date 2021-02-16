@@ -76,7 +76,9 @@ namespace upsylon
         
         topology:: topology(const size_t start,
                             const size_t width,
-                            const size_t every)
+                            const size_t every):
+        nodes(),
+        clusters()
         {
             add(start,width,every);
         }
