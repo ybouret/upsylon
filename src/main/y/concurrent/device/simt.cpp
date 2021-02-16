@@ -2,6 +2,7 @@
 
 #include "y/concurrent/device/simt.hpp"
 #include <iomanip>
+#include "y/os/real-time-clock.hpp"
 
 namespace upsylon {
 
@@ -22,7 +23,7 @@ namespace upsylon {
         finish(),
         kcode(0),
         kargs(0),
-        verbose( self.verbose )
+        verbose( query_simt_verbosity() )
         {
             self.once(loop_stub,this);
             Y_MUTEX_PROBE(access,online>=number);
@@ -37,7 +38,6 @@ namespace upsylon {
         void simt:: loop(executable code, void *args)
         {
             assert(code);
-            access.lock();
             assert(number==online);
             assert(joined<=0);
             assert(0     ==kcode);
@@ -45,7 +45,28 @@ namespace upsylon {
 
             kcode = code;
             kargs = args;
+
+            Y_CREW_PRINTLN(pfx<<"loop] go!");
             course.broadcast();
+
+            real_time_clock rtc;
+            rtc.sleep(1);
+
+            access.lock();
+            if(++joined>number)
+            {
+                Y_CREW_PRINTLN(pfx<<"done] @primary");
+            }
+            else
+            {
+                Y_CREW_PRINTLN(pfx<<"wait] @primary");
+                finish.wait(access);
+            }
+
+            joined = 0;
+            kcode  = 0;
+            kargs  = 0;
+            Y_CREW_PRINTLN(pfx<<"ready!]");
             access.unlock();
             
 
@@ -97,6 +118,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             // wait on the LOCKED mutex
             //------------------------------------------------------------------
+        LOOP:
             course.wait(access);
             
             //------------------------------------------------------------------
@@ -104,16 +126,58 @@ namespace upsylon {
             //------------------------------------------------------------------
             if(kcode)
             {
+                access.unlock();
+                kcode(kargs,ctx,access);
+                access.lock();
+
+                // barrier pattern, LOCKED
+                if(++joined>number)
+                {
+                    Y_CREW_PRINTLN(pfx<<"done] @"<<label);
+                    finish.broadcast();
+                }
+                else
+                {
+                    Y_CREW_PRINTLN(pfx<<"wait] @"<<label);
+                    finish.wait(access);
+                    assert(joined<=0);
+                }
+
+                goto LOOP;
             }
             else
             {
-                // quit
+                // done
                 --online;
                 Y_CREW_PRINTLN(pfx<<"done] @"<<label <<" => online: " << online);
                 access.unlock();
+                return;
             }
 
 
+        }
+
+    }
+
+}
+
+
+#include "y/string/env.hpp"
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        bool simt:: query_simt_verbosity()
+        {
+            if(  environment::flag(Y_VERBOSE_SIMT) )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

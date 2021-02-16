@@ -14,6 +14,8 @@ namespace upsylon {
     namespace concurrent
     {
 
+#define Y_VERBOSE_SIMT "Y_VERBOSE_SIMT"
+
         //______________________________________________________________________
         //
         //
@@ -33,6 +35,8 @@ namespace upsylon {
             virtual void loop(executable code,
                               void      *args);
             virtual void join() throw();
+
+            static bool query_simt_verbosity();  //!< from Y_VERBOSE_SIMT
 
 
         private:
@@ -61,7 +65,7 @@ namespace upsylon {
             void        loop_code(const context &) throw();
 
         public:
-            bool &verbose;
+            bool verbose;
         };
 
     }
