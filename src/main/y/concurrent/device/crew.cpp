@@ -40,7 +40,7 @@ namespace upsylon
 
         void crew:: on()
         {
-            Y_CREW_PRINTLN(pfx << ".init] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
+            Y_CREW_PRINTLN(pfx << ".init] #" << topo->size()  );
             try
             {
                 //--------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace upsylon
                     squad.build<worker::call,void *,size_t,size_t>(entry_stub,this,count,rank);
                     Y_MUTEX_PROBE(synchronize,ready>rank);
                 }
-                Y_CREW_PRINTLN(pfx << ".done] " << topo->size() << " worker" << textual::plural_s(topo->size()) );
+                Y_CREW_PRINTLN(pfx << ".done] #" << topo->size() );
 
                 //--------------------------------------------------------------
                 //
@@ -68,7 +68,7 @@ namespace upsylon
                     {
                         worker       &mate = squad[rank];
                         const size_t  core = node->rank;
-                        Y_CREW_PRINTLN(pfx << ".move] " << mate.label << "@core#" << core);
+                        Y_CREW_PRINTLN(pfx << ".move] @" << mate.label << "->core#" << core);
                         nucleus::thread::assign(mate.handle,core);
                     }
                 }
