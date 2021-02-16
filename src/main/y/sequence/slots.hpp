@@ -151,6 +151,7 @@ namespace upsylon {
             return os;
         }
 
+        
     private:
         Y_DISABLE_ASSIGN(slots);
         size_t        size_;

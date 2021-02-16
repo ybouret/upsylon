@@ -27,6 +27,9 @@ namespace upsylon {
             code(args,impl[1],impl.sync());
         }
 
+        void sist:: join() throw()
+        {
+        }
     }
 
 }

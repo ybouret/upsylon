@@ -66,7 +66,6 @@ namespace upsylon
                     squad.build<worker::call,void *,size_t,size_t>(entry_stub,this,count,rank);
                     Y_MUTEX_PROBE(synchronize,ready>rank);
                 }
-                Y_CREW_PRINTLN(pfx << ".done] #" << topo->size() );
 
                 //--------------------------------------------------------------
                 //
@@ -84,6 +83,8 @@ namespace upsylon
                     }
                 }
                 
+                Y_CREW_PRINTLN(pfx << ".made] #" << topo->size() );
+
 
             }
             catch(...)
@@ -168,7 +169,9 @@ namespace upsylon
             {
                 Y_CREW_PRINTLN(pfx<<".call] @"<< agent.label);
                 synchronize.unlock();
+                // execute the code, unlocked
                 kcode(kdata,agent,synchronize);
+                // re-lock
                 synchronize.lock();
             }
             else
@@ -179,7 +182,7 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // end of loop, use barrier pattern
+            // LOCKED end of loop, use barrier pattern
             //
             //------------------------------------------------------------------
             if(++yoked>ready)

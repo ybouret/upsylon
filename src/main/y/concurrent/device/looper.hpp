@@ -26,6 +26,7 @@ namespace upsylon {
             // interface
             //__________________________________________________________________
             virtual void loop(executable code, void *args) = 0; //!< start a new cycle
+            virtual void join() throw()                    = 0; //!< wait for cycle
 
             //__________________________________________________________________
             //

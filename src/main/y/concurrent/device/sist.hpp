@@ -23,6 +23,7 @@ namespace upsylon {
             virtual ~sist() throw(); //!< cleanup
 
             virtual void loop(executable code, void *args); //!< solo call
+            virtual void join() throw();                    //!< do nothing
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(sist);
