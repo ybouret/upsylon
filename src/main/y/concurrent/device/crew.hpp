@@ -80,22 +80,15 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-
-            //! create all threads an wait on start
-            explicit crew();
-
-            //! broacast all threads and wait on stall
-            virtual ~crew() throw();
+            explicit crew();         //!< create all threads an wait on start
+            virtual ~crew() throw(); //!< broacast all threads and wait on stall
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-
-            //! run the same code in all threads
-            void  run(executable code, void *data);
-            
-            static bool query_threads_verbosity(); //!< from Y_VERBOSE_THREADS
+            void        run(executable,void *);     //!< run the same code in all threads
+            static bool query_threads_verbosity();  //!< from Y_VERBOSE_THREADS
 
             //__________________________________________________________________
             //
