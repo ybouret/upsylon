@@ -149,7 +149,7 @@ namespace upsylon
             //------------------------------------------------------------------
             synchronize.lock();
             const worker &agent = squad.back();            // newly created
-            Y_CREW_PRINTLN(pfx<<".(ok)] "<< agent.label);
+            Y_CREW_PRINTLN(pfx<<".<ok>] "<< agent.label);
             ++ready;
 
             //------------------------------------------------------------------
