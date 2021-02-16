@@ -16,6 +16,7 @@ namespace upsylon
 
         topology:: node:: ~node() throw()
         {
+            aliasing::_(rank) = 0;
         }
         
         topology:: node:: node(const size_t r) throw() :

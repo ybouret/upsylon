@@ -12,6 +12,12 @@
 #include "y/ptr/auto.hpp"
 #include "y/sequence/slots.hpp"
 
+//______________________________________________________________________________
+//
+//
+//! environment variable to trigger verbosity
+//
+//______________________________________________________________________________
 #define Y_VERBOSE_THREADS "Y_VERBOSE_THREADS"
 
 namespace upsylon
@@ -20,24 +26,53 @@ namespace upsylon
     {
         namespace nucleus
         {
+            //__________________________________________________________________
+            //
+            //
+            //! base class to build const topology before workers
+            //
+            //__________________________________________________________________
             class crew
             {
             public:
-                virtual ~crew() throw();
-                
-                const auto_ptr<const topology> topo;
-                
+                //______________________________________________________________
+                //
+                // member
+                //______________________________________________________________
+                const auto_ptr<const topology> topo; //!< built topology
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~crew() throw(); //!< cleanup
+
             protected:
-                explicit crew();
-                
+                explicit crew();                   //!< default
+                explicit crew(const size_t start,
+                              const size_t width,
+                              const size_t every); //!< overrides
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(crew);
             };
         }
-        
+
+
+        //______________________________________________________________________
+        //
+        //
+        //! base class to build const topology before workers
+        //
+        //______________________________________________________________________
 #define Y_CREW_PRINTLN(MSG) do { if(verbose) { std::cerr << MSG << std::endl; } } while(false)
-        
-        //! low level crew of workers
+
+        //______________________________________________________________________
+        //
+        //
+        //! low level crew of "one time" workers
+        //
+        //______________________________________________________________________
         class crew : public nucleus::crew
         {
         public:
@@ -46,14 +81,35 @@ namespace upsylon
                 anchored,
                 launched
             };
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! create all threads an wait on start
             explicit crew();
+
+            //! broacast all threads and wait on stall
             virtual ~crew() throw();
-            
-            mutex synchronize;
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
+            //! run the same code in all threads
             void  run(executable code, void *data);
             
             static bool query_threads_verbosity(); //!< from Y_VERBOSE_THREADS
-            
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            mutex synchronize; //!< mutex for all internal operations
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(crew);
             slots<worker> squad; //!< threads
@@ -70,7 +126,7 @@ namespace upsylon
             void        entry() throw();            //!< threaded function
             
         public:
-            bool  verbose;
+            bool  verbose; //!< verbosity, mostly to debug
             
         };
     }

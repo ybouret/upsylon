@@ -41,6 +41,10 @@ namespace upsylon
             void fmt() throw();
         };
 
+        //______________________________________________________________________
+        //
+        //! C function to call within one thread
+        //______________________________________________________________________
         typedef void (*executable)(void *, const context &, lockable &);
         
     }

@@ -12,9 +12,19 @@ namespace upsylon {
     namespace core
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! counting digits of integer types
+        //
+        //______________________________________________________________________
         struct count_digits
         {
 
+            //__________________________________________________________________
+            //
+            //! for any integer
+            //__________________________________________________________________
             template <typename T>
             static inline unsigned base10(const T &x) throw()
             {
@@ -22,7 +32,10 @@ namespace upsylon {
                 return base10<T>(x,selector);
             }
 
-            //! unsigned
+            //__________________________________________________________________
+            //
+            //! for unsigned integer
+            //__________________________________________________________________
             template <typename T>
             static inline unsigned base10(T value, int2type<false> ) throw()
             {
@@ -37,7 +50,10 @@ namespace upsylon {
                 return count;
             }
 
-            //! signed
+            //__________________________________________________________________
+            //
+            //! for signed integer
+            //__________________________________________________________________
             template <typename T>
             static inline unsigned base10(T value, int2type<true> ) throw()
             {

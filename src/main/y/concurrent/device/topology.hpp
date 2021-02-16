@@ -6,54 +6,88 @@
 
 #include "y/concurrent/nucleus/cluster.hpp"
 
+
+//______________________________________________________________________________
+//
+//
+//! environment variable to parse topology
+//
+//______________________________________________________________________________
+#define Y_NUM_THREADS "Y_NUM_THREADS"
+
 namespace upsylon
 {
     namespace concurrent
     {
-
-#define Y_NUM_THREADS "Y_NUM_THREADS"
-
+        
+        //______________________________________________________________________
+        //
+        //
+        //! topology with different clusters
+        //
+        //______________________________________________________________________
         class topology : public object
         {
         public:
+            //__________________________________________________________________
+            //
+            //! compile availalbe ranks
+            //__________________________________________________________________
             class node : public object
             {
             public:
-                node   *next;
-                node   *prev;
-                const size_t rank;
-                explicit node(const size_t) throw();
-                virtual ~node() throw();
+                node        *next; //!< for list
+                node        *prev; //!< for list
+                const size_t rank; //!< worker's rank
+                explicit node(const size_t) throw(); //!< initialize
+                virtual ~node() throw();             //!< cleanup
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(node);
             };
-            
-            virtual ~topology() throw();
-            explicit topology();
+
+            //__________________________________________________________________
+            //
+            //! C++
+            //__________________________________________________________________
+            virtual ~topology() throw();            //!< cleanup
+            explicit topology();                    //!< default or use env
             explicit topology(const size_t start,
                               const size_t width,
-                              const size_t every);
+                              const size_t every);  //!< overrides
 
+            //__________________________________________________________________
+            //
+            //! parse a cluster
+            //__________________________________________________________________
             template <typename ID>
             inline explicit topology(const ID &id) : nodes(), clusters()
             {
                 add(id);
             }
-            
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            //! add a cluster start:width:every
             void add(const size_t start,
                      const size_t width,
                      const size_t every);
 
-            void add(const string &description);
-            void add(const char   *description);
-            
-            size_t size() const throw();
-            
+
+            void add(const string &description); //!< parse a cluster
+            void add(const char   *description); //!< parse a cluster
+            size_t size() const throw();         //!< nodes.size
+
+            //! display
             friend std::ostream & operator<<(std::ostream &, const topology &);
 
-
-            const core::list_of_cpp<node>  nodes;    //!< all nodes
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const core::list_of_cpp<node>  nodes;    //!< all nodes (by ranks)
             const nucleus::cluster::list   clusters; //!< all clusters
 
             

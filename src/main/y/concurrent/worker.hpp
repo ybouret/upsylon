@@ -10,14 +10,26 @@ namespace upsylon {
     namespace concurrent
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! parallel execution of persistent proc/data
+        //
+        //______________________________________________________________________
         class worker : public context
         {
         public:
-            typedef void (*call)(void *);
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
+            typedef void (*call)(void *); //!< to run within a thread
 
-
-            //! launch a thread
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            //! execute proc(data) within a new thread
             worker(call         user_proc,
                    void        *user_data,
                    const size_t user_size,
@@ -26,6 +38,10 @@ namespace upsylon {
             //! wait for thread to return and release resources
             virtual ~worker() throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             call                          proc;   //!< the procedure
             void                         *data;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID

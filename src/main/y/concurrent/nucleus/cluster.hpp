@@ -27,26 +27,46 @@ namespace upsylon
             class cluster : public object, public inode<cluster>
             {
             public:
-                typedef core::list_of_cpp<cluster> list;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef core::list_of_cpp<cluster> list; //!< alias
 
-                const size_t start; //!< start index
-                const size_t width; //!< width <= nprocs-start
-                const size_t every; //!< clamp(1,every,width)
-                const size_t count; //!< width/every
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~cluster() throw(); //!< cleanup
 
-                virtual ~cluster() throw();
-
+                //! setup with checking
                 static cluster *create(const size_t start_,
                                        const size_t width_,
                                        const size_t every_);
 
-                size_t core_of(const size_t worker_rank) const;
-
+                //! parse with checking: width | start:width | start:width:every
                 static cluster *create(const string &description);
-                friend std::ostream & operator<<(std::ostream &, const cluster &);
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                size_t core_of(const size_t rank) const; //!< start + rank*every
+                friend std::ostream & operator<<(std::ostream &, const cluster &); //!< display
+
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const size_t start; //!< start index
+                const size_t width; //!< width <= nprocs-start
+                const size_t every; //!< clamp(1,every,width)
+                const size_t count; //!< width/every >= 1
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(cluster);
+                //! setup
                 explicit cluster(const size_t start_,
                                  const size_t width_,
                                  size_t       every_) throw();

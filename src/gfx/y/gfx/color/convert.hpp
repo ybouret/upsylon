@@ -44,6 +44,7 @@ namespace upsylon
         template <typename U, typename T>
         struct Convert
         {
+            //! T->U
             static U From(const T &x) throw();
         };
         
@@ -57,6 +58,7 @@ namespace upsylon
         template <typename T>
         struct Convert<T,T>
         {
+            //! T->T
             static const T & From(const T &x) throw() { return x; }
         };
         
