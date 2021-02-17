@@ -14,6 +14,7 @@ namespace upsylon
         
         namespace nucleus
         {
+
             //! wraps low-level system calls
             struct thread
             {
@@ -31,11 +32,23 @@ namespace upsylon
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
 
+                //! T.proc and T.data
+                template <typename T>
+                Y_THREAD_LAUNCHER_RETURN procedure(Y_THREAD_LAUNCHER_PARAMS args) throw()
+                {
+                    assert(args);
+                    T &caller = *static_cast<T*>(args); assert(caller.proc!=0);
+                    caller.proc(caller.data);
+                    return 0;
+                }
+
                 //! low level launch, info points at a concurrent::thread
                 static handle launch_thread(void *info, ID &tid );
 
                 //! low level launch, info points at a concurrent::worker
                 static handle launch_worker(void *info, ID &tid );
+
+                
 
                 //! low level finish
                 static void   finish(handle &h) throw();
