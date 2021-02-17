@@ -8,7 +8,8 @@ using namespace upsylon;
 Y_UTEST(thr_loop)
 {
 
-
+    concurrent::simt par;
+    
 
 }
 Y_UTEST_DONE()

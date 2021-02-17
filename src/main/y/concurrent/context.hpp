@@ -52,6 +52,7 @@ namespace upsylon
             const size_t size;      //!< size>=1
             const size_t rank;      //!< 0<=rank<size
             const size_t indx;      //!< rank+1
+            const size_t setw;      //!< digits for size
             const char   label[16]; //!< formated label
 
         private:

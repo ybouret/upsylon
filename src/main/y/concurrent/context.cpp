@@ -24,6 +24,7 @@ namespace upsylon
         size(1),
         rank(0),
         indx(1),
+        setw(core::count_digits::base10(size)),
         label()
         {
             fmt();
@@ -35,6 +36,7 @@ namespace upsylon
         size(sz),
         rank(rk),
         indx(rank+1),
+        setw(core::count_digits::base10(size)),
         label()
         {
             assert(size>=1);
@@ -48,15 +50,14 @@ namespace upsylon
 
             char *str = (char *)label;
             memset(str,0,sizeof(label));
-            const unsigned digits = core::count_digits::base10(size);
-            const unsigned width  = (1+digits) * 2; // digits + '.' + digits + 0
+            const unsigned width  = (1+setw) * 2; // digits + '.' + digits + 0
             if(width>max_width)
             {
                 fatal_error("concurrent::context(size is too big)");
             }
 
             char fmtstr[32] = { 0 };
-            sprintf(fmtstr,"%%0%uu.%%0%uu",digits,digits);
+            sprintf(fmtstr,"%%0%uu.%%0%uu",unsigned(setw),unsigned(setw));
             snprintf(str,max_width-1,fmtstr,unsigned(size),unsigned(rank));
 
         }

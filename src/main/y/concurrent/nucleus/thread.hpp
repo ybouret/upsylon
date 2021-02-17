@@ -19,17 +19,17 @@ namespace upsylon
             struct thread
             {
 #if defined(Y_BSD)
-                typedef pthread_t handle;
-                typedef pthread_t ID;
-                typedef void *  (*routine)(void*);
+                typedef pthread_t handle;          //!< system thread handle
+                typedef pthread_t ID;              //!< system thread identifier
+                typedef void *  (*routine)(void*); //!< system threadable interface
 #define         Y_THREAD_LAUNCHER_RETURN void *
 #define         Y_THREAD_LAUNCHER_PARAMS void *
 #endif
 
 #if defined(Y_WIN)
-                typedef HANDLE handle;
-                typedef DWORD  ID;
-                typedef LPTHREAD_START_ROUTINE routine;
+                typedef HANDLE handle;                  //!< system thread handle
+                typedef DWORD  ID;                      //!< system thread identifier
+                typedef LPTHREAD_START_ROUTINE routine; //!< system threadable interface
 #define         Y_THREAD_LAUNCHER_RETURN DWORD WINAPI
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
