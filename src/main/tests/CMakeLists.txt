@@ -148,10 +148,13 @@ SOURCE_GROUP(thr FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-ser
 test-thr-context.cpp
 test-thr-topology.cpp
 test-thr-thread.cpp
+test-thr-loop.cpp
 )
 ADD_TEST(thr:context     test-main thr_context)
 ADD_TEST(thr:topology    test-main thr_topology)
 ADD_TEST(thr:thread      test-main thr_thread)
+ADD_TEST(thr::loop       test-main thr_loop)
+
 ADD_TEST(thr:parallel    test-main parallel)
 ADD_TEST(thr:threads     test-main threads)
 ADD_TEST(thr:simd        test-main simd)

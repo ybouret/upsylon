@@ -121,6 +121,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_context);
     Y_UTEST(thr_topology);
     Y_UTEST(thr_thread);
+    Y_UTEST(thr_loop);
     
     Y_UTEST(threads);
     Y_UTEST(simd);

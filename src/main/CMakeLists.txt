@@ -180,6 +180,13 @@ SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
 SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
 INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
 
+FILE(GLOB concurrent_loop_decl y/concurrent/loop/*.hpp)
+FILE(GLOB concurrent_loop_code y/concurrent/loop/*.cpp)
+SET(concurrent_loop_srcs ${concurrent_loop_decl} ${concurrent_loop_code})
+SOURCE_GROUP( concurrent/loop FILES ${concurrent_loop_srcs} )
+INSTALL( FILES ${concurrent_loop_decl} DESTINATION include/y/concurrent/loop )
+
+
 FILE(GLOB ios_decl y/ios/*.hpp)
 FILE(GLOB ios_code y/ios/*.cpp)
 SET(ios_srcs ${ios_decl} ${ios_code})
@@ -421,7 +428,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
-${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_scheme_srcs}  
+${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs} ${concurrent_scheme_srcs}  
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
