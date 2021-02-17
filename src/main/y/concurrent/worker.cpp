@@ -21,6 +21,37 @@ namespace upsylon {
                 return 0;
             }
 
+			thread::handle thread::launch(procedure proc, void *info, ID &tid)
+			{
+				assert(proc);
+				assert(info);
+				bzset(tid);
+#if    defined(Y_BSD)
+				const int res = pthread_create(&tid, NULL, proc, info);
+				if (res != 0)
+				{
+					throw libc::exception(res, "pthread_create");
+				}
+				return tid;
+#endif
+
+#if defined(Y_WIN)
+				Y_GIANT_LOCK();
+				handle h = ::CreateThread(0,
+					0,
+					proc,
+					info,
+					0,
+					&tid);
+				if (NULL == h)
+				{
+					const DWORD res = ::GetLastError();
+					throw win32::exception(res, "::CreateThread");
+				}
+				return h;
+#endif
+			}
+
             thread::handle thread:: launch_worker( void *args, ID &tid)
             {
                 assert(args);

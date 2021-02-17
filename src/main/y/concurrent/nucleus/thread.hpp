@@ -32,7 +32,9 @@ namespace upsylon
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
 
-                typedef Y_THREAD_LAUNCHER_RETURN (*procedure)(Y_THREAD_LAUNCHER_PARAMS);
+                //typedef Y_THREAD_LAUNCHER_RETURN (*procedure)(Y_THREAD_LAUNCHER_PARAMS);
+				//typedef DWORD (*WINAPI procedure)(LPVOID);
+				typedef LPTHREAD_START_ROUTINE procedure;
 
                 //! T.proc and T.data
                 template <typename T>
@@ -50,6 +52,7 @@ namespace upsylon
                 //! low level launch, info points at a concurrent::worker
                 static handle launch_worker(void *info, ID &tid );
 
+				static handle launch(procedure proc, void *info, ID &tid);
                 
 
                 //! low level finish
