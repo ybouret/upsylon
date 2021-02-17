@@ -22,14 +22,14 @@ namespace upsylon
         public:
             //! launch a thread
             thread(thread_proc  user_proc,
-                   void        *user_data,
+                   void        *user_args,
                    const size_t user_size,
                    const size_t user_rank);
             //! wait for thread to return and release resources
             virtual ~thread() throw();
 
             thread_proc                   proc;   //!< the procedure
-            void                         *data;   //!< its data
+            void                         *args;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID
             const nucleus::thread::handle handle; //!< thread handle
 

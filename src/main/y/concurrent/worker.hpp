@@ -13,25 +13,21 @@ namespace upsylon {
         //______________________________________________________________________
         //
         //
-        //! parallel execution of persistent proc/data
+        //! parallel execution of persistent proc/args
         //
         //______________________________________________________________________
         class worker : public context
         {
         public:
-            //__________________________________________________________________
-            //
-            // types and definition
-            //__________________________________________________________________
-            typedef void (*call)(void *); //!< to run within a thread
+            typedef nucleus::thread::call call;
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            //! execute proc(data) within a new thread
+            //! execute proc(args) within a new thread
             worker(call         user_proc,
-                   void        *user_data,
+                   void        *user_args,
                    const size_t user_size,
                    const size_t user_rank);
 
@@ -43,7 +39,7 @@ namespace upsylon {
             // members
             //__________________________________________________________________
             call                          proc;   //!< the procedure
-            void                         *data;   //!< its data
+            void                         *args;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID
             const nucleus::thread::handle handle; //!< thread handle
 

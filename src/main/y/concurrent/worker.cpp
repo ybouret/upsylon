@@ -4,6 +4,7 @@
 #include "y/type/block/zset.hpp"
 #include "y/exceptions.hpp"
 #include "y/os/error.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
@@ -12,6 +13,7 @@ namespace upsylon {
 
         namespace nucleus
         {
+#if 0
             static inline Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
             {
                 assert(args);
@@ -21,36 +23,6 @@ namespace upsylon {
                 return 0;
             }
 
-			thread::handle thread::launch(procedure proc, void *info, ID &tid)
-			{
-				assert(proc);
-				assert(info);
-				bzset(tid);
-#if    defined(Y_BSD)
-				const int res = pthread_create(&tid, NULL, proc, info);
-				if (res != 0)
-				{
-					throw libc::exception(res, "pthread_create");
-				}
-				return tid;
-#endif
-
-#if defined(Y_WIN)
-				Y_GIANT_LOCK();
-				handle h = ::CreateThread(0,
-					0,
-					proc,
-					info,
-					0,
-					&tid);
-				if (NULL == h)
-				{
-					const DWORD res = ::GetLastError();
-					throw win32::exception(res, "::CreateThread");
-				}
-				return h;
-#endif
-			}
 
             thread::handle thread:: launch_worker( void *args, ID &tid)
             {
@@ -82,19 +54,20 @@ namespace upsylon {
 #endif
             }
 
+#endif
+
         }
 
 
-
-        worker:: worker(call         user_proc,
+        worker:: worker(call          user_proc,
                         void        *user_data,
                         const size_t user_size,
                         const size_t user_rank) :
         context(user_size,user_rank),
         proc(user_proc),
-        data(user_data),
+        args(user_data),
         id(),
-        handle( nucleus::thread::launch_worker(this,(nucleus::thread::ID &)id) )
+        handle( nucleus::thread::launch(*this,aliasing::_(id)) )
         {
         }
 

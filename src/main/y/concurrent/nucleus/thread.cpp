@@ -12,7 +12,39 @@ namespace upsylon
 
         namespace  nucleus
         {
-           
+            
+            thread::handle thread::launch(routine code, void *data, ID &tid)
+            {
+                assert(code);
+                assert(data);
+                bzset(tid);
+#if    defined(Y_BSD)
+                const int res = pthread_create(&tid, NULL, code, data);
+                if (res != 0)
+                {
+                    throw libc::exception(res, "pthread_create");
+                }
+                return tid;
+#endif
+
+#if defined(Y_WIN)
+                Y_GIANT_LOCK();
+                handle h = ::CreateThread(0,
+                                          0,
+                                          code,
+                                          data,
+                                          0,
+                                          &tid);
+                if (NULL == h)
+                {
+                    const DWORD res = ::GetLastError();
+                    throw win32::exception(res, "::CreateThread");
+                }
+                return h;
+#endif
+            }
+
+
 
             void thread::finish(handle &h) throw()
             {

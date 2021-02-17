@@ -2,6 +2,7 @@
 #include "y/concurrent/thread.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/type/aliasing.hpp"
 
 #include <iostream>
 
@@ -12,50 +13,7 @@ namespace upsylon
     
     namespace concurrent
     {
-
-        namespace nucleus
-        {
-            static inline Y_THREAD_LAUNCHER_RETURN thread_launcher( Y_THREAD_LAUNCHER_PARAMS args ) throw()
-            {
-                assert(args);
-                concurrent::thread & thr = *static_cast<concurrent::thread*>(args);
-                assert(thr.proc);
-                thr.proc(thr.data);
-                return 0;
-            }
-
-            thread::handle thread:: launch_thread( void *args, ID &tid)
-            {
-                assert(args);
-                bzset(tid);
-#if    defined(Y_BSD)
-                const int res = pthread_create( &tid, NULL, thread_launcher,args);
-                if( res != 0 )
-                {
-                    throw libc::exception( res, "pthread_create" );
-                }
-                return tid;
-#endif
-
-#if defined(Y_WIN)
-                Y_GIANT_LOCK();
-                handle h = ::CreateThread(0 ,
-                                          0 ,
-                                          thread_launcher,
-                                          args,
-                                          0,
-                                          &tid );
-                if( NULL == h )
-                {
-                    const DWORD res = ::GetLastError();
-                    throw win32::exception( res, "::CreateThread" );
-                }
-                return h;
-#endif
-            }
-
-        }
-
+        
 
         thread:: thread(thread_proc  user_proc,
                         void        *user_data,
@@ -63,9 +21,9 @@ namespace upsylon
                         const size_t user_rank) :
         parallel(user_size,user_rank),
         proc(user_proc),
-        data(user_data),
+        args(user_data),
         id(),
-        handle( nucleus::thread::launch_thread(this,(nucleus::thread::ID &)id) )
+        handle( nucleus::thread::launch(*this,aliasing::_(id)) )
         {
         }
 
