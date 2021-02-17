@@ -1,4 +1,4 @@
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 
 namespace upsylon
 {

@@ -14,8 +14,7 @@ namespace
 
 Y_UTEST(thr_context)
 {
-
-
+    
 
     {
         const concurrent::context ctx;

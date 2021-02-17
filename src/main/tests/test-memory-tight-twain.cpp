@@ -2,7 +2,7 @@
 #include "y/memory/tight/twain-allocator.hpp"
 #include "y/utest/run.hpp"
 
-#include "y/concurrent/fake-lock.hpp"
+#include "y/concurrent/sync/fake-lock.hpp"
 #include "y/string/convert.hpp"
 
 using namespace upsylon;

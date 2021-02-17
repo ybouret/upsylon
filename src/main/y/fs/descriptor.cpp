@@ -1,5 +1,5 @@
 #include "y/fs/descriptor.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/exceptions.hpp"
 
 #if defined(Y_BSD)

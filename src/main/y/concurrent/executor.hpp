@@ -3,7 +3,7 @@
 #define Y_CONCURRENT_EXECUTOR_INCLUDED 1
 
 #include "y/parallel.hpp"
-#include "y/concurrent/fake-lock.hpp"
+#include "y/concurrent/sync/fake-lock.hpp"
 
 namespace upsylon
 {

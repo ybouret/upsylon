@@ -5,7 +5,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/string/convert.hpp"
 #include "y/ios/ocstream.hpp"
-#include "y/concurrent/fake-lock.hpp"
+#include "y/concurrent/sync/fake-lock.hpp"
 
 #include <iomanip>
 

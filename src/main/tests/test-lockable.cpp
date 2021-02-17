@@ -1,5 +1,5 @@
-#include "y/concurrent/fake-lock.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/fake-lock.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/utest/run.hpp"
 using namespace upsylon;
 

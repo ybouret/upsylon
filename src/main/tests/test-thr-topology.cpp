@@ -3,10 +3,6 @@
 
 using namespace upsylon;
 
-namespace
-{
-   
-}
 
 Y_UTEST(thr_topology)
 {

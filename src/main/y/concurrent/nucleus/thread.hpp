@@ -4,7 +4,7 @@
 #ifndef Y_CONCURRENT_NUCLEUS_INCLUDED
 #define Y_CONCURRENT_NUCLEUS_INCLUDED 1
 
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/nucleus/mutex.hpp"
 
 namespace upsylon
 {

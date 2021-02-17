@@ -1,6 +1,6 @@
 #include "y/memory/locked.hpp"
 #include "y/os/page-size.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/exceptions.hpp"
 #include "y/type/block/zset.hpp"
 

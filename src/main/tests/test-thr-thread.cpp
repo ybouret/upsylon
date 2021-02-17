@@ -1,5 +1,6 @@
 
 #include "y/concurrent/thread.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

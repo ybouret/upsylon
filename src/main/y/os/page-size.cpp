@@ -1,7 +1,7 @@
 
 #include "y/os/page-size.hpp"
 #include "y/exceptions.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 
 #if defined(Y_BSD)
 #include <unistd.h>

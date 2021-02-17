@@ -3,7 +3,7 @@
 #define Y_SINGLETON_INCLUDED 1
 
 
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/concurrent/at-exit.hpp"
 #include <new>
 

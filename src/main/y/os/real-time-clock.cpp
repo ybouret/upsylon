@@ -1,6 +1,6 @@
 #include "y/os/real-time-clock.hpp"
 #include "y/exceptions.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 
 #if defined(Y_APPLE)
 #include <mach/mach.h>

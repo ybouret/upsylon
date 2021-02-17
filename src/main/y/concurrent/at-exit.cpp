@@ -1,5 +1,5 @@
 #include "y/concurrent/at-exit.hpp"
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 #include "y/os/error.hpp"
 #include "y/type/block/swap.hpp"
 #include <cerrno>

@@ -4,7 +4,7 @@
 #define Y_CONCURRENT_CONDITION_INCLUDED 1
 
 
-#include "y/concurrent/mutex.hpp"
+#include "y/concurrent/sync/mutex.hpp"
 
 namespace upsylon
 {

@@ -1,7 +1,7 @@
 #include "y/memory/dblock.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/concurrent/fake-lock.hpp"
+#include "y/concurrent/sync/fake-lock.hpp"
 
 using namespace upsylon;
 
