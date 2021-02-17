@@ -44,7 +44,7 @@ namespace
 
 Y_UTEST(threads)
 {
-    std::cerr << "sizeof(thread)=" << sizeof(concurrent::thread) << std::endl;
+    std::cerr << "sizeof(thread)=" << sizeof(concurrent::old_thread) << std::endl;
 
     bool run = true;
     if(argc>1 && !strcmp(argv[1],"false"))

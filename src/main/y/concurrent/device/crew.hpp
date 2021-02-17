@@ -6,7 +6,7 @@
 
 #include "y/concurrent/worker.hpp"
 #include "y/concurrent/sync/condition.hpp"
-#include "y/concurrent/device/topology.hpp"
+#include "y/concurrent/topology.hpp"
 #include "y/concurrent/device/engine.hpp"
 
 #include "y/ptr/auto.hpp"

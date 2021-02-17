@@ -1,5 +1,5 @@
 
-#include "y/concurrent/device/topology.hpp"
+#include "y/concurrent/topology.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/os/hw.hpp"
 #include "y/string/env.hpp"

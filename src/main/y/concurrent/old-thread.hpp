@@ -17,17 +17,17 @@ namespace upsylon
         
 
         //! thread wrapper
-        class thread : public parallel
+        class old_thread : public parallel
         {
         public:
             //! launch a thread
-            thread(thread_proc  user_proc,
-                   void        *user_args,
-                   const size_t user_size,
-                   const size_t user_rank);
+            old_thread(thread_proc  user_proc,
+                       void        *user_args,
+                       const size_t user_size,
+                       const size_t user_rank);
             //! wait for thread to return and release resources
-            virtual ~thread() throw();
-
+            virtual ~old_thread() throw();
+            
             thread_proc                   proc;   //!< the procedure
             void                         *args;   //!< its data
             const nucleus::thread::ID     id;     //!< thread ID
@@ -36,7 +36,7 @@ namespace upsylon
             bool is_current() const throw();      //!< checking against get_current_id
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(thread);
+            Y_DISABLE_COPY_AND_ASSIGN(old_thread);
         };
 
         

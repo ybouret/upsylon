@@ -3,7 +3,7 @@
 #define Y_CONCURRENT_THREADS_INCLUDED 1
 
 #include "y/concurrent/executor.hpp"
-#include "y/concurrent/thread.hpp"
+#include "y/concurrent/old-thread.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/concurrent/layout.hpp"
@@ -16,8 +16,8 @@ namespace upsylon {
         //! environment variable to set/get verbosity
 #define Y_VERBOSE_THREADS "Y_VERBOSE_THREADS"
 
-        typedef auto_ptr<const layout>       __topology;  //!< topology for threads
-        typedef slots<thread,memory::global> __threads;   //!< memory for threads
+        typedef auto_ptr<const layout>           __topology;  //!< topology for threads
+        typedef slots<old_thread,memory::global> __threads;   //!< memory for threads
 
         //----------------------------------------------------------------------
         //
@@ -67,13 +67,13 @@ namespace upsylon {
             void               thread_entry()      throw();       //!< parallel entry point
             void               initialize();                      //!< prepare
             
-            __threads  engines;
-            bool       halting;
-            size_t     ready;
-            condition  start;
-            kernel     kproc;
-            void      *kdata;
-            thread    *shift; //!< for parallel[1..size]
+            __threads   engines;
+            bool        halting;
+            size_t      ready;
+            condition   start;
+            kernel      kproc;
+            void       *kdata;
+            old_thread *shift; //!< for parallel[1..size]
 
         public:
             bool verbose; //!< verbose flag, mostly to debug

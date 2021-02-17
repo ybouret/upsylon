@@ -1,4 +1,4 @@
-#include "y/concurrent/device/topology.hpp"
+#include "y/concurrent/topology.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

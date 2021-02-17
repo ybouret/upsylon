@@ -68,6 +68,10 @@ namespace upsylon
                 //! display info per cpu
                 static void   display(const char *who, const size_t);
 
+                //! check environment verbosity
+                static bool   verbosity(const char *id);
+                
+
             private:
                 //! T.proc and T.args
                 template <typename T> static inline
