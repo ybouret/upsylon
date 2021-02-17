@@ -32,9 +32,11 @@ namespace upsylon
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
 
+                typedef Y_THREAD_LAUNCHER_RETURN (*procedure)(Y_THREAD_LAUNCHER_PARAMS);
+
                 //! T.proc and T.data
                 template <typename T>
-                Y_THREAD_LAUNCHER_RETURN procedure(Y_THREAD_LAUNCHER_PARAMS args) throw()
+                Y_THREAD_LAUNCHER_RETURN callback(Y_THREAD_LAUNCHER_PARAMS args) throw()
                 {
                     assert(args);
                     T &caller = *static_cast<T*>(args); assert(caller.proc!=0);
