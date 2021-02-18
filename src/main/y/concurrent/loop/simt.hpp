@@ -18,6 +18,21 @@ namespace upsylon
 
     namespace concurrent
     {
+        
+        class runnable
+        {
+        public:
+            virtual ~runnable() throw() {}
+            explicit runnable() throw()
+            {
+            }
+            
+            virtual void run(const context &, lockable &) = 0;
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(runnable);
+        };
+        
         class simt
         {
         public:
@@ -27,23 +42,37 @@ namespace upsylon
             mutex                          access;
             const auto_ptr<const topology> topo;
             
+            void loop(runnable &);
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
-            typedef runnable<simt>         thread_type;
+            class launcher : public thread
+            {
+            public:
+                explicit launcher(simt        &user_host,
+                                  const size_t user_size,
+                                  const size_t user_rank);
+                virtual ~launcher() throw();
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(launcher);
+                simt &host;
+                static void stub(void *);
+            };
             
-            size_t                         ready;
-            condition                      cycle;
-            size_t                         joined;
-            condition                      finish;
-            slots<thread_type>             crew;
-            bool                           built;
+            runnable       *code;
+            size_t          ready;
+            condition       cycle;
+            size_t          joined;
+            condition       finish;
+            slots<launcher> crew;
+            bool            built;
             
             void setup();
             void cleanup() throw();
             void run(const context &) throw();
-            friend thread_type;
-            
+ 
         public:
             bool verbose;
         };

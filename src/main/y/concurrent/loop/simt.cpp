@@ -1,16 +1,50 @@
 
 #include "y/concurrent/loop/simt.hpp"
 #include <iomanip>
+
 namespace upsylon
 {
 
     namespace concurrent
     {
+        //----------------------------------------------------------------------
+        //
+        // launcher
+        //
+        //----------------------------------------------------------------------
 
+        simt:: launcher:: ~launcher() throw()
+        {
+        }
+        
+        simt:: launcher:: launcher(simt      &user_host,
+                 const size_t user_size,
+                 const size_t user_rank)  :
+        thread(stub,
+               this,
+               user_size,
+               user_rank),
+        host(user_host)
+        {
+        }
+        
+        void simt:: launcher:: stub(void *addr)
+        {
+            assert(addr);
+            launcher &self = *static_cast<launcher *>(addr);
+            self.host.run(self);
+        }
+        
+        //----------------------------------------------------------------------
+        //
+        // setup simt
+        //
+        //----------------------------------------------------------------------
         static const char pfx[] = "[simt";
         
         simt:: simt() :
         topo( new topology() ),
+        code(NULL),
         ready(0),
         cycle(),
         joined(0),
@@ -22,10 +56,8 @@ namespace upsylon
             setup();
         }
 
-        simt:: ~simt() throw()
-        {
-            cleanup();
-        }
+        
+       
 
         void simt:: setup()
         {
@@ -72,27 +104,51 @@ namespace upsylon
             
         }
 
+        //----------------------------------------------------------------------
+        //
+        // cleanup
+        //
+        //----------------------------------------------------------------------
+        
+        simt:: ~simt() throw()
+        {
+            cleanup();
+        }
         void simt:: cleanup() throw()
         {
             Y_SIMT_LN(pfx<<".quit]");
             cycle.broadcast();
         }
         
+        //----------------------------------------------------------------------
+        //
+        // main loop
+        //
+        //----------------------------------------------------------------------
+        
         void simt:: run(const context &ctx) throw()
         {
+            //------------------------------------------------------------------
+            //
             // LOCK access
+            //
+            //------------------------------------------------------------------
             access.lock();
             const size_t count = topo->size();
             ++ready;
             Y_SIMT_LN(pfx<<".<ok>] @ " << ctx.label << " (ready = " << std::setw(ctx.setw) << ready << "/" << count << ")" );
             
             //------------------------------------------------------------------
+            //
             // waiting on a LOCKED access
+            //
             //------------------------------------------------------------------
             cycle.wait(access);
             
             //------------------------------------------------------------------
+            //
             // wake up on a LOCKED access
+            //
             //------------------------------------------------------------------
             
             // first cycle!
@@ -112,6 +168,16 @@ namespace upsylon
         }
 
         
+        //----------------------------------------------------------------------
+        //
+        // interacting with main loop
+        //
+        //----------------------------------------------------------------------
+        void simt:: loop(runnable &obj)
+        {
+            
+            
+        }
     }
 
 }
