@@ -10,7 +10,10 @@
 #include "y/sequence/slots.hpp"
 #include "y/ptr/auto.hpp"
 
+//! VERBOSITY
 #define Y_VERBOSE_SIMT "Y_VERBOSE_SIMT"
+
+//! macro helper
 #define Y_SIMT_LN(MSG) do { if(verbose) { std::cerr << MSG << std::endl; } } while(false)
 
 namespace upsylon
@@ -18,7 +21,7 @@ namespace upsylon
 
     namespace concurrent
     {
-        
+        //!interface to runnable object
         class runnable
         {
         public:

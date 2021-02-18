@@ -114,6 +114,8 @@ namespace upsylon
         {
             cleanup();
         }
+        
+        
         void simt:: cleanup() throw()
         {
             Y_SIMT_LN(pfx<<".quit]");
