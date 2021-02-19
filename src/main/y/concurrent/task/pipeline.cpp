@@ -22,7 +22,7 @@ namespace upsylon
         }
 
 
-        static const char pfx[] = "[pipeline.";
+        static const char pfx[] = "[pipe.";
 
         pipeline:: ~pipeline() throw()
         {
@@ -45,7 +45,7 @@ namespace upsylon
 
         void pipeline:: cleanup() throw()
         {
-            Y_PIPELINE_LN(pfx<<".quit] #" << topo->size() );
+            Y_PIPELINE_LN(pfx<<"quit] #" << topo->size() );
             start.broadcast();
         }
 
@@ -73,9 +73,9 @@ namespace upsylon
                     assert(waiting.size==topo->nodes.size);
                     const topology::node *cpu = topo->nodes.head;
                     engine               *eng = waiting.head;
-                    const char           *who = verbose ? eng->label : NULL;
                     for(size_t n=count;n>0;--n,cpu=cpu->next,eng=eng->next)
                     {
+                        const char *who = verbose ? eng->label : NULL;
                         nucleus::thread::assign(eng->handle,cpu->rank,who);
                     }
                 }
@@ -98,7 +98,7 @@ namespace upsylon
             // LOCK
             access.lock();
             ++ready;
-            Y_PIPELINE_LN(pfx<<".<ok>] @ " << ctx.label << " (ready = " << std::setw(ctx.setw) << ready << "/" << ctx.size << ")" );
+            Y_PIPELINE_LN(pfx<<"<ok>] @ " << ctx.label << " (ready = " << std::setw(ctx.setw) << ready << "/" << ctx.size << ")" );
 
             // wait on a LOCKED mutex
             start.wait(access);
@@ -107,7 +107,7 @@ namespace upsylon
             if(!built)
             {
                 // emergency exit
-                Y_PIPELINE_LN(pfx<<".err!] @"<<ctx.label);
+                Y_PIPELINE_LN(pfx<<"err!] @"<<ctx.label);
                 --ready;
                 access.unlock();
                 return;
