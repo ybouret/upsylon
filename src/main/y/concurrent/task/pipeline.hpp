@@ -7,6 +7,7 @@
 #include "y/concurrent/task/type.hpp"
 #include "y/concurrent/executable.hpp"
 #include "y/concurrent/thread.hpp"
+#include "y/concurrent/sync/condition.hpp"
 #include "y/core/inode.hpp"
 
 //! VERBOSITY
@@ -25,10 +26,10 @@ namespace upsylon
         class pipeline : public executable
         {
         public:
-            class engine : public object, public launcher, public inode<engine>
+            class engine : public object, public executable::launcher, public inode<engine>
             {
             public:
-                explicit engine(const pipeline &srv,
+                explicit engine(executable     &user_host,
                                 const size_t    user_size,
                                 const size_t    user_rank);
                 virtual ~engine() throw();
@@ -46,11 +47,16 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
             virtual void call(const context &) throw();
 
-            engines waiting;
-            engines working;
+            engines   waiting;
+            engines   working;
+            size_t    ready;
+            condition start;
 
+            bool    built;
+            
             void setup();
-
+            void cleanup() throw();
+            
         public:
             bool verbose;
             
