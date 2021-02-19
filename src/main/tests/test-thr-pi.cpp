@@ -15,8 +15,9 @@ namespace
     public:
         vector<double> sums;
         size_t         count;
+        bool           verbose;
 
-        explicit Engine() : sums(), count(0) {}
+        explicit Engine() : sums(), count(0), verbose(true) {}
 
         void prepare(const concurrent::looper &l, const size_t n)
         {
@@ -34,6 +35,7 @@ namespace
             size_t offset = 1;
             size_t length = count;
             ctx.split(length,offset);
+            if(verbose) std::cerr << "ctx @" << ctx.label << offset << "+" << length << std::endl;
             while(length-- > 0)
             {
                 sum += 1.0/square_of( double(offset++) );
@@ -82,6 +84,8 @@ Y_UTEST(thr_pi)
     std::cerr << "par: " << engine.result() << std::endl;
 
     engine.prepare(seq,n);
+    engine.verbose = false;
+
     double seq_speed = 0;
 
     Y_TIMINGS(seq_speed,1,seq.for_each(engine));
