@@ -4,7 +4,7 @@
 #ifndef Y_CONCURRENT_TASK_PIPELINE_INCLUDED
 #define Y_CONCURRENT_TASK_PIPELINE_INCLUDED 1
 
-#include "y/concurrent/task/type.hpp"
+#include "y/concurrent/task/types.hpp"
 #include "y/concurrent/executable.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/sync/condition.hpp"

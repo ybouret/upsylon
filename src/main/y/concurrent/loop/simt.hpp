@@ -4,6 +4,7 @@
 #ifndef Y_CONCURRENT_LOOP_SIMT_INCLUDED
 #define Y_CONCURRENT_LOOP_SIMT_INCLUDED 1
 
+#include "y/concurrent/loop/types.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/executable.hpp"
 #include "y/concurrent/sync/condition.hpp"
@@ -21,33 +22,20 @@ namespace upsylon
 
     namespace concurrent
     {
-        //!interface to runnable object
-        class runnable
-        {
-        public:
-            virtual ~runnable() throw() {}
-            explicit runnable() throw()
-            {
-            }
-            
-            virtual void run(const context &, lockable &) = 0;
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(runnable);
-        };
-
-
-
-        class simt : public executable
+        class simt : public executable, public looper
         {
         public:
             explicit simt();
             virtual ~simt() throw();
 
-            void loop(runnable &);
-            void join() throw();
+            virtual void loop(runnable &) throw();
+            virtual void join()           throw();
 
-            const size_t cycles;
+            virtual size_t         size()                   const throw();
+            virtual const context &operator[](const size_t) const throw();
+
+
+            size_t          cycles;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
             runnable       *code;

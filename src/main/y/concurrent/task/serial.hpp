@@ -4,7 +4,7 @@
 #ifndef Y_CONCURRENT_TASK_SERIAL_INCLUDED
 #define Y_CONCURRENT_TASK_SERIAL_INCLUDED 1
 
-#include "y/concurrent/task/type.hpp"
+#include "y/concurrent/task/types.hpp"
 #include "y/concurrent/sync/fake-lock.hpp"
 
 

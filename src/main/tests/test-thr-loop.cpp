@@ -1,6 +1,7 @@
 
 
 #include "y/concurrent/loop/simt.hpp"
+#include "y/concurrent/loop/solo.hpp"
 #include "y/utest/run.hpp"
 #include "y/os/real-time-clock.hpp"
 
@@ -105,13 +106,18 @@ Y_UTEST(thr_loop)
             doNope nope;
             for(size_t i=0;i<10000;++i)
             {
-                par.loop(nope);
-                par.join();
+                par.for_each(nope);
             }
         }
     }
 
-
+    std::cerr << "Working SOLO" << std::endl;
+    {
+        concurrent::solo seq;
+        doSome code;
+        seq.for_each(code);
+    }
+    std::cerr << std::endl;
 
 
     

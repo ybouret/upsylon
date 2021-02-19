@@ -70,7 +70,10 @@ namespace upsylon
 
                 //! check environment verbosity
                 static bool   verbosity(const char *id);
-                
+
+                //! efficiency
+                static double efficiency(const double speed_up,
+                                         const size_t num_cpus) throw();
 
             private:
                 //! T.proc and T.args

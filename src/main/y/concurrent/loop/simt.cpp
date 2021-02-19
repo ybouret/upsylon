@@ -1,6 +1,5 @@
 
 #include "y/concurrent/loop/simt.hpp"
-#include "y/type/aliasing.hpp"
 #include <iomanip>
 
 
@@ -12,8 +11,19 @@ namespace upsylon
     {
 
 
+        size_t simt:: size() const throw()
+        {
+            return topo->size();
+        }
 
-        
+        const context & simt:: operator[](const size_t indx) const throw()
+        {
+            assert(indx>0);
+            assert(indx<=crew.size());
+            return *( (&crew.front())+indx );
+        }
+
+
         //----------------------------------------------------------------------
         //
         // setup simt
@@ -163,7 +173,7 @@ namespace upsylon
                 code->run(ctx,access);
                 //...
 
-                // post-synchronization on a LOCKED access
+                // barrier on replica side
                 access.lock();
                 if(++joined>count)
                 {
@@ -197,12 +207,12 @@ namespace upsylon
         // interacting with main loop
         //
         //----------------------------------------------------------------------
-        void simt:: loop(runnable &obj)
+        void simt:: loop(runnable &obj) throw()
         {
             Y_LOCK(access);
             assert(!code);
             assert(topo->size() == ready);
-            ++aliasing::_(cycles);
+            ++cycles;
             Y_SIMT_LN(pfx<<".loop] <cycle " << cycles << ">");
             code  = &obj;
             cycle.broadcast();
@@ -211,8 +221,11 @@ namespace upsylon
 
         void simt:: join() throw()
         {
+
             access.lock();
             assert(code);
+
+            // barrier on primary side
             const size_t count = topo->size();
             if(++joined>count)
             {
@@ -228,7 +241,7 @@ namespace upsylon
             code   = 0;
             access.unlock();
 
-            // re-sync
+            // re-sync for next cycle
             Y_MUTEX_PROBE(access,ready<=0);
             ready  = count;
             Y_SIMT_LN(pfx<<".join] <cycle " << cycles << ">");
