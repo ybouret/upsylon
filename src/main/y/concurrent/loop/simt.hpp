@@ -5,7 +5,6 @@
 #define Y_CONCURRENT_LOOP_SIMT_INCLUDED 1
 
 #include "y/concurrent/thread.hpp"
-#include "y/concurrent/topology.hpp"
 #include "y/concurrent/executable.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/sequence/slots.hpp"
@@ -44,29 +43,12 @@ namespace upsylon
         public:
             explicit simt();
             virtual ~simt() throw();
-            
-            const auto_ptr<const topology> topo;
-            
+
             void loop(runnable &);
             
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
-            class launcher : public thread
-            {
-            public:
-                explicit launcher(simt        &user_host,
-                                  const size_t user_size,
-                                  const size_t user_rank);
-                virtual ~launcher() throw();
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(launcher);
-                simt &host;
-                static void stub(void *);
-            };
-
-            
             runnable       *code;
             size_t          ready;
             condition       cycle;

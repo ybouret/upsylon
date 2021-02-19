@@ -19,8 +19,14 @@ namespace upsylon
         public:
             class engine : public object, public thread, public inode<engine>
             {
+            public:
+                explicit engine();
 
+            private:
+                virtual ~engine() throw();
             };
+
+            typedef core::list_of_cpp<engine> engines;
 
             virtual ~pipeline() throw();
             explicit pipeline() throw();

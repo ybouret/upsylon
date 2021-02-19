@@ -5,6 +5,7 @@
 
 
 #include "y/concurrent/nucleus/cluster.hpp"
+#include "y/ptr/auto.hpp"
 
 
 //______________________________________________________________________________
@@ -29,6 +30,8 @@ namespace upsylon
         class topology : public object
         {
         public:
+            typedef const auto_ptr<const topology> pointer; //!< alias
+
             //__________________________________________________________________
             //
             //! compile availalbe ranks

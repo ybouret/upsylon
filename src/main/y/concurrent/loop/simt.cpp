@@ -11,33 +11,7 @@ namespace upsylon
     {
 
 
-        //----------------------------------------------------------------------
-        //
-        // launcher
-        //
-        //----------------------------------------------------------------------
-
-        simt:: launcher:: ~launcher() throw()
-        {
-        }
         
-        simt:: launcher:: launcher(simt      &user_host,
-                 const size_t user_size,
-                 const size_t user_rank)  :
-        thread(stub,
-               this,
-               user_size,
-               user_rank),
-        host(user_host)
-        {
-        }
-        
-        void simt:: launcher:: stub(void *addr)
-        {
-            assert(addr);
-            launcher &self = *static_cast<launcher *>(addr);
-            self.host.call(self);
-        }
         
         //----------------------------------------------------------------------
         //
@@ -47,7 +21,6 @@ namespace upsylon
         static const char pfx[] = "[simt";
         
         simt:: simt() :
-        topo( new topology() ),
         code(NULL),
         ready(0),
         cycle(),
