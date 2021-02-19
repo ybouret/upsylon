@@ -45,8 +45,9 @@ namespace upsylon
             virtual ~simt() throw();
 
             void loop(runnable &);
-            
-            
+            void join() throw();
+
+            const size_t cycles;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
             runnable       *code;

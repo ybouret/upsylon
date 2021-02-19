@@ -1,5 +1,6 @@
 
 #include "y/concurrent/loop/simt.hpp"
+#include "y/type/aliasing.hpp"
 #include <iomanip>
 
 
@@ -11,7 +12,7 @@ namespace upsylon
     {
 
 
-        
+
         
         //----------------------------------------------------------------------
         //
@@ -21,6 +22,7 @@ namespace upsylon
         static const char pfx[] = "[simt";
         
         simt:: simt() :
+        cycles(0),
         code(NULL),
         ready(0),
         cycle(),
@@ -34,7 +36,7 @@ namespace upsylon
         }
 
         
-       
+
 
         void simt:: setup()
         {
@@ -67,8 +69,10 @@ namespace upsylon
                 
                 
                 //--------------------------------------------------------------
-                // first wait on cycle, place threads
+                // first wait on cycle
                 //--------------------------------------------------------------
+                Y_SIMT_LN(pfx<<".----] #" << count << " synchronized");
+
                 built = true;
 
             }
@@ -95,7 +99,10 @@ namespace upsylon
         
         void simt:: cleanup() throw()
         {
-            Y_SIMT_LN(pfx<<".quit]");
+            {
+                Y_LOCK(access);
+                Y_SIMT_LN(pfx<<".quit] #" << crew.size() );
+            }
             cycle.broadcast();
         }
         
@@ -138,15 +145,53 @@ namespace upsylon
                 access.unlock();
                 return;
             }
-            
-            
-            
-            
-            
+
+            //------------------------------------------------------------------
+            //
+            // main loop
+            //
+            //------------------------------------------------------------------
+
+        CYCLE:
+            if(code)
+            {
+                assert(ready>0);
+                Y_SIMT_LN(pfx<<".run!] @" << ctx.label);
+
+                // run UNLOCKED
+                access.unlock();
+                code->run(ctx,access);
+                //...
+
+                // post-synchronization on a LOCKED access
+                access.lock();
+                if(++joined>count)
+                {
+                    Y_SIMT_LN(pfx<<".done] @" << ctx.label << " (joined=all) ");
+                    finish.broadcast();
+                }
+                else
+                {
+                    Y_SIMT_LN(pfx<<".wait] @" << ctx.label << " (joined=" << joined  <<")");
+                    finish.wait(access);
+                }
+
+
+                Y_SIMT_LN(pfx<<".next] @" << ctx.label);
+                --ready;
+                cycle.wait(access);
+                goto CYCLE;
+            }
+
+            // this is the end
+            assert(ready>0);
+            Y_SIMT_LN(pfx<<".bye!] @" << ctx.label);
+            --ready;
             access.unlock();
+            return;
         }
 
-        
+
         //----------------------------------------------------------------------
         //
         // interacting with main loop
@@ -154,8 +199,39 @@ namespace upsylon
         //----------------------------------------------------------------------
         void simt:: loop(runnable &obj)
         {
-            
-            
+            Y_LOCK(access);
+            assert(!code);
+            assert(topo->size() == ready);
+            ++aliasing::_(cycles);
+            Y_SIMT_LN(pfx<<".loop] <cycle " << cycles << ">");
+            code  = &obj;
+            cycle.broadcast();
+        }
+
+
+        void simt:: join() throw()
+        {
+            access.lock();
+            assert(code);
+            const size_t count = topo->size();
+            if(++joined>count)
+            {
+                Y_SIMT_LN(pfx<<".done] @primary (joined=all)");
+                finish.broadcast();
+            }
+            else
+            {
+                Y_SIMT_LN(pfx<<".wait] @primary (joined=" << joined << ")" );
+                finish.wait(access);
+            }
+            joined = 0;
+            code   = 0;
+            access.unlock();
+
+            // re-sync
+            Y_MUTEX_PROBE(access,ready<=0);
+            ready  = count;
+            Y_SIMT_LN(pfx<<".join] <cycle " << cycles << ">");
         }
     }
 
