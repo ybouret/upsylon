@@ -28,7 +28,6 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-                Y_GIANT_LOCK();
                 handle h = ::CreateThread(0,
                                           0,
                                           code,
@@ -58,7 +57,6 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-                Y_GIANT_LOCK();
                 if( ::WaitForSingleObject( h , INFINITE ) != WAIT_OBJECT_0 )
                 {
                     win32::critical_error( ::GetLastError(), "WaitForSingleObject" );
