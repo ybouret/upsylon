@@ -35,8 +35,24 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(runnable);
         };
-        
-        class simt
+
+
+        //! function to execute on a context (i.e. within a thread)
+        class executable
+        {
+        public:
+            virtual ~executable() throw();
+
+            virtual void call(const context &) = 0;
+
+        protected:
+            explicit executable() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(executable);
+        };
+
+        class simt : public executable
         {
         public:
             explicit simt();
@@ -57,12 +73,13 @@ namespace upsylon
                                   const size_t user_size,
                                   const size_t user_rank);
                 virtual ~launcher() throw();
-                
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(launcher);
                 simt &host;
                 static void stub(void *);
             };
+
             
             runnable       *code;
             size_t          ready;
@@ -72,10 +89,9 @@ namespace upsylon
             slots<launcher> crew;
             bool            built;
             
-            void setup();
-            void cleanup() throw();
-            void run(const context &) throw();
- 
+            void         setup();
+            void         cleanup() throw();
+            virtual void call(const context &) throw();
         public:
             bool verbose;
         };

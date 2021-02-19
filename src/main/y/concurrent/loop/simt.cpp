@@ -7,6 +7,25 @@ namespace upsylon
 
     namespace concurrent
     {
+        executable:: ~executable() throw()
+        {
+        }
+
+        executable:: executable() throw()
+        {
+        }
+
+    }
+
+}
+
+namespace upsylon
+{
+
+    namespace concurrent
+    {
+
+
         //----------------------------------------------------------------------
         //
         // launcher
@@ -32,7 +51,7 @@ namespace upsylon
         {
             assert(addr);
             launcher &self = *static_cast<launcher *>(addr);
-            self.host.run(self);
+            self.host.call(self);
         }
         
         //----------------------------------------------------------------------
@@ -128,7 +147,7 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
         
-        void simt:: run(const context &ctx) throw()
+        void simt:: call(const context &ctx) throw()
         {
             //------------------------------------------------------------------
             //
