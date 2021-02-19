@@ -19,6 +19,8 @@ namespace upsylon
         class executable
         {
         public:
+            
+            //! launcher to redirect executable.call
             class launcher : public thread
             {
             public:
