@@ -29,13 +29,17 @@ namespace
         {
         }
 
-        virtual void run(const concurrent::context &ctx, lockable &) throw()
+        virtual void run(const concurrent::context &ctx, lockable &sync) throw()
         {
             double sum    = 0;
             size_t offset = 1;
             size_t length = count;
             ctx.split(length,offset);
-            if(verbose) std::cerr << "ctx @" << ctx.label << offset << "+" << length << std::endl;
+            if(verbose)
+            {
+                Y_LOCK(sync);
+                std::cerr << "ctx @" << ctx.label << " => " << offset << "+" << length << std::endl;
+            }
             while(length-- > 0)
             {
                 sum += 1.0/square_of( double(offset++) );
@@ -59,7 +63,7 @@ namespace
 Y_UTEST(thr_pi)
 {
 
-    size_t n = 1000000;
+    size_t n = 10000000;
 
     if(argc>1)
     {
