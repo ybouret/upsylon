@@ -6,6 +6,7 @@
 
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/topology.hpp"
+#include "y/concurrent/executable.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/sequence/slots.hpp"
 #include "y/ptr/auto.hpp"
@@ -37,20 +38,6 @@ namespace upsylon
         };
 
 
-        //! function to execute on a context (i.e. within a thread)
-        class executable
-        {
-        public:
-            virtual ~executable() throw();
-
-            virtual void call(const context &) = 0;
-
-        protected:
-            explicit executable() throw();
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(executable);
-        };
 
         class simt : public executable
         {
@@ -58,7 +45,6 @@ namespace upsylon
             explicit simt();
             virtual ~simt() throw();
             
-            mutex                          access;
             const auto_ptr<const topology> topo;
             
             void loop(runnable &);

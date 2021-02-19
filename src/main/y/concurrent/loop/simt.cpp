@@ -2,22 +2,7 @@
 #include "y/concurrent/loop/simt.hpp"
 #include <iomanip>
 
-namespace upsylon
-{
 
-    namespace concurrent
-    {
-        executable:: ~executable() throw()
-        {
-        }
-
-        executable:: executable() throw()
-        {
-        }
-
-    }
-
-}
 
 namespace upsylon
 {

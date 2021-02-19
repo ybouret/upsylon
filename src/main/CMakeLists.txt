@@ -187,6 +187,13 @@ SOURCE_GROUP( concurrent/loop FILES ${concurrent_loop_srcs} )
 INSTALL( FILES ${concurrent_loop_decl} DESTINATION include/y/concurrent/loop )
 
 
+FILE(GLOB concurrent_task_decl y/concurrent/task/*.hpp)
+FILE(GLOB concurrent_task_code y/concurrent/task/*.cpp)
+SET(concurrent_task_srcs ${concurrent_task_decl} ${concurrent_task_code})
+SOURCE_GROUP( concurrent/task FILES ${concurrent_task_srcs} )
+INSTALL( FILES ${concurrent_task_decl} DESTINATION include/y/concurrent/task )
+
+
 FILE(GLOB ios_decl y/ios/*.hpp)
 FILE(GLOB ios_code y/ios/*.cpp)
 SET(ios_srcs ${ios_decl} ${ios_code})
@@ -428,7 +435,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
-${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs} ${concurrent_scheme_srcs}  
+${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs}  ${concurrent_task_srcs} ${concurrent_scheme_srcs}  
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
