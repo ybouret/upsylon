@@ -15,15 +15,7 @@ namespace upsylon
         {
         }
 
-
-        void looper:: for_each(runnable &obj) throw()
-        {
-            loop(obj);
-            join();
-        }
-
-
-
+        
 
     }
 

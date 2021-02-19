@@ -10,7 +10,6 @@ using namespace upsylon;
 namespace
 {
     static size_t work_loops = 0;
-    static double wait_time  = 0;
 
     class doSome : public concurrent::runnable
     {
@@ -72,17 +71,16 @@ Y_UTEST(thr_loop)
         work_loops = string_convert::to<size_t>(argv[1],"work_loops");
     }
 
-    if(argc>2)
-    {
-        wait_time = string_convert::to<double>(argv[2],"wait_time");
-    }
-
+    
     std::cerr << "Empty   SIMT" << std::endl;
+    for(size_t i=0;i<2;++i)
     {
         concurrent::simt par;
     }
     std::cerr << std::endl;
-    
+
+
+
     std::cerr << "Working SIMT" << std::endl;
     {
         concurrent::simt par;
@@ -91,16 +89,11 @@ Y_UTEST(thr_loop)
 
             std::cerr << "one loop" << std::endl;
             {
-                par.loop(code);
-                {
-                    Y_LOCK(par.access);
-                    std::cerr << "launched!"<< std::endl;
-                }
-                clk.sleep(wait_time);
-                par.join();
+                par.for_each(code);
             }
         }
 
+        
         {
             std::cerr << "many loops" << std::endl;
             doNope nope;

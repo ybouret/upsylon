@@ -57,7 +57,8 @@ namespace
 Y_UTEST(thr_pi)
 {
 
-    size_t n = 10000;
+    size_t n = 1000000;
+
     if(argc>1)
     {
         n = string_convert::to<size_t>(argv[1],"");
@@ -91,7 +92,7 @@ Y_UTEST(thr_pi)
     Y_TIMINGS(par_speed,1,par.for_each(engine));
     std::cerr << "par_speed=" << par_speed << std::endl;
 
-    std::cerr << "efficiency: " << par.efficiency(par_speed/seq_speed) << std::endl;
+    std::cerr << "efficiency: " << par.efficiency(par_speed/seq_speed) << "%" << std::endl;
 
 }
 Y_UTEST_DONE()

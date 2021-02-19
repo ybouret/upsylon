@@ -19,8 +19,7 @@ namespace upsylon
             virtual ~solo() throw();
             explicit solo() throw();
 
-            virtual void loop(runnable &) throw();
-            virtual void join()           throw();
+            virtual void for_each(runnable &) throw();
 
             virtual size_t         size()                   const throw();
             virtual const context &operator[](const size_t) const throw();

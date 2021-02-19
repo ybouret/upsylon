@@ -28,21 +28,18 @@ namespace upsylon
             explicit simt();
             virtual ~simt() throw();
 
-            virtual void loop(runnable &) throw();
-            virtual void join()           throw();
+            virtual void for_each(runnable &) throw();
 
             virtual size_t         size()                   const throw();
             virtual const context &operator[](const size_t) const throw();
+            
 
-
-            size_t          cycles;
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
             runnable       *code;
             size_t          ready;
             condition       cycle;
-            size_t          joined;
-            condition       finish;
+            condition       fence;
             slots<launcher> crew;
             bool            built;
             

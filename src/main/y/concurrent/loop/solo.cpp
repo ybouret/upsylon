@@ -19,11 +19,8 @@ namespace upsylon
         {
         }
 
-        void solo:: join() throw()
-        {
-        }
 
-        void solo:: loop(runnable &obj) throw()
+        void solo:: for_each(runnable &obj) throw()
         {
             obj.run(here,sync);
         }

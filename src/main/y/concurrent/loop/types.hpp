@@ -17,10 +17,8 @@ namespace upsylon
         public:
             virtual ~looper() throw();
 
-            virtual void loop(runnable &) throw() = 0;
-            virtual void join()           throw() = 0;
-
-            void         for_each(runnable&) throw();
+            virtual void for_each(runnable &) throw() = 0;
+            
 
             double       efficiency(const double speed_up) const throw();
 

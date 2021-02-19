@@ -32,12 +32,10 @@ namespace upsylon
         static const char pfx[] = "[simt";
         
         simt:: simt() :
-        cycles(0),
         code(NULL),
         ready(0),
         cycle(),
-        joined(0),
-        finish(),
+        fence(),
         crew( topo->size()   ),
         built(false),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_SIMT) )
@@ -59,6 +57,7 @@ namespace upsylon
                 Y_SIMT_LN(pfx<<".init] #" << count);
                 for(size_t rank=0;rank<count;++rank)
                 {
+                    assert(ready==rank);
                     crew.build<simt&,size_t,size_t>(*this,count,rank);
                     Y_MUTEX_PROBE(access,ready>rank);
                 }
@@ -81,7 +80,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // first wait on cycle
                 //--------------------------------------------------------------
-                Y_SIMT_LN(pfx<<".----] #" << count << " synchronized");
+                Y_SIMT_LN(pfx<<".----] #" << count << " synchronized ----");
 
                 built = true;
 
@@ -109,11 +108,10 @@ namespace upsylon
         
         void simt:: cleanup() throw()
         {
-            {
-                Y_LOCK(access);
-                Y_SIMT_LN(pfx<<".quit] #" << crew.size() );
-            }
+            Y_SIMT_LN(pfx<<".quit] #" << crew.size() );
+            assert(NULL==code);
             cycle.broadcast();
+            Y_MUTEX_PROBE(access,ready<=0);
         }
         
         //----------------------------------------------------------------------
@@ -158,47 +156,37 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // main loop
+            // main loop: LOCKED
             //
             //------------------------------------------------------------------
-
-        CYCLE:
+        LOOP:
             if(code)
             {
                 assert(ready>0);
-                Y_SIMT_LN(pfx<<".run!] @" << ctx.label);
-
-                // run UNLOCKED
+                // run unlock
                 access.unlock();
                 code->run(ctx,access);
-                //...
 
-                // barrier on replica side
+                // barrier
                 access.lock();
-                if(++joined>count)
+                if(--ready<=0)
                 {
-                    Y_SIMT_LN(pfx<<".done] @" << ctx.label << " (joined=all) ");
-                    finish.broadcast();
+                    fence.broadcast();
                 }
-                else
-                {
-                    Y_SIMT_LN(pfx<<".wait] @" << ctx.label << " (joined=" << joined  <<")");
-                    finish.wait(access);
-                }
-
-
-                Y_SIMT_LN(pfx<<".next] @" << ctx.label);
-                --ready;
                 cycle.wait(access);
-                goto CYCLE;
+                goto LOOP;
+            }
+            else
+            {
+
+                Y_SIMT_LN(pfx<<".bye!] @" << ctx.label);
+                assert(ready>0);
+                --ready;
+                access.unlock();
+                return;
             }
 
-            // this is the end
-            assert(ready>0);
-            Y_SIMT_LN(pfx<<".bye!] @" << ctx.label);
-            --ready;
-            access.unlock();
-            return;
+
         }
 
 
@@ -207,45 +195,31 @@ namespace upsylon
         // interacting with main loop
         //
         //----------------------------------------------------------------------
-        void simt:: loop(runnable &obj) throw()
+        void simt:: for_each(runnable &obj) throw()
         {
+            //
+            // auto LOCKED
+            //
             Y_LOCK(access);
+
             assert(!code);
-            assert(topo->size() == ready);
-            ++cycles;
-            Y_SIMT_LN(pfx<<".loop] <cycle " << cycles << ">");
             code  = &obj;
             cycle.broadcast();
+
+            // unleash threads and wait for fence to open
+            fence.wait(access);
+
+            // return LOCKED
+            assert(ready<=0);
+            code  = 0;
+            ready = topo->size();
+
+            //
+            // auto UNLOCK
+            //
         }
 
 
-        void simt:: join() throw()
-        {
-
-            access.lock();
-            assert(code);
-
-            // barrier on primary side
-            const size_t count = topo->size();
-            if(++joined>count)
-            {
-                Y_SIMT_LN(pfx<<".done] @primary (joined=all)");
-                finish.broadcast();
-            }
-            else
-            {
-                Y_SIMT_LN(pfx<<".wait] @primary (joined=" << joined << ")" );
-                finish.wait(access);
-            }
-            joined = 0;
-            code   = 0;
-            access.unlock();
-
-            // re-sync for next cycle
-            Y_MUTEX_PROBE(access,ready<=0);
-            ready  = count;
-            Y_SIMT_LN(pfx<<".join] <cycle " << cycles << ">");
-        }
     }
 
 }
