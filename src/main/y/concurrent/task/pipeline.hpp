@@ -85,8 +85,8 @@ namespace upsylon
             void    trim() throw(); //!< remove shallow tasks
             void    free() throw(); //!< remove pending tasks
             
-            virtual job::uuid enqueue( const job::type & );
-
+            virtual job::uuid yield( const job::type & );
+            virtual void      flush() throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
@@ -101,6 +101,7 @@ namespace upsylon
             tasks       shallow;
             size_t      ready;
             condition   start;
+            condition   flushed;
             bool        built;
             
             void setup();

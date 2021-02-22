@@ -25,8 +25,8 @@ namespace upsylon
             virtual ~serial() throw(); //!< cleanup
             explicit serial() throw(); //!< setup
 
-            virtual job::uuid enqueue( const job::type & );
-
+            virtual job::uuid yield(const job::type &);
+            virtual void      flush() throw();
         private:
             Y_DISABLE_COPY_AND_ASSIGN(serial);
             fake_lock access;

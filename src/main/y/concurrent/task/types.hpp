@@ -24,14 +24,15 @@ namespace upsylon
             virtual ~supervisor() throw(); //!< cleanup
 
             //! job->uuid
-            virtual job::uuid enqueue( const job::type & ) = 0;
+            virtual job::uuid yield(const job::type &) = 0;
+            virtual void      flush() throw()          = 0;
 
             //! wrapper
             template <typename OBJECT, typename METHOD_POINTER> inline
-            job::uuid enroll(OBJECT &host, METHOD_POINTER method)
+            job::uuid operator()(OBJECT &host, METHOD_POINTER method)
             {
                 const job::type J(&host,method);
-                return enqueue(J);
+                return yield(J);
             }
 
         protected:

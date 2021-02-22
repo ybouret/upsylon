@@ -14,10 +14,15 @@ namespace upsylon
         {
         }
 
-        job::uuid serial:: enqueue( const job::type &J )
+        job::uuid serial:: yield( const job::type &J )
         {
             aliasing::_(J)(access);
             return ++jid;
         }
+
+        void serial:: flush() throw()
+        {
+        }
+        
     }
 }

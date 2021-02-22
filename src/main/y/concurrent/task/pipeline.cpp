@@ -43,6 +43,7 @@ namespace upsylon
         shallow(),
         ready(0),
         start(),
+        flushed(),
         built(false),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_PIPELINE) )
         {
@@ -77,12 +78,15 @@ namespace upsylon
             access.lock();
             Y_PIPELINE_LN(pfx<<"----] #" << topo->size() << " finishing ----");
 
+            // remove pending
             while(pending.size)
             {
                 task *t = pending.pop_back();
                 self_destruct(*t);
                 object::release1(t);
             }
+
+
 
             trim();
             
@@ -192,7 +196,6 @@ namespace upsylon
             //------------------------------------------------------------------
             tasks &io = aliasing::_(running);
         LOOP:
-            //Y_PIPELINE_LN(pfx<<"call] @" << ctx.label);
             if(pending.size>0)
             {
                 //--------------------------------------------------------------
@@ -204,7 +207,7 @@ namespace upsylon
                 task  *todo = io.push_back( pending.pop_front() ); // extract task, store in I/O
                 working.push_back( waiting.unlink(self) );         // self: waiting->working
                 Y_PIPELINE_LN(pfx<<"run+] @" << ctx.label << " job#" << todo->uuid);
-                
+
                 // run UNLOCKED
 
                 access.unlock();
@@ -273,7 +276,7 @@ namespace upsylon
         }
 
 
-        job::uuid pipeline:: enqueue( const job::type &J )
+        job::uuid pipeline:: yield(const job::type &J)
         {
             Y_LOCK(access);
 
@@ -282,6 +285,11 @@ namespace upsylon
 
             start.signal();
             return t->uuid;
+        }
+
+        void pipeline:: flush() throw()
+        {
+            
         }
     }
 

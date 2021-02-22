@@ -49,8 +49,8 @@ Y_UTEST(thr_pipeline)
 
     Worker worker;
     //S.enroll(worker, & Worker::compute );
-    Q.enroll(worker, & Worker::compute );
-    Q.enroll(worker, & Worker::compute );
+    Q(worker, & Worker::compute );
+    Q(worker, & Worker::compute );
 
     real_time_clock clk;
     clk.sleep(1);
