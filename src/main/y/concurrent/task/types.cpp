@@ -7,8 +7,8 @@ namespace upsylon
     {
         supervisor:: ~supervisor() throw() {}
 
-        supervisor:: supervisor() throw() {}
+        supervisor:: supervisor() throw() : jid(0) {}
 
-        
+       
     }
 }

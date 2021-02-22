@@ -1,4 +1,5 @@
 #include "y/concurrent/task/serial.hpp"
+#include "y/type/aliasing.hpp"
 
 namespace upsylon
 {
@@ -13,5 +14,10 @@ namespace upsylon
         {
         }
 
+        job::uuid serial:: enqueue( const job::type &J )
+        {
+            aliasing::_(J)(access);
+            return ++jid;
+        }
     }
 }

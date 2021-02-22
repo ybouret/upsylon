@@ -9,14 +9,26 @@ namespace upsylon
 {
     namespace concurrent
     {
+
+        //! job definitions
+        struct job
+        {
+            typedef unsigned long                uuid; //!< for management
+            typedef functor<void,TL1(lockable&)> type; //!< generic job
+        };
+
+        //! supervisor interface
         class supervisor
         {
         public:
-            virtual ~supervisor() throw();
-            
+            virtual ~supervisor() throw(); //!< cleanup
+
+            //! job->uuid
+            virtual job::uuid enqueue( const job::type & ) = 0;
 
         protected:
             explicit supervisor() throw();
+            job::uuid jid;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(supervisor);

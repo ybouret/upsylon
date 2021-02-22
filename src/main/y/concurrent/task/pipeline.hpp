@@ -31,6 +31,11 @@ namespace upsylon
         class pipeline : public executable, public supervisor
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definition
+            //___________________________________________________________________
+
             //! dynamic engine = thread
             class engine : public object, public executable::launcher, public inode<engine>
             {
@@ -47,8 +52,39 @@ namespace upsylon
             //! list of engines, alias
             typedef core::list_of_cpp<engine> engines;
 
+
+            //! task = job wrapper
+            class task
+            {
+            public:
+                task           *next;
+                task           *prev;
+                const job::uuid uuid;
+                job::type       code;
+                size_t          priv;
+                task(const job::uuid U, const job::type &J);
+                ~task() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(task);
+            };
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~pipeline() throw();  //!< cleanup
             explicit pipeline();          //!< setup threads and placement
+
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
+            void    trim() throw(); //!< remove shallow tasks
+            void    free() throw(); //!< remove pending tasks
+            
+            virtual job::uuid enqueue( const job::type & );
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
@@ -58,11 +94,16 @@ namespace upsylon
             engines   working;
             size_t    ready;
             condition start;
-
-            bool    built;
+            bool      built;
             
             void setup();
             void cleanup() throw();
+
+            core::list_of<task> pending;
+            core::list_of<task> shallow;
+
+            task * create_task(const job::type &J);
+
             
         public:
             bool verbose; //!< from Y_VERBOSE_PIPELINE

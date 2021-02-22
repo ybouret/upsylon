@@ -1,5 +1,7 @@
 
 #include "y/concurrent/task/pipeline.hpp"
+#include "y/type/self-destruct.hpp"
+
 #include <iomanip>
 
 namespace upsylon
@@ -43,10 +45,47 @@ namespace upsylon
             setup();
         }
 
+
+        void pipeline:: trim() throw()
+        {
+            Y_LOCK(access);
+            while( shallow.size )
+            {
+                task *t = shallow.pop_front();
+                object::release1(t);
+            }
+        }
+
+        void pipeline:: free() throw()
+        {
+            Y_LOCK(access);
+            while(pending.size)
+            {
+                task *t = pending.pop_back();
+                self_destruct(*t);
+                shallow.push_back(t);
+            }
+
+        }
+
         void pipeline:: cleanup() throw()
         {
+            access.lock();
+            while(pending.size)
+            {
+                task *t = pending.pop_back();
+                self_destruct(*t);
+                object::release1(t);
+            }
+
+            trim();
+            
+
             Y_PIPELINE_LN(pfx<<"quit] #" << topo->size() );
             start.broadcast();
+            access.unlock();
+
+
         }
 
         void pipeline:: setup()
@@ -118,6 +157,43 @@ namespace upsylon
 
 
             access.unlock();
+        }
+
+
+        pipeline:: task:: task(const job::uuid U, const job::type &J) :
+        next(0), prev(0), uuid(U), code(J)
+        {
+        }
+
+        pipeline:: task:: ~task() throw()
+        {
+            assert(0==next);
+            assert(0==prev);
+        }
+
+
+        pipeline::task * pipeline:: create_task(const job::type &J)
+        {
+            task *t = shallow.size ? shallow.pop_back() : object::acquire1<task>();
+            try {
+                new (t) task(jid,J);
+                ++jid;
+                return t;
+            }
+            catch(...)
+            {
+                t->next = t->prev = 0;
+                shallow.push_back(t);
+                throw;
+            }
+        }
+
+
+        job::uuid pipeline:: enqueue( const job::type &J )
+        {
+            task *t = pending.push_back( create_task(J) );
+
+            return t->uuid;
         }
     }
 
