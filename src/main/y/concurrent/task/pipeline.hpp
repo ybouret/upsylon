@@ -57,13 +57,14 @@ namespace upsylon
             class task
             {
             public:
-                task           *next;
-                task           *prev;
-                const job::uuid uuid;
-                job::type       code;
-                size_t          priv;
-                task(const job::uuid U, const job::type &J);
-                ~task() throw();
+                task           *next; //!< for list
+                task           *prev; //!< for list
+                const job::uuid uuid; //!< from supervisor
+                job::type       code; //!< to execute
+                size_t          priv; //!< private...
+
+                task(const job::uuid U, const job::type &J); //!< setup
+                ~task() throw();                             //!< cleanup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(task);
@@ -90,17 +91,19 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
             virtual void call(const context &) throw();
 
-            engines   waiting;
-            engines   working;
+            engines             waiting;
+            engines             working;
+            core::list_of<task> pending;
+            core::list_of<task> shallow;
             size_t    ready;
             condition start;
+
             bool      built;
             
             void setup();
             void cleanup() throw();
 
-            core::list_of<task> pending;
-            core::list_of<task> shallow;
+
 
             task * create_task(const job::type &J);
 

@@ -28,7 +28,7 @@ namespace upsylon
 
         protected:
             explicit supervisor() throw();
-            job::uuid jid;
+            job::uuid jid; //!< shared job id to build uuids
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(supervisor);

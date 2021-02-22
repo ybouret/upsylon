@@ -37,6 +37,8 @@ namespace upsylon
         executable(),
         waiting(),
         working(),
+        pending(),
+        shallow(),
         ready(0),
         start(),
         built(false),
@@ -161,7 +163,7 @@ namespace upsylon
 
 
         pipeline:: task:: task(const job::uuid U, const job::type &J) :
-        next(0), prev(0), uuid(U), code(J)
+        next(0), prev(0), uuid(U), code(J), priv(0)
         {
         }
 
