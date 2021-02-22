@@ -2,6 +2,7 @@
 #include "y/concurrent/task/serial.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/os/real-time-clock.hpp"
 
 using namespace upsylon;
 
@@ -41,6 +42,9 @@ Y_UTEST(thr_pipeline)
     Worker worker;
     S.enroll(worker, & Worker::compute );
     Q.enroll(worker, & Worker::compute );
+
+    real_time_clock clk;
+    clk.sleep(1);
 
 }
 Y_UTEST_DONE()

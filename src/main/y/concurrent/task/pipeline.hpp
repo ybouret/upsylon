@@ -69,6 +69,7 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(task);
             };
+            typedef core::list_of<task> tasks;
 
             //__________________________________________________________________
             //
@@ -91,21 +92,24 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
             virtual void call(const context &) throw();
 
-            engines             waiting;
-            engines             working;
-            core::list_of<task> pending;
-            core::list_of<task> shallow;
-            size_t              ready;
-            condition           start;
-            bool                built;
+            engines     waiting;
+            engines     working;
+            tasks       pending;
+        public:
+            const tasks running;
+        private:
+            tasks       shallow;
+            size_t      ready;
+            condition   start;
+            bool        built;
             
             void setup();
             void cleanup() throw();
 
 
 
-            task * create_task(const job::type &J);
-
+            task * query_task(const job::type &J);
+            void   store_task(task *t) throw();
             
         public:
             bool verbose; //!< from Y_VERBOSE_PIPELINE
