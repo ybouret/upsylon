@@ -211,10 +211,12 @@ namespace upsylon
                 todo->code(access);
                 access.lock();
 
-                // done
+                // task is done, LOCKED
                 Y_PIPELINE_LN(pfx<<"run-] @" << ctx.label << " job#" << todo->uuid);
                 store_task( io.unlink(todo) );             // remove task from I/O, then trash
                 waiting.push_back( working.unlink(self) ); // self: working->waiting
+
+                
                 start.wait(access);
                 goto LOOP;
             }
