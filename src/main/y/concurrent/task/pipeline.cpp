@@ -289,6 +289,7 @@ namespace upsylon
 
         void pipeline:: flush() throw()
         {
+            Y_LOCK(access);
             
         }
     }
