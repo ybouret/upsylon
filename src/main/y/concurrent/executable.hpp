@@ -15,34 +15,48 @@ namespace upsylon
     namespace concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
         //! function to execute on a context (i.e. within a thread)
+        //
+        //______________________________________________________________________
         class executable
         {
         public:
-            
+            //__________________________________________________________________
+            //
             //! launcher to redirect executable.call
+            //__________________________________________________________________
             class launcher : public thread
             {
             public:
-                virtual ~launcher() throw();
-                explicit launcher(executable  &user_host,
-                                  const size_t user_size,
-                                  const size_t user_rank);
+                virtual ~launcher() throw();               //!< cleanup
+                explicit launcher(executable  &user_host,  //|
+                                  const size_t user_size,  //|
+                                  const size_t user_rank); //!< setup
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(launcher);
                 executable &host;
-                static void stub(void *) throw();
+                static void stub(void *) throw(); // host.call(*this)
             };
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual     ~executable() throw();      //!< cleanup
+            virtual void call(const context &) = 0; //!< called for each thread
 
-            virtual ~executable() throw();
-            virtual void call(const context &) = 0;
-
-            mutex             access;
-            topology::pointer topo;
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            mutex             access; //!< shared mutex for synchro
+            topology::pointer topo;   //!< threads topology
 
         protected:
-            explicit executable();
+            explicit executable();    //!< setup topology
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(executable);

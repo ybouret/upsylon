@@ -35,10 +35,10 @@ namespace upsylon
             class engine : public object, public executable::launcher, public inode<engine>
             {
             public:
-                explicit engine(executable     &user_host,
-                                const size_t    user_size,
-                                const size_t    user_rank);
-                virtual ~engine() throw();
+                virtual ~engine() throw();                  //!< cleanup
+                explicit engine(executable     &user_host,  //|
+                                const size_t    user_size,  //|
+                                const size_t    user_rank); //!< setup
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(engine);
@@ -65,7 +65,7 @@ namespace upsylon
             void cleanup() throw();
             
         public:
-            bool verbose;
+            bool verbose; //!< from Y_VERBOSE_PIPELINE
             
         };
     }

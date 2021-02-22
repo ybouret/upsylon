@@ -13,14 +13,32 @@ namespace upsylon
     namespace concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! Solo executable
+        //
+        //______________________________________________________________________
         class solo : public looper
         {
         public:
-            virtual ~solo() throw();
-            explicit solo() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~solo() throw(); //!< cleanup
+            explicit solo() throw(); //!< setyp
 
+            //__________________________________________________________________
+            //
+            // looper interface
+            //__________________________________________________________________
             virtual void for_each(runnable &) throw();
 
+            //__________________________________________________________________
+            //
+            // accessible<context> interface
+            //__________________________________________________________________
             virtual size_t         size()                   const throw();
             virtual const context &operator[](const size_t) const throw();
 

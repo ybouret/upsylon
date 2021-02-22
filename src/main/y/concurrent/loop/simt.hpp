@@ -22,18 +22,35 @@ namespace upsylon
 
     namespace concurrent
     {
+        //______________________________________________________________________
+        //
+        //
+        //! Single Instruction, Multiple Threads
+        //
+        //______________________________________________________________________
         class simt : public executable, public looper
         {
         public:
-            explicit simt();
-            virtual ~simt() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit simt();          //!< setup
+            virtual ~simt() throw();  //!< cleanup
 
+            //__________________________________________________________________
+            //
+            // looper interface
+            //__________________________________________________________________
             virtual void for_each(runnable &) throw();
 
-            virtual size_t         size()                   const throw();
-            virtual const context &operator[](const size_t) const throw();
+            //__________________________________________________________________
+            //
+            // accessible<context> interface
+            //__________________________________________________________________
+            virtual size_t         size()                   const throw(); //!< num threads
+            virtual const context &operator[](const size_t) const throw(); //!< in 1..num_threads
             
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(simt);
             runnable       *code;
@@ -46,8 +63,9 @@ namespace upsylon
             void         setup();
             void         cleanup() throw();
             virtual void call(const context &) throw();
+
         public:
-            bool verbose;
+            bool verbose; //!< from Y_VERBOSE_SIMT env
         };
 
     }

@@ -120,6 +120,12 @@ namespace upsylon
 #endif
 
 
+            void  thread:: assign_current(const size_t cpu, const char *who)
+            {
+                assign( get_current_handle(), cpu, who );
+            }
+
+
             void thread::display(const char  *who, const size_t j)
             {
                 std::cerr << "[placement] @" << who << "->core#" << std::setw(4) << j << ' ' << '(' << Y_PLATFORM;

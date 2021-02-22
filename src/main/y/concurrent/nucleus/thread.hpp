@@ -70,6 +70,9 @@ namespace upsylon
                                      const size_t cpu,
                                      const char  *who);
 
+                //! assign current
+                static void   assign_current(const size_t cpu, const char *who);
+
                 //! display info per cpu
                 static void   display(const char *who, const size_t);
 
