@@ -9,6 +9,9 @@ namespace upsylon
         {
         }
         
+        serial:: serial() throw()
+        {
+        }
 
     }
 }

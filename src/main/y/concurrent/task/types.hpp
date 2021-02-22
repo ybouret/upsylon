@@ -5,5 +5,26 @@
 
 #include "y/functor.hpp"
 
+namespace upsylon
+{
+    namespace concurrent
+    {
+        class supervisor
+        {
+        public:
+            virtual ~supervisor() throw();
+            
+
+        protected:
+            explicit supervisor() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(supervisor);
+        };
+
+    }
+}
+
+
 #endif
 

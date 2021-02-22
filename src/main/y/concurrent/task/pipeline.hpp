@@ -28,7 +28,7 @@ namespace upsylon
         //! pipeline of tasks
         //
         //______________________________________________________________________
-        class pipeline : public executable
+        class pipeline : public executable, public supervisor
         {
         public:
             //! dynamic engine = thread

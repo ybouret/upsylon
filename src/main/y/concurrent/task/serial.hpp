@@ -13,11 +13,17 @@ namespace upsylon
     namespace concurrent
     {
 
-
-        class serial
+        //______________________________________________________________________
+        //
+        //
+        //! serial tasks
+        //
+        //______________________________________________________________________
+        class serial : public supervisor
         {
         public:
-            virtual ~serial() throw();
+            virtual ~serial() throw(); //!< cleanup
+            explicit serial() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(serial);
