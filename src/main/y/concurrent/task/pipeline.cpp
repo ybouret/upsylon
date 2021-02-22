@@ -75,6 +75,8 @@ namespace upsylon
         void pipeline:: cleanup() throw()
         {
             access.lock();
+            Y_PIPELINE_LN(pfx<<"----] #" << topo->size() << " finishing ----");
+
             while(pending.size)
             {
                 task *t = pending.pop_back();
@@ -137,6 +139,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 built = true;
+                Y_PIPELINE_LN(pfx<<"----] #" << topo->size() << " synchronized ----" );
 
             }
             catch(...)
@@ -262,15 +265,16 @@ namespace upsylon
         {
             assert(t);
             self_destruct(*t);
-            shallow.push_front(t);
+            shallow.push_back(t);
         }
 
 
         job::uuid pipeline:: enqueue( const job::type &J )
         {
             Y_LOCK(access);
-            std::cerr << "pipeline.enqueue..." << std::endl;
+
             task *t = pending.push_back( query_task(J) );
+            Y_PIPELINE_LN(pfx<<"load] job#" << t->uuid);
 
             start.signal();
             return t->uuid;

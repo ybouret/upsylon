@@ -3,6 +3,7 @@
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/os/real-time-clock.hpp"
+#include "y/type/utils.hpp"
 
 using namespace upsylon;
 
@@ -24,6 +25,11 @@ namespace {
         {
             Y_LOCK(sync);
             std::cerr << "..working.." << std::endl;
+            volatile double sum = 0;
+            for(size_t i=1000000000;i>0;--i)
+            {
+                sum += 1.0 / square_of( double(i) );
+            }
         }
 
     private:
@@ -37,14 +43,14 @@ Y_UTEST(thr_pipeline)
     concurrent::pipeline Q;
     concurrent::serial   S;
 
-    Y_UTEST_SIZEOF(concurrent::pipeline::task);
 
     Worker worker;
-    S.enroll(worker, & Worker::compute );
+    //S.enroll(worker, & Worker::compute );
+    Q.enroll(worker, & Worker::compute );
     Q.enroll(worker, & Worker::compute );
 
-    real_time_clock clk;
-    clk.sleep(1);
+    //real_time_clock clk;
+    //clk.sleep(1);
 
 }
 Y_UTEST_DONE()
