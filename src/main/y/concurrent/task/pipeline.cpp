@@ -204,7 +204,7 @@ namespace upsylon
                 task  *todo = io.push_back( pending.pop_front() ); // extract task, store in I/O
                 working.push_back( waiting.unlink(self) );         // self: waiting->working
                 Y_PIPELINE_LN(pfx<<"run+] @" << ctx.label << " job#" << todo->uuid);
-
+                
                 // run UNLOCKED
 
                 access.unlock();
@@ -216,7 +216,7 @@ namespace upsylon
                 store_task( io.unlink(todo) );             // remove task from I/O, then trash
                 waiting.push_back( working.unlink(self) ); // self: working->waiting
 
-                
+
                 start.wait(access);
                 goto LOOP;
             }
