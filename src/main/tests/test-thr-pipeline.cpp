@@ -23,8 +23,11 @@ namespace {
 
         void compute( lockable &sync )
         {
-            Y_LOCK(sync);
-            std::cerr << "..working.." << std::endl;
+            {
+                Y_LOCK(sync);
+                std::cerr << "..working.." << std::endl;
+            }
+            return;
             volatile double sum = 0;
             for(size_t i=1000000000;i>0;--i)
             {
@@ -49,8 +52,8 @@ Y_UTEST(thr_pipeline)
     Q.enroll(worker, & Worker::compute );
     Q.enroll(worker, & Worker::compute );
 
-    //real_time_clock clk;
-    //clk.sleep(1);
+    real_time_clock clk;
+    clk.sleep(1);
 
 }
 Y_UTEST_DONE()

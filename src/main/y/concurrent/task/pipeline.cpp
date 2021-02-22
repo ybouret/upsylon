@@ -153,15 +153,16 @@ namespace upsylon
 
         void pipeline:: call(const context &ctx) throw()
         {
-            //------------------------------------------------------------------
-            //
-            // LOCK
-            //
-            //------------------------------------------------------------------
-
             access.lock();
+            //------------------------------------------------------------------
+            //
+            // LOCKED setup
+            //
+            //------------------------------------------------------------------
+            assert(waiting.tail);
             ++ready;
-            Y_PIPELINE_LN(pfx<<"<ok>] @ " << ctx.label << " (ready = " << std::setw(ctx.setw) << ready << "/" << ctx.size << ")" );
+            engine *self = waiting.tail; assert(self->rank==ctx.rank);
+            Y_PIPELINE_LN(pfx<<"<ok>] @ " << self->label << " (ready = " << std::setw(ctx.setw) << ready << "/" << ctx.size << ")" );
 
             //------------------------------------------------------------------
             //
@@ -189,6 +190,7 @@ namespace upsylon
             // first valid wake up :)
             //
             //------------------------------------------------------------------
+            tasks &io = aliasing::_(running);
         LOOP:
             //Y_PIPELINE_LN(pfx<<"call] @" << ctx.label);
             if(pending.size>0)
@@ -198,21 +200,21 @@ namespace upsylon
                 // working phase
                 //
                 //--------------------------------------------------------------
-
-                // get task
-                tasks &io   = aliasing::_(running);
-                task  *todo = io.push_back( pending.pop_front() );
+                assert(waiting.owns(self));
+                task  *todo = io.push_back( pending.pop_front() ); // extract task, store in I/O
+                working.push_back( waiting.unlink(self) );         // self: waiting->working
                 Y_PIPELINE_LN(pfx<<"run+] @" << ctx.label << " job#" << todo->uuid);
 
                 // run UNLOCKED
+
                 access.unlock();
                 todo->code(access);
                 access.lock();
 
                 // done
                 Y_PIPELINE_LN(pfx<<"run-] @" << ctx.label << " job#" << todo->uuid);
-                store_task( io.unlink(todo) );
-
+                store_task( io.unlink(todo) );             // remove task from I/O, then trash
+                waiting.push_back( working.unlink(self) ); // self: working->waiting
                 start.wait(access);
                 goto LOOP;
             }
