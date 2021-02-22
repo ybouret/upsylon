@@ -193,6 +193,7 @@ namespace upsylon
 
         job::uuid pipeline:: enqueue( const job::type &J )
         {
+            Y_LOCK(access);
             task *t = pending.push_back( create_task(J) );
 
             return t->uuid;

@@ -26,8 +26,16 @@ namespace upsylon
             //! job->uuid
             virtual job::uuid enqueue( const job::type & ) = 0;
 
+            //! wrapper
+            template <typename OBJECT, typename METHOD_POINTER> inline
+            job::uuid enroll(OBJECT &host, METHOD_POINTER method)
+            {
+                const job::type J(&host,method);
+                return enqueue(J);
+            }
+
         protected:
-            explicit supervisor() throw();
+            explicit  supervisor() throw();
             job::uuid jid; //!< shared job id to build uuids
 
         private:

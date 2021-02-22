@@ -95,10 +95,9 @@ namespace upsylon
             engines             working;
             core::list_of<task> pending;
             core::list_of<task> shallow;
-            size_t    ready;
-            condition start;
-
-            bool      built;
+            size_t              ready;
+            condition           start;
+            bool                built;
             
             void setup();
             void cleanup() throw();
