@@ -11,15 +11,33 @@ namespace upsylon
 
     namespace concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! interface to make a loop on a runnable object
+        //
+        //______________________________________________________________________
         class looper : public accessible<context>
         {
         public:
-            virtual ~looper() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~looper() throw(); //!< cleanup
 
-            virtual void for_each(runnable &) throw() = 0;
-            
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual void for_each(runnable &) throw() = 0; //!< run on contexts
 
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
+
+            //! efficiency based on size()
             double       efficiency(const double speed_up) const throw();
 
         protected:

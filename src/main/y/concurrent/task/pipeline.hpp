@@ -22,10 +22,16 @@ namespace upsylon
     namespace concurrent
     {
 
-
+        //______________________________________________________________________
+        //
+        //
+        //! pipeline of tasks
+        //
+        //______________________________________________________________________
         class pipeline : public executable
         {
         public:
+            //! dynamic engine = thread
             class engine : public object, public executable::launcher, public inode<engine>
             {
             public:
@@ -38,10 +44,11 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(engine);
             };
 
+            //! list of engines, alias
             typedef core::list_of_cpp<engine> engines;
 
-            virtual ~pipeline() throw();
-            explicit pipeline();
+            virtual ~pipeline() throw();  //!< cleanup
+            explicit pipeline();          //!< setup threads and placement
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);

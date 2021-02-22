@@ -17,15 +17,22 @@ namespace upsylon
 
     namespace concurrent
     {
+        //______________________________________________________________________
+        //
+        //
         //!interface to runnable object
+        //
+        //______________________________________________________________________
         class runnable
         {
         public:
-            virtual ~runnable() throw();
-            explicit runnable() throw();
+            virtual ~runnable() throw(); //!< cleanup
 
+            //! run code with one context, and a synchronizing object if necessary
             virtual void run(const context &, lockable &) = 0;
-            
+
+        protected:
+            explicit runnable() throw(); //!< setup
         private:
             Y_DISABLE_COPY_AND_ASSIGN(runnable);
         };

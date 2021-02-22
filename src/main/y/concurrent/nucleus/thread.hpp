@@ -15,32 +15,37 @@ namespace upsylon
         namespace nucleus
         {
 
+            //__________________________________________________________________
+            //
+            //
             //! wraps low-level system calls
+            //
+            //__________________________________________________________________
             struct thread
             {
 #if defined(Y_BSD)
-                typedef pthread_t handle;          //!< system thread handle
-                typedef pthread_t ID;              //!< system thread identifier
-                typedef void *  (*routine)(void*); //!< system threadable interface
+                typedef pthread_t handle;                 //!< system thread handle
+                typedef pthread_t ID;                     //!< system thread identifier
+                typedef void *  (*system_routine)(void*); //!< system threadable interface
 #define         Y_THREAD_LAUNCHER_RETURN void *
 #define         Y_THREAD_LAUNCHER_PARAMS void *
 #endif
 
 #if defined(Y_WIN)
-                typedef HANDLE handle;                  //!< system thread handle
-                typedef DWORD  ID;                      //!< system thread identifier
-                typedef LPTHREAD_START_ROUTINE routine; //!< system threadable interface
+                typedef HANDLE handle;                         //!< system thread handle
+                typedef DWORD  ID;                             //!< system thread identifier
+                typedef LPTHREAD_START_ROUTINE system_routine; //!< system threadable interface
 #define         Y_THREAD_LAUNCHER_RETURN DWORD WINAPI
 #define         Y_THREAD_LAUNCHER_PARAMS LPVOID
 #endif
-                typedef void (*call)(void*);
 
-                //! low level launch, info points at a concurrent::thread
-                static handle launch_thread(void *info, ID &tid );
+                typedef void (*call)(void*); //!< portable function to call
 
+                
                 //! low level to start threaded code(data)
-				static handle launch(routine code, void *data, ID &tid);
+				static handle launch(system_routine code, void *data, ID &tid);
 
+                //! start a thread with obj.proc(obj.args)
                 template <typename T> static inline
                 handle launch(T &obj, ID &tid)
                 {
@@ -81,9 +86,9 @@ namespace upsylon
                 Y_THREAD_LAUNCHER_RETURN stub(Y_THREAD_LAUNCHER_PARAMS addr) throw()
                 {
                     assert(addr);
-                    T &caller = *static_cast<T*>(addr);
-                    call      proc = caller.proc; assert(proc);
-                    void     *args = caller.args;
+                    T        &caller = *static_cast<T*>(addr);
+                    call      proc   = caller.proc; assert(proc);
+                    void     *args   = caller.args;
                     proc(args);
                     return 0;
                 }
