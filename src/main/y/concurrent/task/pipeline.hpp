@@ -6,7 +6,6 @@
 
 #include "y/concurrent/task/types.hpp"
 #include "y/concurrent/executable.hpp"
-#include "y/concurrent/thread.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/core/inode.hpp"
 

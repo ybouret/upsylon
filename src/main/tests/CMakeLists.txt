@@ -151,6 +151,7 @@ test-thr-thread.cpp
 test-thr-loop.cpp
 test-thr-pi.cpp
 test-thr-pipeline.cpp
+test-thr-team.cpp
 )
 ADD_TEST(thr:context    test-main thr_context)
 ADD_TEST(thr:topology   test-main thr_topology)
@@ -158,6 +159,7 @@ ADD_TEST(thr:thread     test-main thr_thread)
 ADD_TEST(thr:loop       test-main thr_loop)
 ADD_TEST(thr:pi         test-main thr_pi)
 ADD_TEST(thr:pipeline   test-main thr_pipeline)
+ADD_TEST(thr:team       test-main thr_team)
 
 ADD_TEST(thr:parallel    test-main parallel)
 ADD_TEST(thr:threads     test-main threads)

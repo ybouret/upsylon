@@ -124,6 +124,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_loop);
     Y_UTEST(thr_pi);
     Y_UTEST(thr_pipeline);
+    Y_UTEST(thr_team);
     
     Y_UTEST(threads);
     Y_UTEST(simd);
