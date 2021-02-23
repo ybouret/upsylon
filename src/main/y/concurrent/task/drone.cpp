@@ -57,8 +57,15 @@ namespace upsylon
             wait(access);
 
             // wake up on LOCKED mutex
-            Y_PIPELINE_LN(pfx<<".*] @" << label);
+            if(deal)
+            {
+                Y_PIPELINE_LN(pfx<<".*] @" << label);
 
+            }
+            else
+            {
+                Y_PIPELINE_LN(pfx<<".-] @" << label);
+            }
             
             
 

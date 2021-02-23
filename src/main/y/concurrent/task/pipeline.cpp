@@ -104,11 +104,23 @@ namespace upsylon
         }
 
 
-        job::uuid pipeline:: yield(const job::type &)
+        job::uuid pipeline:: yield(const job::type &J)
         {
             Y_LOCK(access);
-
-            return 0;
+            
+            // create the job
+            const job::uuid ans = jid;
+            cue.establish(ans,J);
+            ++jid;
+            
+            // check status
+            if(waiting.size)
+            {
+                // all right!
+            }
+            
+            
+            return ans;
         }
 
         void pipeline:: flush() throw()
