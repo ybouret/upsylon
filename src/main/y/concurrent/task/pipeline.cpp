@@ -208,18 +208,22 @@ namespace upsylon
                 working.push_back( waiting.unlink(self) );         // self: waiting->working
                 Y_PIPELINE_LN(pfx<<"run+] @" << ctx.label << " job#" << todo->uuid);
 
+                //--------------------------------------------------------------
                 // run UNLOCKED
+                //--------------------------------------------------------------
 
                 access.unlock();
                 todo->code(access);
                 access.lock();
 
+                //--------------------------------------------------------------
                 // task is done, LOCKED
+                //--------------------------------------------------------------
                 Y_PIPELINE_LN(pfx<<"run-] @" << ctx.label << " job#" << todo->uuid);
                 store_task( io.unlink(todo) );             // remove task from I/O, then trash
+
+                
                 waiting.push_back( working.unlink(self) ); // self: working->waiting
-
-
                 start.wait(access);
                 goto LOOP;
             }
@@ -270,6 +274,7 @@ namespace upsylon
 
         void pipeline:: store_task(task *t) throw()
         {
+            // assuming locked
             assert(t);
             self_destruct(*t);
             shallow.push_back(t);
@@ -280,9 +285,11 @@ namespace upsylon
         {
             Y_LOCK(access);
 
+            // create a task
             task *t = pending.push_back( query_task(J) );
             Y_PIPELINE_LN(pfx<<"load] job#" << t->uuid);
 
+            // signal there is job to do
             start.signal();
             return t->uuid;
         }
