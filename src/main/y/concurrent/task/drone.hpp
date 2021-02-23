@@ -14,8 +14,15 @@ namespace upsylon
     namespace concurrent
     {
 
-        class pipeline;
+        class pipeline; //!< forward declaration
 
+
+        //______________________________________________________________________
+        //
+        //
+        //! drone to fullfill contracts
+        //
+        //______________________________________________________________________
         class drone:
         public object,
         public condition,
@@ -24,16 +31,18 @@ namespace upsylon
         public inode<drone>
         {
         public:
+            //! setup and start loop
             explicit drone(pipeline     &user_pipe,
                            const size_t user_size,
                            const size_t user_rank);
 
+            //! cleanup
             virtual ~drone() throw();
 
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(drone);
-            static void stub(void*) throw();    //!< call threaded loop
+            static void stub(void*) throw();   //!< call threaded loop
             void        loop()      throw();   //!< initialize function: wait...
         };
 

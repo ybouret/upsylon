@@ -37,7 +37,7 @@ namespace upsylon
                                   const size_t user_rank); //!< setup
 
             protected:
-                executable &program;
+                executable &program; //!< persistent program
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(launcher);

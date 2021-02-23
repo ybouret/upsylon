@@ -11,6 +11,7 @@ namespace upsylon
 
     namespace concurrent
     {
+        //! default environment variable to activate verbosity
 #define Y_VERBOSE_THREADS "Y_VERBOSE_THREADS"
 
         namespace nucleus
