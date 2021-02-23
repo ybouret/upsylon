@@ -82,11 +82,17 @@ namespace upsylon
             //
             // interface
             //__________________________________________________________________
-            void    trim() throw(); //!< remove shallow tasks
-            void    free() throw(); //!< remove pending tasks
-            
             virtual job::uuid yield( const job::type & );
             virtual void      flush() throw();
+
+            //__________________________________________________________________
+            //
+            // other methods
+            //__________________________________________________________________
+            void    trim() throw(); //!< remove shallow tasks
+            void    free() throw(); //!< remove pending tasks
+
+            void    show() const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);

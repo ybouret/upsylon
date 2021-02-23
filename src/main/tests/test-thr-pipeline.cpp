@@ -52,9 +52,10 @@ Y_UTEST(thr_pipeline)
     Q(worker, & Worker::compute );
     Q(worker, & Worker::compute );
 
+    Q.show();
     real_time_clock clk;
     clk.sleep(1);
-
+    Q.show();
 }
 Y_UTEST_DONE()
 

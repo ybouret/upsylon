@@ -297,8 +297,17 @@ namespace upsylon
         void pipeline:: flush() throw()
         {
             Y_LOCK(access);
-            
         }
+
+        void pipeline:: show() const
+        {
+            Y_LOCK( aliasing::_(access) );
+            std::cerr << "pending: " << pending.size << std::endl;
+            std::cerr << "waiting: " << waiting.size << std::endl;
+            std::cerr << "running: " << running.size << std::endl;
+
+        }
+
     }
 
 }
