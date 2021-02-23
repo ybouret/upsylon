@@ -35,11 +35,11 @@ namespace upsylon
 
         private:
             workers waiting;
-
+            size_t  ready;
             Y_DISABLE_COPY_AND_ASSIGN(team);
             virtual void call(const context &);
             void         setup();
-
+            friend class worker;
         };
 
         class worker :
@@ -56,8 +56,8 @@ namespace upsylon
 
             virtual ~worker() throw();
 
+            
         private:
-
             static void stub(void*) throw();
             void        initialize() throw();
         };

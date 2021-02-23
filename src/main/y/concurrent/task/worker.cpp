@@ -29,8 +29,13 @@ namespace upsylon
 
         void worker:: initialize() throw()
         {
-            Y_LOCK(crew.access);
-            
+            crew.access.lock();
+            std::cerr << "initialized worker@" << label << std::endl;
+            ++crew.ready;
+            wait(crew.access);
+
+            std::cerr << "done worker@" << label << std::endl;
+            crew.access.unlock();
         }
 
         
@@ -44,28 +49,59 @@ namespace upsylon
 
         team:: ~team() throw()
         {
+            {
+                Y_LOCK(access);
+                std::cerr << "team.quit" << std::endl;
+            }
+            while( waiting.size )
+            {
+                worker *w = waiting.pop_back();
+                w->broadcast();
+                delete w;
+            }
+
         }
 
         team:: team() :
-        waiting()
+        waiting(),
+        ready(0)
         {
-            try
-            {
 
-            }
-            catch(...)
-            {
-                throw;
-            }
-
+            setup();
         }
 
         
         void team:: setup()
         {
+            try
+            {
+                const size_t  count = topo->size();
+                const size_t &rank  = waiting.size;
+                while(rank<count)
+                {
+                    waiting.push_back( new worker(*this,count,rank) );
+                }
+                Y_MUTEX_PROBE(access,ready>=count);
+                std::cerr << "synchronized" << std::endl;
 
+            }
+            catch(...)
+            {
+                // emergency exit
+                while( waiting.size )
+                {
+                    worker *w = waiting.pop_back();
+                    w->broadcast();
+                    delete w;
+                }
+                throw;
+            }
         }
 
+        void team::call(const context &primary)
+        {
+
+        }
 
     }
 
