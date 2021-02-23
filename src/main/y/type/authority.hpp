@@ -1,0 +1,41 @@
+//! \file
+
+#ifndef Y_TYPE_AUTHORITY_INCLUDED
+#define Y_TYPE_AUTHORITY_INCLUDED 1
+
+#include "y/type/args.hpp"
+
+namespace upsylon
+{
+
+    //__________________________________________________________________________
+    //
+    //
+    //! simple reference wrapper to build classes with persistent references
+    //
+    //__________________________________________________________________________
+    template <typename T>
+    class authority
+    {
+    public:
+        Y_DECL_ARGS(T,type); //!< aliases
+
+
+        inline explicit authority(type &persistent) throw() : host(persistent) {} //!< setup
+        inline virtual ~authority()                 throw() {}                    //!< cleanup
+
+        inline type       & operator*()       throw()  { return  host; } //!< access
+        inline const_type & operator*() const throw()  { return  host; } //!< access
+
+#if 0
+        inline type       * operator->()       throw() { return &host; } //!< access
+        inline const_type * operator->() const throw() { return &host; } //!< access
+#endif
+
+    private:
+        type &host;
+        Y_DISABLE_COPY_AND_ASSIGN(authority);
+    };
+}
+
+#endif

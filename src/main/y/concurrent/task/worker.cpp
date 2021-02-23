@@ -98,7 +98,7 @@ namespace upsylon
             }
         }
 
-        void team::call(const context &primary)
+        void team::call(const context & )
         {
 
         }

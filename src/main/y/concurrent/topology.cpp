@@ -73,7 +73,13 @@ namespace upsylon
         {
             return nodes.size;
         }
-        
+
+        size_t topology:: primary_rank() const throw()
+        {
+            return nodes.head->rank;
+        }
+
+
         topology:: topology(const size_t start,
                             const size_t width,
                             const size_t every):

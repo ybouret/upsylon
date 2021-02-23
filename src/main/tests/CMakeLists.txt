@@ -34,7 +34,8 @@ ADD_DEPENDENCIES(test-main module)
 ENABLE_TESTING()
 SOURCE_GROUP(os FILES test-platform.cpp test-types.cpp test-sys.cpp test-at-exit.cpp test-endian.cpp test-env.cpp test-spec.cpp test-chkbnd.cpp 
 test-hr-ints.cpp test-ints-display.cpp test-cast.cpp  test-standard.cpp test-base2.cpp
-test-run-time-log.cpp)
+test-run-time-log.cpp
+)
 ADD_TEST(os:platform     test-main platform)
 ADD_TEST(os:types        test-main types)
 ADD_TEST(os:sys          test-main sys)
@@ -55,11 +56,13 @@ test-type-cull.cpp
 test-ints-to-real.cpp
 test-i2i.cpp
 test-decomp.cpp
+test-type-authority.cpp
 )
 ADD_TEST(type:cull         test-main cull)
 ADD_TEST(type:ints-to-real test-main i2r)
 ADD_TEST(type:int-to-int   test-main i2i)
 ADD_TEST(type:decomp       test-main decomp)
+ADD_TEST(type:authority    test-main type_authority)
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp 
 test-code.cpp test-bits.cpp

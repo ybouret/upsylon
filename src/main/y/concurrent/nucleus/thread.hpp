@@ -11,7 +11,8 @@ namespace upsylon
 
     namespace concurrent
     {
-        
+#define Y_VERBOSE_THREADS "Y_VERBOSE_THREADS"
+
         namespace nucleus
         {
 

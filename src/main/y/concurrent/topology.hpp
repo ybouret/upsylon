@@ -79,9 +79,10 @@ namespace upsylon
                      const size_t every);
 
 
-            void add(const string &description); //!< parse a cluster
-            void add(const char   *description); //!< parse a cluster
-            size_t size() const throw();         //!< nodes.size
+            void   add(const string &description); //!< parse a cluster
+            void   add(const char   *description); //!< parse a cluster
+            size_t size()         const throw();   //!< nodes.size
+            size_t primary_rank() const throw();   //!< nodes.head->rank
 
             //! display
             friend std::ostream & operator<<(std::ostream &, const topology &);
