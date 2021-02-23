@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_CONCURRENT_TASK_CONTRACT_INCLUDED
@@ -31,32 +30,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(contract);
         };
 
-        //______________________________________________________________________
-        //
-        //
-        //! manage contracts with memoryc caching
-        //
-        //______________________________________________________________________
-        class contracts
-        {
-        public:
-
-            explicit contracts() throw();
-            virtual ~contracts() throw();
-
-            void establish(const job::uuid U, const job::type &J); //!< add to pending
-            void terminate(contract *c) throw();                   //!< destruct and store to zombies
-
-            void gc() throw(); //!< remove zombies
-
-            core::list_of<contract> pending; //!< pending, alive
-            core::list_of<contract> zombies; //!< memory, dangling
-
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(contracts);
-        };
-
+       
 
     }
 }

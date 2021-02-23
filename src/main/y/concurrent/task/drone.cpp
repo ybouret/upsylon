@@ -31,7 +31,8 @@ namespace upsylon
         condition(),
         authority<pipeline>(user_pipe),
         thread(stub,this,user_size,user_rank),
-        inode<drone>()
+        inode<drone>(),
+        deal(NULL)
         {
         }
 
@@ -56,8 +57,10 @@ namespace upsylon
             wait(access);
 
             // wake up on LOCKED mutex
-            Y_PIPELINE_LN(pfx<<".!] @" << label);
+            Y_PIPELINE_LN(pfx<<".*] @" << label);
 
+            
+            
 
             // return
             --self.ready;

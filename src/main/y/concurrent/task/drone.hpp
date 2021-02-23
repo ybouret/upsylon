@@ -3,9 +3,10 @@
 #ifndef Y_CONCURRENT_TASK_DRONE_INCLUDED
 #define Y_CONCURRENT_TASK_DRONE_INCLUDED 1
 
-#include "y/concurrent/task/contract.hpp"
-#include "y/concurrent/executable.hpp"
+//#include "y/concurrent/task/contract.hpp"
+#include "y/object.hpp"
 #include "y/concurrent/sync/condition.hpp"
+#include "y/concurrent/thread.hpp"
 #include "y/core/inode.hpp"
 #include "y/type/authority.hpp"
 
@@ -15,7 +16,7 @@ namespace upsylon
     {
 
         class pipeline; //!< forward declaration
-
+        class contract; //!< forward declaration
 
         //______________________________________________________________________
         //
@@ -38,7 +39,8 @@ namespace upsylon
 
             //! cleanup
             virtual ~drone() throw();
-
+            
+            contract *deal; //!< to perform
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(drone);

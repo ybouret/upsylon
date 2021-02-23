@@ -5,8 +5,8 @@
 #define Y_CONCURRENT_TASK_PIPELINE_INCLUDED 1
 
 #include "y/concurrent/task/drone.hpp"
-
-
+#include "y/concurrent/task/contracts.hpp"
+#include "y/concurrent/executable.hpp"
 
 //! macro helper
 #define Y_PIPELINE_LN(MSG) do { if(verbose) { std::cerr << MSG << std::endl; } } while(false)
@@ -47,6 +47,7 @@ namespace upsylon
 
             core::list_of_cpp<drone> waiting;
             executable::launcher     primary;
+            contracts                cue;
             condition                activity;
             
             size_t ready;
