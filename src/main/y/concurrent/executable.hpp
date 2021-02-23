@@ -35,9 +35,12 @@ namespace upsylon
                 explicit launcher(executable  &user_host,  //|
                                   const size_t user_size,  //|
                                   const size_t user_rank); //!< setup
+
+            protected:
+                executable &program;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(launcher);
-                executable &host;
                 static void stub(void *) throw(); // host.call(*this)
             };
 

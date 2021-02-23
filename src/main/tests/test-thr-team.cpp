@@ -17,6 +17,8 @@ Y_UTEST(thr_team)
     Y_UTEST_SIZEOF(concurrent::worker);
     Y_UTEST_SIZEOF(concurrent::condition);
 
+    //concurrent::team Q;
+    
 }
 Y_UTEST_DONE()
 

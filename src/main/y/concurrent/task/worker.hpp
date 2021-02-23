@@ -14,26 +14,54 @@ namespace upsylon
     namespace concurrent
     {
 
-        class worker :
-        public object,
-        public inode<worker>,
-        public condition,
-        public executable::launcher
+        class worker;
+        typedef core::list_of_cpp<worker> workers;
+
+        class team : public executable
         {
         public:
-            explicit worker(executable  &user_host,  //|
-                            const size_t user_size,  //|
+            class reference
+            {
+            public:
+                virtual ~reference() throw() {}
+                explicit reference(team &t) throw() : crew(t) {}
+
+            protected:
+                team &crew;
+            };
+
+            virtual ~team() throw();
+            explicit team();
+
+        private:
+            workers waiting;
+
+            Y_DISABLE_COPY_AND_ASSIGN(team);
+            virtual void call(const context &);
+            void         setup();
+
+        };
+
+        class worker :
+        public object,
+        public condition,
+        public team::reference,
+        public thread,
+        public inode<worker>
+        {
+        public:
+            explicit worker(team        &user_team,
+                            const size_t user_size,
                             const size_t user_rank);
 
             virtual ~worker() throw();
 
-
-
-
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(worker);
 
+            static void stub(void*) throw();
+            void        initialize() throw();
         };
+
 
     }
 

@@ -24,7 +24,7 @@ namespace upsylon
                                          const size_t user_size,
                                          const size_t user_rank) :
         thread(stub,this,user_size,user_rank),
-        host(user_host)
+        program(user_host)
         {
         }
 
@@ -32,7 +32,7 @@ namespace upsylon
         {
             assert(addr);
             launcher &self = *static_cast<launcher *>(addr);
-            self.host.call(self);
+            self.program.call(self);
         }
 
     }
