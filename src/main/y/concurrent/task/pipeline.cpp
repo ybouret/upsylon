@@ -25,7 +25,7 @@ namespace upsylon
         waiting(),
         primary(*this, topo->size(), topo->primary_rank() ),
         ready(0),
-        built(false),
+        halting(true),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
             setup();
@@ -42,15 +42,36 @@ namespace upsylon
             Y_PIPELINE_LN(pfx<<"call] @" << ctx.label << sfx);
 
             // wait on LOCKED mutex
+        MONITOR:
             activity.wait(access);
 
             // wake on LOCKED mutex
-            Y_PIPELINE_LN(pfx<<"bip!] @" << ctx.label << sfx);
+            Y_PIPELINE_LN(pfx<<"act!] @" << ctx.label << sfx);
 
-
-            // return
-            --ready;
-            access.unlock();
+            //some activity
+            if(halting)
+            {
+                Y_PIPELINE_LN(pfx<<"halt] @" << ctx.label << sfx);
+                // return
+                --ready;
+                access.unlock();
+            }
+            else
+            {
+                if(cue.pending.size>0)
+                {
+                    loadN();
+                }
+                else
+                {
+                    if(running.size<=0)
+                    {
+                        // signal flushed
+                        flushed.broadcast();
+                    }
+                }
+                goto MONITOR;
+            }
 
         }
 
@@ -71,7 +92,7 @@ namespace upsylon
                 Y_PIPELINE_LN(pfx<<"sync]");
 
 
-                built = true;
+                halting = false;
 
             }
             catch(...)
@@ -100,10 +121,12 @@ namespace upsylon
 
             // cleanup
             cue.remove_pending();
-            
+            halting = true;
+
             access.unlock();
             
-            // flush
+            // flush current jobs
+            flush();
 
 
             // end
@@ -120,6 +143,13 @@ namespace upsylon
             d->broadcast();
         }
 
+        void pipeline:: loadN() throw()
+        {
+            for(size_t num = min_of(waiting.size,cue.pending.size);num>0;--num)
+            {
+                load1();
+            }
+        }
 
 
 
@@ -135,11 +165,9 @@ namespace upsylon
             const job::uuid ans = jid;
             cue.establish(ans,J);
             ++jid;
-            
-            if(waiting.size)
-            {
-                load1();
-            }
+
+            loadN();
+
             
             return ans;
         }
@@ -147,6 +175,11 @@ namespace upsylon
         void pipeline:: flush() throw()
         {
             Y_LOCK(access);
+            Y_PIPELINE_LN(pfx<<"^^^^] flush #job=" << cue.pending.size << " #run=" << running.size );
+            if(cue.pending.size>0||running.size>0)
+            {
+                flushed.wait(access);
+            }
         }
 
 

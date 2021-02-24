@@ -50,15 +50,15 @@ namespace upsylon
             executable::launcher     primary;
             contracts                cue;
             condition                activity;
-            
-            size_t ready;
-            bool   built;
+            condition                flushed;
+            size_t                   ready;
+            bool                     halting;
 
             void setup();
             void cleanup() throw();
             void finish()  throw();
             void load1()   throw();
-            bool load__()  throw();
+            void loadN()   throw();
 
             friend class drone;
 

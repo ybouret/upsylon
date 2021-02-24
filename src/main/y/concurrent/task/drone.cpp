@@ -73,7 +73,9 @@ namespace upsylon
                 self.cue.terminate(deal);
                 self.waiting.push_back( self.running.unlink(this) );
 
+
                 // signal activity
+                self.activity.broadcast();
 
                 // and wait for next deal
                 goto LOOP;
