@@ -4,9 +4,10 @@
 #ifndef Y_CONCURRENT_TASK_PIPELINE_INCLUDED
 #define Y_CONCURRENT_TASK_PIPELINE_INCLUDED 1
 
-#include "y/concurrent/task/drone.hpp"
-#include "y/concurrent/task/contracts.hpp"
+#include "y/concurrent/task/types.hpp"
 #include "y/concurrent/executable.hpp"
+#include "y/concurrent/sync/condition.hpp"
+#include "y/type/authority.hpp"
 
 //! macro helper
 #define Y_PIPELINE_LN(MSG) do { if(verbose) { std::cerr << MSG << std::endl; } } while(false)
@@ -27,6 +28,38 @@ namespace upsylon
         {
         public:
 
+            class task
+            {
+            public:
+                task           *next;
+                task           *prev;
+                const job::uuid uuid;
+                job::type       type;
+                task(const job::uuid, const job::type &);
+                ~task() throw();
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(task);
+            };
+
+            class drone :
+            public authority<pipeline>,
+            public condition,
+            public thread
+            {
+            public:
+
+                explicit drone(pipeline    &p,
+                               const size_t user_size,
+                               const size_t user_rank);
+
+                virtual ~drone() throw();
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(drone);
+                static void stub(void*);
+            };
+
             //__________________________________________________________________
             //
             // C++
@@ -40,28 +73,29 @@ namespace upsylon
             //__________________________________________________________________
             virtual job::uuid yield( const job::type & );
             virtual void      flush() throw();
+            
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
+
+
+            task  *query_task(const job::type &);
+            void   store_task(task *) throw();
+            void   remove_pending() throw();
+
+            void   delete_pending() throw();
+            void   delete_shallow() throw();
+
             virtual void call(const context &) throw();
 
-            core::list_of_cpp<drone> waiting;
-            core::list_of_cpp<drone> running;
-            executable::launcher     primary;
-            contracts                cue;
-            condition                activity;
-            condition                flushed;
-            size_t                   ready;
-            bool                     halting;
+            void         setup();
 
-            void setup();
-            void cleanup() throw();
-            void finish()  throw();
-            void load1()   throw();
-            void loadN()   throw();
+            core::list_of<task> pending; //!< pending tasks
+            core::pool_of<task> shallow; //!< shallow tasks
 
-            friend class drone;
-
+            size_t ready;
+            
         public:
             bool verbose; //!< from Y_VERBOSE_THREADS
             

@@ -104,6 +104,30 @@ assert((node)->next==NULL)
                 return *this;
             }
 
+            //! func(node)
+            template <typename FUNC> inline
+            void yield(FUNC &func) throw()
+            {
+                while(size)
+                {
+                    NODE *node = query();
+                    func(node);
+                }
+            }
+
+
+            //! func(node,args)
+            template <typename FUNC, typename ARGS> inline
+            void yield(FUNC &func, ARGS &args) throw()
+            {
+                while(size)
+                {
+                    NODE *node = query();
+                    func(node,args);
+                }
+            }
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pool_of);
         };

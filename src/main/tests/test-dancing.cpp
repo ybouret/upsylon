@@ -49,6 +49,8 @@ Y_UTEST(dancing)
         std::cerr << *f << std::endl;
     }
 
+    return 0;
+    
     std::cerr << "#amount=" << dance.amount      << std::endl;
     std::cerr << "#cycles=" << dance.frames.size << std::endl;
     std::cerr << "workGroupMax= " << dance.wg_max << std::endl;

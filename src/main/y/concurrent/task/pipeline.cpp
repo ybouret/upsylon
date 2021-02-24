@@ -10,150 +10,107 @@ namespace upsylon
     namespace concurrent
     {
 
+        pipeline:: task:: ~task() throw()
+        {
+            assert(0==next);
+            assert(0==prev);
+            aliasing::_(uuid) = 0;
+        }
+
+        pipeline:: task:: task( const job::uuid U, const job::type &J) :
+        next(0),
+        prev(0),
+        uuid(U),
+        type(J)
+        {
+        }
+
+        pipeline::task * pipeline:: query_task(const job::type &J)
+        {
+            task *t = shallow.size ? shallow.query() : object::acquire1<task>();
+            try {
+
+                new (t) task(jid,J);
+                ++jid;
+                return t;
+            }
+            catch(...)
+            {
+                shallow.store(t);
+                throw;
+            }
+        }
+
+        void pipeline:: store_task(task *t) throw()
+        {
+            assert(t);
+            self_destruct(*t);
+            shallow.store(t);
+        }
+
+        void pipeline:: remove_pending() throw()
+        {
+            while(pending.size)
+            {
+                store_task(pending.pop_back());
+            }
+        }
+
+        void pipeline::   delete_shallow() throw()
+        {
+            shallow.yield( object::release1<task> );
+        }
+
+        static inline void __delete_pending( pipeline::task *t ) throw()
+        {
+            assert(t);
+            self_destruct(*t);
+            object::release1(t);
+        }
+
+        void  pipeline::  delete_pending() throw()
+        {
+            pending.yield(__delete_pending);
+        }
+
+
+
 
         static const char pfx[] = "[pipe.";
 
         pipeline:: ~pipeline() throw()
         {
-            cleanup();
         }
 
 
 
         pipeline:: pipeline() :
         executable(),
-        waiting(),
-        primary(*this, topo->size(), topo->primary_rank() ),
-        ready(0),
-        halting(true),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
-            setup();
+        }
+
+
+        void pipeline:: setup()  
+        {
+            
         }
 
 
 
         void pipeline:: call(const context &ctx) throw()
         {
-            static const char sfx[] = " (primary)";
 
             access.lock();
+            Y_PIPELINE_LN(pfx<<"init] @" << ctx.label);
+
             ++ready;
-            Y_PIPELINE_LN(pfx<<"call] @" << ctx.label << sfx);
-
-            // wait on LOCKED mutex
-        MONITOR:
-            activity.wait(access);
-
-            // wake on LOCKED mutex
-            Y_PIPELINE_LN(pfx<<"act!] @" << ctx.label << sfx);
-
-            //some activity
-            if(halting)
-            {
-                Y_PIPELINE_LN(pfx<<"halt] @" << ctx.label << sfx);
-                // return
-                --ready;
-                access.unlock();
-            }
-            else
-            {
-                if(cue.pending.size>0)
-                {
-                    loadN();
-                }
-                else
-                {
-                    if(running.size<=0)
-                    {
-                        // signal flushed
-                        flushed.broadcast();
-                    }
-                }
-                goto MONITOR;
-            }
-
-        }
-
-
-        void pipeline:: setup()
-        {
-            try
-            {
-                Y_PIPELINE_LN(pfx<<"init]");
-                const size_t  count = topo->size();
-                const size_t &rank  = waiting.size;
-                while(rank<count)
-                {
-                    waiting.push_back( new drone(*this,count,rank) );
-                }
-
-                Y_MUTEX_PROBE(access,ready>count);
-                Y_PIPELINE_LN(pfx<<"sync]");
-
-
-                halting = false;
-
-            }
-            catch(...)
-            {
-                finish();
-                throw;
-            }
-        }
-
-        void pipeline:: finish()  throw()
-        {
-            activity.broadcast();
-            for(drone *d=waiting.head;d;d=d->next)
-            {
-                d->broadcast();
-            }
-            Y_MUTEX_PROBE(access,ready<=0);
-        }
-
-
-        void pipeline:: cleanup() throw()
-        {
-
-            access.lock();
-            Y_PIPELINE_LN(pfx<<"quit]");
-
-            // cleanup
-            cue.remove_pending();
-            halting = true;
 
             access.unlock();
-            
-            // flush current jobs
-            flush();
 
-
-            // end
-            finish();
         }
 
-
-        void pipeline:: load1() throw()
-        {
-            assert(waiting.size>0);
-            assert(cue.pending.size>0);
-            drone *d = running.push_back( waiting.pop_front() );
-            d->deal  = cue.pending.pop_front();
-            d->broadcast();
-        }
-
-        void pipeline:: loadN() throw()
-        {
-            for(size_t num = min_of(waiting.size,cue.pending.size);num>0;--num)
-            {
-                load1();
-            }
-        }
-
-
-
-        job::uuid pipeline:: yield(const job::type &J)
+        job::uuid pipeline:: yield(const job::type &)
         {
             Y_LOCK(access);
 
@@ -162,24 +119,14 @@ namespace upsylon
             // create the job
             //
             //------------------------------------------------------------------
-            const job::uuid ans = jid;
-            cue.establish(ans,J);
-            ++jid;
 
-            loadN();
-
-            
-            return ans;
+            return 0;
         }
 
         void pipeline:: flush() throw()
         {
             Y_LOCK(access);
-            Y_PIPELINE_LN(pfx<<"^^^^] flush #job=" << cue.pending.size << " #run=" << running.size );
-            if(cue.pending.size>0||running.size>0)
-            {
-                flushed.wait(access);
-            }
+
         }
 
 
