@@ -6,7 +6,7 @@
 #include "y/container/sequence.hpp"
 #include "y/sequence/array.hpp"
 #include "y/iterate/linear.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/cswap.hpp"
 #include <cstring>
 
@@ -298,7 +298,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         {
             // destruct last object
             assert(this->size_>0);
-            self_destruct::on( this->item_[this->size_--] );
+            collapse( this->item_[this->size_--] );
         }
 
         //! sequence interface
@@ -306,7 +306,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         {
             // destruct first object
             assert(this->size_>0);
-            self_destruct::on( *(this->addr_) );
+            collapse( *(this->addr_) );
             // adjust memory
             memmove( static_cast<void *>(this->addr_), static_cast<const void *>(this->addr_+1), --(this->size_) * sizeof(T) );
         }
@@ -361,7 +361,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             assert(idx>=1);
             assert(idx<=sz);
             mutable_type *target = &this->item_[idx];
-            self_destruct::on(*target);
+            collapse(*target);
             memmove((void*)target,(const void*)(target+1), (sz-idx) * sizeof(type) );
             --sz;
         }
@@ -415,7 +415,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
             }
             catch(...)
             {
-                while(i>0) self_destruct::on(target[i--]);
+                while(i>0) collapse(target[i--]);
                 throw;
             }
 
@@ -425,7 +425,7 @@ addr_( hmem_.acquire_as<mutable_type>(maxi_,bytes) )
         {
             while(this->size_>0)
             {
-                self_destruct::on(addr_[--(this->size_)]);
+                collapse(addr_[--(this->size_)]);
             }
         }
 

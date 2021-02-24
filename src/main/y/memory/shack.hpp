@@ -6,7 +6,7 @@
 
 #include "y/type/args.hpp"
 #include "y/memory/buffer.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/releasable.hpp"
 #include "y/sequence/array.hpp"
 #include <typeinfo>
@@ -179,7 +179,7 @@ namespace upsylon {
                 void no(void *args) throw()
                 {
                     assert(args);
-                    self_destruct::on( *static_cast<mutable_type *>(args) );
+                    collapse( *static_cast<mutable_type *>(args) );
                 }
 
                 static inline void hook(shack &self, const size_t n) throw()
@@ -212,7 +212,7 @@ namespace upsylon {
                         {
                             while(done>0)
                             {
-                                self_destruct::on(addr[--done]);
+                                collapse(addr[--done]);
                             }
                             throw;
                         }

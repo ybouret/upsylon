@@ -6,7 +6,7 @@
 #include "y/object.hpp"
 #include "y/type/args.hpp"
 #include "y/core/pool.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon {
     
@@ -142,7 +142,7 @@ namespace upsylon {
             static inline void destruct(knode * &alive) throw()
             {
                 assert(NULL!=alive);
-                self_destruct::on(alive->data);
+                collapse(alive->data);
                 release_empty(alive);
                 assert(NULL==alive);
             }
@@ -154,7 +154,7 @@ namespace upsylon {
                                         pool_type   &cache) throw()
             {
                 assert(alive);
-                self_destruct::on(alive->data);
+                collapse(alive->data);
                 cache.store(alive);
                 alive = 0;
             }

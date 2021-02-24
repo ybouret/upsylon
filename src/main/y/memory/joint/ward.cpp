@@ -4,7 +4,7 @@
 #include "y/code/base2.hpp"
 #include "y/exception.hpp"
 #include "y/os/run-time-log.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/block/zset.hpp"
 
 namespace upsylon {
@@ -29,7 +29,7 @@ namespace upsylon {
                 assert(NULL==s->prev);
                 tight::vein &v = Q[s->exp2];   // find memory provider
                 void        *p = s->entry;     // find memory address
-                self_destruct::on(*s);         // cleanup the segment
+                collapse(*s);                  // cleanup the segment
                 v.release(p);                  // return memory into vein of quarry
                 ((zsections *)Z)->zstore(s);   // return zombie section
             }
@@ -47,7 +47,7 @@ namespace upsylon {
                 {
                     restore( S.pop_back() );
                 }
-                self_destruct::on( *(zsections *)Z );
+                collapse( *(zsections *)Z );
                 Y_BZSET_STATIC(Z);
             }
             

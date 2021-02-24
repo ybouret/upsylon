@@ -4,7 +4,7 @@
 
 #include "y/dynamic.hpp"
 #include "y/type/args.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/memory/allocator/global.hpp"
 #include "y/type/block/zset.hpp"
 #include <iostream>
@@ -13,7 +13,7 @@ namespace upsylon {
 
     //! C-style slots of [0..size()-1] C++ objects
     template <typename T, typename ALLOCATOR=memory::global>
-    class slots :   public dynamic
+    class slots : public dynamic
     {
     public:
         Y_DECL_ARGS(T,type); //!< type aliases
@@ -166,7 +166,7 @@ namespace upsylon {
             while(size_>0)
             {
                 mutable_type  &zone = addr[--size_];
-                self_destruct::on( zone );
+                collapse(zone);
                 bzset(zone);
             }
             void *entry = addr;

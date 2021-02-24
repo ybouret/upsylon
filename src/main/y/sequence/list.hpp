@@ -6,7 +6,7 @@
 #include "y/core/knode.hpp"
 #include "y/iterate/linked.hpp"
 #include "y/sort/merge.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/object.hpp"
 #include <iostream>
 

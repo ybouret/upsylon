@@ -1,6 +1,6 @@
 
 #include "y/concurrent/task/pipeline.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/type/utils.hpp"
 #include <iomanip>
@@ -44,7 +44,7 @@ namespace upsylon
         void pipeline:: store_task(task *t) throw()
         {
             assert(t);
-            self_destruct::on(*t);
+            collapse(*t);
             shallow.store(t);
         }
 
@@ -64,7 +64,7 @@ namespace upsylon
         static inline void __delete_pending( pipeline::task *t ) throw()
         {
             assert(t);
-            self_destruct::on(*t);
+            collapse(*t);
             object::release1(t);
         }
 

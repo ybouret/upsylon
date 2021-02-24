@@ -3,7 +3,7 @@
 #include "y/associative/hash/slots.hpp"
 #include "y/type/utils.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/object.hpp"
 
 namespace upsylon
@@ -13,7 +13,7 @@ namespace upsylon
     {
         for(size_t i=0;i<count;++i)
         {
-            self_destruct::on(slot[i]);
+            collapse(slot[i]);
         }
         object::dyadic_release(slot,bexp2);
         cleanup();
