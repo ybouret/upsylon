@@ -4,7 +4,7 @@
 #define Y_TENSOR1D_INCLUDED 1
 
 #include "y/tensor/tensor.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/sequence/addressable.hpp"
 
 namespace upsylon {
@@ -154,7 +154,7 @@ namespace upsylon {
         {
             while(built>0)
             {
-                self_destruct::on( __col[built--] );
+                collapse( __col[built--] );
             }
             __col = 0;
         }

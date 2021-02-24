@@ -3,7 +3,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/code/base2.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/exceptions.hpp"
 
 #include <cstring>
@@ -31,7 +31,7 @@ namespace upsylon {
 
                 for(size_t i=vein::max_exp2;i>=vein::min_exp2;--i)
                 {
-                    self_destruct::on(ore[i]);
+                    collapse(ore[i]);
                 }
                 ore=0;
                 memset(wksp,0,sizeof(wksp));

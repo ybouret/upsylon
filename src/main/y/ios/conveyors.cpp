@@ -2,7 +2,7 @@
 #include "y/associative/suffix/storage.hpp"
 #include "y/code/round.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/spec.hpp"
 #include "y/associative/xbe-key.hpp"
 #include "y/exception.hpp"
@@ -32,7 +32,7 @@ namespace upsylon
                              
         conveyors:: ~conveyors() throw()
         {
-            self_destruct::on( __db() );
+            collapse( __db() );
             memset(wksp,0,sizeof(wksp));
         }
         

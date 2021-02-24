@@ -4,7 +4,7 @@
 #include "y/container/container.hpp"
 #include "y/comparator.hpp"
 #include "y/object.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -135,7 +135,7 @@ namespace upsylon
                 {
                     free__(node->left);
                     free__(node->right);
-                    self_destruct::on(node->data);
+                    collapse(node->data);
                     node->parent = 0;
                     store(node);
                     node = 0;
@@ -148,7 +148,7 @@ namespace upsylon
                 {
                     free__(node->left);
                     free__(node->right);
-                    self_destruct::on(node->data);
+                    collapse(node->data);
                     object::release1(node);
                 }
             }

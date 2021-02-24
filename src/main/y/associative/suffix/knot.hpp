@@ -4,7 +4,7 @@
 #define Y_SUFFIX_KNOT_INCLUDED 1
 
 #include "y/core/list.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/args.hpp"
 #include "y/object.hpp"
 
@@ -72,7 +72,7 @@ namespace upsylon
                 while(this->size)
                 {
                     suffix_knot *knot = this->pop_back();
-                    self_destruct::on( *knot );
+                    collapse( *knot );
                     object::release1(knot);
                 }
             }
@@ -114,7 +114,7 @@ namespace upsylon
             inline void store(suffix_knot *knot) throw()
             {
                 assert(knot);
-                self_destruct::on(*knot);
+                collapse(*knot);
                 this->push_front(knot);
             }
             

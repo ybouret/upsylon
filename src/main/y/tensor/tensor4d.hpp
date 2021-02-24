@@ -136,7 +136,7 @@ namespace upsylon {
         {
             while(built>0)
             {
-                self_destruct::on( __frame[built--] );
+                collapse( __frame[built--] );
             }
             __frame = 0;
         }

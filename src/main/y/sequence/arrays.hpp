@@ -4,7 +4,7 @@
 
 #include "y/sequence/array.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/releasable.hpp"
 
 namespace upsylon {
@@ -152,7 +152,7 @@ namespace upsylon {
             mutable_type *dat = static_cast<mutable_type *>(entry);
             while(n-- > 0)
             {
-                self_destruct::on(dat[n]);
+                collapse(dat[n]);
             }
         }
 

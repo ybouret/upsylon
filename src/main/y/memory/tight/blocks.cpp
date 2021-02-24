@@ -4,7 +4,7 @@
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/memory/allocator/global.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/os/run-time-log.hpp"
 #include <cstdlib>
@@ -26,14 +26,14 @@ namespace upsylon {
                         slot_type &entry = slot[i];
                         while(entry.size)
                         {
-                            za.zstore( self_destruct::at( entry.pop_back() ) );
+                            za.zstore( collapsed( entry.pop_back() ) );
                         }
                     }
                 }
 
                 slots_vein.release(slot);
-                self_destruct::on(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
-                self_destruct::on(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
+                collapse(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
+                collapse(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
                 slot=0;
                 acquiring=0;
                 releasing=0;

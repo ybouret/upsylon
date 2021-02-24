@@ -3,7 +3,7 @@
 #define Y_CONST_FIELD_INCLUDED 1
 
 #include "y/type/args.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -59,7 +59,7 @@ namespace upsylon
             //! C++ cleanup
             inline virtual ~const_field() throw()
             {
-                self_destruct::on( *(type *)item_addr );
+               collapse( *(type *)item_addr );
             }
             
         private:

@@ -2,7 +2,7 @@
 #include "y/memory/tight/twain-allocator.hpp"
 #include "y/memory/tight/zcache.hpp"
 #include "y/memory/tight/arena.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/utils.hpp"
 #include "y/code/base2.hpp"
 #include "y/memory/marker.hpp"
@@ -46,7 +46,7 @@ namespace upsylon
                 arena *a = (arena *)A;
                 while(na-- > 0 )
                 {
-                    self_destruct::on( a[lower_exp2+na] );
+                    collapse( a[lower_exp2+na] );
                 }
                 A=NULL;
                 aliasing::_(num_arenas) = 0;
@@ -67,7 +67,7 @@ namespace upsylon
             void twain_allocator:: release_Z() throw()
             {
                 assert(NULL!=Z);
-                self_destruct::on( *(zchunks *)Z );
+                collapse( *(zchunks *)Z );
                 Z=NULL;
             }
 

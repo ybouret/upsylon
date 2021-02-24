@@ -9,7 +9,7 @@
 #include "y/comparator.hpp"
 #include "y/core/locate.hpp"
 #include "y/iterate/linear.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include "y/type/cswap.hpp"
 #include "y/os/oor.hpp"
 #include <cstring>
@@ -103,7 +103,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             mutable_type *target = core::locate(args,addr,size_,compare,indx);
             if( target )
             {
-                self_destruct::on( *target  );
+                collapse( *target  );
                 __move(target, target+1, (--size_-indx) * sizeof(type) );
                 __zset(addr+size_,sizeof(type) );
                 return true;
@@ -219,7 +219,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         {
             while(this->size_>0)
             {
-                self_destruct::on(addr[--(this->size_)]);
+                collapse(addr[--(this->size_)]);
             }
         }
 

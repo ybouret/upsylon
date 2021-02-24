@@ -3,7 +3,7 @@
 #define Y_MATRIX_INCLUDED 1
 
 #include "y/container/matrix_.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 #include <cstdlib>
 
 namespace upsylon
@@ -502,7 +502,7 @@ namespace upsylon
             mutable_type *entry = get_entry();
             while(count-- > 0)
             {
-                self_destruct::on(entry[count]);
+                collapse(entry[count]);
             }
         }
 
