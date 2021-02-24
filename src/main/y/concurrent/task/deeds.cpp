@@ -1,6 +1,6 @@
 
 #include "y/concurrent/task/deeds.hpp"
-#include "y/type/aliasing.hpp"
+#include "y/type/self-destruct.hpp"
 
 namespace upsylon
 {
@@ -28,10 +28,26 @@ namespace upsylon
             yield(object::release1<deed>);
         }
 
+        
+        void shallow_deeds:: cancel(deed *alive) throw()
+        {
+            assert(alive);
+            push_back( self_destruct::at(pop_back()) );
+        }
+
+        
+        void shallow_deeds:: cancel(pending_deeds &pending) throw()
+        {
+            while(pending.size)
+            {
+                cancel( pending.pop_back() );
+            }
+            
+        }
+
     }
     
 }
-#include "y/type/self-destruct.hpp"
 
 
 namespace upsylon

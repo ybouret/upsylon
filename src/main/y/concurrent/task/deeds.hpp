@@ -24,18 +24,6 @@ namespace upsylon
             
         };
         
-        class shallow_deeds : public deeds
-        {
-        public:
-            explicit shallow_deeds() throw();
-            virtual ~shallow_deeds() throw();
-            virtual void release() throw();
-            void reserve(size_t n);
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(shallow_deeds);
-        };
-        
         class pending_deeds : public deeds
         {
         public:
@@ -46,6 +34,22 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(pending_deeds);
         };
+        
+        class shallow_deeds : public deeds
+        {
+        public:
+            explicit shallow_deeds() throw();
+            virtual ~shallow_deeds() throw();
+            virtual void release() throw();
+            void         reserve(size_t n);
+            void         cancel(deed *alive)     throw();
+            void         cancel(pending_deeds &) throw();
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(shallow_deeds);
+        };
+        
+     
         
        
         
