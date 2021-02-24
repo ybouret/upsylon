@@ -72,7 +72,7 @@ namespace upsylon
                 while(this->size)
                 {
                     suffix_knot *knot = this->pop_back();
-                    self_destruct( *knot );
+                    self_destruct::on( *knot );
                     object::release1(knot);
                 }
             }
@@ -114,7 +114,7 @@ namespace upsylon
             inline void store(suffix_knot *knot) throw()
             {
                 assert(knot);
-                self_destruct(*knot);
+                self_destruct::on(*knot);
                 this->push_front(knot);
             }
             

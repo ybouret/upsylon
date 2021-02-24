@@ -150,9 +150,9 @@ namespace upsylon {
         inline void __free(size_t n) throw()
         {
             mutable_type *dat = static_cast<mutable_type *>(entry);
-            while(n-->0)
+            while(n-- > 0)
             {
-                self_destruct(dat[n]);
+                self_destruct::on(dat[n]);
             }
         }
 

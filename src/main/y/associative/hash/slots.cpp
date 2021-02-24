@@ -13,7 +13,7 @@ namespace upsylon
     {
         for(size_t i=0;i<count;++i)
         {
-            self_destruct(slot[i]);
+            self_destruct::on(slot[i]);
         }
         object::dyadic_release(slot,bexp2);
         cleanup();

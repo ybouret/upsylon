@@ -54,7 +54,7 @@ namespace upsylon
             static memory::allocator &mgr = memory::dyadic::location();
             for(unit_t j=h-1;j>=0;--j)
             {
-                self_destruct( row[j] );
+                self_destruct::on( row[j] );
             }
             mgr.release_as(row,count,bytes);
         }

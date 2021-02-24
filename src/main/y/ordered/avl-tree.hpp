@@ -135,7 +135,7 @@ namespace upsylon
                 {
                     free__(node->left);
                     free__(node->right);
-                    self_destruct(node->data);
+                    self_destruct::on(node->data);
                     node->parent = 0;
                     store(node);
                     node = 0;
@@ -148,7 +148,7 @@ namespace upsylon
                 {
                     free__(node->left);
                     free__(node->right);
-                    self_destruct(node->data);
+                    self_destruct::on(node->data);
                     object::release1(node);
                 }
             }

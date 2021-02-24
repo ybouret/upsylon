@@ -443,14 +443,14 @@ namespace upsylon {
             return node;
         }
 
-        inline void put_to_sleep(node_type *node) throw() { self_destruct(dormant.store(node)->data); }
+        inline void put_to_sleep(node_type *node) throw() { self_destruct::on(dormant.store(node)->data); }
         inline void reserve__(size_t n) { while(n-->0) { dormant.store( object::acquire1<node_type>() ); } }
         inline void free__() throw()    { while( content.size ) { put_to_sleep( content.pop_back() ); }    }
 
         inline void release__() throw()
         {
-            while( content.size ) { node_type *node = content.pop_back(); self_destruct(node->data); object::release1(node); }
-            while( dormant.size ) { node_type *node = dormant.query();                               object::release1(node); }
+            while( content.size ) { node_type *node = content.pop_back(); self_destruct::on(node->data); object::release1(node); }
+            while( dormant.size ) { node_type *node = dormant.query();                                   object::release1(node); }
         }
 
     };

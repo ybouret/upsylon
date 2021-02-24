@@ -131,7 +131,7 @@ namespace upsylon {
         {
             while(built>0)
             {
-                self_destruct( __slice[built--] );
+                self_destruct::on( __slice[built--] );
             }
             __slice = 0;
         }

@@ -103,7 +103,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
             mutable_type *target = core::locate(args,addr,size_,compare,indx);
             if( target )
             {
-                self_destruct( *target  );
+                self_destruct::on( *target  );
                 __move(target, target+1, (--size_-indx) * sizeof(type) );
                 __zset(addr+size_,sizeof(type) );
                 return true;
@@ -219,7 +219,7 @@ size_(0), maxi_(N), bytes(0), hmem( ALLOCATOR::instance() ), addr( hmem.acquire_
         {
             while(this->size_>0)
             {
-                self_destruct(addr[--(this->size_)]);
+                self_destruct::on(addr[--(this->size_)]);
             }
         }
 

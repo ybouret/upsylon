@@ -166,7 +166,7 @@ namespace upsylon {
             while(size_>0)
             {
                 mutable_type  &zone = addr[--size_];
-                self_destruct( zone );
+                self_destruct::on( zone );
                 bzset(zone);
             }
             void *entry = addr;

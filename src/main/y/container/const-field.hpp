@@ -59,7 +59,7 @@ namespace upsylon
             //! C++ cleanup
             inline virtual ~const_field() throw()
             {
-                self_destruct( *(type *)item_addr );
+                self_destruct::on( *(type *)item_addr );
             }
             
         private:

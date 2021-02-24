@@ -32,7 +32,7 @@ namespace upsylon
                              
         conveyors:: ~conveyors() throw()
         {
-            self_destruct( __db() );
+            self_destruct::on( __db() );
             memset(wksp,0,sizeof(wksp));
         }
         

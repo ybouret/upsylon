@@ -122,7 +122,7 @@ namespace upsylon {
                 assert(item);
                 while(built>0)
                 {
-                    self_destruct(this->addr[--built]);
+                    self_destruct::on(this->addr[--built]);
                 }
                 item = 0;
             }

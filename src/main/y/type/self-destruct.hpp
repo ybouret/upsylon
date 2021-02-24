@@ -8,14 +8,37 @@
 namespace upsylon
 {
 
-    //! in place destructor
-    template <typename T>
-    inline void self_destruct( T &data ) throw()
+    //! self-destruct functions
+    class self_destruct
     {
-        typedef typename type_traits<T>::mutable_type mutable_T;
-        mutable_T *item = (mutable_T *)&data;
-        item->~mutable_T();
-    }
+    public:
+        //! in place destructor
+        template <typename T>
+        static inline void on( T &data ) throw()
+        {
+            typedef typename type_traits<T>::mutable_type mutable_T;
+            mutable_T *item = (mutable_T *)&data;
+            item->~mutable_T();
+        }
+        
+        //! in place destructor
+        template <typename T>
+        static inline T *at(T *data) throw()
+        {
+            assert(data);
+            on(*data);
+            return data;
+        }
+        
+    private:
+        self_destruct(); ~self_destruct();
+        Y_DISABLE_COPY_AND_ASSIGN(self_destruct);
+    };
+    
+   
+    
+  
+    
 }
 
 #endif

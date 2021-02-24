@@ -502,7 +502,7 @@ namespace upsylon
             mutable_type *entry = get_entry();
             while(count-- > 0)
             {
-                self_destruct(entry[count]);
+                self_destruct::on(entry[count]);
             }
         }
 

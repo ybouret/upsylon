@@ -29,7 +29,7 @@ namespace upsylon {
                 assert(NULL==s->prev);
                 tight::vein &v = Q[s->exp2];   // find memory provider
                 void        *p = s->entry;     // find memory address
-                self_destruct(*s);             // cleanup the segment
+                self_destruct::on(*s);         // cleanup the segment
                 v.release(p);                  // return memory into vein of quarry
                 ((zsections *)Z)->zstore(s);   // return zombie section
             }
@@ -47,7 +47,7 @@ namespace upsylon {
                 {
                     restore( S.pop_back() );
                 }
-                self_destruct( *(zsections *)Z );
+                self_destruct::on( *(zsections *)Z );
                 Y_BZSET_STATIC(Z);
             }
             

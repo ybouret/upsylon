@@ -26,16 +26,14 @@ namespace upsylon {
                         slot_type &entry = slot[i];
                         while(entry.size)
                         {
-                            arena *a = entry.pop_back();
-                            self_destruct(*a);
-                            za.zstore(a);
+                            za.zstore( self_destruct::at( entry.pop_back() ) );
                         }
                     }
                 }
 
                 slots_vein.release(slot);
-                self_destruct(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
-                self_destruct(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
+                self_destruct::on(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
+                self_destruct::on(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
                 slot=0;
                 acquiring=0;
                 releasing=0;

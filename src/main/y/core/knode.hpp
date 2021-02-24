@@ -142,7 +142,7 @@ namespace upsylon {
             static inline void destruct(knode * &alive) throw()
             {
                 assert(NULL!=alive);
-                self_destruct(alive->data);
+                self_destruct::on(alive->data);
                 release_empty(alive);
                 assert(NULL==alive);
             }
@@ -154,7 +154,7 @@ namespace upsylon {
                                         pool_type   &cache) throw()
             {
                 assert(alive);
-                self_destruct(alive->data);
+                self_destruct::on(alive->data);
                 cache.store(alive);
                 alive = 0;
             }

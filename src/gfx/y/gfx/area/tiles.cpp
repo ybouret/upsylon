@@ -19,7 +19,7 @@ namespace upsylon
 
             while(count>0)
             {
-                self_destruct( tile[--aliasing::_(count)] );
+                self_destruct::on( tile[--aliasing::_(count)] );
 
             }
 

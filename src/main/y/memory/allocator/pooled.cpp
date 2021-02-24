@@ -21,7 +21,7 @@ namespace upsylon
 
         pooled:: ~pooled() throw()
         {
-            self_destruct( *aliasing::as<joint::ward>(impl) );
+            self_destruct::on( *aliasing::as<joint::ward>(impl) );
             memset(impl,0,sizeof(impl));
         }
 

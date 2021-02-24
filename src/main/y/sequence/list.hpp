@@ -163,13 +163,13 @@ namespace upsylon {
         inline virtual void pop_back() throw()
         {
             assert(nodes.size>0);
-            self_destruct( cache.store( nodes.pop_back() )->data );
+            self_destruct::on( cache.store( nodes.pop_back() )->data );
         }
         //! sequence interface : pop_front()
         inline virtual void pop_front() throw()
         {
             assert(nodes.size>0);
-            self_destruct( cache.store(nodes.pop_front())->data );
+            self_destruct::on( cache.store(nodes.pop_front())->data );
         }
 
 

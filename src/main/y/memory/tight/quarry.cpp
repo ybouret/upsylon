@@ -31,7 +31,7 @@ namespace upsylon {
 
                 for(size_t i=vein::max_exp2;i>=vein::min_exp2;--i)
                 {
-                    self_destruct(ore[i]);
+                    self_destruct::on(ore[i]);
                 }
                 ore=0;
                 memset(wksp,0,sizeof(wksp));

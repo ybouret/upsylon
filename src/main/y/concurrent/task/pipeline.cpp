@@ -44,7 +44,7 @@ namespace upsylon
         void pipeline:: store_task(task *t) throw()
         {
             assert(t);
-            self_destruct(*t);
+            self_destruct::on(*t);
             shallow.store(t);
         }
 
@@ -64,7 +64,7 @@ namespace upsylon
         static inline void __delete_pending( pipeline::task *t ) throw()
         {
             assert(t);
-            self_destruct(*t);
+            self_destruct::on(*t);
             object::release1(t);
         }
 

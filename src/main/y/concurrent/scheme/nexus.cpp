@@ -18,7 +18,7 @@ namespace upsylon
 
         nexus::jnode * nexus::jnode:: destruct() throw()
         {
-            self_destruct(call);
+            self_destruct::on(call);
             _bzset(uuid);
             _bzset(valid);
             return this;

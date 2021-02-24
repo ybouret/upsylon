@@ -143,7 +143,7 @@ namespace upsylon {
                 row += lower.y;
                 while(built>0)
                 {
-                    self_destruct(row[--built]);
+                    self_destruct::on(row[--built]);
                 }
                 row=0;
             }

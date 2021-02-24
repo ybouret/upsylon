@@ -154,7 +154,7 @@ namespace upsylon {
         {
             while(built>0)
             {
-                self_destruct( __col[built--] );
+                self_destruct::on( __col[built--] );
             }
             __col = 0;
         }

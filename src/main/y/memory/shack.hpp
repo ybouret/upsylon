@@ -179,7 +179,7 @@ namespace upsylon {
                 void no(void *args) throw()
                 {
                     assert(args);
-                    self_destruct( *static_cast<mutable_type *>(args) );
+                    self_destruct::on( *static_cast<mutable_type *>(args) );
                 }
 
                 static inline void hook(shack &self, const size_t n) throw()
@@ -212,7 +212,7 @@ namespace upsylon {
                         {
                             while(done>0)
                             {
-                                self_destruct(addr[--done]);
+                                self_destruct::on(addr[--done]);
                             }
                             throw;
                         }

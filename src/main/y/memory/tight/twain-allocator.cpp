@@ -46,7 +46,7 @@ namespace upsylon
                 arena *a = (arena *)A;
                 while(na-- > 0 )
                 {
-                    self_destruct( a[lower_exp2+na] );
+                    self_destruct::on( a[lower_exp2+na] );
                 }
                 A=NULL;
                 aliasing::_(num_arenas) = 0;
@@ -67,7 +67,7 @@ namespace upsylon
             void twain_allocator:: release_Z() throw()
             {
                 assert(NULL!=Z);
-                self_destruct( *(zchunks *)Z );
+                self_destruct::on( *(zchunks *)Z );
                 Z=NULL;
             }
 
