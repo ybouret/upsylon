@@ -42,7 +42,7 @@ namespace upsylon
             virtual ~shallow_deeds() throw();
             virtual void release() throw();
             void         reserve(size_t n);
-            void         cancel(deed *alive)     throw();
+            void         cancel(deed *)          throw();
             void         cancel(pending_deeds &) throw();
             
         private:

@@ -1,6 +1,6 @@
 
 #include "y/concurrent/task/deeds.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -32,7 +32,7 @@ namespace upsylon
         void shallow_deeds:: cancel(deed *alive) throw()
         {
             assert(alive);
-            push_back( self_destruct::at(pop_back()) );
+            push_back( collapsed(alive) );
         }
 
         
@@ -67,7 +67,7 @@ namespace upsylon
         {
             while(size)
             {
-                deed *d = self_destruct::at( pop_back() );
+                deed *d = collapsed( pop_back() );
                 object::release1(d);
             }
         }
