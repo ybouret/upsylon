@@ -46,6 +46,7 @@ namespace upsylon
             virtual void call(const context &) throw();
 
             core::list_of_cpp<drone> waiting;
+            core::list_of_cpp<drone> running;
             executable::launcher     primary;
             contracts                cue;
             condition                activity;
@@ -55,6 +56,10 @@ namespace upsylon
 
             void setup();
             void cleanup() throw();
+            void finish()  throw();
+            void load1()   throw();
+            bool load__()  throw();
+
             friend class drone;
 
         public:

@@ -7,57 +7,77 @@ namespace upsylon
     namespace concurrent
     {
         
-        contracts:: contracts() throw() : pending(), zombies()
+        contracts:: contracts() throw() : pending(), shallow()
         {
         }
         
         contracts:: ~contracts() throw()
         {
-            while(pending.size)
-            {
-                contract *c = pending.pop_back();
-                self_destruct(*c);
-                object::release1(c);
-            }
-            trim();
+            release();
         }
-        
-        
-        void contracts:: keep(const size_t n) throw()
+
+        void contracts:: release() throw()
         {
-            while(zombies.size>n)
-            {
-                contract *z = zombies.pop_back();
-                object::release1(z);
-            }
+            remove_shallow();
+            remove_pending();
         }
-        
-        void contracts:: trim() throw()
+
+        void contracts:: delete_pending(contract *c) throw()
         {
-            keep(0);
+            assert(c);
+            self_destruct(*c);
+            object::release1(c);
         }
+
+        void contracts:: delete_shallow(contract *z) throw()
+        {
+            assert(z);
+            object::release1(z);
+        }
+
+        void contracts:: remove_shallow() throw()
+        {
+            shallow.yield(delete_shallow);
+        }
+
+        void contracts:: remove_pending() throw()
+        {
+            pending.yield(delete_pending);
+        }
+
         
-        void contracts:: hire(size_t n)
+        void contracts:: terminate(contract * &c) throw()
+        {
+            assert(c);
+            self_destruct(*c);
+            shallow.push_back(c);
+            c = 0;
+        }
+
+
+        
+        void contracts:: reserve(size_t n)
         {
             while(n-- > 0)
             {
-                zombies.push_back( object::acquire1<contract>() );
+                shallow.push_back( object::acquire1<contract>() );
             }
         }
         
         void contracts:: establish(const job::uuid U, const job::type &J)
         {
-            contract *c = zombies.size ? zombies.pop_back() : object::acquire1<contract>();
+            contract *c = (shallow.size<0) ? shallow.pop_back() : object::acquire1<contract>();
             try
             {
                 pending.push_back( new (c) contract(U,J) );
             }
             catch(...)
             {
-                zombies.push_back(c);
+                shallow.push_back(c);
                 throw;
             }
         }
+
         
         
     }

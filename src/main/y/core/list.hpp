@@ -404,6 +404,28 @@ head = tail = node; increase_size()
                 insert_before(prev,unlink(node));
             }
 
+            //! yield all FUNC(node)
+            template <typename FUNC>
+            void yield(FUNC &func) throw()
+            {
+                while(size>0)
+                {
+                    NODE *node = pop_back();
+                    func(node);
+                }
+            }
+
+            //! yield all FUNC(node,args)
+            template <typename FUNC, typename ARGS>
+            void yield(FUNC &func, ARGS &args ) throw()
+            {
+                while(size>0)
+                {
+                    NODE *node = pop_back();
+                    func(node,args);
+                }
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(list_of);
             inline NODE *pop_last() throw()
@@ -478,12 +500,11 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(list_of_cpp);
+            static inline void delete_node(NODE *node) throw() { assert(node); delete node; }
+
             inline void release_() throw()
             {
-                while(this->has_nodes())
-                {
-                    delete this->pop_back();
-                }
+                this->yield(delete_node);
             }
             
         };

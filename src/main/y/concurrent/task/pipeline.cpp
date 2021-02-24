@@ -2,7 +2,7 @@
 #include "y/concurrent/task/pipeline.hpp"
 #include "y/type/self-destruct.hpp"
 #include "y/type/aliasing.hpp"
-
+#include "y/type/utils.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -76,49 +76,70 @@ namespace upsylon
             }
             catch(...)
             {
-                // TODO
+                finish();
                 throw;
             }
         }
 
-        void pipeline:: cleanup() throw()
+        void pipeline:: finish()  throw()
         {
-            if(verbose)
-            {
-                Y_LOCK(access);
-                Y_PIPELINE_LN(pfx<<"quit]");
-            }
-
-            // cleanup
-            // flush
-
-            // end
             activity.broadcast();
             for(drone *d=waiting.head;d;d=d->next)
             {
                 d->broadcast();
             }
-
             Y_MUTEX_PROBE(access,ready<=0);
-
         }
+
+
+        void pipeline:: cleanup() throw()
+        {
+
+            access.lock();
+            Y_PIPELINE_LN(pfx<<"quit]");
+
+            // cleanup
+            cue.remove_pending();
+            
+            access.unlock();
+            
+            // flush
+
+
+            // end
+            finish();
+        }
+
+
+        void pipeline:: load1() throw()
+        {
+            assert(waiting.size>0);
+            assert(cue.pending.size>0);
+            drone *d = running.push_back( waiting.pop_front() );
+            d->deal  = cue.pending.pop_front();
+            d->broadcast();
+        }
+
+
 
 
         job::uuid pipeline:: yield(const job::type &J)
         {
             Y_LOCK(access);
-            
+
+            //------------------------------------------------------------------
+            //
             // create the job
+            //
+            //------------------------------------------------------------------
             const job::uuid ans = jid;
             cue.establish(ans,J);
             ++jid;
             
-            // check status
             if(waiting.size)
             {
-                // all right!
+                load1();
             }
-            
             
             return ans;
         }

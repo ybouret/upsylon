@@ -22,7 +22,7 @@ namespace upsylon
     namespace concurrent
     {
 
-        static const char pfx[] = "[<drone>";
+        static const char pfx[] = "[:drone:";
 
         drone:: drone(pipeline     &user_pipe,
                       const size_t user_size,
@@ -54,12 +54,29 @@ namespace upsylon
             ++self.ready;
 
             // first sync on LOCKED mutex
+        LOOP:
             wait(access);
 
             // wake up on LOCKED mutex
             if(deal)
             {
-                Y_PIPELINE_LN(pfx<<".*] @" << label);
+                Y_PIPELINE_LN(pfx<<".>] @" << label);
+                assert(self.running.owns(this));
+
+                // run UNLOCKED
+                access.unlock();
+                deal->type(access);
+                access.lock();
+
+                // done LOCKED
+                Y_PIPELINE_LN(pfx<<".<] @" << label);
+                self.cue.terminate(deal);
+                self.waiting.push_back( self.running.unlink(this) );
+
+                // signal activity
+
+                // and wait for next deal
+                goto LOOP;
 
             }
             else

@@ -21,7 +21,7 @@ namespace upsylon
             contract       *next; //!< for list
             contract       *prev; //!< for list
             const job::uuid uuid; //!< UUID for job
-            const job::type type; //!< job content
+            job::type       type; //!< job content
 
             contract(const job::uuid U, const job::type &J); //!< setup
             ~contract() throw();                             //!< cleanup
