@@ -72,11 +72,11 @@ namespace upsylon
                 switch(kind)
                 {
                     case IsTerminal:
-                        self_destruct::on(_Lptr());
+                        collapse(_Lptr());
                         break;
                         
                     case IsInternal:
-                        self_destruct::on(_List());
+                        collapse(_List());
                         break;
                 }
                 setup();

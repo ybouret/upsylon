@@ -70,7 +70,7 @@ namespace upsylon
 
                 while(wBuilt>0)
                 {
-                    self_destruct::on(worker[--wBuilt]);
+                    collapse(worker[--wBuilt]);
                 }
 
                 mgr.release_as(worker, wCount, wBytes);

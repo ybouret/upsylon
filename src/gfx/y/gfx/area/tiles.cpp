@@ -1,7 +1,7 @@
 #include "y/gfx/area/tiles.hpp"
 #include "y/type/utils.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -19,7 +19,7 @@ namespace upsylon
 
             while(count>0)
             {
-                self_destruct::on( tile[--aliasing::_(count)] );
+               collapse( tile[--aliasing::_(count)] );
 
             }
 

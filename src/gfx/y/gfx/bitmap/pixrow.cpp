@@ -42,7 +42,7 @@ namespace upsylon
     }
 }
 
-#include "y/type/self-destruct.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -54,7 +54,7 @@ namespace upsylon
             static memory::allocator &mgr = memory::dyadic::location();
             for(unit_t j=h-1;j>=0;--j)
             {
-                self_destruct::on( row[j] );
+                collapse( row[j] );
             }
             mgr.release_as(row,count,bytes);
         }

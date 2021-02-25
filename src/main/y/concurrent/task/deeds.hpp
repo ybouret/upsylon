@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_CONCURRENT_TASK_DEEDS_INCLUDED

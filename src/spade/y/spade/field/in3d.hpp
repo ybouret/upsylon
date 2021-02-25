@@ -165,7 +165,7 @@ namespace upsylon {
                 slice += lower.z;
                 while(built>0)
                 {
-                    self_destruct::on(slice[--built]);
+                    collapse(slice[--built]);
                 }
             }
             
