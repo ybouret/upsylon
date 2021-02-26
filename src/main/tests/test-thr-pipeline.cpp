@@ -48,7 +48,12 @@ namespace {
 
 Y_UTEST(thr_pipeline)
 {
-    environment::set(Y_VERBOSE_THREADS,"ON");
+    {
+        environment::set(Y_VERBOSE_THREADS,"ON");
+        string value;
+        Y_CHECK(environment::get(value,Y_VERBOSE_THREADS));
+        Y_CHECK("ON"==value);
+    }
     concurrent::pipeline Q;
     std::cerr << "verbose=" << Q.verbose << std::endl;
 
