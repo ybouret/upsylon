@@ -56,7 +56,7 @@ Y_UTEST(thr_pipeline)
         Y_CHECK(environment::get(value,Y_VERBOSE_THREADS));
         Y_CHECK("ON"==value);
     }
-    //concurrent::pipeline Q;
+    concurrent::pipeline Q;
     //std::cerr << "verbose=" << Q.verbose << std::endl;
 
     {
