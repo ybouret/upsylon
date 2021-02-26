@@ -16,20 +16,57 @@ namespace upsylon
 
         pipeline:: ~pipeline() throw()
         {
+            finish();
         }
 
 
 
         pipeline:: pipeline() :
         executable(),
+        crew(),
+        todo(),
+        done(),
+        ready(0),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
+            setup();
+        }
+
+
+        void pipeline:: finish() throw()
+        {
+            for(worker *w=crew.head;w;w=w->next)
+            {
+                w->broadcast();
+            }
+
+            Y_MUTEX_PROBE(access,ready<=0);
         }
 
 
         void pipeline:: setup()  
         {
-            
+            Y_PIPELINE_LN(pfx<<"make] #" << topo->size());
+            const size_t  count = topo->size();
+            const size_t &rank  = crew.size;
+            try
+            {
+                while(rank<count)
+                {
+                    crew.push_back( new worker(*this,count,rank) );
+                }
+                Y_MUTEX_PROBE(access,ready>=count);
+
+            }
+            catch(...)
+            {
+                finish();
+                throw;
+            }
+
+            Y_PIPELINE_LN(pfx<<"made] #" << topo->size());
+
+
         }
 
 
