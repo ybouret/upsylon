@@ -97,7 +97,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(topology);
-            void add_(nucleus::cluster *cls) throw();
+			void add_(nucleus::cluster *cls);
         };
 
     }

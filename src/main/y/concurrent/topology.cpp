@@ -47,7 +47,7 @@ namespace upsylon
             add(_);
         }
 
-        void topology:: add_(nucleus::cluster *cls) throw()
+        void topology:: add_(nucleus::cluster *cls) 
         {
             assert(cls);
             aliasing::_(clusters).push_back(cls);

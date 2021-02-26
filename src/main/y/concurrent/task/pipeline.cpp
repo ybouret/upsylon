@@ -35,14 +35,14 @@ namespace upsylon
         
         pipeline::pipeline() :
         executable(),
+		verbose(nucleus::thread::verbosity(Y_VERBOSE_THREADS)),
         crew(),
         busy(),
         todo(),
         proc(),
         done(),
         ready(0),
-        leave(false),
-        verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
+        leave(false)
         {
             //setup();
         }

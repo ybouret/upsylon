@@ -29,6 +29,7 @@ namespace upsylon
         {
         public:
 
+			bool verbose;
 
             //__________________________________________________________________
             //
@@ -66,7 +67,7 @@ namespace upsylon
             void loop(worker *) throw();
 
         public:
-            bool verbose; //!< from Y_VERBOSE_THREADS
+			//  bool verbose; //!< from Y_VERBOSE_THREADS
             
         };
     }
