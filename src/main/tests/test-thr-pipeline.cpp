@@ -29,7 +29,7 @@ namespace {
                 std::cerr << "..working..2^" << Shift << std::endl;
             }
             volatile double sum = 0;
-            for(size_t i=1<<Shift;i>0;--i)
+            for(size_t i=size_t(1)<<Shift;i>0;--i)
             {
                 sum += 1.0 / square_of( double(i) );
             }
@@ -44,26 +44,14 @@ namespace {
 }
 
 #include "y/string/convert.hpp"
-#include "y/string/env.hpp"
+//#include "y/string/env.hpp"
 
 Y_UTEST(thr_pipeline)
 {
-    concurrent::singleton::verbose = true;
-    
-    {
-        environment::set(Y_VERBOSE_THREADS,"ON");
-        string value;
-        Y_CHECK(environment::get(value,Y_VERBOSE_THREADS));
-        Y_CHECK("ON"==value);
-    }
+   // concurrent::singleton::verbose = true;
+	    
     concurrent::pipeline Q;
-    //std::cerr << "verbose=" << Q.verbose << std::endl;
-
-    {
-        string value;
-        Y_CHECK(environment::get(value,Y_VERBOSE_THREADS));
-        Y_CHECK("ON"==value);
-    }
+	
 
     if(argc>1)
     {

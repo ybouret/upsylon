@@ -119,7 +119,7 @@ namespace upsylon {
 	{
 		Y_GIANT_LOCK();
 		value.clear();
-
+		std::cerr << "environment::get(" << name << ")" << std::endl;
 #if defined(Y_BSD)
 		const char *res = getenv(*name);
 		if (res)

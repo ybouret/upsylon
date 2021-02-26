@@ -13,9 +13,7 @@ namespace upsylon
             bool thread:: verbosity(const char *id)
             {
                 assert(id);
-                std::cerr << "thread::verbosity(" << id << ")" << std::endl;
                 const bool ans =  environment::flag(id);
-                std::cerr << "thread::verbosity(" << id << ")=" << ans << std::endl;
                 return ans;
             }
 
