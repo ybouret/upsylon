@@ -16,6 +16,12 @@ namespace upsylon
 
         pipeline:: ~pipeline() throw()
         {
+
+            access.lock();
+            Y_PIPELINE_LN(pfx<<"quit] #" << topo->size() );
+            todo.release();
+            access.unlock();
+
             finish();
         }
 
@@ -46,7 +52,7 @@ namespace upsylon
 
         void pipeline:: setup()  
         {
-            Y_PIPELINE_LN(pfx<<"make] #" << topo->size());
+            Y_PIPELINE_LN(pfx<<"make] <#" << topo->size() << ">  --------");
             const size_t  count = topo->size();
             const size_t &rank  = crew.size;
             try
@@ -64,7 +70,7 @@ namespace upsylon
                 throw;
             }
 
-            Y_PIPELINE_LN(pfx<<"made] #" << topo->size());
+            Y_PIPELINE_LN(pfx<<"made] <#" << topo->size() << "/> --------" );
 
 
         }
