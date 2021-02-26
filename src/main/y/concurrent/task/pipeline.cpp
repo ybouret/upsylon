@@ -96,6 +96,7 @@ namespace upsylon
 
         void pipeline:: loop(worker *replica) throw()
         {
+            const size_t count = topo->size();
             //------------------------------------------------------------------
             //
             // LOCK access and first sync
@@ -137,18 +138,18 @@ namespace upsylon
                 // LOCKED after contract : restore state
                 //--------------------------------------------------------------
                 Y_PIPELINE_LN(pfx<<"done] @"<<replica->label << "<$" << replica->deal->uuid << "/>");
-                done.cancel( proc.unlink(replica->deal) );  replica->deal = NULL;
+                done.cancel( proc.unlink(replica->deal) );
+                replica->deal = NULL;
                 crew.push_back( busy.unlink(replica) );
 
                 //--------------------------------------------------------------
                 // check what's next
                 //--------------------------------------------------------------
-                if(leave) goto LEAVE;
-
                 
+
             }
             
-        LEAVE:
+        //LEAVE:
             //------------------------------------------------------------------
             //
             // returning
@@ -203,7 +204,7 @@ namespace upsylon
             Y_LOCK(access);
             if(busy.size)
             {
-                Y_PIPELINE_LN(pfx<<"^^^^] #" << busy.size);
+                Y_PIPELINE_LN(pfx<<"^^^^] #busy=" << busy.size);
             }
 
             Y_PIPELINE_LN(pfx<<"----] flushed");
