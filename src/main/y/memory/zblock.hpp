@@ -1,13 +1,13 @@
-
 //! \file
+
 #ifndef Y_MEMORY_ZBLOCK_INCLUDED
 #define Y_MEMORY_ZBLOCK_INCLUDED 1
 
 #include "y/sequence/addressable.hpp"
 #include "y/memory/buffer.hpp"
-#include "y/ptr/counted.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/os/oor.hpp"
+#include "y/type/cswap.hpp"
 
 namespace upsylon
 {
@@ -18,7 +18,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename T,class ALLOCATOR>
-    class zblock : public object, public counted, public memory::rw_buffer, public addressable<T>
+    class zblock : public memory::rw_buffer, public addressable<T>
     {
     public:
         //______________________________________________________________________
@@ -26,8 +26,7 @@ namespace upsylon
         // types and definitions
         //______________________________________________________________________
         Y_DECL_ARGS(T,type); //!< aliases
-
-
+        
         //______________________________________________________________________
         //
         // C++ resources
@@ -108,9 +107,9 @@ namespace upsylon
         {
             _cswap(count,other.count);
             _cswap(bytes,other.bytes);
-            cswap(owned,other.owned);
-            cswap(entry,other.entry);
-            cswap(shift,other.shift);
+            _cswap(owned,other.owned);
+            _cswap(entry,other.entry);
+            _cswap(shift,other.shift);
         }
 
         //______________________________________________________________________
