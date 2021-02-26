@@ -47,14 +47,14 @@ namespace {
 
 Y_UTEST(thr_pipeline)
 {
+    concurrent::pipeline Q;
+    std::cerr << "verbose=" << Q.verbose << std::endl;
 
     if(argc>1)
     {
         Worker::Shift = string_convert::to<size_t>(argv[1],"Shift");
     }
-    concurrent::pipeline Q;
-    std::cerr << "verbose=" << Q.verbose << std::endl;
-    
+
 
     Worker worker;
     //Q(worker, & Worker::compute );

@@ -96,7 +96,7 @@ namespace upsylon
 
         void pipeline:: loop(worker *replica) throw()
         {
-            const size_t count = topo->size();
+            //const size_t count = topo->size();
             //------------------------------------------------------------------
             //
             // LOCK access and first sync
