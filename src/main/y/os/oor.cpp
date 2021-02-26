@@ -23,6 +23,8 @@ namespace upsylon {
         memset(target,byte,bytes);
     }
 
+    
+
     void out_of_reach:: fill_indices(size_t      *indices,
                                      const size_t length,
                                      const size_t offset) throw()

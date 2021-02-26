@@ -5,12 +5,14 @@
 #define Y_TYPE_COLLAPSE_INCLUDED 1
 
 #include "y/type/traits.hpp"
-//#include "y/os/oor.hpp"
 
 namespace upsylon
 {
-    
+
+    //__________________________________________________________________________
+    //
     //! in place destructor
+    //__________________________________________________________________________
     template <typename T>
     inline void collapse(T &data) throw()
     {
@@ -18,9 +20,12 @@ namespace upsylon
         mutable_T *item = (mutable_T *)&data;
         item->~mutable_T();
     }
-    
-    
+
+
+    //__________________________________________________________________________
+    //
     //! in place destructor
+    //__________________________________________________________________________
     template <typename T>
     inline T *collapsed(T *addr) throw()
     {

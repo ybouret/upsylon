@@ -34,7 +34,7 @@ namespace upsylon {
                 slots_vein.release(slot);
                 collapse(*(zcache<arena>*)zArenas); Y_BZSET_STATIC(zArenas);
                 collapse(*(zcache<chunk>*)zChunks); Y_BZSET_STATIC(zChunks);
-                slot=0;
+                slot     =0;
                 acquiring=0;
                 releasing=0;
                 _bzset(chunk_size);
