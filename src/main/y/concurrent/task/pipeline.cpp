@@ -18,7 +18,7 @@ namespace upsylon
         {
 
             access.lock();
-            Y_PIPELINE_LN(pfx<<"quit] #" << topo->size() );
+            Y_PIPELINE_LN(pfx<<"quit] <#" << topo->size() << ">  with #todo=" << todo.size );
             todo.release();
             access.unlock();
 
@@ -30,7 +30,9 @@ namespace upsylon
         pipeline:: pipeline() :
         executable(),
         crew(),
+        busy(),
         todo(),
+        proc(),
         done(),
         ready(0),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
@@ -41,11 +43,11 @@ namespace upsylon
 
         void pipeline:: finish() throw()
         {
+
             for(worker *w=crew.head;w;w=w->next)
             {
                 w->broadcast();
             }
-
             Y_MUTEX_PROBE(access,ready<=0);
         }
 
@@ -71,8 +73,6 @@ namespace upsylon
             }
 
             Y_PIPELINE_LN(pfx<<"made] <#" << topo->size() << "/> --------" );
-
-
         }
 
 
@@ -85,8 +85,9 @@ namespace upsylon
 
             
             access.unlock();
-
         }
+
+        
 
         job::uuid pipeline:: yield(const job::type &J)
         {
@@ -97,13 +98,33 @@ namespace upsylon
             // create the job
             //
             //------------------------------------------------------------------
-            todo.append(jid,J,done);
+            const job::uuid U = jid;
+            todo.append(U,J,done);
             ++jid;
             Y_PIPELINE_LN(pfx<<"+job] $" << todo.tail->uuid);
 
 
-            return 0;
+            //------------------------------------------------------------------
+            //
+            // dispatch the job(s)
+            //
+            //------------------------------------------------------------------
+            size_t num = min_of<size_t>(todo.size,crew.size);
+            Y_PIPELINE_LN(pfx<<"load] #" << num);
+            while(num>0)
+            {
+                --num;
+                worker *w = busy.push_back( crew.pop_front() );
+                w->deal   = proc.push_back( todo.pop_front() );
+                w->broadcast();
+            }
+
+
+
+            return U;
         }
+
+
 
         void pipeline:: flush() throw()
         {

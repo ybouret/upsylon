@@ -24,12 +24,15 @@ namespace upsylon
         public inode<worker>
         {
         public:
+            typedef core::list_of_cpp<worker> list_type;
+            
             explicit worker(pipeline    &user_pipe,
                             const size_t user_size,
                             const size_t user_rank);
             
             virtual ~worker() throw();
-            
+            contract *deal;
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(worker);

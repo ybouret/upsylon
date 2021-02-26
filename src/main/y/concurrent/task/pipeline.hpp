@@ -50,15 +50,18 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(pipeline);
             friend class worker;
 
-            core::list_of_cpp<worker> crew;
-            pending                   todo;
-            settled                   done;
-            size_t                    ready; //!< synchro counter
+            worker::list_type crew;  //!< available workers
+            worker::list_type busy;  //!< running   workers
+            pending           todo;  //!< tasks to do
+            pending           proc;  //!< work in progress
+            settled           done;  //!< done tasks, for re-use
+            size_t            ready; //!< synchro counter
 
             virtual void call(const context &) throw();
             void         setup();
             void         finish() throw(); //!< broadcast and wait for end
-            
+
+            void         dispatch() throw();
             
         public:
             bool verbose; //!< from Y_VERBOSE_THREADS
