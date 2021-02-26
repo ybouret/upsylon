@@ -33,6 +33,7 @@ namespace upsylon {
             inline bool query(string &value, const string &name) const
             {
                 Y_LOCK(access);
+                Y_GIANT_LOCK();
 
 #if defined(Y_BSD)
                 const char *res = getenv( &name[0] );
@@ -106,7 +107,9 @@ namespace upsylon {
 
         };
 
-        Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,envmgr);
+        //Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,envmgr);
+        Y_SINGLETON_IMPL_WITH(object::life_time-1,envmgr);
+
         
     }
 
