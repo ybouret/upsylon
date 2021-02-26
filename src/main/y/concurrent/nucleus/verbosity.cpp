@@ -14,7 +14,7 @@ namespace upsylon
             {
                 assert(id);
                 const bool ans =  environment::flag(id);
-                std::cerr << "env(" << id << ")=" << ans << std::endl;
+                std::cerr << "thread::verbosity::env(" << id << ")=" << ans << std::endl;
                 return ans;
             }
 

@@ -215,6 +215,7 @@ namespace upsylon {
 }
 
 #include "y/string/convert.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -239,12 +240,13 @@ namespace upsylon
     {
         static const char *ok[] = { "yes", "on", "true" , "1" };
         static const char *no[] = { "no", "off", "false" , "0" };
-
+        std::cerr << "check <" << name << ">" << std::endl;
         value = false;
         string content;
         if( env_get_clean(content,name) )
         {
             string_convert::to_lower(content);
+            std::cerr << "found <" << name << "> = '" << content << "'" << std::endl;
             for(unsigned i=0;i<sizeof(ok)/sizeof(ok[0]);++i)
             {
                 if(ok[i]==content)
@@ -264,6 +266,11 @@ namespace upsylon
             }
 
             throw exception("environment::check<bool>: invalid '%s'='%s' )", *name, *content);
+
+        }
+        else
+        {
+            std::cerr << "no    <" << name << std::endl;
 
         }
 
