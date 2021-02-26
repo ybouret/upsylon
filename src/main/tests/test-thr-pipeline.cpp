@@ -54,7 +54,7 @@ Y_UTEST(thr_pipeline)
 	
 	{
 		string value;
-		environment::get(value, Y_VERBOSE_THREADS);
+		(void)environment::get(value, Y_VERBOSE_THREADS);
 	}
 
     if(argc>1)
