@@ -1,5 +1,6 @@
 #include "y/concurrent/nucleus/thread.hpp"
 #include "y/string/env.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -11,7 +12,10 @@ namespace upsylon
         {
             bool thread:: verbosity(const char *id)
             {
-                return environment::flag(id);
+                assert(id);
+                const bool ans =  environment::flag(id);
+                std::cerr << "env(" << id << ")=" << ans << std::endl;
+                return ans;
             }
 
         }
