@@ -44,9 +44,11 @@ namespace {
 }
 
 #include "y/string/convert.hpp"
+#include "y/string/env.hpp"
 
 Y_UTEST(thr_pipeline)
 {
+    environment::set(Y_VERBOSE_THREADS,"ON");
     concurrent::pipeline Q;
     std::cerr << "verbose=" << Q.verbose << std::endl;
 
