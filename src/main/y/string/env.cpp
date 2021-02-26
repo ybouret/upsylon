@@ -226,10 +226,12 @@ namespace upsylon
         if( environment::get(content,name) )
         {
             content.clean_with(" \t");
+            std::cerr << "-- <" << name << "> = '" << content << "' -- " << std::endl;
             return true;
         }
         else
         {
+            std::cerr << "-- <" << name << "> = UNDEFINED --" << std::endl;
             return false;
         }
 
