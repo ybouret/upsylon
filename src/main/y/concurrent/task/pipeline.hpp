@@ -59,10 +59,9 @@ namespace upsylon
             bool              leave; //!< if this is the end...
             
             virtual void call(const context &) throw();
-            void         setup();
-            void         finish() throw(); //!< broadcast and wait for end
-
-            void         dispatch() throw();
+            void         setup();            //!< build all up to first sync
+            void         finish()   throw(); //!< broadcast and wait for end
+            void         dispatch() throw(); //!< load jobs...
 
             void loop(worker *) throw();
 

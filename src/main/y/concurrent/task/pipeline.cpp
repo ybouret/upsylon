@@ -16,13 +16,18 @@ namespace upsylon
 
         pipeline:: ~pipeline() throw()
         {
+            // remove extra work
+            {
+                Y_LOCK(access);
+                Y_PIPELINE_LN(pfx<<"quit] <#" << topo->size() << ">  with #todo=" << todo.size );
+                leave = true;
+                todo.release();
+            }
 
-            access.lock();
-            Y_PIPELINE_LN(pfx<<"quit] <#" << topo->size() << ">  with #todo=" << todo.size );
-            leave = true;
-            todo.release();
-            access.unlock();
+            // flush current tasks
+            flush();
 
+            // shutdown all crew
             finish();
         }
 
@@ -198,9 +203,11 @@ namespace upsylon
             Y_LOCK(access);
             if(busy.size)
             {
-
+                Y_PIPELINE_LN(pfx<<"^^^^] #" << busy.size);
             }
-            
+
+            Y_PIPELINE_LN(pfx<<"----] flushed");
+
         }
 
 
