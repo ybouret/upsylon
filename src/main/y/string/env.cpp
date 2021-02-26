@@ -113,13 +113,13 @@ namespace upsylon {
 
     bool environment::get( string &value, const string &name )
     {
-        return envmgr::instance().query( value, name );
+        return envmgr::instance().query(value,name);
     }
 
     bool environment::get( string &value, const char *name )
     {
         const string _(name);
-        return get(value,_);
+        return environment::get(value,_);
     }
 
 

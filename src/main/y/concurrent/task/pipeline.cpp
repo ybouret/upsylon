@@ -44,7 +44,7 @@ namespace upsylon
         leave(false),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
-            setup();
+            //setup();
         }
 
 
