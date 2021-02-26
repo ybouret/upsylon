@@ -43,10 +43,20 @@ namespace
 
 Y_UTEST(env)
 {
-	//std::cerr << "sizeof(TCHAR)=" << sizeof(TCHAR) << std::endl;
-	//return 0;
+	
     list<envPair> envList;
-    environment::set("UPSYLON", "Library");
+	{
+		string temp = "Library";
+		environment::set("UPSYLON", *temp);
+		temp.clear();
+	}
+
+	{
+		string value;
+		Y_CHECK(environment::get(value, "UPSYLON"));
+		Y_CHECK("Library" == value);
+	}
+	
     environment::get(callBack,&envList);
     for( list<envPair>::iterator i=envList.begin();i!=envList.end();++i)
     {
