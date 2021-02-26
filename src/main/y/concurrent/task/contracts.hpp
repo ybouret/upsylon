@@ -1,29 +1,30 @@
 //! \file
 
-#ifndef Y_CONCURRENT_TASK_DEEDS_INCLUDED
-#define Y_CONCURRENT_TASK_DEEDS_INCLUDED 1
+#ifndef Y_CONCURRENT_TASK_CONTRACTS_INCLUDED
+#define Y_CONCURRENT_TASK_CONTRACTS_INCLUDED 1
 
-#include "y/concurrent/task/deed.hpp"
+#include "y/concurrent/task/contract.hpp"
 
 namespace upsylon
 {
     namespace concurrent
     {
         
-        class deeds : public core::list_of<deed>, public releasable
+        class contracts : public core::list_of<contract>, public releasable
         {
         public:
-            virtual ~deeds() throw();
+            virtual ~contracts() throw();
             
         protected:
-            explicit deeds() throw();
+            explicit contracts() throw();
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(deeds);
+            Y_DISABLE_COPY_AND_ASSIGN(contracts);
             
         };
-        
-        class pending_deeds : public deeds
+
+#if 0
+        class pending_contracts : public contracts
         {
         public:
             explicit     pending_deeds() throw();
@@ -34,7 +35,7 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(pending_deeds);
         };
         
-        class shallow_deeds : public deeds
+        class shallow_deeds : public contracts
         {
         public:
             explicit shallow_deeds() throw();
@@ -47,6 +48,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shallow_deeds);
         };
+#endif
         
      
         

@@ -1,7 +1,26 @@
 
-#include "y/concurrent/task/deeds.hpp"
+#include "y/concurrent/task/contracts.hpp"
 #include "y/type/collapse.hpp"
 
+namespace upsylon
+{
+    namespace concurrent
+    {
+        contracts:: ~contracts() throw()
+        {
+            assert(0==size);
+        }
+
+        contracts:: contracts() throw()
+        {}
+
+        
+    }
+
+}
+
+
+#if 0
 namespace upsylon
 {
     namespace concurrent
@@ -77,3 +96,4 @@ namespace upsylon
 }
 
 
+#endif
