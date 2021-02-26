@@ -283,13 +283,15 @@ namespace upsylon
 
     bool environment:: flag(const string &name)
     {
+        std::cerr << "flag(" << name << ")..." << std::endl;
         bool   value = false;
         return check<bool>(value,name) ? /* defined */ value : /* undefined */ false;
     }
 
     bool environment:: flag(const char *name)
     {
-        const string _(name); return flag(_);
+        const string _(name);
+        return flag(_);
     }
 
 #define Y_ENV_CHECK_FOR(TYPE) \
