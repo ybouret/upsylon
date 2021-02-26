@@ -43,8 +43,8 @@ namespace
 
 Y_UTEST(env)
 {
-	std::cerr << "sizeof(TCHAR)=" << sizeof(TCHAR) << std::endl;
-	return 0;
+	//std::cerr << "sizeof(TCHAR)=" << sizeof(TCHAR) << std::endl;
+	//return 0;
     list<envPair> envList;
     environment::set("UPSYLON", "Library");
     environment::get(callBack,&envList);

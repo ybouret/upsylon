@@ -43,7 +43,7 @@ namespace upsylon
         {
             const size_t num_procs = hardware::nprocs();
             string       value;
-            const string name= Y_NUM_THREADS;
+            const string name = Y_NUM_THREADS;
             if( environment::get(value,name) )
             {
                 char *s_cores = *value;
