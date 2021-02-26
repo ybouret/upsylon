@@ -13,15 +13,18 @@ namespace upsylon
         class contract
         {
         public:
-            contract           *next;
-            contract           *prev;
+            contract       *next;
+            contract       *prev;
             const job::uuid uuid;
-            const job::type func;
+            const job::type plan;
             
             contract(const job::uuid, const job::type &);
             ~contract() throw();
         
-            
+            static contract *zcreate();
+            static contract *revoked(contract *) throw();
+            static void      zdelete(contract *) throw();
+            static void      release(contract *) throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(contract);

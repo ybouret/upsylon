@@ -1,6 +1,5 @@
 
 #include "y/concurrent/task/contracts.hpp"
-#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
@@ -19,47 +18,82 @@ namespace upsylon
 
 }
 
-
-#if 0
 namespace upsylon
 {
     namespace concurrent
     {
-        shallow_deeds:: shallow_deeds() throw() : deeds()
+        pending:: pending() throw()
+        {
+        }
+
+        pending:: ~pending() throw()
+        {
+            release();
+        }
+
+        void pending:: release() throw()
+        {
+            yield(contract::release);
+        }
+
+        void pending:: append(const job::uuid U, const job::type &J, settled &pool)
+        {
+            contract *c = pool.size ? pool.pop_back() : contract::zcreate();
+            try
+            {
+                push_back( new (c) contract(U,J) );
+            }
+            catch(...)
+            {
+                pool.push_back(c);
+                throw;
+            }
+        }
+    }
+}
+
+
+
+
+namespace upsylon
+{
+    namespace concurrent
+    {
+        settled:: settled() throw() : contracts()
         {
         }
         
-        shallow_deeds:: ~shallow_deeds() throw()
+        settled:: ~settled() throw()
         {
             release();
         }
         
-        void shallow_deeds:: reserve(size_t n)
+        void settled:: reserve(size_t n)
         {
             while(n-- > 0)
             {
-                push_back( object::acquire1<deed>() );
+                push_back( contract::zcreate() );
             }
         }
         
-        void shallow_deeds:: release() throw()
+        void settled:: release() throw()
         {
-            yield(object::release1<deed>);
+            yield(contract::zdelete);
         }
 
         
-        void shallow_deeds:: cancel(deed *alive) throw()
+        void settled:: cancel(contract *alive) throw()
         {
             assert(alive);
-            push_back( collapsed(alive) );
+            push_back( contract::revoked(alive) );
         }
 
         
-        void shallow_deeds:: cancel(pending_deeds &pending) throw()
+        void settled:: cancel(pending &source) throw()
         {
-            while(pending.size)
+            while(source.size)
             {
-                cancel( pending.pop_back() );
+                cancel( source.pop_back() );
             }
             
         }
@@ -68,32 +102,3 @@ namespace upsylon
     
 }
 
-
-namespace upsylon
-{
-    namespace concurrent
-    {
-        pending_deeds:: pending_deeds() throw() : deeds()
-        {
-        }
-        
-        pending_deeds:: ~pending_deeds() throw()
-        {
-            release();
-        }
-        
-        void pending_deeds:: release() throw()
-        {
-            while(size)
-            {
-                deed *d = collapsed( pop_back() );
-                object::release1(d);
-            }
-        }
-        
-    }
-    
-}
-
-
-#endif

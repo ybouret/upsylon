@@ -10,70 +10,6 @@ namespace upsylon
     namespace concurrent
     {
 
-        pipeline:: task:: ~task() throw()
-        {
-            assert(0==next);
-            assert(0==prev);
-            aliasing::_(uuid) = 0;
-        }
-
-        pipeline:: task:: task( const job::uuid U, const job::type &J) :
-        next(0),
-        prev(0),
-        uuid(U),
-        type(J)
-        {
-        }
-
-        pipeline::task * pipeline:: query_task(const job::type &J)
-        {
-            task *t = shallow.size ? shallow.query() : object::acquire1<task>();
-            try {
-
-                new (t) task(jid,J);
-                ++jid;
-                return t;
-            }
-            catch(...)
-            {
-                shallow.store(t);
-                throw;
-            }
-        }
-
-        void pipeline:: store_task(task *t) throw()
-        {
-            assert(t);
-            collapse(*t);
-            shallow.store(t);
-        }
-
-        void pipeline:: remove_pending() throw()
-        {
-            while(pending.size)
-            {
-                store_task(pending.pop_back());
-            }
-        }
-
-        void pipeline::   delete_shallow() throw()
-        {
-            shallow.yield( object::release1<task> );
-        }
-
-        static inline void __delete_pending( pipeline::task *t ) throw()
-        {
-            assert(t);
-            collapse(*t);
-            object::release1(t);
-        }
-
-        void  pipeline::  delete_pending() throw()
-        {
-            pending.yield(__delete_pending);
-        }
-
-
 
 
         static const char pfx[] = "[pipe.";
@@ -104,13 +40,12 @@ namespace upsylon
             access.lock();
             Y_PIPELINE_LN(pfx<<"init] @" << ctx.label);
 
-            ++ready;
-
+            
             access.unlock();
 
         }
 
-        job::uuid pipeline:: yield(const job::type &)
+        job::uuid pipeline:: yield(const job::type &J)
         {
             Y_LOCK(access);
 
@@ -119,6 +54,10 @@ namespace upsylon
             // create the job
             //
             //------------------------------------------------------------------
+            todo.append(jid,J,done);
+            ++jid;
+            Y_PIPELINE_LN(pfx<<"+job] $" << todo.tail->uuid);
+
 
             return 0;
         }

@@ -9,7 +9,8 @@ namespace upsylon
 {
     namespace concurrent
     {
-        
+
+        //! list of contracts
         class contracts : public core::list_of<contract>, public releasable
         {
         public:
@@ -23,33 +24,37 @@ namespace upsylon
             
         };
 
-#if 0
-        class pending_contracts : public contracts
+
+        class settled; //!< forward declaration
+
+        class pending : public contracts
         {
         public:
-            explicit     pending_deeds() throw();
-            virtual     ~pending_deeds() throw();
-            virtual void release()       throw();
-            
+            explicit     pending() throw();
+            virtual     ~pending() throw();
+            virtual void release() throw();
+
+            void         append(const job::uuid, const job::type &, settled &pool);
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(pending_deeds);
+            Y_DISABLE_COPY_AND_ASSIGN(pending);
         };
+
         
-        class shallow_deeds : public contracts
+        class settled : public contracts
         {
         public:
-            explicit shallow_deeds() throw();
-            virtual ~shallow_deeds() throw();
+            explicit     settled() throw();
+            virtual     ~settled() throw();
             virtual void release() throw();
             void         reserve(size_t n);
-            void         cancel(deed *)          throw();
-            void         cancel(pending_deeds &) throw();
+            void         cancel(contract *) throw();
+            void         cancel(pending  &) throw();
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(shallow_deeds);
+            Y_DISABLE_COPY_AND_ASSIGN(settled);
         };
-#endif
-        
+
      
         
        

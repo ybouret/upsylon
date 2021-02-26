@@ -55,6 +55,7 @@ Y_UTEST(thr_pipeline)
     concurrent::pipeline Q;
     concurrent::serial   S;
 
+    
 
     Worker worker;
     //S.enroll(worker, & Worker::compute );
