@@ -53,8 +53,7 @@ Y_UTEST(thr_pipeline)
         Worker::Shift = string_convert::to<size_t>(argv[1],"Shift");
     }
     concurrent::pipeline Q;
-    concurrent::serial   S;
-
+    
     
 
     Worker worker;
