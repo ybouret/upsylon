@@ -37,7 +37,6 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(worker);
             static void stub(void*) throw();
-            void        loop()      throw();
         };
     }
 }

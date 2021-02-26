@@ -63,7 +63,7 @@ Y_UTEST(thr_pipeline)
     Q(worker, & Worker::compute );
 
     real_time_clock clk;
-    //clk.sleep(1);
+    clk.sleep(1);
 }
 Y_UTEST_DONE()
 

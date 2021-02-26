@@ -19,6 +19,7 @@ namespace upsylon
 
             access.lock();
             Y_PIPELINE_LN(pfx<<"quit] <#" << topo->size() << ">  with #todo=" << todo.size );
+            leave = true;
             todo.release();
             access.unlock();
 
@@ -35,6 +36,7 @@ namespace upsylon
         proc(),
         done(),
         ready(0),
+        leave(false),
         verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
             setup();
@@ -52,7 +54,7 @@ namespace upsylon
         }
 
 
-        void pipeline:: setup()  
+        void pipeline:: setup()
         {
             Y_PIPELINE_LN(pfx<<"make] <#" << topo->size() << ">  --------");
             const size_t  count = topo->size();
@@ -79,11 +81,76 @@ namespace upsylon
 
         void pipeline:: call(const context &ctx) throw()
         {
-
             access.lock();
             Y_PIPELINE_LN(pfx<<"init] @" << ctx.label);
-
             
+
+
+            access.unlock();
+        }
+
+        void pipeline:: loop(worker *replica) throw()
+        {
+            //------------------------------------------------------------------
+            //
+            // LOCK access and first sync
+            //
+            //------------------------------------------------------------------
+            access.lock();
+            Y_PIPELINE_LN(pfx<<"init] @" << replica->label);
+            ++ready;
+
+            //------------------------------------------------------------------
+            //
+            // waiting on a LOCKED mutex
+            //
+            //------------------------------------------------------------------
+            replica->wait(access);
+
+
+            //------------------------------------------------------------------
+            //
+            // wake up on a LOCKED mutex: what do I find ?
+            //
+            //------------------------------------------------------------------
+            if(replica->deal)
+            {
+                //--------------------------------------------------------------
+                // perform contract
+                //--------------------------------------------------------------
+                Y_PIPELINE_LN(pfx<<"call] @"<<replica->label << "<$" << replica->deal->uuid << ">");
+                assert(proc.owns(replica->deal));
+                assert(busy.owns(replica));
+
+                {
+                    access.unlock();
+                    aliasing::_(replica->deal->plan)(access);
+                    access.lock();
+                }
+
+                //--------------------------------------------------------------
+                // LOCKED after contract : restore state
+                //--------------------------------------------------------------
+                Y_PIPELINE_LN(pfx<<"done] @"<<replica->label << "<$" << replica->deal->uuid << "/>");
+                done.cancel( proc.unlink(replica->deal) );  replica->deal = NULL;
+                crew.push_back( busy.unlink(replica) );
+
+                //--------------------------------------------------------------
+                // check what's next
+                //--------------------------------------------------------------
+                if(leave) goto LEAVE;
+
+                
+            }
+            
+        LEAVE:
+            //------------------------------------------------------------------
+            //
+            // returning
+            //
+            //------------------------------------------------------------------
+            Y_PIPELINE_LN(pfx<<"bye!] @"<<replica->label);
+            --ready;
             access.unlock();
         }
 
@@ -114,11 +181,11 @@ namespace upsylon
             while(num>0)
             {
                 --num;
-                worker *w = busy.push_back( crew.pop_front() );
-                w->deal   = proc.push_back( todo.pop_front() );
-                w->broadcast();
+                worker *w = busy.push_back( crew.pop_front() ); // get next worker
+                w->deal   = proc.push_back( todo.pop_front() ); // assign work
+                w->broadcast();                                 // unleash!
             }
-
+            
 
 
             return U;
@@ -129,7 +196,11 @@ namespace upsylon
         void pipeline:: flush() throw()
         {
             Y_LOCK(access);
+            if(busy.size)
+            {
 
+            }
+            
         }
 
 
