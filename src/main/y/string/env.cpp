@@ -270,7 +270,7 @@ namespace upsylon
         }
         else
         {
-            std::cerr << "no    <" << name << std::endl;
+            std::cerr << "no    <" << name << ">" << std::endl;
 
         }
 
