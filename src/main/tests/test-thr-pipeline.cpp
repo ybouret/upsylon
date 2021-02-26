@@ -48,10 +48,14 @@ namespace {
 
 Y_UTEST(thr_pipeline)
 {
-   // concurrent::singleton::verbose = true;
+	concurrent::singleton::verbose = true;
     environment::verbose = true;
     concurrent::pipeline Q;
 	
+	{
+		string value;
+		environment::get(value, Y_VERBOSE_THREADS);
+	}
 
     if(argc>1)
     {

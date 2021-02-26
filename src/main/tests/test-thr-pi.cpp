@@ -64,7 +64,8 @@ namespace
 Y_UTEST(thr_pi)
 {
     environment::verbose = true;
-    
+	concurrent::singleton::verbose = true;
+
     size_t n = 10000000;
 
     if(argc>1)
