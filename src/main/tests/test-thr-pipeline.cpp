@@ -44,12 +44,12 @@ namespace {
 }
 
 #include "y/string/convert.hpp"
-//#include "y/string/env.hpp"
+#include "y/string/env.hpp"
 
 Y_UTEST(thr_pipeline)
 {
    // concurrent::singleton::verbose = true;
-	    
+    environment::verbose = true;
     concurrent::pipeline Q;
 	
 

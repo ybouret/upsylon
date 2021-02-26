@@ -59,10 +59,12 @@ namespace
 }
 
 #include "y/string/convert.hpp"
+#include "y/string/env.hpp"
 
 Y_UTEST(thr_pi)
 {
-
+    environment::verbose = true;
+    
     size_t n = 10000000;
 
     if(argc>1)

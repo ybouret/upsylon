@@ -9,7 +9,8 @@ namespace upsylon {
     //! environment access
     struct environment
     {
-
+        static bool verbose; //!< monitor operations
+        
         //! try to get value of name, true upon success
         static bool get( string &value, const string &name );
 
