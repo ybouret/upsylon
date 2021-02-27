@@ -55,9 +55,9 @@ namespace upsylon {
 		else
 		{
 			assert(res > 0);
-			//zblock<char, memory::pooled> blk(res); assert(blk.bytes >= res);
-			//char                        *buf = *blk;
-			char                         buf[1024] = { 0 };
+			zblock<char, memory::pooled> blk(res); assert(blk.bytes >= res);
+			char                        *buf = *blk;
+			//	char                         buf[1024] = { 0 };
 			const DWORD                  ret = ::GetEnvironmentVariableA(*name,buf, res);
 			const DWORD                  len = res - 1;
 			if (ret != len)
