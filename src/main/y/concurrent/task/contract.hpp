@@ -9,22 +9,28 @@ namespace upsylon
 {
     namespace concurrent
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //! holds a user's job and its ID
+        //
+        //______________________________________________________________________
         class contract
         {
         public:
-            contract       *next;
-            contract       *prev;
-            const job::uuid uuid;
-            const job::type plan;
+            contract(const job::uuid, const job::type &); //!< setup
+            ~contract() throw();                          //!< cleanup
             
-            contract(const job::uuid, const job::type &);
-            ~contract() throw();
-        
-            static contract *zcreate();
-            static contract *revoked(contract *) throw();
-            static void      zdelete(contract *) throw();
-            static void      release(contract *) throw();
+            static contract *zcreate();                   //!< create zombie
+            static contract *revoked(contract *) throw(); //!< alive -> zombie
+            static void      zdelete(contract *) throw(); //!< delete zombie
+            static void      release(contract *) throw(); //!< delete alive
+            
+            contract       *next; //!< for list
+            contract       *prev; //!< for list
+            const job::uuid uuid; //!< uuid
+            const job::type plan; //!< what to do
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(contract);

@@ -63,9 +63,7 @@ namespace
 
 Y_UTEST(thr_pi)
 {
-    environment::verbose = true;
-	concurrent::singleton::verbose = true;
-
+ 
     size_t n = 10000000;
 
     if(argc>1)
@@ -73,16 +71,7 @@ Y_UTEST(thr_pi)
         n = string_convert::to<size_t>(argv[1],"");
     }
 
-	{
-		string value;
-		(void)environment::get(value, Y_VERBOSE_THREADS);
-	}
     Engine           engine;
-	{
-		string value;
-		(void)environment::get(value, Y_VERBOSE_THREADS);
-	}
-
     concurrent::solo seq;
     concurrent::simt par;
 

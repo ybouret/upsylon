@@ -15,8 +15,14 @@ namespace upsylon
     namespace concurrent
     {
 
-        class pipeline;
-
+        class pipeline; //!< forward declaration
+               
+        //______________________________________________________________________
+        //
+        //
+        //! distinguishable thread
+        //
+        //______________________________________________________________________
         class worker :
         public authority<pipeline>,
         public condition,
@@ -24,13 +30,16 @@ namespace upsylon
         public inode<worker>
         {
         public:
-            typedef core::list_of_cpp<worker> list_type;
+            typedef core::list_of_cpp<worker> list_type; //!< alias
             
+            //! setup
             explicit worker(pipeline    &user_pipe,
                             const size_t user_size,
                             const size_t user_rank);
-            
+            //! cleanup
             virtual ~worker() throw();
+            
+            //! (mutable) deal to handle
             contract *deal;
 
 

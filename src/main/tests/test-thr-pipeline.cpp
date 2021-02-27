@@ -42,29 +42,17 @@ namespace {
 
 	size_t Worker::Shift = 16;
 
-	static inline void display_env(const string &a, const string &b, void *)
-	{
-		std::cerr << a << '=' << b << std::endl;
-	}
+	 
 }
 
 #include "y/string/convert.hpp"
-#include "y/string/env.hpp"
 
 Y_UTEST(thr_pipeline)
 {
-    environment::verbose = true;
-	{
-		string value;
-		(void)environment::get(value, Y_VERBOSE_THREADS);
-	}
-	concurrent::pipeline Q;
-    if( false) environment::get(display_env, 0);
     
-	{
-		string value;
-		(void)environment::get(value, Y_VERBOSE_THREADS);
-	}
+	concurrent::pipeline Q;
+    
+    
 
 	if (argc > 1)
 	{

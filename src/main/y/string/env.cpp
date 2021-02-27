@@ -51,7 +51,7 @@ namespace upsylon {
             const DWORD err = ::GetLastError();
             if (err != ERROR_ENVVAR_NOT_FOUND)
             {
-                throw win32::exception( err, "GetEnvironmentVariable(%s)", *name);
+                throw win32::exception( err, "::GetEnvironmentVariable(%s)", *name);
             }
             if (verbose) std::cerr << "getenv('" << name << "') : UNDEFINED" << std::endl;
             return false; // undefined
