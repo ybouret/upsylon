@@ -46,29 +46,30 @@ namespace upsylon {
 
 #if defined(Y_WIN)
 		const DWORD res = ::GetEnvironmentVariableA(*name, NULL, 0);
-		const DWORD err = ::GetLastError();
-		if (err == ERROR_ENVVAR_NOT_FOUND)
-		{
-			if (verbose) std::cerr << "getenv('" << name << "') : UNDEFINED" << std::endl;
-			return false;
-		}
-		else
-		{
-			assert(res > 0);
-			zblock<char, memory::pooled> blk(res); assert(blk.bytes >= res);
-			char                        *buf = *blk;
-			//	char                         buf[1024] = { 0 };
-			const DWORD                  ret = ::GetEnvironmentVariableA(*name,buf, res);
-			const DWORD                  len = res - 1;
-			if (ret != len)
-			{
-				throw win32::exception(::GetLastError(), "::GetEnvironmentVariable(%s)", *name);
-			}
-			//std::cerr << "buf='" << buf << "'" << std::endl;
-			value.assign(buf, len);
-			if (verbose) std::cerr << "getenv('" << name << "')='" << value << "'" << std::endl;
-			return true;
-		}
+        if(res<=0)
+        {
+            const DWORD err = ::GetLastError();
+            if (err != ERROR_ENVVAR_NOT_FOUND)
+            {
+                throw win32::exception( err, "GetEnvironmentVariable(%s)", *name);
+            }
+            if (verbose) std::cerr << "getenv('" << name << "') : UNDEFINED" << std::endl;
+            return false; // undefined
+        }
+        else
+        {
+            zblock<char, memory::pooled> blk(res); assert(blk.bytes >= res);
+            char                        *buf = *blk;
+            const DWORD                  ret = ::GetEnvironmentVariableA(*name,buf, res);
+            const DWORD                  len = res - 1;
+            if (ret != len)
+            {
+                throw win32::exception(::GetLastError(), "::GetEnvironmentVariable(%s)", *name);
+            }
+            value.assign(buf, len);
+            if (verbose) std::cerr << "getenv('" << name << "')='" << value << "'" << std::endl;
+            return true;
+        }
 #endif
 
 	}

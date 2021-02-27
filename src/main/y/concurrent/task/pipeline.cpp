@@ -16,8 +16,7 @@ namespace upsylon
         
         pipeline:: ~pipeline() throw()
         {
-#if 0
-            // remove extra work
+             // remove extra work
             {
                 Y_LOCK(access);
                 Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  with #todo=" << todo.size);
@@ -30,14 +29,12 @@ namespace upsylon
             
             // shutdown all crew
             finish();
-#endif
         }
         
         
         
         pipeline::pipeline() :
         executable(),
-#if 0
         crew(),
         busy(),
         todo(),
@@ -45,28 +42,24 @@ namespace upsylon
         done(),
         ready(0),
         leave(false),
-#endif
-		verbose(nucleus::thread::verbosity(Y_VERBOSE_THREADS))
+        verbose(nucleus::thread::verbosity(Y_VERBOSE_THREADS))
         {
-            //setup();
+            setup();
         }
         
         
         void pipeline::finish() throw()
         {
-#if 0
             for (worker *w = crew.head; w; w = w->next)
             {
                 w->broadcast();
             }
             Y_MUTEX_PROBE(access, ready <= 0);
-#endif
         }
         
         
         void pipeline::setup()
         {
-#if 0
             Y_PIPELINE_LN(pfx << "make] <#" << topo->size() << ">  --------");
             const size_t  count = topo->size();
             const size_t &rank  = crew.size;
@@ -86,7 +79,6 @@ namespace upsylon
             }
             
             Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> --------");
-#endif
         }
         
         
@@ -103,7 +95,6 @@ namespace upsylon
         
         void pipeline::loop(worker *replica) throw()
         {
-#if 0
             //const size_t count = topo->size();
             //------------------------------------------------------------------
             //
@@ -166,14 +157,12 @@ namespace upsylon
             Y_PIPELINE_LN(pfx << "bye!] @" << replica->label);
             --ready;
             access.unlock();
-#endif
         }
         
         
         
         job::uuid pipeline::yield(const job::type &J)
         {
-#if 0
             Y_LOCK(access);
             
             //------------------------------------------------------------------
@@ -205,15 +194,12 @@ namespace upsylon
             
             
             return U;
-#endif
-			return 0;
         }
         
         
         
         void pipeline::flush() throw()
         {
-#if 0
             Y_LOCK(access);
             if (busy.size)
             {
@@ -221,7 +207,6 @@ namespace upsylon
             }
             
             Y_PIPELINE_LN(pfx << "----] flushed");
-#endif
         }
         
         

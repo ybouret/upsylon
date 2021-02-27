@@ -47,16 +47,14 @@ namespace upsylon
 		private:
 			Y_DISABLE_COPY_AND_ASSIGN(pipeline);
 			friend class worker;
-#if 0
-			worker::list_type crew;  //!< available workers
+            worker::list_type crew;  //!< available workers
 			worker::list_type busy;  //!< running   workers
 			pending           todo;  //!< tasks to do
 			pending           proc;  //!< tasks in progress
 			settled           done;  //!< done tasks, for re-use
 			size_t            ready; //!< synchro counter
 			bool              leave; //!< if this is the end...
-#endif
-			virtual void call(const context &) throw();
+            virtual void call(const context &) throw();
 			void         setup();            //!< build all up to first sync
 			void         finish()   throw(); //!< broadcast and wait for end
 			void         dispatch() throw(); //!< load jobs...
