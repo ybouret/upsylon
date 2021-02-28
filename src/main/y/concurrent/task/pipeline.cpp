@@ -126,13 +126,14 @@ namespace upsylon
                 // LOCKED after contract : restore state
                 //--------------------------------------------------------------
                 Y_PIPELINE_LN(pfx << "done] @" << replica->label << "<$" << replica->deal->uuid << "/>");
-                done.cancel(proc.unlink(replica->deal));
-                replica->deal = NULL;
-                crew.push_back(busy.unlink(replica));
+                done.cancel(proc.unlink(replica->deal)); // cancel this deal
+                replica->deal = NULL;                    // no more deal here
+                crew.push_back(busy.unlink(replica));    // send 'myself' back to crew
                 
                 //--------------------------------------------------------------
                 // check what's next
                 //--------------------------------------------------------------
+                
                 
                 
             }
@@ -167,7 +168,7 @@ namespace upsylon
             
             //------------------------------------------------------------------
             //
-            // dispatch the job(s) in primary
+            // dispatch the job(s)...
             //
             //------------------------------------------------------------------
             size_t num = min_of<size_t>(todo.size,crew.size);
