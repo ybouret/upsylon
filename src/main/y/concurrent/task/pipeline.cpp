@@ -178,20 +178,20 @@ namespace upsylon
             
             //------------------------------------------------------------------
             //
-            // dispatch the job(s)
+            // dispatch the job(s) in primary
             //
             //------------------------------------------------------------------
-            size_t num = min_of<size_t>(todo.size, crew.size);
-            Y_PIPELINE_LN(pfx << "load] #" << num);
+            size_t num = min_of<size_t>(todo.size,crew.size);
+            Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
             while (num > 0)
             {
                 --num;
                 worker *w = busy.push_back(crew.pop_front()); // get next worker
-                w->deal = proc.push_back(todo.pop_front()); // assign work
-                w->broadcast();                                 // unleash!
+                w->deal   = proc.push_back(todo.pop_front()); // assign work
+                w->broadcast();                               // unleash!
             }
             
-            
+            // auto unlock, ready for more yield or flush
             
             return U;
         }

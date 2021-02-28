@@ -54,6 +54,7 @@ namespace upsylon
 			settled           done;  //!< done tasks, for re-use
 			size_t            ready; //!< synchro counter
 			bool              leave; //!< if this is the end...
+            
             virtual void call(const context &) throw();
 			void         setup();            //!< build all up to first sync
 			void         finish()   throw(); //!< broadcast and wait for end

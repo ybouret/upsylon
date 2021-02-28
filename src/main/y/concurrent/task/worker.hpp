@@ -30,7 +30,8 @@ namespace upsylon
         public inode<worker>
         {
         public:
-            typedef core::list_of_cpp<worker> list_type; //!< alias
+            //! alias
+            typedef core::list_of_cpp<worker> list_type; 
             
             //! setup
             explicit worker(pipeline    &user_pipe,
