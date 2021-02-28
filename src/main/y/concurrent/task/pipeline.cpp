@@ -89,6 +89,7 @@ namespace upsylon
             return ans;
         }
         
+        // theaded function owned by replica
         void pipeline::loop(worker *replica) throw()
         {
             //------------------------------------------------------------------
@@ -139,9 +140,22 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // check status
                 //--------------------------------------------------------------
-                switch( status() )
+                const unsigned flags = status();
+                switch( flags )
                 {
+                    case TODO:
+                        // ok, reload
+                        break;
+                        
+                    case BUSY:
+                        // just busy
+                        break;
+                        
+                    case TODO|BUSY:
+                        break;
+                        
                     default:
+                        assert(DONE==flags);
                         break;
                 }
                 
