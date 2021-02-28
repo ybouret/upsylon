@@ -11,18 +11,23 @@ namespace upsylon
     
     namespace concurrent
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! a component for threads
+        //
+        //______________________________________________________________________
         class component
         {
         public:
-            virtual ~component() throw();
+            virtual ~component() throw(); //!< cleanup
             
-            mutex             access; //!< shared    access
-            topology::pointer topo;   //!< thread(s) topology
+            mutex             access;     //!< shared    access
+            topology::pointer topo;       //!< thread(s) topology
             
             
         protected:
-            explicit component();
+            explicit component();         //!< setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(component);
