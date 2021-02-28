@@ -81,7 +81,13 @@ namespace upsylon
             Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> --------");
         }
         
-        
+        unsigned  pipeline:: status() const throw()
+        {
+            unsigned      ans  = DONE;
+            if(todo.size) ans |= TODO;
+            if(busy.size) ans |= BUSY;
+            return ans;
+        }
         
         void pipeline::loop(worker *replica) throw()
         {
@@ -133,7 +139,11 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // check status
                 //--------------------------------------------------------------
-                
+                switch( status() )
+                {
+                    default:
+                        break;
+                }
                 
                 
             }

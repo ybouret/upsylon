@@ -28,7 +28,11 @@ namespace upsylon
 		class pipeline : public component, public supervisor
 		{
 		public:
-			//__________________________________________________________________
+            static const unsigned DONE = 0x00;
+            static const unsigned BUSY = 0x01;
+            static const unsigned TODO = 0x02;
+			
+            //__________________________________________________________________
 		    //
 			// C++
 			//__________________________________________________________________
@@ -55,12 +59,11 @@ namespace upsylon
 			size_t            ready; //!< synchro counter
 			bool              leave; //!< if this is the end...
             
-            void         setup();            //!< build all up to first sync
-			void         finish()   throw(); //!< broadcast and wait for end
-			void         dispatch() throw(); //!< load jobs...
-
-			void loop(worker *) throw();
-
+            void      setup();                 //!< build all up to first sync
+			void      finish()        throw(); //!< broadcast and wait for end
+            void      loop(worker *)  throw(); //!< call within a thread
+            unsigned  status()  const throw(); //!< get status, assuming locked
+            
 		public:
 			bool verbose; //!< from Y_VERBOSE_THREADS
 
