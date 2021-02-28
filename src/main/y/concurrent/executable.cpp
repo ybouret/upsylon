@@ -9,9 +9,7 @@ namespace upsylon
         {
         }
 
-        executable:: executable() :
-        access(),
-        topo( new topology() )
+        executable:: executable() : component()
         {
         }
 

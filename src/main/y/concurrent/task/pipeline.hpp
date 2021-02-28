@@ -6,7 +6,7 @@
 
 #include "y/concurrent/task/contracts.hpp"
 #include "y/concurrent/task/worker.hpp"
-#include "y/concurrent/executable.hpp"
+#include "y/concurrent/component.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/type/authority.hpp"
 
@@ -25,7 +25,7 @@ namespace upsylon
 		//! pipeline of tasks
 		//
 		//______________________________________________________________________
-		class pipeline : public executable, public supervisor
+		class pipeline : public component, public supervisor
 		{
 		public:
 			//__________________________________________________________________
@@ -55,8 +55,7 @@ namespace upsylon
 			size_t            ready; //!< synchro counter
 			bool              leave; //!< if this is the end...
             
-            virtual void call(const context &) throw();
-			void         setup();            //!< build all up to first sync
+            void         setup();            //!< build all up to first sync
 			void         finish()   throw(); //!< broadcast and wait for end
 			void         dispatch() throw(); //!< load jobs...
 

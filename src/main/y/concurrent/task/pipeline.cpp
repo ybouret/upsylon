@@ -34,7 +34,7 @@ namespace upsylon
         
         
         pipeline::pipeline() :
-        executable(),
+        component(),
         crew(),
         busy(),
         todo(),
@@ -83,19 +83,8 @@ namespace upsylon
         
         
         
-        void pipeline::call(const context &ctx) throw()
-        {
-            access.lock();
-            Y_PIPELINE_LN(pfx << "init] @" << ctx.label);
-            
-            
-            
-            access.unlock();
-        }
-        
         void pipeline::loop(worker *replica) throw()
         {
-            //const size_t count = topo->size();
             //------------------------------------------------------------------
             //
             // LOCK access and first sync
@@ -183,9 +172,8 @@ namespace upsylon
             //------------------------------------------------------------------
             size_t num = min_of<size_t>(todo.size,crew.size);
             Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
-            while (num > 0)
+            while (num-- > 0)
             {
-                --num;
                 worker *w = busy.push_back(crew.pop_front()); // get next worker
                 w->deal   = proc.push_back(todo.pop_front()); // assign work
                 w->broadcast();                               // unleash!

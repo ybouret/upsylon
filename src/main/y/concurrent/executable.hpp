@@ -5,8 +5,7 @@
 #define Y_CONCURRENT_EXECUTABLE_INCLUDED 1
 
 #include "y/concurrent/thread.hpp"
-#include "y/concurrent/sync/mutex.hpp"
-#include "y/concurrent/topology.hpp"
+#include "y/concurrent/component.hpp"
 
 
 namespace upsylon
@@ -23,7 +22,7 @@ namespace upsylon
         //! function to execute on a context (i.e. within a thread)
         //
         //______________________________________________________________________
-        class executable
+        class executable : public component
         {
         public:
             //__________________________________________________________________
@@ -53,13 +52,7 @@ namespace upsylon
             virtual     ~executable() throw();      //!< cleanup
             virtual void call(const context &) = 0; //!< called for each thread
 
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            mutex             access; //!< shared mutex for synchro
-            topology::pointer topo;   //!< threads topology
-
+            
         protected:
             explicit executable();    //!< setup topology
 
