@@ -131,7 +131,7 @@ namespace upsylon
                 crew.push_back(busy.unlink(replica));    // send 'myself' back to crew
                 
                 //--------------------------------------------------------------
-                // check what's next
+                // check status
                 //--------------------------------------------------------------
                 
                 
