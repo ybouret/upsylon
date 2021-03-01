@@ -15,9 +15,15 @@ namespace {
 	public:
 		static size_t Shift;
 
-		explicit Worker() throw()
+        double total;
+
+		explicit Worker() throw() : total(0)
 		{
 		}
+
+        Worker(const Worker &other) throw() : total(other.total)
+        {
+        }
 
 		virtual ~Worker() throw()
 		{
@@ -27,17 +33,18 @@ namespace {
 		{
 			{
 				Y_LOCK(sync);
-				std::cerr << "..working..2^" << Shift << std::endl;
+				std::cerr << "<working..2^" << Shift << ">" << std::endl;
 			}
 			volatile double sum = 0;
 			for (size_t i = size_t(1) << Shift; i > 0; --i)
 			{
 				sum += 1.0 / square_of(double(i));
 			}
+            total = sum;
 		}
 
 	private:
-		Y_DISABLE_COPY_AND_ASSIGN(Worker);
+        Y_DISABLE_ASSIGN(Worker);
 	};
 
 	size_t Worker::Shift = 16;
@@ -51,7 +58,7 @@ Y_UTEST(thr_pipeline)
 {
     
 	concurrent::pipeline Q;
-    
+    size_t               works = 1;
     
 
 	if (argc > 1)
@@ -59,13 +66,24 @@ Y_UTEST(thr_pipeline)
 		Worker::Shift = string_convert::to<size_t>(argv[1], "Shift");
 	}
 
+    if(argc>2)
+    {
+        works = string_convert::to<size_t>(argv[2],"works");
+    }
 
-	Worker worker;
-    Q(worker, & Worker::compute );
-	Q(worker, & Worker::compute );
+    Worker worker;
+    for(size_t i=1;i<=works;++i)
+    {
+        Q(worker, & Worker::compute );
+    }
+
+
+    Q.flush();
+
+    return 0;
 
 	real_time_clock clk;
-	clk.sleep(1);
+    clk.sleep(1);
 }
 Y_UTEST_DONE()
 

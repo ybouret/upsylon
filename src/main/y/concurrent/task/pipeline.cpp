@@ -11,7 +11,6 @@ namespace upsylon
     {
         
         
-        
         static const char pfx[] = "[pipe.";
         
         pipeline:: ~pipeline() throw()
@@ -19,7 +18,7 @@ namespace upsylon
             // remove extra work
             {
                 Y_LOCK(access);
-                Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  with #todo=" << todo.size);
+                Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << "> ------- with #todo=" << todo.size);
                 leave = true;
                 todo.release();
             }
@@ -35,6 +34,7 @@ namespace upsylon
         
         pipeline::pipeline() :
         component(),
+        flushed(),
         crew(),
         busy(),
         todo(),
@@ -65,10 +65,12 @@ namespace upsylon
             const size_t &rank  = crew.size;
             try
             {
-                while (rank < count)
+                // build threads
+                while (rank<count)
                 {
                     crew.push_back(new worker(*this, count, rank));
                 }
+                // wait for first sync
                 Y_MUTEX_PROBE(access, ready >= count);
                 
             }
@@ -81,13 +83,7 @@ namespace upsylon
             Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> --------");
         }
         
-        unsigned  pipeline:: status() const throw()
-        {
-            unsigned      ans  = DONE;
-            if(todo.size) ans |= TODO;
-            if(busy.size) ans |= BUSY;
-            return ans;
-        }
+        
 
         
 
@@ -161,7 +157,7 @@ namespace upsylon
                 // LOCKED: update status
                 //
                 //--------------------------------------------------------------
-                Y_PIPELINE_LN(pfx << "--->] todo: " << todo.size << " busy: " << busy.size);
+                Y_PIPELINE_LN(pfx << " ...] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
                 assert(crew.size>0);
                 assert(crew.tail == replica);
 
@@ -187,26 +183,30 @@ namespace upsylon
                         // recycle!
                         worker *current = activate_worker();
                         assert(replica==current);
-                        Y_PIPELINE_LN(pfx << "--->] @" << current->label << " : recycle");
+                        Y_PIPELINE_LN(pfx << " -->] @" << current->label << " : recycle");
                         goto RECYCLE;
                     }
                     else
                     {
                         // standby!
-                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/todo");
+                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/todo");
                         goto STANDBY;
                     }
                 }
                 else
                 {
+                    //----------------------------------------------------------
+                    // no pending tasks!
+                    //----------------------------------------------------------
                     if(busy.size>0)
                     {
-                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/busy");
+                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/busy");
                         goto STANDBY;
                     }
                     else
                     {
-                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/flushed");
+                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/flushed");
+                        flushed.broadcast();
                         goto STANDBY;
                     }
                 }
@@ -215,7 +215,6 @@ namespace upsylon
 
             }
             
-            //LEAVE:
             //------------------------------------------------------------------
             //
             // returning
@@ -256,7 +255,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             size_t num = min_of<size_t>(todo.size,crew.size);
-            Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
+            //Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
             while (num-- > 0)
             {
                 activate_worker()->broadcast();
@@ -274,13 +273,17 @@ namespace upsylon
         
         void pipeline::flush() throw()
         {
+            // LOCK
             Y_LOCK(access);
+            Y_PIPELINE_LN(pfx << "^^^^] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
+
             if (busy.size)
             {
-                Y_PIPELINE_LN(pfx << "^^^^] #busy=" << busy.size);
+                Y_PIPELINE_LN(pfx<<" -->] waiting...");
+                flushed.wait(access);
             }
-            
-            Y_PIPELINE_LN(pfx << "----] flushed");
+            Y_PIPELINE_LN(pfx << ">>>>] flushed");
+            // UNLOCK
         }
         
         
