@@ -63,7 +63,10 @@ namespace upsylon
 			void      finish()        throw(); //!< broadcast and wait for end
             void      loop(worker *)  throw(); //!< call within a thread
             unsigned  status()  const throw(); //!< get status, assuming locked
-            
+
+            void      deactivate_busy(worker *replica) throw(); //!< cancel deal, back to crew
+            worker   *activate_worker() throw();                //!< load head worker with head deal, NO broadcast/signal
+
 		public:
 			bool verbose; //!< from Y_VERBOSE_THREADS
 

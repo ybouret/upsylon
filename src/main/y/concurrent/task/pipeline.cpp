@@ -16,7 +16,7 @@ namespace upsylon
         
         pipeline:: ~pipeline() throw()
         {
-             // remove extra work
+            // remove extra work
             {
                 Y_LOCK(access);
                 Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  with #todo=" << todo.size);
@@ -88,7 +88,21 @@ namespace upsylon
             if(busy.size) ans |= BUSY;
             return ans;
         }
+
         
+
+        void pipeline:: deactivate_busy(worker *replica) throw()
+        {
+            assert(replica);
+            assert(busy.owns(replica));
+            assert(replica->deal);
+            assert(proc.owns(replica->deal));
+            
+            done.cancel(proc.unlink(replica->deal)); // cancel this deal
+            replica->deal = NULL;                    // no more deal here
+            crew.push_back(busy.unlink(replica));    // send 'myself' back to crew
+        }
+
         // theaded function owned by replica
         void pipeline::loop(worker *replica) throw()
         {
@@ -106,6 +120,7 @@ namespace upsylon
             // waiting on a LOCKED mutex
             //
             //------------------------------------------------------------------
+        STANDBY:
             replica->wait(access);
             
             
@@ -116,10 +131,13 @@ namespace upsylon
             //------------------------------------------------------------------
             if (replica->deal)
             {
+            RECYCLE:
                 //--------------------------------------------------------------
-                // perform contract
+                //
+                // perform assigned contract
+                //
                 //--------------------------------------------------------------
-                Y_PIPELINE_LN(pfx << "call] @" << replica->label << "<$" << replica->deal->uuid << ">");
+                Y_PIPELINE_LN(pfx << "call] @" << replica->label << " <$" << replica->deal->uuid << ">");
                 assert(proc.owns(replica->deal));
                 assert(busy.owns(replica));
                 
@@ -130,36 +148,71 @@ namespace upsylon
                 }
                 
                 //--------------------------------------------------------------
+                //
                 // LOCKED after contract : restore state
+                //
                 //--------------------------------------------------------------
-                Y_PIPELINE_LN(pfx << "done] @" << replica->label << "<$" << replica->deal->uuid << "/>");
-                done.cancel(proc.unlink(replica->deal)); // cancel this deal
-                replica->deal = NULL;                    // no more deal here
-                crew.push_back(busy.unlink(replica));    // send 'myself' back to crew
-                
+                Y_PIPELINE_LN(pfx << "done] @" << replica->label << " <$" << replica->deal->uuid << "/>");
+                deactivate_busy(replica);
+
+
                 //--------------------------------------------------------------
-                // check status
+                //
+                // LOCKED: update status
+                //
                 //--------------------------------------------------------------
-                const unsigned flags = status();
-                switch( flags )
+                Y_PIPELINE_LN(pfx << "--->] todo: " << todo.size << " busy: " << busy.size);
+                assert(crew.size>0);
+                assert(crew.tail == replica);
+
+                if(todo.size>0)
                 {
-                    case TODO:
-                        // ok, reload
-                        break;
-                        
-                    case BUSY:
-                        // just busy
-                        break;
-                        
-                    case TODO|BUSY:
-                        break;
-                        
-                    default:
-                        assert(DONE==flags);
-                        break;
+                    //----------------------------------------------------------
+                    // still some work to do: dispatch to other
+                    //----------------------------------------------------------
+                    {
+                        size_t them = crew.size-1;
+                        while( (them>0) && (todo.size>0) )
+                        {
+                            activate_worker()->broadcast();
+                            --them;
+                        }
+                    }
+
+                    //----------------------------------------------------------
+                    // work left ? need to recycle this
+                    //----------------------------------------------------------
+                    if(todo.size)
+                    {
+                        // recycle!
+                        worker *current = activate_worker();
+                        assert(replica==current);
+                        Y_PIPELINE_LN(pfx << "--->] @" << current->label << " : recycle");
+                        goto RECYCLE;
+                    }
+                    else
+                    {
+                        // standby!
+                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/todo");
+                        goto STANDBY;
+                    }
                 }
-                
-                
+                else
+                {
+                    if(busy.size>0)
+                    {
+                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/busy");
+                        goto STANDBY;
+                    }
+                    else
+                    {
+                        Y_PIPELINE_LN(pfx << "--->] @" << replica->label << " : standby/flushed");
+                        goto STANDBY;
+                    }
+                }
+
+
+
             }
             
             //LEAVE:
@@ -173,8 +226,15 @@ namespace upsylon
             access.unlock();
         }
         
-        
-        
+        worker *pipeline:: activate_worker() throw()
+        {
+            assert(crew.size>0);
+            assert(todo.size>0);
+            worker *w = busy.push_back(crew.pop_front()); // get next worker
+            w->deal   = proc.push_back(todo.pop_front()); // assign next work
+            return w;
+        }
+
         job::uuid pipeline::yield(const job::type &J)
         {
             Y_LOCK(access);
@@ -199,13 +259,14 @@ namespace upsylon
             Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
             while (num-- > 0)
             {
-                worker *w = busy.push_back(crew.pop_front()); // get next worker
-                w->deal   = proc.push_back(todo.pop_front()); // assign work
-                w->broadcast();                               // unleash!
+                activate_worker()->broadcast();
             }
-            
+
+            //------------------------------------------------------------------
+            //
             // auto unlock, ready for more yield or flush
-            
+            //
+            //------------------------------------------------------------------
             return U;
         }
         
