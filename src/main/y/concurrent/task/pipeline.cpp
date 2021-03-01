@@ -15,17 +15,25 @@ namespace upsylon
         
         pipeline:: ~pipeline() throw()
         {
-            // remove extra work
-            {
-                Y_LOCK(access);
-                Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << "> ------- with #todo=" << todo.size);
-                leave = true;
-                todo.release();
-            }
-            
+            access.lock();
+
+            Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  --------------");
+            Y_PIPELINE_LN(pfx << " ...] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
+
+            leave = true;     //
+            todo.release();   // remove extra work
+
+
             // flush current tasks
-            flush();
-            
+            if(busy.size>0)
+            {
+                Y_PIPELINE_LN(pfx << " ...] final flush!");
+                flushed.wait(access);
+            }
+
+            access.unlock();
+            Y_PIPELINE_LN(pfx << "bye!] <#" << topo->size() << "/> --------------");
+
             // shutdown all crew
             finish();
         }
@@ -60,7 +68,7 @@ namespace upsylon
         
         void pipeline::setup()
         {
-            Y_PIPELINE_LN(pfx << "make] <#" << topo->size() << ">  --------");
+            Y_PIPELINE_LN(pfx << "make] <#" << topo->size() << ">  ---------------");
             const size_t  count = topo->size();
             const size_t &rank  = crew.size;
             try
@@ -80,7 +88,7 @@ namespace upsylon
                 throw;
             }
             
-            Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> --------");
+            Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> ---------------");
         }
         
         
