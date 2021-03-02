@@ -41,8 +41,12 @@ namespace upsylon
 			//__________________________________________________________________
 			virtual job::uuid yield(const job::type &);
 			virtual void      flush() throw();
-
-
+            
+            //__________________________________________________________________
+            //
+            // helper
+            //__________________________________________________________________
+            void display_status() const;
 
 		private:
 			Y_DISABLE_COPY_AND_ASSIGN(pipeline);
@@ -54,7 +58,6 @@ namespace upsylon
 			pending           proc;    //!< tasks in progress
 			settled           done;    //!< done tasks, for re-use
 			size_t            ready;   //!< synchro counter
-			bool              leave;   //!< if this is the end...
             
             void      setup();                 //!< build all up to first sync
 			void      finish()        throw(); //!< broadcast and wait for end

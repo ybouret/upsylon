@@ -13,28 +13,43 @@ namespace upsylon
         
         static const char pfx[] = "[pipe.";
         
+        void pipeline:: display_status() const
+        {
+            Y_PIPELINE_LN(pfx << "stat] todo: " << todo.size << " | busy: " << busy.size << " | crew: " << crew.size);
+        }
+        
         pipeline:: ~pipeline() throw()
         {
+            //------------------------------------------------------------------
+            // LOCK access
+            //------------------------------------------------------------------
             access.lock();
+            Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  ---------------");
+            display_status();
+            
+            //------------------------------------------------------------------
+            // remove extra work
+            //------------------------------------------------------------------
+            todo.release();
 
-            Y_PIPELINE_LN(pfx << "quit] <#" << topo->size() << ">  --------------");
-            Y_PIPELINE_LN(pfx << " ...] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
-
-            leave = true;     //
-            todo.release();   // remove extra work
-
-
+            //------------------------------------------------------------------
             // flush current tasks
+            //------------------------------------------------------------------
             if(busy.size>0)
             {
                 Y_PIPELINE_LN(pfx << " ...] final flush!");
                 flushed.wait(access);
             }
-
+            
+            //------------------------------------------------------------------
+            // all done: UNLOCK
+            //------------------------------------------------------------------
+            Y_PIPELINE_LN(pfx << "bye!] <#" << topo->size() << "/> ---------------");
             access.unlock();
-            Y_PIPELINE_LN(pfx << "bye!] <#" << topo->size() << "/> --------------");
 
+            //------------------------------------------------------------------
             // shutdown all crew
+            //------------------------------------------------------------------
             finish();
         }
         
@@ -49,8 +64,7 @@ namespace upsylon
         proc(),
         done(),
         ready(0),
-        leave(false),
-        verbose(nucleus::thread::verbosity(Y_VERBOSE_THREADS))
+        verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
         {
             setup();
         }
@@ -73,12 +87,17 @@ namespace upsylon
             const size_t &rank  = crew.size;
             try
             {
+                //--------------------------------------------------------------
                 // build threads
+                //--------------------------------------------------------------
                 while (rank<count)
                 {
                     crew.push_back(new worker(*this, count, rank));
                 }
+                
+                //--------------------------------------------------------------
                 // wait for first sync
+                //--------------------------------------------------------------
                 Y_MUTEX_PROBE(access, ready >= count);
                 
             }
@@ -87,7 +106,6 @@ namespace upsylon
                 finish();
                 throw;
             }
-            
             Y_PIPELINE_LN(pfx << "made] <#" << topo->size() << "/> ---------------");
         }
         
@@ -97,14 +115,16 @@ namespace upsylon
 
         void pipeline:: deactivate_busy(worker *replica) throw()
         {
+            // sanity check
             assert(replica);
             assert(busy.owns(replica));
             assert(replica->deal);
             assert(proc.owns(replica->deal));
             
-            done.cancel(proc.unlink(replica->deal)); // cancel this deal
-            replica->deal = NULL;                    // no more deal here
-            crew.push_back(busy.unlink(replica));    // send 'myself' back to crew
+            // cleanup
+            done.cancel(proc.unlink(replica->deal)); // cancel replica's deal
+            replica->deal = NULL;                    // mark replica as free
+            crew.push_back(busy.unlink(replica));    // send replica back to crew
         }
 
         // theaded function owned by replica
@@ -138,7 +158,7 @@ namespace upsylon
             RECYCLE:
                 //--------------------------------------------------------------
                 //
-                // perform assigned contract
+                // perform assigned contract, unlocked
                 //
                 //--------------------------------------------------------------
                 Y_PIPELINE_LN(pfx << "call] @" << replica->label << " <$" << replica->deal->uuid << ">");
@@ -263,7 +283,6 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             size_t num = min_of<size_t>(todo.size,crew.size);
-            //Y_PIPELINE_LN(pfx << "load] #" << num << " (primary)");
             while (num-- > 0)
             {
                 activate_worker()->broadcast();
@@ -271,7 +290,7 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // auto unlock, ready for more yield or flush
+            // auto UNLOCK, ready for more yield or flush
             //
             //------------------------------------------------------------------
             return U;
@@ -281,7 +300,9 @@ namespace upsylon
         
         void pipeline::flush() throw()
         {
+            //------------------------------------------------------------------
             // LOCK
+            //------------------------------------------------------------------
             Y_LOCK(access);
             Y_PIPELINE_LN(pfx << "^^^^] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
 
@@ -291,7 +312,9 @@ namespace upsylon
                 flushed.wait(access);
             }
             Y_PIPELINE_LN(pfx << ">>>>] flushed");
+            //------------------------------------------------------------------
             // UNLOCK
+            //------------------------------------------------------------------
         }
         
         

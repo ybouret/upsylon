@@ -57,11 +57,12 @@ namespace {
 Y_UTEST(thr_pipeline)
 {
     
-    std::cerr << "Empty Pipeline" << std::endl;
+    std::cerr << "<Empty Pipeline>" << std::endl;
     {
         volatile concurrent::pipeline Q;
     }
-    
+    std::cerr << "<Empty Pipeline/>" << std::endl;
+
     if(false)
     {
         concurrent::pipeline Q;
