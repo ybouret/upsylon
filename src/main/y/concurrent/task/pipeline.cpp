@@ -13,6 +13,11 @@ namespace upsylon
         
         static const char pfx[] = "[pipe.";
         
+        size_t pipeline:: size() const throw()
+        {
+            return topo->size();
+        }
+        
         void pipeline:: display_status() const
         {
             Y_PIPELINE_LN(pfx << "stat] todo: " << todo.size << " | busy: " << busy.size << " | crew: " << crew.size);
@@ -185,7 +190,7 @@ namespace upsylon
                 // LOCKED: update status
                 //
                 //--------------------------------------------------------------
-                Y_PIPELINE_LN(pfx << " ...] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
+                display_status();
                 assert(crew.size>0);
                 assert(crew.tail == replica);
 
@@ -211,13 +216,13 @@ namespace upsylon
                         // recycle!
                         worker *current = activate_worker();
                         assert(replica==current);
-                        Y_PIPELINE_LN(pfx << " -->] @" << current->label << " : recycle");
+                        Y_PIPELINE_LN(pfx << "....] @" << current->label << " --> recycle");
                         goto RECYCLE;
                     }
                     else
                     {
                         // standby!
-                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/todo");
+                        Y_PIPELINE_LN(pfx << "....] @" << replica->label << " --> standby [todo]");
                         goto STANDBY;
                     }
                 }
@@ -228,12 +233,12 @@ namespace upsylon
                     //----------------------------------------------------------
                     if(busy.size>0)
                     {
-                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/busy");
+                        Y_PIPELINE_LN(pfx << "....] @" << replica->label << " --> standby[busy]");
                         goto STANDBY;
                     }
                     else
                     {
-                        Y_PIPELINE_LN(pfx << " -->] @" << replica->label << " : standby/flushed");
+                        Y_PIPELINE_LN(pfx << "....] @" << replica->label << " --> standby [flushed!]");
                         flushed.broadcast();
                         goto STANDBY;
                     }
@@ -304,11 +309,12 @@ namespace upsylon
             // LOCK
             //------------------------------------------------------------------
             Y_LOCK(access);
-            Y_PIPELINE_LN(pfx << "^^^^] todo: " << todo.size << " busy: " << busy.size << " crew: " << crew.size);
-
+            Y_PIPELINE_LN(pfx << "^^^^]");
+            display_status();
+            
             if (busy.size)
             {
-                Y_PIPELINE_LN(pfx<<" -->] waiting...");
+                Y_PIPELINE_LN(pfx<<" -->] waiting for flushed...");
                 flushed.wait(access);
             }
             Y_PIPELINE_LN(pfx << ">>>>] flushed");

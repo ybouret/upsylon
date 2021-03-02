@@ -43,6 +43,17 @@ namespace upsylon
             assert(rank<size);
             fmt();
         }
+        
+        
+        context:: context(const context &other) throw() :
+        size(other.size),
+        rank(other.rank),
+        indx(other.indx),
+        setw(other.setw),
+        label()
+        {
+            memcpy( (void*)label,other.label,sizeof(label));
+        }
 
         void context:: fmt() throw()
         {

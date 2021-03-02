@@ -5,49 +5,74 @@
 #include "y/os/real-time-clock.hpp"
 #include "y/type/utils.hpp"
 #include "y/string.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 
 namespace {
     
-    class Worker
+    class Engine : public concurrent::context
     {
     public:
         static size_t Shift;
         
-        double total;
+        double       sum;
+        const size_t length;
+        const size_t offset;
         
-        explicit Worker() throw() : total(0)
+        Engine(const size_t size, const size_t rank) throw() :
+        concurrent::context(size,rank),
+        sum(0),
+        length( size_t(1) << Shift ),
+        offset( 1 )
+        {
+            split(aliasing::_(length),aliasing::_(offset));
+        }
+        
+        virtual ~Engine() throw()
         {
         }
         
-        Worker(const Worker &other) throw() : total(other.total)
+        Engine(const Engine &other) throw() :
+        concurrent::context(other),
+        sum( other.sum ),
+        length( other.length ),
+        offset( other.offset )
         {
         }
         
-        virtual ~Worker() throw()
+        inline friend std::ostream & operator<<(std::ostream &os, const Engine &eng)
         {
+            os << "engine@" << eng.label << ": " << eng.offset << "+" << eng.length;
+            return os;
         }
         
-        void compute(lockable &sync)
+        void compute(lockable &) throw()
         {
+            double localSum = 0;
+            size_t i=offset;
+            for(size_t j=length;j>0;--j)
             {
-                Y_LOCK(sync);
-                std::cerr << "<working..2^" << Shift << ">" << std::endl;
+                localSum += 1.0 / square_of( double(i++));
             }
-            volatile double sum = 0;
-            for (size_t i = size_t(1) << Shift; i > 0; --i)
-            {
-                sum += 1.0 / square_of(double(i));
-            }
-            total = sum;
+            sum = localSum;
+        }
+        
+        static inline
+        double Sum( const accessible<Engine> &engines ) throw()
+        {
+            const size_t n  = engines.size();
+            double       s  = 0;
+            for(size_t i=n;i>0;--i) s += engines[i].sum;
+            return sqrt(6.0*s);
         }
         
     private:
-        Y_DISABLE_ASSIGN(Worker);
+        Y_DISABLE_ASSIGN(Engine);
     };
     
-    size_t Worker::Shift = 16;
+    size_t Engine:: Shift = 24;
+    
     
     
 }
@@ -57,42 +82,42 @@ namespace {
 Y_UTEST(thr_pipeline)
 {
     
-    std::cerr << "<Empty Pipeline>" << std::endl;
+    size_t N = 1;
+    if(argc>1)
+    {
+        N = string_convert::to<size_t>(argv[1],"N");
+    }
+    std::cerr << "<Empty  Pipeline>" << std::endl;
     {
         volatile concurrent::pipeline Q;
     }
-    std::cerr << "<Empty Pipeline/>" << std::endl;
+    std::cerr << "<Empty  Pipeline/>" << std::endl;
 
-    if(false)
+    std::cerr << "<User's Pipeline>" << std::endl;
     {
         concurrent::pipeline Q;
-        size_t               works = 1;
+        vector<Engine>       engines(N,as_capacity);
         
-        
-        if (argc > 1)
+        for(size_t i=0;i<N;++i)
         {
-            Worker::Shift = string_convert::to<size_t>(argv[1], "Shift");
+            {
+                const Engine tmp(N,i);
+                engines << tmp;
+            }
+            std::cerr << engines.back() << std::endl;
         }
         
-        if(argc>2)
+        for(size_t i=N;i>0;--i)
         {
-            works = string_convert::to<size_t>(argv[2],"works");
+            Q(engines[i], & Engine::compute );
         }
-        
-        Worker worker;
-        for(size_t i=1;i<=works;++i)
-        {
-            Q(worker, & Worker::compute );
-        }
-        
         
         Q.flush();
-        
-        return 0;
-        
-        real_time_clock clk;
-        clk.sleep(1);
+        std::cerr << "res: " << Engine::Sum(engines) << std::endl;
     }
+    std::cerr << "<User's Pipeline/>" << std::endl;
+    
+    
 }
 Y_UTEST_DONE()
 

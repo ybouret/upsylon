@@ -25,11 +25,12 @@ namespace upsylon
             // C++
             //__________________________________________________________________
 
-            explicit context() throw(); //! size=1
+            explicit context() throw(); //! <size=1, rank=0
             explicit context(const size_t sz,
-                             const size_t rk) throw();
-            virtual ~context() throw();
-
+                             const size_t rk) throw(); //!< size=sz, rank=rk
+            virtual ~context() throw();                //!< cleanup
+            context(const context &) throw();          //!< copy
+            
             //__________________________________________________________________
             //
             // methods

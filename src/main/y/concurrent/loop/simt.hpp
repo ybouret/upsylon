@@ -9,7 +9,6 @@
 #include "y/concurrent/executable.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/ptr/auto.hpp"
 
 
 //! macro helper

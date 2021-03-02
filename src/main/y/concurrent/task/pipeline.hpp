@@ -9,6 +9,7 @@
 #include "y/concurrent/component.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/type/authority.hpp"
+#include "y/collection.hpp"
 
 //! macro helper
 #define Y_PIPELINE_LN(MSG) do { if(verbose) { std::cerr << MSG << std::endl; } } while(false)
@@ -25,7 +26,7 @@ namespace upsylon
 		//! pipeline of tasks
 		//
 		//______________________________________________________________________
-		class pipeline : public component, public supervisor
+		class pipeline : public component, public supervisor, public collection
 		{
 		public:
             //__________________________________________________________________
@@ -41,6 +42,7 @@ namespace upsylon
 			//__________________________________________________________________
 			virtual job::uuid yield(const job::type &);
 			virtual void      flush() throw();
+            virtual size_t    size() const throw(); //!< topo->size
             
             //__________________________________________________________________
             //
