@@ -4,6 +4,7 @@
 #define Y_CONCURRENT_TASK_TYPE_INCLUDED 1
 
 #include "y/functor.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -35,7 +36,8 @@ namespace upsylon
             //! job->uuid
             virtual job::uuid yield(const job::type &) = 0; //!< yield a new job
             virtual void      flush() throw()          = 0; //!< flush current jobs
-
+            virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &) = 0;
+            
             //! wrapper
             template <typename OBJECT, typename METHOD_POINTER> inline
             job::uuid operator()(OBJECT &host, METHOD_POINTER method)

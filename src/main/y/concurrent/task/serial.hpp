@@ -27,6 +27,8 @@ namespace upsylon
 
             virtual job::uuid yield(const job::type &);
             virtual void      flush() throw();
+            virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &);
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(serial);
             fake_lock access;

@@ -216,7 +216,7 @@ namespace upsylon
                         // recycle!
                         worker *current = activate_worker();
                         assert(replica==current);
-                        Y_PIPELINE_LN(pfx << "....] @" << current->label << " --> recycle");
+                        Y_PIPELINE_LN(pfx << "....] @" << current->label << " --> recycle [todo]");
                         goto RECYCLE;
                     }
                     else
@@ -233,7 +233,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     if(busy.size>0)
                     {
-                        Y_PIPELINE_LN(pfx << "....] @" << replica->label << " --> standby[busy]");
+                        Y_PIPELINE_LN(pfx << "....] @" << replica->label << " --> standby [busy]");
                         goto STANDBY;
                     }
                     else
@@ -300,6 +300,13 @@ namespace upsylon
             //------------------------------------------------------------------
             return U;
         }
+        
+        
+        void pipeline:: batch(addressable<job::uuid> &jids, const accessible<job::type> &jobs)
+        {
+            
+        }
+        
         
         
         

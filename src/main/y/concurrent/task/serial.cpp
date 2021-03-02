@@ -24,5 +24,14 @@ namespace upsylon
         {
         }
         
+        void serial:: batch(addressable<job::uuid> &jids, const accessible<job::type> &jobs)
+        {
+            assert(jids.size()==jobs.size());
+            for(size_t i=jobs.size();i>0;--i)
+            {
+                jids[i] = yield(jobs[i]);
+            }
+        }
+        
     }
 }

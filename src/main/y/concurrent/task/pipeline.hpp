@@ -42,6 +42,8 @@ namespace upsylon
 			//__________________________________________________________________
 			virtual job::uuid yield(const job::type &);
 			virtual void      flush() throw();
+            virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &);
+            
             virtual size_t    size() const throw(); //!< topo->size
             
             //__________________________________________________________________
