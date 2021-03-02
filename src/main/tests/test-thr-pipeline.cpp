@@ -9,47 +9,47 @@
 using namespace upsylon;
 
 namespace {
-
-	class Worker
-	{
-	public:
-		static size_t Shift;
-
+    
+    class Worker
+    {
+    public:
+        static size_t Shift;
+        
         double total;
-
-		explicit Worker() throw() : total(0)
-		{
-		}
-
+        
+        explicit Worker() throw() : total(0)
+        {
+        }
+        
         Worker(const Worker &other) throw() : total(other.total)
         {
         }
-
-		virtual ~Worker() throw()
-		{
-		}
-
-		void compute(lockable &sync)
-		{
-			{
-				Y_LOCK(sync);
-				std::cerr << "<working..2^" << Shift << ">" << std::endl;
-			}
-			volatile double sum = 0;
-			for (size_t i = size_t(1) << Shift; i > 0; --i)
-			{
-				sum += 1.0 / square_of(double(i));
-			}
+        
+        virtual ~Worker() throw()
+        {
+        }
+        
+        void compute(lockable &sync)
+        {
+            {
+                Y_LOCK(sync);
+                std::cerr << "<working..2^" << Shift << ">" << std::endl;
+            }
+            volatile double sum = 0;
+            for (size_t i = size_t(1) << Shift; i > 0; --i)
+            {
+                sum += 1.0 / square_of(double(i));
+            }
             total = sum;
-		}
-
-	private:
+        }
+        
+    private:
         Y_DISABLE_ASSIGN(Worker);
-	};
-
-	size_t Worker::Shift = 16;
-
-	 
+    };
+    
+    size_t Worker::Shift = 16;
+    
+    
 }
 
 #include "y/string/convert.hpp"
@@ -57,33 +57,41 @@ namespace {
 Y_UTEST(thr_pipeline)
 {
     
-	concurrent::pipeline Q;
-    size_t               works = 1;
+    std::cerr << "Empty Pipeline" << std::endl;
+    {
+        volatile concurrent::pipeline Q;
+    }
     
-
-	if (argc > 1)
-	{
-		Worker::Shift = string_convert::to<size_t>(argv[1], "Shift");
-	}
-
-    if(argc>2)
+    if(false)
     {
-        works = string_convert::to<size_t>(argv[2],"works");
+        concurrent::pipeline Q;
+        size_t               works = 1;
+        
+        
+        if (argc > 1)
+        {
+            Worker::Shift = string_convert::to<size_t>(argv[1], "Shift");
+        }
+        
+        if(argc>2)
+        {
+            works = string_convert::to<size_t>(argv[2],"works");
+        }
+        
+        Worker worker;
+        for(size_t i=1;i<=works;++i)
+        {
+            Q(worker, & Worker::compute );
+        }
+        
+        
+        Q.flush();
+        
+        return 0;
+        
+        real_time_clock clk;
+        clk.sleep(1);
     }
-
-    Worker worker;
-    for(size_t i=1;i<=works;++i)
-    {
-        Q(worker, & Worker::compute );
-    }
-
-
-    Q.flush();
-
-    return 0;
-
-	real_time_clock clk;
-    clk.sleep(1);
 }
 Y_UTEST_DONE()
 
