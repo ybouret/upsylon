@@ -2,6 +2,7 @@
 #include "y/concurrent/task/serial.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/utest/timings.hpp"
 #include "y/os/real-time-clock.hpp"
 #include "y/type/utils.hpp"
 #include "y/string.hpp"
@@ -71,7 +72,7 @@ namespace {
         Y_DISABLE_ASSIGN(Engine);
     };
     
-    size_t Engine:: Shift = 24;
+    size_t Engine:: Shift = 28;
     
     
     
@@ -82,21 +83,31 @@ namespace {
 Y_UTEST(thr_pipeline)
 {
     
-    size_t N = 1;
+    size_t N = 8;
     if(argc>1)
     {
         N = string_convert::to<size_t>(argv[1],"N");
     }
+    
+    if(argc>2)
+    {
+        Engine::Shift = string_convert::to<size_t>(argv[2],"Shift");
+    }
+    
+    
+    
     std::cerr << "<Empty  Pipeline>" << std::endl;
     {
         volatile concurrent::pipeline Q;
     }
     std::cerr << "<Empty  Pipeline/>" << std::endl;
-
+    
     std::cerr << "<User's Pipeline>" << std::endl;
     {
-        concurrent::pipeline Q;
-        vector<Engine>       engines(N,as_capacity);
+        concurrent::pipeline          Q;
+        vector<Engine>                engines(N,as_capacity);
+        vector<concurrent::job::uuid> jids(N,0);
+        vector<concurrent::job::type> jobs(N,as_capacity);
         
         for(size_t i=0;i<N;++i)
         {
@@ -107,15 +118,51 @@ Y_UTEST(thr_pipeline)
             std::cerr << engines.back() << std::endl;
         }
         
+        for(size_t i=1;i<=N;++i)
+        {
+            const concurrent::job::type J( &engines[i], & Engine::compute );
+            jobs.push_back(J);
+        }
+        
         for(size_t i=N;i>0;--i)
         {
             Q(engines[i], & Engine::compute );
         }
         
         Q.flush();
-        std::cerr << "res: " << Engine::Sum(engines) << std::endl;
+        std::cerr << "yield res: " << Engine::Sum(engines) << std::endl;
+        
+        Q.batch(jids,jobs);
+        Q.flush();
+        std::cerr << "batch res: " << Engine::Sum(engines) << std::endl;
+        
+        std::cerr << "\t<Perf>" << std::endl;
+        
+        Q.verbose = false;
+        
+        
+        double ser_speed = 0;
+        {
+            concurrent::serial S;
+            Y_TIMINGS(ser_speed, 1,
+                      S.batch(jids,jobs);
+                      S.flush());
+        }
+        std::cerr << "\tser_speed  = " << ser_speed << std::endl;
+        
+        double par_speed = 0;
+        Y_TIMINGS(par_speed, 1,
+                  Q.batch(jids,jobs);
+                  Q.flush());
+        std::cerr << "\tpar_speed  = " << par_speed << std::endl;
+        std::cerr << "\tefficiency = " << Q.efficiency(par_speed/ser_speed) << std::endl;
+        std::cerr << "\t<Perf/>" << std::endl;
+        
+        
     }
     std::cerr << "<User's Pipeline/>" << std::endl;
+    
+    
     
     
 }

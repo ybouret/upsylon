@@ -43,15 +43,14 @@ namespace upsylon
 			virtual job::uuid yield(const job::type &);
 			virtual void      flush() throw();
             virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &);
-            
             virtual size_t    size() const throw(); //!< topo->size
             
             //__________________________________________________________________
             //
             // helper
             //__________________________________________________________________
-            void display_status() const;
-
+            double efficiency(const double speed_up) const throw();
+            
 		private:
 			Y_DISABLE_COPY_AND_ASSIGN(pipeline);
 			friend class worker;
@@ -68,7 +67,9 @@ namespace upsylon
             void      loop(worker *)  throw(); //!< call within a thread
 
             void      deactivate_busy(worker *replica) throw(); //!< cancel deal, back to crew
-            worker   *activate_worker() throw();                //!< load head worker with head deal, NO broadcast/signal
+            worker   *activate_worker()    throw();             //!< load head worker with head deal, NO broadcast/signal
+            void      activate_by_primary() throw();
+            void      display_status() const;
 
 		public:
 			bool verbose; //!< from Y_VERBOSE_THREADS

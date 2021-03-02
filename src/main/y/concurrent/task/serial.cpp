@@ -27,9 +27,22 @@ namespace upsylon
         void serial:: batch(addressable<job::uuid> &jids, const accessible<job::type> &jobs)
         {
             assert(jids.size()==jobs.size());
-            for(size_t i=jobs.size();i>0;--i)
+            const size_t count = jobs.size();
+            size_t       alive = 0;
+            try
             {
-                jids[i] = yield(jobs[i]);
+                for(size_t i=1;alive<count;++alive,++i)
+                {
+                    jids[i] = yield(jobs[i]);
+                }
+            }
+            catch(...)
+            {
+                while(alive<count)
+                {
+                    jids[++alive] = 0;
+                }
+                throw;
             }
         }
         

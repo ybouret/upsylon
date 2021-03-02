@@ -23,6 +23,12 @@ namespace upsylon
             Y_PIPELINE_LN(pfx << "stat] todo: " << todo.size << " | busy: " << busy.size << " | crew: " << crew.size);
         }
         
+        double pipeline:: efficiency(const double speed_up) const throw()
+        {
+            return nucleus::thread::efficiency(speed_up,size());
+        }
+
+        
         pipeline:: ~pipeline() throw()
         {
             //------------------------------------------------------------------
@@ -267,6 +273,15 @@ namespace upsylon
             return w;
         }
 
+        void pipeline:: activate_by_primary() throw()
+        {
+            size_t num = min_of<size_t>(todo.size,crew.size);
+            while (num-- > 0)
+            {
+                activate_worker()->broadcast();
+            }
+        }
+        
         job::uuid pipeline::yield(const job::type &J)
         {
             Y_LOCK(access);
@@ -279,7 +294,7 @@ namespace upsylon
             const job::uuid U = jid;
             todo.append(U, J, done);
             ++jid;
-            Y_PIPELINE_LN(pfx << "+job] $" << todo.tail->uuid);
+            Y_PIPELINE_LN(pfx << "+job] $" << todo.tail->uuid << " (yield)");
             
             
             //------------------------------------------------------------------
@@ -287,11 +302,7 @@ namespace upsylon
             // dispatch the job(s)...
             //
             //------------------------------------------------------------------
-            size_t num = min_of<size_t>(todo.size,crew.size);
-            while (num-- > 0)
-            {
-                activate_worker()->broadcast();
-            }
+            activate_by_primary();
 
             //------------------------------------------------------------------
             //
@@ -304,6 +315,31 @@ namespace upsylon
         
         void pipeline:: batch(addressable<job::uuid> &jids, const accessible<job::type> &jobs)
         {
+            Y_LOCK(access);
+            assert(jids.size()==jobs.size());
+            const size_t count = jobs.size();
+            size_t       alive = 0;
+            try
+            {
+                for(size_t i=1;alive<count;++alive,++i)
+                {
+                    const job::uuid U = jid;
+                    todo.append(U, jobs[i], done);
+                    jids[i] = U;
+                    ++jid;
+                    Y_PIPELINE_LN(pfx << "+job] $" << todo.tail->uuid << " (batch)" );
+                }
+                activate_by_primary();
+            }
+            catch(...)
+            {
+                while(alive<count)
+                {
+                    jids[++alive] = 0;
+                }
+                activate_by_primary();
+                throw;
+            }
             
         }
         
