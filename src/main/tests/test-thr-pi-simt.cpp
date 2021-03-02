@@ -61,7 +61,7 @@ namespace
 #include "y/string/convert.hpp"
 #include "y/string/env.hpp"
 
-Y_UTEST(thr_pi)
+Y_UTEST(thr_pi_simt)
 {
  
     size_t n = 10000000;
