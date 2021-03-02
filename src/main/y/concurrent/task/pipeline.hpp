@@ -49,6 +49,7 @@ namespace upsylon
             //
             // helper
             //__________________________________________________________________
+            //! compute efficiency from speed_up and size()
             double efficiency(const double speed_up) const throw();
             
 		private:
@@ -67,8 +68,8 @@ namespace upsylon
             void      loop(worker *)  throw(); //!< call within a thread
 
             void      deactivate_busy(worker *replica) throw(); //!< cancel deal, back to crew
-            worker   *activate_worker()    throw();             //!< load head worker with head deal, NO broadcast/signal
-            void      activate_by_primary() throw();
+            worker   *activate_worker()     throw();            //!< load head worker with head deal, NO broadcast/signal
+            void      activate_by_primary() throw();            //!< activate and broadcast maximum of crew
             void      display_status() const;
 
 		public:

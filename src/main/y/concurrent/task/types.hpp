@@ -36,6 +36,7 @@ namespace upsylon
             //! job->uuid
             virtual job::uuid yield(const job::type &) = 0; //!< yield a new job
             virtual void      flush() throw()          = 0; //!< flush current jobs
+            //! process a batch of jobs
             virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &) = 0;
             
             //! wrapper
