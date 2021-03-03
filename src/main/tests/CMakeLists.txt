@@ -147,7 +147,7 @@ ADD_TEST(mem:shack         test-main shack)
 ADD_TEST(mem:dblocks       test-main dblocks)
 ADD_TEST(mem:lock          test-main mlock)
 
-SOURCE_GROUP(thr FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp
+SOURCE_GROUP(thr FILES 
 test-thr-context.cpp
 test-thr-topology.cpp
 test-thr-thread.cpp
@@ -161,12 +161,6 @@ ADD_TEST(thr:thread     test-main thr_thread)
 ADD_TEST(thr:loop       test-main thr_loop)
 ADD_TEST(thr:pi_simt    test-main thr_pi_simt)
 ADD_TEST(thr:pipeline   test-main thr_pipeline)
-
-ADD_TEST(thr:parallel    test-main parallel)
-ADD_TEST(thr:threads     test-main threads)
-ADD_TEST(thr:simd        test-main simd)
-ADD_TEST(thr:server      test-main server)
-ADD_TEST(thr:servpi      test-main servpi)
 
 SOURCE_GROUP(str FILES test-string.cpp test-string-convert.cpp test-tokenizer.cpp test-string-defrag.cpp test-esma.cpp test-string-time.cpp) 
 ADD_TEST(str:string      test-main string)
@@ -403,7 +397,7 @@ test-colors.cpp
 test-color-hist.cpp
 )
 ADD_TEST(colors     test-main colors)
-ADD_TEST(color:hist test-main color:hist)
+ADD_TEST(color:hist test-main color_hist)
 
 
 

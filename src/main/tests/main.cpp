@@ -118,7 +118,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(const_field);
     Y_UTEST(for_each);
 
-    Y_UTEST(parallel);
     Y_UTEST(thr_context);
     Y_UTEST(thr_topology);
     Y_UTEST(thr_thread);
@@ -126,11 +125,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_pi_simt);
     Y_UTEST(thr_pipeline);
     
-    Y_UTEST(threads);
-    Y_UTEST(simd);
-    Y_UTEST(server);
-    Y_UTEST(servpi);
-
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
 
