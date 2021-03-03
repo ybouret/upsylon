@@ -14,7 +14,7 @@ namespace
     void fillnz(void *addr, size_t n) throw()
     {
         uint8_t *p = (uint8_t *)addr;
-        while(n-- > 0 )
+        while(n-- > 0)
         {
             uint8_t a = 0;
             while(a<=0) a = alea.full<uint8_t>();

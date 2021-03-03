@@ -42,14 +42,14 @@ namespace upsylon
             type & operator[](const size_t i) throw()
             {
                 assert(i<size);
-                return entry[size];
+                return entry[i];
             }
 
             //! access [0..size-1]
             const_type & operator[](const size_t i) const throw()
             {
                 assert(i<size);
-                return entry[size];
+                return entry[i];
             }
 
 
