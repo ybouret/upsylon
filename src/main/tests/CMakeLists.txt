@@ -147,7 +147,7 @@ ADD_TEST(mem:shack         test-main shack)
 ADD_TEST(mem:dblocks       test-main dblocks)
 ADD_TEST(mem:lock          test-main mlock)
 
-SOURCE_GROUP(thr FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp test-skimp.cpp
+SOURCE_GROUP(thr FILES test-parallel.cpp test-threads.cpp test-simd.cpp test-server.cpp
 test-thr-context.cpp
 test-thr-topology.cpp
 test-thr-thread.cpp
@@ -167,7 +167,6 @@ ADD_TEST(thr:threads     test-main threads)
 ADD_TEST(thr:simd        test-main simd)
 ADD_TEST(thr:server      test-main server)
 ADD_TEST(thr:servpi      test-main servpi)
-ADD_TEST(thr:skimp       test-main skimp)
 
 SOURCE_GROUP(str FILES test-string.cpp test-string-convert.cpp test-tokenizer.cpp test-string-defrag.cpp test-esma.cpp test-string-time.cpp) 
 ADD_TEST(str:string      test-main string)
@@ -398,6 +397,11 @@ ADD_TEST(jive:opt      test-main jive_opt)
 ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
 ADD_TEST(jive:match    test-main jive_match "[:word:]+" ${HERE}/1000.txt)
 ADD_TEST(jive:leading  test-main jive_leading)
+
+SOURCE_GROUP(gfx FILES
+test-colors.cpp)
+ADD_TEST(colors test-main colors)
+
 
 ADD_CUSTOM_TARGET(utest-main
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

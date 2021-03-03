@@ -355,14 +355,13 @@ namespace upsylon {
 
 #include "y/yap/rational.hpp"
 
-#include "../../../gfx/y/gfx/color/rgb.hpp"
-#include "../../../gfx/y/gfx/color/yuv.hpp"
+#include "y/color/rgb.hpp"
+#include "y/color/yuv.hpp"
 
 namespace upsylon {
 
 #define TS(TYPE) (void) name( typeid(TYPE), #TYPE )
 
-    using namespace GFX;
     
     void type_specs::initialize()
     {

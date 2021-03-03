@@ -130,7 +130,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(simd);
     Y_UTEST(server);
     Y_UTEST(servpi);
-    Y_UTEST(skimp);
 
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
@@ -253,6 +252,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_rx);
     Y_UTEST(jive_match);
     Y_UTEST(jive_leading);
+
+    Y_UTEST(colors);
 }
 Y_UTEST_EXEC()
 
