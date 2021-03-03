@@ -5,7 +5,7 @@
 using namespace upsylon;
 using namespace graphic;
 
-Y_UTEST(color_hist)
+Y_UTEST(gfx_hist)
 {
     histogram H;
     {

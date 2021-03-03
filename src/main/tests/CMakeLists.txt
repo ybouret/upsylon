@@ -392,14 +392,16 @@ ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
 ADD_TEST(jive:match    test-main jive_match "[:word:]+" ${HERE}/1000.txt)
 ADD_TEST(jive:leading  test-main jive_leading)
 
-SOURCE_GROUP(color FILES
-test-colors.cpp
-test-color-hist.cpp
-test-color-io.cpp
+SOURCE_GROUP(gfx FILES
+test-gfx-colors.cpp
+test-gfx-hist.cpp
+test-gfx-conv.cpp
+test-gfx-pixels.cpp
 )
-ADD_TEST(colors     test-main colors)
-ADD_TEST(color:hist test-main color_hist)
-ADD_TEST(color:io   test-main color-io)
+ADD_TEST(gfx:colors test-main gfx_colors)
+ADD_TEST(gfx:hist   test-main gfx_hist)
+ADD_TEST(gfx:conv   test-main gfx_conv)
+ADD_TEST(gfx:pixels test-main gfx_pixels)
 
 
 

@@ -247,9 +247,10 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_match);
     Y_UTEST(jive_leading);
 
-    Y_UTEST(colors);
-    Y_UTEST(color_hist);
-    Y_UTEST(color_io);
+    Y_UTEST(gfx_colors);
+    Y_UTEST(gfx_hist);
+    Y_UTEST(gfx_conv);
+    Y_UTEST(gfx_pixels);
 }
 Y_UTEST_EXEC()
 

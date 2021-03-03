@@ -28,7 +28,7 @@ namespace
     }
 }
 
-Y_UTEST(colors)
+Y_UTEST(gfx_colors)
 {
 
     {

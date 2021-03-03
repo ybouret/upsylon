@@ -19,7 +19,7 @@ namespace
     }
 }
 
-Y_UTEST(color_io)
+Y_UTEST(gfx_conv)
 {
     {
         uint8_t u=100;
