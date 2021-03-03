@@ -65,7 +65,19 @@ namespace upsylon
         static const T & from(const T &x) throw() { return x; }
     };
 
+    
+    class color_converter
+    {
+    public:
+        virtual       ~color_converter() throw();
+        virtual size_t depth() const throw() = 0;
 
+    protected:
+        explicit       color_converter() throw();
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(color_converter);
+    };
 
 
 }

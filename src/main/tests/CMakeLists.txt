@@ -395,9 +395,11 @@ ADD_TEST(jive:leading  test-main jive_leading)
 SOURCE_GROUP(color FILES
 test-colors.cpp
 test-color-hist.cpp
+test-color-io.cpp
 )
 ADD_TEST(colors     test-main colors)
 ADD_TEST(color:hist test-main color_hist)
+ADD_TEST(color:io   test-main color-io)
 
 
 

@@ -63,7 +63,9 @@ namespace upsylon
     
     
     
-    
+    color_converter::  color_converter() throw() {}
+    color_converter:: ~color_converter() throw() {}
+
     
     
 }

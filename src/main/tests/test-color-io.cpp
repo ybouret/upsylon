@@ -1,0 +1,31 @@
+#include "y/color/rgba-to-type.hpp"
+#include "y/color/type-to-rgba.hpp"
+#include "y/utest/run.hpp"
+#include "y/type/spec.hpp"
+
+using namespace upsylon;
+
+namespace
+{
+    template <typename T>
+    void do_check( const T &data )
+    {
+        std::cerr << "checking with <" << type_name_of<T>() << ">" << std::endl;
+        get_rgba<T> io_get;
+
+        rgba c = io_get(&data);
+        std::cerr << data << " -> " << c << std::endl;
+    }
+}
+
+Y_UTEST(color_io)
+{
+    {
+        uint8_t u=100;
+        do_check(u);
+    }
+
+}
+Y_UTEST_DONE()
+
+

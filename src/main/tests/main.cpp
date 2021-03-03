@@ -249,6 +249,7 @@ Y_UTEST_INIT(256)
 
     Y_UTEST(colors);
     Y_UTEST(color_hist);
+    Y_UTEST(color_io);
 }
 Y_UTEST_EXEC()
 
