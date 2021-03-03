@@ -15,10 +15,10 @@ namespace upsylon
         
         namespace crux
         {
-            //______________________________________________________________________
+            //__________________________________________________________________
             //
             //! basic conversion helpers
-            //______________________________________________________________________
+            //__________________________________________________________________
             struct convert
             {
                 static const  float   unit_float[256]; //!< 0/255,...255/255
@@ -69,14 +69,20 @@ namespace upsylon
         };
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! converter base class
+        //
+        //______________________________________________________________________
         class converter
         {
         public:
-            virtual       ~converter() throw();
-            virtual size_t depth() const throw() = 0;
+            virtual       ~converter() throw();       //!< cleanup
+            virtual size_t depth() const throw() = 0; //!< target/source depth
 
         protected:
-            explicit       converter() throw();
+            explicit       converter() throw();       //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(converter);

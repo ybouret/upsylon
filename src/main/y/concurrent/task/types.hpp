@@ -24,6 +24,7 @@ namespace upsylon
             typedef addressable<uuid>            uuids; //!< interface to uuids
             typedef accessible<type>             batch; //!< interface to types
 
+            //! helper to precompile some jobs
             template <typename OBJECT, typename METHOD_POINTER> static inline
             void to(sequence<type> &jobs, OBJECT &host, METHOD_POINTER method)
             {

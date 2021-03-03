@@ -9,29 +9,42 @@ namespace upsylon
 {
     namespace graphic
     {
+        //______________________________________________________________________
+        //
+        //
+        //! type to rgba conversion
+        //
+        //______________________________________________________________________
         class type_to_rgba : public converter
         {
         public:
-            virtual ~type_to_rgba() throw();
+            virtual ~type_to_rgba() throw(); //!< cleanup
 
-            //! convert address
+            //! convert (valid) address
             virtual rgba operator()(const void *) const throw() = 0;
 
         protected:
-            explicit type_to_rgba() throw();
+            explicit type_to_rgba() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(type_to_rgba);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! default conversion
+        //
+        //______________________________________________________________________
         template <typename T>
         class get_rgba : public type_to_rgba
         {
         public:
-            inline virtual ~get_rgba() throw() {}
-            inline explicit get_rgba() throw() : type_to_rgba() {}
+            inline virtual       ~get_rgba() throw() {}                       //!< cleanup
+            inline explicit       get_rgba() throw() : type_to_rgba() {}      //!< setup
+            inline virtual size_t depth() const throw() { return sizeof(T); } //!< source depth
 
-            inline virtual size_t depth() const throw() { return sizeof(T); }
+            //! use generic functions
             inline virtual rgba   operator()(const void *addr) const throw()
             {
                 assert(addr);
