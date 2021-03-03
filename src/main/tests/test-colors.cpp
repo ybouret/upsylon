@@ -46,6 +46,11 @@ Y_UTEST(colors)
     }
 
     {
+        const rgba     c(50,100,150);
+        CheckAll<rgba>(c);
+    }
+
+    {
         const YUV   yuv(0.5f,0.1f,-0.1f);
         CheckAll<YUV>(yuv);
     }
