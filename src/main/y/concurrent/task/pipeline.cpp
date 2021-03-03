@@ -313,10 +313,11 @@ namespace upsylon
         }
         
         
-        void pipeline:: batch(addressable<job::uuid> &jids, const accessible<job::type> &jobs)
+        void pipeline:: batch(job::uuids &jids, const job::batch &jobs)
         {
-            Y_LOCK(access);
             assert(jids.size()==jobs.size());
+
+            Y_LOCK(access);
             const size_t count = jobs.size();
             size_t       alive = 0;
             try
@@ -365,7 +366,12 @@ namespace upsylon
             // UNLOCK
             //------------------------------------------------------------------
         }
-        
+
+        void pipeline:: clear() throw()
+        {
+            Y_LOCK(access);
+            done.cancel(todo);
+        }
         
         
     }

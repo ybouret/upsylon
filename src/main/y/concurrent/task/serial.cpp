@@ -45,6 +45,9 @@ namespace upsylon
                 throw;
             }
         }
-        
+
+        void serial:: clear() throw()
+        {
+        }
     }
 }

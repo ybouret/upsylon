@@ -120,8 +120,8 @@ Y_UTEST(thr_pipeline)
         
         for(size_t i=1;i<=N;++i)
         {
-            const concurrent::job::type J( &engines[i], & Engine::compute );
-            jobs.push_back(J);
+            concurrent::job::to(jobs, engines[i], &Engine::compute);
+            
         }
         
         for(size_t i=N;i>0;--i)

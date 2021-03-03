@@ -25,10 +25,11 @@ namespace upsylon
             virtual ~serial() throw(); //!< cleanup
             explicit serial() throw(); //!< setup
 
-            virtual job::uuid yield(const job::type &);
-            virtual void      flush() throw();
-            virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &);
-            
+            virtual job::uuid yield(const job::type &);                //!< process
+            virtual void      flush() throw();                         //!< nothing to do
+            virtual void      batch(job::uuids &, const job::batch &); //!< process in-order
+            virtual void      clear() throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(serial);
             fake_lock access;

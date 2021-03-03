@@ -38,11 +38,17 @@ namespace upsylon
 
 			//__________________________________________________________________
 			//
-			// interface
+			// interface : supervisor
 			//__________________________________________________________________
 			virtual job::uuid yield(const job::type &);
 			virtual void      flush() throw();
-            virtual void      batch(addressable<job::uuid> &, const accessible<job::type> &);
+            virtual void      batch(job::uuids &, const job::batch &);
+            virtual void      clear() throw();
+
+            //__________________________________________________________________
+            //
+            // interface : collection
+            //__________________________________________________________________
             virtual size_t    size() const throw(); //!< topo->size
             
             //__________________________________________________________________
