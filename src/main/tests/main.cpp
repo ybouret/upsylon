@@ -254,6 +254,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(jive_leading);
 
     Y_UTEST(colors);
+    Y_UTEST(color_hist);
 }
 Y_UTEST_EXEC()
 

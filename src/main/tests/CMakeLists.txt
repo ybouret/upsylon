@@ -398,9 +398,13 @@ ADD_TEST(jive:rx       test-main jive_rx "{INT}" ${HERE}/1000.txt)
 ADD_TEST(jive:match    test-main jive_match "[:word:]+" ${HERE}/1000.txt)
 ADD_TEST(jive:leading  test-main jive_leading)
 
-SOURCE_GROUP(gfx FILES
-test-colors.cpp)
-ADD_TEST(colors test-main colors)
+SOURCE_GROUP(color FILES
+test-colors.cpp
+test-color-hist.cpp
+)
+ADD_TEST(colors     test-main colors)
+ADD_TEST(color:hist test-main color:hist)
+
 
 
 ADD_CUSTOM_TARGET(utest-main
