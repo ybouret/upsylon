@@ -1,5 +1,5 @@
 
-#include "y/color/yuv.hpp"
+#include "y/graphic/color/yuv.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon

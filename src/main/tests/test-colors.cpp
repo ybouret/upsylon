@@ -1,18 +1,19 @@
 
-#include "y/color/convert.hpp"
+#include "y/graphic/color/convert.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ios/align.hpp"
 
 using namespace upsylon;
+using namespace graphic;
 
 namespace
 {
     template <typename T, typename U>
     static inline void  Check(const T &value)
     {
-        std::cerr << "convert_color<" << type_name_of<T>() << "," << type_name_of<U>() << ">::from" << std::endl;
-        std::cerr << "\t" << value << " -> " << convert_color<U,T>::from(value) << std::endl;
+        std::cerr << "convert<" << type_name_of<T>() << "," << type_name_of<U>() << ">::from" << std::endl;
+        std::cerr << "\t" << value << " -> " << convert<U,T>::from(value) << std::endl;
     }
 
     template <typename T>

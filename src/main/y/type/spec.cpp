@@ -355,13 +355,14 @@ namespace upsylon {
 
 #include "y/yap/rational.hpp"
 
-#include "y/color/rgb.hpp"
-#include "y/color/yuv.hpp"
+#include "y/graphic/color/rgb.hpp"
+#include "y/graphic/color/yuv.hpp"
 
 namespace upsylon {
 
 #define TS(TYPE) (void) name( typeid(TYPE), #TYPE )
 
+    using namespace graphic;
     
     void type_specs::initialize()
     {

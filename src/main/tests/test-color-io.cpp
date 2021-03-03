@@ -1,9 +1,10 @@
-#include "y/color/rgba-to-type.hpp"
-#include "y/color/type-to-rgba.hpp"
+#include "y/graphic/color/rgba-to-type.hpp"
+#include "y/graphic/color/type-to-rgba.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 
 using namespace upsylon;
+using namespace graphic;
 
 namespace
 {

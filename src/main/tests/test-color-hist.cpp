@@ -1,12 +1,13 @@
 
-#include "y/color/histogram.hpp"
+#include "y/graphic/color/histogram.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
+using namespace graphic;
 
 Y_UTEST(color_hist)
 {
-    color_histogram H;
+    histogram H;
     {
         const float f = 0.2f;
         H << f;

@@ -414,11 +414,17 @@ SET(jive_pattern_joker_srcs ${jive_pattern_joker_decl} ${jive_pattern_joker_code
 SOURCE_GROUP( jive/pattern/joker FILES ${jive_pattern_joker_srcs} )
 INSTALL( FILES ${jive_pattern_joker_decl} DESTINATION include/y/jive/pattern/joker )
 
-FILE(GLOB color_decl y/color/*.hpp)
-FILE(GLOB color_code y/color/*.cpp)
-SET(color_srcs ${color_decl} ${color_code})
-SOURCE_GROUP( color FILES ${color_srcs} )
-INSTALL( FILES ${color_decl} DESTINATION include/y/color )
+FILE(GLOB graphic_decl y/graphic/*.hpp)
+FILE(GLOB graphic_code y/graphic/*.cpp)
+SET(graphic_srcs ${graphic_decl} ${graphic_code})
+SOURCE_GROUP( graphic FILES ${graphic_srcs} )
+INSTALL( FILES ${graphic_decl} DESTINATION include/y/graphic )
+
+FILE(GLOB graphic_color_decl y/graphic/color/*.hpp)
+FILE(GLOB graphic_color_code y/graphic/color/*.cpp)
+SET(graphic_color_srcs ${graphic_color_decl} ${graphic_color_code})
+SOURCE_GROUP( graphic/color FILES ${graphic_color_srcs} )
+INSTALL( FILES ${graphic_color_decl} DESTINATION include/y/graphic/color )
 
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
@@ -471,7 +477,7 @@ ${jargon_pattern_joker_srcs}
 ${tensor_srcs}
 ${yap_srcs}  ${yap_natural_srcs}  ${yap_integer_srcs} ${yap_prime_srcs}
 ${jive_srcs} ${jive_pattern_srcs} ${jive_pattern_basic_srcs} ${jive_pattern_logic_srcs} ${jive_pattern_joker_srcs}
-${color_srcs}
+${graphic_srcs} ${graphic_color_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )
