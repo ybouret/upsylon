@@ -29,6 +29,12 @@ namespace upsylon
             //! greyscale compression table
             static  const uint8_t greyscale[255*3+1];
 
+            //! fg:alpha, bg:beta, beta=255-alpha
+            static uint8_t mix(const uint8_t fg,
+                               const uint8_t bg,
+                               const uint8_t alpha,
+                               const uint8_t beta) throw();
+
         };
     }
 
