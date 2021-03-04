@@ -10,8 +10,11 @@ using namespace graphic;
 Y_UTEST(image)
 {
     image::io    &img = image::io::instance();
+
     jpeg_format *jpeg= new jpeg_format();
     img.define(jpeg);
+
+    img.standard();
 
     std::cerr << "jpeg.rx=" << jpeg->extension_lowercase_regexp << std::endl;
     jpeg->extension_compiled_pattern->graphViz("jpeg.dot");

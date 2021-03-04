@@ -7,7 +7,8 @@ namespace upsylon
     
     namespace graphic
     {
-        image:: io:: io()
+        image:: io:: io() :
+        named_format::database(8,as_capacity)
         {
         }
 
@@ -21,7 +22,7 @@ namespace upsylon
             const named_format::pointer ptr(fmt);
             if(!insert(ptr))
             {
-                throw exception("multiple '%s'", *(ptr->name));
+                throw exception("%s: multiple '%s'", call_sign, *(ptr->name));
             }
         }
 
@@ -47,7 +48,7 @@ namespace upsylon
                     return fmt.load(file,opts,conv);
                 }
             }
-            throw exception("unsupported extension '%s'", *ext);
+            throw exception("%s: unsupported extension '%s'", call_sign, *ext);
         }
 
 
