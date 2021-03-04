@@ -18,6 +18,7 @@ namespace upsylon
                    const size_t width,
                    const zflux &zhost) throw();
             ~bitrow() throw();
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bitrow);

@@ -1,27 +1,45 @@
 
-//! \file
-
-#ifndef Y_GFX_BITROWS_INCLUDED
-#define Y_GFX_BITROWS_INCLUDED 1
-
-#include "y/gfx/bitrow.hpp"
-#include "y/gfx/bitrow.hpp"
+#include "y/gfx/bitrows.hpp"
+#include "y/type/collapse.hpp"
 
 namespace upsylon
 {
-    namespace gfx
+    namespace graphic
     {
 
-        class bitrows : public object, public counted
+        bitrows:: ~bitrows() throw()
         {
-        public:
+            bitrow *row = static_cast<bitrow *>(impl.block_addr);
+            while(done)
+            {
+                collapse(row[--done]);
+            }
+        }
 
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(bitrows);
+        bitrows:: bitrows(void        *entry,
+                          const size_t count,
+                          const size_t width,
+                          const zflux &zhost,
+                          const size_t shift) :
+        impl(count*sizeof(bitrow)),
+        done(0)
+        {
+            assert(entry);
+            assert(count>0);
+            assert(width>0);
+            assert(shift>=width);
+            bitrow *row = static_cast<bitrow *>(impl.block_addr);
+            char   *ptr = static_cast<char   *>(entry);
+            for(done=0;done<count;++done)
+            {
+                new (row) bitrow(ptr,width,zhost);
+                ++row;
+                ptr+=shift;
+            }
+        }
 
-        };
+
     }
 
 }
 
-#endif

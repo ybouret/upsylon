@@ -21,7 +21,16 @@ namespace upsylon
             static const char width[];
             static const char height[];
         };
-        
+
+        class entity : public object, public counted
+        {
+        public:
+            explicit entity() throw();
+            virtual ~entity() throw();
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(entity);
+        };
+
         
     }
 
