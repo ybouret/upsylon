@@ -20,14 +20,27 @@ namespace upsylon
         zfh(h),
         zfw(w),
         pixels( new crux::pixels(stride*h) ),
-        rows( new bitrows( (void*)(pixels->block_addr),w,h,zfw,stride ) )
+        a_rows( new bitrows( (void*)(pixels->block_addr),w,h,zfw,stride ) )
         {
+        }
+
+        bitmap:: bitmap(const bitmap &other) throw() :
+        entity(),
+        area(other),
+        depth(other.depth),
+        stride(other.stride),
+        zfh(other.zfh),
+        zfw(other.zfw),
+        pixels(other.pixels),
+        a_rows(other.a_rows)
+        {
+
         }
 
         std::ostream & operator<<(std::ostream &os, const bitmap &b)
         {
             const area &a = b;
-            os << a << " | depth: " << b.depth << " stride:" << b.stride << " bytes:" << b.pixels->block_size << "+" << b.rows->impl.block_size;
+            os << a << " | depth: " << b.depth << " stride:" << b.stride << " bytes:" << b.pixels->block_size << "+" << b.a_rows->impl.block_size;
             return os;
         }
 

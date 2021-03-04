@@ -22,6 +22,9 @@ Y_UTEST(bitmap)
             {
                 bitmap bmp(w,h,depth);
                 std::cerr << bmp << std::endl;
+                const bitmap cpy = bmp;
+                std::cerr << cpy << std::endl;
+
             }
         }
 

@@ -22,7 +22,11 @@ namespace upsylon
             explicit area(const unit_t W, const unit_t H, const unit_t X=0, const unit_t Y=0);
             area(const area &) throw();
             virtual ~area() throw();
-            
+
+            bool owns(const unit_t x, const unit_t y) const throw();
+            bool owns(const coord p)                  const throw();
+            bool owns(const area &sub)                const throw();
+
             friend std::ostream & operator<<(std::ostream &, const area &);
             
         private:

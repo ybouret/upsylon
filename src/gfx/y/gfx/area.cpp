@@ -28,7 +28,32 @@ namespace upsylon
             os << "[" << a.w << "x" << a.h << "] : " << a.lower << "->" << a.upper << " #" << a.items;
             return os;
         }
-        
+
+        area:: area(const area &a) throw() :
+        w(a.w),
+        h(a.h),
+        items(a.items),
+        lower(a.lower),
+        upper(a.upper)
+        {
+        }
+
+        bool area:: owns(const unit_t x, const unit_t y) const throw()
+        {
+            return (x>=lower.x&&x<=upper.x) && (y>=lower.y&&y<=upper.y);
+        }
+
+        bool area:: owns(const coord p) const throw()
+        {
+            return owns(p.x,p.y);
+        }
+
+        bool area:: owns(const area &sub) const throw()
+        {
+            return owns(sub.lower) && owns(sub.upper);
+        }
+
+
     }
     
 }

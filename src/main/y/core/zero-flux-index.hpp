@@ -29,6 +29,15 @@ namespace upsylon {
                 assert(idmax-idmin+1==range);
             }
 
+            //! copy
+            inline zero_flux_index(const zero_flux_index &z) throw() :
+            range(z.range),
+            idmin(z.idmin),
+            idmax(z.idmax),
+            delta(z.delta)
+            {
+            }
+            
 
             //! cleanup
             inline virtual ~zero_flux_index() throw()
@@ -59,7 +68,7 @@ namespace upsylon {
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(zero_flux_index);
+            Y_DISABLE_ASSIGN(zero_flux_index);
         };
     }
 }
