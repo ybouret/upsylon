@@ -15,7 +15,7 @@ namespace
 
 Y_UTEST(area)
 {
-    area z(0,0, pos(), pos());    std::cerr << "z    = " << z   << std::endl;
+    area z(0,0, pos(), pos());  std::cerr << "z    = " << z   << std::endl;
     area one(1,1,pos(),pos());  std::cerr << "one  = " << one << std::endl;
 
     for(size_t iter=0;iter<16;++iter)
