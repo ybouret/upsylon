@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_GFX_TYPES_INCLUDED
@@ -20,15 +19,6 @@ namespace upsylon
             static unit_t     geqz(const unit_t value, const char *name);
             static const char width[];
             static const char height[];
-        };
-
-        class entity : public object, public counted
-        {
-        public:
-            explicit entity() throw();
-            virtual ~entity() throw();
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(entity);
         };
 
         

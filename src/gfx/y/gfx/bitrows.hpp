@@ -23,14 +23,13 @@ namespace upsylon
                              const size_t shift);
             virtual ~bitrows() throw();
 
-            pixels impl;
+            crux::pixels impl;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bitrows);
-            size_t done;
+            size_t      done;
         };
 
-        typedef arc_ptr<bitrows> shared_rows;
     }
 
 }

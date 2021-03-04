@@ -18,7 +18,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class pblock : public pixels
+        class pblock : public crux::pixels
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases
