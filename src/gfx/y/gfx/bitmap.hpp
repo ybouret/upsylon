@@ -13,6 +13,7 @@ namespace upsylon
     namespace graphic
     {
         typedef arc_ptr<const crux::pixels> shared_pixels;
+        typedef arc_ptr<const bitrows>      shared_rows;
 
         class bitmap : public entity, public area
         {
@@ -22,7 +23,13 @@ namespace upsylon
 
             const size_t        depth;
             const size_t        stride;
+            const zflux         zfh;
+            const zflux         zfw;
             const shared_pixels pixels;
+            const shared_rows   rows;
+            
+            friend std::ostream & operator<<(std::ostream &, const bitmap &);
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bitmap);

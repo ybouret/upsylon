@@ -16,9 +16,12 @@ namespace upsylon
         
         struct checking
         {
-            static unit_t     geqz(const unit_t value, const char *name);
+            static unit_t     geqz(const unit_t value, const char *name); //!< value>=0
+            static unit_t     gtz(const unit_t value, const char *name);  //!< value>0
             static const char width[];
             static const char height[];
+            static const char depth[];
+
         };
 
         

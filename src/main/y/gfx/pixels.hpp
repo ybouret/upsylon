@@ -15,7 +15,7 @@ namespace upsylon
             //______________________________________________________________________
             //
             //
-            //! anonymous pixels
+            //! anonymous pixels for memory handling
             //
             //______________________________________________________________________
             class pixels : public entity

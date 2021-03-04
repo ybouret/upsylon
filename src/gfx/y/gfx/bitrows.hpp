@@ -17,8 +17,8 @@ namespace upsylon
         {
         public:
             explicit bitrows(void        *entry,
-                             const size_t count,
                              const size_t width,
+                             const size_t height,
                              const zflux &zhost,
                              const size_t shift);
             virtual ~bitrows() throw();
