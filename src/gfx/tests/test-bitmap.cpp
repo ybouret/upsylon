@@ -28,8 +28,6 @@ Y_UTEST(bitmap)
 
     }
 
-
-
 }
 Y_UTEST_DONE()
 

@@ -1,5 +1,6 @@
 #include "y/gfx/area.hpp"
 #include "y/exception.hpp"
+#include "y/type/standard.hpp"
 
 namespace upsylon
 {
@@ -52,6 +53,25 @@ namespace upsylon
         {
             return owns(sub.lower) && owns(sub.upper);
         }
+
+        coord area:: coord_of(const unit_t i) const throw()
+        {
+            const core::standard<unit_t>::div_type l =  core::standard<unit_t>::div_call(i,w);
+            return coord( lower.x + l.rem, lower.y+l.quot );
+        }
+
+        unit_t  area:: index_of(coord p) const throw()
+        {
+            p-=lower;
+            return p.x + p.y * w;
+        }
+
+        unit_t  area:: index_of(const unit_t X, const unit_t Y) const throw()
+        {
+            return index_of( coord(X,Y) );
+        }
+
+
 
 
     }
