@@ -31,6 +31,13 @@ namespace upsylon
             }
         }
 
+        bool istream:: is_broken()
+        {
+            return !is_active();
+        }
+
+
+
 #if 0
         void istream:: input(void        *buffer,
                              const size_t buflen,

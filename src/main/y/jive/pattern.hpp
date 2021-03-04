@@ -86,7 +86,7 @@ namespace upsylon {
             const void * const self; //!< derived class pointer
             Pattern *          next; //!< for list
             Pattern *          prev; //!< for list
-        
+
             //__________________________________________________________________
             //
             // helpers
@@ -115,12 +115,12 @@ namespace upsylon {
 
             friend bool operator==(const Pattern &, const Pattern&); //!< uses AreEqual
             friend bool operator!=(const Pattern &, const Pattern&); //!< uses AreEqual
-            static bool AreEqual(const Pattern &, const Pattern &); //!< equality (TODO: optimize!!!)
+            static bool AreEqual(const Pattern &, const Pattern &);  //!< equality (TODO: optimize!!!)
 
         protected:
-            explicit Pattern(const uint32_t) throw();  //!< setup uuid
+            explicit Pattern(const uint32_t)  throw(); //!< setup uuid
             explicit Pattern(const Pattern &) throw(); //!< copy  uuid...
-            size_t         id(ios::ostream&) const;    //!< emit default uuid
+            size_t         id(ios::ostream&)    const; //!< emit default uuid
 
         private:
             Y_DISABLE_ASSIGN(Pattern);

@@ -41,6 +41,9 @@ namespace upsylon
             //
             //------------------------------------------------------------------
 
+            //! not active
+            bool         is_broken();
+
             //! get a new line
             bool gets( string &line );
 
