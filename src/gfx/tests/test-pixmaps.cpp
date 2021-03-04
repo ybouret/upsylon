@@ -1,5 +1,6 @@
 
 #include "y/gfx/pixmaps.hpp"
+#include "y/gfx/bitrow.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "support.hpp"

@@ -11,16 +11,18 @@ namespace upsylon
 
     namespace graphic
     {
-        typedef point2d<unit_t>          coord;
-        typedef core::zero_flux_index<0> zflux;
-        
+
+        typedef point2d<unit_t>          coord; //!< logical coordinate
+        typedef core::zero_flux_index<0> zflux; //!< zero-flux computation
+
+        //! helper to check setups
         struct checking
         {
             static unit_t     geqz(const unit_t value, const char *name); //!< value>=0
             static unit_t     gtz(const unit_t value, const char *name);  //!< value>0
-            static const char width[];
-            static const char height[];
-            static const char depth[];
+            static const char width[];  //!< "width"
+            static const char height[]; //!< "height"
+            static const char depth[];  //!< "depth"
 
         };
 

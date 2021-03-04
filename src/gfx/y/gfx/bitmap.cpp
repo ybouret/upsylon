@@ -1,5 +1,6 @@
 #include "y/gfx/bitmap.hpp"
 #include "y/type/block/zset.hpp"
+#include "y/gfx/bitrow.hpp"
 
 namespace upsylon
 {
@@ -42,6 +43,43 @@ namespace upsylon
             const area &a = b;
             os << a << " | depth: " << b.depth << " stride:" << b.stride << " bytes:" << b.pixels->block_size << "+" << b.a_rows->impl.block_size;
             return os;
+        }
+
+
+        void *bitmap:: row_address(const unit_t y) throw()
+        {
+            assert(y>=0); assert(y<h);
+            return static_cast<bitrow *>(a_rows->impl.block_addr)+y;
+        }
+
+        const void *bitmap:: row_address(const unit_t y) const throw()
+        {
+            assert(y>=0); assert(y<h);
+            return static_cast<bitrow *>(a_rows->impl.block_addr)+y;
+        }
+
+        void *bitmap:: at(const unit_t x, const unit_t y) throw()
+        {
+            assert(owns(x,y));
+            return static_cast<bitrow *>( row_address(y) )->at(x,depth);
+        }
+
+        void *bitmap:: at(const coord p) throw()
+        {
+            assert(owns(p));
+            return at(p.x,p.y);
+        }
+
+        const void *bitmap:: at(const unit_t x, const unit_t y) const throw()
+        {
+            assert(owns(x,y));
+            return static_cast<const bitrow *>( row_address(y) )->at(x,depth);
+        }
+
+        const void *bitmap:: at(const coord p) const throw()
+        {
+            assert(owns(p));
+            return at(p.x,p.y);
         }
 
     }

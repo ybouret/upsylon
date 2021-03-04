@@ -1,6 +1,7 @@
 
 #include "y/gfx/bitrows.hpp"
 #include "y/type/collapse.hpp"
+#include "y/gfx/bitrow.hpp"
 
 namespace upsylon
 {

@@ -10,11 +10,17 @@ namespace upsylon
 
     namespace graphic
     {
+
+        //______________________________________________________________________
+        //
+        //! base class for dynamic objects of graphic
+        //______________________________________________________________________
         class entity : public object, public counted
         {
         public:
-            explicit entity() throw();
-            virtual ~entity() throw();
+            explicit entity() throw(); //!< setup
+            virtual ~entity() throw(); //!< cleanup
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(entity);
         };

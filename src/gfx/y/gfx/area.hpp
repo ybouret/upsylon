@@ -9,26 +9,41 @@ namespace upsylon
 {
     namespace graphic
     {
-        
+        //______________________________________________________________________
+        //
+        //! basic area
+        //______________________________________________________________________
         class area
         {
         public:
-            const unit_t w;
-            const unit_t h;
-            const size_t items;
-            const coord  lower;
-            const coord  upper;
-            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            //! setup
             explicit area(const unit_t W, const unit_t H, const unit_t X=0, const unit_t Y=0);
-            area(const area &) throw();
-            virtual ~area() throw();
+            area(const area &) throw();  //!< copy
+            virtual ~area()    throw();  //!< cleanup
 
-            bool owns(const unit_t x, const unit_t y) const throw();
-            bool owns(const coord p)                  const throw();
-            bool owns(const area &sub)                const throw();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            bool owns(const unit_t x, const unit_t y) const throw();        //!< in area ?
+            bool owns(const coord p)                  const throw();        //!< in area ?
+            bool owns(const area &sub)                const throw();        //!< lower and upper in area
+            friend std::ostream & operator<<(std::ostream &, const area &); //!< display
 
-            friend std::ostream & operator<<(std::ostream &, const area &);
-            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const unit_t w;       //!< width  >= 0
+            const unit_t h;       //!< height >= 0
+            const size_t items;   //!< items = w*h
+            const coord  lower;   //!< lower coordinate
+            const coord  upper;   //!< upper coordinate
+
         private:
             Y_DISABLE_ASSIGN(area);
         };
