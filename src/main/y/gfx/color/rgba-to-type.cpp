@@ -1,4 +1,4 @@
-#include "y/graphic/color/rgba-to-type.hpp"
+#include "y/gfx/color/rgba-to-type.hpp"
 
 
 namespace upsylon

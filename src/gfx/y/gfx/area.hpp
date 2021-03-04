@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    namespace gfx
+    namespace graphic
     {
         
         class area

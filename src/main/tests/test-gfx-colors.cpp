@@ -1,5 +1,5 @@
 
-#include "y/graphic/color/convert.hpp"
+#include "y/gfx/color/convert.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 #include "y/ios/align.hpp"

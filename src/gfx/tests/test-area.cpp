@@ -3,7 +3,7 @@
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
-using namespace gfx;
+using namespace graphic;
 
 namespace
 {

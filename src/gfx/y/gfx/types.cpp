@@ -3,7 +3,7 @@
 
 namespace upsylon
 {
-    namespace gfx
+    namespace graphic
     {
         unit_t checking:: geqz(const unit_t value, const char *name)
         {

@@ -4,7 +4,7 @@
 #ifndef Y_GRAPHIC_PBLOCK_INCLUDED
 #define Y_GRAPHIC_PBLOCK_INCLUDED 1
 
-#include "y/graphic/pixels.hpp"
+#include "y/gfx/pixels.hpp"
 #include "y/type/args.hpp"
 
 namespace upsylon

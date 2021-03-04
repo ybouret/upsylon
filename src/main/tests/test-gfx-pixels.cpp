@@ -1,7 +1,7 @@
 
 
-#include "y/graphic/pblock.hpp"
-#include "y/graphic/color/rgb.hpp"
+#include "y/gfx/pblock.hpp"
+#include "y/gfx/color/rgb.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 

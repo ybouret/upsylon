@@ -355,8 +355,8 @@ namespace upsylon {
 
 #include "y/yap/rational.hpp"
 
-#include "y/graphic/color/rgb.hpp"
-#include "y/graphic/color/yuv.hpp"
+#include "y/gfx/color/rgb.hpp"
+#include "y/gfx/color/yuv.hpp"
 
 namespace upsylon {
 

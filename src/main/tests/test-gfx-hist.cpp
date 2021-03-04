@@ -1,5 +1,5 @@
 
-#include "y/graphic/color/histogram.hpp"
+#include "y/gfx/color/histogram.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;

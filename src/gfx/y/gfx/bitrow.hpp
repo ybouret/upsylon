@@ -7,7 +7,7 @@
 
 namespace upsylon
 {
-    namespace gfx
+    namespace graphic
     {
 
         //! ABI compatible row for bitmap/pixmpa

@@ -1,5 +1,5 @@
 
-#include "y/graphic/color/histogram.hpp"
+#include "y/gfx/color/histogram.hpp"
 #include <cstring>
 
 namespace upsylon

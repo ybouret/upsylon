@@ -1,5 +1,5 @@
 
-#include "y/graphic/pixels.hpp"
+#include "y/gfx/pixels.hpp"
 #include "y/code/base2.hpp"
 #include "y/exception.hpp"
 #include "y/type/block/zset.hpp"

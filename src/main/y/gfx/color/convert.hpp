@@ -3,8 +3,8 @@
 #ifndef Y_COLOR_CONVERT_INCLUDED
 #define Y_COLOR_CONVERT_INCLUDED 1
 
-#include "y/graphic/color/rgb.hpp"
-#include "y/graphic/color/yuv.hpp"
+#include "y/gfx/color/rgb.hpp"
+#include "y/gfx/color/yuv.hpp"
 #include <cmath>
 
 namespace upsylon

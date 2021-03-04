@@ -1,6 +1,6 @@
 
 
-#include "y/graphic/color/convert.hpp"
+#include "y/gfx/color/convert.hpp"
 
 namespace upsylon
 {

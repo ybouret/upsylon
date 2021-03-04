@@ -4,7 +4,7 @@
 namespace upsylon
 {
     
-    namespace gfx
+    namespace graphic
     {
         
         area:: area(const unit_t W, const unit_t H,

@@ -1,6 +1,6 @@
 
 
-#include "y/graphic/color/rgb.hpp"
+#include "y/gfx/color/rgb.hpp"
 
 namespace upsylon {
 

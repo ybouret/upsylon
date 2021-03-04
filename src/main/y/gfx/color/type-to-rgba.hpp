@@ -3,7 +3,7 @@
 #ifndef Y_COLOR_TYPE_TO_RGBA_INCLUDED
 #define Y_COLOR_TYPE_TO_RGBA_INCLUDED 1
 
-#include "y/graphic/color/convert.hpp"
+#include "y/gfx/color/convert.hpp"
 
 namespace upsylon
 {

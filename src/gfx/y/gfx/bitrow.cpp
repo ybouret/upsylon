@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    namespace gfx
+    namespace graphic
     {
         bitrow:: ~bitrow() throw()
         {

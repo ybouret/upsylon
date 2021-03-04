@@ -1,5 +1,5 @@
 
-#include "y/graphic/color/convert.hpp"
+#include "y/gfx/color/convert.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon

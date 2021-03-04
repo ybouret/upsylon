@@ -10,7 +10,7 @@
 namespace upsylon
 {
 
-    namespace gfx
+    namespace graphic
     {
         typedef point2d<unit_t>          coord;
         typedef core::zero_flux_index<0> zflux;

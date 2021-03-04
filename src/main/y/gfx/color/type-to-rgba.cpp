@@ -1,5 +1,5 @@
 
-#include "y/graphic/color/type-to-rgba.hpp"
+#include "y/gfx/color/type-to-rgba.hpp"
 
 namespace upsylon
 {

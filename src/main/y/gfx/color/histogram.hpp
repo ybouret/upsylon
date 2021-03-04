@@ -3,7 +3,7 @@
 #ifndef Y_COLOR_HISTOGRAM_INCLUDED
 #define Y_COLOR_HISTOGRAM_INCLUDED 1
 
-#include "y/graphic/color/convert.hpp"
+#include "y/gfx/color/convert.hpp"
 
 namespace upsylon
 {
