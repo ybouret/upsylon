@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_GFX_BITMAP_INCLUDED
