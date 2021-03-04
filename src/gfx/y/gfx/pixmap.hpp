@@ -20,7 +20,8 @@ namespace upsylon
             typedef pixrow<T> row;
 
             inline explicit pixmap(const unit_t W, const unit_t H) :
-            bitmap(W,H,sizeof(T))
+            bitmap(W,H,sizeof(T)),
+            rows(0)
             {
                 setup();
             }
@@ -30,7 +31,8 @@ namespace upsylon
             }
 
             inline pixmap(const pixmap &other) throw() :
-            bitmap(other)
+            bitmap(other),
+            rows(0)
             {
                 setup();
             }
