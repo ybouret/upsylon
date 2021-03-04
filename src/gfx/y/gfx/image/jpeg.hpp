@@ -17,6 +17,10 @@ namespace upsylon
             virtual ~jpeg_format() throw();
             explicit jpeg_format();
 
+            virtual bitmap load(const string       &file,
+                                const void         *opts,
+                                const rgba_to_type &conv);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(jpeg_format);
         };

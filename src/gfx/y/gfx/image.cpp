@@ -1,76 +1,4 @@
-
 #include "y/gfx/image.hpp"
-#include "y/jive/regexp.hpp"
-#include "y/string/convert.hpp"
-
-
-namespace upsylon
-{
-    namespace graphic
-    {
-
-        image:: format:: ~format() throw()
-        {
-        }
-
-        image:: format:: format() throw()
-        {
-        }
-
-
-    }
-
-}
-
-namespace upsylon
-{
-    namespace graphic
-    {
-
-        image:: named_format:: ~named_format() throw()
-        {
-        }
-
-        static inline
-        string rx_to_format_rx(const char *rx)
-        {
-            string tmp = rx;
-            string_convert::to_lower(tmp);
-            return '(' + tmp + ')' + '&';
-        }
-
-        image::named_format:: named_format(const char *id, const char *rx) :
-        format(),
-        name(id),
-        extension_lowercase_regexp( rx_to_format_rx(rx) ),
-        extension_compiled_pattern( Jive::RegExp(extension_lowercase_regexp,NULL) )
-        {
-
-        }
-
-        bool image::named_format:: matches(const string &ext) const
-        {
-            Jive::Token  token;
-            Jive::Source source( Jive::Module::OpenData(ext) );
-            if( extension_compiled_pattern->accept(token,source) )
-            {
-                return source.is_broken();
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-        const string & image::named_format::key() const throw()
-        {
-            return name;
-        }
-
-    }
-}
-
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -104,6 +32,22 @@ namespace upsylon
                 if( (**it).matches(ext) ) return true;
             }
             return false;
+        }
+
+        bitmap image::io:: load(const string       &file,
+                                const void         *opts,
+                                const rgba_to_type &conv)
+        {
+            const string ext = vfs::get_extension(file);
+            for(named_format::database::iterator it=begin();it!=end();++it)
+            {
+                named_format &fmt = **it;
+                if(fmt.matches(ext))
+                {
+                    return fmt.load(file,opts,conv);
+                }
+            }
+            throw exception("unsupported extension '%s'", *ext);
         }
 
 

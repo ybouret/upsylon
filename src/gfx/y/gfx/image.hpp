@@ -33,6 +33,10 @@ namespace upsylon
                     return matches(ext);
                 }
 
+                virtual bitmap load(const string       &file,
+                                    const void         *opts,
+                                    const rgba_to_type &conv) = 0;
+
             protected:
                 explicit format() throw();
 
@@ -71,9 +75,12 @@ namespace upsylon
             public:
 
                 void define( named_format *fmt );
+                void standard();
 
-                virtual bool matches(const string &ext) const;
-
+                virtual bool   matches(const string &ext) const;
+                virtual bitmap load(const string       &file,
+                                    const void         *opts,
+                                    const rgba_to_type &conv);
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);
                 explicit io();
