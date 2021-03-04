@@ -48,6 +48,8 @@ namespace
                 pxm[j][i] = tmp;
                 const T &src = cpy[j][i];
                 Y_ASSERT( 0== memcmp(&tmp,&src,sizeof(T)) );
+                Y_ASSERT( &src == pxm.at(i,j) );
+
             }
         }
 
