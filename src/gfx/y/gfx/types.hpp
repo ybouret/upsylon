@@ -17,7 +17,7 @@ namespace upsylon
         
         struct checking
         {
-            static unit_t geqz(const unit_t value, const char *name);
+            static unit_t     geqz(const unit_t value, const char *name);
             static const char width[];
             static const char height[];
         };
