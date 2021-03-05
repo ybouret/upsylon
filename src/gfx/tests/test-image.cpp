@@ -10,23 +10,10 @@ using namespace graphic;
 Y_UTEST(image)
 {
     image::io    &img = image::io::instance();
-
-    
-
+ 
     img.standard();
-
-    {
-        image::named_format *jpeg = img("JPEG"); Y_CHECK(jpeg);
-        std::cerr << "jpeg: " << jpeg->extension_lowercase_regexp << std::endl;
-        jpeg->extension_compiled_pattern->graphViz("jpeg.dot");
-    }
-
-    {
-        image::named_format *png = img("PNG"); Y_CHECK(png);
-        std::cerr << "png: " << png->extension_lowercase_regexp << std::endl;
-        png->extension_compiled_pattern->graphViz("png.dot");
-    }
-
+    
+    
 
     if(argc>1)
     {
@@ -37,8 +24,16 @@ Y_UTEST(image)
             Y_CHECK(img.handles(_));
             pixmap<float> pxm = img.load<float>(filename);
             std::cerr << pxm << std::endl;
-            img.save(pxm,"img.jpg","quality=80");
-            img.save(pxm,"img.png","z=9:alpha=true");
+            image::options opts("quality=90");
+            opts.parse("z=9:alpha=true");
+            img.save(pxm,"img-default.jpg");
+            img.save(pxm,"img-options.jpg",&opts);
+            
+            img.save(pxm,"img-default.png");
+            img.save(pxm,"img-options.png",&opts);
+            
+            img.save(pxm,"img-default.tif");
+            
         }
         else
         {

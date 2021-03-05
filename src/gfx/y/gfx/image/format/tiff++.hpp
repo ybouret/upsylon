@@ -25,22 +25,10 @@ namespace upsylon
             class Raster : public _Raster
             {
             public:
-                //! constructor
-                inline explicit Raster() : _Raster(0) {}
-                //! destructor
-                inline virtual ~Raster() throw() {}
-                //! ensure enough dwords
-                inline void startup(const size_t n)
-                {
-                    if( n > size() )
-                    {
-                        _Raster tmp(n);
-                        swap_with(tmp);
-                    }
-                    assert(size()>=n);
-                }
+                virtual ~Raster() throw();    //!< cleanp
+                explicit Raster();            //!< setup
+                void startup(const size_t n); //!< ensure enough dwords
 
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Raster);
             };

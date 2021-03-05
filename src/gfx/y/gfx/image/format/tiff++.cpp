@@ -7,6 +7,28 @@ namespace upsylon
 {
     namespace graphic
     {
+        _TIFF:: Raster:: ~Raster() throw() {}
+        _TIFF:: Raster::  Raster() : _Raster(0) {}
+        
+        void _TIFF:: Raster:: startup(const size_t n)
+        {
+            if( n > size() )
+            {
+                _Raster tmp(n);
+                swap_with(tmp);
+            }
+            assert(size()>=n);
+        }
+
+
+    }
+}
+
+
+namespace upsylon
+{
+    namespace graphic
+    {
         _TIFF:: _TIFF() throw() : handle(0) {}
 
         _TIFF:: ~ _TIFF() throw()

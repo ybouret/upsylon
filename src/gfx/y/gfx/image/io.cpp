@@ -39,13 +39,13 @@ namespace upsylon
             }
 
             bitmap io:: load_(const string       &file,
-                              const void         *opts,
-                              const rgba_to_type &conv)
+                              const options      *opts,
+                              const rgba_to_type &conv) const
             {
                 const string ext = vfs::get_extension(file);
-                for(iterator it=begin();it!=end();++it)
+                for(const_iterator it=begin();it!=end();++it)
                 {
-                    named_format &fmt = **it;
+                    const named_format &fmt = **it;
                     if(fmt.matches(ext))
                     {
                         return fmt.load_(file,opts,conv);
@@ -57,13 +57,13 @@ namespace upsylon
 
             void  io:: save_(const bitmap       &bmp,
                              const string       &file,
-                             const void         *opts,
-                             const type_to_rgba &conv)
+                             const options      *opts,
+                             const type_to_rgba &conv) const
             {
                 const string ext = vfs::get_extension(file);
-                for(iterator it=begin();it!=end();++it)
+                for(const_iterator it=begin();it!=end();++it)
                 {
-                    named_format &fmt = **it;
+                    const named_format &fmt = **it;
                     if(fmt.matches(ext))
                     {
                         fmt.save_(bmp,file,opts,conv);

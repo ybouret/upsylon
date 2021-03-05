@@ -24,14 +24,14 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(jpeg_format);
 
-            virtual bitmap load_(const string       &file,
-                                 const void         *opts,
-                                 const rgba_to_type &conv);
+            virtual bitmap load_(const string         &file,
+                                 const image::options *opts,
+                                 const rgba_to_type   &conv) const;
 
-            virtual void   save_(const bitmap       &bmp,
-                                 const string       &file,
-                                 const void         *opts,
-                                 const type_to_rgba &conv);
+            virtual void   save_(const bitmap         &bmp,
+                                 const string         &file,
+                                 const image::options *opts,
+                                 const type_to_rgba   &conv) const;
         };
 
     }

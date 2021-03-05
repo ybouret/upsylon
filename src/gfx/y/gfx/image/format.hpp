@@ -7,6 +7,7 @@
 #include "y/gfx/color/type-to-rgba.hpp"
 #include "y/gfx/color/rgba-to-type.hpp"
 #include "y/fs/vfs.hpp"
+#include "y/gfx/image/format/options.hpp"
 
 namespace upsylon
 {
@@ -33,14 +34,14 @@ namespace upsylon
             protected:
                 //! load a new bitmap
                 virtual bitmap load_(const string       &file,
-                                     const void         *opts,
-                                     const rgba_to_type &conv) = 0;
+                                     const options      *opts,
+                                     const rgba_to_type &conv) const = 0;
 
                 //! save a bitmap
                 virtual void   save_(const bitmap       &bmp,
                                      const string       &file,
-                                     const void         *opts,
-                                     const type_to_rgba &conv) = 0;
+                                     const options      *opts,
+                                     const type_to_rgba &conv) const = 0;
 
             public:
                 //______________________________________________________________
@@ -59,8 +60,8 @@ namespace upsylon
                 //! load a pixmap
                 template <typename T> inline
                 pixmap<T> load(const string       &file,
-                               const void         *opts=NULL,
-                               const rgba_to_type *conv=NULL)
+                               const options      *opts=NULL,
+                               const rgba_to_type *conv=NULL) const
                 {
                     put_rgba<T> proc;
                     if(!conv)   conv = &proc;
@@ -72,8 +73,8 @@ namespace upsylon
                 template <typename T> inline
                 void save(const pixmap<T>    &pxm,
                           const string       &file,
-                          const void         *opts=NULL,
-                          const type_to_rgba *conv=NULL)
+                          const options      *opts=NULL,
+                          const type_to_rgba *conv=NULL) const
                 {
                     get_rgba<T> proc;
                     if(!conv)   conv = &proc;

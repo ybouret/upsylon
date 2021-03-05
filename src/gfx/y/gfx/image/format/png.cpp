@@ -81,9 +81,9 @@ namespace upsylon
 
 
 
-        bitmap png_format:: load_(const string       &file,
-                                  const void         *,
-                                  const rgba_to_type &conv)
+        bitmap png_format:: load_(const string         &file,
+                                  const image::options *,
+                                  const rgba_to_type   &conv) const
         {
 
             static const char fn[] = "png::load";
@@ -251,10 +251,10 @@ namespace upsylon
         }
 
 
-        void   png_format:: save_(const bitmap       &bmp,
-                                  const string       &file,
-                                  const void         *opts,
-                                  const type_to_rgba &conv)
+        void   png_format:: save_(const bitmap         &bmp,
+                                  const string         &file,
+                                  const image::options *opts,
+                                  const type_to_rgba   &conv) const
         {
             assert(conv.depth()==bmp.depth);
             static const char fn[] = "png::save";
@@ -263,16 +263,15 @@ namespace upsylon
             //
             // open file
             //__________________________________________________________________
-            const image::options options((const char *)opts);
             ios::ocstream        fp(file,false);
 
             //__________________________________________________________________
             //
             // parse options
             //__________________________________________________________________
-            const bool     use_alpha    = options.fetch("alpha"); //Image::Options::Flag(options, "alpha");
+            const bool     use_alpha    = image::options::flag(opts,"alpha");
             const unit_t   num_channels = use_alpha ? 4 : 3;
-            const int      zlevel       = unsigned(options.fetch<size_t>("z",6));
+            const int      zlevel       = unsigned(image::options::get<size_t>(opts,"z",6));
             if(zlevel>=10) throw exception("%s(invalid z=%u)",fn, unsigned(zlevel));
 
             //__________________________________________________________________

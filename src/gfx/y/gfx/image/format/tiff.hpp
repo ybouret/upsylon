@@ -21,33 +21,29 @@ namespace upsylon
             //! destructor
             virtual ~tiff_format() throw();
 
-#if 0
-            //! load a new bitmap
-            virtual Bitmap *load(const string         &filename,
-                                 const size_t          depth,
-                                 RGBA2Data            &proc,
-                                 const Image::Options *params) const;
-
-            //! save a bitmap
-            virtual void    save(const string         &filename,
-                                 const Bitmap         &bmp,
-                                 Data2RGBA            &proc,
-                                 const Image::Options *params) const;
-#endif
-
             //! compile a bitmap to a RGBA raster
             static void compile(_TIFF::Raster        &raster,
                                 const bitmap         &bmp,
-                                type_to_rgba         &proc);
+                                const type_to_rgba   &proc);
             
             //! expand a RGBA raster into a Bitmap
             static void expand(bitmap              &bmp,
                                const _TIFF::Raster &raster,
-                               rgba_to_type        &proc);
+                               const rgba_to_type  &proc);
 
         private:
             mutable _TIFF::Raster raster;
             Y_DISABLE_COPY_AND_ASSIGN(tiff_format);
+            
+            
+            virtual bitmap load_(const string         &file,
+                                 const image::options *opts,
+                                 const rgba_to_type   &conv) const;
+            
+            virtual void   save_(const bitmap         &bmp,
+                                 const string         &file,
+                                 const image::options *opts,
+                                 const type_to_rgba   &conv) const;
         };
 
     }

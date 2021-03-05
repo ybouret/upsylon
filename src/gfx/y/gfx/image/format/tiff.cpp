@@ -6,66 +6,46 @@ namespace upsylon
 {
     namespace graphic
     {
-
+        
         const char tiff_format::ID[] = "TIFF";
-
+        
         tiff_format:: ~tiff_format() throw()  {}
-
-
+        
+        
         tiff_format:: tiff_format() : named_format(ID,"tiff?"), raster() {}
         
-
-
+        
+        
 #define TIFFGetR(abgr) ( (abgr)        & 0xff)
 #define TIFFGetG(abgr) (((abgr) >> 8)  & 0xff)
 #define TIFFGetB(abgr) (((abgr) >> 16) & 0xff)
 #define TIFFGetA(abgr) (((abgr) >> 24) & 0xff)
-
-#if 0
-        Bitmap  *TIFF_Format:: load(const string         &filename,
-                                    const size_t          depth,
-                                    RGBA2Data            &proc,
-                                    const Image::Options *params) const
+        
+        bitmap tiff_format:: load_(const string         &file,
+                                   const image::options *opts,
+                                   const rgba_to_type   &conv) const
         {
             // open file
-            I_TIFF      tiff(filename);
-            tiff.SetDirectory( Image::Options::Get<size_t>(params,"directory",0));
-
+            I_TIFF      tiff(file);
+            tiff.SetDirectory( image::options::get<size_t>(opts,"directory",0));
             
-
+            
+            
             // read raster
             tiff.ReadRBGAImage(raster);
             
             // allocate resources
-            const int        w = tiff.GetWidth();
-            const int        h = tiff.GetHeight();
-            auto_ptr<Bitmap> B = Bitmap::Create(w, h, depth);
-
-
-#if 0
-            // map raster to bitmap
-            const uint32_t *p = *raster;
-            for(int j=0;j<h;++j)
-            {
-                const uint32_t *q = &p[j*w];
-                for(int i=0;i<w;++i)
-                {
-                    const uint32_t P = *(q++);
-                    const rgba     C( TIFFGetR(P), TIFFGetG(P), TIFFGetB(P), TIFFGetA(P));
-                    proc( (void*)(B->stdGet(i,j)),C);
-                }
-            }
-#endif
-            Expand(*B, raster, proc);
-            
-            return B.yield();
+            const int w = tiff.GetWidth();
+            const int h = tiff.GetHeight();
+            bitmap    bmp(w,h,conv.depth());
+            expand(bmp,raster,conv);
+            return bmp;
             
         }
-#endif
         
         void tiff_format:: expand(bitmap              &bmp,
                                   const _TIFF::Raster &raster,
-                                  rgba_to_type        &proc)
+                                  const rgba_to_type  &proc)
         {
             assert(bmp.depth==proc.depth());
             const unit_t w = bmp.w;
@@ -84,31 +64,28 @@ namespace upsylon
             }
         }
         
-
-#if 0
-        void TIFF_Format:: save(const string         &filename,
-                                const Bitmap         &bmp,
-                                Data2RGBA            &proc,
-                                const Image::Options *options) const
+        
+         void  tiff_format:: save_(const bitmap         &bmp,
+                                  const string         &file,
+                                  const image::options *,
+                                  const type_to_rgba   &conv) const
         {
             // open file
-            O_TIFF tiff(filename,false);
-
-
+            O_TIFF tiff(file,false);
+            
+            
             // compile data
-            Compile(raster,bmp, proc);
+            compile(raster,bmp,conv);
             
             // call library
             tiff.WriteRGBAImage(raster, int(bmp.w), int(bmp.h), 0);
-
-            (void) options;
-
+            
+            
         }
-#endif
-
-        void tiff_format:: compile(_TIFF::Raster &raster,
-                                   const bitmap  &bmp,
-                                   type_to_rgba  &proc)
+        
+        void tiff_format:: compile(_TIFF::Raster      &raster,
+                                   const bitmap       &bmp,
+                                   const type_to_rgba &proc)
         {
             assert(bmp.depth==proc.depth());
             const unit_t w = bmp.w;
@@ -133,7 +110,7 @@ namespace upsylon
                 }
             }
         }
-
+        
         
     }
 }

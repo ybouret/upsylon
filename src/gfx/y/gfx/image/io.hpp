@@ -48,14 +48,14 @@ namespace upsylon
 
 
                 virtual bitmap load_(const string       &file,
-                                     const void         *opts,
-                                     const rgba_to_type &conv);
+                                     const options      *opts,
+                                     const rgba_to_type &conv) const;
 
 
                 virtual void   save_(const bitmap       &bmp,
                                      const string       &file,
-                                     const void         *opts,
-                                     const type_to_rgba &conv);
+                                     const options      *opts,
+                                     const type_to_rgba &conv) const;
             };
 
         }
