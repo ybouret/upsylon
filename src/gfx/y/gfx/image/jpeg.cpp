@@ -63,9 +63,9 @@ namespace upsylon
         //typedef zblock<JSAMPLE, memory::dyadic> jsample_buffer;
         typedef pblock<JSAMPLE> jsample_buffer;
         
-        bitmap jpeg_format:: load(const string       &file,
-                                  const void         *opts,
-                                  const rgba_to_type &conv)
+        bitmap jpeg_format:: load_(const string       &file,
+                                   const void         *opts,
+                                   const rgba_to_type &conv)
         {
 
             static const char fn[] = "jpeg::load";
@@ -184,15 +184,137 @@ namespace upsylon
                 jpeg_destroy_decompress(&cinfo);
                 throw;
             }
-            throw exception("not implemented");
         }
 
-        void jpeg_format:: save(const bitmap       &bmp,
-                                const string       &file,
-                                const void         *opts,
-                                const type_to_rgba &conv)
+        void jpeg_format:: save_(const bitmap       &bmp,
+                                 const string       &file,
+                                 const void         *opts,
+                                 const type_to_rgba &conv)
         {
-            throw exception("not implemented");
+
+            static const char fn[] = "jpeg::save";
+            Y_GIANT_LOCK();
+            //(void) options;
+            ios::ocstream fp(file);
+
+            struct jpeg_compress_struct cinfo;
+            struct my_error_mgr         jerr;
+            memset(&cinfo,0,sizeof(cinfo));
+            memset(&jerr,0,sizeof(jerr));
+
+            //__________________________________________________________________
+            //
+            // We set up the normal JPEG error routines,
+            // then override error_exit
+            //__________________________________________________________________
+            cinfo.err = jpeg_std_error(&jerr.pub);
+            jerr.pub.error_exit = my_error_exit;
+
+            //__________________________________________________________________
+            //
+            // We create the compression setup
+            //__________________________________________________________________
+            jpeg_create_compress(&cinfo);
+
+
+
+            //__________________________________________________________________
+            //
+            // Establish the setjmp return context for my_error_exit to use.
+            //__________________________________________________________________
+            if (setjmp(jerr.setjmp_buffer)) {
+                /* If we get here, the JPEG code has signaled an error.
+                 * We need to clean up the JPEG object, close the input file, and return.
+                 */
+                jpeg_destroy_compress(&cinfo);
+                throw exception("%s(failure)",fn);
+            }
+
+            //__________________________________________________________________
+            //
+            // set the output
+            //__________________________________________________________________
+            jpeg_stdio_dest(&cinfo,*fp);
+
+
+            cinfo.image_width      = JDIMENSION(bmp.w);       /* image width and height, in pixels */
+            cinfo.image_height     = JDIMENSION(bmp.h);
+            cinfo.input_components = 3;            /* # of color components per pixel */
+            cinfo.in_color_space   = JCS_RGB;     /* colorspace of input image */
+
+            /* Now use the library's routine to set default compression parameters.
+             * (You must set at least cinfo.in_color_space before calling this,
+             * since the defaults depend on the source color space.)
+             */
+            jpeg_set_defaults(&cinfo);
+
+            int quality = 70;
+            //int quality = int(Image::Options::Get<unit_t>(params,"quality",70));
+            /* Now you can set any non-default parameters you wish to.
+             * Here we just illustrate the use of quality (quantization table) scaling:
+             */
+            jpeg_set_quality(&cinfo, quality, TRUE /* limit to baseline-JPEG values */);
+
+            /* Step 4: Start compressor */
+
+            /* TRUE ensures that we will write a complete interchange-JPEG file.
+             * Pass TRUE unless you are very sure of what you're doing.
+             */
+            jpeg_start_compress(&cinfo, TRUE);
+            /* Here we use the library's state variable cinfo.next_scanline as the
+             * loop counter, so that we don't have to keep track ourselves.
+             * To keep things simple, we pass one scanline per call; you can pass
+             * more if you wish, though.
+             */
+
+            try
+            {
+                jsample_buffer jsbuff(bmp.w*3);
+                JSAMPLE       *buffer         = &jsbuff[0];
+                JSAMPROW       row_pointer[1] = { buffer };
+
+                unit_t       j     = bmp.h - 1;
+                const unit_t depth = bmp.depth;
+                const unit_t width = bmp.w;
+                while (cinfo.next_scanline < cinfo.image_height)
+                {
+                    /* jpeg_write_scanlines expects an array of pointers to scanlines.
+                     * Here the array is only one element long, but you could pass
+                     * more than one scanline at a time if that's more convenient.
+                     */
+                    const uint8_t *p = static_cast<const uint8_t*>(bmp.get_line(j));
+                    for(unit_t i=0;i<width;++i)
+                    {
+                        JSAMPLE       *b  = &buffer[3*i];
+                        const rgba     C  = conv(p);
+                        b[0] = C.r;
+                        b[1] = C.g;
+                        b[2] = C.b;
+                        p += depth;
+                    }
+                    (void) jpeg_write_scanlines(&cinfo, row_pointer, 1);
+                    --j;
+                }
+
+                /* Step 6: Finish compression */
+
+                jpeg_finish_compress(&cinfo);
+                /* After finish_compress, we can close the output file. */
+
+                /* Step 7: release JPEG compression object */
+
+                /* This is an important step since it will release a good deal of memory. */
+                jpeg_destroy_compress(&cinfo);
+
+                // success
+            }
+            catch(...)
+            {
+
+                jpeg_destroy_compress(&cinfo);
+                throw;
+            }
+
         }
 
     }

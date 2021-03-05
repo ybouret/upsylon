@@ -27,9 +27,9 @@ Y_UTEST(image)
         {
             const string _(filename);
             Y_CHECK(img.handles(_));
-            put_rgba<float> conv;
-            pixmap<float>   pxm = img.load(filename, NULL, conv );
+            pixmap<float>   pxm = img.load<float>(filename);
             std::cerr << pxm << std::endl;
+            img.save(pxm,"img.jpg");
         }
         else
         {

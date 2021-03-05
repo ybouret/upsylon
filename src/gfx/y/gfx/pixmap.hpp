@@ -20,6 +20,7 @@ namespace upsylon
             {
                 //! throw exception
                 static void invalid_depth(const unit_t depth, const std::type_info &);
+                
             };
         }
 

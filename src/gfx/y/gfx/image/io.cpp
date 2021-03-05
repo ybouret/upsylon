@@ -38,9 +38,9 @@ namespace upsylon
                 return false;
             }
 
-            bitmap io:: load(const string       &file,
-                             const void         *opts,
-                             const rgba_to_type &conv)
+            bitmap io:: load_(const string       &file,
+                              const void         *opts,
+                              const rgba_to_type &conv)
             {
                 const string ext = vfs::get_extension(file);
                 for(iterator it=begin();it!=end();++it)
@@ -48,17 +48,17 @@ namespace upsylon
                     named_format &fmt = **it;
                     if(fmt.matches(ext))
                     {
-                        return fmt.load(file,opts,conv);
+                        return fmt.load_(file,opts,conv);
                     }
                 }
                 throw exception("%s.load: unsupported extension '%s'", call_sign, *ext);
             }
 
 
-            void  io:: save(const bitmap       &bmp,
-                            const string       &file,
-                            const void         *opts,
-                            const type_to_rgba &conv)
+            void  io:: save_(const bitmap       &bmp,
+                             const string       &file,
+                             const void         *opts,
+                             const type_to_rgba &conv)
             {
                 const string ext = vfs::get_extension(file);
                 for(iterator it=begin();it!=end();++it)
@@ -66,7 +66,7 @@ namespace upsylon
                     named_format &fmt = **it;
                     if(fmt.matches(ext))
                     {
-                        fmt.save(bmp,file,opts,conv);
+                        fmt.save_(bmp,file,opts,conv);
                         return;
                     }
                 }

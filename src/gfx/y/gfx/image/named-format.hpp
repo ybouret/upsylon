@@ -16,6 +16,8 @@ namespace upsylon
 
         namespace image
         {
+            class io; //!< forward declaration
+
             //__________________________________________________________________
             //
             //! named format (a.k.a JPEG, PNG, TIFF...)
@@ -58,6 +60,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(named_format);
+                friend class io;
             };
         }
 
