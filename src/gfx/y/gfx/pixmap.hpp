@@ -60,7 +60,7 @@ namespace upsylon
             }
 
             //! from bitmap
-            inline pixmap(const bitmap &bmp) throw() :
+            inline pixmap(const bitmap &bmp):
             bitmap(bmp),
             rows( mine() )
             {
