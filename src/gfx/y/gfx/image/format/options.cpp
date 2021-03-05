@@ -65,7 +65,7 @@ namespace upsylon
             }
 
 
-            bool options:: flag(const string &name) const
+            bool options:: fetch(const string &name) const
             {
                 const option::pointer *ppOpt = search(name);
                 if(ppOpt)
@@ -81,10 +81,6 @@ namespace upsylon
                 }
             }
 
-            bool options:: flag(const char   *name) const
-            {
-                const string _(name); return flag(_);
-            }
 
         }
 

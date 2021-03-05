@@ -253,7 +253,7 @@ namespace upsylon
              */
             jpeg_set_defaults(&cinfo);
 
-            int quality = int(options.get<unit_t>("quality",70));
+            int quality = int(options.fetch<unit_t>("quality",70));
             //int quality = int(Image::Options::Get<unit_t>(params,"quality",70));
             /* Now you can set any non-default parameters you wish to.
              * Here we just illustrate the use of quality (quantization table) scaling:

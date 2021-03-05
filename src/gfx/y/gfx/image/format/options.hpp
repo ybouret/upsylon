@@ -48,7 +48,7 @@ namespace upsylon
                  - size_t, unit_t, float, double, bool
                  */
                 template <typename T> inline
-                T get(const string &name, const T default_value) const
+                T fetch(const string &name, const T default_value) const
                 {
                     const option::pointer *ppOpt = search(name);
                     if(ppOpt)
@@ -61,15 +61,33 @@ namespace upsylon
                     }
                 }
 
-                //! get with default value wrapper
-                template <typename T> inline
-                T get(const char *name, const T default_value) const
+                bool fetch(const string &name) const; //!< default : false
+
+                template <typename T>
+                static T get(const options *opts, const string &name, const T default_value)
                 {
-                    const string _(name); return get<T>(_,default_value);
+                    return opts ? opts->fetch(name,default_value) : default_value;
                 }
 
-                bool flag(const string &name) const; //!< default : false
-                bool flag(const char   *name) const; //!< flag wrapper
+                template <typename T>
+                static T get(const options *opts, const char *name, const T default_value)
+                {
+                    const string _(name);
+                    return get<T>(opts,_,default_value);
+                }
+
+                static bool flag(const options *opts, const string &name)
+                {
+                    return opts ? opts->fetch(name) : false;
+                }
+
+                static bool flag(const options *opts, const char *name)
+                {
+                    const string _(name);
+                    return flag(opts,_);
+                }
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(options);

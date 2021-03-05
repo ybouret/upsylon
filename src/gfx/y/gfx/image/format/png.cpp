@@ -270,9 +270,9 @@ namespace upsylon
             //
             // parse options
             //__________________________________________________________________
-            const bool     use_alpha    = options.flag("alpha"); //Image::Options::Flag(options, "alpha");
+            const bool     use_alpha    = options.fetch("alpha"); //Image::Options::Flag(options, "alpha");
             const unit_t   num_channels = use_alpha ? 4 : 3;
-            const int      zlevel       = unsigned(options.get<size_t>("z",6));
+            const int      zlevel       = unsigned(options.fetch<size_t>("z",6));
             if(zlevel>=10) throw exception("%s(invalid z=%u)",fn, unsigned(zlevel));
 
             //__________________________________________________________________
