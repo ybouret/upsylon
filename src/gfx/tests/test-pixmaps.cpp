@@ -35,22 +35,30 @@ namespace
         std::cerr << "pixmap<" << type_name_of<T>() << ">" << std::endl;
         Y_CHECK(sizeof(bitrow)==sizeof(pixrow<T>));
 
-        pixmap<T>       pxm( 1+alea.leq(1000), 1+alea.leq(1000) );
-        const pixmap<T> cpy = pxm;
-        std::cerr << pxm << std::endl;
-        std::cerr << cpy << std::endl;
-
-        for(unit_t j=0;j<pxm.h;++j)
         {
-            for(unit_t i=0;i<pxm.w;++i)
-            {
-                const T tmp = support::get<T>();
-                pxm[j][i] = tmp;
-                const T &src = cpy[j][i];
-                Y_ASSERT( 0== memcmp(&tmp,&src,sizeof(T)) );
-                Y_ASSERT( &src == pxm.at(i,j) );
+            pixmap<T>       pxm( 1+alea.leq(1000), 1+alea.leq(1000) );
+            const pixmap<T> cpy = pxm;
+            std::cerr << pxm << std::endl;
+            std::cerr << cpy << std::endl;
 
+            for(unit_t j=0;j<pxm.h;++j)
+            {
+            for(unit_t i=0;i<pxm.w;++i)
+                {
+                    const T tmp = support::get<T>();
+                    pxm[j][i] = tmp;
+                    const T &src = cpy[j][i];
+                    Y_ASSERT( 0== memcmp(&tmp,&src,sizeof(T)) );
+                    Y_ASSERT( &src == pxm.at(i,j) );
+
+                }
             }
+        }
+
+        {
+            const unit_t depth = sizeof(T);
+            bitmap       bmp(100,200,depth);
+            pixmap<T>    pxm = bmp;
         }
         
         std::cerr << std::endl;

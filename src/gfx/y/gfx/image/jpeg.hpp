@@ -11,6 +11,7 @@ namespace upsylon
     namespace graphic
     {
 
+        //! using jpeg
         class jpeg_format : public image::named_format
         {
         public:

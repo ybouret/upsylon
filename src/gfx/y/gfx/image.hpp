@@ -16,14 +16,26 @@ namespace upsylon
     namespace graphic
     {
 
-        //! image architecture
+        //______________________________________________________________________
+        //
+        //
+        //! image API
+        //
+        //______________________________________________________________________
         struct image
         {
 
+            //__________________________________________________________________
+            //
             //! format object: match/load/save
+            //__________________________________________________________________
             class format : public entity
             {
             public:
+                //______________________________________________________________
+                //
+                // virtual interface
+                //______________________________________________________________
 
                 virtual     ~format() throw();                     //!< cleanup
                 virtual bool matches(const string &ext) const = 0; //!< exact extension math
@@ -32,6 +44,11 @@ namespace upsylon
                 virtual bitmap load(const string       &file,
                                     const void         *opts,
                                     const rgba_to_type &conv) = 0;
+
+                //______________________________________________________________
+                //
+                // non-virtual interface
+                //______________________________________________________________
 
                 //! handles file if matches extension
                 template <typename FILENAME>
@@ -48,7 +65,10 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(format);
             };
 
+            //__________________________________________________________________
+            //
             //! named format (a.k.a JPEG, PNG, TIFF...)
+            //__________________________________________________________________
             class named_format : public format
             {
             public:

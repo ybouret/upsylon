@@ -6,11 +6,22 @@
 
 #include "y/gfx/bitmap.hpp"
 #include "y/gfx/pixrow.hpp"
+#include <typeinfo>
 
 namespace upsylon
 {
     namespace graphic
     {
+
+        namespace crux
+        {
+            //! common stuff for pixmaps
+            struct pixmap
+            {
+                //! throw exception
+                static void invalid_depth(const unit_t depth, const std::type_info &);
+            };
+        }
 
         //______________________________________________________________________
         //
@@ -34,24 +45,26 @@ namespace upsylon
 
             //! setup
             inline explicit pixmap(const unit_t W, const unit_t H) :
-            bitmap(W,H,sizeof(T)),
-            rows(0)
+            bitmap(W,H,sizeof(T)), rows( mine() )
             {
-                setup();
             }
 
             //! cleanup
-            inline virtual ~pixmap() throw()
-            {
-                rows = 0;
-            }
+            inline virtual ~pixmap() throw() { rows = 0; }
 
             //! shared copy
-            inline pixmap(const pixmap &other) throw() :
-            bitmap(other),
-            rows(0)
+            inline pixmap(const pixmap &pxm) throw() :
+            bitmap(pxm), rows( mine() )
             {
-                setup();
+                
+            }
+
+            //! from bitmap
+            inline pixmap(const bitmap &bmp) throw() :
+            bitmap(bmp),
+            rows( mine() )
+            {
+                if( depth != 0) crux::pixmap::invalid_depth(depth, typeid(T) );
             }
 
             //__________________________________________________________________
@@ -90,8 +103,8 @@ namespace upsylon
             row *rows;
 
             Y_DISABLE_ASSIGN(pixmap);
-            inline void setup() throw() { rows = static_cast<row *>(a_rows->impl.block_addr); }
 
+            inline row * mine() throw() { return static_cast<row *>(a_rows->impl.block_addr); }
 
         };
     }

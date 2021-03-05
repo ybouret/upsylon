@@ -39,8 +39,8 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            const size_t        depth;  //!< bytes per pixel
-            const size_t        stride; //!< stride
+            const unit_t        depth;  //!< bytes per pixel
+            const unit_t        stride; //!< stride
             const zflux         zfh;    //!< zero flux/h
             const zflux         zfw;    //!< zero flux/w
             const shared_pixels pixels; //!< raw memory
