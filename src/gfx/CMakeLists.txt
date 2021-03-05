@@ -27,10 +27,16 @@ SET(image_srcs ${image_decl} ${image_code})
 SOURCE_GROUP( gfx/image FILES ${image_srcs} )
 INSTALL( FILES ${image_decl} DESTINATION include/y/gfx/image )
 
+FILE(GLOB image_format_decl y/gfx/image/format/*.hpp)
+FILE(GLOB image_format_code y/gfx/image/format/*.cpp)
+SET(image_format_srcs ${image_format_decl} ${image_format_code})
+SOURCE_GROUP( gfx/image/format FILES ${image_format_srcs} )
+INSTALL( FILES ${image_format_decl} DESTINATION include/y/gfx/image/format )
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
-${image_srcs}
+${image_srcs} ${image_format_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )

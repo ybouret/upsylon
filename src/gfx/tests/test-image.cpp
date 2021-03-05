@@ -1,6 +1,5 @@
 
 
-#include "y/gfx/image/jpeg.hpp"
 #include "y/gfx/image/io.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
@@ -12,12 +11,13 @@ Y_UTEST(image)
 {
     image::io    &img = image::io::instance();
 
-    jpeg_format *jpeg= new jpeg_format();
-    img.define(jpeg);
+    
 
     img.standard();
 
-    std::cerr << "jpeg.rx=" << jpeg->extension_lowercase_regexp << std::endl;
+    image::named_format *jpeg = img("JPEG"); Y_CHECK(jpeg);
+
+    std::cerr << "jpeg: " << jpeg->extension_lowercase_regexp << std::endl;
     jpeg->extension_compiled_pattern->graphViz("jpeg.dot");
 
     if(argc>1)

@@ -15,6 +15,7 @@ namespace upsylon
         class jpeg_format : public image::named_format
         {
         public:
+            static const char ID[]; //!< "JPEG"
             virtual ~jpeg_format() throw();
             explicit jpeg_format();
 

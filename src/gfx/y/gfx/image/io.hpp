@@ -32,6 +32,12 @@ namespace upsylon
 
                 virtual bool   matches(const string &ext) const;
 
+                template <typename ID>
+                named_format * operator()(const ID &id ) throw()
+                {
+                    named_format::pointer *ptr = search(id);
+                    return ptr ? & (**ptr) : NULL;
+                }
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);

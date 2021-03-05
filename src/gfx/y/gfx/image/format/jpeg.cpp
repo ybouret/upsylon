@@ -1,5 +1,5 @@
 
-#include "y/gfx/image/jpeg.hpp"
+#include "y/gfx/image/format/jpeg.hpp"
 #include "y/gfx/pblock.hpp"
 #include "y/exception.hpp"
 #include "y/memory/allocator/dyadic.hpp"
@@ -24,8 +24,10 @@ namespace upsylon
         {
         }
 
+        const char jpeg_format::ID[] = "JPEG";
+
         jpeg_format:: jpeg_format() :
-        image::named_format( "JPG", "jpe?g" )
+        image::named_format( ID, "jpe?g" )
         {
         }
 

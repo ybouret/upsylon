@@ -1,7 +1,7 @@
 
 
 #include "y/gfx/image/io.hpp"
-#include "y/gfx/image/jpeg.hpp"
+#include "y/gfx/image/format/jpeg.hpp"
 
 namespace upsylon
 {
