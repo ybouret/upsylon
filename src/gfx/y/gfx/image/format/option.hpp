@@ -16,24 +16,49 @@ namespace upsylon
         namespace image
         {
 
+            //__________________________________________________________________
+            //
+            //! name=value pair for format options
+            //__________________________________________________________________
             class option : public entity
             {
             public:
-                typedef intr_ptr<string,option> pointer;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef intr_ptr<string,option> pointer; //!< alias
 
-                const string name;
-                string       value;
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                //! setup
                 template <typename NAME, typename VALUE>
                 inline explicit option(const NAME &n, const VALUE &v) :
                 name(n), value(v)
                 {
                 }
 
-                virtual      ~option() throw();
-                const string &key() const throw();
+                //! cleanup
+                virtual ~option() throw();
 
-                friend std::ostream & operator<<(std::ostream &, const option&);
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                const  string       &key() const throw();                        //!< for pointer
+                friend std::ostream & operator<<(std::ostream &, const option&); //!< display
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                const string name;  //!< option name
+                string       value; //!< option value
+
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(option);

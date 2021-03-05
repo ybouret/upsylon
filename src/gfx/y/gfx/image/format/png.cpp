@@ -1,5 +1,6 @@
 
 #include "y/gfx/image/format/png.hpp"
+#include "y/gfx/image/format/options.hpp"
 #include "y/gfx/pblock.hpp"
 #include "y/exception.hpp"
 
@@ -262,15 +263,16 @@ namespace upsylon
             //
             // open file
             //__________________________________________________________________
-            ios::ocstream fp(file,false);
+            const image::options options((const char *)opts);
+            ios::ocstream        fp(file,false);
 
             //__________________________________________________________________
             //
             // parse options
             //__________________________________________________________________
-            const bool     use_alpha    = true; //Image::Options::Flag(options, "alpha");
+            const bool     use_alpha    = options.flag("alpha"); //Image::Options::Flag(options, "alpha");
             const unit_t   num_channels = use_alpha ? 4 : 3;
-            const int      zlevel       = 6; //unsigned(Image::Options::Get<size_t>(options,6));
+            const int      zlevel       = unsigned(options.get<size_t>("z",6));
             if(zlevel>=10) throw exception("%s(invalid z=%u)",fn, unsigned(zlevel));
 
             //__________________________________________________________________

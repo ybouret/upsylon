@@ -35,10 +35,10 @@ Y_UTEST(image)
         {
             const string _(filename);
             Y_CHECK(img.handles(_));
-            pixmap<float>   pxm = img.load<float>(filename);
+            pixmap<float> pxm = img.load<float>(filename);
             std::cerr << pxm << std::endl;
-            img.save(pxm,"img.jpg");
-            img.save(pxm,"img.png");
+            img.save(pxm,"img.jpg","quality=80");
+            img.save(pxm,"img.png","z=9:alpha=true");
         }
         else
         {

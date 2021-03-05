@@ -1,17 +1,19 @@
 
 #include "y/gfx/image/format/jpeg.hpp"
+#include "y/gfx/image/format/options.hpp"
+
 #include "y/gfx/pblock.hpp"
 #include "y/exception.hpp"
+
+#include "y/ios/icstream.hpp"
+#include "y/ios/ocstream.hpp"
 
 extern "C" {
 #include "y/jpeg/jpeglib.h"
 }
 
-#include <cstring>
-#include "y/ios/icstream.hpp"
-#include "y/ios/ocstream.hpp"
-#include "y/exception.hpp"
 #include <setjmp.h>
+#include <cstring>
 
 
 namespace upsylon
@@ -65,7 +67,7 @@ namespace upsylon
         typedef pblock<JSAMPLE> jsample_buffer;
         
         bitmap jpeg_format:: load_(const string       &file,
-                                   const void         *opts,
+                                   const void         *,
                                    const rgba_to_type &conv)
         {
 
@@ -196,8 +198,9 @@ namespace upsylon
             assert(conv.depth()==bmp.depth);
             static const char fn[] = "jpeg::save";
             Y_GIANT_LOCK();
-            //(void) options;
-            ios::ocstream fp(file);
+
+            image::options options((const char*)opts);
+            ios::ocstream  fp(file);
 
             struct jpeg_compress_struct cinfo;
             struct my_error_mgr         jerr;
@@ -250,7 +253,7 @@ namespace upsylon
              */
             jpeg_set_defaults(&cinfo);
 
-            int quality = 70;
+            int quality = int(options.get<unit_t>("quality",70));
             //int quality = int(Image::Options::Get<unit_t>(params,"quality",70));
             /* Now you can set any non-default parameters you wish to.
              * Here we just illustrate the use of quality (quantization table) scaling:

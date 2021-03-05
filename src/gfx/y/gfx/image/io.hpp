@@ -32,6 +32,7 @@ namespace upsylon
 
                 virtual bool   matches(const string &ext) const;
 
+                //! look for a given named format
                 template <typename ID>
                 named_format * operator()(const ID &id ) throw()
                 {

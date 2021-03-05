@@ -3,6 +3,7 @@
 #include "y/string/tokenizer.hpp"
 #include "y/sequence/list.hpp"
 #include "y/exception.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,16 @@ namespace upsylon
 
             options:: options() : options_()
             {
+            }
+
+            options:: options(const string &opts) : options_()
+            {
+                parse(opts);
+            }
+
+            options:: options(const char *opts) : options_()
+            {
+                if(opts) parse(opts);
             }
 
             options:: ~options() throw()
@@ -52,6 +63,29 @@ namespace upsylon
                 const option::pointer opt = new option(name,value);
                 if(!insert(opt)) throw exception("%s multiple entry '%s'",fn,*name);
             }
+
+
+            bool options:: flag(const string &name) const
+            {
+                const option::pointer *ppOpt = search(name);
+                if(ppOpt)
+                {
+                    const string &value = (**ppOpt).value;
+                    if("1" == value || "true"  == value || "TRUE"  == value) return true;
+                    if("0" == value || "false" == value || "FALSE" == value) return false;
+                    throw exception("%sinvalid flag value='%s'",fn,*value);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            bool options:: flag(const char   *name) const
+            {
+                const string _(name); return flag(_);
+            }
+
         }
 
     }

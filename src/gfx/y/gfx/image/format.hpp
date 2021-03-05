@@ -56,6 +56,7 @@ namespace upsylon
                     return matches(ext);
                 }
 
+                //! load a pixmap
                 template <typename T> inline
                 pixmap<T> load(const string       &file,
                                const void         *opts=NULL,
@@ -67,6 +68,7 @@ namespace upsylon
                     return pxm;
                 }
 
+                //! save a pixmap
                 template <typename T> inline
                 void save(const pixmap<T>    &pxm,
                           const string       &file,
