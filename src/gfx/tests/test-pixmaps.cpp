@@ -8,24 +8,27 @@
 using namespace upsylon;
 using namespace graphic;
 
-template <>
-inline rgb support:: get<rgb>()
+namespace
 {
-    return rgb( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
-}
+    template <>
+    inline rgb support:: get<rgb>()
+    {
+        return rgb( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
+    }
 
-template <>
-inline rgba support:: get<rgba>()
-{
-    return rgb( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
-}
+    template <>
+    inline rgba support:: get<rgba>()
+    {
+        return rgb( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
+    }
 
-template <>
-inline YUV support:: get<YUV>()
-{
-    return YUV( alea.to<float>(), alea.range(YUV::Umin,YUV::Umax), alea.range(YUV::Vmin,YUV::Vmax) );
-}
+    template <>
+    inline YUV support:: get<YUV>()
+    {
+        return YUV( alea.to<float>(), alea.range(YUV::Umin,YUV::Umax), alea.range(YUV::Vmin,YUV::Vmax) );
+    }
 
+}
 
 namespace
 {
@@ -43,7 +46,7 @@ namespace
 
             for(unit_t j=0;j<pxm.h;++j)
             {
-            for(unit_t i=0;i<pxm.w;++i)
+                for(unit_t i=0;i<pxm.w;++i)
                 {
                     const T tmp = support::get<T>();
                     pxm[j][i] = tmp;
