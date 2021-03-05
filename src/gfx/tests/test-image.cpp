@@ -15,10 +15,18 @@ Y_UTEST(image)
 
     img.standard();
 
-    image::named_format *jpeg = img("JPEG"); Y_CHECK(jpeg);
+    {
+        image::named_format *jpeg = img("JPEG"); Y_CHECK(jpeg);
+        std::cerr << "jpeg: " << jpeg->extension_lowercase_regexp << std::endl;
+        jpeg->extension_compiled_pattern->graphViz("jpeg.dot");
+    }
 
-    std::cerr << "jpeg: " << jpeg->extension_lowercase_regexp << std::endl;
-    jpeg->extension_compiled_pattern->graphViz("jpeg.dot");
+    {
+        image::named_format *png = img("PNG"); Y_CHECK(png);
+        std::cerr << "png: " << png->extension_lowercase_regexp << std::endl;
+        png->extension_compiled_pattern->graphViz("png.dot");
+    }
+
 
     if(argc>1)
     {

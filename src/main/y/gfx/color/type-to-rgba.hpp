@@ -42,7 +42,7 @@ namespace upsylon
         public:
             inline virtual       ~get_rgba() throw() {}                       //!< cleanup
             inline explicit       get_rgba() throw() : type_to_rgba() {}      //!< setup
-            inline virtual size_t depth() const throw() { return sizeof(T); } //!< source depth
+            inline virtual unit_t depth() const throw() { return sizeof(T); } //!< source depth
 
             //! use generic functions
             inline virtual rgba   operator()(const void *addr) const throw()

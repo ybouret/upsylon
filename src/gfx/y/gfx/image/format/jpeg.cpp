@@ -2,7 +2,6 @@
 #include "y/gfx/image/format/jpeg.hpp"
 #include "y/gfx/pblock.hpp"
 #include "y/exception.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 
 extern "C" {
 #include "y/jpeg/jpeglib.h"
@@ -194,6 +193,7 @@ namespace upsylon
                                  const type_to_rgba &conv)
         {
 
+            assert(conv.depth()==bmp.depth);
             static const char fn[] = "jpeg::save";
             Y_GIANT_LOCK();
             //(void) options;

@@ -2,6 +2,7 @@
 
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/image/format/jpeg.hpp"
+#include "y/gfx/image/format/png.hpp"
 
 namespace upsylon
 {
@@ -19,6 +20,7 @@ namespace upsylon
             void io:: standard()
             {
                 Y_IMAGE_IO(jpeg);
+                Y_IMAGE_IO(png);
             }
         }
 

@@ -79,7 +79,7 @@ namespace upsylon
         {
         public:
             virtual       ~converter() throw();       //!< cleanup
-            virtual size_t depth() const throw() = 0; //!< target/source depth
+            virtual unit_t depth() const throw() = 0; //!< target/source depth
 
         protected:
             explicit       converter() throw();       //!< setup

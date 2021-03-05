@@ -44,7 +44,7 @@ namespace upsylon
         public:
             explicit       put_rgba() throw() : rgba_to_type() {}             //!< setup
             virtual       ~put_rgba() throw() {}                              //!< cleanup
-            inline virtual size_t depth() const throw() { return sizeof(T); } //!< target depth
+            inline virtual unit_t depth() const throw() { return sizeof(T); } //!< target depth
 
             //! use generic functions
             inline virtual void operator()(void *addr, const rgba c) const throw()
