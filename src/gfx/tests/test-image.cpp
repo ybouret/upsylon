@@ -38,6 +38,7 @@ Y_UTEST(image)
             pixmap<float>   pxm = img.load<float>(filename);
             std::cerr << pxm << std::endl;
             img.save(pxm,"img.jpg");
+            img.save(pxm,"img.png");
         }
         else
         {

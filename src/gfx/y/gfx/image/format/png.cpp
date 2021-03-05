@@ -271,7 +271,7 @@ namespace upsylon
             const bool     use_alpha    = true; //Image::Options::Flag(options, "alpha");
             const unit_t   num_channels = use_alpha ? 4 : 3;
             const int      zlevel       = 6; //unsigned(Image::Options::Get<size_t>(options,6));
-            if(zlevel>=10) throw exception("%sinvalid z=%u",fn, unsigned(zlevel));
+            if(zlevel>=10) throw exception("%s(invalid z=%u)",fn, unsigned(zlevel));
 
             //__________________________________________________________________
             //
