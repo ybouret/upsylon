@@ -1,6 +1,7 @@
 
 
 #include "y/gfx/image/jpeg.hpp"
+#include "y/gfx/image/io.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/spec.hpp"
 

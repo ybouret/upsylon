@@ -4,7 +4,7 @@
 #ifndef Y_GFX_IMAGE_JPEG_INCLUDED
 #define Y_GFX_IMAGE_JPEG_INCLUDED 1
 
-#include "y/gfx/image.hpp"
+#include "y/gfx/image/named-format.hpp"
 
 namespace upsylon
 {

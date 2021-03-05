@@ -61,10 +61,9 @@ namespace upsylon
 
             //! from bitmap
             inline pixmap(const bitmap &bmp):
-            bitmap(bmp),
-            rows( mine() )
+            bitmap(bmp), rows( mine() )
             {
-                if( depth != 0) crux::pixmap::invalid_depth(depth, typeid(T) );
+                if( depth != sizeof(T) ) crux::pixmap::invalid_depth(depth, typeid(T) );
             }
 
             //__________________________________________________________________

@@ -1,18 +1,21 @@
-#include "y/gfx/image.hpp"
+#include "y/gfx/image/format.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
-
-        image:: format:: ~format() throw()
+        namespace image
         {
-        }
 
-        image:: format:: format() throw()
-        {
-        }
+            format:: ~format() throw()
+            {
+            }
 
+            format:: format() throw()
+            {
+            }
+
+        }
 
     }
 
