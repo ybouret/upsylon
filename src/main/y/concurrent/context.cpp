@@ -61,7 +61,7 @@ namespace upsylon
 
             char *str = (char *)label;
             memset(str,0,sizeof(label));
-            const unsigned width  = (1+setw) * 2; // digits + '.' + digits + 0
+            const size_t width  = (1+setw) * 2; // digits + '.' + digits + 0
             if(width>max_width)
             {
                 fatal_error("concurrent::context(size is too big)");
