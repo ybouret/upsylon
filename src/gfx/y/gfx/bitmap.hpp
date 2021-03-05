@@ -58,7 +58,9 @@ namespace upsylon
             const void *at(const coord p)                  const throw(); //!< address (p.x,p.y)
 
             void       *row_address(const unit_t y)       throw(); //!< address of row[y]
-            const void *row_address(const unit_t y) const throw(); //!< address of row[y]
+            const void *row_address(const unit_t y) const throw(); //!< address of row[y], const
+            void       *get_line(const unit_t y)          throw(); //!< address of row[y][0]
+            const void *get_line(const unit_t y)    const throw(); //!< address of row[y][0], const
 
         private:
             Y_DISABLE_ASSIGN(bitmap);

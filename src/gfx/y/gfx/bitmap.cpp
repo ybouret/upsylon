@@ -58,6 +58,16 @@ namespace upsylon
             return static_cast<bitrow *>(a_rows->impl.block_addr)+y;
         }
 
+        void * bitmap:: get_line(const unit_t y) throw()
+        {
+            return (static_cast<bitrow *>(a_rows->impl.block_addr)+y)->p;
+        }
+
+        const void * bitmap:: get_line(const unit_t y) const throw()
+        {
+            return (static_cast<const bitrow *>(a_rows->impl.block_addr)+y)->p;
+        }
+
         void *bitmap:: at(const unit_t x, const unit_t y) throw()
         {
             assert(owns(x,y));

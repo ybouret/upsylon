@@ -27,8 +27,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bitrow);
-            void *       p; //!< address
         public:
+            void        *p; //!< address
             const unit_t w; //!< width
             const zflux &z; //!< zero flux for width
         };
