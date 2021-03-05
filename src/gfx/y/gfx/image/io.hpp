@@ -26,14 +26,22 @@ namespace upsylon
             public named_format::database
             {
             public:
-
+                
                 void define( named_format *fmt ); //!< insert, taken care of
                 void standard();                  //!< insert undefined standard
 
                 virtual bool   matches(const string &ext) const;
+                
                 virtual bitmap load(const string       &file,
                                     const void         *opts,
                                     const rgba_to_type &conv);
+
+
+                virtual void   save(const bitmap       &bmp,
+                                    const string       &file,
+                                    const void         *opts,
+                                    const type_to_rgba &conv);
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(io);
                 explicit io();

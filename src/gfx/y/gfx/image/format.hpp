@@ -35,6 +35,12 @@ namespace upsylon
                                     const void         *opts,
                                     const rgba_to_type &conv) = 0;
 
+                //! save a bitmap
+                virtual void   save(const bitmap       &bmp,
+                                    const string       &file,
+                                    const void         *opts,
+                                    const type_to_rgba &conv) = 0;
+
                 //______________________________________________________________
                 //
                 // non-virtual interface

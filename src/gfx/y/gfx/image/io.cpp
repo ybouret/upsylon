@@ -11,8 +11,7 @@ namespace upsylon
 
         namespace image
         {
-            io:: io() :
-            named_format::database(8,as_capacity)
+            io:: io() : named_format::database(8,as_capacity)
             {
             }
 
@@ -32,7 +31,7 @@ namespace upsylon
 
             bool  io:: matches(const string &ext) const
             {
-                for(named_format::database::const_iterator it=begin();it!=end();++it)
+                for(const_iterator it=begin();it!=end();++it)
                 {
                     if( (**it).matches(ext) ) return true;
                 }
@@ -40,11 +39,11 @@ namespace upsylon
             }
 
             bitmap io:: load(const string       &file,
-                                    const void         *opts,
-                                    const rgba_to_type &conv)
+                             const void         *opts,
+                             const rgba_to_type &conv)
             {
                 const string ext = vfs::get_extension(file);
-                for(named_format::database::iterator it=begin();it!=end();++it)
+                for(iterator it=begin();it!=end();++it)
                 {
                     named_format &fmt = **it;
                     if(fmt.matches(ext))
@@ -52,39 +51,32 @@ namespace upsylon
                         return fmt.load(file,opts,conv);
                     }
                 }
-                throw exception("%s: unsupported extension '%s'", call_sign, *ext);
+                throw exception("%s.load: unsupported extension '%s'", call_sign, *ext);
             }
 
 
-        }
-    }
-
-}
-
-
-
-#include "y/gfx/image/io.hpp"
-#include "y/gfx/image/jpeg.hpp"
-
-namespace upsylon
-{
-
-    namespace graphic
-    {
-
-        namespace image
-        {
-#define Y_IMAGE_IO(NAME) do {                          \
-/**/ auto_ptr<named_format> fmt = new NAME##_format(); \
-/**/ if( !search(fmt->name) ) define( fmt.yield() );   \
-} while(false)
-
-            void io:: standard()
+            void  io:: save(const bitmap       &bmp,
+                            const string       &file,
+                            const void         *opts,
+                            const type_to_rgba &conv)
             {
-                Y_IMAGE_IO(jpeg);
+                const string ext = vfs::get_extension(file);
+                for(iterator it=begin();it!=end();++it)
+                {
+                    named_format &fmt = **it;
+                    if(fmt.matches(ext))
+                    {
+                        fmt.save(bmp,file,opts,conv);
+                        return;
+                    }
+                }
+                throw exception("%s.save: unsupported extension '%s'", call_sign, *ext);
             }
-        }
 
+
+        }
     }
 
 }
+
+
