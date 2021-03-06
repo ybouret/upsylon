@@ -69,8 +69,10 @@ namespace upsylon
             void ReadRBGAImage(Raster &raster);
 
             //! directly count the number of directories
-            static size_t CountDirectoriesOf( const string &filename );
-
+            static size_t CountDirectoriesOf(const string &);
+            static size_t WidthOf(const string &);  //!< extract width
+            static size_t HeightOf(const string &); //!< extract height
+            
         private:            
             Y_DISABLE_COPY_AND_ASSIGN(I_TIFF);
         };

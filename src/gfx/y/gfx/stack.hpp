@@ -17,7 +17,9 @@ namespace upsylon
         {
             struct stack
             {
-                static void check_tiff(const string &filename);
+                static void   check_tiff_handles(const string &filename);
+                static void   check_same_metrics(const area &, I_TIFF &, const string &filename);
+                static size_t min_directories(const size_t nmax, const string &filename);
             };
         }
         //______________________________________________________________________
@@ -54,9 +56,55 @@ namespace upsylon
             //! cleanup
             inline virtual ~stack() throw()
             {
-            }            
+            }
+            
+            //! load file
+            explicit stack(const string  &filename,
+                           rgba_to_type   *conv = 0,
+                           const size_t    nmax = 0) :
+            area( I_TIFF::WidthOf(filename), I_TIFF::HeightOf(filename)),
+            slots_type( crux::stack::min_directories(nmax,filename) )
+            {
+                const size_t loaded = load_tiff(filename,conv);
+                (void)loaded;
+                assert(loaded==this->size());
+            }
             
             
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            
+            //! load tiff(s)
+            inline size_t load_tiff(const string  &filename,
+                                    rgba_to_type  *conv    = 0)
+            {
+                crux::stack::check_tiff_handles(filename);
+                put_rgba<T>   proc;
+                if(!conv)     conv     = &proc;
+                const size_t  num_dirs = I_TIFF::CountDirectoriesOf(filename);
+                const size_t  max_dirs = min_of(num_dirs,this->size());
+                
+                _TIFF::Raster raster;
+                I_TIFF        tiff(filename);
+                crux::stack::check_same_metrics(*this,tiff,filename);
+                for(size_t i=0;i<max_dirs;++i)
+                {
+                    tiff.SetDirectory(i);
+                    tiff.ReadRBGAImage(raster);
+                    tiff_format::expand((*this)[i], raster, *conv);
+                }
+                
+                return max_dirs;
+            }
+            
+            //! load tiff(s) wrapper
+            inline size_t load_tiff(const char   *filename,
+                                    rgba_to_type *conv = 0)
+            {
+                const string _(filename); return load_tiff(_,conv);
+            }
             
             //! save [ini..end-1] as a multiple tiff
             inline void save_tiff(const string &filename,
@@ -67,7 +115,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // sanity check
                 //--------------------------------------------------------------
-                crux::stack::check_tiff(filename);
+                crux::stack::check_tiff_handles(filename);
                 get_rgba<T>   proc;
                 if(!conv)     conv = &proc;
                 

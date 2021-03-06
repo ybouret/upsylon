@@ -102,12 +102,25 @@ namespace upsylon
             return count;
         }
 
-        size_t I_TIFF:: CountDirectoriesOf( const string &filename )
+        size_t I_TIFF:: CountDirectoriesOf(const string &filename)
         {
             I_TIFF tiff(filename);
             return tiff.CountDirectories();
         }
 
+        size_t I_TIFF:: WidthOf(const string &filename)
+        {
+            I_TIFF tiff(filename);
+            return tiff.GetWidth();
+        }
+        
+        size_t I_TIFF:: HeightOf(const string &filename)
+        {
+            I_TIFF tiff(filename);
+            return tiff.GetHeight();
+        }
+        
+        
         void I_TIFF:: ReadRBGAImage(Raster &raster)
         {
             const int    w   = GetWidth();
