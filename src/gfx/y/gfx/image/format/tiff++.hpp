@@ -52,12 +52,16 @@ namespace upsylon
 
             //! test if possible to read directpry
             bool   ReadDirectory();
+            
             //! return the number of contained directories
             size_t CountDirectories();
+            
             //! set current directory
             void   SetDirectory(const size_t n);
+            
             //! get current width
             int    GetWidth();
+            
             //! get current height
             int    GetHeight();
 

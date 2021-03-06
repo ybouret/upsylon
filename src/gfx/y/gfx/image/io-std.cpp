@@ -18,11 +18,12 @@ namespace upsylon
 /**/ if( !search(fmt->name) ) define( fmt.yield() );   \
 } while(false)
 
-            void io:: standard()
+            io & io:: standard()
             {
                 Y_IMAGE_IO(jpeg);
                 Y_IMAGE_IO(png);
                 Y_IMAGE_IO(tiff);
+                return *this;
             }
         }
 

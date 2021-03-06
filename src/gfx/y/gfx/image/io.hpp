@@ -27,8 +27,8 @@ namespace upsylon
             {
             public:
                 
-                void define( named_format *fmt ); //!< insert, taken care of
-                void standard();                  //!< insert undefined standard
+                void  define( named_format *fmt ); //!< insert, taken care of
+                io   &standard();                  //!< insert undefined standard
 
                 virtual bool   matches(const string &ext) const;
 

@@ -1,6 +1,7 @@
 
 #include "y/gfx/stack.hpp"
 #include "y/utest/run.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -16,6 +17,9 @@ namespace
         
         stack<T> s(n,w,h);
         std::cerr << "#s=" << s.size() << std::endl;
+        
+        const string filename = "stack-" + type_name_of<T>() + ".tif";
+        s.save_tiff(filename,0,s.size());
         
     }
 }
