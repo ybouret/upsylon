@@ -30,8 +30,17 @@ namespace upsylon
         class stack : public area, public slots< pixmap<T> >
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef slots< pixmap<T> > slots_type;
             
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            //!setup
             inline explicit stack(const size_t n, const unit_t W, const unit_t H) :
             area(W,H),
             slots_type(n)
@@ -42,22 +51,29 @@ namespace upsylon
                 }
             }
             
+            //! cleanup
             inline virtual ~stack() throw()
             {
             }            
             
-            //! save [ini..end-1]
+            
+            
+            //! save [ini..end-1] as a multiple tiff
             inline void save_tiff(const string &filename,
                                   const size_t  ini,
                                   const size_t  end,
                                   type_to_rgba *conv = 0) const
             {
+                //--------------------------------------------------------------
                 // sanity check
+                //--------------------------------------------------------------
                 crux::stack::check_tiff(filename);
                 get_rgba<T>   proc;
                 if(!conv)     conv = &proc;
                 
+                //--------------------------------------------------------------
                 // prepare to write
+                //--------------------------------------------------------------
                 _TIFF::Raster raster;
                 bool          append = false;
                 raster.startup(w*h);
