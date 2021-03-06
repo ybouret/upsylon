@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_GFX_PIXMAP_INCLUDED
@@ -26,7 +25,9 @@ namespace upsylon
 
         //______________________________________________________________________
         //
+        //
         //! generic pixmap, using bitmap as memory layout
+        //
         //______________________________________________________________________
         template <typename T>
         class pixmap : public bitmap

@@ -11,6 +11,7 @@ add_test(bitmap  test-gfx bitmap)
 add_test(pixmaps test-gfx pixmaps)
 add_test(image   test-gfx image)
 add_test(options test-gfx options)
+add_test(stack   test-gfx stack)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
