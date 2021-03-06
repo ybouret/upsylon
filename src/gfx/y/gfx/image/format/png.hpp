@@ -16,7 +16,7 @@ namespace upsylon
         class png_format : public image::named_format
         {
         public:
-            static const char ID[]; //!< "PNG"
+            static  const char * const ID; //!< "PNG"
             virtual ~png_format() throw();
             explicit png_format();
             

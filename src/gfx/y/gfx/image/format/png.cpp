@@ -19,7 +19,7 @@ namespace upsylon
         {
         }
 
-        const char png_format::ID[] = "PNG";
+        const char * const png_format::ID = "PNG";
 
         png_format:: png_format() :
         image::named_format(ID, "png")

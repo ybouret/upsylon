@@ -7,7 +7,7 @@ namespace upsylon
     namespace graphic
     {
         
-        const char tiff_format::ID[] = "TIFF";
+        const char * const tiff_format::ID = "TIFF";
         
         tiff_format:: ~tiff_format() throw()  {}
         

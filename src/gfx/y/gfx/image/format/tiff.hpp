@@ -14,7 +14,7 @@ namespace upsylon
         class tiff_format : public image::named_format
         {
         public:
-            static const char ID[]; //!< "TIFF"
+            static  const char * const ID; //!< "TIFF"
 
             //! constructor
             explicit tiff_format();

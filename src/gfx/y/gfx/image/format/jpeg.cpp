@@ -25,7 +25,7 @@ namespace upsylon
         {
         }
 
-        const char jpeg_format::ID[] = "JPEG";
+        const char * const jpeg_format::ID = "JPEG";
 
         jpeg_format:: jpeg_format() :
         image::named_format( ID, "jpe?g" )
