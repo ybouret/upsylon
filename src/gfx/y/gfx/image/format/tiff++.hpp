@@ -17,9 +17,8 @@ namespace upsylon
             //! desctructor
             virtual ~ _TIFF() throw();
 
-            //! internal raster base type
-            typedef memory::dyadic           Memory;
-            typedef zblock<uint32_t,Memory> _Raster;
+            typedef memory::dyadic           Memory; //!< memory allocator
+            typedef zblock<uint32_t,Memory> _Raster; //!< internal memory for TIFF
             
             //! internal memory raster
             class Raster : public _Raster

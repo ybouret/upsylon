@@ -63,12 +63,14 @@ namespace upsylon
 
                 bool fetch(const string &name) const; //!< default : false
 
+                //! get from optional database
                 template <typename T>
                 static T get(const options *opts, const string &name, const T default_value)
                 {
                     return opts ? opts->fetch(name,default_value) : default_value;
                 }
 
+                //! get from optional, wrapper
                 template <typename T>
                 static T get(const options *opts, const char *name, const T default_value)
                 {
@@ -76,11 +78,13 @@ namespace upsylon
                     return get<T>(opts,_,default_value);
                 }
 
+                //! get a flag from an optional database
                 static bool flag(const options *opts, const string &name)
                 {
                     return opts ? opts->fetch(name) : false;
                 }
 
+                //! get a flag, wrapper
                 static bool flag(const options *opts, const char *name)
                 {
                     const string _(name);

@@ -43,6 +43,13 @@ Y_UTEST(stack)
     do_stack<float>();
     do_stack<rgba>();
     
+    if(argc>1)
+    {
+        const string filename = argv[1];
+        
+        stack<float> sgs(filename);
+        std::cerr << "stack: " << sgs.size() << std::endl;
+    }
 }
 Y_UTEST_DONE()
 

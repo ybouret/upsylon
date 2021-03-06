@@ -15,13 +15,15 @@ namespace upsylon
         
         namespace crux
         {
+            //! common stuff for stacks
             struct stack
             {
-                static void   check_tiff_handles(const string &filename);
-                static void   check_same_metrics(const area &, I_TIFF &, const string &filename);
-                static size_t min_directories(const size_t nmax, const string &filename);
+                static void   check_tiff_handles(const string &filename);                         //!< check extension
+                static void   check_same_metrics(const area &, I_TIFF &, const string &filename); //!< WxH compatible
+                static size_t min_directories(const size_t nmax, const string &filename);         //!< check
             };
         }
+        
         //______________________________________________________________________
         //
         //
@@ -36,7 +38,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef slots< pixmap<T> > slots_type;
+            typedef slots< pixmap<T> > slots_type; //!< alias
             
             //__________________________________________________________________
             //
@@ -47,10 +49,7 @@ namespace upsylon
             area(W,H),
             slots_type(n)
             {
-                for(size_t i=0;i<n;++i)
-                {
-                    this->template build<size_t,size_t>(W,H);
-                }
+                setup();
             }
             
             //! cleanup
@@ -65,6 +64,7 @@ namespace upsylon
             area( I_TIFF::WidthOf(filename), I_TIFF::HeightOf(filename)),
             slots_type( crux::stack::min_directories(nmax,filename) )
             {
+                setup();
                 const size_t loaded = load_tiff(filename,conv);
                 (void)loaded;
                 assert(loaded==this->size());
@@ -137,6 +137,14 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(stack);
+            
+            inline void setup()
+            {
+                for(size_t i=0;i<this->count;++i)
+                {
+                    this->template build<size_t,size_t>(w,h);
+                }
+            }
         };
     }
     
