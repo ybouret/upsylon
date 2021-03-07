@@ -13,7 +13,12 @@ namespace upsylon
 {
     namespace graphic
     {
+        //______________________________________________________________________
+        //
+        //
         //! a tile is a collection of contiguous segments
+        //
+        //______________________________________________________________________
         class tile : public entity, public accessible<segment>
         {
         public:

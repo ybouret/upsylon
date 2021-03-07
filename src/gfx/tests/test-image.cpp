@@ -9,9 +9,7 @@ using namespace graphic;
 
 Y_UTEST(image)
 {
-    image::io    &img = image::io::instance();
- 
-    img.standard();
+    image::io    &img = Y_IMAGE();
     
     
 

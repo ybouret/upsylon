@@ -7,6 +7,7 @@
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/image/format/tiff.hpp"
 #include "y/sequence/slots.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
 {
@@ -31,14 +32,14 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class stack : public area, public slots< pixmap<T> >
+        class stack : public area, public slots< pixmap<T>, memory::dyadic >
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef slots< pixmap<T> > slots_type; //!< alias
+            typedef slots< pixmap<T>, memory::dyadic > slots_type; //!< alias
             
             //__________________________________________________________________
             //
