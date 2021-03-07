@@ -5,6 +5,7 @@
 
 #include "y/type/point2d.hpp"
 #include "y/core/zero-flux-index.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
@@ -23,9 +24,15 @@ namespace upsylon
             static const char width[];  //!< "width"
             static const char height[]; //!< "height"
             static const char depth[];  //!< "depth"
+        };
+        
+        //! parsing helpers
+        struct parsing
+        {
+            static coord wxh(const string &); //!< 'wxh'
+            static coord wxh(const char   *); //!< 'wxh', wrapper
 
         };
-
         
     }
 
