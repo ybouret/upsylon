@@ -65,21 +65,30 @@ namespace upsylon
         }
         
         
-        
+#define Y_PIPELINE_CTOR()\
+flushed(),\
+crew(),\
+busy(),\
+todo(),\
+proc(),\
+done(),\
+ready(0),\
+verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
+
         pipeline::pipeline() :
         component(),
-        flushed(),
-        crew(),
-        busy(),
-        todo(),
-        proc(),
-        done(),
-        ready(0),
-        verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
+        Y_PIPELINE_CTOR()
         {
             setup();
         }
-        
+
+
+        pipeline::pipeline(Y_CONCURRENT_TOPO_ARGS) :
+        component(Y_CONCURRENT_TOPO_ARGS_),
+        Y_PIPELINE_CTOR()
+        {
+            setup();
+        }
         
         void pipeline::finish() throw()
         {

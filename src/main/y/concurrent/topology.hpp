@@ -16,6 +16,25 @@
 //______________________________________________________________________________
 #define Y_NUM_THREADS "Y_NUM_THREADS"
 
+//______________________________________________________________________________
+//
+//
+//! manual setup
+//
+//______________________________________________________________________________
+#define Y_CONCURRENT_TOPO_ARGS \
+const size_t start,            \
+const size_t width,            \
+const size_t every
+
+//______________________________________________________________________________
+//
+//
+//! manual setup
+//
+//______________________________________________________________________________
+#define Y_CONCURRENT_TOPO_ARGS_ start,width,every
+
 namespace upsylon
 {
     namespace concurrent
@@ -34,7 +53,7 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            //! compile availalbe ranks
+            //! compile available ranks
             //__________________________________________________________________
             class node : public object
             {
@@ -53,11 +72,9 @@ namespace upsylon
             //
             //! C++
             //__________________________________________________________________
-            virtual ~topology() throw();            //!< cleanup
-            explicit topology();                    //!< default or use env
-            explicit topology(const size_t start,
-                              const size_t width,
-                              const size_t every);  //!< overrides
+            virtual ~topology() throw();                //!< cleanup
+            explicit topology();                        //!< default or use env
+            explicit topology(Y_CONCURRENT_TOPO_ARGS);  //!< overrides
 
             //__________________________________________________________________
             //

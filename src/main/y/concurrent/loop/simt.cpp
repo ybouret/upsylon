@@ -50,20 +50,30 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
         static const char pfx[] = "[simt.";
-        
+
+#define Y_SIMT_CTOR() \
+code(NULL),\
+ready(0),\
+cycle(),\
+fence(),\
+crew( topo->size()   ),\
+built(false),\
+verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
+
         simt:: simt() :
-        code(NULL),
-        ready(0),
-        cycle(),
-        fence(),
-        crew( topo->size()   ),
-        built(false),
-        verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
+        component(), Y_SIMT_CTOR()
         {
             setup();
         }
 
-        
+
+        simt:: simt(Y_CONCURRENT_TOPO_ARGS) :
+        component(start,width,every),
+        Y_SIMT_CTOR()
+        {
+            setup();
+        }
+
 
 
         void simt:: setup()

@@ -27,7 +27,8 @@ namespace upsylon
             
             
         protected:
-            explicit component();         //!< setup
+            explicit component();                       //!< automatic setup
+            explicit component(Y_CONCURRENT_TOPO_ARGS); //!< manual setup
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(component);

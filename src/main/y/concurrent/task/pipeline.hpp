@@ -33,8 +33,9 @@ namespace upsylon
 		    //
 			// C++
 			//__________________________________________________________________
-			virtual ~pipeline() throw();  //!< cleanup
-			explicit pipeline();          //!< setup threads and placement
+			virtual ~pipeline() throw();               //!< cleanup
+			explicit pipeline();                       //!< automatic setup
+            explicit pipeline(Y_CONCURRENT_TOPO_ARGS); //!< manual setup
 
 			//__________________________________________________________________
 			//

@@ -12,7 +12,13 @@ namespace upsylon
         component::component() : access(), topo( new topology() )
         {
         }
+
+        component:: component(Y_CONCURRENT_TOPO_ARGS) :
+        access(), topo( new topology(Y_CONCURRENT_TOPO_ARGS_) )
+        {
+        }
         
+
     }
 }
 

@@ -80,13 +80,11 @@ namespace upsylon
         }
 
 
-        topology:: topology(const size_t start,
-                            const size_t width,
-                            const size_t every):
+        topology:: topology(Y_CONCURRENT_TOPO_ARGS):
         nodes(),
         clusters()
         {
-            add(start,width,every);
+            add(Y_CONCURRENT_TOPO_ARGS_);
         }
 
         topology:: topology() :

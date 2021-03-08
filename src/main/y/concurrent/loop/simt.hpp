@@ -32,7 +32,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit simt();          //!< setup
+            explicit simt();                       //!< automatic setup
+            explicit simt(Y_CONCURRENT_TOPO_ARGS); //!< manual setup
             virtual ~simt() throw();  //!< cleanup
 
             //__________________________________________________________________
