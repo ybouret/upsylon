@@ -250,10 +250,6 @@ MACRO(TARGET_LINK_Y tgt)
 			LIST(APPEND ylibs "y-jive")
 		ENDIF()
 		
-		IF( ${extra} STREQUAL "graphic" )
-			LIST(APPEND ylibs "y-spade;y-tiff;y-jpeg;y-jbig;y-png;y-z")
-		ENDIF()
-		
 		IF( ${extra} STREQUAL "gfx" )
 			LIST(APPEND ylibs "y-spade;y-tiff;y-jpeg;y-jbig;y-png;y-z")
 		ENDIF()

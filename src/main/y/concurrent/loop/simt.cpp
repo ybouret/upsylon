@@ -10,6 +10,26 @@ namespace upsylon
     namespace concurrent
     {
 
+        simt::launcher:: ~launcher() throw()
+        {
+        }
+
+        simt:: launcher:: launcher(simt        &user_host,
+                                   const size_t user_size,
+                                   const size_t user_rank) :
+        authority<simt>(user_host),
+        thread(stub,static_cast<launcher *>(this),user_size,user_rank)
+        {
+            
+        }
+
+        void simt:: launcher:: stub(void *addr) throw()
+        {
+            assert(addr);
+            launcher &self = *static_cast<launcher *>(addr);
+            simt     &host = *self;
+            host.call(self);
+        }
 
         size_t simt:: size() const throw()
         {
