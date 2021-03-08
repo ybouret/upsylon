@@ -81,6 +81,17 @@ namespace upsylon
                 }
             }
 
+            bool options::flag(const options *opts, const string &name)
+            {
+                return opts ? opts->fetch(name) : false;
+            }
+
+
+            bool options::flag(const options *opts, const char *name)
+            {
+                const string _(name);
+                return flag(opts,_);
+            }
 
         }
 

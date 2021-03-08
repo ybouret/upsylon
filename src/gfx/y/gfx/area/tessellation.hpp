@@ -20,7 +20,7 @@ namespace upsylon
         //! tesselation of any area
         //
         //______________________________________________________________________
-        class tessellation : public area, public slots< arc_ptr<tile>, memory::dyadic >
+        class tessellation : public entity, public area, public slots< arc_ptr<tile>, memory::dyadic >
         {
         public:
             //__________________________________________________________________

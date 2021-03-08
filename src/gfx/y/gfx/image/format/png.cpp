@@ -250,6 +250,10 @@ namespace upsylon
             return *bmp;
         }
 
+        static inline unit_t num_channels_for(const bool alpha) throw()
+        {
+            return alpha ? 4:3;
+        }
 
         void   png_format:: save_(const bitmap         &bmp,
                                   const string         &file,
@@ -270,7 +274,7 @@ namespace upsylon
             // parse options
             //__________________________________________________________________
             const bool     use_alpha    = image::options::flag(opts,"alpha");
-            const unit_t   num_channels = use_alpha ? 4 : 3;
+            const unit_t   num_channels = num_channels_for(use_alpha);
             const int      zlevel       = unsigned(image::options::get<size_t>(opts,"z",6));
             if(zlevel>=10) throw exception("%s(invalid z=%u)",fn, unsigned(zlevel));
 
@@ -320,16 +324,14 @@ namespace upsylon
                          PNG_INTERLACE_NONE,
                          PNG_COMPRESSION_TYPE_BASE,
                          PNG_FILTER_TYPE_BASE);
-
             png_write_info(png_ptr, info_ptr);
-
-            png_set_compression_level(png_ptr, zlevel);
+            png_set_compression_level(png_ptr,zlevel);
 
 
             PNG_Mem mem;
             try
             {
-                mem.allocate(width, height, num_channels);
+                mem.allocate(width,height,num_channels);
             }
             catch(...)
             {

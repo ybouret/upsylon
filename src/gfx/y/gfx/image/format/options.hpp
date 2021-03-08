@@ -45,7 +45,7 @@ namespace upsylon
 
                 //! get with default value:
                 /**
-                 - size_t, unit_t, float, double, bool
+                 - size_t, unit_t, float, double
                  */
                 template <typename T> inline
                 T fetch(const string &name, const T default_value) const
@@ -79,17 +79,12 @@ namespace upsylon
                 }
 
                 //! get a flag from an optional database
-                static bool flag(const options *opts, const string &name)
-                {
-                    return opts ? opts->fetch(name) : false;
-                }
+                static bool flag(const options *opts, const string &name);
 
                 //! get a flag, wrapper
-                static bool flag(const options *opts, const char *name)
-                {
-                    const string _(name);
-                    return flag(opts,_);
-                }
+                static bool flag(const options *opts, const char *name);
+
+
 
 
 
