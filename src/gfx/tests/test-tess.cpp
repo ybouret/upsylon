@@ -25,8 +25,7 @@ Y_UTEST(tess)
     {
         dims = parsing::wxh(argv[1]);
     }
-    area a(dims.x,dims.y);
-    
+    area        a(dims.x,dims.y);
     pixmap<rgb> pxm(a.w,a.h);
     
     for(size_t cpus=1;cpus<=5;++cpus)
@@ -56,7 +55,8 @@ Y_UTEST(tess)
     
     Y_UTEST_SIZEOF(segment);
     Y_UTEST_SIZEOF(tile);
-    
+    Y_UTEST_SIZEOF(tessellation);
+
 }
 Y_UTEST_DONE()
 

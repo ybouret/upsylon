@@ -20,7 +20,10 @@ namespace upsylon
         //! tesselation of any area
         //
         //______________________________________________________________________
-        class tessellation : public entity, public area, public slots< arc_ptr<tile>, memory::dyadic >
+        class tessellation :
+        public entity,
+        public area,
+        public slots< arc_ptr<tile>, memory::dyadic >
         {
         public:
             //__________________________________________________________________
@@ -43,7 +46,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tessellation);
         };
-        
+
+        //! dynamic tessellation => tiles
+        typedef arc_ptr<tessellation> tiles;
     }
     
 }
