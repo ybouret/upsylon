@@ -18,7 +18,7 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            segment(const coord,const unit_t) throw(); //!< setup
+            segment(const unit_t Xmin, const unit_t Y, const unit_t Xmax) throw(); //!< setup
             ~segment() throw();                        //!< cleanup
             segment(const segment &) throw();          //!< copy
             
@@ -26,9 +26,11 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const coord  origin; //!< where to start
-            const unit_t length; //!< how may pixels
-            
+            const unit_t xmin; //!< origin x
+            const unit_t y;    //!< origin y
+            const unit_t xmax; //!< final x
+            const unit_t w;    //!< width
+
         private:
             Y_DISABLE_ASSIGN(segment);
         };

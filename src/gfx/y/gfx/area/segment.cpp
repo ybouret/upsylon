@@ -9,10 +9,15 @@ namespace upsylon
         {
         }
         
-        segment:: segment(const coord c,const unit_t n) throw() :
-        origin(c),
-        length(n)
+        segment:: segment(const unit_t Xmin,
+                          const unit_t Y,
+                          const unit_t Xmax) throw() :
+        xmin(Xmin),
+        y(Y),
+        xmax(Xmax),
+        w((1+xmax)-xmin)
         {
+            assert(w>0);
         }
     }
     

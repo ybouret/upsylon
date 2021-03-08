@@ -119,8 +119,14 @@ namespace upsylon
             I_TIFF tiff(filename);
             return tiff.GetHeight();
         }
-        
-        
+
+        area  I_TIFF::  AreaOf(const string &filename)
+        {
+            I_TIFF tiff(filename);
+            return area(tiff.GetWidth(),tiff.GetHeight());
+        }
+
+
         void I_TIFF:: ReadRBGAImage(Raster &raster)
         {
             const int    w   = GetWidth();

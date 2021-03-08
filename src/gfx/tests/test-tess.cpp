@@ -43,9 +43,8 @@ Y_UTEST(tess)
             for(size_t l=t.lines;l>0;--l)
             {
                 const segment &s = t[l];
-                const unit_t   y = s.origin.y;
-                unit_t         x = s.origin.x;
-                for(unit_t i=s.length;i>0;--i,++x)
+                const unit_t   y = s.y;
+                for(unit_t x=s.xmax;x>=s.xmin;--x)
                 {
                     pxm[y][x] = c;
                 }

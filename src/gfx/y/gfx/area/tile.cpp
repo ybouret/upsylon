@@ -47,19 +47,19 @@ namespace upsylon
                 switch(lines)
                 {
                     case 1:
-                        new (h_seg+1) segment(ini,end.x-ini.x+one);
-                        sum += h_seg[1].length;
+                        new (h_seg+1) segment(ini.x,ini.y,end.x);
+                        sum += h_seg[1].w;
                         break;
                         
                     default:
-                        new (h_seg+1)      segment(ini,a.upper.x-ini.x+one);
-                        sum += h_seg[1].length;
+                        new (h_seg+1)      segment(ini.x,ini.y,a.upper.x);
+                        sum += h_seg[1].w;
                         for(unit_t i=2,y=ini.y+1;i<num;++i,++y) {
-                            new (h_seg+i) segment( coord(a.lower.x,y), a.w );
-                            sum += h_seg[i].length;
+                            new (h_seg+i) segment(a.lower.x,y,a.upper.x);
+                            sum += h_seg[i].w;
                         }
-                        new (h_seg+lines)  segment( coord(a.lower.x,end.y), end.x-a.lower.x+one );
-                        sum += h_seg[lines].length;
+                        new (h_seg+lines)  segment(  a.lower.x,end.y,end.x);
+                        sum += h_seg[lines].w;
                         break;
                 }
                 
@@ -81,7 +81,7 @@ namespace upsylon
             unit_t res = 0;
             for(size_t i=lines;i>0;--i)
             {
-                res += h_seg[i].length;
+                res += h_seg[i].w;
             }
             return res;
         }

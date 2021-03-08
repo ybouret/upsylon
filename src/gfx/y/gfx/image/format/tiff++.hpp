@@ -5,6 +5,7 @@
 #include "y/string.hpp"
 #include "y/memory/zblock.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/gfx/area.hpp"
 
 namespace upsylon
 {
@@ -71,7 +72,8 @@ namespace upsylon
             static size_t CountDirectoriesOf(const string &);
             static size_t WidthOf(const string &);  //!< extract width
             static size_t HeightOf(const string &); //!< extract height
-            
+            static area   AreaOf(const string &);   //!< Wxh
+
         private:            
             Y_DISABLE_COPY_AND_ASSIGN(I_TIFF);
         };

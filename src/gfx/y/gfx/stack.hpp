@@ -6,8 +6,8 @@
 
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/image/format/tiff.hpp"
-#include "y/sequence/slots.hpp"
 #include "y/memory/allocator/dyadic.hpp"
+#include "y/sequence/slots.hpp"
 
 namespace upsylon
 {
@@ -62,7 +62,7 @@ namespace upsylon
             explicit stack(const string  &filename,
                            rgba_to_type   *conv = 0,
                            const size_t    nmax = 0) :
-            area( I_TIFF::WidthOf(filename), I_TIFF::HeightOf(filename)),
+            area( I_TIFF::AreaOf(filename) ),
             slots_type( crux::stack::min_directories(nmax,filename) )
             {
                 setup();
