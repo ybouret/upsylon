@@ -45,6 +45,7 @@ namespace upsylon
 			virtual void      flush() throw();
             virtual void      batch(job::uuids &, const job::batch &);
             virtual void      clear() throw();
+            virtual bool      completed(const job::uuid) throw();
 
             //__________________________________________________________________
             //

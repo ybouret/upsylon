@@ -46,10 +46,11 @@ namespace upsylon
             //
             // interface
             //__________________________________________________________________
-            virtual job::uuid yield(const job::type &)                = 0; //!< yield a new job
-            virtual void      flush() throw()                         = 0; //!< flush current jobs
-            virtual void      batch(job::uuids &, const job::batch &) = 0; //!< process a batch of jobs
-            virtual void      clear() throw()                         = 0; //!< remove pending
+            virtual job::uuid yield(const job::type &)                 = 0; //!< yield a new job
+            virtual void      flush() throw()                          = 0; //!< flush current jobs
+            virtual void      batch(job::uuids &, const job::batch &)  = 0; //!< process a batch of jobs
+            virtual void      clear() throw()                          = 0; //!< remove pending
+            virtual bool      completed(const job::uuid) throw()       = 0; //!< test if completed job
 
             //__________________________________________________________________
             //

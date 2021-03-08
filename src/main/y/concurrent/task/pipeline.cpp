@@ -65,14 +65,14 @@ namespace upsylon
         }
         
         
-#define Y_PIPELINE_CTOR()\
-flushed(),\
-crew(),\
-busy(),\
-todo(),\
-proc(),\
-done(),\
-ready(0),\
+#define Y_PIPELINE_CTOR() \
+flushed(),                \
+crew(),                   \
+busy(),                   \
+todo(),                   \
+proc(),                   \
+done(),                   \
+ready(0),                 \
 verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
 
         pipeline::pipeline() :
@@ -98,6 +98,7 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
             }
             Y_MUTEX_PROBE(access, ready <= 0);
         }
+
         
         
         void pipeline::setup()
@@ -382,7 +383,23 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
             done.cancel(todo);
         }
         
-        
+
+        bool pipeline:: completed(const job::uuid j) throw()
+        {
+            Y_LOCK(access);
+            for(const contract *c=proc.head;c;c=c->next)
+            {
+                if(j==c->uuid) return false;
+            }
+
+            for(const contract *c=todo.head;c;c=c->next)
+            {
+                if(j==c->uuid) return false;
+            }
+
+            return true;
+        }
+
     }
     
 }

@@ -49,5 +49,10 @@ namespace upsylon
         void serial:: clear() throw()
         {
         }
+
+        bool serial:: completed(const job::uuid) throw()
+        {
+            return true;
+        }
     }
 }
