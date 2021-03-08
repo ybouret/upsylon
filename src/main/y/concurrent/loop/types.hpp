@@ -5,6 +5,7 @@
 
 #include "y/concurrent/loop/runnable.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/ptr/counted.hpp"
 
 namespace upsylon
 {
@@ -17,7 +18,7 @@ namespace upsylon
         //! interface to make a loop on a runnable object
         //
         //______________________________________________________________________
-        class looper : public accessible<context>
+        class looper : public object, public counted, public accessible<context>
         {
         public:
             //__________________________________________________________________

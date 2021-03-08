@@ -4,6 +4,7 @@
 #include "y/ptr/zrc.hpp"
 #include "y/ptr/shared.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/ptr/ref.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -86,10 +87,10 @@ Y_UTEST(ptr)
     
     {
         std::cerr << "-- ZRC" << std::endl;
-        typedef zrc_ptr<counted> ZP;
+        typedef zrc_ptr<counted_object> ZP;
         ZP p = NULL;
         Y_CHECK(p.is_empty()); std::cerr << "#p=" << p.refcount() << std::endl;
-        auto_ptr<counted> tmp = new counted; std::cerr << "#counted=" << tmp->refcount() << std::endl;
+        auto_ptr<counted_object> tmp = new counted_object(); std::cerr << "#counted=" << tmp->refcount() << std::endl;
         p    = tmp.yield();
         Y_CHECK(p.is_valid()); std::cerr << "#p=" << p.refcount() << std::endl;
         ZP q = p;
@@ -98,7 +99,18 @@ Y_UTEST(ptr)
         Y_CHECK_EMBED(zrc_ptr);
 
     }
-    
+
+    {
+        std::cerr << "-- REF" << std::endl;
+        typedef ref_ptr<counted_object> RP;
+
+        RP       p = new derived();
+        const RP q = p;
+        Y_CHECK(q.refcount()==2);
+        Y_CHECK_EMBED(ref_ptr);
+
+    }
+
     
 }
 Y_UTEST_DONE()

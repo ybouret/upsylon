@@ -1,6 +1,6 @@
 
 
-#include "y/gfx/area/tessellation.hpp"
+#include "y/gfx/area/tiles.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
@@ -31,7 +31,7 @@ Y_UTEST(tess)
     for(size_t cpus=1;cpus<=5;++cpus)
     {
         std::cerr << "<cpus=" << cpus << ">" << std::endl;
-        tessellation tess(a,cpus);
+        tiles tess(a,cpus);
         std::cerr << "<cpus=" << cpus << "/>" << std::endl;
         
         const string filename = vformat("tess%u.png",unsigned(cpus));
@@ -55,7 +55,7 @@ Y_UTEST(tess)
     
     Y_UTEST_SIZEOF(segment);
     Y_UTEST_SIZEOF(tile);
-    Y_UTEST_SIZEOF(tessellation);
+    Y_UTEST_SIZEOF(tiles);
 
 }
 Y_UTEST_DONE()

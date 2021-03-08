@@ -1,16 +1,17 @@
-#include "y/gfx/area/tessellation.hpp"
+
+#include "y/gfx/area/tiles.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
-        tessellation:: ~tessellation() throw()
+        tiles:: ~tiles() throw()
         {}
-        
-    
-        tessellation:: tessellation(const area  &a,
-                                    const size_t n) :
+
+
+        tiles:: tiles(const area  &a,
+                      const size_t n) :
         entity(),
         area(a),
         tiles_type( clamp<size_t>(1,n,items) )
@@ -22,9 +23,9 @@ namespace upsylon
                 this->push(t);
             }
         }
-        
+
     }
-    
+
 }
 
 

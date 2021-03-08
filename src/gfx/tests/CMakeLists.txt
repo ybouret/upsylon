@@ -13,6 +13,7 @@ add_test(image   test-gfx image)
 add_test(options test-gfx options)
 add_test(stack   test-gfx stack)
 add_test(tess    test-gfx tess)
+add_test(ops     test-gfx ops)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
