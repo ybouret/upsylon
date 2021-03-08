@@ -8,7 +8,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(image);
     Y_UTEST(options);
     Y_UTEST(stack);
+    Y_UTEST(tiles);
     Y_UTEST(tess);
-    Y_UTEST(ops);
 }
 Y_UTEST_EXEC()

@@ -21,10 +21,7 @@ namespace upsylon
         //! tiles for any area
         //
         //______________________________________________________________________
-        class tiles :
-        public entity,
-        public area,
-        public slots< arc_ptr<tile>, memory::dyadic >
+        class tiles : public area, public slots< arc_ptr<tile>, memory::dyadic >
         {
         public:
             //__________________________________________________________________

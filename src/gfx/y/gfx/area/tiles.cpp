@@ -12,7 +12,6 @@ namespace upsylon
 
         tiles:: tiles(const area  &a,
                       const size_t n) :
-        entity(),
         area(a),
         tiles_type( clamp<size_t>(1,n,items) )
         {
