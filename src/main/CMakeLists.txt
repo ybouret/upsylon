@@ -174,12 +174,6 @@ SET(concurrent_sync_srcs ${concurrent_sync_decl} ${concurrent_sync_code})
 SOURCE_GROUP( concurrent/sync FILES ${concurrent_sync_srcs} )
 INSTALL( FILES ${concurrent_sync_decl} DESTINATION include/y/concurrent/sync )
 
-FILE(GLOB concurrent_scheme_decl y/concurrent/scheme/*.hpp)
-FILE(GLOB concurrent_scheme_code y/concurrent/scheme/*.cpp)
-SET(concurrent_scheme_srcs ${concurrent_scheme_decl} ${concurrent_scheme_code})
-SOURCE_GROUP( concurrent/scheme FILES ${concurrent_scheme_srcs} )
-INSTALL( FILES ${concurrent_scheme_decl} DESTINATION include/y/concurrent/scheme )
-
 FILE(GLOB concurrent_loop_decl y/concurrent/loop/*.hpp)
 FILE(GLOB concurrent_loop_code y/concurrent/loop/*.cpp)
 SET(concurrent_loop_srcs ${concurrent_loop_decl} ${concurrent_loop_code})
@@ -446,7 +440,7 @@ ${container_srcs}
 ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
-${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs}  ${concurrent_task_srcs} ${concurrent_scheme_srcs}  
+${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs}  ${concurrent_task_srcs} 
 ${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
@@ -468,12 +462,6 @@ ${geometry_srcs} ${geometry_iso2d_srcs} ${geometry_iso3d_srcs}
 ${kr_sc_srcs} ${kr_bc_srcs}
 ${sparse_srcs}
 ${counting_srcs}
-${jargon_srcs} 
-${jargon_token_srcs} 
-${jargon_pattern_srcs} 
-${jargon_pattern_basic_srcs}
-${jargon_pattern_logic_srcs}
-${jargon_pattern_joker_srcs}
 ${tensor_srcs}
 ${yap_srcs}  ${yap_natural_srcs}  ${yap_integer_srcs} ${yap_prime_srcs}
 ${jive_srcs} ${jive_pattern_srcs} ${jive_pattern_basic_srcs} ${jive_pattern_logic_srcs} ${jive_pattern_joker_srcs}
