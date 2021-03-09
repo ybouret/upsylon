@@ -239,8 +239,6 @@ namespace upsylon
         //
         // members
         //______________________________________________________________________
-
-
         const size_t  count; //!< capacity
         const size_t  bytes; //!< allocated
 
@@ -250,7 +248,7 @@ namespace upsylon
         size_t        size_; //!< internal counter
 
     private:
-        Y_DISABLE_ASSIGN(crates);
+        Y_DISABLE_COPY_AND_ASSIGN(crates);
         inline mutable_type *allocate()
         {
             static ALLOCATOR &mgr = ALLOCATOR::instance();
