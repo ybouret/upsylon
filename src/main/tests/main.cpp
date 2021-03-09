@@ -101,6 +101,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(traits);
     Y_UTEST(ptr);
     Y_UTEST(slots);
+    Y_UTEST(crates);
     Y_UTEST(env);
     Y_UTEST(list);
     Y_UTEST(sequence);

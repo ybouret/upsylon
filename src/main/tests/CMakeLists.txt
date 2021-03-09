@@ -267,10 +267,13 @@ ADD_TEST(info:codecs       test-main codecs)
 SOURCE_GROUP(data FILES
 test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp 
 test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
-test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp)
+test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp
+test-crates.cpp
+)
 
 ADD_TEST(data:matrix      test-main matrix)
 ADD_TEST(data:slots       test-main slots)
+ADD_TEST(data:crates      test-main crates)
 ADD_TEST(data:list        test-main list)
 ADD_TEST(data:sequence    test-main sequence)
 ADD_TEST(data:pipe        test-main pipe)
