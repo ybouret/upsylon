@@ -7,7 +7,6 @@
 
 #include "y/gfx/area.hpp"
 #include "y/gfx/area/segment.hpp"
-#include "y/gfx/entity.hpp"
 
 namespace upsylon
 {
@@ -19,7 +18,7 @@ namespace upsylon
         //! a tile is a collection of contiguous segments
         //
         //______________________________________________________________________
-        class tile : public entity, public accessible<segment>
+        class tile :  public accessible<segment>
         {
         public:
             //__________________________________________________________________

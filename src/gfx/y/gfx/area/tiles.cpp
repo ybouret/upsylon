@@ -26,7 +26,7 @@ namespace upsylon
             const size_t sz = count;
             for(size_t rk=0;rk<sz;++rk)
             {
-                this->build<tile *>( new tile(*this,sz,rk) );
+                this->build<const area &,size_t,size_t>(*this,sz,rk);
             }
         }
 

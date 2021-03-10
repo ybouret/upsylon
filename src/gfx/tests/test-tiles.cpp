@@ -34,7 +34,7 @@ Y_UTEST(tiles)
         for(size_t rank=0;rank<tess.size();++rank)
         {
             const rgb   c = random_color::get<rgba>(alea);
-            const tile &t = *tess[rank];
+            const tile &t = tess[rank];
             for(size_t l=t.lines;l>0;--l)
             {
                 const segment &s = t[l];

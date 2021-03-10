@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_GFX_AREA_TILES_INCLUDED
@@ -15,22 +13,20 @@ namespace upsylon
 {
     namespace graphic
     {
-        typedef const ref_ptr<const tile> pebble;
-
         //______________________________________________________________________
         //
         //
         //! tiles for any area
         //
         //______________________________________________________________________
-        class tiles : public area, public slots<pebble,memory::dyadic>
+        class tiles : public area, public slots<const tile,memory::dyadic>
         {
         public:
             //__________________________________________________________________
             //
             // types and defintions
             //__________________________________________________________________
-            typedef slots<pebble, memory::dyadic > tiles_type; //!< alias
+            typedef slots<const tile, memory::dyadic > tiles_type; //!< alias
 
             //__________________________________________________________________
             //

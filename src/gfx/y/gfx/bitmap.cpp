@@ -17,7 +17,8 @@ namespace upsylon
         area(  checking::gtz(W,checking::width),
                checking::gtz(H,checking::height) ),
         depth( checking::gtz(D,checking::depth) ),
-        stride( w*depth ),
+        scanline(w*depth),
+        stride( scanline),
         zfh(h),
         zfw(w),
         pixels( new crux::pixels(stride*h) ),
@@ -29,6 +30,7 @@ namespace upsylon
         entity(),
         area(other),
         depth(other.depth),
+        scanline(other.scanline),
         stride(other.stride),
         zfh(other.zfh),
         zfw(other.zfw),
@@ -37,6 +39,16 @@ namespace upsylon
         {
 
         }
+
+        void bitmap:: ldz() throw()
+        {
+            char *p = static_cast<char *>(get_line(0));
+            for(unit_t j=h;j>0;--j,p+=stride)
+            {
+                memset(p,0,scanline);
+            }
+        }
+
 
         std::ostream & operator<<(std::ostream &os, const bitmap &b)
         {

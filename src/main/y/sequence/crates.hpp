@@ -15,9 +15,10 @@ namespace upsylon
 
     namespace core
     {
+        //! common functions for crates
         struct crates
         {
-            static void reserve_failure();
+            static void reserve_failure(); //!< throw exception
         };
     }
 

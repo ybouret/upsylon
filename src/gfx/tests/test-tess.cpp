@@ -27,27 +27,27 @@ namespace upsylon
                 assert(  size() <= loop->size() );
             }
 
-            void operator()()
+            typedef void (*func)(const tile &t, void *args, lockable &);
+
+            void operator()(func f, void *p)
             {
+                kCode = f;
+                kArgs = p;
                 aliasing::_(loop)->for_each(*this);
             }
-            
-            virtual void run(const concurrent::context &ctx, lockable &) throw()
+
+            func  kCode;
+            void *kArgs;
+
+            virtual void run(const concurrent::context &ctx, lockable &sync) throw()
             {
+                assert(kCode);
+                assert(kArgs);
                 const size_t rank = ctx.rank;
+
                 if(rank<size())
                 {
-                    const tile &t = *(*this)[rank];
-                    for(unit_t j=t.size();j>0;--j)
-                    {
-                        const segment &s    = t[j];
-                        const unit_t   y    = s.y;
-                        const unit_t   xmin = s.xmin;
-                        for(unit_t x=s.xmax;x>=xmin;--x)
-                        {
-                            (void)y;
-                        }
-                    }
+                    kCode( (*this)[rank], kArgs, sync);
                 }
             }
 
@@ -71,14 +71,14 @@ Y_UTEST(tess)
     std::cerr << "sequential" << std::endl;
     {
         broker seq(pxm,seq_loop);
-        seq();
+        //seq();
         std::cerr << std::endl;
     }
 
     std::cerr << "parallel" << std::endl;
     {
         broker par(pxm,par_loop);
-        par();
+        // par();
     }
 
 

@@ -35,20 +35,11 @@ namespace upsylon
             bitmap(const bitmap & ) throw();  //!< no throw copy
             virtual ~bitmap()       throw();  //!< cleanup
 
-            //__________________________________________________________________
-            //
-            // methods
-            //__________________________________________________________________
-            const unit_t        depth;  //!< bytes per pixel
-            const unit_t        stride; //!< stride
-            const zflux         zfh;    //!< zero flux/h
-            const zflux         zfw;    //!< zero flux/w
-            const shared_pixels pixels; //!< raw memory
-            const shared_rows   a_rows; //!< anonymous rows
+
 
             //__________________________________________________________________
             //
-            // members
+            // methods
             //__________________________________________________________________
             friend std::ostream & operator<<(std::ostream &, const bitmap &); //!< display info
 
@@ -61,6 +52,20 @@ namespace upsylon
             const void *row_address(const unit_t y) const throw(); //!< address of row[y], const
             void       *get_line(const unit_t y)          throw(); //!< address of row[y][0]
             const void *get_line(const unit_t y)    const throw(); //!< address of row[y][0], const
+
+            void        ldz() throw(); //!< cleanup
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const unit_t        depth;    //!< bytes per pixel
+            const unit_t        scanline; //!< bytes per line
+            const unit_t        stride;   //!< stride >= scanline
+            const zflux         zfh;      //!< zero flux/h
+            const zflux         zfw;      //!< zero flux/w
+            const shared_pixels pixels;   //!< raw memory
+            const shared_rows   a_rows;   //!< anonymous rows
 
         private:
             Y_DISABLE_ASSIGN(bitmap);
