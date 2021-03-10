@@ -27,7 +27,7 @@ namespace upsylon
             virtual ~runnable() throw(); //!< cleanup
 
             //! run code with one context, and a synchronizing object if necessary
-            virtual void run(const context &, lockable &) = 0;
+            virtual void run(const context &, lockable &) throw() = 0;
 
         protected:
             explicit runnable() throw(); //!< setup

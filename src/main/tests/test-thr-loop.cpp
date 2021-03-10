@@ -25,7 +25,7 @@ namespace
 
         }
 
-        virtual void run(const concurrent::context & ctx, lockable &sync)
+        virtual void run(const concurrent::context & ctx, lockable &sync) throw()
         {
             {
                 Y_LOCK(sync);
@@ -51,7 +51,7 @@ namespace
         explicit doNope() throw() {}
         virtual ~doNope() throw() {}
 
-        virtual void run(const concurrent::context &, lockable &)
+        virtual void run(const concurrent::context &, lockable &) throw()
         {
         }
 

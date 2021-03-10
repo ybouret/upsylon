@@ -10,17 +10,30 @@ namespace upsylon
         {}
 
 
-        tiles:: tiles(const area  &a,
-                      const size_t n) :
-        area(a),
-        tiles_type( clamp<size_t>(1,n,items) )
+        size_t tiles:: size_for(const area &a, const size_t n) throw()
+        {
+            return clamp<size_t>(1,n,a.items);
+        }
+
+        tiles:: tiles(const area  &a, const size_t n) :
+        area(a), tiles_type( size_for(a,n) )
+        {
+            initialize();
+        }
+
+        void tiles:: initialize()
         {
             const size_t sz = count;
             for(size_t rk=0;rk<sz;++rk)
             {
-                const arc_ptr<tile> t = new tile(*this,sz,rk);
-                this->push(t);
+                this->build<tile *>( new tile(*this,sz,rk) );
             }
+        }
+
+        tiles:: tiles(const area &a, const collection &c) :
+        area(a), tiles_type( size_for(a,c.size()) )
+        {
+            initialize();
         }
 
     }
