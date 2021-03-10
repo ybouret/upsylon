@@ -71,7 +71,10 @@ namespace upsylon
             return index_of( coord(X,Y) );
         }
 
-
+        bool area:: has_same_metrics_than(const area &other) const throw()
+        {
+            return (lower == other.lower) && (upper == other.upper);
+        }
 
 
     }

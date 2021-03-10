@@ -35,6 +35,7 @@ namespace upsylon
             bool owns(const coord p)                  const throw();        //!< in area ?
             bool owns(const area &sub)                const throw();        //!< lower and upper in area
             friend std::ostream & operator<<(std::ostream &, const area &); //!< display
+            bool has_same_metrics_than(const area &other) const throw();    //!< check metrics
 
             coord   coord_of(const unit_t i) const throw();                 //!< lower+( i%w, i/w )
             unit_t  index_of(coord        p) const throw();                 //!< (p-lower).x + (p-lower).y * w

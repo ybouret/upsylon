@@ -4,81 +4,83 @@
 #include "y/gfx/pixmaps.hpp"
 
 #include "y/utest/run.hpp"
+#include "y/gfx/color/random.hpp"
+
+#include "y/gfx/image/io.hpp"
 
 using namespace upsylon;
 using namespace graphic;
 
-namespace upsylon
-{
-    namespace graphic
+
+namespace {
+
+    template <typename T>
+    static inline void set_some_color(const tile &t,
+                                      void       *args,
+                                      lockable   &sync )
     {
-
-        typedef arc_ptr<concurrent::looper> engine;
-
-        class broker : tiles, concurrent::runnable
+        T          tmp(0);
         {
-        public:
-            const engine  loop;
-
-            explicit broker(const area &a, const engine &l) :
-            tiles(a,*l),
-            loop(l)
+            Y_LOCK(sync);
+            tmp = random_color::get<T>(alea);
+        }
+        pixmap<T> &pxm = *static_cast<pixmap<T>*>(args);
+        for(size_t j=t.size();j>0;--j)
+        {
+            const segment &s  = t[j];
+            const unit_t   y  = s.y;
+            const unit_t   x0 = s.xmin;
+            for(unit_t x=s.xmax;x>=x0;--x)
             {
-                assert(  size() <= loop->size() );
+                pxm[y][x] = tmp;
             }
+        }
+    }
 
-            typedef void (*func)(const tile &t, void *args, lockable &);
+    template <typename T>
+    static inline void set_some_color(pixmap<T>    &pxm,
+                                      const engine &loop,
+                                      image::io    &IMG)
+    {
+        broker B(loop,pxm);
+        B(set_some_color<T>,&pxm);
 
-            void operator()(func f, void *p)
-            {
-                kCode = f;
-                kArgs = p;
-                aliasing::_(loop)->for_each(*this);
-            }
-
-            func  kCode;
-            void *kArgs;
-
-            virtual void run(const concurrent::context &ctx, lockable &sync) throw()
-            {
-                assert(kCode);
-                assert(kArgs);
-                const size_t rank = ctx.rank;
-
-                if(rank<size())
-                {
-                    kCode( (*this)[rank], kArgs, sync);
-                }
-            }
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(broker);
-
-        };
+        const string filename = string(loop->category()) + ".png";
+        IMG.save(pxm,filename);
 
 
     }
+
 }
 
 Y_UTEST(tess)
 {
+    image::io &IMG = Y_IMAGE();
 
     engine seq_loop = new concurrent::solo();
     engine par_loop = new concurrent::simt();
 
-    pixmap<float> pxm(100,50);
-
-    std::cerr << "sequential" << std::endl;
+    coord dims(100,50);
+    if(argc>1)
     {
-        broker seq(pxm,seq_loop);
-        //seq();
-        std::cerr << std::endl;
+        dims = parsing::wxh(argv[1]);
     }
 
-    std::cerr << "parallel" << std::endl;
+    pixmap<rgba> pxm(dims.x,dims.y);
+    
+    set_some_color(pxm,seq_loop,IMG);
+    set_some_color(pxm,par_loop,IMG);
+
+    broker        seq(seq_loop,pxm);
+    broker        par(par_loop,pxm);
+
+    pixmap<float> seq_gs(seq,pxm, convert<float,rgba>::from);
+    pixmap<float> par_gs(par,pxm, convert<float,rgba>::from);
+
     {
-        broker par(pxm,par_loop);
-        // par();
+        IMG.save(seq_gs,"seq-gs.png");
+        IMG.save(par_gs,"par-gs.png");
+
     }
 
 

@@ -31,7 +31,8 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-            virtual void for_each(runnable &) throw() = 0; //!< run on contexts
+            virtual void        for_each(runnable &) throw() = 0; //!< run on contexts
+            virtual const char *category()     const throw() = 0; //!< "par" / "seq"
 
             //__________________________________________________________________
             //
@@ -40,6 +41,8 @@ namespace upsylon
 
             //! efficiency based on size()
             double       efficiency(const double speed_up) const throw();
+
+
 
         protected:
             explicit looper() throw();

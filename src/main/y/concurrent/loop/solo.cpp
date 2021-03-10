@@ -32,6 +32,12 @@ namespace upsylon
             return here;
         }
 
+        const char * solo:: category()     const throw()
+        {
+            return "sequential";
+        }
+
+
     }
 
 }

@@ -30,7 +30,7 @@ Y_UTEST(tiles)
         tiles tess(a,cpus);
         std::cerr << "<cpus=" << cpus << "/>" << std::endl;
         
-        const string filename = vformat("tess%u.png",unsigned(cpus));
+        const string filename = vformat("tiles%u.png",unsigned(cpus));
         for(size_t rank=0;rank<tess.size();++rank)
         {
             const rgb   c = random_color::get<rgba>(alea);

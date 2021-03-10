@@ -249,6 +249,10 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
             //
         }
 
+        const char * simt:: category() const throw()
+        {
+            return "concurrent";
+        }
 
     }
 

@@ -40,7 +40,8 @@ namespace upsylon
             //
             // looper interface
             //__________________________________________________________________
-            virtual void for_each(runnable &) throw();
+            virtual void        for_each(runnable &) throw();
+            virtual const char *category()     const throw();
 
             //__________________________________________________________________
             //

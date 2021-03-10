@@ -5,6 +5,7 @@
 
 #include "y/gfx/bitmap.hpp"
 #include "y/gfx/pixrow.hpp"
+#include "y/gfx/broker.hpp"
 #include <typeinfo>
 
 namespace upsylon
@@ -73,6 +74,7 @@ namespace upsylon
             // methods
             //__________________________________________________________________
 
+
             //! raw access
             inline row & operator()(const unit_t j) throw()
             {
@@ -98,6 +100,50 @@ namespace upsylon
             {
                 return rows[ zfh(j) ];
             }
+
+            //__________________________________________________________________
+            //
+            // operations
+            //__________________________________________________________________
+            template <typename U, typename FUNC>
+            explicit pixmap(broker &apply, const pixmap<U> &source, FUNC &conv ) :
+            bitmap(source.w,source.h,sizeof(T)),rows( mine() )
+            {
+                assign(apply,source,conv);
+            }
+
+            template <typename U, typename FUNC>
+            inline void assign(broker &apply, const pixmap<U> &source, FUNC &conv)
+            {
+                struct ops {
+                    const pixmap<U> &source;
+                    pixmap<T>       &target;
+                    FUNC            &conv;
+                    static inline void run(const tile &t,
+                                           void       *args,
+                                           lockable   &) throw()
+                    {
+                        ops  &self = *static_cast<ops *>(args);
+                        FUNC &conv = self.conv;
+                        for(size_t j=t.size();j>0;--j)
+                        {
+                            const segment   &s = t[j];
+                            const unit_t     y = s.y;
+                            const pixrow<U> &src = self.source[y];
+                            pixrow<T>       &tgt = self.target[y];
+                            const unit_t     x0 = s.xmin;
+                            for(unit_t x=s.xmax;x>=x0;--x)
+                            {
+                                tgt(x) = conv(src(x));
+                            }
+                        }
+                    }
+                };
+
+                ops todo = { source, *this, conv };
+                apply(ops::run,&todo);
+            }
+
 
 
         private:

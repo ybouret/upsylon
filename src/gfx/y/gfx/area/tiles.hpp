@@ -7,7 +7,6 @@
 #include "y/gfx/area/tile.hpp"
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/ptr/ref.hpp"
 
 namespace upsylon
 {

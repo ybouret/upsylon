@@ -33,10 +33,19 @@ SET(image_format_srcs ${image_format_decl} ${image_format_code})
 SOURCE_GROUP( gfx/image/format FILES ${image_format_srcs} )
 INSTALL( FILES ${image_format_decl} DESTINATION include/y/gfx/image/format )
 
+
+FILE(GLOB ops_decl y/gfx/ops/*.hpp)
+FILE(GLOB ops_code y/gfx/ops/*.cpp)
+SET(ops_srcs ${ops_decl} ${ops_code})
+SOURCE_GROUP( gfx/ops FILES ${ops_srcs} )
+INSTALL( FILES ${ops_decl} DESTINATION include/y/gfx/ops )
+
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
 ${image_srcs} ${image_format_srcs}
+${ops_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
