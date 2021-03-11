@@ -7,11 +7,14 @@
 
 #include "y/gfx/area.hpp"
 #include "y/gfx/area/segment.hpp"
+#include "y/memory/shack.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
+        typedef memory::shack cache;
+        
         //______________________________________________________________________
         //
         //

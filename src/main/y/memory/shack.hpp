@@ -9,6 +9,8 @@
 #include "y/type/collapse.hpp"
 #include "y/type/releasable.hpp"
 #include "y/sequence/array.hpp"
+#include "y/object.hpp"
+#include "y/ptr/counted.hpp"
 #include <typeinfo>
 
 namespace upsylon {
@@ -21,7 +23,7 @@ namespace upsylon {
         //! flexible cache for one or more objects of SAME type
         //
         //______________________________________________________________________
-        class shack : public memory::rw_buffer, public releasable
+        class shack : public object, public counted, public memory::rw_buffer, public releasable
         {
         public:
 

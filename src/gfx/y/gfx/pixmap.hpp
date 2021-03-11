@@ -106,14 +106,14 @@ namespace upsylon
             // operations
             //__________________________________________________________________
             template <typename U, typename FUNC>
-            explicit pixmap(broker &apply, const pixmap<U> &source, FUNC &conv ) :
+            explicit pixmap( const pixmap<U> &source, broker &apply, FUNC &conv ) :
             bitmap(source.w,source.h,sizeof(T)),rows( mine() )
             {
-                assign(apply,source,conv);
+                assign(source,apply,conv);
             }
 
             template <typename U, typename FUNC>
-            inline void assign(broker &apply, const pixmap<U> &source, FUNC &conv)
+            inline void assign(const pixmap<U> &source, broker &apply, FUNC &conv) throw()
             {
                 struct ops {
                     const pixmap<U> &source;

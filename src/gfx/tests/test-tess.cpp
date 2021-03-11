@@ -74,8 +74,8 @@ Y_UTEST(tess)
     broker        seq(seq_loop,pxm);
     broker        par(par_loop,pxm);
 
-    pixmap<float> seq_gs(seq,pxm, convert<float,rgba>::from);
-    pixmap<float> par_gs(par,pxm, convert<float,rgba>::from);
+    pixmap<float> seq_gs(pxm,seq,convert<float,rgba>::from);
+    pixmap<float> par_gs(pxm,par,convert<float,rgba>::from);
 
     {
         IMG.save(seq_gs,"seq-gs.png");

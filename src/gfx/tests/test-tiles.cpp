@@ -52,6 +52,10 @@ Y_UTEST(tiles)
     Y_UTEST_SIZEOF(segment);
     Y_UTEST_SIZEOF(tile);
     Y_UTEST_SIZEOF(tiles);
+    Y_UTEST_SIZEOF(memory::shack);
+    Y_UTEST_SIZEOF(auto_ptr<memory::shack>);
+    Y_UTEST_SIZEOF(arc_ptr<memory::shack>);
+    Y_UTEST_SIZEOF(ref_ptr<memory::shack>);
 
 }
 Y_UTEST_DONE()
