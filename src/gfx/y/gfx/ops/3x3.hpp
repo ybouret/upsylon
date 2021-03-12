@@ -57,6 +57,8 @@ namespace upsylon
                             {
                                 const coord p(x,y);
                                 assert(source.owns(p));
+                                const U tmp = source[p];
+#if 0
                                 U arr[9] =
                                 {
                                     source(y)(x),
@@ -69,8 +71,10 @@ namespace upsylon
                                     source[p+area::delta[6]],
                                     source[p+area::delta[7]],
                                 };
+                                
                                 const U u    = op(arr);
                                 target(y)(x) = conv(u);
+#endif
                             }
                         }
 

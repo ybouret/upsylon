@@ -24,11 +24,16 @@ Y_UTEST(ops)
     engine seqEngine = new concurrent::solo();
     engine parEngine = new concurrent::simt();
 
+    for(size_t i=0;i<8;++i)
+    {
+        std::cerr << "delta[" << i << "]=" << area::delta[i] << std::endl;
+    }
+    
     if(argc>1)
     {
         const pixmap<rgb> img = IMG.load<rgb>(argv[1]);
         IMG.save(img,"img.png");
-
+        std::cerr << "loaded: " << img << std::endl;
         broker            seq(seqEngine,img);
         broker            par(parEngine,img);
         
@@ -64,7 +69,7 @@ Y_UTEST(ops)
             pixmap<rgb> tgt(img.w,img.h);
 
             _3x3::to(tgt,img,seq,pixel::average<rgb>,convert<rgb,rgb>::from);
-            IMG.save(tgt,"ave-seq.png");
+            //IMG.save(tgt,"ave-seq.png");
 
             return 0;
             _3x3::to(tgt,img,par,pixel::average<rgb>,convert<rgb,rgb>::from);

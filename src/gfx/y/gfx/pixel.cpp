@@ -29,7 +29,7 @@ namespace upsylon
             return
             (unsigned(arr[0]) + unsigned(arr[1]) + unsigned(arr[2]) +
              unsigned(arr[3]) + unsigned(arr[4]) + unsigned(arr[5]) +
-             unsigned(arr[6]) + unsigned(arr[7]) + unsigned(arr[9])) / 9;
+             unsigned(arr[6]) + unsigned(arr[7]) + unsigned(arr[8])) / 9;
         }
 
         template <> rgb pixel::average<rgb>(rgb arr[9]) throw()

@@ -29,6 +29,7 @@ namespace upsylon
             assert(width>0);
             assert(height>0);
             assert(shift>=width);
+            assert(impl.block_size>=height*sizeof(bitrow));
             bitrow *row = static_cast<bitrow *>(impl.block_addr);
             char   *ptr = static_cast<char   *>(entry);
             for(done=0;done<height;++done)

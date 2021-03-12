@@ -102,13 +102,13 @@ namespace upsylon
             //! zero-flux access
             inline row & operator[](const unit_t j) throw()
             {
-                return rows[ zfh(j) ];
+                return rows[zfh(j)];
             }
 
             //! zero-flux access, const
             inline const row & operator[](const unit_t j) const throw()
             {
-                return rows[ zfh(j) ];
+                return rows[zfh(j)];
             }
 
             inline type & operator[](const coord p) throw()
