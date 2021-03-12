@@ -8,13 +8,21 @@
 #include "y/gfx/area.hpp"
 #include "y/gfx/area/segment.hpp"
 #include "y/memory/shack.hpp"
+#include "y/ptr/arc.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
-        typedef memory::shack cache;
-        
+        //______________________________________________________________________
+        //
+        //
+        // types for local memory
+        //
+        //______________________________________________________________________
+        typedef memory::shack         local_memory; //!< alias
+        typedef arc_ptr<local_memory> local_cache;  //!< alias
+
         //______________________________________________________________________
         //
         //
@@ -52,13 +60,15 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t   lines; //!< number of lines
-            
+            const size_t        lines; //!< number of lines
+            mutable local_cache cache; //!< memory cache
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tile);
             segment *h_seg;
             size_t   count;
             size_t   bytes;
+
         };
     };
 }

@@ -22,6 +22,7 @@ namespace upsylon
                     const size_t size,
                     const size_t rank)   :
         lines(0),
+        cache( new local_memory() ),
         h_seg(0),
         count(0),
         bytes(0)
