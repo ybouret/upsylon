@@ -94,6 +94,10 @@ Y_UTEST(ops)
             _3x3::erode(tgt,img,par,convert<rgb,rgb>::from);   IMG.save(tgt,"erode.png");
             _3x3::dilate(tgt,img,par,convert<rgb,rgb>::from);  IMG.save(tgt,"dilate.png");
 
+            pixmap<rgb> tmp(img.w,img.h);
+            _3x3::open(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"open.png");
+            _3x3::close(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"close.png");
+
 
         }
     }

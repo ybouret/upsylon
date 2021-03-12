@@ -60,14 +60,15 @@ namespace upsylon
         //! built-in auto-conversion
         //
         //______________________________________________________________________
-
         template <typename T>
         struct convert<T,T>
         {
             //! T->T
             static const T & from(const T &x) throw() { return x; }
         };
-
+        
+        template <typename T>
+        inline const T & identity(const T &x) throw() { return x; }
 
         //______________________________________________________________________
         //
@@ -80,7 +81,8 @@ namespace upsylon
         public:
             virtual       ~converter() throw();       //!< cleanup
             virtual unit_t depth() const throw() = 0; //!< target/source depth
-
+            
+            
         protected:
             explicit       converter() throw();       //!< setup
 
