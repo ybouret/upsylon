@@ -22,7 +22,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            static const coord delta[4+4]; //! neighbour coords
+            static const coord delta[4+4]; //!< neighbour coords
 
             //__________________________________________________________________
             //

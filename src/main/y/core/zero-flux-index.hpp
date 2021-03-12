@@ -62,7 +62,6 @@ namespace upsylon {
                 }
                 else
                 {
-                    assert(i>=idmin); assert(i<=idmax);
                     return i;
                 }
             }

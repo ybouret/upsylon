@@ -6,7 +6,7 @@ namespace upsylon
     namespace graphic
     {
 
-        template <> float pixel:: average<float>(float arr[9]) throw()
+        template <> float pixel:: average9<float>(float *arr) throw()
         {
             sorting::on(arr,comparison::increasing<float>);
             return
@@ -15,7 +15,7 @@ namespace upsylon
              arr[6] + arr[7] + arr[8] ) / 9.0f;
         }
 
-        template <> double pixel:: average<double>(double arr[9]) throw()
+        template <> double pixel:: average9<double>(double *arr) throw()
         {
             sorting::on(arr,comparison::increasing<double>);
             return
@@ -24,7 +24,7 @@ namespace upsylon
              arr[6] + arr[7] + arr[8] ) / 9.0;
         }
 
-        template <> uint8_t pixel:: average<uint8_t>(uint8_t arr[9]) throw()
+        template <> uint8_t pixel:: average9<uint8_t>(uint8_t *arr) throw()
         {
             return
             (unsigned(arr[0]) + unsigned(arr[1]) + unsigned(arr[2]) +
@@ -32,7 +32,7 @@ namespace upsylon
              unsigned(arr[6]) + unsigned(arr[7]) + unsigned(arr[8])) / 9;
         }
 
-        template <> rgb pixel::average<rgb>(rgb arr[9]) throw()
+        template <> rgb pixel::average9<rgb>(rgb *arr) throw()
         {
             uint8_t r[9] = { 0 };
             uint8_t g[9] = { 0 };
@@ -44,10 +44,10 @@ namespace upsylon
                 g[i] = tmp.g;
                 b[i] = tmp.b;
             }
-            return rgb(average(r),average(g),average(b));
+            return rgb(average9(r),average9(g),average9(b));
         }
 
-        template <> rgba pixel::average<rgba>(rgba arr[9]) throw()
+        template <> rgba pixel::average9<rgba>(rgba *arr) throw()
         {
             uint8_t r[9] = { 0 };
             uint8_t g[9] = { 0 };
@@ -62,7 +62,7 @@ namespace upsylon
                 b[i] = tmp.b;
                 a[i] = tmp.a;
             }
-            return rgba(average(r),average(g),average(b),average(a));
+            return rgba(average9(r),average9(g),average9(b),average9(a));
         }
 
 

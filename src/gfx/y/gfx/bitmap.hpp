@@ -63,7 +63,6 @@ namespace upsylon
             const unit_t        scanline; //!< bytes per line
             const unit_t        stride;   //!< stride >= scanline
             const zflux         zfh;      //!< zero flux/h
-            const zflux         zfw;      //!< zero flux/w
             const shared_pixels pixels;   //!< raw memory
             const shared_rows   a_rows;   //!< anonymous rows
 

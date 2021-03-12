@@ -11,8 +11,10 @@ namespace upsylon
     namespace graphic
     {
 
+        //! applying 3x3 local modifications
         struct _3x3
         {
+            //! generic call
             template <
             typename T,
             typename U,
@@ -58,7 +60,6 @@ namespace upsylon
                                 const coord p(x,y);
                                 assert(source.owns(p));
                                 const U tmp = source[p];
-#if 0
                                 U arr[9] =
                                 {
                                     source(y)(x),
@@ -74,7 +75,6 @@ namespace upsylon
                                 
                                 const U u    = op(arr);
                                 target(y)(x) = conv(u);
-#endif
                             }
                         }
 
@@ -85,40 +85,44 @@ namespace upsylon
                 apply( ops::run, &todo );
             }
 
+            //! average of 3x3 blocks
             template <typename T, typename U, typename CONV> static inline
             void average(pixmap<T>       &target,
                          const pixmap<U> &source,
                          broker          &apply,
                          CONV            &conv) throw()
             {
-                to(target,source,apply,pixel::average<U>,conv);
+                to(target,source,apply,pixel::average9<U>,conv);
             }
 
+            //! median of 3x3 blocks
             template <typename T, typename U, typename CONV> static inline
             void median(pixmap<T>       &target,
                         const pixmap<U> &source,
                         broker          &apply,
                         CONV            &conv) throw()
             {
-                to(target,source,apply,pixel::median<U>,conv);
+                to(target,source,apply,pixel::median9<U>,conv);
             }
 
+            //! maximum of 3x3 block
             template <typename T, typename U, typename CONV> static inline
             void dilate(pixmap<T>       &target,
                         const pixmap<U> &source,
                         broker          &apply,
                         CONV            &conv) throw()
             {
-                to(target,source,apply,pixel::maximum<U>,conv);
+                to(target,source,apply,pixel::max9<U>,conv);
             }
 
+            //! minimum of 3x3 blocks
             template <typename T, typename U, typename CONV> static inline
             void erode(pixmap<T>       &target,
                        const pixmap<U> &source,
                        broker          &apply,
                        CONV            &conv) throw()
             {
-                to(target,source,apply,pixel::minimum<U>,conv);
+                to(target,source,apply,pixel::min9<U>,conv);
             }
 
 

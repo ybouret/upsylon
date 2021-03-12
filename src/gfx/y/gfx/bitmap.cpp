@@ -23,9 +23,8 @@ namespace upsylon
         scanline(w*depth),
         stride( scanline),
         zfh(h),
-        zfw(w),
         pixels( new crux::pixels(stride*h) ),
-        a_rows( new bitrows( (void*)(pixels->block_addr),w,h,zfw,stride ) )
+        a_rows( new bitrows( (void*)(pixels->block_addr),w,h,stride ) )
         {
             assert( unit_t(pixels->block_size) >= h*stride );
         }
@@ -37,7 +36,6 @@ namespace upsylon
         scanline(other.scanline),
         stride(other.stride),
         zfh(other.zfh),
-        zfw(other.zfw),
         pixels(other.pixels),
         a_rows(other.a_rows)
         {

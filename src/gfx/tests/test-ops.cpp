@@ -79,15 +79,14 @@ Y_UTEST(ops)
             std::cerr << "computing 3x3 filters" << std::endl;
             pixmap<rgb> tgt(img.w,img.h);
 
-            _3x3::to(tgt,img,seq,pixel::average<rgb>,convert<rgb,rgb>::from);
-            //IMG.save(tgt,"ave-seq.png");
+            _3x3::to(tgt,img,seq,pixel::average9<rgb>,convert<rgb,rgb>::from);
+            IMG.save(tgt,"ave-seq.png");
 
-            return 0;
-            _3x3::to(tgt,img,par,pixel::average<rgb>,convert<rgb,rgb>::from);
+            _3x3::to(tgt,img,par,pixel::average9<rgb>,convert<rgb,rgb>::from);
             IMG.save(tgt,"ave-par.png");
 
             pixmap<float>  gsf(img.w,img.h);
-            _3x3::to(gsf,img,par,pixel::average<rgb>,convert<float,rgb>::from);
+            _3x3::to(gsf,img,par,pixel::average9<rgb>,convert<float,rgb>::from);
             IMG.save(gsf,"ave-gsf.png");
 
             _3x3::average(tgt,img,par,convert<rgb,rgb>::from); IMG.save(tgt,"average.png");

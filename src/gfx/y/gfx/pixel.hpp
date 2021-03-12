@@ -13,31 +13,36 @@ namespace upsylon
     namespace graphic
     {
 
+        //! pixel-wise operations
         struct pixel
         {
+            //! dedicated 9 objects sorting
             typedef network_sort<9> sorting;
 
+            //! median of 9 items
             template <typename T>
-            static inline T median(T arr[9]) throw()
+            static inline T median9(T *arr) throw()
             {
                 sorting::on(arr, comparison::increasing<T>);
                 return arr[4];
             }
 
 
-            
-            template <typename T> static T average(T arr[9]) throw();
+            //! average of 9 items
+            template <typename T> static T average9(T *arr) throw();
 
+            //! minimum of 9 items
             template <typename T>
-            static inline T minimum(const T arr[9]) throw()
+            static inline T min9(const T *arr) throw()
             {
                 T ans = arr[0];
                 for(unsigned i=1;i<9;++i) { const T tmp = arr[i]; if(tmp<ans) ans = tmp; }
                 return ans;
             }
 
+            //! maximum of 9 items
             template <typename T>
-            static inline T maximum(const T arr[9]) throw()
+            static inline T max9(const T arr[9]) throw()
             {
                 T ans = arr[0];
                 for(unsigned i=1;i<9;++i) { const T tmp = arr[i]; if(tmp>ans) ans = tmp; }
@@ -46,8 +51,8 @@ namespace upsylon
 
         };
 
-
-        template <> inline rgb pixel::median<rgb>(rgb arr[9]) throw()
+        //! take median by component
+        template <> inline rgb pixel::median9<rgb>(rgb *arr) throw()
         {
             unsigned r[9] = { 0 };
             unsigned g[9] = { 0 };
@@ -59,13 +64,14 @@ namespace upsylon
                 g[i] = tmp.g;
                 b[i] = tmp.b;
             }
-            return rgb(uint8_t(median(r)),
-                       uint8_t(median(g)),
-                       uint8_t(median(b))
+            return rgb(uint8_t(median9(r)),
+                       uint8_t(median9(g)),
+                       uint8_t(median9(b))
                        );
         }
 
-        template <> inline rgba pixel::median<rgba>(rgba arr[9]) throw()
+        //! take median by component
+        template <> inline rgba pixel::median9<rgba>(rgba *arr) throw()
         {
             unsigned r[9] = { 0 };
             unsigned g[9] = { 0 };
@@ -80,14 +86,15 @@ namespace upsylon
                 b[i] = tmp.b;
                 a[i] = tmp.a;
             }
-            return rgba(uint8_t(median(r)),
-                        uint8_t(median(g)),
-                        uint8_t(median(b)),
-                        uint8_t(median(a))
+            return rgba(uint8_t(median9(r)),
+                        uint8_t(median9(g)),
+                        uint8_t(median9(b)),
+                        uint8_t(median9(a))
                         );
         }
 
-        template <> inline rgb pixel::minimum<rgb>(const rgb arr[9]) throw()
+        //! minimum by intensity
+        template <> inline rgb pixel::min9<rgb>(const rgb *arr) throw()
         {
             rgb     ans = arr[0];
             uint8_t score  = convert<uint8_t,rgb>::from(ans);
@@ -104,7 +111,8 @@ namespace upsylon
             return ans;
         }
 
-        template <> inline rgb pixel::maximum<rgb>(const rgb arr[9]) throw()
+        //! maximum by intensity
+        template <> inline rgb pixel::max9<rgb>(const rgb *arr) throw()
         {
             rgb     ans = arr[0];
             uint8_t score  = convert<uint8_t,rgb>::from(ans);

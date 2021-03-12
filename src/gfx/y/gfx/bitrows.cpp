@@ -20,8 +20,8 @@ namespace upsylon
         bitrows:: bitrows(void        *entry,
                           const size_t width,
                           const size_t height,
-                          const zflux &zhost,
                           const size_t shift) :
+        zfw(width),
         impl(height*sizeof(bitrow)),
         done(0)
         {
@@ -34,7 +34,7 @@ namespace upsylon
             char   *ptr = static_cast<char   *>(entry);
             for(done=0;done<height;++done)
             {
-                new (row) bitrow(ptr,width,zhost);
+                new (row) bitrow(ptr,width,zfw);
                 ++row;
                 ptr+=shift;
             }

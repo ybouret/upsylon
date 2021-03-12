@@ -24,12 +24,12 @@ namespace upsylon
             explicit bitrows(void        *entry,
                              const size_t width,
                              const size_t height,
-                             const zflux &zhost,
                              const size_t shift);
             //! cleanup
             virtual ~bitrows() throw();
-
-            crux::pixels impl; //!< memory for this rows
+            
+            const   zflux zfw;  //!< shared zero flux/w
+            crux::pixels  impl; //!< memory for this rows
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(bitrows);

@@ -89,11 +89,13 @@ namespace upsylon
                 return rows[j];
             }
 
+            //! raw access by coordinate
             inline type & operator()(const coord p) throw()
             {
                 pixmap<T> &self = *this; return self(p.y)(p.x);
             }
 
+            //! raw accces by coordinate, const
             inline const type & operator()(const coord p) const throw()
             {
                 const pixmap<T> &self = *this; return self(p.y)(p.x);
@@ -108,18 +110,18 @@ namespace upsylon
             //! zero-flux access, const
             inline const row & operator[](const unit_t j) const throw()
             {
-                std::cerr << "@y=" << j << "->" << zfh(j) << std::endl;
                 return rows[zfh(j)];
             }
 
+            //! zero-flux access by coordinate
             inline type & operator[](const coord p) throw()
             {
                 pixmap<T> &self = *this; return self[p.y][p.x];
             }
 
+            //! zero-flux access by coordinate, const
             inline const_type & operator[](const coord p) const throw()
             {
-                assert(owns(p)); std::cerr << "@" << p << std::endl;
                 const pixmap<T> &self = *this; return self[p.y][p.x];
             }
 
