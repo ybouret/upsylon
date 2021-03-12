@@ -125,7 +125,16 @@ namespace upsylon
                 to(target,source,apply,pixel::min9<U>,conv);
             }
 
-
+            //! erode/dilate
+            static inline void open()
+            {
+            }
+            
+            //! dilate/erode
+            static inline void close()
+            {
+            }
+            
         };
 
     }
