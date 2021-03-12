@@ -40,16 +40,7 @@ namespace
         std::cerr << "pixmap<" << type_name_of<T>() << ">" << std::endl;
         Y_CHECK(sizeof(bitrow)==sizeof(pixrow<T>));
         
-        {
-            T     tmp;
-            zflux zf(10);
-            bitrow     br(&tmp,10,zf);
-            pixrow<T> &pr = *(pixrow<T> *)( aliasing::anonymous( &br ) );
-            Y_CHECK(&br.z == &pr.z);
-            Y_CHECK(br.w  ==  pr.w);
-            Y_CHECK(br.p==&tmp);
-            Y_CHECK(&pr[0]==&tmp);
-        }
+        
         
         {
             pixmap<T>       pxm( 1+alea.leq(1000), 1+alea.leq(1000) );

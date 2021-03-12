@@ -27,6 +27,7 @@ namespace upsylon
         pixels( new crux::pixels(stride*h) ),
         a_rows( new bitrows( (void*)(pixels->block_addr),w,h,zfw,stride ) )
         {
+            assert( unit_t(pixels->block_size) >= h*stride );
         }
 
         bitmap:: bitmap(const bitmap &other) throw() :
