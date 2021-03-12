@@ -65,12 +65,20 @@ Y_UTEST(ops)
 
             _3x3::to(tgt,img,seq,pixel::average<rgb>,convert<rgb,rgb>::from);
             IMG.save(tgt,"ave-seq.png");
+
+            return 0;
             _3x3::to(tgt,img,par,pixel::average<rgb>,convert<rgb,rgb>::from);
             IMG.save(tgt,"ave-par.png");
 
             pixmap<float>  gsf(img.w,img.h);
             _3x3::to(gsf,img,par,pixel::average<rgb>,convert<float,rgb>::from);
             IMG.save(gsf,"ave-gsf.png");
+
+            _3x3::average(tgt,img,par,convert<rgb,rgb>::from); IMG.save(tgt,"average.png");
+            _3x3::median(tgt,img,par,convert<rgb,rgb>::from);  IMG.save(tgt,"median.png");
+            _3x3::erode(tgt,img,par,convert<rgb,rgb>::from);   IMG.save(tgt,"erode.png");
+            _3x3::dilate(tgt,img,par,convert<rgb,rgb>::from);  IMG.save(tgt,"dilate.png");
+
 
         }
     }

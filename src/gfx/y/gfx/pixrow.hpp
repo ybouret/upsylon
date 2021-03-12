@@ -32,24 +32,28 @@ namespace upsylon
             //! raw access
             inline type & operator()(const unit_t i) throw()
             {
+                assert(p);
                 assert(i>=0); assert(i<w); return p[i];
             }
 
             //! raw access, const
             inline const_type & operator()(const unit_t i) const throw()
             {
+                assert(p);
                 assert(i>=0); assert(i<w); return p[i];
             }
 
             //! zero-flux access
             inline type & operator[](const unit_t i) throw()
             {
+                assert(p);
                 return p[ z(i) ];
             }
 
             //! zero-flux access, const
             inline const_type & operator[](const unit_t i) const throw()
             {
+                assert(p);
                 return p[ z(i) ];
             }
 

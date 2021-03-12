@@ -23,12 +23,11 @@ namespace upsylon
                                   broker          &apply,
                                   FUNC            &op,
                                   CONV            &conv
-                                  )
+                                  ) throw()
             {
 
                 assert( target.has_same_metrics_than(source)     );
                 assert( target.has_same_metrics_than(apply.tess) );
-
 
                 struct ops
                 {
@@ -57,6 +56,7 @@ namespace upsylon
                             for(unit_t x=s.xmax;x>=xmin;--x)
                             {
                                 const coord p(x,y);
+                                assert(source.owns(p));
                                 U arr[9] =
                                 {
                                     source(y)(x),
@@ -69,7 +69,7 @@ namespace upsylon
                                     source[p+area::delta[6]],
                                     source[p+area::delta[7]],
                                 };
-                                const U u    = op(arr); 
+                                const U u    = op(arr);
                                 target(y)(x) = conv(u);
                             }
                         }
@@ -79,9 +79,45 @@ namespace upsylon
 
                 ops todo = { target, source, op, conv };
                 apply( ops::run, &todo );
-                
-
             }
+
+            template <typename T, typename U, typename CONV> static inline
+            void average(pixmap<T>       &target,
+                         const pixmap<U> &source,
+                         broker          &apply,
+                         CONV            &conv) throw()
+            {
+                to(target,source,apply,pixel::average<U>,conv);
+            }
+
+            template <typename T, typename U, typename CONV> static inline
+            void median(pixmap<T>       &target,
+                        const pixmap<U> &source,
+                        broker          &apply,
+                        CONV            &conv) throw()
+            {
+                to(target,source,apply,pixel::median<U>,conv);
+            }
+
+            template <typename T, typename U, typename CONV> static inline
+            void dilate(pixmap<T>       &target,
+                        const pixmap<U> &source,
+                        broker          &apply,
+                        CONV            &conv) throw()
+            {
+                to(target,source,apply,pixel::maximum<U>,conv);
+            }
+
+            template <typename T, typename U, typename CONV> static inline
+            void erode(pixmap<T>       &target,
+                       const pixmap<U> &source,
+                       broker          &apply,
+                       CONV            &conv) throw()
+            {
+                to(target,source,apply,pixel::minimum<U>,conv);
+            }
+
+
         };
 
     }
