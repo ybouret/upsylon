@@ -2,6 +2,8 @@
 #include "y/type/block/zset.hpp"
 #include "y/gfx/bitrow.hpp"
 
+#include <cstring>
+
 namespace upsylon
 {
     namespace graphic
@@ -9,6 +11,7 @@ namespace upsylon
         bitmap:: ~bitmap() throw()
         {
             _bzset(depth);
+            _bzset(scanline);
             _bzset(stride);
         }
 

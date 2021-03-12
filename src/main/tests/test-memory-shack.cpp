@@ -7,6 +7,43 @@
 
 using namespace upsylon;
 
+namespace
+{
+    template <typename T>
+    void do_shacks( memory::shacks &S )
+    {
+
+        S.make<T>();
+        for(size_t i=0;i<S.size();++i)
+        {
+            memory::shack &s = *S[i];
+            Y_ASSERT(s.is<T>());
+
+            addressable<T> &arr = s.__<T>();
+            std::cerr << "#arr=" << arr.size() << std::endl;
+            Y_ASSERT(1==arr.size());
+        }
+
+        const size_t r = 1+alea.leq(20);
+        S.make<T>(r);
+        for(size_t i=0;i<S.size();++i)
+        {
+            memory::shack &s = *S[i];
+            Y_ASSERT(s.is<T>());
+
+            addressable<T> &arr = s.__<T>();
+            std::cerr << "#arr=" << arr.size() << std::endl;
+            Y_ASSERT(r==arr.size());
+            T *ptr = &s._<T>();
+        }
+
+
+
+
+    }
+
+}
+
 Y_UTEST(shack)
 {
     {
@@ -59,7 +96,15 @@ Y_UTEST(shack)
         }
     }
 
+    {
+        memory::shacks S(10,memory::shacks::construct_filled);
+        std::cerr << "S.size=" << S.size() << std::endl;
 
+        do_shacks<short>(S);
+        do_shacks<double>(S);
+
+
+    }
 
 }
 Y_UTEST_DONE()

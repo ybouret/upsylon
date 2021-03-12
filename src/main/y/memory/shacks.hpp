@@ -16,6 +16,7 @@ namespace upsylon {
     namespace memory
     {
 
+        //! shared shacks
         class shacks : public slots< ref_ptr<shack>, memory::dyadic >
         {
         public:
@@ -30,6 +31,23 @@ namespace upsylon {
             explicit shacks(const size_t n, const construct_mode = construct_vacant);
 
             void fill(); //!< fill with default shack
+
+            //! make one object per slot
+            template <typename T> inline
+            void make()
+            {
+                slots_type &self = *this;
+                for(size_t i=0;i<size();++i) (void) (*self[i]).make<T>();
+            }
+
+            //! make n objects per slot
+            template <typename T> inline
+            void make(const size_t n)
+            {
+
+                slots_type &self = *this;
+                for(size_t i=0;i<size();++i) (void) (*self[i]).make<T>(n);
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shacks);
