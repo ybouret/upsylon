@@ -30,6 +30,8 @@ namespace
 
 }
 
+#include "y/type/aliasing.hpp"
+
 namespace
 {
     template <typename T>
@@ -42,7 +44,7 @@ namespace
             T     tmp;
             zflux zf(10);
             bitrow     br(&tmp,10,zf);
-            pixrow<T> &pr = *(pixrow<T> *)&br;
+            pixrow<T> &pr = *(pixrow<T> *)( aliasing::anonymous( &br ) );
             Y_CHECK(&br.z == &pr.z);
             Y_CHECK(br.w  ==  pr.w);
             Y_CHECK(br.p==&tmp);
