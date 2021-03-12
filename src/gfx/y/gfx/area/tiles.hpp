@@ -14,6 +14,12 @@ namespace upsylon
     {
         //______________________________________________________________________
         //
+        //! alias for local caches
+        //______________________________________________________________________
+        typedef memory::shacks local_caches;
+        
+        //______________________________________________________________________
+        //
         //
         //! tiles for any area
         //
@@ -44,7 +50,7 @@ namespace upsylon
             //
             // member
             //__________________________________________________________________
-            memory::shacks caches;
+            mutable local_caches caches; //!< pointers to all internal cache
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tiles);

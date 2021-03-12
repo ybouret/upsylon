@@ -7,7 +7,21 @@ namespace upsylon
     
     namespace graphic
     {
-        
+
+        const coord area::delta[4+4] =
+        {
+            coord(1,0),
+            coord(-1,0),
+            coord(0,1),
+            coord(-1,0),
+
+            coord(1,1),
+            coord(-1,1),
+            coord(-1,-1),
+            coord(1,-1)
+
+        };
+
         area:: area(const unit_t W, const unit_t H,
                     const unit_t X, const unit_t Y) :
         w( checking::geqz(W,checking::width)  ),

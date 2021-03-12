@@ -4,6 +4,7 @@
 #define Y_COLOR_HISTOGRAM_INCLUDED 1
 
 #include "y/gfx/color/convert.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
@@ -53,6 +54,8 @@ namespace upsylon
                 return *this;
             }
 
+            //! save to file
+            void save(const string &filename) const;
 
         private:
             size_t bin[bins];

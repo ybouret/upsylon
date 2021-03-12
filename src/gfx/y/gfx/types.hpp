@@ -13,10 +13,21 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //
+        // global types
+        //
+        //______________________________________________________________________
         typedef point2d<unit_t>          coord; //!< logical coordinate
         typedef core::zero_flux_index<0> zflux; //!< zero-flux computation
 
+        //______________________________________________________________________
+        //
+        //
         //! helper to check setups
+        //
+        //______________________________________________________________________
         struct checking
         {
             static unit_t     geqz(const unit_t value, const char *name); //!< value>=0
@@ -25,13 +36,17 @@ namespace upsylon
             static const char height[]; //!< "height"
             static const char depth[];  //!< "depth"
         };
-        
+
+        //______________________________________________________________________
+        //
+        //
         //! parsing helpers
+        //
+        //______________________________________________________________________
         struct parsing
         {
             static coord wxh(const string &); //!< 'wxh'
             static coord wxh(const char   *); //!< 'wxh', wrapper
-
         };
         
     }

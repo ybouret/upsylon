@@ -64,4 +64,22 @@ namespace upsylon
 
 }
 
+#include "y/ios/ocstream.hpp"
+
+namespace upsylon
+{
+    namespace  graphic
+    {
+
+        void histogram:: save(const string &filename) const
+        {
+            ios::ocstream fp(filename);
+            for(unsigned long i=0;i<histogram::bins;++i)
+            {
+                fp("%lu %lu\n", i, (unsigned long)( bin[i] ) );
+            }
+        }
+    }
+
+}
 

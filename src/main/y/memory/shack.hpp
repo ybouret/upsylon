@@ -84,7 +84,7 @@ namespace upsylon {
 
             //! cast with check
             template <typename T> inline
-            T & _() throw()
+            T & as() throw()
             {
                 assert( is<T>() );
                 return *(T*)block_addr;
@@ -92,7 +92,7 @@ namespace upsylon {
 
             //! cast with check, const
             template <typename T> inline
-            const T & _() const throw()
+            const T & as() const throw()
             {
                 assert( is<T>() );
                 return *(const T *)block_addr;
@@ -118,14 +118,14 @@ namespace upsylon {
 
             //! direct access to multiple items
             template <typename T> inline
-            T & _(const size_t j) throw()
+            T & get(const size_t j) throw()
             {
                 return __<T>()[j];
             }
 
             //! direct access to multiple items
             template <typename T> inline
-            const T & _(const size_t j) const throw()
+            const T & get(const size_t j) const throw()
             {
                 return __<T>()[j];
             }
@@ -188,11 +188,11 @@ namespace upsylon {
                 {
                     assert(n>0);
                     assert(n*sizeof(T)<=self.block_size);
-                    self.count = n;
-                    self.width = sizeof(T);
-                    self.clear = no;
+                    self.count =  n;
+                    self.width =  sizeof(T);
+                    self.clear =  no;
                     self.label = &id();
-                    new ( self.vaddr() ) vtype( & self._<mutable_type>(), self.count );
+                    new ( self.vaddr() ) vtype( & self.as<mutable_type>(), self.count );
                 }
 
                 static inline void make(shack &self, const size_t n)

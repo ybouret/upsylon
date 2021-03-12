@@ -18,25 +18,29 @@ namespace upsylon
         tiles:: tiles(const area  &a, const size_t n) :
         area(a),
         tiles_type( size_for(a,n) ),
-        caches( size() )
+        caches( capacity() )
         {
             initialize();
         }
 
         void tiles:: initialize()
         {
+            assert(caches.size()==0);
+            assert(caches.capacity()==capacity());
+            
             const size_t sz = count;
             for(size_t rk=0;rk<sz;++rk)
             {
                 this->build<const area &,size_t,size_t>(*this,sz,rk);
                 caches.push( (*this)[rk].cache );
             }
+            assert(caches.size()==this->size());
         }
 
         tiles:: tiles(const area &a, const collection &c) :
         area(a),
         tiles_type( size_for(a,c.size()) ),
-        caches( size() )
+        caches( capacity() )
         {
             initialize();
         }

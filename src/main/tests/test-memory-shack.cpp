@@ -87,12 +87,12 @@ Y_UTEST(shack)
         {
             const string a = "hello";
             S.build<string>(a);
-            std::cerr << S._<string>() << std::endl;
+            std::cerr << S.as<string>() << std::endl;
         }
 
         {
             S.build<string>( "world" );
-            std::cerr << S._<string>() << std::endl;
+            std::cerr << S.as<string>() << std::endl;
         }
     }
 
