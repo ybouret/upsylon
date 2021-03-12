@@ -64,11 +64,11 @@ namespace upsylon
                             for(size_t j=t.size();j>0;--j)
                             {
                                 const segment   &s    = t[j];
-                                const pixrow<T> &r    = pxm[s.y];
+                                const pixrow<T> &r    = pxm(s.y);
                                 const unit_t     xmin = s.xmin;
                                 for(unit_t x=s.xmax;x>=xmin;--x)
                                 {
-                                    const uint8_t indx = uint8_t( conv(r[x]) );
+                                    const uint8_t indx = uint8_t( conv(r(x)) );
                                     ++hist[indx];
                                 }
                             }
