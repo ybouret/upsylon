@@ -105,6 +105,7 @@ namespace upsylon
             //
             // operations
             //__________________________________________________________________
+            //! hard-copy with conversion
             template <typename U, typename FUNC>
             explicit pixmap( const pixmap<U> &source, broker &apply, FUNC &conv ) :
             bitmap(source.w,source.h,sizeof(T)),rows( mine() )
@@ -112,9 +113,11 @@ namespace upsylon
                 assign(source,apply,conv);
             }
 
+            //! assign with conversion
             template <typename U, typename FUNC>
             inline void assign(const pixmap<U> &source, broker &apply, FUNC &conv) throw()
             {
+                assert(source.has_same_metrics_than(*this));
                 struct ops {
                     const pixmap<U> &source;
                     pixmap<T>       &target;

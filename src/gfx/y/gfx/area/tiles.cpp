@@ -16,7 +16,9 @@ namespace upsylon
         }
 
         tiles:: tiles(const area  &a, const size_t n) :
-        area(a), tiles_type( size_for(a,n) )
+        area(a),
+        tiles_type( size_for(a,n) ),
+        caches( size() )
         {
             initialize();
         }
@@ -27,11 +29,14 @@ namespace upsylon
             for(size_t rk=0;rk<sz;++rk)
             {
                 this->build<const area &,size_t,size_t>(*this,sz,rk);
+                caches.push( (*this)[rk].cache );
             }
         }
 
         tiles:: tiles(const area &a, const collection &c) :
-        area(a), tiles_type( size_for(a,c.size()) )
+        area(a),
+        tiles_type( size_for(a,c.size()) ),
+        caches( size() )
         {
             initialize();
         }

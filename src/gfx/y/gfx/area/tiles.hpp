@@ -6,7 +6,7 @@
 
 #include "y/gfx/area/tile.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/sequence/slots.hpp"
+#include "y/memory/shacks.hpp"
 
 namespace upsylon
 {
@@ -39,6 +39,12 @@ namespace upsylon
 
             //! setup for collection
             explicit tiles(const area &, const collection &);
+
+            //__________________________________________________________________
+            //
+            // member
+            //__________________________________________________________________
+            memory::shacks caches;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(tiles);

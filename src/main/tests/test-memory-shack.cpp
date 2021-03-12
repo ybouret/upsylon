@@ -34,7 +34,7 @@ namespace
             addressable<T> &arr = s.__<T>();
             std::cerr << "#arr=" << arr.size() << std::endl;
             Y_ASSERT(r==arr.size());
-            T *ptr = &s._<T>();
+            //T *ptr = &s._<T>();
         }
 
 

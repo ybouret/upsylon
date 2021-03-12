@@ -15,22 +15,45 @@ namespace upsylon {
 
     namespace memory
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! shared shacks
+        //
+        //______________________________________________________________________
         class shacks : public slots< ref_ptr<shack>, memory::dyadic >
         {
         public:
-            typedef slots< ref_ptr<shack>, memory::dyadic > slots_type;
+            //__________________________________________________________________
+            //
+            //types and definition
+            //__________________________________________________________________
+            typedef slots< ref_ptr<shack>, memory::dyadic > slots_type; //!< alias
+
+            //! construct mode
             enum construct_mode
             {
-                construct_vacant,
-                construct_filled
+                construct_vacant, //!< no preallocated
+                construct_filled  //!< filled with dynamic shacks
             };
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! cleanup
             virtual ~shacks() throw();
+
+            //! setup
             explicit shacks(const size_t n, const construct_mode = construct_vacant);
 
-            void fill(); //!< fill with default shack
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
+            void fill(); //!< fill remaining with default shack
 
             //! make one object per slot
             template <typename T> inline
