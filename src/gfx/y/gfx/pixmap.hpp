@@ -108,6 +108,7 @@ namespace upsylon
             //! zero-flux access, const
             inline const row & operator[](const unit_t j) const throw()
             {
+                std::cerr << "@y=" << j << "->" << zfh(j) << std::endl;
                 return rows[zfh(j)];
             }
 
@@ -118,6 +119,7 @@ namespace upsylon
 
             inline const_type & operator[](const coord p) const throw()
             {
+                assert(owns(p)); std::cerr << "@" << p << std::endl;
                 const pixmap<T> &self = *this; return self[p.y][p.x];
             }
 

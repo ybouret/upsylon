@@ -34,6 +34,17 @@ Y_UTEST(ops)
         const pixmap<rgb> img = IMG.load<rgb>(argv[1]);
         IMG.save(img,"img.png");
         std::cerr << "loaded: " << img << std::endl;
+        
+        {
+            std::cerr << "@" << img.lower << std::endl;
+            const rgb c0 = img[ img.lower ];
+            std::cerr << "c0=" << c0 << std::endl;
+            std::cerr << "@" << img.upper << std::endl;
+            const rgb c1 = img[ img.upper ];
+            std::cerr << "c1=" << c1 << std::endl;
+
+        }
+        
         broker            seq(seqEngine,img);
         broker            par(parEngine,img);
         
