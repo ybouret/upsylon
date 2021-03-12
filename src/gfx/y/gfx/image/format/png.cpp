@@ -51,7 +51,9 @@ namespace upsylon
                 size_t     wlen;
                 void      *wksp;
 
-                void allocate( unit_t width, unit_t height, unit_t num_channels )
+                void allocate(const unit_t width,
+                              const unit_t height,
+                              const unit_t num_channels )
                 {
                     const size_t rows_offset = 0;
                     const size_t rows_length = sizeof(png_bytep) * height;
