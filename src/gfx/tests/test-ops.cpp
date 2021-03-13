@@ -1,6 +1,8 @@
 
 #include "y/gfx/ops/hist.hpp"
 #include "y/gfx/ops/3x3.hpp"
+#include "y/gfx/ops/gradient.hpp"
+
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
 #include "y/gfx/pixmaps.hpp"
@@ -97,8 +99,25 @@ Y_UTEST(ops)
             pixmap<rgb> tmp(img.w,img.h);
             _3x3::open(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"open.png");
             _3x3::close(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"close.png");
-
-
+        }
+        
+        
+        {
+            std::cerr << "computing gradient" << std::endl;
+            gradient      G(img.w,img.h);
+            pixmap<float> f(img,par,convert<float,rgb>::from);
+            
+            G.compute(f,seq); std::cerr << "gmax_seq=" << G.gmax << std::endl;
+            G.compute(f,par); std::cerr << "gmax_par=" << G.gmax << std::endl;
+            
+            G.normalize(par); IMG.save(G,"grad.png");
+            
+            gradient::x_to_rgba conv_vx( rgb(0,0,255), rgb(255,0,0) );
+            IMG.save(G.g,"grad_x.png", NULL, conv_vx);
+            
+            gradient::y_to_rgba conv_vy( rgb(0,0,255), rgb(255,0,0) );
+            IMG.save(G.g,"grad_y.png", NULL, conv_vy);
+            
         }
     }
 }

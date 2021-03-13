@@ -14,10 +14,10 @@ namespace upsylon
 
         broker:: broker(const engine &l,
                         const area   &a) :
+        tiles(a,*l),
         func(0),
         args(0),
         loop(l),
-        tess(a,*loop),
         call(0)
         {
             setup();
@@ -25,7 +25,7 @@ namespace upsylon
 
         void broker:: setup() throw()
         {
-            if(tess.size()<loop->size())
+            if(size()<loop->size())
             {
                 std::cerr << "DOWNSIZED" << std::endl;
                 call = & broker::run_downsized;
@@ -33,29 +33,29 @@ namespace upsylon
             else
             {
                 std::cerr << "OPTIMIZED" << std::endl;
-                assert(tess.size()==loop->size());
+                assert(size()==loop->size());
                 call = & broker::run_optimized;
             }
         }
 
         void broker:: run_downsized(const concurrent::context &ctx, lockable &sync) throw()
         {
-            assert(tess.size()<ctx.size);
+            assert(size()<ctx.size);
             assert(func);
             assert(args);
-            if(ctx.rank<tess.size())
+            if(ctx.rank<size())
             {
-                func(tess[ctx.rank],args,sync);
+                func( (*this)[ctx.rank],args,sync);
             }
         }
 
         void broker:: run_optimized(const concurrent::context &ctx, lockable &sync) throw()
         {
-            assert(ctx.indx<=tess.size());
-            assert(ctx.size==tess.size());
+            assert(ctx.indx<=size());
+            assert(ctx.size==size());
             assert(func);
             assert(args);
-            func(tess[ctx.rank],args,sync);
+            func((*this)[ctx.rank],args,sync);
         }
 
         void broker:: run( const concurrent::context &ctx, lockable &sync) throw()

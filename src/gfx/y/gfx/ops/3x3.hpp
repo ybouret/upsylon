@@ -28,8 +28,8 @@ namespace upsylon
                                   ) throw()
             {
                 
-                assert( target.has_same_metrics_than(source)     );
-                assert( target.has_same_metrics_than(apply.tess) );
+                assert( target.has_same_metrics_than(source) );
+                assert( target.has_same_metrics_than(apply)  );
                 
                 struct ops
                 {

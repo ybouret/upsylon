@@ -27,7 +27,7 @@ namespace upsylon
         //! broker for instruction on multiple/single tile(s)
         //
         //______________________________________________________________________
-        class broker :  public concurrent:: runnable
+        class broker :  public tiles, concurrent:: runnable
         {
         public:
             //__________________________________________________________________
@@ -55,8 +55,7 @@ namespace upsylon
 
         public:
             ref_ptr<concurrent::looper> loop; //!< loop to apply for each
-            const tiles                 tess; //!< tessellation
-
+            
 
         private:
             void (broker::*call)(const concurrent::context &, lockable &) throw();

@@ -47,7 +47,6 @@ namespace upsylon
             inline type & operator[](const unit_t i) throw()
             {
                 assert(p);
-                std::cerr << "@x=" << i << "->" << z(i) << std::endl;
                 return p[z(i)];
             }
 

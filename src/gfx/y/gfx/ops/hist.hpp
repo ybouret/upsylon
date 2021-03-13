@@ -38,7 +38,7 @@ namespace upsylon
                 // check memory for each tile
                 //
                 //--------------------------------------------------------------
-                local_caches &caches = apply.tess.caches;
+                local_caches &caches = apply.caches;
                 caches.make<size_t>( histogram::bins );
 
                 //--------------------------------------------------------------
