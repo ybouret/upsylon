@@ -67,6 +67,7 @@ namespace upsylon
             static const T & from(const T &x) throw() { return x; }
         };
         
+        //! simple identity function
         template <typename T>
         inline const T & identity(const T &x) throw() { return x; }
 
