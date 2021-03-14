@@ -15,6 +15,7 @@ add_test(stack   test-gfx stack)
 add_test(tiles   test-gfx tiles)
 add_test(tess    test-gfx tess)
 add_test(ops     test-gfx ops)
+add_test(grads   test-gfx grads)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
