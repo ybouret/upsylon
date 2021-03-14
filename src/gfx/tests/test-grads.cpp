@@ -4,6 +4,7 @@
 #include "y/counting/mloop.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "../../mkl/y/mkl/kernel/lu.hpp"
 
 using namespace upsylon;
 using namespace yap;
@@ -57,7 +58,9 @@ namespace
     
     
     static inline void compute(const accessible<coord> &coords,
-                               const accessible<apq>   &weights)
+                               const accessible<apq>   &weights,
+                               addressable<apq>        &gx,
+                               addressable<apq>        &gy)
     {
         assert(weights.size()==coords.size());
         
@@ -73,7 +76,7 @@ namespace
                 apq sum = 0;
                 for(size_t k=1;k<=N;++k)
                 {
-                    sum += Lam[i](coords,k)*Lam[j](coords,k);
+                    sum += Lam[i](coords,k)*Lam[j](coords,k) * weights[k];
                 }
                 M[i][j] = sum;
             }
@@ -85,30 +88,58 @@ namespace
         }
         std::cerr << "M=" << M << std::endl;
         std::cerr << "W=" << W << std::endl;
+        if(!mkl::LU::build(M))
+        {
+            throw exception("singular matrix");
+        }
+        mkl::LU::solve(M,W);
+        for(size_t k=1;k<=N;++k)
+        {
+            gx[k] = W[4][k];
+            gy[k] = W[5][k];
+        }
+        
+        std::cerr << "gx=" << gx << std::endl;
+        std::cerr << "gy=" << gy << std::endl;
     }
+    
+    typedef apq (*Weight)(const coord);
+    
+    static inline apq Weight1(const coord) { return 1; }
+    static inline apq Weight2(const coord) { return 2; }
+
+    
+    static inline void compute(const coord lower,
+                               const coord upper,
+                               Weight      wproc)
+    {
+        vector<coord> coords;
+        vector<apq>   weights;
+        vector<apq>   gx,gy;
+        
+        mloop<unit_t,coord> loop(lower,upper);
+        for( loop.boot(); loop.good(); loop.next() )
+        {
+            coords.push_back( *loop );
+            weights.push_back( wproc(*loop) );
+            gx.push_back(0);
+            gy.push_back(0);
+        }
+        compute(coords,weights,gx,gy);
+
+    }
+    
 }
+
+
 
 
 Y_UTEST(grads)
 {
-    vector<coord> coords;
-    vector<apq>   weights;
-    
-    {
-        mloop<unit_t,coord> loop(coord(-1,-1),coord(1,1));
-        std::cerr << "loop.count=" << loop.count << std::endl;
-        
-        coords.free();
-        weights.free();
-        
-        for( loop.boot(); loop.good(); loop.next() )
-        {
-            coords.push_back( *loop );
-            weights.push_back(1);
-        }
-        compute(coords,weights);
-    }
-    
+   
+    compute( coord(-1,-1), coord(1,1), Weight1 );
+    compute( coord(-1,-1), coord(1,1), Weight2 );
+
 }
 Y_UTEST_DONE()
 
