@@ -21,7 +21,10 @@ namespace upsylon
             segment(const unit_t Xmin, const unit_t Y, const unit_t Xmax) throw(); //!< setup
             ~segment() throw();                        //!< cleanup
             segment(const segment &) throw();          //!< copy
-            
+
+            coord head() const throw(); //!< (xmin,y)
+            coord tail() const throw(); //!< (xmax,y)
+
             //__________________________________________________________________
             //
             // members

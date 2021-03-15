@@ -86,7 +86,26 @@ namespace upsylon {
                 }
                 return ans;
             }
-            
+
+
+            //! get min of shacks
+            template <typename T> inline
+            T get_min() const throw()
+            {
+
+                const size_t      num  = size();
+                const slots_type &self = *this;
+                assert( self[0]->is<T>() );
+                T ans = self[0]->as<T>();
+                for(size_t i=1;i<num;++i)
+                {
+                    ans = min_of(ans,self[i]->as<T>());
+                }
+                return ans;
+            }
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shacks);
         };

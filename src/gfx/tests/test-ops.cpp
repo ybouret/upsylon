@@ -2,6 +2,7 @@
 #include "y/gfx/ops/hist.hpp"
 #include "y/gfx/ops/3x3.hpp"
 #include "y/gfx/ops/gradient.hpp"
+#include "y/gfx/ops/extrema.hpp"
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
@@ -117,8 +118,30 @@ Y_UTEST(ops)
             
             gradient::y_to_rgba conv_vy( rgb(0,0,255), rgb(255,0,0) );
             IMG.save(G.g,"grad_y.png", NULL, conv_vy);
-            
         }
+
+        {
+            std::cerr << "computing extrema" << std::endl;
+            const pixmap<float> pxm(img,par,convert<float,rgb>::from);
+
+            const float smax = extrema::get_max(pxm,seq);
+            {
+                const float pmax = extrema::get_max(pxm,par);
+                Y_CHECK( fabsf(smax-pmax)<=0 );
+            }
+            std::cerr << "max=" << smax << std::endl;
+
+            const float smin = extrema::get_min(pxm,seq);
+            {
+                const float pmin = extrema::get_min(pxm,par);
+                Y_CHECK( fabsf(smin-pmin)<=0 );
+            }
+            std::cerr << "min=" << smin << std::endl;
+
+
+
+        }
+
     }
 }
 Y_UTEST_DONE()

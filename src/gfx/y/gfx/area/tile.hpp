@@ -55,7 +55,8 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             unit_t content() const throw(); //!< recompute content!
-            
+            coord  origin()  const throw(); //!< lower point
+
             //__________________________________________________________________
             //
             // members

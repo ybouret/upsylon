@@ -98,7 +98,13 @@ namespace upsylon
             assert(j<=size());
             return h_seg[j];
         }
-        
+
+        coord  tile:: origin()  const throw()
+        {
+            return h_seg[1].head();
+        }
+
+
     }
     
 }

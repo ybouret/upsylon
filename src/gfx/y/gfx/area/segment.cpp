@@ -19,6 +19,26 @@ namespace upsylon
         {
             assert(w>0);
         }
+
+        segment:: segment(const segment &other) throw() :
+        xmin(other.xmin),
+        y(other.y),
+        xmax(other.xmax),
+        w(other.w)
+        {
+        }
+        
+
+
+        coord segment:: head() const throw()
+        {
+            return coord(xmin,y);
+        }
+
+        coord segment:: tail() const throw()
+        {
+            return coord(xmax,y);
+        }
     }
     
 }

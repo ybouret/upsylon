@@ -41,11 +41,18 @@ SOURCE_GROUP( gfx/ops FILES ${ops_srcs} )
 INSTALL( FILES ${ops_decl} DESTINATION include/y/gfx/ops )
 
 
+FILE(GLOB filter_decl y/gfx/filter/*.hpp)
+FILE(GLOB filter_code y/gfx/filter/*.cpp)
+SET(filter_srcs ${filter_decl} ${filter_code})
+SOURCE_GROUP( gfx/filter FILES ${filter_srcs} )
+INSTALL( FILES ${filter_decl} DESTINATION include/y/gfx/filter )
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
 ${image_srcs} ${image_format_srcs}
 ${ops_srcs}
+${filter_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
