@@ -109,11 +109,15 @@ namespace
     static inline apq WeightOne(const coord) { return 1; }
     static inline apq WeightTwo(const coord) { return 2; }
 
-    static inline apq WeightA(const coord p) {
+    static inline apq WeightA1(const coord p) {
         return apq(1,(1+p.norm1()));
     }
 
+    static inline apq WeightA2(const coord p) {
+        return apq(1,(1+p.norm2()));
+    }
     
+
 
     static inline void compute(const unit_t delta,
                                Weight       wproc)
@@ -178,7 +182,12 @@ Y_UTEST(grads)
 
     compute(1,WeightOne);
     compute(1,WeightTwo);
-    compute(1,WeightA);
+    compute(1,WeightA1);
+    compute(1,WeightA2);
+
+    compute(2,WeightOne);
+    compute(2,WeightA1);
+    compute(2,WeightA2);
 
 }
 Y_UTEST_DONE()
