@@ -9,9 +9,10 @@ namespace upsylon
         {}
         
         
-        gradient:: gradient(const unit_t W, const unit_t H) :
+        gradient:: gradient(const unit_t W, const unit_t H, const shared_filters &F) :
         pixmap<float>(W,H),
         g(W,H),
+        comp(F),
         gmax(0)
         {
         }
@@ -27,22 +28,30 @@ namespace upsylon
                 const segment &s    = t[j];
                 const unit_t   y    = s.y;
                 const unit_t   xmin = s.xmin;
-                pixmap<float> &gn   = *this;
+                pixmap<float> &norm = *this;
                 for(unit_t x=s.xmax;x>=xmin;--x)
                 {
-                    const float gx = f[y][x+1]-f[y][x-1];
-                    const float gy = f[y+1][x]-f[y-1][x];
-                    const float g2 = gx*gx + gy*gy;
-                    if(g2>0)
+                    float       gx = 0.0f;
+                    float       gy = 0.0f;
                     {
-                        const float gg = gn(y)(x) = sqrtf(g2);
-                        lmax    = max_of(lmax,gg);
-                        g(y)(x) = vertex(gx/gg,gy/gg);
+                        const coord p(x,y);
+                        comp->x->put(gx,f,p);
+                        comp->y->put(gy,f,p);
+                    }
+
+                    const float    g2      = gx*gx + gy*gy;
+                    pixrow<float>  &norm_y = norm(y);
+                    pixrow<vertex> &grad_y = g(y);
+                    if(g2>0.0f)
+                    {
+                        const float gg = norm_y(x) = sqrtf(g2);
+                        lmax      = max_of(lmax,gg);
+                        grad_y(x) = vertex(gx/gg,gy/gg);
                     }
                     else
                     {
-                        gn(y)(x) = 0.0f;
-                        g(y)(x)  = vertex(0.0f,0.0f);
+                        norm_y(x)  = 0.0f;
+                        grad_y(x)  = vertex(0.0f,0.0f);
                     }
                 }
                 

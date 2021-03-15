@@ -2,6 +2,7 @@
 
 #include "y/gfx/filter/sobel.hpp"
 #include "y/gfx/filter/prewitt.hpp"
+#include "y/gfx/filter/scharr.hpp"
 
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/ops/extrema.hpp"
@@ -48,6 +49,7 @@ namespace
                                   const pixmap<float>  &pxm,
                                   broker               &apply)
     {
+        std::cerr << "Computing [" << F->name << "]" << std::endl;
         pixmap<float> fx(pxm.w,pxm.h);
         pixmap<float> fy(pxm.w,pxm.h);
         do_compute(fx,pxm,apply,*(F->x));
@@ -81,14 +83,17 @@ Y_UTEST(filters)
     const shared_filters prewitt5 = new Prewitt5();
     const shared_filters prewitt7 = new Prewitt7();
 
-    
-    
+    const shared_filters scharr3 = new Scharr3();
+    const shared_filters scharr5 = new Scharr5();
+
     do_filters(sobel3);
     do_filters(sobel5);
     do_filters(sobel7);
     do_filters(prewitt3);
     do_filters(prewitt5);
     do_filters(prewitt7);
+    do_filters(scharr3);
+    do_filters(scharr5);
 
     //engine seqE = new concurrent::solo();
     engine parE = new concurrent::simt();
@@ -107,6 +112,8 @@ Y_UTEST(filters)
         do_filters(prewitt3,pxm,par);
         do_filters(prewitt5,pxm,par);
         do_filters(prewitt7,pxm,par);
+        do_filters(scharr3,pxm,par);
+        do_filters(scharr5,pxm,par);
 
     }
 }

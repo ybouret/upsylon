@@ -3,6 +3,10 @@
 #include "y/gfx/ops/3x3.hpp"
 #include "y/gfx/ops/gradient.hpp"
 #include "y/gfx/ops/extrema.hpp"
+#include "y/gfx/filter/sobel.hpp"
+#include "y/gfx/filter/scharr.hpp"
+#include "y/gfx/filter/prewitt.hpp"
+
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
@@ -105,7 +109,8 @@ Y_UTEST(ops)
         
         {
             std::cerr << "computing gradient" << std::endl;
-            gradient      G(img.w,img.h);
+            const shared_filters sobel = new Sobel5();
+            gradient      G(img.w,img.h,sobel);
             pixmap<float> f(img,par,convert<float,rgb>::from);
             
             G.compute(f,seq); std::cerr << "gmax_seq=" << G.gmax << std::endl;
@@ -113,11 +118,8 @@ Y_UTEST(ops)
             
             G.normalize(par); IMG.save(G,"grad.png");
             
-            gradient::x_to_rgba conv_vx( rgb(0,0,255), rgb(255,0,0) );
-            IMG.save(G.g,"grad_x.png", NULL, conv_vx);
+
             
-            gradient::y_to_rgba conv_vy( rgb(0,0,255), rgb(255,0,0) );
-            IMG.save(G.g,"grad_y.png", NULL, conv_vy);
         }
 
         {
