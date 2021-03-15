@@ -26,7 +26,7 @@ namespace
     
     apq toXY(const accessible<coord> &coords, const size_t k)
     {
-        return  (coords[k].x*coords[k].y);
+        return  coords[k].prod();
     }
     
     apq toX(const accessible<coord> &coords, const size_t k)
@@ -105,8 +105,12 @@ namespace
     
     typedef apq (*Weight)(const coord);
     
-    static inline apq Weight1(const coord) { return 1; }
-    static inline apq Weight2(const coord) { return 2; }
+    static inline apq WeightOne(const coord) { return 1; }
+    static inline apq WeightTwo(const coord) { return 2; }
+
+    static inline apq WeightA(const coord p) {
+        return apq(1,(1+p.norm1()));
+    }
 
     
     static inline void compute(const coord lower,
@@ -137,8 +141,9 @@ namespace
 Y_UTEST(grads)
 {
    
-    compute( coord(-1,-1), coord(1,1), Weight1 );
-    compute( coord(-1,-1), coord(1,1), Weight2 );
+    compute( coord(-1,-1), coord(1,1), WeightOne );
+    compute( coord(-1,-1), coord(1,1), WeightTwo );
+    compute( coord(-1,-1), coord(1,1), WeightA   );
 
 }
 Y_UTEST_DONE()

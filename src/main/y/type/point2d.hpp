@@ -61,6 +61,8 @@ namespace upsylon
         inline friend type operator*(const point2d a, const point2d b) { return a.x*b.x + a.y*b.y; }
         //! norm2
         inline type norm2() const { return x*x+y*y; }
+        //! norm1
+        inline type norm1() const { return abs_of(x)+abs_of(y); }
 
         //! in place division by scalar
         inline point2d & operator/=( param_type u) { x/=u;y/=u; return *this; }
