@@ -71,9 +71,11 @@ namespace upsylon {
                 for(size_t i=0;i<size();++i) (void) (*self[i]).make<T>(n);
             }
 
+            //! get max of shacks
             template <typename T> inline
             T get_max() const throw()
             {
+
                 const size_t      num  = size();
                 const slots_type &self = *this;
                 assert( self[0]->is<T>() );

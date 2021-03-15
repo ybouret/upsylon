@@ -34,7 +34,21 @@ Y_UTEST(yap_lcm)
     }
     Y_CHECK( say("all good") );
 
-
+    list<apq> Q;
+    for(size_t i=1+alea.leq(10);i>0;--i)
+    {
+        const apq q(alea.range<unit_t>(-100,100),i);
+        Q.push_back(q);
+    }
+    std::cerr << Q << std::endl;
+    const integer fac = lcm::of_denominators(Q);
+    std::cerr << "fac=" << fac << std::endl;
+    for(list<apq>::iterator i=Q.begin();i!=Q.end();++i)
+    {
+        apq &q =(*i);
+        q *= fac;
+    }
+    std::cerr << Q << std::endl;
 }
 Y_UTEST_DONE()
 

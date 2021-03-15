@@ -215,13 +215,13 @@ namespace upsylon {
                 os << (curr->data);
                 if(next)
                 {
-                    os << ' ';
+                    os << ';';
                     curr = next;
                 }
                 else
                     break;
             }
-            os << ']' << '\'';
+            os << ']';
             return os;
         }
 

@@ -4,7 +4,7 @@
 #ifndef YAP_LCM_INCLUDED
 #define YAP_LCM_INCLUDED 1
 
-#include "y/yap/natural.hpp"
+#include "y/yap/rational.hpp"
 
 namespace upsylon
 {
@@ -50,6 +50,28 @@ namespace upsylon
             {
                 return of( seq.begin(), seq.size() );
             }
+
+            //! lcm of a range of rational denominators
+            template <typename ITERATOR> static inline
+            integer of_denominators(ITERATOR curr, size_t size)
+            {
+                natural res(1);
+                while(size-- > 0)
+                {
+                    const rational &q   = *(curr++);
+                    const natural  &den = q.den; assert(den>0);
+                    res = apn::lcm(res,den);
+                }
+                return res;
+            }
+
+            //! compute for a sequence of denominators
+            template <typename SEQUENCE> static inline
+            integer of_denominators(SEQUENCE &seq)
+            {
+                return of_denominators( seq.begin(), seq.size() );
+            }
+
         };
     }
 }

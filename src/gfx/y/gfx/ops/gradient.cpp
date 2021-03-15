@@ -11,7 +11,8 @@ namespace upsylon
         
         gradient:: gradient(const unit_t W, const unit_t H) :
         pixmap<float>(W,H),
-        g(W,H)
+        g(W,H),
+        gmax(0)
         {
         }
         
