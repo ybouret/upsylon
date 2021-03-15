@@ -156,7 +156,7 @@ namespace upsylon
         inline const array<type>  & operator[](const size_t r) const throw() { assert(r>0); assert(r<=rows); return row_ptr[r]; }
 
 
-        //! display Octave/Julia style
+        //! display Julia style
         inline friend std::ostream & operator<<( std::ostream &os, const matrix &m )
         {
             os << '[';
@@ -174,7 +174,7 @@ namespace upsylon
         }
         
         //! display for maxima
-        inline std::ostream & maxima(std::ostream &os)
+        inline std::ostream & maxima(std::ostream &os) const
         {
             os << "matrix(";
             for(size_t i=1;i<=rows;++i)
@@ -192,6 +192,20 @@ namespace upsylon
             return os << ")";
         }
 
+        //! display as tableau
+        inline std::ostream &tableau(std::ostream &os)
+        {
+            for(size_t j=rows;j>0;--j)
+            {
+                os << '|';
+                for(size_t i=1;i<=cols;++i)
+                {
+                    os << ' ' << (*this)[i][j];
+                }
+                os << ' ' << '|' << '\n';
+            }
+            return os;
+        }
 
 
 

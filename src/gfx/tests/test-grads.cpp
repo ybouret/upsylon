@@ -56,7 +56,9 @@ namespace
         0
     };
     
-    
+
+
+
     static inline void compute(const accessible<coord> &coords,
                                const accessible<apq>   &weights,
                                addressable<apq>        &gx,
@@ -112,7 +114,7 @@ namespace
         return apq(1,(1+p.norm1()));
     }
 
-    
+#if 0
     static inline void compute(const coord lower,
                                const coord upper,
                                Weight      wproc)
@@ -132,6 +134,45 @@ namespace
         compute(coords,weights,gx,gy);
 
     }
+#endif
+    
+
+    static inline void compute(const unit_t delta,
+                               Weight       wproc)
+    {
+        assert(delta>0);
+        const unit_t  length = 1+delta*2;
+
+        matrix<coord> m(length,length);
+        matrix<apq>   w(length,length);
+        matrix<apq>   gx(length,length);
+        matrix<apq>   gy(length,length);
+
+        const matrix<coord>::row coords = m.as_array();
+        const matrix<apq>::row   weight = w.as_array();
+        matrix<apq>::row         grad_x = gx.as_array();
+        matrix<apq>::row         grad_y = gy.as_array();
+
+        for(unit_t y=-delta;y<=delta;++y)
+        {
+            const unit_t j=y+delta+1;
+            for(unit_t x=-delta;x<=delta;++x)
+            {
+                const unit_t i=x+delta+1;
+                const coord  p(x,y);
+                m[i][j] = p;
+                w[i][j] = wproc(p);
+            }
+        }
+        m.tableau( std::cerr << "coords:" << std::endl );
+        w.tableau( std::cerr << "weight:" << std::endl );
+
+        compute(coords,weight,grad_x,grad_y);
+
+        gx.tableau( std::cerr << "grad_x:" << std::endl );
+        gy.tableau( std::cerr << "grad_y:" << std::endl );
+
+    }
     
 }
 
@@ -140,10 +181,13 @@ namespace
 
 Y_UTEST(grads)
 {
-   
+#if 0
     compute( coord(-1,-1), coord(1,1), WeightOne );
     compute( coord(-1,-1), coord(1,1), WeightTwo );
     compute( coord(-1,-1), coord(1,1), WeightA   );
+#endif
+
+    compute(1,WeightOne);
 
 }
 Y_UTEST_DONE()
