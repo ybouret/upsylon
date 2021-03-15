@@ -1,7 +1,6 @@
 #include "y/yap/lcm.hpp"
 #include "y/gfx/types.hpp"
 #include "y/container/matrix.hpp"
-#include "y/counting/mloop.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "../../mkl/y/mkl/kernel/lu.hpp"
@@ -88,8 +87,8 @@ namespace
                 W[i][k] = Lam[i](coords,k) * weights[k];
             }
         }
-        std::cerr << "M=" << M << std::endl;
-        std::cerr << "W=" << W << std::endl;
+        //std::cerr << "M=" << M << std::endl;
+        //std::cerr << "W=" << W << std::endl;
         if(!mkl::LU::build(M))
         {
             throw exception("singular matrix");
@@ -101,8 +100,8 @@ namespace
             gy[k] = W[5][k];
         }
         
-        std::cerr << "gx=" << gx << std::endl;
-        std::cerr << "gy=" << gy << std::endl;
+        //std::cerr << "gx=" << gx << std::endl;
+        //std::cerr << "gy=" << gy << std::endl;
     }
     
     typedef apq (*Weight)(const coord);
@@ -114,32 +113,12 @@ namespace
         return apq(1,(1+p.norm1()));
     }
 
-#if 0
-    static inline void compute(const coord lower,
-                               const coord upper,
-                               Weight      wproc)
-    {
-        vector<coord> coords;
-        vector<apq>   weights;
-        vector<apq>   gx,gy;
-        
-        mloop<unit_t,coord> loop(lower,upper);
-        for( loop.boot(); loop.good(); loop.next() )
-        {
-            coords.push_back( *loop );
-            weights.push_back( wproc(*loop) );
-            gx.push_back(0);
-            gy.push_back(0);
-        }
-        compute(coords,weights,gx,gy);
-
-    }
-#endif
     
 
     static inline void compute(const unit_t delta,
                                Weight       wproc)
     {
+        std::cerr << "<computing>" << std::endl;
         assert(delta>0);
         const unit_t  length = 1+delta*2;
         const size_t  N      = length*length;
@@ -185,6 +164,7 @@ namespace
         gx.tableau( std::cerr << "grad_x:" << std::endl );
         gy.tableau( std::cerr << "grad_y:" << std::endl );
 
+        std::cerr << "<computing/>" << std::endl << std::endl;
 
     }
     
@@ -195,13 +175,10 @@ namespace
 
 Y_UTEST(grads)
 {
-#if 0
-    compute( coord(-1,-1), coord(1,1), WeightOne );
-    compute( coord(-1,-1), coord(1,1), WeightTwo );
-    compute( coord(-1,-1), coord(1,1), WeightA   );
-#endif
 
     compute(1,WeightOne);
+    compute(1,WeightTwo);
+    compute(1,WeightA);
 
 }
 Y_UTEST_DONE()
