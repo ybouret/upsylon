@@ -1,4 +1,4 @@
-#include "y/yap.hpp"
+#include "y/yap/lcm.hpp"
 #include "y/gfx/types.hpp"
 #include "y/container/matrix.hpp"
 #include "y/counting/mloop.hpp"
@@ -142,7 +142,7 @@ namespace
     {
         assert(delta>0);
         const unit_t  length = 1+delta*2;
-
+        const size_t  N      = length*length;
         matrix<coord> m(length,length);
         matrix<apq>   w(length,length);
         matrix<apq>   gx(length,length);
@@ -167,10 +167,24 @@ namespace
         m.tableau( std::cerr << "coords:" << std::endl );
         w.tableau( std::cerr << "weight:" << std::endl );
 
+
+
         compute(coords,weight,grad_x,grad_y);
+        const apz xfac = lcm::of_denominators(&grad_x[1],N);
+        const apz yfac = lcm::of_denominators(&grad_y[1],N);
+
+        std::cerr << "xfac=" << xfac << std::endl;
+        std::cerr << "yfac=" << yfac << std::endl;
+        for(size_t i=1;i<=N;++i)
+        {
+            grad_x[i] *= xfac;
+            grad_y[i] *= yfac;
+        }
+
 
         gx.tableau( std::cerr << "grad_x:" << std::endl );
         gy.tableau( std::cerr << "grad_y:" << std::endl );
+
 
     }
     
