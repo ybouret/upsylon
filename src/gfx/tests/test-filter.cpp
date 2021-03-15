@@ -89,6 +89,8 @@ Y_UTEST(filter)
 
     Y_UTEST_SIZEOF( crux::filter_weights<int>   );
     Y_UTEST_SIZEOF( crux::filter_weights<float> );
+    Y_UTEST_SIZEOF( filter<float>   );
+    Y_UTEST_SIZEOF( filter<int>   );
 
     if(argc>1)
     {

@@ -100,9 +100,11 @@ namespace upsylon
             inline explicit filter(const ID    &ident,
                                    const U     *coeff,
                                    const unit_t width,
-                                   const bool   trans) :
+                                   const bool   trans,
+                                   const char  *suffix=NULL) :
             crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
             {
+                aliasing::_(name) += suffix;
                 compile(coeff,width,trans);
             }
 

@@ -115,6 +115,21 @@ namespace upsylon
                 apply( ops::run, &todo );
             }
 
+            template <typename T>
+            static inline
+            void normalize(pixmap<T>       &target,
+                           const pixmap<T> &source,
+                           broker          &apply)
+            {
+                T vmin=0,vmax=0;
+                {
+                    const T *p = minmax(source,apply);
+                    vmin = p[0];
+                    vmax = p[1];
+                }
+                normalize(target,source,apply,vmin,vmax);
+            }
+            
         private:
             template <typename T> static inline
             void kernel_maxi(const tile &t, void *args, lockable &) throw()
