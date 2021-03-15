@@ -72,8 +72,13 @@ namespace
 Y_UTEST(filters)
 {
     const shared_filters sobel3 = new Sobel3();
+    const shared_filters sobel5 = new Sobel5();
+    const shared_filters sobel7 = new Sobel7();
+
     do_filters(sobel3);
-    
+    do_filters(sobel5);
+    do_filters(sobel7);
+
     //engine seqE = new concurrent::solo();
     engine parE = new concurrent::simt();
     
@@ -86,7 +91,9 @@ Y_UTEST(filters)
         broker              par(parE,img);
         const pixmap<float> pxm(img,par,convert<float,rgb>::from);
         do_filters(sobel3,pxm,par);
-        
+        do_filters(sobel5,pxm,par);
+        do_filters(sobel7,pxm,par);
+
     }
 }
 Y_UTEST_DONE()

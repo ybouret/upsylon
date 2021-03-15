@@ -11,17 +11,10 @@ namespace upsylon
     namespace graphic
     {
         
-        class Sobel3 : public filters
-        {
-        public:
-            static const char ID[];
-            explicit Sobel3();
-            virtual ~Sobel3() throw();
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Sobel3);
-        };
-        
+        Y_FILTERS_DECL(Sobel,3);
+        Y_FILTERS_DECL(Sobel,5);
+        Y_FILTERS_DECL(Sobel,7);
+
     }
     
 }

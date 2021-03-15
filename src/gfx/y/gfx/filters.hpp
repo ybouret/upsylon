@@ -44,5 +44,24 @@ namespace upsylon
     
 }
 
+#define Y_FILTERS_DECL(NAME,DIM)           \
+/**/ class NAME##DIM : public filters {    \
+/**/ public:                               \
+/**/ static const char ID[];               \
+/**/ explicit NAME##DIM();                 \
+/**/ virtual ~NAME##DIM() throw();         \
+/**/ private:                              \
+/**/ Y_DISABLE_COPY_AND_ASSIGN(NAME##DIM); \
+/**/ static const int Coeffs[DIM][DIM];    \
+/**/ }
+
+#define Y_FILTERS_IMPL(NAME,DIM)                                 \
+/**/ const char   NAME##DIM :: ID[] = #NAME #DIM;                \
+/**/ NAME##DIM::  NAME##DIM() : filters(ID,&Coeffs[0][0],DIM) {} \
+/**/ NAME##DIM:: ~NAME##DIM() throw() {} \
+/**/ const int NAME##DIM :: Coeffs[DIM][DIM] = {
+
+#define Y_FILTERS_DONE() }
+
 #endif
 
