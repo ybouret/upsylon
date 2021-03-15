@@ -175,12 +175,9 @@ namespace upsylon
 
 
         private:
-            row *rows;
-
             Y_DISABLE_ASSIGN(pixmap);
-
+            row *rows;
             inline row * mine() throw() { return static_cast<row *>(a_rows->impl.block_addr); }
-
         };
     }
 

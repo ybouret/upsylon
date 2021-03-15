@@ -1,6 +1,7 @@
 
 #include "y/gfx/filter.hpp"
 #include "y/gfx/image/io.hpp"
+#include "y/gfx/ops/extrema.hpp"
 
 #include "y/concurrent/loop/solo.hpp"
 #include "y/concurrent/loop/simt.hpp"
@@ -24,7 +25,7 @@ namespace {
 
     static const int dummy[3][3] =
     {
-        {0,1,0},
+        {0,-1,0},
         {0,0,0},
         {1,2,3}
     };
@@ -57,6 +58,24 @@ namespace {
         }
     }
 
+    static inline
+    void apply_filter(const filter<float> &f,
+                      pixmap<float>       &target,
+                      const pixmap<float> &source,
+                      broker              &apply,
+                      image::io           &IMG)
+    {
+        f(target,source,apply);
+        float vmin=0, vmax=0;
+        {
+            const float *arr = extrema::minmax(target,apply);
+            vmin = arr[0];
+            vmax = arr[1];
+        }
+        extrema::normalize(target,target,apply,vmin,vmax);
+
+        IMG.save(target,f.name+".png");
+    }
 
 }
 
@@ -85,12 +104,15 @@ Y_UTEST(filter)
         filter<float> f3y( "simple-y", &simple[0][0],3,false );
         filter<float> f3x( "simple-x", &simple[0][0],3,true  );
 
+        filter<float> d3y( "dummy-y", &dummy[0][0],3,false);
+        filter<float> d3x( "dummy-x", &dummy[0][0],3,true);
+
         pixmap<float> target(source.w,source.h);
 
-        f3x(target,source,seq);
-
-
-
+        apply_filter(f3y, target, source, par, IMG);
+        apply_filter(f3x, target, source, par, IMG);
+        apply_filter(d3y, target, source, par, IMG);
+        apply_filter(d3x, target, source, par, IMG);
 
     }
 

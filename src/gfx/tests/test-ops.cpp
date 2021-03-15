@@ -129,14 +129,29 @@ Y_UTEST(ops)
                 const float pmax = extrema::get_max(pxm,par);
                 Y_CHECK( fabsf(smax-pmax)<=0 );
             }
-            std::cerr << "max=" << smax << std::endl;
 
             const float smin = extrema::get_min(pxm,seq);
             {
                 const float pmin = extrema::get_min(pxm,par);
                 Y_CHECK( fabsf(smin-pmin)<=0 );
             }
-            std::cerr << "min=" << smin << std::endl;
+
+            struct minmax_t
+            {
+                float vmin, vmax;
+            };
+
+            minmax_t seq_both = {0,0};
+            memcpy(&seq_both,extrema::minmax(pxm,seq),sizeof(minmax_t));
+
+            Y_CHECK( fabsf(seq_both.vmin-smin)<= 0);
+            Y_CHECK( fabsf(seq_both.vmax-smax)<= 0);
+
+            minmax_t par_both = { 0,0 };
+            memcpy(&par_both,extrema::minmax(pxm,par),sizeof(minmax_t));
+
+            Y_CHECK( fabsf(par_both.vmin-smin)<= 0);
+            Y_CHECK( fabsf(par_both.vmax-smax)<= 0);
 
 
 

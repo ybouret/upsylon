@@ -92,7 +92,6 @@ namespace upsylon {
             template <typename T> inline
             T get_min() const throw()
             {
-
                 const size_t      num  = size();
                 const slots_type &self = *this;
                 assert( self[0]->is<T>() );
@@ -102,6 +101,30 @@ namespace upsylon {
                     ans = min_of(ans,self[i]->as<T>());
                 }
                 return ans;
+            }
+
+            //! minmax
+            template <typename T> inline
+            const T * minmax() throw()
+            {
+                const size_t          num  = size();
+                slots_type           &self = *this;
+                lightweight_array<T> &here = self[0]->__<T>();
+                {
+                    T vmin = here[1];
+                    T vmax = here[2];
+                    for(size_t i=1;i<num;++i)
+                    {
+                        const shack &s = *self[i];
+                        vmin = min_of(vmin,s.get<T>(1));
+                        vmax = max_of(vmax,s.get<T>(2));
+                    }
+
+                    here[1] = vmin;
+                    here[2] = vmax;
+                }
+
+                return &here[1];
             }
 
 

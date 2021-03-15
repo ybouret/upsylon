@@ -159,6 +159,7 @@ namespace upsylon
                 assert( target.has_same_metrics_than(source) );
                 assert( target.has_same_metrics_than(apply)  );
 
+                
                 struct ops
                 {
                     pixmap<U>       &target;
@@ -172,7 +173,7 @@ namespace upsylon
                         pixmap<U>       &target = self.target;
                         const pixmap<V> &source = self.source;
                         const filter    &morpho = self.morpho;
-
+                        
                         for(size_t j=t.size();j>0;--j)
                         {
                             const segment &s = t[j];
