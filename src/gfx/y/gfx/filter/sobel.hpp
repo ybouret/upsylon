@@ -1,7 +1,7 @@
 //! \file
 
 #ifndef Y_GFX_FILTERS_SOBEL_INCLUDED
-#define Y_GFX_FILTERS_SOBLE_INCLUDED 1
+#define Y_GFX_FILTERS_SOBEL_INCLUDED 1
 
 #include "y/gfx/filters.hpp"
 

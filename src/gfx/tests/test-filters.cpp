@@ -1,6 +1,8 @@
 
 
 #include "y/gfx/filter/sobel.hpp"
+#include "y/gfx/filter/prewitt.hpp"
+
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/ops/extrema.hpp"
 
@@ -74,10 +76,19 @@ Y_UTEST(filters)
     const shared_filters sobel3 = new Sobel3();
     const shared_filters sobel5 = new Sobel5();
     const shared_filters sobel7 = new Sobel7();
+    
+    const shared_filters prewitt3 = new Prewitt3();
+    const shared_filters prewitt5 = new Prewitt5();
+    const shared_filters prewitt7 = new Prewitt7();
 
+    
+    
     do_filters(sobel3);
     do_filters(sobel5);
     do_filters(sobel7);
+    do_filters(prewitt3);
+    do_filters(prewitt5);
+    do_filters(prewitt7);
 
     //engine seqE = new concurrent::solo();
     engine parE = new concurrent::simt();
@@ -93,6 +104,9 @@ Y_UTEST(filters)
         do_filters(sobel3,pxm,par);
         do_filters(sobel5,pxm,par);
         do_filters(sobel7,pxm,par);
+        do_filters(prewitt3,pxm,par);
+        do_filters(prewitt5,pxm,par);
+        do_filters(prewitt7,pxm,par);
 
     }
 }
