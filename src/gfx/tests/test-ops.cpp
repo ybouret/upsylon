@@ -117,7 +117,7 @@ Y_UTEST(ops)
             G.compute(f,par); std::cerr << "gmax_par=" << G.gmax << std::endl;
             
             G.normalize(par); IMG.save(G,"grad.png");
-            
+            G.maxima(par);    IMG.save(G,"gmax.png");
 
             
         }

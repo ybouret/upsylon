@@ -119,7 +119,45 @@ namespace upsylon
             }
         }
 
+        namespace
+        {
+            static inline void maxima_kernel(const tile &t,
+                                             void       *args,
+                                             lockable   &) throw()
+            {
+                assert(args);
+                gradient                 &G = *static_cast<gradient *>(args); assert(G.gmax>0.0f);
+                pixmap<gradient::vertex> &V = G.g;
+                
+                for(size_t j=t.size();j>0;--j)
+                {
+                    const segment  &s    = t[j];
+                    const unit_t    y    = s.y;
+                    const unit_t    xmin = s.xmin;
+                    pixrow<float>            &Gy = G(y);
+                    pixrow<gradient::vertex> &Vy = V(y);
+                    
+                    for(unit_t x=s.xmax;x>=xmin;--x)
+                    {
+                        float             &G0  = Gy(x);
+                        gradient::vertex  &gv  = Vy(x);
+                        const unit_t       dx  =  unit_t( floorf(gv.x+0.5f) );
+                        const unit_t       dy  =  unit_t( floorf(gv.y+0.5f) );
+                        const float        Gm  = G[y-dy][x-dx];
+                        const float        Gp  = G[y+dy][x+dx];
+                        if(G0<Gp||G0<Gm)
+                        {
+                            G0 = 0.0f;
+                        }
+                    }
+                }
+            }
+        }
         
+        void gradient:: maxima(broker &apply) throw()
+        {
+            apply(maxima_kernel,this);
+        }
         
     }
     

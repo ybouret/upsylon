@@ -42,7 +42,8 @@ namespace upsylon
             //__________________________________________________________________
             void compute(const pixmap<float> &, broker &apply); //!< compute -> gmax
             void normalize(broker &apply) throw();              //!< normalize with gmax
-
+            void maxima(broker &apply) throw();                 //!< keep only maxima
+            
             //__________________________________________________________________
             //
             // members
