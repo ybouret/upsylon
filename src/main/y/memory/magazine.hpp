@@ -229,6 +229,7 @@ Y_SINGLETON_TEMPLATE_WITH(LIFE_TIME,SUPPLY);                 \
                 //! remove back
                 inline void remove_back() throw()
                 {
+                    assert(this->size>0);
                     static magazine &mgr = magazine::location();
                     mgr.release(this->pop_back());
                 }

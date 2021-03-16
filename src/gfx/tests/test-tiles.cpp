@@ -35,6 +35,7 @@ Y_UTEST(tiles)
         {
             const rgb   c = random_color::get<rgba>(alea);
             const tile &t = tess[rank];
+            const area  a = t.aabb();
             for(size_t l=t.lines;l>0;--l)
             {
                 const segment &s = t[l];
@@ -42,8 +43,10 @@ Y_UTEST(tiles)
                 for(unit_t x=s.xmax;x>=s.xmin;--x)
                 {
                     pxm[y][x] = c;
+                    Y_ASSERT(a.owns(x,y));
                 }
             }
+
         }
         img.save(pxm,filename);
         std::cerr << std::endl;

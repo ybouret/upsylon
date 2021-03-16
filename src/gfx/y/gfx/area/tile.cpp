@@ -25,7 +25,8 @@ namespace upsylon
         cache( new local_memory() ),
         h_seg(0),
         count(0),
-        bytes(0)
+        bytes(0),
+        shift(0)
         {
             static memory::allocator &mgr = memory::dyadic::instance();
           
@@ -41,8 +42,7 @@ namespace upsylon
                 const coord  end   = a.coord_of(offset+items-one);
                 const unit_t num   = one+end.y-ini.y;
                 aliasing::_(lines) = num;
-                std::cerr << "tile: " << ini << " -> " << end << " : lines=" << lines << " | items=" << items << std::endl;
-                
+
                 count = lines;
                 h_seg = mgr.acquire_as<segment>(count,bytes)-1;
                 switch(lines)
@@ -63,9 +63,10 @@ namespace upsylon
                         sum += h_seg[lines].w;
                         break;
                 }
-                
+                aliasing::_(shift) = size_t(offset);
                 assert(items==sum);
-                
+                std::cerr << "tile: " << ini << " -> " << end << " : lines=" << lines << " | items=" << items << " | shift=" << offset << " | aabb=" << aabb() << std::endl;
+
             }
             else
             {
@@ -104,6 +105,22 @@ namespace upsylon
             return h_seg[1].head();
         }
 
+        area tile:: aabb()    const throw()
+        {
+            unit_t       xmin = h_seg[1].xmin;
+            unit_t       xmax = h_seg[1].xmax;
+            const unit_t ymin = h_seg[1].y;
+            const unit_t ymax = h_seg[lines].y;
+            for(size_t i=lines;i>1;--i)
+            {
+                const segment &s = (*this)[i];
+                xmin = min_of(s.xmin,xmin);
+                xmax = max_of(s.xmax,xmax);
+            }
+
+            return area(xmax-xmin+1,ymax-ymin+1,xmin,ymin);
+
+        }
 
     }
     

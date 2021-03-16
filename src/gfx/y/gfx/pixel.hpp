@@ -27,6 +27,8 @@ namespace upsylon
                 return arr[4];
             }
 
+            //! check if zero
+            template <typename T> static bool is_zero(const T&) throw();
 
             //! average of 9 items
             template <typename T> static T average9(T *arr) throw();

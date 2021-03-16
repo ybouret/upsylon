@@ -6,6 +6,28 @@ namespace upsylon
     namespace graphic
     {
 
+        template <>   bool pixel:: is_zero<float>(const float &f) throw()
+        {
+            return f <= 0.0f;
+        }
+
+        template <>   bool pixel:: is_zero<uint8_t>(const uint8_t &u) throw()
+        {
+            return u<=0;
+        }
+
+
+        template <>   bool pixel:: is_zero<rgb>(const rgb &c) throw()
+        {
+            return unsigned(c.r) + unsigned(c.g) + unsigned(c.b) <= 0;
+        }
+
+        template <>   bool pixel:: is_zero<rgba>(const rgba &c) throw()
+        {
+            return unsigned(c.r) + unsigned(c.g) + unsigned(c.b) <= 0;
+        }
+
+
         template <> float pixel:: average9<float>(float *arr) throw()
         {
             sorting::on(arr,comparison::increasing<float>);

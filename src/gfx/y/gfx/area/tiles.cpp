@@ -28,7 +28,7 @@ namespace upsylon
             assert(caches.size()==0);
             assert(caches.capacity()==capacity());
             
-            const size_t sz = count;
+            const size_t sz    = count;
             for(size_t rk=0;rk<sz;++rk)
             {
                 this->build<const area &,size_t,size_t>(*this,sz,rk);

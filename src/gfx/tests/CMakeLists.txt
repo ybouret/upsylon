@@ -17,6 +17,7 @@ add_test(tess    test-gfx tess)
 add_test(ops     test-gfx ops)
 add_test(filter  test-gfx filter)
 add_test(filter  test-gfx filters)
+add_test(blobs   test-gfx blobs)
 add_test(edges   test-gfx edges)
 
 ADD_CUSTOM_TARGET(utest-gfx

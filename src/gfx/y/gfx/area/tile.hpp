@@ -56,6 +56,7 @@ namespace upsylon
             //__________________________________________________________________
             unit_t content() const throw(); //!< recompute content!
             coord  origin()  const throw(); //!< lower point
+            area   aabb()    const throw(); //!< axis aligned bounding box
 
             //__________________________________________________________________
             //
@@ -69,6 +70,8 @@ namespace upsylon
             segment *h_seg;
             size_t   count;
             size_t   bytes;
+        public:
+            const size_t        shift; //!< total items since origin
 
         };
     };
