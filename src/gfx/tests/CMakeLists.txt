@@ -17,7 +17,7 @@ add_test(tess    test-gfx tess)
 add_test(ops     test-gfx ops)
 add_test(filter  test-gfx filter)
 add_test(filter  test-gfx filters)
-add_test(grads   test-gfx grads)
+add_test(edges   test-gfx edges)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

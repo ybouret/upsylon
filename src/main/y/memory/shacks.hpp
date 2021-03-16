@@ -127,6 +127,19 @@ namespace upsylon {
                 return &here[1];
             }
 
+            //! set same value
+            template <typename T> inline
+            void set( const T &args )
+            {
+                const size_t num  = size();
+                slots_type  &self = *this;
+
+                for(size_t i=0;i<num;++i)
+                {
+                    self[i]->as<T>() = args;
+                }
+            }
+
 
 
         private:

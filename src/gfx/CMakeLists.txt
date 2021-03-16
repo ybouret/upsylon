@@ -47,12 +47,21 @@ SET(filters_srcs ${filters_decl} ${filters_code})
 SOURCE_GROUP( gfx/filters FILES ${filters_srcs} )
 INSTALL( FILES ${filters_decl} DESTINATION include/y/gfx/filters )
 
+
+FILE(GLOB edges_decl y/gfx/edges/*.hpp)
+FILE(GLOB edges_code y/gfx/edges/*.cpp)
+SET(edges_srcs ${edges_decl} ${edges_code})
+SOURCE_GROUP( gfx/edges FILES ${edges_srcs} )
+INSTALL( FILES ${edges_decl} DESTINATION include/y/gfx/edges )
+
+
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
 ${area_srcs}
 ${image_srcs} ${image_format_srcs}
 ${ops_srcs}
 ${filters_srcs}
+${edges_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
