@@ -1,5 +1,5 @@
 
-#include "y/gfx/filter/scharr.hpp"
+#include "y/gfx/filters/scharr.hpp"
 
 namespace upsylon
 {

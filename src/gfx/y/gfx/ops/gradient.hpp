@@ -41,7 +41,6 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             void compute(const pixmap<float> &, broker &apply); //!< compute -> gmax
-            void normalize(broker &apply) throw();              //!< normalize with gmax
             void maxima(broker &apply) throw();                 //!< keep only maxima
             
             //__________________________________________________________________
@@ -54,7 +53,9 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gradient);
-            void compute(const pixmap<float> &, const tile &t) throw();
+            const pixmap<float>   *host;
+            void        compute_tile(const tile &t) throw();
+            static void compute_call(const tile &,void *,lockable&) throw();
         };
         
     }

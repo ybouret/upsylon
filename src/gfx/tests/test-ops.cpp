@@ -3,9 +3,9 @@
 #include "y/gfx/ops/3x3.hpp"
 #include "y/gfx/ops/gradient.hpp"
 #include "y/gfx/ops/extrema.hpp"
-#include "y/gfx/filter/sobel.hpp"
-#include "y/gfx/filter/scharr.hpp"
-#include "y/gfx/filter/prewitt.hpp"
+#include "y/gfx/filters/sobel.hpp"
+#include "y/gfx/filters/scharr.hpp"
+#include "y/gfx/filters/prewitt.hpp"
 
 
 #include "y/concurrent/loop/simt.hpp"
@@ -116,7 +116,7 @@ Y_UTEST(ops)
             G.compute(f,seq); std::cerr << "gmax_seq=" << G.gmax << std::endl;
             G.compute(f,par); std::cerr << "gmax_par=" << G.gmax << std::endl;
             
-            G.normalize(par); IMG.save(G,"grad.png");
+            IMG.save(G,"grad.png");
             G.maxima(par);    IMG.save(G,"gmax.png");
 
             

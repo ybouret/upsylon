@@ -1,8 +1,8 @@
 
 
-#include "y/gfx/filter/sobel.hpp"
-#include "y/gfx/filter/prewitt.hpp"
-#include "y/gfx/filter/scharr.hpp"
+#include "y/gfx/filters/sobel.hpp"
+#include "y/gfx/filters/prewitt.hpp"
+#include "y/gfx/filters/scharr.hpp"
 
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/ops/extrema.hpp"

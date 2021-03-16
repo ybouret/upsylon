@@ -1,5 +1,6 @@
 
 #include "y/gfx/ops/gradient.hpp"
+#include "y/momentary/value.hpp"
 
 namespace upsylon
 {
@@ -13,16 +14,20 @@ namespace upsylon
         pixmap<float>(W,H),
         g(W,H),
         comp(F),
-        gmax(0)
+        gmax(0),
+        host(NULL)
         {
         }
         
         
         
-        void gradient:: compute(const pixmap<float> &f, const tile &t) throw()
+        void gradient:: compute_tile(const tile &t) throw()
         {
             assert(t.cache->is<float>());
-            float lmax = 0;
+            assert(host!=NULL);
+
+            const pixmap<float> &f    = *host;
+            float                lmax = 0;
             for(size_t j=t.size();j>0;--j)
             {
                 const segment &s    = t[j];
@@ -58,38 +63,15 @@ namespace upsylon
             }
             t.cache->as<float>() = lmax;
         }
-        
-        void gradient:: compute(const pixmap<float> &f, broker &apply)
-        {
-            apply.caches.make<float>();
-            
-            // compute gradient and max per tile
-            {
-                struct ops
-                {
-                    const pixmap<float> &f;
-                    gradient            &G;
-                    
-                    static inline void run(const tile &t,
-                                           void       *args,
-                                           lockable   &) throw()
-                    {
-                        assert(args);
-                        ops &self = *static_cast<ops *>(args);
-                        self.G.compute(self.f,t);
-                    }
-                };
-                
-                ops todo = { f, *this };
-                apply(ops::run,&todo);
-                
-            }
-            
-            // update global gmax
-            aliasing::_(gmax) = apply.caches.get_max<float>();
 
+
+        void gradient:: compute_call(const tile &t, void *args, lockable &) throw()
+        {
+            assert(args);
+            static_cast<gradient *>(args)->compute_tile(t);
         }
-        
+
+
         namespace
         {
             static inline void normalize_kernel(const tile &t,
@@ -97,28 +79,52 @@ namespace upsylon
                                                 lockable   &) throw()
             {
                 assert(args);
-                gradient &G = *static_cast<gradient *>(args); assert(G.gmax>0.0f);
+                gradient    &G  = *static_cast<gradient *>(args); assert(G.gmax>0.0f);
+                const float fac = 1.0f/G.gmax;
                 for(size_t j=t.size();j>0;--j)
                 {
                     const segment &s    = t[j];
-                    const unit_t   y    = s.y;
                     const unit_t   xmin = s.xmin;
+                    pixrow<float> &r    = G[s.y];
                     for(unit_t x=s.xmax;x>=xmin;--x)
                     {
-                        G(y)(x) = clamp(0.0f,G(y)(x)/G.gmax,1.0f);
+                        r(x) = clamp(0.0f,fac*r(x),1.0f);
                     }
                 }
             }
         }
+
         
-        void gradient:: normalize(broker &apply) throw()
+        void gradient:: compute(const pixmap<float> &f, broker &apply)
         {
-            if(gmax>0.0f)
+            //------------------------------------------------------------------
+            // prepare memory
+            //------------------------------------------------------------------
+            apply.caches.make<float>();
+
+            //------------------------------------------------------------------
+            // compute per tile, store local gmax
+            //------------------------------------------------------------------
             {
-                apply(normalize_kernel,this);
+                momentary_value< const pixmap<float> * > temp(host,&f);
+                apply(compute_call,this);
             }
+            
+            //------------------------------------------------------------------
+            // update global gmax
+            //------------------------------------------------------------------
+            aliasing::_(gmax) = apply.caches.get_max<float>();
+
+            //------------------------------------------------------------------
+            // normalize
+            //------------------------------------------------------------------
+            apply(normalize_kernel,this);
+            
         }
 
+
+
+#if 0
         namespace
         {
             static inline void maxima_kernel(const tile &t,
@@ -153,10 +159,12 @@ namespace upsylon
                 }
             }
         }
-        
+
+#endif
+
         void gradient:: maxima(broker &apply) throw()
         {
-            apply(maxima_kernel,this);
+            //apply(maxima_kernel,this);
         }
         
     }

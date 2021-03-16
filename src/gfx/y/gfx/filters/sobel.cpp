@@ -1,5 +1,5 @@
 
-#include "y/gfx/filter/sobel.hpp"
+#include "y/gfx/filters/sobel.hpp"
 
 namespace upsylon
 {

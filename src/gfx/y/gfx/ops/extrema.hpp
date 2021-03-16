@@ -35,6 +35,7 @@ namespace upsylon
                 return apply.caches.get_min<T>();
             }
 
+            //! return arr[0.1] = {vmin,vmax} from local cache
             template <typename T>
             static inline
             const T * minmax(const pixmap<T> &pxm, broker &apply)
