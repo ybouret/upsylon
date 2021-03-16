@@ -1,6 +1,5 @@
 #include "y/utest/run.hpp"
-#include "y/gfx/edges/gradient.hpp"
-#include "y/gfx/edges/keep-max.hpp"
+#include "y/gfx/edges/profile.hpp"
 
 #include "y/gfx/image/io.hpp"
 
@@ -75,6 +74,16 @@ Y_UTEST(edges)
 
         Y_CHECK(compute_rms(Kseq,Kpar)<=0);
         Y_CHECK(Kseq==Kpar);
+        IMG.save(Kpar,"gmax.png");
+
+        const uint8_t hi = Kseq.threshold();
+        const uint8_t lo = hi/2;
+
+        edges::profile::tighten(Kseq, seq, lo, hi);
+        edges::profile::tighten(Kpar, par, lo, hi);
+        Y_CHECK(compute_rms(Kseq,Kpar)<=0);
+        IMG.save(Kpar,"gprf.png");
+
 
     }
 

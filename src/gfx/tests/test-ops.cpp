@@ -3,7 +3,6 @@
 #include "y/gfx/ops/keep.hpp"
 
 #include "y/gfx/ops/3x3.hpp"
-#include "y/gfx/ops/gradient.hpp"
 #include "y/gfx/ops/extrema.hpp"
 #include "y/gfx/filters/sobel.hpp"
 #include "y/gfx/filters/scharr.hpp"
@@ -24,32 +23,6 @@ using namespace upsylon;
 using namespace graphic;
 
 
-namespace {
-
-    static inline float compute_rms(const pixmap<float> &lhs,
-                                    const pixmap<float> &rhs)
-    {
-        float res = 0;
-        float rmx = 0;
-        coord pos;
-        for(unit_t j=0;j<lhs.h;++j)
-        {
-            for(unit_t i=0;i<lhs.w;++i)
-            {
-                const float tmp = square_of( lhs(j)(i) - rhs(j)(i) );
-                if(tmp>rmx)
-                {
-                    rmx = tmp;
-                    pos = coord(i,j);
-                    std::cerr << "\t@" <<pos << " lhs:" << lhs(j)(i) << " rhs:" << rhs(j)(i) << std::endl;
-                }
-                res += tmp;
-            }
-        }
-        std::cerr << "rmx=" << rmx << "@" << pos << std::endl;
-        return sqrtf( res/lhs.items );
-    }
-}
 
 Y_UTEST(ops)
 {
@@ -68,15 +41,6 @@ Y_UTEST(ops)
         IMG.save(img,"img.png");
         std::cerr << "loaded: " << img << std::endl;
         
-        {
-            std::cerr << "@" << img.lower << std::endl;
-            const rgb c0 = img[ img.lower ];
-            std::cerr << "c0=" << c0 << std::endl;
-            std::cerr << "@" << img.upper << std::endl;
-            const rgb c1 = img[ img.upper ];
-            std::cerr << "c1=" << c1 << std::endl;
-
-        }
         
         broker            seq(seqEngine,img);
         broker            par(parEngine,img);
@@ -188,38 +152,6 @@ Y_UTEST(ops)
         }
 
 
-        {
-            std::cerr << "computing gradient" << std::endl;
-            const shared_filters F = new Sobel5();
-            gradient             Gseq(img.w,img.h,F);
-            gradient             Gpar(img.w,img.h,F);
-
-            const pixmap<float> f(img,par,convert<float,rgb>::from);
-            Gseq.compute(seq,f);
-            Gpar.compute(par,f);
-            const float rms = compute_rms(Gseq,Gpar);
-            Y_CHECK(rms<=0);
-            Y_CHECK(fabsf(Gseq.gmax-Gpar.gmax) <= 0);
-            IMG.save(Gpar,"grad.png");
-
-            histogram Hseq; std::cerr << "histogram.bytes:" << Hseq.private_bytes() << std::endl;
-            histogram Hpar;
-            Gseq.keepmax(seq,Hseq); Hseq.save("gseq.dat");
-            Gpar.keepmax(par,Hpar); Hpar.save("gpar.dat");
-            Y_CHECK(Hpar==Hseq);
-            IMG.save(Gpar.edge,"edge0.png");
-
-            const uint8_t up = Hpar.threshold();
-            const uint8_t lo = up/2;
-            std::cerr << "up=" << int(up) << ", lo=" << int(lo) << std::endl;
-
-            Gpar.profile(par,up,lo);
-            IMG.save(Gpar.edge,"edge1.png");
-
-
-
-            std::cerr << std::endl;
-        }
 
     }
 }
