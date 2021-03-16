@@ -15,5 +15,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(filters);
     Y_UTEST(edges);
     Y_UTEST(blobs);
+    
 }
 Y_UTEST_EXEC()

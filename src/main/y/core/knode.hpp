@@ -53,7 +53,16 @@ namespace upsylon {
             //! direct with default constructor
             static inline knode *create_alive()
             {
-                return new( acquire_empty() ) knode();
+                knode *node = acquire_empty();
+                try
+                {
+                    return new( node ) knode();
+                }
+                catch(...)
+                {
+                    release_empty(node);
+                    throw;
+                }
             }
             
             //! direct with 1-args constructor

@@ -56,6 +56,7 @@ namespace upsylon
             //__________________________________________________________________
             unit_t content() const throw(); //!< recompute content!
             coord  origin()  const throw(); //!< lower point
+            coord  ending()  const throw(); //!< upper point
             area   aabb()    const throw(); //!< axis aligned bounding box
 
             //__________________________________________________________________

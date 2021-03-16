@@ -65,7 +65,7 @@ namespace upsylon
                 }
                 aliasing::_(shift) = size_t(offset);
                 assert(items==sum);
-                std::cerr << "tile: " << ini << " -> " << end << " : lines=" << lines << " | items=" << items << " | shift=" << offset << " | aabb=" << aabb() << std::endl;
+                //std::cerr << "tile: " << ini << " -> " << end << " : lines=" << lines << " | items=" << items << " | shift=" << offset << " | aabb=" << aabb() << std::endl;
 
             }
             else
@@ -103,6 +103,11 @@ namespace upsylon
         coord  tile:: origin()  const throw()
         {
             return h_seg[1].head();
+        }
+        
+        coord  tile:: ending()  const throw()
+        {
+            return h_seg[lines].tail();
         }
 
         area tile:: aabb()    const throw()
