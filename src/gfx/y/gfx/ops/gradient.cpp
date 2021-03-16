@@ -16,6 +16,8 @@ namespace upsylon
         edge(W,H),
         comp(F),
         gmax(0),
+        strong(0),
+        feeble(0),
         host(NULL)
         {
         }
@@ -137,12 +139,12 @@ namespace upsylon
             assert( t.cache->length()>= 256*sizeof(size_t) );
 
             size_t *h = & t.cache->as<size_t>();
-#if 1
+#if 0
             for(size_t i=0;i<256;++i) { assert(0==h[i]); }
 #endif
 
             const pixmap<float> &G = *this;
-            pixmap<float>       &E = edge;
+            pixmap<uint8_t>     &E = edge;
 
             for(size_t j=t.size();j>0;--j)
             {
@@ -151,7 +153,7 @@ namespace upsylon
                 const unit_t         xmin = s.xmin;
                 const pixrow<float> &G_y  = (*this)(y);
                 pixrow<vertex>      &d_y  = gdir(y);
-                pixrow<float>       &E_y  = E(y);
+                pixrow<uint8_t>     &E_y  = E(y);
 
                 for(unit_t x=s.xmax;x>=xmin;--x)
                 {
@@ -163,13 +165,12 @@ namespace upsylon
                     const float        Gp    = G[y+dy][x+dx];
                     if(G0<Gp||G0<Gm)
                     {
-                        E_y(x) = 0.0f;
+                        E_y(x) = 0;
                         delta  = vertex(0,0);
                     }
                     else
                     {
-                        E_y(x) = G0;
-                        ++h[ crux::convert::to_byte(G0) ];
+                        ++h[ E_y(x) =  crux::convert::to_byte(G0) ];
                     }
                 }
             }
@@ -184,7 +185,7 @@ namespace upsylon
 
 
 
-        void gradient:: maxima(broker &apply, histogram &H) 
+        void gradient:: keepmax(broker &apply, histogram &H) 
         {
             //------------------------------------------------------------------
             // prepare local caches
@@ -207,7 +208,63 @@ namespace upsylon
                 const size_t * h = & (caches[i]->as<size_t>());
                 H.add(h);
             }
-            
+
+        }
+
+        void gradient:: profile(broker       &apply,
+                                const uint8_t strong_threshold,
+                                const uint8_t feeble_threshold)
+        {
+            assert(strong_threshold>=feeble_threshold);
+            aliasing::_(feeble) = feeble_threshold;
+            aliasing::_(strong) = strong_threshold;
+            std::cerr << "profile with: " << int(feeble) << "->" << int(strong) << std::endl;
+            apply(profile,static_cast<gradient *>(this));
+        }
+
+
+        void gradient:: profile(const tile &t) throw()
+        {
+            pixmap<uint8_t> &E = edge;
+
+            const unsigned lo = feeble;
+            const unsigned up = strong;
+
+            for(size_t j=t.size();j>0;--j)
+            {
+                const segment       &s    = t[j];
+                const unit_t         y    = s.y;
+                const unit_t         xmin = s.xmin;
+                pixrow<uint8_t>     &E_y  = E(y);
+
+                for(unit_t x=s.xmax;x>=xmin;--x)
+                {
+                    uint8_t       &E0ref = E_y(x);
+                    const unsigned E0    = E0ref;
+                    if(E0>=up)
+                    {
+                        E0ref = 255;
+                    }
+                    else
+                    {
+                        if(E0>=lo)
+                        {
+                            E0ref = 127;
+                        }
+                        else
+                        {
+                            E0ref = 0;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        void gradient:: profile(const tile &t, void *args, lockable &) throw()
+        {
+            assert(args);
+            static_cast<gradient *>(args)->profile(t);
         }
         
     }

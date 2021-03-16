@@ -121,7 +121,6 @@ Y_UTEST(ops)
 
 
             std::cerr << std::endl;
-            return 0;
         }
 
 
@@ -205,10 +204,20 @@ Y_UTEST(ops)
 
             histogram Hseq; std::cerr << "histogram.bytes:" << Hseq.private_bytes() << std::endl;
             histogram Hpar;
-            Gseq.maxima(seq,Hseq); Hseq.save("gseq.dat");
-            Gpar.maxima(par,Hpar); Hpar.save("gpar.dat");
+            Gseq.keepmax(seq,Hseq); Hseq.save("gseq.dat");
+            Gpar.keepmax(par,Hpar); Hpar.save("gpar.dat");
             Y_CHECK(Hpar==Hseq);
             IMG.save(Gpar.edge,"edge0.png");
+
+            const uint8_t up = Hpar.threshold();
+            const uint8_t lo = up/2;
+            std::cerr << "up=" << int(up) << ", lo=" << int(lo) << std::endl;
+
+            Gpar.profile(par,up,lo);
+            IMG.save(Gpar.edge,"edge1.png");
+
+
+
             std::cerr << std::endl;
         }
 

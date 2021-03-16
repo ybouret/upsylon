@@ -41,16 +41,19 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             void compute(broker &apply, const pixmap<float> &); //!< compute -> gmax
-            void maxima(broker  &apply, histogram           &); //!< keep only maxima
-            
+            void keepmax(broker  &apply, histogram          &); //!< keep only maxima
+            void profile(broker  &apply, const uint8_t strong_threshold, const uint8_t feeble_threshold); //!< profile edges
+
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            pixmap<vertex>   gdir; //!< digitized gradient direction
-            pixmap<float>    edge; //!< edge working
-            shared_filters   comp; //!< get components
-            const float      gmax; //!< last max gradient
+            pixmap<vertex>   gdir;   //!< digitized gradient direction
+            pixmap<uint8_t>  edge;   //!< edge working
+            shared_filters   comp;   //!< get components
+            const float      gmax;   //!< last max gradient
+            const uint8_t    strong; //!< strong threshold
+            const uint8_t    feeble; //!< feeble threshold
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gradient);
@@ -60,6 +63,9 @@ namespace upsylon
 
             void        keepmax(const tile &t) throw();
             static void keepmax(const tile &,void *,lockable&) throw();
+
+            void        profile(const tile &t) throw();
+            static void profile(const tile &,void *,lockable&) throw();
 
         };
         
