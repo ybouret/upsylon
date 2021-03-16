@@ -1,5 +1,7 @@
 
 #include "y/gfx/ops/hist.hpp"
+#include "y/gfx/ops/keep.hpp"
+
 #include "y/gfx/ops/3x3.hpp"
 #include "y/gfx/ops/gradient.hpp"
 #include "y/gfx/ops/extrema.hpp"
@@ -106,7 +108,20 @@ Y_UTEST(ops)
                 std::cerr << "efficiency: " << parEngine->efficiency(par_speed/seq_speed) << std::endl;
             }
 
+            const uint8_t t = Hpar.threshold();
+            std::cerr << "threshold=" << int(t) << std::endl;
+            pixmap<rgb> fg(img.w,img.h);
+            pixmap<rgb> bg(img.w,img.h);
+
+            keep::transfer(fg,img,par,convert<uint8_t,rgb>::from,keep::geq,t,rgb(0,0,0));
+            keep::transfer(bg,img,par,convert<uint8_t,rgb>::from,keep::lt,t,rgb(255,255,255));
+
+            IMG.save(fg,"fg.png");
+            IMG.save(bg,"bg.png");
+
+
             std::cerr << std::endl;
+            return 0;
         }
 
 
