@@ -5,7 +5,7 @@
 
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/pixel.hpp"
-#include "y/gfx/color/type-to-rgba.hpp"
+#include "y/gfx/color/histogram.hpp"
 #include "y/gfx/filters.hpp"
 
 namespace upsylon
@@ -25,7 +25,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef point2d<float> vertex; //!< alias
+            typedef point2d<int8_t> vertex; //!< alias
 
            
 
@@ -40,22 +40,27 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void compute(const pixmap<float> &, broker &apply); //!< compute -> gmax
-            void maxima(broker &apply) throw();                 //!< keep only maxima
+            void compute(broker &apply, const pixmap<float> &); //!< compute -> gmax
+            void maxima(broker  &apply, histogram           &); //!< keep only maxima
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            pixmap<vertex>   g;    //!< map of normalized vertices
+            pixmap<vertex>   gdir; //!< digitized gradient direction
+            pixmap<float>    edge; //!< edge working
             shared_filters   comp; //!< get components
             const float      gmax; //!< last max gradient
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gradient);
             const pixmap<float>   *host;
-            void        compute_tile(const tile &t) throw();
-            static void compute_call(const tile &,void *,lockable&) throw();
+            void        compute(const tile &t) throw();
+            static void compute(const tile &,void *,lockable&) throw();
+
+            void        keepmax(const tile &t) throw();
+            static void keepmax(const tile &,void *,lockable&) throw();
+
         };
         
     }

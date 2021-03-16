@@ -53,12 +53,40 @@ namespace upsylon
             }
         }
 
+        size_t histogram:: private_bytes() const throw()
+        {
+            return sizeof(bin);
+        }
+
+
 
         void histogram:: add(const histogram &other) throw()
         {
             add(other.bin);
         }
 
+        bool operator==( const histogram &lhs, const histogram &rhs) throw()
+        {
+            for(size_t i=0;i<histogram::bins;++i)
+            {
+                if( lhs.bin[i]!=rhs.bin[i] ) return false;
+            }
+            return true;
+        }
+
+        bool operator!=( const histogram &lhs, const histogram &rhs) throw()
+        {
+            for(size_t i=0;i<histogram::bins;++i)
+            {
+                if( lhs.bin[i]!=rhs.bin[i] ) return true;
+            }
+            return false;
+        }
+
+        uint8_t histogram:: threshold() const throw()
+        {
+            
+        }
 
     }
 

@@ -14,6 +14,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
+#include "y/utest/sizeof.hpp"
 
 #include "y/gfx/image/io.hpp"
 
@@ -23,6 +24,29 @@ using namespace graphic;
 
 namespace {
 
+    static inline float compute_rms(const pixmap<float> &lhs,
+                                    const pixmap<float> &rhs)
+    {
+        float res = 0;
+        float rmx = 0;
+        coord pos;
+        for(unit_t j=0;j<lhs.h;++j)
+        {
+            for(unit_t i=0;i<lhs.w;++i)
+            {
+                const float tmp = square_of( lhs(j)(i) - rhs(j)(i) );
+                if(tmp>rmx)
+                {
+                    rmx = tmp;
+                    pos = coord(i,j);
+                    std::cerr << "\t@" <<pos << " lhs:" << lhs(j)(i) << " rhs:" << rhs(j)(i) << std::endl;
+                }
+                res += tmp;
+            }
+        }
+        std::cerr << "rmx=" << rmx << "@" << pos << std::endl;
+        return sqrtf( res/lhs.items );
+    }
 }
 
 Y_UTEST(ops)
@@ -68,6 +92,8 @@ Y_UTEST(ops)
             Hseq.save("hseq.dat");
             Hpar.save("hpar.dat");
 
+            Y_CHECK(Hseq==Hpar);
+
             if(false)
             {
                 double seq_speed = 0;
@@ -79,6 +105,8 @@ Y_UTEST(ops)
                 std::cerr << "par_speed=" << par_speed << std::endl;
                 std::cerr << "efficiency: " << parEngine->efficiency(par_speed/seq_speed) << std::endl;
             }
+
+            std::cerr << std::endl;
         }
 
 
@@ -104,23 +132,11 @@ Y_UTEST(ops)
             pixmap<rgb> tmp(img.w,img.h);
             _3x3::open(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"open.png");
             _3x3::close(tgt,tmp,img,par,identity<rgb>); IMG.save(tgt,"close.png");
-        }
-        
-        
-        {
-            std::cerr << "computing gradient" << std::endl;
-            const shared_filters sobel = new Sobel5();
-            gradient      G(img.w,img.h,sobel);
-            pixmap<float> f(img,par,convert<float,rgb>::from);
-            
-            G.compute(f,seq); std::cerr << "gmax_seq=" << G.gmax << std::endl;
-            G.compute(f,par); std::cerr << "gmax_par=" << G.gmax << std::endl;
-            
-            IMG.save(G,"grad.png");
-            G.maxima(par);    IMG.save(G,"gmax.png");
 
-            
+            std::cerr << std::endl;
         }
+        
+
 
         {
             std::cerr << "computing extrema" << std::endl;
@@ -154,9 +170,31 @@ Y_UTEST(ops)
 
             Y_CHECK( fabsf(par_both.vmin-smin)<= 0);
             Y_CHECK( fabsf(par_both.vmax-smax)<= 0);
+            std::cerr << std::endl;
+        }
 
 
+        {
+            std::cerr << "computing gradient" << std::endl;
+            const shared_filters F = new Sobel5();
+            gradient             Gseq(img.w,img.h,F);
+            gradient             Gpar(img.w,img.h,F);
 
+            const pixmap<float> f(img,par,convert<float,rgb>::from);
+            Gseq.compute(seq,f);
+            Gpar.compute(par,f);
+            const float rms = compute_rms(Gseq,Gpar);
+            Y_CHECK(rms<=0);
+            Y_CHECK(fabsf(Gseq.gmax-Gpar.gmax) <= 0);
+            IMG.save(Gpar,"grad.png");
+
+            histogram Hseq; std::cerr << "histogram.bytes:" << Hseq.private_bytes() << std::endl;
+            histogram Hpar;
+            Gseq.maxima(seq,Hseq); Hseq.save("gseq.dat");
+            Gpar.maxima(par,Hpar); Hpar.save("gpar.dat");
+            Y_CHECK(Hpar==Hseq);
+            IMG.save(Gpar.edge,"edge0.png");
+            std::cerr << std::endl;
         }
 
     }

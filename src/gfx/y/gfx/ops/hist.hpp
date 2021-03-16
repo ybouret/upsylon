@@ -89,7 +89,7 @@ namespace upsylon
                 for(size_t i=0;i<nc;++i)
                 {
                     const local_memory &mem = *caches[i];
-                    const size_t *h = & mem.as<size_t>();
+                    const size_t       *h   = & mem.as<size_t>();
                     H.add(h);
                 }
 

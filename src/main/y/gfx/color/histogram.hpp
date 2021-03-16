@@ -56,6 +56,17 @@ namespace upsylon
 
             //! save to file
             void save(const string &filename) const;
+            
+            //! test equality
+            friend bool operator==( const histogram &lhs, const histogram &rhs) throw();
+
+            //! test difference
+            friend bool operator!=( const histogram &lhs, const histogram &rhs) throw();
+
+            //! helper, mostly to debug
+            size_t private_bytes() const throw();
+
+            uint8_t threshold() const throw();
 
         private:
             size_t bin[bins];
