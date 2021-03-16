@@ -62,14 +62,19 @@ Y_UTEST(edges)
 
         const float     seq_gmax = Gseq.compute(pxm,seq,F);
         const float     par_gmax = Gpar.compute(pxm,par,F);
-        Y_CHECK(fabs(seq_gmax-par_gmax)<=0.0);
-        Y_CHECK(compute_rms(Gseq,Gpar)<=0.0f);
+        Y_CHECK(fabsf(seq_gmax-par_gmax)<=0.0f);
+        Y_CHECK(compute_rms(Gseq,Gpar)<=0.0);
         IMG.save(Gpar,"grad.png");
 
 
         edges::keep_max Kpar(img.w,img.h);
         edges::keep_max Kseq(img.w,img.h);
 
+        Kseq(seq,Gseq);
+        Kpar(par,Gpar);
+
+        Y_CHECK(compute_rms(Kseq,Kpar)<=0);
+        Y_CHECK(Kseq==Kpar);
 
     }
 

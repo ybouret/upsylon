@@ -23,7 +23,7 @@ namespace upsylon
                 explicit keep_max(const unit_t W, const unit_t H);
                 virtual ~keep_max() throw();
 
-                void operator()(broker &apply, gradient &G);
+                void operator()(broker &apply, const gradient &G);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(keep_max);

@@ -133,7 +133,6 @@ namespace upsylon {
             {
                 const size_t num  = size();
                 slots_type  &self = *this;
-
                 for(size_t i=0;i<num;++i)
                 {
                     self[i]->as<T>() = args;
