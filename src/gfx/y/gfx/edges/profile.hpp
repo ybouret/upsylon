@@ -22,10 +22,10 @@ namespace upsylon
                 explicit profile(const unit_t W, const unit_t H);
                 virtual ~profile() throw();
 
-                static void tighten(pixmap<uint8_t> &edges,
-                                    broker          &apply,
-                                    const uint8_t    feeble_limit,
-                                    const uint8_t    strong_limit) throw();
+                static size_t tighten(pixmap<uint8_t> &edges,
+                                      broker          &apply,
+                                      const uint8_t    feeble_limit,
+                                      const uint8_t    strong_limit);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(profile);

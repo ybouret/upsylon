@@ -37,6 +37,8 @@ namespace {
     }
 }
 
+#include "y/gfx/pixel.hpp"
+
 Y_UTEST(edges)
 {
 
@@ -79,11 +81,15 @@ Y_UTEST(edges)
         const uint8_t hi = Kseq.threshold();
         const uint8_t lo = hi/2;
 
-        edges::profile::tighten(Kseq, seq, lo, hi);
-        edges::profile::tighten(Kpar, par, lo, hi);
+        const size_t nseq = edges::profile::tighten(Kseq, seq, lo, hi);
+        const size_t npar = edges::profile::tighten(Kpar, par, lo, hi);
         Y_CHECK(compute_rms(Kseq,Kpar)<=0);
-        IMG.save(Kpar,"gprf.png");
+        Y_CHECK(nseq==npar);
+        Y_CHECK(nseq==Kseq.how_many(seq,pixel::is_not_zero<float>));
+        Y_CHECK(npar==Kpar.how_many(seq,pixel::is_not_zero<float>));
 
+        IMG.save(Kpar,"gprf.png");
+        std::cerr << "active=" << npar << std::endl;
 
     }
 
