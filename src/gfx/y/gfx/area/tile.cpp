@@ -127,6 +127,12 @@ namespace upsylon
 
         }
 
+
+        std::ostream & operator<<(std::ostream &os, const tile &t)
+        {
+            os << '{' << t.origin() << " -> " << t.ending() << " : #" << t.content() << '}';
+            return os;
+        }
     }
     
 }

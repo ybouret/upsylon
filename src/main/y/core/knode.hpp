@@ -54,29 +54,26 @@ namespace upsylon {
             static inline knode *create_alive()
             {
                 knode *node = acquire_empty();
-                try
-                {
-                    return new( node ) knode();
-                }
-                catch(...)
-                {
-                    release_empty(node);
-                    throw;
-                }
+                try { return new( node ) knode(); }
+                catch(...) { release_empty(node); throw; }
             }
             
             //! direct with 1-args constructor
             template <typename U>
             static inline knode *create_alive(const U &args)
             {
-                return new( acquire_empty() ) knode(args);
+                knode *node = acquire_empty();
+                try { return new( node ) knode(args); }
+                catch(...) { release_empty(node); throw; }
             }
 
             //! direct with 2-args constructor
             template <typename U, typename V>
             static inline knode *create_alive(const U &u, const V &v)
             {
-                return new( acquire_empty() ) knode(u,v);
+                knode *node = acquire_empty();
+                try { return new( node ) knode(u,v); }
+                catch(...) { release_empty(node); throw; }
             }
 
 
@@ -203,6 +200,7 @@ namespace upsylon {
             Y_DISABLE_COPY_AND_ASSIGN(knode);
             ~knode() throw();
             inline knode()              : next(0), prev(0), data()     {}
+            
             template <typename U>
             inline knode(const U &args) : next(0), prev(0), data(args) {}
 

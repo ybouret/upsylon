@@ -6,7 +6,6 @@
 #include "y/type/point2d.hpp"
 #include "y/core/zero-flux-index.hpp"
 #include "y/strfwd.hpp"
-#include "y/core/knode.hpp"
 
 namespace upsylon
 {
@@ -23,9 +22,6 @@ namespace upsylon
         typedef point2d<unit_t>          coord; //!< logical coordinate
         typedef core::zero_flux_index<0> zflux; //!< zero-flux computation
         
-        typedef core::knode<coord> cNode; //!< coordinate node
-        typedef cNode::list_type   cList; //!< coordinate list
-        typedef cNode::pool_type   cPool; //!< coordinate pool
         
         //______________________________________________________________________
         //

@@ -59,6 +59,8 @@ namespace upsylon
             coord  ending()  const throw(); //!< upper point
             area   aabb()    const throw(); //!< axis aligned bounding box
 
+            friend std::ostream & operator<<(std::ostream &os, const tile &t);
+
             //__________________________________________________________________
             //
             // members

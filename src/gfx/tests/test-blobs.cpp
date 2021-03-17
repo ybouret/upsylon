@@ -16,11 +16,29 @@
 using namespace upsylon;
 using namespace graphic;
 
-
+namespace
+{
+    template <typename T>
+    static inline void display_for(const tiles &tess, const pixmap<T> &pxm)
+    {
+        std::cerr << "<tessellation #" << tess.size() << ">" << std::endl;
+        for(size_t i=0;i<tess.size();++i)
+        {
+            const tile &t = tess[i];
+            std::cerr << "tess[" << std::setw(2) << i << "] : " << t << " => " << blobs::knots_for(t,pxm) << std::endl;
+        }
+        std::cerr << "<tessellation/>" << std::endl << std::endl;
+    }
+}
 
 Y_UTEST(blobs)
 {
-    
+
+    Y_UTEST_SIZEOF(knot);
+    Y_UTEST_SIZEOF(knots);
+    Y_UTEST_SIZEOF(blob);
+
+
     image::io &IMG       = Y_IMAGE();
     engine     seqEngine = new concurrent::solo();
     engine     parEngine = new concurrent::simt();
@@ -43,12 +61,15 @@ Y_UTEST(blobs)
             keep::transfer(fg,img,par,convert<uint8_t,rgb>::from,keep::geq,t,rgb(0,0,0));
             IMG.save(fg,"fg.png");
         }
+        display_for(seq,fg);
+        display_for(par,fg);
+
+
+        shared_knots ks( new knots() );
+        blobs b(img.w,img.h,ks);
         
-        
-        //blobs b(img.w,img.h);
-        
-        
-        
+
+
     }
     
 }
