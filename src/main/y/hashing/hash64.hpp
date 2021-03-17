@@ -11,6 +11,8 @@ namespace upsylon
         //! hashing of 64 bits unsigned integers
         struct hash64
         {
+            static const uint32_t nldw = 0x12345678; //!< non linear dword
+
             //! mix two 32 bits
             typedef void (*proc)( uint32_t *lword, uint32_t *rword );
 
@@ -27,7 +29,7 @@ namespace upsylon
                 {
                     uint32_t u[2];
                     T        t;
-                } q = { {0,0} };
+                } q = { {nldw,nldw} };
                 q.t = x;
                 h(&q.u[0],&q.u[1]);
                 return q.t;
@@ -67,7 +69,7 @@ namespace upsylon
                     uint32_t u[2];
                     T        t;
                     size_t   k;
-                } q = { {0,0} };
+                } q = { {nldw,nldw} };
                 q.t = x;
                 h(&q.u[0],&q.u[1]);
                 return q.k;

@@ -33,6 +33,8 @@ namespace upsylon
         class blob : public knots, public inode<blob>
         {
         public:
+
+
             explicit blob(const size_t        id,
                           const shared_knots &ks) throw();
             virtual ~blob() throw();
@@ -48,11 +50,13 @@ namespace upsylon
 
         typedef core::list_of_cpp<blob> blobs_;
 
-        class blobs : public pixmap<size_t>, public blobs_
+        typedef pixmap<size_t> marks;
+        typedef arc_ptr<marks> shared_marks;
+
+        class blobs :  public blobs_
         {
         public:
-            explicit blobs(const unit_t        W,
-                           const unit_t        H,
+            explicit blobs(const shared_marks &M,
                            const shared_knots &K);
             virtual ~blobs() throw();
 
@@ -77,8 +81,18 @@ namespace upsylon
 
             void initialize(size_t num_knots);
 
+            template <typename T> inline
+            void initialize(const tile &t, const pixmap<T> &pxm)
+            {
+                initialize( knots_for(t,pxm) );
+            }
+
+
+            shared_marks probe;
             knots        cache;
             shared_knots kpool;
+
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);

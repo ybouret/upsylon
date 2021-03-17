@@ -54,10 +54,11 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            unit_t content() const throw(); //!< recompute content!
-            coord  origin()  const throw(); //!< lower point
-            coord  ending()  const throw(); //!< upper point
-            area   aabb()    const throw(); //!< axis aligned bounding box
+            unit_t content()         const throw(); //!< recompute content!
+            coord  origin()          const throw(); //!< lower point
+            coord  ending()          const throw(); //!< upper point
+            area   aabb()            const throw(); //!< axis aligned bounding box
+            bool   owns(const coord) const throw(); //!< ownership
 
             friend std::ostream & operator<<(std::ostream &os, const tile &t);
 

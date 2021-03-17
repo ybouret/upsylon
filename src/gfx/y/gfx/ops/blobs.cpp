@@ -13,6 +13,11 @@ namespace upsylon
 
         knots:: ~knots() throw()
         {
+            while(size)
+            {
+                knot *k = pop_back();
+                knot::destruct(k);
+            }
         }
 
 
@@ -55,8 +60,10 @@ namespace upsylon
         }
 
 
-        blobs:: blobs(const unit_t W, const unit_t H, const shared_knots &K) :
-        pixmap<size_t>(W,H),
+        blobs:: blobs(const shared_marks &M,
+                      const shared_knots &K) :
+        probe(M),
+        cache(),
         kpool(K)
         {
         }
@@ -64,7 +71,8 @@ namespace upsylon
         void blobs:: initialize(size_t n)
         {
             release();
-            ldz();
+            probe->ldz();
+            
             while(cache.size>n)
             {
                 kpool->push_back( cache.pop_front() );

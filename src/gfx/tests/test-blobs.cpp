@@ -11,6 +11,7 @@
 #include "y/utest/sizeof.hpp"
 
 #include "y/gfx/image/io.hpp"
+#include "y/gfx/color/size-to-rgba.hpp"
 
 
 using namespace upsylon;
@@ -64,9 +65,31 @@ Y_UTEST(blobs)
         display_for(seq,fg);
         display_for(par,fg);
 
+        shared_marks indices = new marks(img.w,img.h);
+        shared_knots k_cache = new knots();
+        blobs        b(indices,k_cache);
 
-        shared_knots ks( new knots() );
-        blobs b(img.w,img.h,ks);
+        b.initialize(100);
+
+        for(unit_t y=0;y<img.h;++y)
+        {
+            for(unit_t x=0;x<img.w;++x)
+            {
+                if( !pixel::is_zero( fg(y)(x) ) )
+                {
+                    (*indices)(y)(x) = x+y;
+                }
+            }
+        }
+
+        {
+            size_to_rgba conv;
+            IMG.save(*indices,"tags.png", NULL, conv);
+        }
+
+
+
+
         
 
 
