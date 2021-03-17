@@ -12,39 +12,61 @@ namespace upsylon
 {
     namespace graphic
     {
+        //______________________________________________________________________
+        //
+        //
+        // types and definition
+        //
+        //______________________________________________________________________
+        typedef core::knode<coord>    knot;   //!< dynamic coordinate
+        typedef knot::list_type       knots_; //!< base class for list of knots
 
-        typedef core::knode<coord>    knot;
-        typedef knot::list_type       knots_;
-
+        
+        //______________________________________________________________________
+        //
+        //
+        //! list of knots
+        //
+        //______________________________________________________________________
         class knots : public entity, public knots_
         {
         public:
-            virtual ~knots() throw();
-            explicit knots() throw();
+            virtual ~knots() throw(); //!< cleanup
+            explicit knots() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(knots);
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! shared list of knots
+        //
+        //______________________________________________________________________
         typedef arc_ptr<knots> shared_knots;
 
+        //______________________________________________________________________
+        //
+        //
+        //! a blob is a list of nodes, itself a node for blobs
+        //
+        //______________________________________________________________________
         class blob : public knots, public inode<blob>
         {
         public:
+            explicit blob(const size_t, const shared_knots &) throw(); //!< setup
+            virtual ~blob() throw();                                   //!< cleanup
 
 
-            explicit blob(const size_t        id,
-                          const shared_knots &ks) throw();
-            virtual ~blob() throw();
-
-
-            const size_t label;
-            shared_knots kpool;
+            const size_t label; //!< identifier
+            shared_knots kpool; //!< pool to return to
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);
         };
 
+        //! base class for blobs
         typedef core::list_of_cpp<blob> blobs_;
 
         typedef pixmap<size_t> marks;

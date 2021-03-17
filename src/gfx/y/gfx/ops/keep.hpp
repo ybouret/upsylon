@@ -11,7 +11,9 @@ namespace upsylon
 {
     namespace graphic
     {
-
+        
+        
+        //! helper to keep part of pixmaps
         struct keep
         {
 

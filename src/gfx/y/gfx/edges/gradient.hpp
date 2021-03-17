@@ -14,12 +14,18 @@ namespace upsylon
 
         namespace edges
         {
+            //__________________________________________________________________
+            //
+            //
+            //! compute gradient norm + digitized direction
+            //
+            //__________________________________________________________________
+            
             class gradient : public pixmap<float>
             {
             public:
                 typedef point2d<int8_t> vertex;
-
-                pixmap<vertex> probe;
+                
 
                 explicit gradient(const unit_t W, const unit_t H);
                 virtual ~gradient() throw();
@@ -28,6 +34,9 @@ namespace upsylon
                               broker               &apply,
                               const shared_filters &delta);
                 
+                
+                pixmap<vertex> probe;
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(gradient);
             };
