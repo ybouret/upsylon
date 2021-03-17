@@ -34,14 +34,13 @@ namespace upsylon
         blob:: blob(const size_t        id,
                     const shared_knots &ks) throw() :
         label(id),
-        cache(),
         kpool(ks)
         {
         }
 
         blob:: ~blob() throw()
         {
-            kpool->merge_back(cache);
+            kpool->merge_back(*this);
         }
 
 
@@ -63,7 +62,6 @@ namespace upsylon
         blobs:: blobs(const shared_marks &M,
                       const shared_knots &K) :
         probe(M),
-        cache(),
         kpool(K)
         {
         }
@@ -72,22 +70,12 @@ namespace upsylon
         {
             release();
             probe->ldz();
-            
-            while(cache.size>n)
-            {
-                kpool->push_back( cache.pop_front() );
-            }
+            while(kpool->size<n) kpool->push_back( knot::create_alive() );
+        }
 
-            while(cache.size<n&&kpool->size)
-            {
-                cache.push_back(kpool->pop_front());
-            }
-
-            while(cache.size<n)
-            {
-                cache.push_back( knot::create_alive() );
-            }
-
+        knot * blobs:: fetch_knot()
+        {
+            return kpool->size ? kpool->pop_front() : knot::create_alive();
         }
 
     }

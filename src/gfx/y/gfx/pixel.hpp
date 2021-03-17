@@ -30,6 +30,10 @@ namespace upsylon
             //! check if zero
             template <typename T> static bool is_zero(const T&) throw();
 
+            //! check if not zero
+            template <typename T> static inline
+            bool is_not_zero(const T &value) throw() { return !is_zero(value); }
+
             //! average of 9 items
             template <typename T> static T average9(T *arr) throw();
 

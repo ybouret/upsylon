@@ -137,12 +137,19 @@ namespace upsylon {
                 ops<T>:: template build<U>(*this,args);
                 return *(T *)block_addr;
             }
-            
+
+            template <typename T>
+            shack & operator=(const T &args)
+            {
+                assert(is<T>());
+                *(T*)block_addr = args;
+                return *this;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(shack);
-            void kill()         throw(); //!< kill objects
-            void zero()         throw(); //!< set memory to zero
+            void  kill()        throw(); //!< kill objects
+            void  zero()        throw(); //!< set memory to zero
             void *vaddr() const throw(); //!< &vdata
 
             //__________________________________________________________________

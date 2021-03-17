@@ -28,8 +28,6 @@ namespace upsylon
 
         typedef arc_ptr<knots> shared_knots;
 
-
-
         class blob : public knots, public inode<blob>
         {
         public:
@@ -41,7 +39,6 @@ namespace upsylon
 
 
             const size_t label;
-            knots        cache;
             shared_knots kpool;
 
         private:
@@ -62,37 +59,83 @@ namespace upsylon
 
 
 
-            template <typename T> inline
-            static size_t knots_for(const tile &t, const pixmap<T> &pxm) throw()
-            {
-                size_t res = 0;
-                for(size_t j=t.size();j>0;--j)
-                {
-                    const segment   &s    = t[j];
-                    const pixrow<T> &r    = pxm[s.y];
-                    const unit_t     xmin = s.xmin;
-                    for(unit_t x=s.xmax;x>=xmin;--x)
-                    {
-                        if( !pixel::is_zero(r(x)) )  ++res;
-                    }
-                }
-                return res;
-            }
 
             void initialize(size_t num_knots);
 
-            template <typename T> inline
-            void initialize(const tile &t, const pixmap<T> &pxm)
+
+            shared_marks probe;
+            shared_knots kpool;
+
+            knot *fetch_knot();
+
+            template <typename T>
+            void build(const pixmap<T> &field,
+                       const size_t     n)
             {
-                initialize( knots_for(t,pxm) );
+                assert(probe->has_same_metrics_than(field));
+                size_t label = 0;
+                marks &_mark = *probe;
+                knots  stack;
+
+                const unit_t w = _mark.w;
+                const unit_t h = _mark.h;
+
+                for(unit_t y=0;y<h;++y)
+                {
+                    const pixrow<T> &f_y  = field(y);
+                    pixrow<size_t>  &m_y  = _mark(y);
+
+                    for(unit_t x=0;x<w;++x)
+                    {
+                        if( pixel::is_zero(f_y(x)) ) continue; // no data
+                        size_t &m = m_y(x); if(m>0)  continue; // already visited
+
+
+                        blob *b = push_back( new blob(++label,kpool) );
+                        assert(0==stack.size);
+                        {
+                            // initialize stack
+                            m = label;
+                            **stack.push_back( fetch_knot() )  = coord(x,y);
+
+                            while(stack.size)
+                            {
+                                // pop front
+                                const coord  curr = **(b->push_back( stack.pop_front() ));
+                                for(size_t i=0;i<n;++i)
+                                {
+                                    // check if can be added
+                                    const coord link = curr + area::delta[i];
+                                    if( !_mark.owns(link)  ) { continue; }                // another region
+                                    size_t &msub = _mark(link);
+                                    if( msub > 0 )
+                                    {
+                                        assert(label==msub);
+                                        continue;
+
+                                    } // already visited
+
+                                    if( pixel::is_zero( field(link) ) )
+                                    {
+                                        continue;
+
+                                    } // a zero pixel
+
+                                    // add
+                                    msub = label;
+                                    **stack.push_back( fetch_knot() )  = link;
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+
             }
 
 
-            shared_marks probe;
-            knots        cache;
-            shared_knots kpool;
-
-
+#if 0
             template <typename T>
             void build(const tile      &t,
                        const pixmap<T> &field,
@@ -161,7 +204,8 @@ namespace upsylon
                     }
                 }
             }
-
+#endif
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);
 

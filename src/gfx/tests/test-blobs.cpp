@@ -17,8 +17,10 @@
 using namespace upsylon;
 using namespace graphic;
 
+#if 0
 namespace
 {
+
     template <typename T>
     static inline void display_for(const tiles &tess, const pixmap<T> &pxm)
     {
@@ -31,6 +33,7 @@ namespace
         std::cerr << "<tessellation/>" << std::endl << std::endl;
     }
 }
+#endif
 
 Y_UTEST(blobs)
 {
@@ -62,15 +65,12 @@ Y_UTEST(blobs)
             keep::transfer(fg,img,par,convert<uint8_t,rgb>::from,keep::geq,t,rgb(0,0,0));
             IMG.save(fg,"fg.png");
         }
-        display_for(seq,fg);
-        display_for(par,fg);
 
         shared_marks indices = new marks(img.w,img.h);
         shared_knots k_cache = new knots();
         blobs        b(indices,k_cache);
         size_to_rgba conv;
 
-        b.initialize(seq[0],fg);
 
         if(true)
         {
@@ -90,21 +90,17 @@ Y_UTEST(blobs)
             }
         }
 
-        b.probe->ldz();
-        b.build(seq[0],fg,4);
-        IMG.save(*indices,"blobs4.png", NULL, conv);
+        std::cerr << "active: " << fg.how_many(par,pixel::is_not_zero<rgb>) << std::endl;
 
-        b.initialize(seq[0],fg);
-        b.build(seq[0],fg,8);
-        IMG.save(*indices,"blobs8.png", NULL, conv);
+        b.initialize(0);
+        b.build(fg,4);
+        IMG.save(*indices,"blobs4.png",NULL,conv);
+
+        b.initialize(0);
+        b.build(fg,8);
+        IMG.save(*indices,"blobs8.png",NULL,conv);
 
 
-        if(par.size()>1)
-        {
-            b.initialize(par[1],fg);
-            b.build(par[1],fg,8);
-            IMG.save(*indices,"blobs8-1.png", NULL, conv);
-        }
         
 
 

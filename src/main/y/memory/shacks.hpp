@@ -136,9 +136,24 @@ namespace upsylon {
                 for(size_t i=0;i<num;++i)
                 {
                     self[i]->as<T>() = args;
+                    //(*self[i]) = args;
                 }
             }
 
+            //! sum (integral) values
+            template <typename T> inline
+            T sum() const throw()
+            {
+
+                const size_t      num  = size();
+                const slots_type &self = *this;
+                T ans = 0;
+                for(size_t i=0;i<num;++i)
+                {
+                    ans += self[i]->as<T>();
+                }
+                return ans;
+            }
 
 
         private:

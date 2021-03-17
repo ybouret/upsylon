@@ -172,12 +172,56 @@ namespace upsylon
                 apply(ops::run,&todo);
             }
 
+            template <typename PPTY> inline
+            size_t how_many(broker &apply, PPTY &property) const
+            {
+                // prepare local memory
+                assert(has_same_metrics_than(apply));
+                apply.caches.make<size_t>();
+
+                // parallel run
+                struct ops
+                {
+                    const pixmap<T> &source;
+                    PPTY            &property;
+
+                    static inline void run(const tile &t,
+                                           void       *args,
+                                           lockable   &) throw()
+                    {
+                        ops             &self     = *static_cast<ops *>(args);
+                        PPTY            &property = self.property;
+                        const pixmap<T> &source   = self.source;
+                        size_t  lres = 0;
+                        for(size_t j=t.size();j>0;--j)
+                        {
+                            const segment   &s = t[j];
+                            const unit_t     y = s.y;
+                            const pixrow<T> &src  =  source[y];
+                            const unit_t     xmin = s.xmin;
+                            for(unit_t x=s.xmax;x>=xmin;--x)
+                            {
+                                if(property(src(x))) ++lres;
+                            }
+                        }
+                        (*t.cache) = lres;
+                    }
+                };
+
+                ops todo = { *this, property };
+                apply(ops::run,&todo);
+
+                // reduction
+                return apply.caches.sum<size_t>();
+            }
+
 
 
         private:
             Y_DISABLE_ASSIGN(pixmap);
             row *rows;
             inline row * mine() throw() { return static_cast<row *>(a_rows->impl.block_addr); }
+
         };
     }
 
