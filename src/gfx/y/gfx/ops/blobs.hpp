@@ -94,19 +94,69 @@ namespace upsylon
 
 
             template <typename T>
-            void build(const tile &t, const pixmap<T> &pxm)
+            void build(const tile      &t,
+                       const pixmap<T> &field,
+                       const size_t     n)
             {
+                std::cerr << "in " << t << std::endl;
                 assert(0==size);
-                size_t label = 0;
+                assert(4==n||8==n);
+                size_t label = t.shift;
+                marks &_mark = *probe;
+                knots  stack;
+                
                 for(size_t j=t.size();j>0;--j)
                 {
                     const segment   &s    = t[j];
-                    const pixrow<T> &r    = pxm[s.y];
+                    const unit_t     y    = s.y;
+                    const pixrow<T> &f_y  = field(y);
+                    pixrow<size_t>  &m_y  = _mark(y);
                     const unit_t     xmin = s.xmin;
+
                     for(unit_t x=s.xmax;x>=xmin;--x)
                     {
+                        if( pixel::is_zero(f_y(x)) ) continue; // no data
+                        size_t &m = m_y(x); if(m>0)  continue; // already visited
                         
+                        
+                        blob *b = push_back( new blob(++label,kpool) );
+                        assert(0==stack.size);
+                        {
+                            // initialize stack
+                            m = label;
+                            **stack.push_back( cache.pop_front() )  = coord(x,y);
 
+                            while(stack.size)
+                            {
+                                // pop front
+                                const coord  curr = **(b->push_back( stack.pop_front() ));
+                                for(size_t i=0;i<n;++i)
+                                {
+                                    // check if can be added
+                                    const coord link = curr + area::delta[i];
+                                    if( !t.owns(link)  ) { continue; }                // another region
+                                    size_t &msub = _mark(link);
+                                    if( msub > 0 )
+                                    {
+                                        assert(label==msub);
+                                        continue;
+
+                                    } // already visited
+
+                                    if( pixel::is_zero( field(link) ) )
+                                    {
+                                        continue;
+
+                                    } // a zero pixel
+
+                                    // add
+                                    msub = label;
+                                    **stack.push_back( cache.pop_front() )  = link;
+                                }
+                            }
+
+                        }
+                        //return;
 
                     }
                 }

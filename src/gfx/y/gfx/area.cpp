@@ -13,7 +13,7 @@ namespace upsylon
             coord(1,0),
             coord(-1,0),
             coord(0,1),
-            coord(-1,0),
+            coord(0,-1),
 
             coord(1,1),
             coord(-1,1),

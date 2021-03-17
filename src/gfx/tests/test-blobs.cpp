@@ -68,28 +68,43 @@ Y_UTEST(blobs)
         shared_marks indices = new marks(img.w,img.h);
         shared_knots k_cache = new knots();
         blobs        b(indices,k_cache);
+        size_to_rgba conv;
 
         b.initialize(seq[0],fg);
 
-        for(unit_t y=0;y<img.h;++y)
+        if(true)
         {
-            for(unit_t x=0;x<img.w;++x)
+            for(unit_t y=0;y<img.h;++y)
             {
-                if( !pixel::is_zero( fg(y)(x) ) )
+                for(unit_t x=0;x<img.w;++x)
                 {
-                    (*indices)(y)(x) = x+y;
+                    if( !pixel::is_zero( fg(y)(x) ) )
+                    {
+                        (*indices)(y)(x) = x+y;
+                    }
                 }
+            }
+
+            {
+                IMG.save(*indices,"tags.png", NULL, conv);
             }
         }
 
+        b.probe->ldz();
+        b.build(seq[0],fg,4);
+        IMG.save(*indices,"blobs4.png", NULL, conv);
+
+        b.initialize(seq[0],fg);
+        b.build(seq[0],fg,8);
+        IMG.save(*indices,"blobs8.png", NULL, conv);
+
+
+        if(par.size()>1)
         {
-            size_to_rgba conv;
-            IMG.save(*indices,"tags.png", NULL, conv);
+            b.initialize(par[1],fg);
+            b.build(par[1],fg,8);
+            IMG.save(*indices,"blobs8-1.png", NULL, conv);
         }
-
-
-
-
         
 
 
