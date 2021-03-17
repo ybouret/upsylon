@@ -128,6 +128,22 @@ namespace upsylon
         }
 
 
+        bool tile:: owns(const coord p) const throw()
+        {
+            const tile  &self = *this;
+            const unit_t ymin = self[1].y;
+            if(p.y<ymin||p.y>self[lines].y)
+            {
+                return false;
+            }
+            else
+            {
+                unit_t         dy = p.y-ymin;
+                const segment &s  = self[++dy];
+                return (p.x>=s.xmin&&p.x<=s.xmax);
+            }
+        }
+
         std::ostream & operator<<(std::ostream &os, const tile &t)
         {
             os << '{' << t.origin() << " -> " << t.ending() << " : #" << t.content() << '}';

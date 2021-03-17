@@ -92,7 +92,25 @@ namespace upsylon
             knots        cache;
             shared_knots kpool;
 
-            
+
+            template <typename T>
+            void build(const tile &t, const pixmap<T> &pxm)
+            {
+                assert(0==size);
+                size_t label = 0;
+                for(size_t j=t.size();j>0;--j)
+                {
+                    const segment   &s    = t[j];
+                    const pixrow<T> &r    = pxm[s.y];
+                    const unit_t     xmin = s.xmin;
+                    for(unit_t x=s.xmax;x>=xmin;--x)
+                    {
+                        
+
+
+                    }
+                }
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);

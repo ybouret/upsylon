@@ -69,7 +69,7 @@ Y_UTEST(blobs)
         shared_knots k_cache = new knots();
         blobs        b(indices,k_cache);
 
-        b.initialize(100);
+        b.initialize(seq[0],fg);
 
         for(unit_t y=0;y<img.h;++y)
         {
