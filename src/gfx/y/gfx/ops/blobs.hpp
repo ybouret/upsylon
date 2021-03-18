@@ -84,6 +84,9 @@ namespace upsylon
                 }
             }
             
+            static int increasing_size(const blob *, const blob *, void*) throw();
+            static int decreasing_size(const blob *, const blob *, void*) throw();
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);
@@ -103,6 +106,9 @@ namespace upsylon
         public:
             explicit blobs() throw(); //!< setup empty
             virtual ~blobs() throw(); //!< cleanup
+            
+            void     sort_decreasing();
+            void     rewrote(pixmap<size_t> &masks) throw();
             
             
             //! generic build algorithm
@@ -206,6 +212,7 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);
             static knot *fetch_knot(shared_knots &cache);
+            void relabel() throw();
         };
         
  

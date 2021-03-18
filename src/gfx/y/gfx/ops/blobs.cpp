@@ -65,10 +65,24 @@ namespace upsylon
             return change_label(0,masks);
         }
 
+        int blob:: increasing_size(const blob *lhs, const blob *rhs, void*) throw()
+        {
+            return comparison::increasing(lhs->size,rhs->size);
+        }
+
+        
+        int blob:: decreasing_size(const blob *lhs, const blob *rhs,void*) throw()
+        {
+            return comparison::decreasing(lhs->size,rhs->size);
+        }
+
+        
     }
     
 }
 
+
+#include "y/sort/merge.hpp"
 
 namespace upsylon
 {
@@ -90,6 +104,33 @@ namespace upsylon
         {
             return cache->size ? cache->pop_front() : knot::create_alive();
         }
+        
+        void blobs:: relabel() throw()
+        {
+            size_t label = 0;
+            for(blob *b=head;b;b=b->next)
+            {
+                aliasing::_(b->label) = ++label;
+            }
+        }
+
+        
+        void blobs:: sort_decreasing()
+        {
+            merging<blob>::sort(*this, blob::decreasing_size,NULL);
+            relabel();
+        }
+        
+        void blobs:: rewrote(pixmap<size_t> &masks) throw()
+        {
+            for(const blob *b=head;b;b=b->next)
+            {
+                b->dispatch(b->label,masks);
+            }
+        }
+        
+
+
     }
     
 }

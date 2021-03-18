@@ -106,7 +106,7 @@ namespace upsylon
                 }
                 
                 b.dispatch(0,E);
-                return false;
+                return false; // and will remove blob from blobs
                 
             IS_STRONG:
                 b.dispatch(Y_GFX_EDGE_STRONG,E);

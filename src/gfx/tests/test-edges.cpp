@@ -5,6 +5,8 @@
 #include "y/gfx/image/io.hpp"
 
 #include "y/gfx/filters/sobel.hpp"
+#include "y/gfx/filters/scharr.hpp"
+
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
@@ -58,7 +60,7 @@ Y_UTEST(edges)
 
         IMG.save(img,"img.png");
 
-        const shared_filters F = new Sobel5();
+        const shared_filters F = new Sobel7();
 
         edges::gradient Gpar(img.w,img.h);
         edges::gradient Gseq(img.w,img.h);
@@ -102,7 +104,11 @@ Y_UTEST(edges)
         blobs          B;
         pixmap<size_t> masks(img.w,img.h);
         prof.track(B,Kseq,masks,cache);
-        IMG.save(Kpar, "edges.png");
+        
+        B.sort_decreasing();
+        B.rewrote(masks);
+        
+        IMG.save(Kseq, "edges.png");
         IMG.save(masks,"blobs.png",NULL,conv);
 
         
