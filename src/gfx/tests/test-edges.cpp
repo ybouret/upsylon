@@ -8,6 +8,7 @@
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
+#include "y/gfx/color/size-to-rgba.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -86,11 +87,26 @@ Y_UTEST(edges)
         const size_t npar = edges::profile::tighten(Kpar, par, lo, hi);
         Y_CHECK(compute_rms(Kseq,Kpar)<=0);
         Y_CHECK(nseq==npar);
-        Y_CHECK(nseq==Kseq.how_many(seq,pixel::is_not_zero<float>));
-        Y_CHECK(npar==Kpar.how_many(seq,pixel::is_not_zero<float>));
+        Y_CHECK(nseq==Kseq.how_many(seq,pixel::is_not_zero<uint8_t>));
+        Y_CHECK(npar==Kpar.how_many(par,pixel::is_not_zero<uint8_t>));
 
         IMG.save(Kpar,"gprf.png");
         std::cerr << "active=" << npar << std::endl;
+        
+        
+        shared_knots cache = new knots();
+        cache->ensure(npar);
+        
+        size_to_rgba   conv;
+        edges::profile prof;
+        blobs          B;
+        pixmap<size_t> masks(img.w,img.h);
+        prof.track(B,Kseq,masks,cache);
+        IMG.save(Kpar, "edges.png");
+        IMG.save(masks,"blobs.png",NULL,conv);
+
+        
+        
 
     }
 

@@ -52,7 +52,19 @@ namespace upsylon
             cache->merge_back(*this);
         }
         
+        blob * blob:: change_label(const size_t    value,
+                                 pixmap<size_t> &masks) throw()
+        {
+            aliasing::_(label) = value;
+            dispatch(value,masks);
+            return this;
+         }
         
+        blob  * blob:: remove_from(pixmap<size_t> &masks) throw()
+        {
+            return change_label(0,masks);
+        }
+
     }
     
 }

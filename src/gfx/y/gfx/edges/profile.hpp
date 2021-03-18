@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_GFX_EDGES_PROFILE_INCLUDED
@@ -13,7 +11,6 @@ namespace upsylon
     {
 
         
-#define Y_GFX_EDGE_VACANT 0       //!< vacant edge
 #define Y_GFX_EDGE_FEEBLE 127     //!< feeble edge
 #define Y_GFX_EDGE_STRONG 255     //!< strong edge
         
@@ -27,16 +24,15 @@ namespace upsylon
             //! profile edges
             //
             //__________________________________________________________________
-            class profile : public pixmap<size_t>
+            class profile
             {
             public:
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-
-                explicit profile(const unit_t W, const unit_t H); //!< setup
-                virtual ~profile() throw();                       //!< cleanup
+                explicit profile() throw();       //!< setup
+                virtual ~profile() throw();       //!< cleanup
 
                 //______________________________________________________________
                 //
@@ -50,9 +46,21 @@ namespace upsylon
                                       broker          &apply,
                                       const uint8_t    feeble_limit,
                                       const uint8_t    strong_limit);
-
+                
+                void track(blobs           &userBlobs,
+                           pixmap<uint8_t> &userEdges,
+                           pixmap<size_t>  &userMasks,
+                           shared_knots    &knotCache);
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(profile);
+                blobs           *Blobs;
+                pixmap<uint8_t> *Edges;
+                pixmap<size_t>  *Masks;
+                
+                bool        accept(blob &b)            throw();
+                static bool call_accept(blob &,void *) throw();
+                
             };
 
         }

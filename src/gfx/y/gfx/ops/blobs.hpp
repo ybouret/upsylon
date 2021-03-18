@@ -67,6 +67,23 @@ namespace upsylon
             const size_t label; //!< identifier
             shared_knots cache; //!< pool to return knots to
             
+            //! change label, propagating
+            blob  *change_label(const size_t    value,
+                                pixmap<size_t> &masks) throw();
+            
+            //! change label to 0
+            blob  *remove_from(pixmap<size_t> &masks) throw();
+            
+            //! set value on knots
+            template <typename T> inline
+            void dispatch(typename type_traits<T>::parameter_type args, pixmap<T> &pxm ) const
+            {
+                for(const knot *node=head;node;node=node->next)
+                {
+                    pxm(**node) = args;
+                }
+            }
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);
@@ -170,9 +187,7 @@ namespace upsylon
                         if( proc && ! (*proc)(*b,args) )
                         {
                             // clean zone
-                            
-                            // remove blob
-                            delete unlink(b);
+                            delete unlink(b->remove_from(masks));
                             --label;
                         }
                         

@@ -179,7 +179,7 @@ namespace upsylon
                 // prepare local memory
                 assert(has_same_metrics_than(apply));
                 apply.caches.make<size_t>();
-
+                
                 // parallel run
                 struct ops
                 {
@@ -205,7 +205,7 @@ namespace upsylon
                                 if(property(src(x))) ++lres;
                             }
                         }
-                        (*t.cache) = lres;
+                        t.cache->as<size_t>() = lres;
                     }
                 };
 

@@ -1,5 +1,7 @@
 
 #include "y/gfx/edges/profile.hpp"
+#include "y/momentary/value.hpp"
+#include "y/momentary/link.hpp"
 
 namespace upsylon
 {
@@ -9,6 +11,9 @@ namespace upsylon
         namespace edges
         {
             
+            profile::  profile() throw() : Blobs(0), Edges(0), Masks(0) {}
+            profile:: ~profile() throw() {}
+
             size_t profile:: tighten(pixmap<uint8_t> &edges,
                                      broker          &apply,
                                      const uint8_t    feeble_limit,
@@ -56,12 +61,12 @@ namespace upsylon
                                     }
                                     else
                                     {
-                                        B0ref = Y_GFX_EDGE_VACANT;
+                                        B0ref = 0;
                                     }
                                 }
                             }
                         }
-                        (*t.cache) = active;
+                        t.cache->as<size_t>() = active;
                     }
                     
                 };
@@ -70,6 +75,42 @@ namespace upsylon
                 apply(ops::run, &todo);
                 
                 return apply.caches.sum<size_t>();
+            }
+            
+            bool profile:: call_accept(blob &b, void *args) throw()
+            {
+                assert(args);
+                return static_cast<profile *>(args)->accept(b);
+            }
+          
+            void profile:: track(blobs           &userBlobs,
+                                 pixmap<uint8_t> &userEdges,
+                                 pixmap<size_t>  &userMasks,
+                                 shared_knots    &knotCache)
+            {
+                momentary_link<blobs>            linkBlobs(userBlobs,&Blobs);
+                momentary_link<pixmap<uint8_t> > linkEdges(userEdges,&Edges);
+                momentary_link<pixmap<size_t>  > linkMasks(userMasks,&Masks);
+                
+                userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
+                
+            }
+            
+            
+            bool profile:: accept(blob &b) throw()
+            {
+                pixmap<uint8_t> &E = *Edges;
+                for(const knot  *node=b.head;node;node=node->next)
+                {
+                    if( E(**node) >= Y_GFX_EDGE_STRONG ) goto IS_STRONG;
+                }
+                
+                b.dispatch(0,E);
+                return false;
+                
+            IS_STRONG:
+                b.dispatch(Y_GFX_EDGE_STRONG,E);
+                return true;
             }
         }
         
