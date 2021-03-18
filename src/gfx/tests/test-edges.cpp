@@ -106,7 +106,7 @@ Y_UTEST(edges)
         prof.track(B,Kseq,masks,cache);
         
         B.sort_decreasing();
-        B.rewrote(masks);
+        B.rewrite(masks);
         
         IMG.save(Kseq, "edges.png");
         IMG.save(masks,"blobs.png",NULL,conv);

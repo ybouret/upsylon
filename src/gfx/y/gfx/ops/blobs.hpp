@@ -84,15 +84,24 @@ namespace upsylon
                 }
             }
             
+            //! compare blobs by increasing size
             static int increasing_size(const blob *, const blob *, void*) throw();
+            
+            //! comapre blobs by decreasing size
             static int decreasing_size(const blob *, const blob *, void*) throw();
             
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);
         };
-
+        
+        //______________________________________________________________________
+        //
+        //
         //! base class for blobs
+        //
+        //______________________________________________________________________
+
         typedef core::list_of_cpp<blob> blobs_;
         
         //______________________________________________________________________
@@ -107,8 +116,8 @@ namespace upsylon
             explicit blobs() throw(); //!< setup empty
             virtual ~blobs() throw(); //!< cleanup
             
-            void     sort_decreasing();
-            void     rewrote(pixmap<size_t> &masks) throw();
+            void     sort_decreasing(); //!< sort blobs bigs first
+            void     rewrite(pixmap<size_t> &masks) throw(); //!< rewrite labels
             
             
             //! generic build algorithm

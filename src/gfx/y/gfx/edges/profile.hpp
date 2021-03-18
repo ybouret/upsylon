@@ -47,6 +47,7 @@ namespace upsylon
                                       const uint8_t    feeble_limit,
                                       const uint8_t    strong_limit);
                 
+                //! track edges
                 void track(blobs           &userBlobs,
                            pixmap<uint8_t> &userEdges,
                            pixmap<size_t>  &userMasks,

@@ -121,7 +121,7 @@ namespace upsylon
             relabel();
         }
         
-        void blobs:: rewrote(pixmap<size_t> &masks) throw()
+        void blobs:: rewrite(pixmap<size_t> &masks) throw()
         {
             for(const blob *b=head;b;b=b->next)
             {
