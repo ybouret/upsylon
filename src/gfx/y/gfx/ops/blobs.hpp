@@ -31,9 +31,11 @@ namespace upsylon
         class knots : public entity, public knots_
         {
         public:
-            virtual ~knots() throw(); //!< cleanup
-            explicit knots() throw(); //!< setup
-
+            virtual ~knots() throw();   //!< cleanup
+            explicit knots() throw();   //!< setup
+            void     reserve(size_t n); //!< push_back n nodes
+            void     ensure(const size_t n); //!< ensure n nodes
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(knots);
         };
@@ -55,185 +57,135 @@ namespace upsylon
         class blob : public knots, public inode<blob>
         {
         public:
+            
+            typedef bool (*proc)(blob &, void *);
+            
             explicit blob(const size_t, const shared_knots &) throw(); //!< setup
             virtual ~blob() throw();                                   //!< cleanup
 
-
             const size_t label; //!< identifier
-            shared_knots kpool; //!< pool to return to
-
+            shared_knots cache; //!< pool to return to
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);
         };
 
         //! base class for blobs
         typedef core::list_of_cpp<blob> blobs_;
-
-        typedef pixmap<size_t> marks;
-        typedef arc_ptr<marks> shared_marks;
-
-        class blobs :  public blobs_
+        
+        class blobs : public blobs_
         {
         public:
-            explicit blobs(const shared_marks &M,
-                           const shared_knots &K);
+            explicit blobs() throw();
             virtual ~blobs() throw();
-
-
-
-
-            void initialize(size_t num_knots);
-
-
-            shared_marks probe;
-            shared_knots kpool;
-
-            knot *fetch_knot();
-
-            template <typename T>
-            void build(const pixmap<T> &field,
-                       const size_t     n)
+            
+            
+            template <typename T> inline
+            void build(pixmap<size_t>  &masks,
+                       const pixmap<T> &field,
+                       shared_knots    &cache,
+                       const size_t     n,
+                       blob::proc       proc = NULL,
+                       void            *args = NULL)
             {
-                assert(probe->has_same_metrics_than(field));
-                size_t label = 0;
-                marks &_mark = *probe;
-                knots  stack;
-
-                const unit_t w = _mark.w;
-                const unit_t h = _mark.h;
-
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
+                assert(masks.has_same_metrics_than(field));
+                assert(n==4||n==8);
+                masks.ldz();
+                release();
+                
+                size_t       label = 0;       // initial label
+                const unit_t w     = masks.w; // full width
+                const unit_t h     = masks.h; // full height
+                knots        stack;           // local search stack
+                
+               
+                
                 for(unit_t y=0;y<h;++y)
                 {
                     const pixrow<T> &f_y  = field(y);
-                    pixrow<size_t>  &m_y  = _mark(y);
-
+                    pixrow<size_t>  &m_y  = masks(y);
+                    
                     for(unit_t x=0;x<w;++x)
                     {
-                        if( pixel::is_zero(f_y(x)) ) continue; // no data
-                        size_t &m = m_y(x); if(m>0)  continue; // already visited
-
-
-                        blob *b = push_back( new blob(++label,kpool) );
-                        assert(0==stack.size);
+                        //------------------------------------------------------
+                        //
+                        // ENTER: inner loop
+                        //
+                        //------------------------------------------------------
+                        
+                        if( pixel::is_zero(f_y(x)) ) continue;            // no data
+                        size_t &m = m_y(x); if(m>0)  continue;            // already visited
+                        blob   *b = push_back( new blob(++label,cache) ); // start new blob!
                         {
+                            //--------------------------------------------------
                             // initialize stack
+                            //--------------------------------------------------
+                            assert(0==stack.size);
                             m = label;
-                            **stack.push_back( fetch_knot() )  = coord(x,y);
-
+                            **stack.push_back( fetch_knot(cache) )  = coord(x,y);
+                            
                             while(stack.size)
                             {
-                                // pop front
+                                //----------------------------------------------
+                                // register front node, take its coordinates
+                                //----------------------------------------------
                                 const coord  curr = **(b->push_back( stack.pop_front() ));
                                 for(size_t i=0;i<n;++i)
                                 {
+                                    //------------------------------------------
                                     // check if can be added
-                                    const coord link = curr + area::delta[i];
-                                    if( !_mark.owns(link)  ) { continue; }                // another region
-                                    size_t &msub = _mark(link);
-                                    if( msub > 0 )
-                                    {
-                                        assert(label==msub);
-                                        continue;
-
-                                    } // already visited
-
-                                    if( pixel::is_zero( field(link) ) )
-                                    {
-                                        continue;
-
-                                    } // a zero pixel
-
-                                    // add
-                                    msub = label;
-                                    **stack.push_back( fetch_knot() )  = link;
+                                    //------------------------------------------
+                                    const coord link = curr + area::delta[i];     // where to look at
+                                    if( !masks.owns(link)  ) continue;            // does not belong  -> continue
+                                    size_t &l = masks(link);                      // check label
+                                    if( l > 0 ) { assert(label==l); continue; }   // already visited  -> continue
+                                    if( pixel::is_zero( field(link) ) ) continue; // a zero pixel     -> continue
+                                   
+                                    //------------------------------------------
+                                    // added to stack
+                                    //------------------------------------------
+                                    l = label;
+                                    **stack.push_back( fetch_knot(cache) )  = link;
                                 }
                             }
-
+                            
                         }
+                        //------------------------------------------------------
+                        // a new blob was created!
+                        //------------------------------------------------------
+                        if( proc && ! (*proc)(*b,args) )
+                        {
+                            // clean zone
+                            
+                            // remove blob
+                            delete unlink(b);
+                            --label;
+                        }
+                        
+                        //------------------------------------------------------
+                        //
+                        // LEAVE: inner loop
+                        //
+                        //------------------------------------------------------
                     }
-
+                    
                 }
-
-            }
-
-
-#if 0
-            template <typename T>
-            void build(const tile      &t,
-                       const pixmap<T> &field,
-                       const size_t     n)
-            {
-                std::cerr << "in " << t << std::endl;
-                assert(0==size);
-                assert(4==n||8==n);
-                size_t label = t.shift;
-                marks &_mark = *probe;
-                knots  stack;
                 
-                for(size_t j=t.size();j>0;--j)
-                {
-                    const segment   &s    = t[j];
-                    const unit_t     y    = s.y;
-                    const pixrow<T> &f_y  = field(y);
-                    pixrow<size_t>  &m_y  = _mark(y);
-                    const unit_t     xmin = s.xmin;
-
-                    for(unit_t x=s.xmax;x>=xmin;--x)
-                    {
-                        if( pixel::is_zero(f_y(x)) ) continue; // no data
-                        size_t &m = m_y(x); if(m>0)  continue; // already visited
-                        
-                        
-                        blob *b = push_back( new blob(++label,kpool) );
-                        assert(0==stack.size);
-                        {
-                            // initialize stack
-                            m = label;
-                            **stack.push_back( cache.pop_front() )  = coord(x,y);
-
-                            while(stack.size)
-                            {
-                                // pop front
-                                const coord  curr = **(b->push_back( stack.pop_front() ));
-                                for(size_t i=0;i<n;++i)
-                                {
-                                    // check if can be added
-                                    const coord link = curr + area::delta[i];
-                                    if( !t.owns(link)  ) { continue; }                // another region
-                                    size_t &msub = _mark(link);
-                                    if( msub > 0 )
-                                    {
-                                        assert(label==msub);
-                                        continue;
-
-                                    } // already visited
-
-                                    if( pixel::is_zero( field(link) ) )
-                                    {
-                                        continue;
-
-                                    } // a zero pixel
-
-                                    // add
-                                    msub = label;
-                                    **stack.push_back( cache.pop_front() )  = link;
-                                }
-                            }
-
-                        }
-                        //return;
-
-                    }
-                }
             }
-#endif
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);
-
+            static knot *fetch_knot(shared_knots &cache);
         };
-
-
+        
+ 
     }
 
 

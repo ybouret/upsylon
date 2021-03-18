@@ -3,14 +3,14 @@
 
 namespace upsylon
 {
-
+    
     namespace graphic
     {
-
+        
         knots:: knots() throw()
         {
         }
-
+        
         knots:: ~knots() throw()
         {
             while(size)
@@ -19,66 +19,66 @@ namespace upsylon
                 knot::destruct(k);
             }
         }
-
-
+        
+        void knots:: reserve(size_t n)
+        {
+            while(n-- > 0)
+                push_back( knot::create_alive() );
+        }
+        
+        void knots:: ensure(const size_t n)
+        {
+            if(n>size) reserve(n-size);
+        }
+        
     }
-
 }
 
 namespace upsylon
 {
-
+    
     namespace graphic
     {
-
+        
         blob:: blob(const size_t        id,
                     const shared_knots &ks) throw() :
         label(id),
-        kpool(ks)
+        cache(ks)
         {
         }
-
+        
         blob:: ~blob() throw()
         {
-            kpool->merge_back(*this);
+            cache->merge_back(*this);
         }
-
-
+        
+        
     }
-
+    
 }
 
 
 namespace upsylon
 {
-
+    
     namespace graphic
     {
         blobs:: ~blobs() throw()
         {
         }
-
-
-        blobs:: blobs(const shared_marks &M,
-                      const shared_knots &K) :
-        probe(M),
-        kpool(K)
+        
+        
+        blobs:: blobs() throw()
         {
         }
-
-        void blobs:: initialize(size_t n)
+        
+        
+        
+        knot * blobs:: fetch_knot(shared_knots &cache)
         {
-            release();
-            probe->ldz();
-            while(kpool->size<n) kpool->push_back( knot::create_alive() );
+            return cache->size ? cache->pop_front() : knot::create_alive();
         }
-
-        knot * blobs:: fetch_knot()
-        {
-            return kpool->size ? kpool->pop_front() : knot::create_alive();
-        }
-
     }
-
+    
 }
 

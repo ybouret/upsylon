@@ -11,28 +11,34 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //! finding extrema of a pixmap
+        //______________________________________________________________________
         struct extrema
         {
+            //! get maximum
             template <typename T>
             static inline
             T get_max(const pixmap<T> &pxm, broker &apply )
             {
                 assert( pxm.has_same_metrics_than(apply) );
 
-                apply.caches.make<T>();
-                apply(kernel_maxi<T>,(void*)&pxm);
-                return apply.caches.get_max<T>();
+                apply.caches.make<T>();             // local mem
+                apply(kernel_maxi<T>,(void*)&pxm);  // run kernel
+                return apply.caches.get_max<T>();   // max of local mem
             }
 
+            //! get minimum
             template <typename T>
             static inline
             T get_min(const pixmap<T> &pxm, broker &apply )
             {
                 assert( pxm.has_same_metrics_than(apply) );
-
-                apply.caches.make<T>();
-                apply(kernel_mini<T>,(void*)&pxm);
-                return apply.caches.get_min<T>();
+ 
+                apply.caches.make<T>();              // local mem
+                apply(kernel_mini<T>,(void*)&pxm);   // run kernel
+                return apply.caches.get_min<T>();    // min of local mem
             }
 
             //! return arr[0.1] = {vmin,vmax} from local cache
@@ -42,11 +48,12 @@ namespace upsylon
             {
                 assert( pxm.has_same_metrics_than(apply) );
 
-                apply.caches.make<T>(2);
-                apply(kernel_both<T>,(void*)&pxm);
-                return apply.caches.minmax<T>();
+                apply.caches.make<T>(2);             // local mem
+                apply(kernel_both<T>,(void*)&pxm);   // run kernel
+                return apply.caches.minmax<T>();     // minmax of local mem
             }
 
+            //! normalize: vmin->vmax => 0->1
             template <typename T>
             static inline
             void normalize(pixmap<T>       &target,
@@ -116,6 +123,7 @@ namespace upsylon
                 apply( ops::run, &todo );
             }
 
+            //! auto-normalize
             template <typename T>
             static inline
             void normalize(pixmap<T>       &target,

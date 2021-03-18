@@ -15,14 +15,28 @@ namespace upsylon
 
         namespace edges
         {
-            class keep_max :
-            public histogram,
-            public pixmap<uint8_t>
+            //__________________________________________________________________
+            //
+            //
+            //! keep only local maxima of a normalized gradient field
+            //
+            //__________________________________________________________________
+            class keep_max : public histogram, public pixmap<uint8_t>
             {
             public:
+                
+                //! setup
                 explicit keep_max(const unit_t W, const unit_t H);
+                
+                //! cleanup
                 virtual ~keep_max() throw();
 
+                //! apply algorithm
+                /**
+                 - check local maxima in gradient direction
+                 - convert it to byte
+                 - produce the histogram of local extrema
+                 */
                 void operator()(broker &apply, const gradient &G);
 
             private:

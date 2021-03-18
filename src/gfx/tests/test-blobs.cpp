@@ -66,42 +66,21 @@ Y_UTEST(blobs)
             IMG.save(fg,"fg.png");
         }
 
-        shared_marks indices = new marks(img.w,img.h);
-        shared_knots k_cache = new knots();
-        blobs        b(indices,k_cache);
-        size_to_rgba conv;
+        pixmap<size_t> masks(img.w,img.h);
+        shared_knots   cache = new knots();
+        size_to_rgba   conv;
 
-
-        if(true)
-        {
-            for(unit_t y=0;y<img.h;++y)
-            {
-                for(unit_t x=0;x<img.w;++x)
-                {
-                    if( !pixel::is_zero( fg(y)(x) ) )
-                    {
-                        (*indices)(y)(x) = x+y;
-                    }
-                }
-            }
-
-            {
-                IMG.save(*indices,"tags.png", NULL, conv);
-            }
-        }
-
-        std::cerr << "active: " << fg.how_many(par,pixel::is_not_zero<rgb>) << std::endl;
-
-        b.initialize(0);
-        b.build(fg,4);
-        IMG.save(*indices,"blobs4.png",NULL,conv);
-
-        b.initialize(0);
-        b.build(fg,8);
-        IMG.save(*indices,"blobs8.png",NULL,conv);
-
-
+        blobs b;
         
+        b.build(masks,fg,cache,4);
+        IMG.save(masks,"blobs4.png",NULL,conv);
+        std::cerr << "#blobs4: " << b.size << std::endl;
+        
+        b.build(masks,fg,cache,8);
+        IMG.save(masks,"blobs8.png",NULL,conv);
+        
+        std::cerr << "#blobs8: " << b.size << std::endl;
+
 
 
     }

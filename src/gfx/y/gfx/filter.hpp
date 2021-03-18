@@ -16,13 +16,15 @@ namespace upsylon
 
         namespace crux
         {
+            //! weight at an horizontal position
             template <typename T>
             class filter_weight
             {
             public:
-                const unit_t x;
-                const T      value;
+                const unit_t x;      //!< horizontal shift
+                const T      value;  //!< value
 
+                //! setup
                 inline filter_weight(const unit_t X, const T V) throw() : x(X), value(V) { }
 
             private:
@@ -30,13 +32,13 @@ namespace upsylon
             };
 
 
+            //! horitonzal weights at a vertical position
             template <typename T>
             class filter_weights : public accessible< const filter_weight<T> >
             {
             public:
-                const unit_t                    y;
 
-
+                //! setuo
                 explicit filter_weights(const unit_t            yyy,
                                         const filter_weight<T> *ptr,
                                         const size_t            num) throw() :
@@ -46,14 +48,18 @@ namespace upsylon
                     assert(num>0);
                 }
 
+                //! number of vertical position(s)
                 inline virtual size_t size() const throw() { return count; }
 
+                //! get the weigth a i-th position
                 inline const filter_weight<T> &  operator[](const size_t i) const throw()
                 {
                     assert(i>0);
                     assert(i<=count);
                     return shift[i];
                 }
+                
+                const unit_t                    y; //!< the vertical poisition
 
             private:
                 const filter_weight<T>  * const shift;
@@ -63,16 +69,19 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(filter_weights);
             };
 
-
+            //! base class for a filter
             class filter : public entity
             {
             public:
                 virtual ~filter() throw();
-
+                
+                //! suppress memory
                 static void  suppress(void *&,size_t &) throw();
+                
+                //! allocate embeedded memory
                 static void *allocate(memory::embed emb[], const size_t num, size_t &);
 
-                const string name;
+                const string name; //!< identifier
 
             protected:
                 explicit filter(const string&); //!< setup
@@ -82,7 +91,12 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(filter);
             };
         }
-
+        //______________________________________________________________________
+        //
+        //
+        //! a filter is a series of horizontal filters
+        //
+        //______________________________________________________________________
         template <typename T>
         class filter : public crux::filter, public accessible< const crux::filter_weights<T> >
         {
@@ -90,12 +104,14 @@ namespace upsylon
             typedef crux::filter_weight<T>  weight_type;
             typedef crux::filter_weights<T> weights_type;
 
+            //! cleanup
             inline virtual ~filter() throw()
             {
                 suppress(wksp,wlen);
                 wline=0; aliasing::_(lines)=0;
             }
 
+            //! setuo
             template <typename ID, typename U>
             inline explicit filter(const ID    &ident,
                                    const U     *coeff,
@@ -104,12 +120,14 @@ namespace upsylon
                                    const char  *suffix=NULL) :
             crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
             {
-                aliasing::_(name) += suffix;
+                if(suffix) aliasing::_(name) += suffix;
                 compile(coeff,width,trans);
             }
 
+            //! accessible interface
             virtual size_t size() const throw() { return lines; }
 
+            //! accessible interface
             virtual const weights_type & operator[](const size_t iline) const throw()
             {
                 assert(wline);
@@ -118,6 +136,7 @@ namespace upsylon
                 return wline[iline];
             }
 
+            //! human readable output
             inline friend std::ostream & operator<<(std::ostream &os, const filter &f)
             {
                 for(size_t j=f.lines;j>0;--j)
@@ -153,6 +172,7 @@ namespace upsylon
                 target = sum;
             }
 
+            //! target = filter(source)
             template <typename U, typename V> inline
             void operator()(pixmap<U>       &target,
                             const pixmap<V> &source,

@@ -12,13 +12,19 @@ namespace upsylon
     namespace graphic
     {
         
-        
+        //______________________________________________________________________
+        //
+        //
         //! helper to keep part of pixmaps
+        //
+        //______________________________________________________________________
         struct keep
         {
 
+            //! args of a test function
 #define Y_GFX_KEEP_ARGS const uint8_t value, const uint8_t threshold
 
+            //! prototype of a test function
             typedef bool (*compare)(Y_GFX_KEEP_ARGS);
 
             //! strict background
@@ -44,7 +50,15 @@ namespace upsylon
             {
                 return value>=threshold;
             }
-
+            
+            //__________________________________________________________________
+            //
+            //! transert source to target
+            /**
+             for all source pixels matching the comparison, else replaced by
+             'discarded'
+             */
+            //__________________________________________________________________
 
             template <typename T, typename CONV> static inline
             void transfer(pixmap<T>       &target,
