@@ -31,9 +31,9 @@ namespace upsylon
         class knots : public entity, public knots_
         {
         public:
-            virtual ~knots() throw();   //!< cleanup
-            explicit knots() throw();   //!< setup
-            void     reserve(size_t n); //!< push_back n nodes
+            virtual ~knots() throw();        //!< cleanup
+            explicit knots() throw();        //!< setup
+            void     reserve(size_t n);      //!< push_back n nodes
             void     ensure(const size_t n); //!< ensure n nodes
             
         private:
@@ -58,13 +58,14 @@ namespace upsylon
         {
         public:
             
+            //! prototype to validate a newlyformed blob
             typedef bool (*proc)(blob &, void *);
             
             explicit blob(const size_t, const shared_knots &) throw(); //!< setup
             virtual ~blob() throw();                                   //!< cleanup
 
             const size_t label; //!< identifier
-            shared_knots cache; //!< pool to return to
+            shared_knots cache; //!< pool to return knots to
             
             
         private:
@@ -74,13 +75,20 @@ namespace upsylon
         //! base class for blobs
         typedef core::list_of_cpp<blob> blobs_;
         
+        //______________________________________________________________________
+        //
+        //
+        //! blobs for a pixmap
+        //
+        //______________________________________________________________________
         class blobs : public blobs_
         {
         public:
-            explicit blobs() throw();
-            virtual ~blobs() throw();
+            explicit blobs() throw(); //!< setup empty
+            virtual ~blobs() throw(); //!< cleanup
             
             
+            //! generic build algorithm
             template <typename T> inline
             void build(pixmap<size_t>  &masks,
                        const pixmap<T> &field,

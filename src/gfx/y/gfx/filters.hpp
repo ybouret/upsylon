@@ -5,25 +5,33 @@
 #define Y_GFX_FILTERS_INCLUDED 1
 
 #include "y/gfx/filter.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
     
     namespace graphic
     {
-        typedef filter<float>              filter_type;
-        typedef arc_ptr<const filter_type> shared_filter;
+        typedef filter<float>                      filter_type;   //!< built-in filter type
+        typedef intr_ptr<string,const filter_type> shared_filter; //!< allocated filter
         
+        //______________________________________________________________________
+        //
+        //
+        //! named filters for Y and X
+        //
+        //______________________________________________________________________
         class filters : public entity
         {
         public:
-            virtual ~filters() throw();
+            virtual ~filters() throw(); //!< cleanup
             
-            const string        name;
-            const shared_filter y;
-            const shared_filter x;
+            const string        name;   //!< identifier
+            const shared_filter y;      //!< y filter
+            const shared_filter x;      //!< x filter (y-transposed)
             
         protected:
+            //! setup filters from a table
             template <typename ID, typename U>
             inline explicit filters(const ID    &ident,
                                     const U     *coeff,
@@ -38,12 +46,22 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(filters);
         };
         
-        typedef arc_ptr<const filters> shared_filters;
+        //______________________________________________________________________
+        //
+        //
+        //! allocated filters
+        //
+        //______________________________________________________________________
+
+        typedef intr_ptr<string,const filters> shared_filters;
         
     }
     
 }
+//______________________________________________________________________
 
+
+//! declare a filter NAME/DIM
 #define Y_FILTERS_DECL(NAME,DIM)           \
 /**/ class NAME##DIM : public filters {    \
 /**/ public:                               \
@@ -55,12 +73,14 @@ namespace upsylon
 /**/ static const int Coeffs[DIM][DIM];    \
 /**/ }
 
+//! implement a filter NAME/DIM
 #define Y_FILTERS_IMPL(NAME,DIM)                                 \
 /**/ const char   NAME##DIM :: ID[] = #NAME #DIM;                \
 /**/ NAME##DIM::  NAME##DIM() : filters(ID,&Coeffs[0][0],DIM) {} \
-/**/ NAME##DIM:: ~NAME##DIM() throw() {} \
+/**/ NAME##DIM:: ~NAME##DIM() throw() {}                         \
 /**/ const int NAME##DIM :: Coeffs[DIM][DIM] = {
 
+//! done implementing coefficients...
 #define Y_FILTERS_DONE() }
 
 #endif

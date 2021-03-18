@@ -1,4 +1,5 @@
 #include "y/utest/run.hpp"
+#include "y/gfx/edges/keep-max.hpp"
 #include "y/gfx/edges/profile.hpp"
 
 #include "y/gfx/image/io.hpp"

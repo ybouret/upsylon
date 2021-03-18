@@ -11,8 +11,8 @@ namespace upsylon
     namespace graphic
     {
         
-        Y_FILTERS_DECL(Scharr,3);
-        Y_FILTERS_DECL(Scharr,5);
+        Y_FILTERS_DECL(Scharr,3); //!< Scharr 3x3
+        Y_FILTERS_DECL(Scharr,5); //!< Scharr 5x5
         
     }
     

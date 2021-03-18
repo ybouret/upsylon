@@ -11,9 +11,9 @@ namespace upsylon
     namespace graphic
     {
         
-        Y_FILTERS_DECL(Sobel,3);
-        Y_FILTERS_DECL(Sobel,5);
-        Y_FILTERS_DECL(Sobel,7);
+        Y_FILTERS_DECL(Sobel,3); //!< Sobel 3x3
+        Y_FILTERS_DECL(Sobel,5); //!< Sobel 5x5
+        Y_FILTERS_DECL(Sobel,7); //!< Sobel 7x7
 
     }
     

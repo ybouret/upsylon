@@ -101,8 +101,17 @@ namespace upsylon
         class filter : public crux::filter, public accessible< const crux::filter_weights<T> >
         {
         public:
-            typedef crux::filter_weight<T>  weight_type;
-            typedef crux::filter_weights<T> weights_type;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef crux::filter_weight<T>  weight_type; //!< alias
+            typedef crux::filter_weights<T> weights_type; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
             //! cleanup
             inline virtual ~filter() throw()
@@ -123,6 +132,11 @@ namespace upsylon
                 if(suffix) aliasing::_(name) += suffix;
                 compile(coeff,width,trans);
             }
+            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! accessible interface
             virtual size_t size() const throw() { return lines; }

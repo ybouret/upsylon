@@ -66,6 +66,7 @@ namespace upsylon
             //! helper, mostly to debug
             size_t private_bytes() const throw();
 
+            //! Otsu's threshold
             uint8_t threshold() const throw();
 
         private:

@@ -138,6 +138,7 @@ namespace upsylon {
                 return *(T *)block_addr;
             }
 
+            //! assign
             template <typename T>
             shack & operator=(const T &args)
             {

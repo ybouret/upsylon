@@ -44,19 +44,19 @@ namespace upsylon
                                 const unsigned B0 = B0ref;
                                 if(B0>=strong)
                                 {
-                                    B0ref = 255;
+                                    B0ref = Y_GFX_EDGE_STRONG;
                                     ++active;
                                 }
                                 else
                                 {
                                     if(B0>=feeble)
                                     {
-                                        B0ref = 127;
+                                        B0ref = Y_GFX_EDGE_FEEBLE;
                                         ++active;
                                     }
                                     else
                                     {
-                                        B0ref = 0;
+                                        B0ref = Y_GFX_EDGE_VACANT;
                                     }
                                 }
                             }

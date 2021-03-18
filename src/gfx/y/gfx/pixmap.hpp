@@ -172,6 +172,7 @@ namespace upsylon
                 apply(ops::run,&todo);
             }
 
+            //! count how many pixels fullfill the property
             template <typename PPTY> inline
             size_t how_many(broker &apply, PPTY &property) const
             {

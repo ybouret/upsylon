@@ -60,6 +60,7 @@ namespace upsylon
             area   aabb()            const throw(); //!< axis aligned bounding box
             bool   owns(const coord) const throw(); //!< ownership
 
+            //! human readable output
             friend std::ostream & operator<<(std::ostream &os, const tile &t);
 
             //__________________________________________________________________
