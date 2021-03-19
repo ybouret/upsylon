@@ -30,32 +30,34 @@ Y_UTEST(blur)
     if(argc>2)
     {
         const pixmap<rgb>  img = IMG.load<rgb>(argv[2]);
-        engine             seqEngine = new concurrent::solo;
+        engine             seqEngine = new concurrent::solo();
         broker             seq(seqEngine,img);
-        const tile        &full = seq[0];
+
+        engine             parEngine = new concurrent::simt();
+        broker             par(parEngine,img);
 
         IMG.save(img,"img.png");
 
-        full.cache->make<rgb>( b.data.size );
-        std::cerr << "full blur RGB" << std::endl;
-
         pixmap<rgb> pxm(img.w,img.h);
 
-        
-        b.compute<rgb,uint8_t,3>(full,pxm,img);
+        std::cerr << "blur RGB seq..." << std::endl;
+        b.compute(pxm,seq,img);
+        IMG.save(pxm,"blur3-seq.png");
 
-        IMG.save(pxm,"blur3.png");
+        std::cerr << "blur RGB par..." << std::endl;
+        b.compute(pxm,par,img);
+        IMG.save(pxm,"blur3-par.png");
 
         const pixmap<float> imgf(img,seq,convert<float,rgb>::from);
         pixmap<float>       pxmf(img.w,img.h);
-        std::cerr << "full blur float" << std::endl;
+        std::cerr << "blur float seq..." << std::endl;
+        b.compute(pxmf,seq,imgf);
+        IMG.save(pxmf,"blurf-seq.png");
 
-        full.cache->make<float>( b.data.size );
-
-        b.compute<float,float,1>(full,pxmf,imgf);
-
-        IMG.save(imgf,"imgf.png");
-        IMG.save(pxmf,"blurf.png");
+        std::cerr << "blur float par..." << std::endl;
+        b.compute(pxmf,par,imgf);
+        IMG.save(pxmf,"blurf-par.png");
+        
 
     }
 
