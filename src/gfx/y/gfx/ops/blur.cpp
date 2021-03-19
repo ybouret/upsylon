@@ -10,7 +10,7 @@ namespace upsylon
 
         const float blur::expand = 2.355f;
 
-        unit_t blur:: r_max_for(const float sig) throw()
+        unit_t blur:: delta_for(const float sig) throw()
         {
             assert(sig>0);
             return unit_t(1.0f+floorf( expand * sig + 0.5f ));
@@ -18,82 +18,58 @@ namespace upsylon
 
         static float check_sigma(const float sig)
         {
-
+            if(sig<=0) throw exception("invalid blur sigma=%g",sig);
             return sig;
         }
-
-        static inline int cmpflt(const void *lhs, const void *rhs) throw()
-        {
-            const float L = fabsf( *static_cast<const float *>(lhs) );
-            const float R = fabsf( *static_cast<const float *>(rhs) );
-            return L<R ? -1 : ( R<L ? 1 : 0);
-
-        }
-
-
-        float blur:: direct_sum() const throw()
-        {
-            float        sum = 0;
-            const size_t n   = data.size;
-            for(size_t i=0;i<n;++i)
-            {
-                sum += data[i];
-            }
-            return sum;
-        }
-
-        float blur:: direct_average() const throw()
-        {
-            return direct_sum() * factor;
-        }
-
-        float blur:: sorted_sum() const throw()
-        {
-            qsort(&data[0],data.size,sizeof(float),cmpflt);
-            return direct_sum();
-        }
-
-        float blur:: sorted_average() const throw()
-        {
-            return sorted_sum() * factor;
-        }
-
-
+        
+        
         blur:: blur(const float sig) :
-        r_max( r_max_for(check_sigma(sig) ) ),
-        weight(1+r_max,1+r_max),
+        delta( delta_for(check_sigma(sig) ) ),
+        weight( 1+twice(square_of(delta))   ),
         factor(0),
-        sigma( sig ),
-        data(square_of(1+2*r_max))
+        counts(0),
+        length(1+twice(delta)),
+        sigma(sig)
         {
+            
             const float coeff = 1.0f/twice(square_of(sigma));
             {
-                size_t k = 0;
-                for(unit_t y=-r_max;y<=r_max;++y)
+                for(unit_t y=-delta;y<=delta;++y)
                 {
-                    const float Y2(y*y);
-                    for(unit_t x=-r_max;x<=r_max;++x)
+                    const unit_t y2 = y*y;
+                    for(unit_t x=-delta;x<=delta;++x)
                     {
-                        const float X2(x*x);
-                        const float EW = expf( -(X2+Y2)*coeff );
-                        data[k++] = EW;
-                        if(x>=0&&y>=0)
-                        {
-                            aliasing::_(weight(y)(x)) = EW;
-                        }
+                        const unit_t x2=x*x;
+                        const unit_t r2=x2+y2;
+                        weight_t &w = aliasing::_(weight[r2]);
+                        w.value = expf( -float(r2)*coeff );
+                        w.count++;
                     }
                 }
-                assert(k==data.size);
             }
-            aliasing::_(factor) = 1.0f/sorted_sum();
+            float  sum = 0.0f;
+            size_t num = 0;
+            for(size_t i=weight.size;i>0;)
+            {
+                const weight_t &w = weight[--i];
+                const count_t   n = w.count;
+                
+                if(n>0)
+                {
+                    num += n;
+                    sum += n * w.value;
+                    std::cerr << "r^2=" << i << "x" << w.count << " => " << w.value << std::endl;
+                }
+            }
+            aliasing::_(factor) = 1.0f / sum;
+            aliasing::_(counts) = num;
+            std::cerr << "factor=" << factor << " | counts=" << counts << std::endl;
         }
-
+        
         blur:: ~blur() throw()
         {
         }
-
-
-
+        
         void blur:: compute(pixmap<float> &target, broker &apply,const pixmap<float> &source) const
         {
             compute_for<float,float,1>(target,apply,source);
@@ -116,7 +92,7 @@ namespace upsylon
         }
 
         
-
+        
     }
 
 }
