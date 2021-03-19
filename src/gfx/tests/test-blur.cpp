@@ -42,11 +42,11 @@ Y_UTEST(blur)
             pixmap<rgb> pxm(img.w,img.h);
             
             std::cerr << "blur RGB seq..." << std::endl;
-            b.compute(pxm,seq,img);
+            b.cover(pxm,seq,img);
             IMG.save(pxm,"blur3-seq.png");
             
             std::cerr << "blur RGB par..." << std::endl;
-            b.compute(pxm,par,img);
+            b.cover(pxm,par,img);
             IMG.save(pxm,"blur3-par.png");
         }
         
@@ -54,11 +54,11 @@ Y_UTEST(blur)
             const pixmap<float> imgf(img,seq,convert<float,rgb>::from);
             pixmap<float>       pxmf(img.w,img.h);
             std::cerr << "blur float seq..." << std::endl;
-            b.compute(pxmf,seq,imgf);
+            b.cover(pxmf,seq,imgf);
             IMG.save(pxmf,"blurf-seq.png");
             
             std::cerr << "blur float par..." << std::endl;
-            b.compute(pxmf,par,imgf);
+            b.cover(pxmf,par,imgf);
             IMG.save(pxmf,"blurf-par.png");
         }
         
@@ -66,11 +66,11 @@ Y_UTEST(blur)
             const pixmap<uint8_t> img1(img,seq,convert<uint8_t,rgb>::from);
             pixmap<uint8_t>       pxm1(img.w,img.h);
             std::cerr << "blur byte seq..." << std::endl;
-            b.compute(pxm1,seq,img1);
+            b.cover(pxm1,seq,img1);
             IMG.save(pxm1,"blur1-seq.png");
             
             std::cerr << "blur byte par..." << std::endl;
-            b.compute(pxm1,par,img1);
+            b.cover(pxm1,par,img1);
             IMG.save(pxm1,"blur1-par.png");
         }
         

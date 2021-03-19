@@ -70,23 +70,27 @@ namespace upsylon
         {
         }
         
-        void blur:: compute(pixmap<float> &target, broker &apply,const pixmap<float> &source) const
+        template <>
+        void blur:: cover<float>(pixmap<float> &target, broker &apply,const pixmap<float> &source) const
         {
             compute_for<float,float,1>(target,apply,source);
         }
 
-        void blur:: compute(pixmap<rgb>   &target, broker &apply,const pixmap<rgb>   &source) const
+        template <>
+        void blur:: cover<rgb>(pixmap<rgb>   &target, broker &apply,const pixmap<rgb>   &source) const
         {
             compute_for<rgb,uint8_t,3>(target,apply,source);
 
         }
 
-        void blur:: compute(pixmap<rgba>   &target, broker &apply,const pixmap<rgba>   &source) const
+        template <>
+        void blur:: cover<rgba>(pixmap<rgba>   &target, broker &apply,const pixmap<rgba>   &source) const
         {
             compute_for<rgba,uint8_t,3>(target,apply,source);
         }
 
-        void blur:: compute(pixmap<uint8_t>   &target, broker &apply,const pixmap<uint8_t>   &source) const
+        template <>
+        void blur:: cover<uint8_t>(pixmap<uint8_t>   &target, broker &apply,const pixmap<uint8_t>   &source) const
         {
             compute_for<uint8_t,uint8_t,1>(target,apply,source);
         }

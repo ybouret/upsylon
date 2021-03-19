@@ -6,34 +6,48 @@
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/pblock.hpp"
 #include "y/gfx/color/convert.hpp"
-#include "y/container/matrix.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
         
-
+        //______________________________________________________________________
+        //
+        //
+        //! blur computation
+        //
+        //______________________________________________________________________
         class blur
         {
         public:
-            typedef unsigned_int<sizeof(float)>::type count_t;
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
+            typedef unsigned_int<sizeof(float)>::type count_t; //!< alias
+            
+            //! local weigth
             struct weight_t
             {
-                count_t count;
-                float   value;
-                inline float operator*() const throw() { return value; }
+                count_t count; //!< number of count
+                float   value; //!< effective value
             };
             
             static const float expand; //!< 2*sqrt(2*log(2))
 
 
-            static unit_t delta_for(const float sig) throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit blur(const float sig); //!< setup
+            virtual ~blur() throw();        //!< cleanup
 
-            explicit blur(const float sig);
-            virtual ~blur() throw();
-
-
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const unit_t           delta;  //!< exp( -(delta^2+delta^2)/(2*sigma^2) ) <= 1/256
             const pblock<weight_t> weight; //!< 0->(delta^2+delta^2) => 1+2*delta^2 value
             const float            factor; //!< normalization factor
@@ -41,6 +55,16 @@ namespace upsylon
             const size_t           length; //!< 1+2*delta
             const float            sigma;  //!< keep track
             
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            static unit_t delta_for(const float sig) throw(); //!< delta for a given sigma
+
+            //__________________________________________________________________
+            //
+            //! single point direct computation
+            //__________________________________________________________________
             template <typename PIXEL, typename T, const size_t NCH>
             PIXEL compute_at(const coord          center,
                              const pixmap<PIXEL> &source) const throw()
@@ -75,7 +99,7 @@ namespace upsylon
                 
                 //--------------------------------------------------------------
                 //
-                // avergae by channels
+                // average by channels
                 //
                 //--------------------------------------------------------------
                 PIXEL result(0);
@@ -91,7 +115,10 @@ namespace upsylon
                 return result;
             }
             
-            
+            //__________________________________________________________________
+            //
+            //! compute for one tile
+            //__________________________________________________________________
             template <
             typename     PIXEL,
             typename     T,
@@ -100,8 +127,6 @@ namespace upsylon
                           pixmap<PIXEL>       &target,
                           const pixmap<PIXEL> &source) const throw()
             {
-                
-                // run on tile
                 for(size_t j=t.size();j>0;--j)
                 {
                     const segment &s    = t[j];
@@ -115,6 +140,10 @@ namespace upsylon
                 }
             }
 
+            //__________________________________________________________________
+            //
+            //! compute using tile broker
+            //__________________________________________________________________
             template <typename PIXEL, typename T, const size_t NCH>
             void compute_for(pixmap<PIXEL>       &target,
                              broker              &apply,
@@ -138,12 +167,16 @@ namespace upsylon
                 ops todo = { *this, target, source };
                 apply(ops::run,&todo);
             }
-
-            void compute(pixmap<float>   &target, broker &apply,const pixmap<float>   &source) const;
-            void compute(pixmap<rgb>     &target, broker &apply,const pixmap<rgb>     &source) const;
-            void compute(pixmap<rgba>    &target, broker &apply,const pixmap<rgba>    &source) const;
-            void compute(pixmap<uint8_t> &target, broker &apply,const pixmap<uint8_t> &source) const;
-
+            
+            //! implemented for
+            /**
+             - float, uint8_t, rgb
+             - rgba, mix colors only
+             */
+            template <typename T>
+            void cover(pixmap<T> &, broker &, const pixmap<T> &) const;
+            
+            
             
 
         private:
