@@ -43,6 +43,7 @@ namespace {
 }
 
 #include "y/gfx/pixel.hpp"
+#include "y/gfx/ops/blur.hpp"
 
 Y_UTEST(edges)
 {
@@ -58,16 +59,32 @@ Y_UTEST(edges)
         broker              seq(seqEngine,img);
         broker              par(parEngine,img);
         const pixmap<float> pxm(img,par,convert<float,rgb>::from);
-
+        pixmap<float>       src(img.w,img.h);
+        
+        if( argc> 2)
+        {
+            const float sigma = string_convert::to<float>(argv[2],"sigma");
+            blur        fuzz(sigma);
+            std::cerr << "apply blur." << sigma << std::endl;
+            fuzz.cover(src,par,pxm);
+        }
+        else
+        {
+            std::cerr << "direct copy" << std::endl;
+            src.assign(pxm,par);
+        }
+            
+        
         IMG.save(img,"img.png");
+        IMG.save(src,"src.png");
 
         const shared_filters F = new Sobel7();
 
         edges::gradient Gpar(img.w,img.h);
         edges::gradient Gseq(img.w,img.h);
 
-        const float     seq_gmax = Gseq.compute(pxm,seq,F);
-        const float     par_gmax = Gpar.compute(pxm,par,F);
+        const float     seq_gmax = Gseq.compute(src,seq,F);
+        const float     par_gmax = Gpar.compute(src,par,F);
         Y_CHECK(fabsf(seq_gmax-par_gmax)<=0.0f);
         Y_CHECK(compute_rms(Gseq,Gpar)<=0.0);
         IMG.save(Gpar,"grad.png");
@@ -119,7 +136,7 @@ Y_UTEST(edges)
         std::cerr << "#blobs: " << B.size << std::endl;
         for(const blob *b=B.head;b;b=b->next)
         {
-            std::cerr << "-> " << b->size << std::endl;
+           // std::cerr << "-> " << b->size << std::endl;
         }
 
         

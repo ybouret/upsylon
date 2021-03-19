@@ -172,6 +172,13 @@ namespace upsylon
                 apply(ops::run,&todo);
             }
 
+            //! assign same type
+            inline void assign(const pixmap<T> &source, broker &apply ) throw()
+            {
+                struct id { static inline const T &_(const T &__) throw() { return __; } };
+                assign(source,apply,id::_);
+            }
+            
             //! count how many pixels fullfill the property
             template <typename PPTY> inline
             size_t how_many(broker &apply, PPTY &property) const
