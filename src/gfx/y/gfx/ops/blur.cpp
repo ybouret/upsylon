@@ -1,9 +1,7 @@
 
 #include "y/gfx/ops/blur.hpp"
 #include "y/exceptions.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/allocator/dyadic.hpp"
-#include "y/sort/sorted-sum.hpp"
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -24,14 +22,51 @@ namespace upsylon
             return sig;
         }
 
+        static inline int cmpflt(const void *lhs, const void *rhs) throw()
+        {
+            const float L = fabsf( *static_cast<const float *>(lhs) );
+            const float R = fabsf( *static_cast<const float *>(rhs) );
+            return L<R ? -1 : ( R<L ? 1 : 0);
+
+        }
+
+
+        float blur:: direct_sum() const throw()
+        {
+            float        sum = 0;
+            const size_t n   = data.size;
+            for(size_t i=0;i<n;++i)
+            {
+                sum += data[i];
+            }
+            return sum;
+        }
+
+        float blur:: direct_average() const throw()
+        {
+            return direct_sum() * factor;
+        }
+
+        float blur:: sorted_sum() const throw()
+        {
+            qsort(&data[0],data.size,sizeof(float),cmpflt);
+            return direct_sum();
+        }
+
+        float blur:: sorted_average() const throw()
+        {
+            return sorted_sum() * factor;
+        }
+
+
         blur:: blur(const float sig) :
         r_max( r_max_for(check_sigma(sig) ) ),
         weight(1+r_max,1+r_max),
         factor(0),
-        sigma( sig )
+        sigma( sig ),
+        data(square_of(1+2*r_max))
         {
             const float coeff = 1.0f/twice(square_of(sigma));
-            vector<float,memory::dyadic> w( square_of(1+2*r_max), 0.0f);
             {
                 size_t k = 0;
                 for(unit_t y=-r_max;y<=r_max;++y)
@@ -41,16 +76,16 @@ namespace upsylon
                     {
                         const float X2(x*x);
                         const float EW = expf( -(X2+Y2)*coeff );
-                        w[++k] = EW;
+                        data[k++] = EW;
                         if(x>=0&&y>=0)
                         {
                             aliasing::_(weight(y)(x)) = EW;
                         }
                     }
                 }
-                assert(k==w.size());
+                assert(k==data.size);
             }
-            aliasing::_(factor) = 1.0f/sorted_sum(w);
+            aliasing::_(factor) = 1.0f/sorted_sum();
         }
 
         blur:: ~blur() throw()

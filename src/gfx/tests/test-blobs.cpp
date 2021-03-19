@@ -17,23 +17,7 @@
 using namespace upsylon;
 using namespace graphic;
 
-#if 0
-namespace
-{
 
-    template <typename T>
-    static inline void display_for(const tiles &tess, const pixmap<T> &pxm)
-    {
-        std::cerr << "<tessellation #" << tess.size() << ">" << std::endl;
-        for(size_t i=0;i<tess.size();++i)
-        {
-            const tile &t = tess[i];
-            std::cerr << "tess[" << std::setw(2) << i << "] : " << t << " => " << blobs::knots_for(t,pxm) << std::endl;
-        }
-        std::cerr << "<tessellation/>" << std::endl << std::endl;
-    }
-}
-#endif
 
 Y_UTEST(blobs)
 {
