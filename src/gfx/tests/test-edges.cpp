@@ -116,6 +116,12 @@ Y_UTEST(edges)
         IMG.save(Kseq, "edges.png");
         IMG.save(masks,"blobs.png",NULL,conv);
 
+        std::cerr << "#blobs: " << B.size << std::endl;
+        for(const blob *b=B.head;b;b=b->next)
+        {
+            std::cerr << "-> " << b->size << std::endl;
+        }
+
         
         
 

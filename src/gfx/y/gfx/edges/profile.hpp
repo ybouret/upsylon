@@ -38,7 +38,7 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                //! tighten edges values to STRING/FEEBLE/VACANT
+                //! tighten edges values to STRING/FEEBLE 
                 /**
                  \return the number of active edges
                  */

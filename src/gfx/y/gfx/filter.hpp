@@ -171,7 +171,7 @@ namespace upsylon
             template <typename U, typename V> inline
             void put( U &target, const pixmap<V> &source, const coord p) const throw()
             {
-                U sum = 0;
+                U sum(0);
                 for(size_t j=lines;j>0;--j)
                 {
                     const weights_type &W = (*this)[j];

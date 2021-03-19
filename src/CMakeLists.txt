@@ -45,7 +45,6 @@ ADD_SUBDIRECTORY(spade)
 ADD_SUBDIRECTORY(mpi++)
 ADD_SUBDIRECTORY(aqua)
 ADD_SUBDIRECTORY(gfx)
-#ADD_SUBDIRECTORY(graphic)
 ADD_SUBDIRECTORY(net)
 ADD_SUBDIRECTORY(omp)
 MESSAGE(STATUS "")
@@ -153,7 +152,7 @@ MESSAGE(STATUS "")
 ########################################################################
 
 ADD_CUSTOM_TARGET(core
-DEPENDS test-main test-jive test-mkl test-aqua test-chem test-net test-spade test-graphic
+DEPENDS test-main test-jive test-mkl test-aqua test-chem test-net test-spade test-gfx
 COMMENT "Built Core Libraries"
 )
 

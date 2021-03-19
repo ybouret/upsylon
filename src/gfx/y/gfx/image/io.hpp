@@ -65,6 +65,9 @@ namespace upsylon
 }
 
 //! call singleton and load with standard formats
-#define Y_IMAGE() upsylon::graphic::image::io::instance().standard()
+#define Y_IMAGE()   upsylon::graphic::image::io::instance().standard()
+
+//! define the local IMG
+#define Y_USE_IMG() upsylon::graphic::image::io &IMG = Y_IMAGE()
 
 #endif
