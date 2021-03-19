@@ -19,7 +19,7 @@ namespace upsylon
             {
             }
 
-            void keep_max:: operator()(broker &apply, const gradient &G)
+            void keep_max:: operator()(broker &apply, gradient &G)
             {
                 // prepare memory
                 local_caches &caches = apply.caches;
@@ -28,8 +28,8 @@ namespace upsylon
 
                 struct ops
                 {
-                    keep_max       &kmax;
-                    const gradient &grad;
+                    keep_max &kmax;
+                    gradient &grad;
 
                     static inline
                     void run(const tile &t, void *args, lockable &)
@@ -42,8 +42,8 @@ namespace upsylon
                         ops               &self  = *static_cast<ops *>(args);
                         keep_max          &kmax  = self.kmax;
                         pixmap<uint8_t>   &bmax  = kmax;
-                        const gradient    &grad  = self.grad;
-                        const pixmap<vtx> &probe = grad.probe;
+                        gradient          &grad  = self.grad;
+                        pixmap<vtx>       &probe = grad.probe;
 
                         for(size_t j=t.size();j>0;--j)
                         {
@@ -52,7 +52,7 @@ namespace upsylon
                             const unit_t         xmin    = s.xmin;
                             pixrow<uint8_t>     &bmax_y  = bmax(y);
                             const pixrow<float> &grad_y  = grad(y);
-                            const pixrow<vtx>   &probe_y = probe(y);
+                            pixrow<vtx>         &probe_y = probe(y);
 
                             for(unit_t x=s.xmax;x>=xmin;--x)
                             {
@@ -63,6 +63,7 @@ namespace upsylon
                                 if(G0<Gm||G0<Gp)
                                 {
                                     bmax_y(x) = 0;
+                                    probe_y(x) = vtx(0,0);
                                 }
                                 else
                                 {

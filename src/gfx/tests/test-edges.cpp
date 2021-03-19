@@ -1,6 +1,7 @@
 #include "y/utest/run.hpp"
 #include "y/gfx/edges/keep-max.hpp"
 #include "y/gfx/edges/profile.hpp"
+#include "y/gfx/edges/dvertex-to-rgba.hpp"
 
 #include "y/gfx/image/io.hpp"
 
@@ -71,6 +72,8 @@ Y_UTEST(edges)
         Y_CHECK(compute_rms(Gseq,Gpar)<=0.0);
         IMG.save(Gpar,"grad.png");
 
+        edges::dvertex_to_rgba vconv;
+        IMG.save(Gpar.probe,"gdir0.png",NULL,vconv);
 
         edges::keep_max Kpar(img.w,img.h);
         edges::keep_max Kseq(img.w,img.h);
@@ -81,6 +84,8 @@ Y_UTEST(edges)
         Y_CHECK(compute_rms(Kseq,Kpar)<=0);
         Y_CHECK(Kseq==Kpar);
         IMG.save(Kpar,"gmax.png");
+        IMG.save(Gpar.probe,"gdir1.png",NULL,vconv);
+
 
         const uint8_t hi = Kseq.threshold();
         const uint8_t lo = hi/2;

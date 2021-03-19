@@ -6,6 +6,7 @@
 
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/filters.hpp"
+#include "y/gfx/edges/dvertex.hpp"
 
 namespace upsylon
 {
@@ -17,7 +18,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! compute gradient norm + digitized direction
+            //! compute gradient norm + digitized directions
             //
             //__________________________________________________________________
             class gradient : public pixmap<float>
@@ -27,8 +28,10 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef point2d<int8_t> vertex; //!< local direction type
-                
+                typedef dvertex::type vertex; //!< local direction
+
+             
+
                 //______________________________________________________________
                 //
                 // C++

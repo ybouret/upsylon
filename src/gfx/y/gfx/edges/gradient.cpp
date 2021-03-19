@@ -1,6 +1,6 @@
-
 #include "y/gfx/edges/gradient.hpp"
 #include "y/gfx/color/histogram.hpp"
+
 
 namespace upsylon
 {
