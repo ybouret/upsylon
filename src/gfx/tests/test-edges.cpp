@@ -5,8 +5,6 @@
 
 #include "y/gfx/image/io.hpp"
 
-#include "y/gfx/filters/sobel.hpp"
-#include "y/gfx/filters/scharr.hpp"
 
 
 #include "y/concurrent/loop/simt.hpp"
@@ -44,6 +42,7 @@ namespace {
 
 #include "y/gfx/pixel.hpp"
 #include "y/gfx/ops/blur.hpp"
+#include "y/gfx/filters/db.hpp"
 
 Y_UTEST(edges)
 {
@@ -65,24 +64,26 @@ Y_UTEST(edges)
         {
             const float sigma = string_convert::to<float>(argv[2],"sigma");
             blur        fuzz(sigma);
-            std::cerr << "apply blur:" << sigma << " -> " << fuzz.length << "x" << fuzz.length << std::endl;
+            std::cerr << "<blur sigma=" << sigma << " length=" << fuzz.length << "x" << fuzz.length << ">" << std::endl;
             fuzz.cover(src,par,pxm);
+            std::cerr << "<blur>" << std::endl;
         }
         else
         {
-            std::cerr << "direct copy" << std::endl;
+            std::cerr << "<direct copy>" << std::endl;
             src.assign(pxm,par);
+            std::cerr << "<direct copy/>" << std::endl;
         }
             
         
         IMG.save(img,"img.png");
         IMG.save(src,"src.png");
 
-        const shared_filters F = new Sobel7();
+        const shared_filters F = filters_db::instance()["Sobel7"];
 
         edges::gradient Gpar(img.w,img.h);
         edges::gradient Gseq(img.w,img.h);
-
+        
         const float     seq_gmax = Gseq.compute(src,seq,F);
         const float     par_gmax = Gpar.compute(src,par,F);
         Y_CHECK(fabsf(seq_gmax-par_gmax)<=0.0f);

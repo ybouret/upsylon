@@ -44,7 +44,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(io);
                 explicit io();
                 virtual ~io() throw();
-                Y_SINGLETON_DECL_WITH(0,io);
+                Y_SINGLETON_DECL_WITH(100,io);
 
 
                 virtual bitmap load_(const string       &file,

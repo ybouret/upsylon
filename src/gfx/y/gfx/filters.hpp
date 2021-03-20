@@ -12,6 +12,8 @@ namespace upsylon
     
     namespace graphic
     {
+        
+        
         typedef filter<float>                      filter_type;   //!< built-in filter type
         typedef intr_ptr<string,const filter_type> shared_filter; //!< allocated filter
         
@@ -29,6 +31,8 @@ namespace upsylon
             const string        name;   //!< identifier
             const shared_filter y;      //!< y filter
             const shared_filter x;      //!< x filter (y-transposed)
+            
+            const string &key() const throw(); //!< name
             
         protected:
             //! setup filters from a table

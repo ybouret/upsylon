@@ -11,6 +11,7 @@ namespace upsylon
         {
         }
         
+        const string & filters:: key() const throw() { return name; }
     }
     
 }
