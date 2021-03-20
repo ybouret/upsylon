@@ -65,7 +65,7 @@ Y_UTEST(edges)
         {
             const float sigma = string_convert::to<float>(argv[2],"sigma");
             blur        fuzz(sigma);
-            std::cerr << "apply blur." << sigma << std::endl;
+            std::cerr << "apply blur:" << sigma << " -> " << fuzz.length << "x" << fuzz.length << std::endl;
             fuzz.cover(src,par,pxm);
         }
         else

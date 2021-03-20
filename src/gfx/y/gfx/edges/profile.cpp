@@ -92,8 +92,8 @@ namespace upsylon
                 momentary_link<pixmap<uint8_t> > linkEdges(userEdges,&Edges);
                 momentary_link<pixmap<size_t>  > linkMasks(userMasks,&Masks);
                 
-                //userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
-                userBlobs.build(userMasks,userEdges,knotCache,8);
+                userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
+                //userBlobs.build(userMasks,userEdges,knotCache,8);
 
             }
             

@@ -53,17 +53,14 @@ namespace upsylon
             {
                 const weight_t &w = weight[--i];
                 const count_t   n = w.count;
-                
                 if(n>0)
                 {
                     num += n;
                     sum += n * w.value;
-                    std::cerr << "r^2=" << i << "x" << w.count << " => " << w.value << std::endl;
                 }
             }
             aliasing::_(factor) = 1.0f / sum;
             aliasing::_(counts) = num;
-            std::cerr << "factor=" << factor << " | counts=" << counts << std::endl;
         }
         
         blur:: ~blur() throw()

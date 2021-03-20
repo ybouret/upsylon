@@ -3,14 +3,39 @@
 #ifndef Y_GFX_BLUR_INCLUDED
 #define Y_GFX_BLUR_INCLUDED 1
 
-#include "y/gfx/pixmap.hpp"
+#include "y/gfx/pixmaps.hpp"
 #include "y/gfx/pblock.hpp"
-#include "y/gfx/color/convert.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
+        namespace crux
+        {
+            //! converting float to a type
+            template <typename T>
+            struct float_to
+            {
+                static T from(const float) throw(); //!< prototype
+            };
+            
+            //! float to float...
+            template <>
+            struct float_to<float>
+            {
+                static float from(const float x) throw() { return x; } //!< ID
+            };
+            
+            //! uint8_t to float
+            template <>
+            struct float_to<uint8_t>
+            {
+                static float from(const uint8_t x) throw()
+                {
+                    return uint8_t( floorf(x+0.5f) );
+                } //!< nearest
+            };
+        }
         
         //______________________________________________________________________
         //
@@ -18,7 +43,7 @@ namespace upsylon
         //! blur computation
         //
         //______________________________________________________________________
-        class blur
+        class blur : public entity
         {
         public:
             //__________________________________________________________________
@@ -35,15 +60,15 @@ namespace upsylon
             };
             
             static const float expand; //!< 2*sqrt(2*log(2))
-
-
+            
+            
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             explicit blur(const float sig); //!< setup
             virtual ~blur() throw();        //!< cleanup
-
+            
             //__________________________________________________________________
             //
             // members
@@ -60,7 +85,7 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             static unit_t delta_for(const float sig) throw(); //!< delta for a given sigma
-
+            
             //__________________________________________________________________
             //
             //! single point direct computation
@@ -108,7 +133,7 @@ namespace upsylon
                     const float tmp    = factor;
                     for(size_t ch=0;ch<NCH;++ch)
                     {
-                        target[ch] = T(acc[ch]*tmp);
+                        target[ch] = crux::float_to<T>::from(acc[ch]*tmp);
                     }
                 }
                 
@@ -139,7 +164,7 @@ namespace upsylon
                     }
                 }
             }
-
+            
             //__________________________________________________________________
             //
             //! compute using tile broker
@@ -155,7 +180,7 @@ namespace upsylon
                     const blur          &myself;
                     pixmap<PIXEL>       &target;
                     const pixmap<PIXEL> &source;
-
+                    
                     static inline void run(const tile &t, void *args, lockable &) throw()
                     {
                         assert(args);
@@ -163,7 +188,7 @@ namespace upsylon
                         _.myself.template compute1<PIXEL,T,NCH>(t,_.target,_.source);
                     }
                 };
-
+                
                 ops todo = { *this, target, source };
                 apply(ops::run,&todo);
             }
@@ -178,16 +203,16 @@ namespace upsylon
             
             
             
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blur);
-
+            
         };
-
+        
     }
-
-
-
+    
+    
+    
 }
 
 #endif
