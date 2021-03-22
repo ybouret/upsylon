@@ -7,6 +7,7 @@
 #include "y/gfx/pixmap.hpp"
 #include "y/memory/embed.hpp"
 #include <iomanip>
+#include <cstring>
 
 namespace upsylon
 {
