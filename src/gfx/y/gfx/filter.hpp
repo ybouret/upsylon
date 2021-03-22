@@ -4,6 +4,7 @@
 #define Y_GFX_FILTER_INCLUDED 1
 
 #include "y/gfx/pixmap.hpp"
+#include "y/gfx/area/patch.hpp"
 #include "y/memory/embed.hpp"
 #include "y/string.hpp"
 #include <iomanip>
@@ -16,65 +17,120 @@ namespace upsylon
 
         namespace crux
         {
-            //! weight at an horizontal position
-            template <typename T>
-            class filter_weight
-            {
-            public:
-                const unit_t x;      //!< horizontal shift
-                const T      value;  //!< value
-
-                //! setup
-                inline filter_weight(const unit_t X, const T V) throw() : x(X), value(V) { }
-
-            private:
-                ~filter_weight() throw(); Y_DISABLE_COPY_AND_ASSIGN(filter_weight);
-            };
 
 
-            //! horitonzal weights at a vertical position
-            template <typename T>
-            class filter_weights : public accessible< const filter_weight<T> >
-            {
-            public:
 
-                //! setuo
-                explicit filter_weights(const unit_t            yyy,
-                                        const filter_weight<T> *ptr,
-                                        const size_t            num) throw() :
-                y(yyy), shift(ptr-1), count(num)
-                {
-                    assert(ptr!=NULL);
-                    assert(num>0);
-                }
+            
 
-                //! number of vertical position(s)
-                inline virtual size_t size() const throw() { return count; }
-
-                //! get the weigth a i-th position
-                inline const filter_weight<T> &  operator[](const size_t i) const throw()
-                {
-                    assert(i>0);
-                    assert(i<=count);
-                    return shift[i];
-                }
-                
-                const unit_t                    y; //!< the vertical poisition
-
-            private:
-                const filter_weight<T>  * const shift;
-                const size_t                    count;
-
-                virtual ~filter_weights() throw() {}
-                Y_DISABLE_COPY_AND_ASSIGN(filter_weights);
-            };
 
             //! base class for a filter
             class filter : public entity
             {
             public:
+                //______________________________________________________________
+                //
+                //! C-array to patch
+                //______________________________________________________________
+                template <typename T>
+                class patch : public graphic::patch<T>
+                {
+                public:
+                    template <typename U> inline
+                    explicit patch(const U     *cf,
+                                   const coord  lo,
+                                   const coord  up) :
+                    graphic::patch<T>(1+up.x-lo.x,1+up.y-lo.y,lo.x,lo.y)
+                    {
+                        assert(cf);
+                        for(unit_t y=this->lower.y;y<=this->upper.y;++y)
+                        {
+                            patch_row<T> &r = (*this)[y];
+                            for(unit_t x=this->lower.x;x<=this->upper.x;++x)
+                            {
+                                r[x] = T(*(cf++));
+                            }
+                        }
+                    }
+
+                    //! copy
+                    inline patch(const patch &other) : graphic::patch<T>(other) {}
+
+                    //! copy/transpose
+                    inline patch(const patch &other, const area::transpose_t &_) :
+                    graphic::patch<T>(other,_) {}
+
+                    
+                    //! cleanup
+                    virtual ~patch() throw() {}
+
+                private:
+                    Y_DISABLE_ASSIGN(patch);
+                };
+
+                //______________________________________________________________
+                //
+                //! horizontal weight
+                //______________________________________________________________
+                template <typename T>
+                class weight
+                {
+                public:
+                    const unit_t x;      //!< horizontal shift
+                    const T      value;  //!< value
+
+                    //! setup
+                    inline weight(const unit_t X, const T V) throw() : x(X), value(V) { }
+
+                private:
+                    ~weight() throw(); Y_DISABLE_COPY_AND_ASSIGN(weight);
+                };
+
+                //______________________________________________________________
+                //
+                //! horizontal weights at a vertical position
+                //______________________________________________________________
+                template <typename T>
+                class weights : public accessible< const weight<T> >
+                {
+                public:
+
+                    //! setup
+                    explicit weights(const unit_t     yyy,
+                                     const weight<T> *ptr,
+                                     const size_t     num) throw() :
+                    y(yyy),
+                    shift(ptr-1),
+                    count(num)
+                    {
+                        assert(ptr!=NULL);
+                        assert(num>0);
+                    }
+
+                    //! number of vertical position(s)
+                    inline virtual size_t size() const throw() { return count; }
+
+                    //! get the weigth a i-th position
+                    inline const weight<T> &  operator[](const size_t i) const throw()
+                    {
+                        assert(i>0);
+                        assert(i<=count);
+                        return shift[i];
+                    }
+
+                    const unit_t             y; //!< the vertical shift
+
+                private:
+                    const weight<T>  * const shift;
+                    const size_t             count;
+
+                    virtual ~weights() throw() {}
+                    Y_DISABLE_COPY_AND_ASSIGN(weights);
+                };
+
+
+
                 virtual ~filter() throw();
-              
+
                 const string name; //!< identifier
 
             protected:
@@ -85,6 +141,11 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(filter);
             };
         }
+
+
+
+
+
         //______________________________________________________________________
         //
         //
@@ -92,15 +153,15 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T>
-        class filter : public crux::filter, public accessible< const crux::filter_weights<T> >
+        class filter : public crux::filter, public accessible< const crux::filter::weights<T> >
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef crux::filter_weight<T>  weight_type; //!< alias
-            typedef crux::filter_weights<T> weights_type; //!< alias
+            typedef crux::filter::weight<T>  weight_type;  //!< alias
+            typedef crux::filter::weights<T> weights_type; //!< alias
 
             //__________________________________________________________________
             //
@@ -272,7 +333,8 @@ namespace upsylon
 
                     // allocate memory
                     {
-                        memory::embed emb[] = {
+                        memory::embed emb[] =
+                        {
                             memory::embed::as(wline,lines),
                             memory::embed::as(wcurr,total)
                         };

@@ -7,6 +7,7 @@
 #include "y/gfx/area.hpp"
 #include "y/gfx/entity.hpp"
 #include "y/memory/embed.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -126,10 +127,22 @@ namespace upsylon
             inline size_t allocated() const throw() { return wlen; }
 
             //! row access
-            row       & operator[](const unit_t y)       throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
+            inline row       & operator[](const unit_t y)       throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
 
             //! row access, const
-            const row & operator[](const unit_t y) const throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
+            inline const row & operator[](const unit_t y) const throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
+
+            //! display
+            inline std::ostream & display(std::ostream &os) const
+            {
+                for(unit_t y=upper.y;y>=lower.y;--y)
+                {
+                    os << "@y=" << std::setw(3) << y << " : ";
+
+                    os << std::endl;
+                }
+                return os;
+            }
 
         private:
             Y_DISABLE_ASSIGN(patch);

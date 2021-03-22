@@ -32,10 +32,16 @@ namespace {
 
 
 
+
+
+
     template <typename T>
     static inline void do_filter()
     {
-
+        crux::filter::patch<T> p3y( &simple[0][0], coord(-1,-1),coord(1,1 ));
+        p3y.display(std::cerr << "p3y:" << std::endl);
+        
+        return ;
         {
             std::cerr << "<simple>" << std::endl;
             filter<T> F3y( "simple.y", &simple[0][0],3,false);
@@ -87,8 +93,8 @@ Y_UTEST(filter)
     do_filter<float>();
     do_filter<int>();
 
-    Y_UTEST_SIZEOF( crux::filter_weights<int>   );
-    Y_UTEST_SIZEOF( crux::filter_weights<float> );
+    Y_UTEST_SIZEOF( crux::filter::weights<int>   );
+    Y_UTEST_SIZEOF( crux::filter::weights<float> );
     Y_UTEST_SIZEOF( filter<float>   );
     Y_UTEST_SIZEOF( filter<int>   );
 
