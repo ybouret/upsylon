@@ -17,5 +17,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(blobs);
     Y_UTEST(named);
     Y_UTEST(blur);
+    Y_UTEST(patch);
 }
 Y_UTEST_EXEC()

@@ -24,14 +24,28 @@ namespace upsylon
             //__________________________________________________________________
             static const coord delta[4+4]; //!< neighbour coords
 
+            //__________________________________________________________________________
+            //
+            //! special for transposition
+            //__________________________________________________________________________
+            struct transpose_t {};
+
+            //__________________________________________________________________________
+            //
+            //! helper for transposition
+            //__________________________________________________________________________
+            static const transpose_t transpose;
+
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             //! setup
             explicit area(const unit_t W, const unit_t H, const unit_t X=0, const unit_t Y=0);
-            area(const area &) throw();  //!< copy
-            virtual ~area()    throw();  //!< cleanup
+            area(const area &) throw();                      //!< copy
+            area(const area &, const transpose_t &) throw(); //!< copy/transposed
+            virtual ~area()    throw();                      //!< cleanup
 
             //__________________________________________________________________
             //

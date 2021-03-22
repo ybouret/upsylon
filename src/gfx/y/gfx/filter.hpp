@@ -74,13 +74,7 @@ namespace upsylon
             {
             public:
                 virtual ~filter() throw();
-                
-                //! suppress memory
-                static void  suppress(void *&,size_t &) throw();
-                
-                //! allocate embeedded memory
-                static void *allocate(memory::embed emb[], const size_t num, size_t &);
-
+              
                 const string name; //!< identifier
 
             protected:

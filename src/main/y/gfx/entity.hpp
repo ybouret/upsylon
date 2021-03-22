@@ -7,6 +7,10 @@
 
 namespace upsylon
 {
+    namespace memory
+    {
+        class embed;
+    }
 
     namespace graphic
     {
@@ -20,7 +24,17 @@ namespace upsylon
         public:
             explicit entity() throw(); //!< setup
             virtual ~entity() throw(); //!< cleanup
-            
+
+
+            //! suppress memory
+            static void  suppress(void *&,size_t &) throw();
+
+            //! allocate embeedded memory
+            static void *allocate(memory::embed emb[], const size_t num, size_t &);
+
+            //! throw exception
+            static void  error(const char *when);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(entity);
         };

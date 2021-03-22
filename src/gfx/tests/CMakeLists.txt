@@ -20,6 +20,7 @@ add_test(filter  test-gfx filters)
 add_test(blobs   test-gfx blobs)
 add_test(edges   test-gfx edges)
 add_test(blur    test-gfx blur)
+add_test(patch   test-gfx patch)
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

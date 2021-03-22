@@ -8,6 +8,8 @@ namespace upsylon
     namespace graphic
     {
 
+        const area::transpose_t area::transpose = {};
+
         const coord area::delta[4+4] =
         {
             coord(1,0),
@@ -52,6 +54,17 @@ namespace upsylon
         upper(a.upper)
         {
         }
+
+        area:: area(const area &a, const transpose_t &) throw() :
+        w(a.h),
+        h(a.w),
+        items(a.items),
+        lower(a.lower.y,a.lower.x),
+        upper(a.upper.y,a.upper.x)
+        {
+        }
+
+
 
         bool area:: owns(const unit_t x, const unit_t y) const throw()
         {
