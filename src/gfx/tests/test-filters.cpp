@@ -40,9 +40,9 @@ namespace
         f(target,source,apply);
         pixmap<float> tmp(target.w,target.h);
         extrema::normalize(tmp,target,apply);
-        const string filename = "img-" + f.name + ".png";
-        image::io   &IMG = image::io::location();
-        IMG.save(tmp,filename);
+        //const string filename = "img-" + f.name + ".png";
+        //image::io   &IMG = image::io::location();
+        // IMG.save(tmp,filename);
     }
     
     static inline void do_filters(const shared_filters &F,
@@ -65,6 +65,7 @@ namespace
             }
         }
         extrema::normalize(fn, fn, apply);
+        std::cerr << "done!" << std::endl;
         image::io   &IMG = image::io::location();
         const string filename = "img-" + F->name + "-grad.png";
         IMG.save(fn,filename);

@@ -62,6 +62,22 @@ Y_UTEST(patch)
     do_patch<int>();
     do_patch<char>();
 
+    for(unit_t W=1;W<=1024;++W)
+    {
+        for(unit_t H=1;H<=1024;++H)
+        {
+            const coord up = crux::patch::symmetrical_upper(W,H);
+            const coord lo = crux::patch::symmetrical_lower(W,H);
+            Y_ASSERT(up.x>=0);
+            Y_ASSERT(up.y>=0);
+            Y_ASSERT(lo.x<=0);
+            Y_ASSERT(lo.y<=0);
+            Y_ASSERT(W-1==up.x-lo.x);
+            Y_ASSERT(H-1==up.y-lo.y);
+
+        }
+    }
+
 }
 Y_UTEST_DONE()
 

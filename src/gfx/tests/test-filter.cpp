@@ -67,28 +67,25 @@ namespace {
 
         std::cerr << std::endl;
 
-#if 0
         {
             std::cerr << "<simple>" << std::endl;
-            filter<T> F3y( "simple.y", &simple[0][0],3,false);
-            filter<T> F3x( "simple.x", &simple[0][0],3,true);
+            filter<T,int> F3y( "simple", &simple[0][0],3,3,".y");
+            filter<T,int> F3x( "simple", &simple[0][0],3,3,area::transpose,".x");
 
             std::cerr << "F3y:" << std::endl << F3y << std::endl;
-
             std::cerr << "F3x:" << std::endl << F3x << std::endl;
         }
 
-        if(true)
+         if(true)
         {
             std::cerr << "<dummy>" << std::endl;
-            filter<T> F3y( "dummy.y", &dummy[0][0],3,false);
-            filter<T> F3x( "dummy.x", &dummy[0][0],3,true);
+            filter<T,long> F3y( "dummy.y", &dummy[0][0],3,3);
+            filter<T,long> F3x( "dummy.x", &dummy[0][0],3,3,area::transpose);
 
             std::cerr << "F3y:" << std::endl << F3y << std::endl;
 
             std::cerr << "F3x:" << std::endl << F3x << std::endl;
         }
-#endif
     }
 
     template <typename Z>

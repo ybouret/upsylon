@@ -39,10 +39,11 @@ namespace upsylon
             template <typename ID, typename U>
             inline explicit filters(const ID    &ident,
                                     const U     *coeff,
-                                    const unit_t width) :
+                                    const unit_t width,
+                                    const unit_t height) :
             name(ident),
-            y( new filter_type(name,coeff,width,false, "_y") ),
-            x( new filter_type(name,coeff,width,true,  "_x") )
+            y( new filter_type(name,coeff,width,height, "_y") ),
+            x( new filter_type(name,coeff,width,height, area::transpose, "_x") )
             {
             }
             
@@ -78,10 +79,10 @@ namespace upsylon
 /**/ }
 
 //! implement a filter NAME/DIM
-#define Y_FILTERS_IMPL(NAME,DIM)                                 \
-/**/ const char   NAME##DIM :: ID[] = #NAME #DIM;                \
-/**/ NAME##DIM::  NAME##DIM() : filters(ID,&Coeffs[0][0],DIM) {} \
-/**/ NAME##DIM:: ~NAME##DIM() throw() {}                         \
+#define Y_FILTERS_IMPL(NAME,DIM)                                     \
+/**/ const char   NAME##DIM :: ID[] = #NAME #DIM;                    \
+/**/ NAME##DIM::  NAME##DIM() : filters(ID,&Coeffs[0][0],DIM,DIM) {} \
+/**/ NAME##DIM:: ~NAME##DIM() throw() {}                             \
 /**/ const int NAME##DIM :: Coeffs[DIM][DIM] = {
 
 //! done implementing coefficients...

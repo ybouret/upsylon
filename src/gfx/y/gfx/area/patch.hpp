@@ -20,8 +20,9 @@ namespace upsylon
             //! common ops for patch
             struct patch
             {
-
-                static void throw_empty_patch();
+                static void  throw_empty_patch();
+                static coord symmetrical_lower(const unit_t W, const unit_t H);
+                static coord symmetrical_upper(const unit_t W, const unit_t H);
             };
         }
 
@@ -80,7 +81,6 @@ namespace upsylon
             // C++
             //__________________________________________________________________
 
-
             //! setup
             inline  patch(const unit_t W,
                           const unit_t H,
@@ -89,10 +89,23 @@ namespace upsylon
             entity(),
             area(W,H,X,Y), rows(0), wksp(0), wlen(0)
             {
-                if(items<=0) error("empty graphic::patch!");
+                if(items<=0) crux::patch::throw_empty_patch();
                 initialize();
             }
 
+            //! setup symmetrical
+            inline  patch(const unit_t W,
+                          const unit_t H) :
+            entity(),
+            area(W,
+                 H,
+                 crux::patch::symmetrical_lower(W,H).x,
+                 crux::patch::symmetrical_lower(W,H).y),
+            rows(0), wksp(0), wlen(0)
+            {
+                if(items<=0) crux::patch::throw_empty_patch();
+                initialize();
+            }
             //! cleanup
             virtual ~patch() throw()
             {
@@ -125,13 +138,13 @@ namespace upsylon
                         r[x] = other[x][y];
                     }
                 }
-
             }
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
+            const_type * operator*() const throw() { return static_cast<const_type *>(wksp); }
 
             //! info
             inline size_t allocated() const throw() { return wlen; }

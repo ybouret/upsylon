@@ -40,16 +40,18 @@ namespace upsylon
                                    const coord  up) :
                     graphic::patch<T>(1+up.x-lo.x,1+up.y-lo.y,lo.x,lo.y)
                     {
-                        assert(cf);
-                        for(unit_t y=this->lower.y;y<=this->upper.y;++y)
-                        {
-                            patch_row<T> &r = (*this)[y];
-                            for(unit_t x=this->lower.x;x<=this->upper.x;++x)
-                            {
-                                r[x] = T(*(cf++));
-                            }
-                        }
+                        setup(cf);
                     }
+
+                    template <typename U> inline
+                    explicit patch(const U     *cf,
+                                   const unit_t W,
+                                   const unit_t H) :
+                    graphic::patch<T>(W,H)
+                    {
+                        setup(cf);
+                    }
+
 
                     template <typename U> inline
                     explicit patch(const U                 *cf,
@@ -58,17 +60,17 @@ namespace upsylon
                                    const area::transpose_t  &) :
                     graphic::patch<T>(1+up.y-lo.y,1+up.x-lo.x,lo.y,lo.x)
                     {
-                        assert(cf);
-                        patch &self = *this;
-                        for(unit_t x=this->lower.x;x<=this->upper.x;++x)
-                        {
-                            for(unit_t y=this->lower.y;y<=this->upper.y;++y)
-                            {
-                                {
-                                    self[y][x] = T(*(cf++));
-                                }
-                            }
-                        }
+                        setup_trn(cf);
+                    }
+
+                    template <typename U> inline
+                    explicit patch(const U                 *cf,
+                                   const unit_t             W,
+                                   const unit_t             H,
+                                   const area::transpose_t  &) :
+                    graphic::patch<T>(H,W)
+                    {
+                        setup_trn(cf);
                     }
 
 
@@ -85,6 +87,35 @@ namespace upsylon
 
                 private:
                     Y_DISABLE_ASSIGN(patch);
+                    template <typename U> inline
+                    void setup(const U *cf) throw()
+                    {
+                        assert(cf);
+                        for(unit_t y=this->lower.y;y<=this->upper.y;++y)
+                        {
+                            patch_row<T> &r = (*this)[y];
+                            for(unit_t x=this->lower.x;x<=this->upper.x;++x)
+                            {
+                                r[x] = T(*(cf++));
+                            }
+                        }
+                    }
+
+                    template <typename U> inline
+                    void setup_trn(const U *cf) throw()
+                    {
+                        assert(cf);
+                        patch &self = *this;
+                        for(unit_t x=this->lower.x;x<=this->upper.x;++x)
+                        {
+                            for(unit_t y=this->lower.y;y<=this->upper.y;++y)
+                            {
+                                {
+                                    self[y][x] = T(*(cf++));
+                                }
+                            }
+                        }
+                    }
                 };
 
                 //______________________________________________________________
@@ -198,7 +229,7 @@ namespace upsylon
 
 #define Y_GFX_FILTER_CTOR() crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
 
-            //! setup
+            //! setup with full coordinates
             template <typename ID, typename U>
             inline explicit filter(const ID    &ident,
                                    const U     *cf,
@@ -211,7 +242,21 @@ namespace upsylon
                 compile(suffix);
             }
 
-            //! setup
+            //! setup with W/H
+            //! setup with full coordinates
+            template <typename ID, typename U>
+            inline explicit filter(const ID    &ident,
+                                   const U     *cf,
+                                   const unit_t W,
+                                   const unit_t H,
+                                   const char  *suffix=NULL) :
+            Y_GFX_FILTER_CTOR(),
+            data(cf,W,H)
+            {
+                compile(suffix);
+            }
+
+            //! setup with full coordinates, transposed
             template <typename ID, typename U>
             inline explicit filter(const ID                &ident,
                                    const U                 *cf,
@@ -224,6 +269,21 @@ namespace upsylon
             {
                 compile(suffix);
             }
+
+            //! setup with W/H, transposed
+            template <typename ID, typename U>
+            inline explicit filter(const ID                &ident,
+                                   const U                 *cf,
+                                   const unit_t             W,
+                                   const unit_t             H,
+                                   const area::transpose_t &tr,
+                                   const char              *suffix=NULL) :
+            Y_GFX_FILTER_CTOR(),
+            data(cf,W,H,tr)
+            {
+                compile(suffix);
+            }
+
             
             //__________________________________________________________________
             //
@@ -248,18 +308,18 @@ namespace upsylon
                 for(size_t j=f.lines;j>0;--j)
                 {
                     const weights_type &W = f[j];
-                    os << "line[" << j << "]@y=" << std::setw(3) << W.y << "|";
+                    os << "line[" << j << "]@y=" << std::setw(3) << W.y << " |";
                     for(size_t i=1;i<=W.size();++i)
                     {
                         const weight_type &w = W[i];
-                        os << " (" << std::setw(3) << w.value << ")@x=" << std::setw(3) << w.x << "|";
+                        os << " @[" << std::setw(3) << w.x << "]=" << std::setw(4) << w.value << " |";
                     }
                     os << std::endl;
                 }
                 return os;
             }
 
-            //! target = filter(source[p])
+            //! target = filter(source[p]), integral type
             template <typename U, typename V> inline
             void put( U &target, const pixmap<V> &source, const coord p) const throw()
             {
@@ -278,7 +338,7 @@ namespace upsylon
                 target = sum;
             }
 
-            //! target = filter(source)
+            //! target = filter(source), integral type
             template <typename U, typename V> inline
             void operator()(pixmap<U>       &target,
                             const pixmap<V> &source,
@@ -339,10 +399,70 @@ namespace upsylon
 
             inline void compile(const char *suffix)
             {
+                //! initialize
                 if(suffix) aliasing::_(name) += suffix;
+                size_t total = 0;
+
+                // pass 1: count active lines and total items
+                for(unit_t y=data.lower.y;y<=data.upper.y;++y)
+                {
+                    const patch_row<Z> &r     = data[y];
+                    size_t              count = 0;
+                    for(unit_t x=data.lower.x;x<=data.upper.x;++x)
+                    {
+                        if(r[x]!=0) ++count;
+                    }
+                    if(count>0)
+                    {
+                        ++aliasing::_(lines);
+                        total += count;
+                    }
+                }
+
+                //! pass 2: create structure
+                if(lines)
+                {
+                    weight_type  *wcurr     = 0;
+
+                    // allocate memory
+                    {
+                        memory::embed emb[] =
+                        {
+                            memory::embed::as(wline,lines),
+                            memory::embed::as(wcurr,total)
+                        };
+                        wksp = allocate(emb, sizeof(emb)/sizeof(emb[0]), wlen);
+                    }
+
+                    // setup addresses
+                    {
+                        size_t iline = 0;
+                        for(unit_t y=data.lower.y;y<=data.upper.y;++y)
+                        {
+                            weight_type        *start = wcurr;
+                            const patch_row<Z> &r     = data[y];
+                            for(unit_t x=data.lower.x;x<=data.upper.x;++x)
+                            {
+                                const Z &value = r[x];
+                                if(value!=0)
+                                {
+                                    new ( wcurr++ ) weight_type(x,T(value));
+                                }
+                            }
+                            const size_t count = wcurr-start;
+                            if(count)
+                            {
+                                new ( &wline[iline++] ) weights_type(y,start,count);
+                            }
+                        }
+                    }
+
+                    --wline;
+                }
 
             }
 
+#if 0
             template <typename U> inline
             void compile(const U     *coeff,
                          const unit_t width,
@@ -414,6 +534,8 @@ namespace upsylon
                 }
 
             }
+#endif
+
         };
 
     }
