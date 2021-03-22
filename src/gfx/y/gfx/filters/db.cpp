@@ -51,6 +51,11 @@ namespace upsylon
             return *ppF;
         }
 
+        const shared_filters & filters_db:: operator[](const char *id) const
+        {
+            const string _(id);
+            return (*this)[_];
+        }
         
     }
     
