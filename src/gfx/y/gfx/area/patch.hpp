@@ -15,6 +15,16 @@ namespace upsylon
     namespace graphic
     {
 
+        namespace crux
+        {
+            //! common ops for patch
+            struct patch
+            {
+
+                static void throw_empty_patch();
+            };
+        }
+
         //______________________________________________________________________
         //
         //
@@ -137,8 +147,11 @@ namespace upsylon
             {
                 for(unit_t y=upper.y;y>=lower.y;--y)
                 {
-                    os << "@y=" << std::setw(3) << y << " : ";
-
+                    os << "@y=" << std::setw(4) << y << " :";
+                    for(unit_t x=lower.x;x<=upper.x;++x)
+                    {
+                        os << " [" << std::setw(4) << x << "]=" << std::setw(4) << (*this)[y][x];
+                    }
                     os << std::endl;
                 }
                 return os;

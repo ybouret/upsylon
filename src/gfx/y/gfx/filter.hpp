@@ -17,13 +17,12 @@ namespace upsylon
 
         namespace crux
         {
-
-
-
-            
-
-
+            //__________________________________________________________________
+            //
+            //
             //! base class for a filter
+            //
+            //__________________________________________________________________
             class filter : public entity
             {
             public:
@@ -51,6 +50,27 @@ namespace upsylon
                             }
                         }
                     }
+
+                    template <typename U> inline
+                    explicit patch(const U                 *cf,
+                                   const coord              lo,
+                                   const coord              up,
+                                   const area::transpose_t  &) :
+                    graphic::patch<T>(1+up.y-lo.y,1+up.x-lo.x,lo.y,lo.x)
+                    {
+                        assert(cf);
+                        patch &self = *this;
+                        for(unit_t x=this->lower.x;x<=this->upper.x;++x)
+                        {
+                            for(unit_t y=this->lower.y;y<=this->upper.y;++y)
+                            {
+                                {
+                                    self[y][x] = T(*(cf++));
+                                }
+                            }
+                        }
+                    }
+
 
                     //! copy
                     inline patch(const patch &other) : graphic::patch<T>(other) {}
@@ -152,7 +172,7 @@ namespace upsylon
         //! a filter is a series of horizontal filters
         //
         //______________________________________________________________________
-        template <typename T>
+        template <typename T, typename Z>
         class filter : public crux::filter, public accessible< const crux::filter::weights<T> >
         {
         public:
@@ -160,6 +180,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
+            typedef crux::filter::patch<Z>   patch_type;   //!< alias
             typedef crux::filter::weight<T>  weight_type;  //!< alias
             typedef crux::filter::weights<T> weights_type; //!< alias
 
@@ -175,17 +196,33 @@ namespace upsylon
                 wline=0; aliasing::_(lines)=0;
             }
 
-            //! setuo
+#define Y_GFX_FILTER_CTOR() crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
+
+            //! setup
             template <typename ID, typename U>
             inline explicit filter(const ID    &ident,
-                                   const U     *coeff,
-                                   const unit_t width,
-                                   const bool   trans,
+                                   const U     *cf,
+                                   const coord  lo,
+                                   const coord  up,
                                    const char  *suffix=NULL) :
-            crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
+            Y_GFX_FILTER_CTOR(),
+            data(cf,lo,up)
             {
-                if(suffix) aliasing::_(name) += suffix;
-                compile(coeff,width,trans);
+                compile(suffix);
+            }
+
+            //! setup
+            template <typename ID, typename U>
+            inline explicit filter(const ID                &ident,
+                                   const U                 *cf,
+                                   const coord              lo,
+                                   const coord              up,
+                                   const area::transpose_t &tr,
+                                   const char              *suffix=NULL) :
+            Y_GFX_FILTER_CTOR(),
+            data(cf,lo,up,tr)
+            {
+                compile(suffix);
             }
             
             //__________________________________________________________________
@@ -295,6 +332,16 @@ namespace upsylon
             void          *wksp;
             size_t         wlen;
 
+        public:
+            const patch_type data;
+
+        private:
+
+            inline void compile(const char *suffix)
+            {
+                if(suffix) aliasing::_(name) += suffix;
+
+            }
 
             template <typename U> inline
             void compile(const U     *coeff,

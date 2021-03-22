@@ -8,6 +8,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -31,6 +32,12 @@ namespace {
     };
 
 
+    static const short rect[3][5] =
+    {
+        {1,2,3,4,5},
+        {6,7,8,9,10},
+        {11,12,13,14,15}
+    };
 
 
 
@@ -38,10 +45,29 @@ namespace {
     template <typename T>
     static inline void do_filter()
     {
-        crux::filter::patch<T> p3y( &simple[0][0], coord(-1,-1),coord(1,1 ));
-        p3y.display(std::cerr << "p3y:" << std::endl);
-        
-        return ;
+        std::cerr << "do_filter<" << type_name_of<T>() << ">" << std::endl;
+        {
+            crux::filter::patch<T> p3y( &rect[0][0], coord(-2,-1), coord(2,1) );
+            p3y.display(std::cerr << "p3y:" << std::endl);
+
+            crux::filter::patch<T> p3x( &rect[0][0], coord(-2,-1), coord(2,1), area::transpose);
+            p3x.display(std::cerr << "p3x:" << std::endl);
+
+            T rms=0;
+            for(unit_t y=p3y.lower.y;y<=p3y.upper.y;++y)
+            {
+                for(unit_t x=p3y.lower.x;x<=p3y.upper.y;++x)
+                {
+                    rms += square_of( p3y[y][x] - p3x[x][y] );
+                }
+            }
+            Y_CHECK(rms<=0);
+
+        }
+
+        std::cerr << std::endl;
+
+#if 0
         {
             std::cerr << "<simple>" << std::endl;
             filter<T> F3y( "simple.y", &simple[0][0],3,false);
@@ -62,10 +88,12 @@ namespace {
 
             std::cerr << "F3x:" << std::endl << F3x << std::endl;
         }
+#endif
     }
 
+    template <typename Z>
     static inline
-    void apply_filter(const filter<float> &f,
+    void apply_filter(const filter<float,Z> &f,
                       pixmap<float>       &target,
                       const pixmap<float> &source,
                       broker              &apply,
@@ -95,8 +123,7 @@ Y_UTEST(filter)
 
     Y_UTEST_SIZEOF( crux::filter::weights<int>   );
     Y_UTEST_SIZEOF( crux::filter::weights<float> );
-    Y_UTEST_SIZEOF( filter<float>   );
-    Y_UTEST_SIZEOF( filter<int>   );
+
 
     if(argc>1)
     {
@@ -109,11 +136,11 @@ Y_UTEST(filter)
 
         IMG.save(source, "source.png" );
 
-        filter<float> f3y( "simple-y", &simple[0][0],3,false );
-        filter<float> f3x( "simple-x", &simple[0][0],3,true  );
+        filter<float,short> f3y( "simple-y", &simple[0][0],3,false );
+        filter<float,short> f3x( "simple-x", &simple[0][0],3,true  );
 
-        filter<float> d3y( "dummy-y", &dummy[0][0],3,false);
-        filter<float> d3x( "dummy-x", &dummy[0][0],3,true);
+        filter<float,int> d3y( "dummy-y", &dummy[0][0],3,false);
+        filter<float,int> d3x( "dummy-x", &dummy[0][0],3,true);
 
         pixmap<float> target(source.w,source.h);
 

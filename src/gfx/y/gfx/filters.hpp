@@ -14,7 +14,7 @@ namespace upsylon
     {
         
         
-        typedef filter<float>                      filter_type;   //!< built-in filter type
+        typedef filter<float,int>                  filter_type;   //!< built-in filter type
         typedef intr_ptr<string,const filter_type> shared_filter; //!< allocated filter
         
         //______________________________________________________________________
