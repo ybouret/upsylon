@@ -34,6 +34,7 @@ namespace upsylon
                 class patch : public graphic::patch<T>
                 {
                 public:
+                    //! create and format patch
                     template <typename U> inline
                     explicit patch(const U     *cf,
                                    const coord  lo,
@@ -43,6 +44,7 @@ namespace upsylon
                         setup(cf);
                     }
 
+                    //! create and format patch, using symmetric layout
                     template <typename U> inline
                     explicit patch(const U     *cf,
                                    const unit_t W,
@@ -52,7 +54,7 @@ namespace upsylon
                         setup(cf);
                     }
 
-
+                    //! create and format patch with transposed data
                     template <typename U> inline
                     explicit patch(const U                 *cf,
                                    const coord              lo,
@@ -63,6 +65,7 @@ namespace upsylon
                         setup_trn(cf);
                     }
 
+                    //! create and format patch, using transposed symmetric layout
                     template <typename U> inline
                     explicit patch(const U                 *cf,
                                    const unit_t             W,
@@ -227,6 +230,7 @@ namespace upsylon
                 wline=0; aliasing::_(lines)=0;
             }
 
+            //! common constructor code
 #define Y_GFX_FILTER_CTOR() crux::filter(ident), wline(0), lines(0), wksp(0), wlen(0)
 
             //! setup with full coordinates
@@ -393,7 +397,7 @@ namespace upsylon
             size_t         wlen;
 
         public:
-            const patch_type data;
+            const patch_type data; //!< store initial coefficients
 
         private:
 

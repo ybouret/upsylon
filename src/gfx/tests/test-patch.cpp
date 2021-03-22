@@ -3,6 +3,7 @@
 #include "y/type/spec.hpp"
 #include "support.hpp"
 #include "y/gfx/color/rgb.hpp"
+#include "y/gfx/pblock.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -27,6 +28,8 @@ namespace {
             }
         }
 
+        pblock<T> tmp(p.items);
+        
         {
             const patch<T> q(p);
             for(unit_t y=p.lower.y;y<=p.upper.y;++y)
@@ -36,6 +39,8 @@ namespace {
                     Y_ASSERT(p[y][x] == q[y][x]);
                 }
             }
+            Y_CHECK(p.sum()==q.sum());
+            Y_CHECK(p.sum()==p.sum(&tmp[0]));
         }
 
         {
@@ -47,6 +52,7 @@ namespace {
                     Y_ASSERT(p[y][x] == q[x][y]);
                 }
             }
+            Y_CHECK(p.sum()==q.sum());
         }
 
 
