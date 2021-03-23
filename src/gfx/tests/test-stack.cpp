@@ -10,7 +10,7 @@ using namespace graphic;
 namespace
 {
     template <typename T>
-    static inline void do_stack()
+    static inline void do_stack(const string id)
     {
         const size_t n = 2 + alea.leq(10);
         const unit_t w = 1 + alea.leq(100);
@@ -31,7 +31,7 @@ namespace
             }
         }
         
-        const string filename = "stack-" + type_name_of<T>() + ".tif";
+        const string filename = "stack-" + id + ".tif";
         s.save_tiff(filename,0,s.size());
         
     }
@@ -39,9 +39,9 @@ namespace
 
 Y_UTEST(stack)
 {
-    do_stack<uint8_t>();
-    do_stack<float>();
-    do_stack<rgba>();
+    do_stack<uint8_t>("byte");
+    do_stack<float>("float");
+    do_stack<rgba>("rgba");
     
     if(argc>1)
     {
