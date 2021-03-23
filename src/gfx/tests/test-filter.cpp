@@ -133,11 +133,11 @@ Y_UTEST(filter)
 
         IMG.save(source, "source.png" );
 
-        filter<float,short> f3y( "simple-y", &simple[0][0],3,false );
-        filter<float,short> f3x( "simple-x", &simple[0][0],3,true  );
+        filter<float,short> f3y( "simple-y", &simple[0][0],3,3 );
+        filter<float,short> f3x( "simple-x", &simple[0][0],3,3, area::transpose  );
 
-        filter<float,int> d3y( "dummy-y", &dummy[0][0],3,false);
-        filter<float,int> d3x( "dummy-x", &dummy[0][0],3,true);
+        filter<float,int> d3y( "dummy-y", &dummy[0][0],3,3);
+        filter<float,int> d3x( "dummy-x", &dummy[0][0],3,3,area::transpose);
 
         pixmap<float> target(source.w,source.h);
 
