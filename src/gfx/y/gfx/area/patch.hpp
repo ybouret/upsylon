@@ -29,7 +29,9 @@ namespace upsylon
                 static coord  symmetrical_upper(const unit_t W, const unit_t H);  //!< convert
                 static unit_t symmetrical_upper(const unit_t L, const char   *);  //!< convert
                 static unit_t symmetrical_lower(const unit_t L, const char   *);  //!< convert
-                static void   sort_data(void*,size_t,size_t,int (*cmp)(const void *, const void*)) throw();
+                
+                typedef int   (*compare)(const void *, const void*);              //!< compare patch types
+                static void   sort_data(void*,size_t,size_t,compare) throw();     //!< call sorting algo
             };
         }
         
@@ -49,7 +51,7 @@ namespace upsylon
             Y_DECL_ARGS(T,type); //!< aliases
             inline patch_row(mutable_type *p,const area &a)      throw() : addr(p), from(a)  { } //!< setup
             inline type       & operator[](const unit_t x)       throw() { Y_GFX_PATCH_ROW(x); } //!< access
-            inline const_type & operator[](const unit_t x) const throw() { Y_GFX_PATCH_ROW(x); } //! access, const
+            inline const_type & operator[](const unit_t x) const throw() { Y_GFX_PATCH_ROW(x); } //!< access, const
             
         private:
             mutable_type  *addr;

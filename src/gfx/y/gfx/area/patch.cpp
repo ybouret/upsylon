@@ -16,7 +16,7 @@ namespace upsylon
             void   patch:: sort_data(void        *ptr,
                                      const size_t num,
                                      const size_t itm,
-                                     int (*cmp)(const void *, const void*)) throw()
+                                     compare      cmp) throw()
             {
                 assert(ptr); assert(itm>0); assert(cmp);
                 qsort(ptr,num,itm,cmp);
