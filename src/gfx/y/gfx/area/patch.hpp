@@ -9,6 +9,7 @@
 #include "y/os/static-check.hpp"
 #include <iomanip>
 #include <cstring>
+#include <cstdlib>
 
 namespace upsylon
 {
