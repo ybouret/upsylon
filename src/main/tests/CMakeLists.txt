@@ -1,17 +1,5 @@
 PROJECT(test-main)
-
-IF(FALSE)
-
-ADD_EXECUTABLE(test-lzo ../y/codec/lzo/testmini.c)
-TARGET_LINK_Y(test-lzo)
-ADD_CUSTOM_COMMAND(
-TARGET             test-lzo
-POST_BUILD COMMAND test-lzo
-COMMENT            "Testing LZO"
-)
-
-ENDIF()
-
+ 
 FILE(GLOB srcs test-*.cpp)
 SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -23,11 +11,20 @@ SET(HERE ${CMAKE_CURRENT_SOURCE_DIR})
 ADD_EXECUTABLE(test-main 
 main.cpp ${srcs} 
 support.hpp 
-#rsa-keys.inc
 )
 TARGET_LINK_Y(test-main)
 
+SET(the_module ${HERE}/module.dll)
+
 ADD_LIBRARY(module MODULE module.cpp)
+
+add_custom_command(
+  TARGET module
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:module> ${the_module}
+  COMMENT "Copy local module"
+)
+
 
 ADD_DEPENDENCIES(test-main module)
 
