@@ -84,16 +84,17 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
+
+            //! helper for constructor
+#define Y_GFX_PATCH_CTOR_() rows(0), wksp(0), wlen(0)
             
             //! setup
             inline  patch(const unit_t W,
                           const unit_t H,
                           const unit_t X,
                           const unit_t Y) :
-            entity(),
-            area(W,H,X,Y), rows(0), wksp(0), wlen(0)
+            entity(), area(W,H,X,Y), Y_GFX_PATCH_CTOR_()
             {
-                if(items<=0) crux::patch::throw_empty_patch();
                 initialize();
             }
             
@@ -101,13 +102,11 @@ namespace upsylon
             inline  patch(const unit_t W,
                           const unit_t H) :
             entity(),
-            area(W,
-                 H,
+            area(W,H,
                  crux::patch::symmetrical_lower(W,checking::width ),
                  crux::patch::symmetrical_lower(H,checking::height) ),
-            rows(0), wksp(0), wlen(0)
+            Y_GFX_PATCH_CTOR_()
             {
-                if(items<=0) crux::patch::throw_empty_patch();
                 initialize();
             }
             //! cleanup
@@ -121,7 +120,7 @@ namespace upsylon
             inline patch(const patch &other) :
             entity(),
             area(other),
-            rows(0), wksp(0), wlen(0)
+            Y_GFX_PATCH_CTOR_()
             {
                 initialize();
                 memcpy(wksp,other.wksp,items*sizeof(T));
@@ -236,6 +235,7 @@ namespace upsylon
             
             inline void initialize()
             {
+                if(items<=0) crux::patch::throw_empty_patch();
                 mutable_type *data = 0;
                 {
                     memory::embed emb[] =
