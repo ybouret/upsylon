@@ -1,5 +1,6 @@
 #include "y/gfx/area/patch.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
 #include "y/type/spec.hpp"
 #include "support.hpp"
 #include "y/gfx/color/rgb.hpp"
@@ -83,6 +84,11 @@ Y_UTEST(patch)
 
         }
     }
+    
+    Y_UTEST_SIZEOF(patch_row<int>);
+    Y_UTEST_SIZEOF(patch_row<float>);
+    Y_UTEST_SIZEOF(patch_row<uint8_t>);
+
 
 }
 Y_UTEST_DONE()

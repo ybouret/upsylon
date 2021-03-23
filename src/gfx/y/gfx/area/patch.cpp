@@ -2,6 +2,8 @@
 #include "y/gfx/area/patch.hpp"
 #include "y/exception.hpp"
 
+#include <cstdlib>
+
 namespace upsylon
 {
 
@@ -10,6 +12,15 @@ namespace upsylon
 
         namespace crux
         {
+
+            void   patch:: sort_data(void        *ptr,
+                                     const size_t num,
+                                     const size_t itm,
+                                     int (*cmp)(const void *, const void*)) throw()
+            {
+                assert(ptr); assert(itm>0); assert(cmp);
+                qsort(ptr,num,itm,cmp);
+            }
 
             void patch:: throw_empty_patch()
             {
@@ -28,7 +39,7 @@ namespace upsylon
                 const coord up = symmetrical_upper(W,H);
                 return coord(1+up.x-W,1+up.y-H);
             }
-
+            
             unit_t patch:: symmetrical_upper(const unit_t L, const char *name)
             {
                 assert(name);

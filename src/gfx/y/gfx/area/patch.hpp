@@ -9,7 +9,6 @@
 #include "y/os/static-check.hpp"
 #include <iomanip>
 #include <cstring>
-#include <cstdlib>
 
 namespace upsylon
 {
@@ -19,21 +18,28 @@ namespace upsylon
         
         namespace crux
         {
+            //__________________________________________________________________
+            //
             //! common ops for patch
+            //__________________________________________________________________
             struct patch
             {
-                static void   throw_empty_patch();                                 //!< throw if patch has no item
+                static void   throw_empty_patch();                                //!< throw if patch has no item
                 static coord  symmetrical_lower(const unit_t W, const unit_t H);  //!< convert
                 static coord  symmetrical_upper(const unit_t W, const unit_t H);  //!< convert
                 static unit_t symmetrical_upper(const unit_t L, const char   *);  //!< convert
                 static unit_t symmetrical_lower(const unit_t L, const char   *);  //!< convert
+                static void   sort_data(void*,size_t,size_t,int (*cmp)(const void *, const void*)) throw();
             };
         }
+        
+        //! access macro
+#define Y_GFX_PATCH_ROW(x) assert(x>=from.lower.x); assert(x<=from.upper.x); return addr[x]
         
         //______________________________________________________________________
         //
         //
-        //! row for a patch of data
+        //! pre-computed row for a patch of data
         //
         //______________________________________________________________________
         template <typename T>
@@ -41,27 +47,22 @@ namespace upsylon
         {
         public:
             Y_DECL_ARGS(T,type); //!< aliases
-            
-            //! setup
-            inline patch_row(mutable_type *p,const area &a) throw() : addr(p), from(a) { }
-            
-            //! access
-            type       & operator[](const unit_t x) throw()       { assert(x>=from.lower.x); assert(x<=from.upper.x); return addr[x]; }
-            
-            //! access, const
-            const_type & operator[](const unit_t x) const throw() { assert(x>=from.lower.x); assert(x<=from.upper.x); return addr[x]; }
+            inline patch_row(mutable_type *p,const area &a)      throw() : addr(p), from(a)  { } //!< setup
+            inline type       & operator[](const unit_t x)       throw() { Y_GFX_PATCH_ROW(x); } //!< access
+            inline const_type & operator[](const unit_t x) const throw() { Y_GFX_PATCH_ROW(x); } //! access, const
             
         private:
             mutable_type  *addr;
-            
-        public:
-            const area    &from; //!< original area
+            const area    &from;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(patch_row);
             inline ~patch_row() throw() {}
-            
         };
+        
+        
+        //! access macro
+#define Y_GFX_PATCH_GET(y) assert(y<=upper.y);assert(y>=lower.y); return rows[y]
         
         //______________________________________________________________________
         //
@@ -86,7 +87,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! helper for constructor
-#define Y_GFX_PATCH_CTOR_() rows(0), wksp(0), wlen(0)
+#define Y_GFX_PATCH_CTOR_() rows(0), wksp(0), wlen(0), room(0)
             
             //! setup
             inline  patch(const unit_t W,
@@ -114,23 +115,20 @@ namespace upsylon
             {
                 suppress(wksp,wlen);
                 rows=0;
+                aliasing::_(room) = 0;
             }
             
             //! copy
             inline patch(const patch &other) :
-            entity(),
-            area(other),
-            Y_GFX_PATCH_CTOR_()
+            entity(), area(other), Y_GFX_PATCH_CTOR_()
             {
                 initialize();
-                memcpy(wksp,other.wksp,items*sizeof(T));
+                memcpy(wksp,other.wksp,room);
             }
             
             //! copy/transpose
             inline patch(const patch &other, const area::transpose_t &_) :
-            entity(),
-            area(other,_),
-            rows(0), wksp(0), wlen(0)
+            entity(), area(other,_), Y_GFX_PATCH_CTOR_()
             {
                 initialize();
                 for(unit_t y=lower.y;y<=upper.y;++y)
@@ -148,16 +146,16 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             //! access data entry
-            const_type * operator*() const throw() { return static_cast<const_type *>(wksp); }
+            inline const_type * operator*() const throw() { return static_cast<const_type *>(wksp); }
             
             //! info
             inline size_t allocated() const throw() { return wlen; }
             
             //! row access
-            inline row       & operator[](const unit_t y)       throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
+            inline row       & operator[](const unit_t y)       throw() { Y_GFX_PATCH_GET(y); }
             
             //! row access, const
-            inline const row & operator[](const unit_t y) const throw() { assert(y<=upper.y);assert(y>=lower.y); return rows[y]; }
+            inline const row & operator[](const unit_t y) const throw() { Y_GFX_PATCH_GET(y); }
             
             //! display
             inline std::ostream & display(std::ostream &os) const
@@ -184,8 +182,8 @@ namespace upsylon
             inline const_type sum(mutable_type *tmp) const throw()
             {
                 assert(tmp);
-                memcpy(tmp,wksp,items*sizeof(T));
-                qsort(tmp,items,sizeof(T),cmp);
+                memcpy(tmp,wksp,room);
+                crux::patch::sort_data(tmp,items,sizeof(T),cmp);
                 return sum_of(tmp,items);
             }
             
@@ -228,10 +226,10 @@ namespace upsylon
             
         private:
             Y_DISABLE_ASSIGN(patch);
-            row   *rows;
-            void  *wksp;
-            size_t wlen;
-            
+            row         *rows;
+            void        *wksp;
+            size_t       wlen;
+            const size_t room;
             
             inline void initialize()
             {
@@ -245,6 +243,7 @@ namespace upsylon
                     };
                     wksp = allocate(emb, sizeof(emb)/sizeof(emb[0]), wlen);
                     assert(wksp==data);
+                    aliasing::_(room) = items * sizeof(T);
                 }
                 rows -= lower.y;
                 data -= lower.x;
