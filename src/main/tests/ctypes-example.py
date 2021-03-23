@@ -3,9 +3,7 @@ import numpy as np
 import platform
 
 
-module_name  = "./libmodule.so"
-if platform.system() == "Windows":
-	module_name="./libmodule.dll"
+module_name  = "./module.dll"
 
 m            = cdll.LoadLibrary(module_name)
 Sin          = m.Sin
