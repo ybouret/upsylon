@@ -2,7 +2,7 @@
 //! \file
 
 #ifndef Y_GFX_GAUSSIAN_BLUR_INCLUDED
-#define Y_GFX_GAUSSINA_BLUR_INCLUDED 1
+#define Y_GFX_GAUSSIAN_BLUR_INCLUDED 1
 
 #include "y/gfx/area/patch.hpp"
 #include "y/gfx/color/rgb.hpp"
@@ -14,6 +14,42 @@ namespace upsylon
     namespace graphic
     {
 
+        namespace crux
+        {
+            //! convert to closest type
+            template <typename T,typename U>
+            struct to_closest
+            {
+                static T from(const U) throw(); //!< prototype
+            };
+
+            //! convert identity
+            template <typename T>
+            struct to_closest<T,T>
+            {
+                //! prototype
+                static inline T from(const T x) throw() { return x; }
+            };
+
+            //! convert [0..255.0f]->uint8_t
+            template <>
+            struct to_closest<uint8_t,float>
+            {
+                //! prototype
+                static inline uint8_t from(const float x) throw() { return uint8_t( floorf(x+0.5f) ); }
+            };
+
+            //! convert [0..255]->uint8_t
+            template <>
+            struct to_closest<uint8_t,double>
+            {
+                //! prototype
+                static inline uint8_t from(const float x) throw() { return uint8_t( floor(x+0.5) ); }
+            };
+
+
+        }
+
         //______________________________________________________________________
         //
         //
@@ -24,12 +60,22 @@ namespace upsylon
         class gaussian_blur : public patch<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
-            typedef patch<T> patch_type;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            Y_DECL_ARGS(T,type);           //!< aliasesd
+            typedef patch<T> patch_type;   //!< alias
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
+            //! cleanup
             inline virtual ~gaussian_blur() throw() {}
 
+            //! setup with automatic symmetrical layout
             inline explicit gaussian_blur(const unit_t W,
                                           const unit_t H,
                                           param_type   sigma_x,
@@ -41,8 +87,12 @@ namespace upsylon
                 setup(sigma_x,sigma_y);
             }
 
-            const_type factor;
-            const_type weight;
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const_type factor; //!< 1/weight
+            const_type weight; //!< total weight
 
             //__________________________________________________________________
             //
@@ -72,25 +122,28 @@ namespace upsylon
                 apply(ops::run,&todo);
             }
 
+            //! self type cover
             inline
             void cover(pixmap<T> &target, broker &apply, const pixmap<T> &source)
             {
                 compute<T,T,1>(target,apply,source);
             }
 
-
+            //! rgb cover
             inline
             void cover(pixmap<rgb> &target, broker &apply, const pixmap<rgb> &source)
             {
                 compute<rgb,uint8_t,3>(target,apply,source);
             }
 
+            //! rgb(a) cover
             inline
             void cover(pixmap<rgba> &target, broker &apply, const pixmap<rgba> &source)
             {
                 compute<rgba,uint8_t,3>(target,apply,source);
             }
 
+            //! uint8_t cover
             inline
             void cover(pixmap<uint8_t> &target, broker &apply, const pixmap<uint8_t> &source)
             {
@@ -138,7 +191,7 @@ namespace upsylon
                 for(unsigned ch=0;ch<NCH;++ch)
                 {
                     const_type value = acc[ch]*this->factor;
-                    q[ch] = U(value); // TODO: improve
+                    q[ch] = crux::to_closest<U,T>::from(value); // TODO: improve
                 }
             }
 
