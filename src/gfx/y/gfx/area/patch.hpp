@@ -6,6 +6,7 @@
 
 #include "y/gfx/pixmap.hpp"
 #include "y/memory/embed.hpp"
+#include "y/os/static-check.hpp"
 #include <iomanip>
 #include <cstring>
 
@@ -20,9 +21,11 @@ namespace upsylon
             //! common ops for patch
             struct patch
             {
-                static void  throw_empty_patch(); //!< throw if patch has no item
-                static coord symmetrical_lower(const unit_t W, const unit_t H); //!< convert
-                static coord symmetrical_upper(const unit_t W, const unit_t H); //!< convert
+                static void   throw_empty_patch();                                 //!< throw if patch has no item
+                static coord  symmetrical_lower(const unit_t W, const unit_t H);  //!< convert
+                static coord  symmetrical_upper(const unit_t W, const unit_t H);  //!< convert
+                static unit_t symmetrical_upper(const unit_t L, const char   *);  //!< convert
+                static unit_t symmetrical_lower(const unit_t L, const char   *);  //!< convert
             };
         }
         
@@ -99,8 +102,8 @@ namespace upsylon
             entity(),
             area(W,
                  H,
-                 crux::patch::symmetrical_lower(W,H).x,
-                 crux::patch::symmetrical_lower(W,H).y),
+                 crux::patch::symmetrical_lower(W,checking::width ),
+                 crux::patch::symmetrical_lower(H,checking::height) ),
             rows(0), wksp(0), wlen(0)
             {
                 if(items<=0) crux::patch::throw_empty_patch();
@@ -186,7 +189,7 @@ namespace upsylon
                 return sum_of(tmp,items);
             }
             
-            //! load sum of per-channel accumulation
+            //! load  per-channel accumulation
             template <
             typename       PIXEL,
             typename       U,
@@ -196,7 +199,7 @@ namespace upsylon
                            const pixmap<PIXEL> &pxm,
                            const coord          pos) const throw()
             {
-                assert(sizeof(PIXEL)>=NCH*sizeof(U));
+                Y_STATIC_CHECK(sizeof(PIXEL)>=NCH*sizeof(U),invalid_pixel);
                 static const unsigned zlen = NCH*sizeof(T);
                
                 memset(acc,0,zlen);
@@ -219,9 +222,8 @@ namespace upsylon
                         }
                     }
                 }
-                
-                
             }
+
             
             
         private:

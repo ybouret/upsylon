@@ -41,7 +41,7 @@ namespace {
 }
 
 #include "y/gfx/pixel.hpp"
-#include "y/gfx/ops/blur.hpp"
+#include "y/gfx/ops/gaussian-blur.hpp"
 #include "y/gfx/filters/db.hpp"
 
 Y_UTEST(edges)
@@ -62,9 +62,8 @@ Y_UTEST(edges)
         
         if( argc> 2)
         {
-            const float sigma = string_convert::to<float>(argv[2],"sigma");
-            blur        fuzz(sigma);
-            std::cerr << "<blur sigma=" << sigma << " length=" << fuzz.length << "x" << fuzz.length << ">" << std::endl;
+            const float          sigma = string_convert::to<float>(argv[2],"sigma");
+            gaussian_blur<float> fuzz(7,7,sigma);
             fuzz.cover(src,par,pxm);
             std::cerr << "<blur>" << std::endl;
         }

@@ -1,4 +1,5 @@
-#include "y/gfx/ops/blur.hpp"
+#include "y/gfx/ops/gaussian-blur.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
 
@@ -24,9 +25,13 @@ Y_UTEST(blur)
     {
         sigma = string_convert::to<float>(argv[1],"sigma");
     }
-    blur  b(sigma);
-    std::cerr << "sigma=" << sigma << std::endl;
+
+    gaussian_blur<float> b(3,5,sigma);
+
+    b.display(std::cerr);
     
+
+
     if(argc>2)
     {
         const pixmap<rgb>  img = IMG.load<rgb>(argv[2]);
