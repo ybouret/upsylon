@@ -8,7 +8,6 @@
 
 using namespace upsylon;
 
-Y_DLL_PRIVATE();
 
 namespace  {
 
@@ -94,25 +93,20 @@ namespace  {
     };
 
     App * App::Impl = 0;
-
-
-
-
-
-
+    
 }
 
 
 static inline void enter() throw()
 {
-    Print(stderr,"Enter Engine DLL[flags=%d]\n",y_dll_flags);
+    Print(stderr,"Enter Engine DLL\n");
 }
 
 
 
 static inline void leave() throw()
 {
-    Print(stderr, "Leave Engine DLL[flags=%d]\n",y_dll_flags);
+    Print(stderr, "Leave Engine DLL\n");
 }
 
 

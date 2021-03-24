@@ -1,5 +1,4 @@
 #include "y/rtld/dll.h"
-Y_DLL_PRIVATE();
 
 
 #include <cmath>

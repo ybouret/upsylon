@@ -33,32 +33,34 @@
 // Specific Module Init/Quit
 //______________________________________________________________________________
 
-#define Y_DLL_PRIVATE() static int y_dll_flags = 0
 
 
 #if defined(Y_BSD)
 
 #define Y_DLL_SETUP(ON_INIT,ON_QUIT)                      \
-__attribute__((constructor)) void OnInit() { y_dll_flags=0; ON_INIT(); } \
-__attribute__((destructor))  void OnQuit() { y_dll_flags=0; ON_QUIT(); }
+__attribute__((constructor)) void OnInit() { ON_INIT(); } \
+__attribute__((destructor))  void OnQuit() { ON_QUIT(); }
 
 #endif
 
 #if defined(Y_WIN)
 
-#define Y_DLL_SETUP(ON_INIT,ON_QUIT)  \
-extern "C" BOOL WINAPI DllMain(HINSTANCE hinstDLL,DWORD fdwReason,LPVOID)\
-{\
-(void)hinstDLL;\
-switch( fdwReason )\
-{\
-case DLL_PROCESS_ATTACH:  y_dll_flags=0; ON_INIT(); break;\
-case DLL_THREAD_ATTACH:   y_dll_flags=1; ON_INIT(); break;\
-case DLL_THREAD_DETACH:   y_dll_flags=1; ON_QUIT(); break;\
-case DLL_PROCESS_DETACH:  y_dll_flags=0; ON_QUIT(); break;\
-}\
-return TRUE;\
+#define Y_DLL_SETUP(ON_INIT,ON_QUIT)                                      \
+extern "C" BOOL WINAPI DllMain(HINSTANCE hinstDLL,DWORD fdwReason,LPVOID) \
+{                                                                         \
+/**/ (void)hinstDLL;                                                      \
+/**/ switch( fdwReason )                                                  \
+/**/   {                                                                  \
+/**/     case DLL_PROCESS_ATTACH: ON_INIT(); break;                       \
+/**/     case DLL_PROCESS_DETACH: ON_QUIT(); break;                       \
+/**/   }                                                                  \
+/**/ return TRUE;                                                         \
 }
+
+/*
+ case DLL_THREAD_ATTACH:   y_dll_flags=1; ON_INIT(); break;\
+ case DLL_THREAD_DETACH:   y_dll_flags=1; ON_QUIT(); break;\
+*/
 
 #endif
 
