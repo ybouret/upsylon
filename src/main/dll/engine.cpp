@@ -10,30 +10,32 @@
 using namespace upsylon;
 
 
-namespace  {
-    
-    typedef concurrent::simt SIMT;
-    typedef arc_ptr<SIMT>    Threads;
-    
-    
-    
-    Y_SOAK_DERIVED(App,Threads);
-    static int num_procs;
-    inline App() : Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
-    {
-    }
-    
-    Y_SOAK_FINISH(App);
-    
-    int App::num_procs = 0;
-    
-    
+
+typedef concurrent::simt SIMT;
+typedef arc_ptr<SIMT>    Threads;
+
+
+
+Y_SOAK_DERIVED(Engine,Threads);
+// some declaration(s)
+static int num_procs;
+
+// the constructor
+inline Engine() : Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
+{
+    soak::print(stderr,"#threads=%u\n", unsigned( (**this).size() ) );
 }
+
+Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
+
+int Engine::num_procs = 0;
+
+
 
 
 static inline void enter() throw()
 {
-    soak::print(stderr,"Enter Engine DLL\n");
+    soak::print(stderr,"<%s.dll>\n",Engine::call_sign);
     soak::verbose = true;
 }
 
@@ -41,26 +43,9 @@ static inline void enter() throw()
 
 static inline void leave() throw()
 {
-    soak::print(stderr, "Leave Engine DLL\n");
+    soak::print(stderr,"<%s.dll/>\n",Engine::call_sign);
 }
 
 
 Y_DLL_SETUP(enter,leave);
 
-Y_DLL_EXTERN()
-
-Y_EXPORT int Y_DLL_API EngineInit(unsigned np) throw()
-{
-    soak::print(stderr,"EngineStart(%u)\n",np);
-    App::num_procs = np;
-    return App::Init() != 0 ? 0 : -1;
-}
-
-Y_EXPORT void Y_DLL_API EngineQuit() throw()
-{
-    App::Quit();
-}
-
-
-
-Y_DLL_FINISH()

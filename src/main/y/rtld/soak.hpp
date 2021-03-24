@@ -39,6 +39,12 @@ namespace upsylon
     //__________________________________________________________________________
 #define Y_SOAK_VERBOSE(CODE) do { if(soak::verbose) { CODE; } } while(false)
     
+    //! success value
+#define Y_SOAK_SUCCESS ( 0)
+    
+    //! failure value
+#define Y_SOAK_FAILURE (-1)
+    
     //__________________________________________________________________________
     //
     //
@@ -47,10 +53,11 @@ namespace upsylon
     //__________________________________________________________________________
     struct soak
     {
-        static void       print(FILE * stream, const char * format, ...) throw(); //!< secured print
-        static const char unhandled_exception[]; //!< "unhandled exception"
-        static bool       verbose;               //!< verbose flag
-        
+        static void        print(FILE * stream, const char * format, ...) throw(); //!< secured print
+        static const char  unhandled_exception[]; //!< "unhandled exception"
+        static bool        verbose;               //!< verbose flag
+        static inline void nope() throw() {}      //!< nope for leave/enter in dll
+
         //______________________________________________________________________
         //
         //! class to handle one instance of an APPLICATION
@@ -109,30 +116,62 @@ namespace upsylon
     
     template <typename T>  volatile T *  soak::app<T>::instance = 0;
 
+    //__________________________________________________________________________
+    //
+    //! common code to initialize CLASS Init/Quit an call_sign
+    //__________________________________________________________________________
 #define Y_SOAK_INIT_(CLASS) \
-/**/  {\
-/**/    public:\
-/**/      inline static void   Quit() throw() { soak::app<CLASS>::quit();        }\
-/**/      inline static CLASS *Init() throw() { return soak::app<CLASS>::init(); }\
+/**/  {                                                                            \
+/**/    public:                                                                    \
+/**/      inline static void   Quit() throw() { soak::app<CLASS>::quit();        } \
+/**/      inline static CLASS *Init() throw() { return soak::app<CLASS>::init(); } \
 /**/      static const char call_sign[]
     
-#define Y_SOAK_FINISH(CLASS) \
-/**/    private:\
-/**/      Y_DISABLE_COPY_AND_ASSIGN(CLASS);\
-/**/      inline virtual ~CLASS() throw() {}\
-/**/      friend class soak::app<CLASS>;\
-/**/  };\
+    //! no parameters macro
+#define Y_SOAK_NO_PARAMS void
+    
+    //! no code macro
+#define Y_SOAK_NO_LOADER (void)0
+    
+    //__________________________________________________________________________
+    //
+    //! finalize the code
+    //__________________________________________________________________________
+#define Y_SOAK_FINISH(CLASS,PARAMS,LOADER)                               \
+/**/    private:                                                         \
+/**/      Y_DISABLE_COPY_AND_ASSIGN(CLASS);                              \
+/**/      inline virtual ~CLASS() throw() {}                             \
+/**/      friend class soak::app<CLASS>;                                 \
+/**/  };                                                                 \
+/**/ Y_DLL_EXTERN()                                                      \
+/**/ Y_EXPORT void Y_DLL_API CLASS##Quit() throw() { CLASS::Quit(); }    \
+/**/ Y_EXPORT int  Y_DLL_API CLASS##Init(PARAMS) throw() {               \
+/**/   do { LOADER; } while(false);                                      \
+/**/   return (NULL != CLASS::Init()) ? Y_SOAK_SUCCESS : Y_SOAK_FAILURE; \
+/**/ }                                                                   \
+/**/ Y_DLL_FINISH()                                                      \
 /**/ const char CLASS::call_sign[] = #CLASS
     
-    
+    //__________________________________________________________________________
+    //
+    //! common CLASS declaration
+    //__________________________________________________________________________
 #define Y_SOAK_DECL_(CLASS) class CLASS : public soak::app<CLASS>
     
     
-#define Y_SOAK_DECLARE(CLASS) \
-/**/    Y_SOAK_DECL_(CLASS)      \
+    //__________________________________________________________________________
+    //
+    //! declare simple class
+    //__________________________________________________________________________
+#define Y_SOAK_DECLARE(CLASS)  \
+/**/    Y_SOAK_DECL_(CLASS)    \
 /**/    Y_SOAK_INIT_(CLASS)
 
-#define Y_SOAK_DERIVED(CLASS,BASE) \
+    //__________________________________________________________________________
+    //
+    //! declare derived class
+    //__________________________________________________________________________
+#define Y_SOAK_DERIVED(CLASS,BASE)       \
 /**/    Y_SOAK_DECL_(CLASS), public BASE \
 /**/    Y_SOAK_INIT_(CLASS)
     
