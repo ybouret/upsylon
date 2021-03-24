@@ -1,6 +1,6 @@
 
 ADD_LIBRARY(engine MODULE engine.cpp)
-TARGET_LINK_LIBRARIES(engine y)
+TARGET_LINK_Y(engine)
 
 SET(the_engine ${CMAKE_CURRENT_SOURCE_DIR}/engine.dll)
 add_custom_target(engine_copy ALL
