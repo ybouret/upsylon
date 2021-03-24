@@ -2,44 +2,31 @@
 #include "y/rtld/soak.hpp"
 #include "y/concurrent/loop/simt.hpp"
 #include "y/exception.hpp"
+#include "y/ptr/arc.hpp"
+
 #include <cmath>
 #include <cstdio>
- 
+
 using namespace upsylon;
 
 
 namespace  {
-
     
-    class App : public soak::app<App>, public concurrent::simt
+    typedef concurrent::simt SIMT;
+    typedef arc_ptr<SIMT>    Threads;
+    
+    
+    
+    Y_SOAK_DERIVED(App,Threads);
+    static int num_procs;
+    inline App() : Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
     {
-    public:
-        static const char call_sign[];
-        
-        static inline void Quit() throw()
-        {
-            soak::app<App>::quit();
-        }
-        
-        static inline App *Init(const unsigned np)
-        {
-            return (np<=0) ? soak::app<App>::init() : soak::app<App>::init<unsigned>(np);
-        }
-        
-        
-    private:
-        Y_DISABLE_COPY_AND_ASSIGN(App);
-        inline explicit App(const unsigned np) : concurrent::simt(0,np,1) {}
-        inline explicit App( ) : concurrent::simt( ) {}
-
-        inline virtual ~App() throw() {}
-        friend class soak::app<App>;
-    };
+    }
     
-    const char App::call_sign[] = "App";
+    Y_SOAK_FINISH(App);
     
-
-
+    int App::num_procs = 0;
+    
     
 }
 
@@ -65,7 +52,8 @@ Y_DLL_EXTERN()
 Y_EXPORT int Y_DLL_API EngineInit(unsigned np) throw()
 {
     soak::print(stderr,"EngineStart(%u)\n",np);
-    return App::Init(np) != 0 ? 0 : -1;
+    App::num_procs = np;
+    return App::Init() != 0 ? 0 : -1;
 }
 
 Y_EXPORT void Y_DLL_API EngineQuit() throw()

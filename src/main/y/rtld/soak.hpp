@@ -9,13 +9,19 @@
 
 namespace upsylon
 {
- 
-    
+    //__________________________________________________________________________
+    //
+    //! try block...
+    //______________________________________________________________________________
 #define Y_SOAK_TRY(FUNC)                     \
 /**/  do {                                   \
 /**/    const char * const __soak_fn = FUNC; \
 /**/    try
     
+    //__________________________________________________________________________
+    //
+    //! ...to catch'm all
+    //___________________________________________________________________________
 #define Y_SOAK_CATCH()                                                       \
 /**/    catch(const upsylon::exception &e)                                   \
 /**/    {                                                                    \
@@ -27,29 +33,47 @@ namespace upsylon
 /**/    }                                                                    \
 /**/  } while(false)
     
+    //__________________________________________________________________________
+    //
+    //! code on verbosity
+    //__________________________________________________________________________
 #define Y_SOAK_VERBOSE(CODE) do { if(soak::verbose) { CODE; } } while(false)
     
+    //__________________________________________________________________________
+    //
+    //
+    //! Shared Object Application Kit
+    //
+    //__________________________________________________________________________
     struct soak
     {
-        static void       print(FILE * stream, const char * format, ...) throw();
-        static const char unhandled_exception[];
-        static const char multi_template_init[];
-        static bool       verbose;
+        static void       print(FILE * stream, const char * format, ...) throw(); //!< secured print
+        static const char unhandled_exception[]; //!< "unhandled exception"
+        static bool       verbose;               //!< verbose flag
         
+        //______________________________________________________________________
+        //
+        //! class to handle one instance of an APPLICATION
+        /**
+         the APPLICATION must have a call_sign
+         */
+        //______________________________________________________________________
         template <typename APPLICATION>
         class app
         {
         public:
-            inline virtual ~app() throw() {}
+            //! cleanup
+            inline virtual           ~app() throw() {}
             
+            //! soname from call_sign
             static inline const char *soname() throw() { return APPLICATION::call_sign; }
-            
-          
             
             
         protected:
+            //! setup
             inline explicit app() throw() {}
             
+            //! cleanup
             inline static void quit() throw()
             {
                 Y_SOAK_VERBOSE(soak::print(stderr,"[%s] quit\n",soname()));
@@ -60,6 +84,7 @@ namespace upsylon
                 }
             }
             
+            //! create/recall
             inline static
             APPLICATION *init() throw()
             {
@@ -72,19 +97,7 @@ namespace upsylon
                 return 0;
             }
             
-            template <typename T>
-            static APPLICATION *init(const T &args)
-            {
-                Y_SOAK_VERBOSE(soak::print(stderr,"[%s] init<...>\n",soname()));
-                Y_SOAK_TRY(soname())
-                {
-                    if(instance) throw exception("%s",multi_template_init);
-                    instance = (volatile APPLICATION *) new APPLICATION(args);
-                    return (APPLICATION *)instance;
-                }
-                Y_SOAK_CATCH();
-                return 0;
-            }
+        
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(app);
@@ -95,6 +108,34 @@ namespace upsylon
     };
     
     template <typename T>  volatile T *  soak::app<T>::instance = 0;
+
+#define Y_SOAK_INIT_(CLASS) \
+/**/  {\
+/**/    public:\
+/**/      inline static void   Quit() throw() { soak::app<CLASS>::quit();        }\
+/**/      inline static CLASS *Init() throw() { return soak::app<CLASS>::init(); }\
+/**/      static const char call_sign[]
+    
+#define Y_SOAK_FINISH(CLASS) \
+/**/    private:\
+/**/      Y_DISABLE_COPY_AND_ASSIGN(CLASS);\
+/**/      inline virtual ~CLASS() throw() {}\
+/**/      friend class soak::app<CLASS>;\
+/**/  };\
+/**/ const char CLASS::call_sign[] = #CLASS
+    
+    
+#define Y_SOAK_DECL_(CLASS) class CLASS : public soak::app<CLASS>
+    
+    
+#define Y_SOAK_DECLARE(CLASS) \
+/**/    Y_SOAK_DECL_(CLASS)      \
+/**/    Y_SOAK_INIT_(CLASS)
+
+#define Y_SOAK_DERIVED(CLASS,BASE) \
+/**/    Y_SOAK_DECL_(CLASS), public BASE \
+/**/    Y_SOAK_INIT_(CLASS)
+    
 
     
 }

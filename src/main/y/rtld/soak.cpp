@@ -16,7 +16,6 @@ namespace upsylon
     }
     
     const char soak:: unhandled_exception[] = "unhandled exception";
-    const char soak:: multi_template_init[] = "multiple template init";
     bool       soak:: verbose = false;
 }
 
