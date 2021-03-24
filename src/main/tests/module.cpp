@@ -1,6 +1,8 @@
 #include "y/rtld/dll.h"
-#include <cmath>
+Y_DLL_PRIVATE();
 
+
+#include <cmath>
 #include <cstdio>
 
 static inline void enter()
