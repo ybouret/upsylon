@@ -43,6 +43,7 @@ LIST( APPEND to_remove "src/r++/tests/rmodule.dll" )
 LIST( APPEND to_remove "src/python/spam.so" )
 LIST( APPEND to_remove "src/python/spam.dll" )
 LIST( APPEND to_remove "src/main/tests/module.dll" )
+LIST( APPEND to_remove "src/main/dll/engine.dll"   )
 
 FOREACH(item IN LISTS to_remove)
 	IF(EXISTS "${item}")

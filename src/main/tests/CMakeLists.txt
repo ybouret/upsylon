@@ -18,11 +18,10 @@ SET(the_module ${HERE}/module.dll)
 
 ADD_LIBRARY(module MODULE module.cpp)
 
-add_custom_command(
-  TARGET module
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:module> ${the_module}
-  COMMENT "Copy local module"
+add_custom_target(module_copy 
+COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:module> ${the_module}
+DEPENDS module
+COMMENT "Copy local module.dll"
 )
 
 

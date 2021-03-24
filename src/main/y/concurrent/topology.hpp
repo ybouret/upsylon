@@ -58,11 +58,21 @@ namespace upsylon
             class node : public object
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit node(const size_t) throw(); //!< initialize
+                virtual ~node() throw();             //!< cleanup
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 node        *next; //!< for list
                 node        *prev; //!< for list
                 const size_t rank; //!< worker's rank
-                explicit node(const size_t) throw(); //!< initialize
-                virtual ~node() throw();             //!< cleanup
+
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(node);
