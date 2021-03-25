@@ -174,6 +174,12 @@ namespace upsylon
     
     //__________________________________________________________________________
     //
+    //! direct finish class
+    //__________________________________________________________________________
+#define Y_SOAK_POLISH(CLASS) Y_SOAK_FINISH(CLASS,Y_SOAK_NO_PARAMS,Y_SOAK_NO_LOADER)
+
+    //__________________________________________________________________________
+    //
     //! common CLASS declaration
     //__________________________________________________________________________
 #define Y_SOAK_DECL_(CLASS) class CLASS : public soak::app<CLASS>
