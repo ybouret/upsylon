@@ -39,10 +39,16 @@ namespace upsylon
     //__________________________________________________________________________
 #define Y_SOAK_VERBOSE(CODE) do { if(soak::verbose) { CODE; } } while(false)
     
+    //__________________________________________________________________________
+    //
     //! success value
+    //__________________________________________________________________________
 #define Y_SOAK_SUCCESS ( 0)
     
+    //__________________________________________________________________________
+    //
     //! failure value
+    //__________________________________________________________________________
 #define Y_SOAK_FAILURE (-1)
     
     //__________________________________________________________________________
@@ -53,7 +59,13 @@ namespace upsylon
     //__________________________________________________________________________
     struct soak
     {
-        static void        print(FILE * stream, const char * format, ...) throw(); //!< secured print
+        //______________________________________________________________________
+        //
+        // definition
+        //______________________________________________________________________
+        
+        //! internal safe printf
+        static void        print(FILE * stream, const char * format, ...) throw();
         static const char  unhandled_exception[]; //!< "unhandled exception"
         static bool        verbose;               //!< verbose flag
         static inline void nope() throw() {}      //!< nope for leave/enter in dll
@@ -95,10 +107,18 @@ namespace upsylon
             inline static
             APPLICATION *init() throw()
             {
-                Y_SOAK_VERBOSE(soak::print(stderr,"[%s] init\n",soname()));
                 Y_SOAK_TRY(soname())
                 {
-                    return (APPLICATION *)(instance ? instance : (instance = (volatile APPLICATION *) new APPLICATION() ));
+                    if(instance)
+                    {
+                        Y_SOAK_VERBOSE(soak::print(stderr,"[%s] call\n",soname()));
+                    }
+                    else
+                    {
+                        Y_SOAK_VERBOSE(soak::print(stderr,"[%s] init\n",soname()));
+                        instance = (volatile APPLICATION *) new APPLICATION();
+                    }
+                    return (APPLICATION *)instance;
                 }
                 Y_SOAK_CATCH();
                 return 0;
