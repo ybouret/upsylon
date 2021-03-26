@@ -13,24 +13,84 @@ namespace upsylon
     namespace graphic
     {
 
-        template <typename CLASS>
+        //______________________________________________________________________
+        //
+        //
+        //! fixed dimension tableau of colors
+        //
+        //______________________________________________________________________
         class tableau : public color_ramp
         {
         public:
-            explicit tableau(const CLASS &) throw()
+            virtual ~tableau() throw();
+
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual size_t      dimensions() const throw(); //!< registered colors
+            virtual const rgba *repository() const throw(); //!< first color address
+
+
+        protected:
+            explicit tableau(const rgba  * const, const size_t) throw();
+
+        private:
+            const rgba  * const repository_;
+            const size_t        dimensions_;
+            Y_DISABLE_COPY_AND_ASSIGN(tableau);
+        };
+
+        template <typename CLASS>
+        class tableau_of: public tableau
+        {
+        public:
+            explicit tableau_of(const CLASS &host) throw() :
+            tableau( host.repo, host.dims )
             {
             }
 
-            virtual ~tableau() throw()
+            explicit tableau_of( ) throw() :
+            tableau( CLASS::repo, CLASS::dims )
+            {
+            }
+
+            virtual ~tableau_of() throw()
             {
             }
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(tableau);
+            Y_DISABLE_COPY_AND_ASSIGN(tableau_of);
+        };
+
+        class monochrome
+        {
+        public:
+            monochrome(const rgba &c) throw() :
+            repo(),
+            dims(2)
+            {
+                repo[1] = c;
+            }
+
+            ~monochrome() throw()
+            {
+            }
+
+            rgba repo[2];
+            const size_t dims;
+        };
+
+        struct cold_to_hot
+        {
+            static const size_t dims = 5;
+            static const rgba   repo[dims];
         };
 
     }
 
 }
+
+#endif
 

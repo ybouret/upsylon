@@ -1,4 +1,6 @@
 #include "y/gfx/color/ramp/gradation.hpp"
+#include "y/gfx/color/ramp/tableau.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
 #include "y/concurrent/loop/simt.hpp"
@@ -44,6 +46,19 @@ Y_UTEST(ramp)
         pixmap<float>     pxm(img,apply,convert<float,rgb>::from);
         IMG.save(pxm,"pxm.png");
         IMG.save(pxm,"rmp.png", NULL,conv);
+
+        {
+            monochrome             mh( Y_RED );
+            tableau_of<monochrome> mt(mh);
+            color_ramp::mapping    mm(mt);
+            IMG.save(pxm,"mono.png", NULL,mm);
+        }
+        {
+            tableau_of<cold_to_hot> mt;
+            color_ramp::mapping     mm(mt);
+            IMG.save(pxm,"cth.png", NULL,mm);
+        }
+
 
 
 
