@@ -1,4 +1,5 @@
 #include "y/gfx/ops/gaussian-blur.hpp"
+#include "y/gfx/stack.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
@@ -13,11 +14,38 @@ using namespace graphic;
 namespace
 {
 
+    static float sigma = 2.7f;
+
     template <typename T> static inline
-    void do_blur(const pixmap<rgb> &img)
+    void do_blur(const pixmap<rgb> &img,
+                 broker            &apply,
+                 const char        *sfx)
     {
-        const string &id = type_name_of<T>();
-        std::cerr << "handling with " << id << std::endl;
+        static const unit_t max_half = 4;
+        static const unit_t num      = 1+max_half;
+        static const unit_t count    = num*num;
+
+        const string filename = string("blur") + sfx;
+        std::cerr << "<" << filename << ">" << std::endl;
+        const pixmap<T> src(img,apply,convert<T,rgb>::from);
+
+        stack<T> stk(num*num,img.w,img.h);
+
+        unit_t idx=0;
+        for(unit_t dx=0;dx<num;++dx)
+        {
+            for(unit_t dy=0;dy<num;++dy)
+            {
+                pixmap<T>           &tgt = stk[idx++];
+                gaussian_blur<float> blr(1+2*dx,1+2*dy,sigma);
+                blr.cover(tgt,apply,src);
+            }
+        }
+        assert(count==idx);
+
+        stk.save_tiff(filename,0,count);
+        std::cerr << std::endl;
+
     }
     
 }
@@ -26,8 +54,7 @@ Y_UTEST(blur)
 {
     Y_USE_IMG();
     
-    float sigma = 2.7f;
-    
+
     if(argc>1)
     {
         sigma = string_convert::to<float>(argv[1],"sigma");
@@ -50,9 +77,7 @@ Y_UTEST(blur)
         
         IMG.save(img,"img.png");
 
-        do_blur<rgb>(img);
-        do_blur<float>(img);
-        do_blur<uint8_t>(img);
+
 
 
         {
@@ -90,7 +115,11 @@ Y_UTEST(blur)
             b.cover(pxm1,par,img1);
             IMG.save(pxm1,"blur1-par.png");
         }
-        
+
+        do_blur<rgb>(img,par,"3.tif");
+        do_blur<float>(img,par,"f.tif");
+        do_blur<uint8_t>(img,par,"1.tif");
+
     }
     
     
