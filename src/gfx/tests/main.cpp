@@ -1,6 +1,6 @@
 #include "y/utest/driver.hpp"
 
-Y_UTEST_INIT(16)
+Y_UTEST_INIT(32)
 {
     Y_UTEST(area);
     Y_UTEST(bitmap);
@@ -18,5 +18,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(named);
     Y_UTEST(blur);
     Y_UTEST(patch);
+    Y_UTEST(ramp);
 }
 Y_UTEST_EXEC()

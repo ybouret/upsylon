@@ -420,6 +420,12 @@ SET(gfx_color_srcs ${gfx_color_decl} ${gfx_color_code})
 SOURCE_GROUP( gfx/color FILES ${gfx_color_srcs} )
 INSTALL( FILES ${gfx_color_decl} DESTINATION include/y/gfx/color )
 
+FILE(GLOB gfx_color_ramp_decl y/gfx/color/ramp/*.hpp)
+FILE(GLOB gfx_color_ramp_code y/gfx/color/ramp/*.cpp)
+SET(gfx_color_ramp_srcs ${gfx_color_ramp_decl} ${gfx_color_ramp_code})
+SOURCE_GROUP( gfx/color/ramp FILES ${gfx_color_ramp_srcs} )
+INSTALL( FILES ${gfx_color_ramp_decl} DESTINATION include/y/gfx/color/ramp )
+
 ADD_LIBRARY(y STATIC 
 ${main_srcs} 
 ${os_srcs}
@@ -465,7 +471,7 @@ ${counting_srcs}
 ${tensor_srcs}
 ${yap_srcs}  ${yap_natural_srcs}  ${yap_integer_srcs} ${yap_prime_srcs}
 ${jive_srcs} ${jive_pattern_srcs} ${jive_pattern_basic_srcs} ${jive_pattern_logic_srcs} ${jive_pattern_joker_srcs}
-${gfx_srcs} ${gfx_color_srcs}
+${gfx_srcs} ${gfx_color_srcs} ${gfx_color_ramp_srcs}
 )
  
 INSTALL( TARGETS y ARCHIVE DESTINATION lib )

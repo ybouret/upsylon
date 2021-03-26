@@ -24,6 +24,8 @@ add_test(blobs   test-gfx blobs   ${IMG})
 add_test(edges   test-gfx edges   ${IMG} 1.2)
 add_test(blur    test-gfx blur    2.1 ${IMG})
 add_test(patch   test-gfx patch)
+add_test(ramp    test-gfx ramp)
+
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>

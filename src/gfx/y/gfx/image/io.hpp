@@ -68,6 +68,6 @@ namespace upsylon
 #define Y_IMAGE()   upsylon::graphic::image::io::instance().standard()
 
 //! define the local IMG
-#define Y_USE_IMG() upsylon::graphic::image::io &IMG = Y_IMAGE()
+#define Y_USE_IMG() upsylon::graphic::image::io &IMG = Y_IMAGE(); (void)IMG
 
 #endif
