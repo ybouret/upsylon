@@ -48,7 +48,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(serial);
-            const context     single; //!< 1.0
+            const context     myself; //!< 1.0
+            const anchor      single; //!< myself
             fake_lock         access; //!< to call jobs
         };
 

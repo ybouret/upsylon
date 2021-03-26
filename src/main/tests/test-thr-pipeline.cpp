@@ -48,7 +48,8 @@ namespace {
             return os;
         }
         
-        void compute(const context &, lockable &) throw()
+        void compute(const concurrent::anchor  &,
+                     lockable                  &) throw()
         {
             double localSum = 0;
             size_t i=offset;

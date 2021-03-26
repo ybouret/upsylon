@@ -8,7 +8,6 @@
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/sync/condition.hpp"
 #include "y/core/inode.hpp"
-#include "y/type/authority.hpp"
 
 namespace upsylon
 {

@@ -6,19 +6,25 @@
 #include "y/functor.hpp"
 #include "y/container/sequence.hpp"
 #include "y/concurrent/context.hpp"
+#include "y/type/authority.hpp"
 
 namespace upsylon
 {
     namespace concurrent
     {
 
+        //______________________________________________________________________
+        //
+        //! alias a context to provide info to jobs
+        //______________________________________________________________________
+        typedef authority<const context> anchor;
 
         //______________________________________________________________________
         //
         //
         //! job definitions
         /**
-         the context of the calling thread is provided
+         the (anchored-)context of the calling thread is provided
          - for information
          - if some thread-specific data is to be accessed
          */
@@ -26,11 +32,11 @@ namespace upsylon
         //______________________________________________________________________
         struct job
         {
-            typedef TL2(const context &, lockable&) args;
-            typedef unsigned long                   uuid;  //!< for management
-            typedef functor<void,args>              type;  //!< generic job
-            typedef addressable<uuid>               uuids; //!< interface to uuids
-            typedef accessible<type>                batch; //!< interface to types
+            typedef TL2(const anchor &, lockable&) args;  //!< arguments for jobs
+            typedef unsigned long                  uuid;  //!< for management
+            typedef functor<void,args>             type;  //!< generic job
+            typedef addressable<uuid>              uuids; //!< interface to uuids
+            typedef accessible<type>               batch; //!< interface to types
 
             //! helper to precompile some jobs
             template <typename OBJECT, typename METHOD_POINTER> static inline

@@ -10,7 +10,7 @@ namespace upsylon
         {
         }
         
-        serial:: serial() throw() : single(), access()
+        serial:: serial() throw() : myself(), single(myself), access()
         {
         }
 
