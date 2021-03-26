@@ -5,13 +5,20 @@
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
+#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace graphic;
 
 namespace
 {
-    
+
+    template <typename T> static inline
+    void do_blur(const pixmap<rgb> &img)
+    {
+        const string &id = type_name_of<T>();
+        std::cerr << "handling with " << id << std::endl;
+    }
     
 }
 
@@ -42,7 +49,12 @@ Y_UTEST(blur)
         broker             par(parEngine,img);
         
         IMG.save(img,"img.png");
-        
+
+        do_blur<rgb>(img);
+        do_blur<float>(img);
+        do_blur<uint8_t>(img);
+
+
         {
             pixmap<rgb> pxm(img.w,img.h);
             
