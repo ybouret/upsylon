@@ -7,8 +7,8 @@
 #include "y/concurrent/task/contract.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/sync/condition.hpp"
-#include "y/type/authority.hpp"
 #include "y/core/inode.hpp"
+#include "y/type/authority.hpp"
 
 namespace upsylon
 {

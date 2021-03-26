@@ -10,13 +10,13 @@ namespace upsylon
         {
         }
         
-        serial:: serial() throw() : access()
+        serial:: serial() throw() : single(), access()
         {
         }
 
         job::uuid serial:: yield( const job::type &J )
         {
-            aliasing::_(J)(access);
+            aliasing::_(J)(single,access);
             return ++jid;
         }
 

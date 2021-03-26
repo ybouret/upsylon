@@ -17,6 +17,7 @@ typedef arc_ptr<SIMT>    Threads;
 
 
 Y_SOAK_DERIVED(Engine,Threads);
+
 // some declaration(s)
 static int num_procs;
 

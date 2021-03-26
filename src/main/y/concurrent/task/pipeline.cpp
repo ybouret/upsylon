@@ -165,6 +165,7 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
             // waiting on a LOCKED mutex
             //
             //------------------------------------------------------------------
+            const context &anchor = *replica;
         STANDBY:
             replica->wait(access);
             
@@ -188,7 +189,7 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
                 
                 {
                     access.unlock();
-                    aliasing::_(replica->deal->plan)(access);
+                    aliasing::_(replica->deal->plan)(anchor,access);
                     access.lock();
                 }
                 

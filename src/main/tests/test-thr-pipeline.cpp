@@ -48,7 +48,7 @@ namespace {
             return os;
         }
         
-        void compute(lockable &) throw()
+        void compute(const context &, lockable &) throw()
         {
             double localSum = 0;
             size_t i=offset;
@@ -82,7 +82,7 @@ namespace {
 
 Y_UTEST(thr_pipeline)
 {
-    
+
     size_t N = 8;
     if(argc>1)
     {

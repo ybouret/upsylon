@@ -4,25 +4,33 @@
 #define Y_CONCURRENT_TASK_TYPE_INCLUDED 1
 
 #include "y/functor.hpp"
-#include "y/sequence/addressable.hpp"
 #include "y/container/sequence.hpp"
+#include "y/concurrent/context.hpp"
 
 namespace upsylon
 {
     namespace concurrent
     {
+
+
         //______________________________________________________________________
         //
         //
         //! job definitions
+        /**
+         the context of the calling thread is provided
+         - for information
+         - if some thread-specific data is to be accessed
+         */
         //
         //______________________________________________________________________
         struct job
         {
-            typedef unsigned long                uuid;  //!< for management
-            typedef functor<void,TL1(lockable&)> type;  //!< generic job
-            typedef addressable<uuid>            uuids; //!< interface to uuids
-            typedef accessible<type>             batch; //!< interface to types
+            typedef TL2(const context &, lockable&) args;
+            typedef unsigned long                   uuid;  //!< for management
+            typedef functor<void,args>              type;  //!< generic job
+            typedef addressable<uuid>               uuids; //!< interface to uuids
+            typedef accessible<type>                batch; //!< interface to types
 
             //! helper to precompile some jobs
             template <typename OBJECT, typename METHOD_POINTER> static inline
