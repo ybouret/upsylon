@@ -11,43 +11,71 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! interface for color ramps
+        //
+        //______________________________________________________________________
         class color_ramp
         {
         public:
-            virtual ~color_ramp() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~color_ramp() throw(); //!< cleanup
 
-            virtual size_t      dimensions() const throw() = 0;
-            virtual const rgba *repository() const throw() = 0;
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual size_t      dimensions() const throw() = 0; //!< registered colors
+            virtual const rgba *repository() const throw() = 0; //!< first color address
 
-            //! interpolate rgba with 0<=u<=1
-            rgba get(const float u) const throw();
-
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            rgba get(const float u) const throw(); //!< interpolate rgba with 0<=u<=1
 
         protected:
-            explicit color_ramp() throw();
+            explicit color_ramp() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(color_ramp);
 
         public:
+
+            //__________________________________________________________________
+            //
+            //! mapping floats to a color ramp
+            //__________________________________________________________________
             class mapping : public type_to_rgba
             {
             public:
-                virtual ~mapping() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~mapping() throw();                             //!< cleanup
                 explicit mapping(const color_ramp &ramp_,
                                  const float       vmin_=0.0f,
-                                 const float       vmax_=1.0f) throw();
+                                 const float       vmax_=1.0f) throw(); //!< setup
 
+                //__________________________________________________________________
+                //
+                // interface
+                //__________________________________________________________________
                 virtual unit_t depth()                  const throw(); //!< sizeof(float)
                 virtual rgba   operator()(const void *) const throw(); //!< using ramp..
 
-
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(mapping);
                 const float       vmin;
                 const float       vmax;
                 const float       scal;
                 const color_ramp &ramp;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(mapping);
             };
         };
 

@@ -14,16 +14,32 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //! base class for a dynamic gradation
+        //______________________________________________________________________
         typedef vector<rgba,memory::dyadic> gradation_;
 
+        //______________________________________________________________________
+        //
+        //! gradation to produce a color ramp
+        //______________________________________________________________________
         class gradation : public color_ramp, public gradation_
         {
         public:
-            virtual ~gradation() throw();
-            explicit gradation(const size_t n=0);
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~gradation() throw();           //!< cleanup
+            explicit gradation(const size_t n=0);   //!< setup
 
-            virtual size_t      dimensions() const throw();
-            virtual const rgba *repository() const throw();
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
+            virtual size_t      dimensions() const throw(); //!< size()
+            virtual const rgba *repository() const throw(); //!< first color
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gradation);
