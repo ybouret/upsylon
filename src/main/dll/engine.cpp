@@ -36,7 +36,7 @@ int Engine::num_procs = 0;
 
 static inline void enter() throw()
 {
-    soak::print(stderr,"<%s.dll>\n",Engine::call_sign);
+    soak::print(stderr,"<C++ %s.dll Enter>\n",Engine::call_sign);
     soak::verbose = true;
 }
 
@@ -44,7 +44,7 @@ static inline void enter() throw()
 
 static inline void leave() throw()
 {
-    soak::print(stderr,"<%s.dll/>\n",Engine::call_sign);
+    soak::print(stderr,"<C++ %s.dll Leave/>\n",Engine::call_sign);
 }
 
 
