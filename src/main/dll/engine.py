@@ -10,10 +10,10 @@ class Engine:
 		self.Init.argtypes = [c_uint]
 		self.Init.restype  = c_int
 		if( 0 != self.Init(num_procs) ):
-			print('error')
+			raise OSError('C++ code failure')
 	
 	def __del__(self):
 		self.Quit()
-		print('<Engine Python Quit')
+		print('<Engine Python Quit>')
 		
 		
