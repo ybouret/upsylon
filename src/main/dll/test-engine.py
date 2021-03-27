@@ -1,24 +1,8 @@
 from ctypes import *
 from engine import Engine
 
-e = Engine("./engine.dll",0)
-
-# m = cdll.LoadLibrary("./engine.dll")
-# EngineInit          = m.EngineInit
-# EngineInit.argtypes = [c_uint]
-# EngineInit.restype  = c_int
-
-# EngineQuit = m.EngineQuit
+engine = Engine("./engine.dll",0)
  
-# status = EngineInit(0)
-# print(status)
+engine.Quit()
 
-
-
-# EngineQuit()
-
-# status = EngineInit(2)
-# print(status)
-
-
-# EngineQuit()
+engine.Init(2)
