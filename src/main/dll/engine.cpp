@@ -14,34 +14,68 @@ using namespace upsylon;
 
 typedef concurrent::simt SIMT;
 typedef arc_ptr<SIMT>    Threads;
+typedef memory::shack    Cache;
+typedef memory::shacks   Caches;
+
+ 
+
+//------------------------------------------------------------------------------
+//
+// Declare internal Code
+//
+//------------------------------------------------------------------------------
+
+Y_SOAK_DERIVED2(Engine,Threads,concurrent::runnable);
 
 
-
-Y_SOAK_DERIVED(Engine,Threads);
-
-// some declaration(s)
+// some declaration(s) to communitcate
 static int num_procs;
 
+Caches caches;
+
 // the constructor
-inline Engine() : Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
+inline Engine() :
+Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) ),
+caches( (**this).size(), upsylon::memory::shacks::construct_filled )
 {
     soak::print(stderr,"#threads=%u\n", unsigned( (**this).size() ) );
+    caches.make<double>();
 }
+
+// the C++ functions
+inline double Average(const double  *source,
+                      const unsigned length) throw()
+{
+    Y_SOAK_VERBOSE(soak::print(stderr, "<Engine::Average[%u]>\n",length));
+    struct ops
+    {
+    };
+    
+    return 0;
+    
+}
+
+inline virtual void run(const concurrent::context &ctx, lockable &) throw()
+{
+}
+
 
 Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
 
 int Engine::num_procs = 0;
 
-// interfacing
+//------------------------------------------------------------------------------
+//
+// done
+//
+//------------------------------------------------------------------------------
+
+// C-interfacing
 Y_DLL_EXTERN()
 
-Y_EXPORT double Y_DLL_API EngineAverage(const double *arr, const unsigned n) throw()
+Y_EXPORT double Y_DLL_API EngineAverage(const double *source, const unsigned length) throw()
 {
-    Engine *engine = Engine::_(); (void)engine;
-    assert(arr); assert(n>0);
-    double sum = 0;
-    for(unsigned i=0;i<n;++i) { sum += arr[i]; }
-    return sum/n;
+    return Engine::_().Average(source,length);
 }
 
 Y_DLL_FINISH()

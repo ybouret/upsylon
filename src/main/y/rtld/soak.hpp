@@ -87,9 +87,10 @@ namespace upsylon
             //! soname from call_sign
             static inline const char *soname() throw() { return APPLICATION::call_sign; }
             
-            static inline APPLICATION *_() throw() {
+            //! get initialized instance
+            static inline APPLICATION &_() throw() {
                 assert(instance);
-                return (APPLICATION *)instance;
+                return *(APPLICATION *)instance;
             }
             
         protected:
@@ -203,6 +204,14 @@ namespace upsylon
     //__________________________________________________________________________
 #define Y_SOAK_DERIVED(CLASS,BASE)       \
 /**/    Y_SOAK_DECL_(CLASS), public BASE \
+/**/    Y_SOAK_INIT_(CLASS)
+    
+    //__________________________________________________________________________
+    //
+    //! declare derived class
+    //__________________________________________________________________________
+#define Y_SOAK_DERIVED2(CLASS,BASE1,BASE2)              \
+/**/    Y_SOAK_DECL_(CLASS), public BASE1, public BASE2 \
 /**/    Y_SOAK_INIT_(CLASS)
     
 
