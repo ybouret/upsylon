@@ -17,9 +17,13 @@ class Engine:
             raise OSError('C++ code failure')
 
         # average function, arguments are defined with numpy
-        self.Average = self.lib.EngineAverage
+        self.Average         = self.lib.EngineAverage
         self.Average.restype = c_double
 
+        # process function, arguments are defined with numpy
+        self.Process         = self.lib.EngineProcess
+        self.Process.restype = c_int;
+        
     def __del__(self):
         self.Quit()
         print('<Engine Python Quit>')

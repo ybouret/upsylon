@@ -15,7 +15,7 @@ using namespace upsylon;
 
 typedef concurrent::simt  SIMT;
 typedef concurrent::runic Threads;
- 
+
 
 //------------------------------------------------------------------------------
 //
@@ -43,7 +43,7 @@ inline double Average(const double  *source,
                       const unsigned length) throw()
 {
     Y_SOAK_VERBOSE(soak::print(stderr, "<Engine::Average[%u]>\n",length));
- 
+    
     struct ops
     {
         const double  *source;
@@ -51,9 +51,9 @@ inline double Average(const double  *source,
         static inline void run(const concurrent::context &cntx,
                                memory::shack             &data,
                                void                      *args,
-                               lockable &sync) throw()
+                               lockable                  &sync) throw()
         {
-           
+            
             double local_sum = 0;
             
             {
@@ -88,6 +88,49 @@ inline double Average(const double  *source,
     
 }
 
+inline int Process(double *target, const double *source, const unsigned length) throw()
+{
+    Y_SOAK_VERBOSE(soak::print(stderr, "<Engine::Process[%u]>\n",length));
+    
+    struct ops
+    {
+        double       *target;
+        const double *source;
+        unsigned      length;
+        
+        static inline void run(const concurrent::context &cntx,
+                               memory::shack             &,
+                               void                      *args,
+                               lockable                  &sync) throw()
+        {
+            ops     &self   = *static_cast<ops *>(args);
+            unsigned offset = 0;
+            unsigned length = self.length;
+            cntx.split(length,offset);
+            
+            if(soak::verbose)
+            {
+                Y_LOCK(sync);
+                soak::print(stderr, "\t<Engine::Process@%s: #%u>\n", cntx.label, length);
+            }
+            
+            const double *source = self.source;
+            double       *target = self.target;
+            while(length-- > 0 )
+            {
+                target[offset] = source[offset];
+                ++offset;
+            }
+        }
+    };
+    
+    ops task = { target, source, length };
+    
+    (*this)( ops::run, &task );
+    
+    return 0;
+}
+
 
 Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
 
@@ -105,6 +148,11 @@ Y_DLL_EXTERN()
 Y_EXPORT double Y_DLL_API EngineAverage(const double *source, const unsigned length) throw()
 {
     return Engine::_().Average(source,length);
+}
+
+Y_EXPORT int Y_DLL_API EngineProcess(double *target, const double *source, const unsigned length) throw()
+{
+    return Engine::_().Process(target,source,length);
 }
 
 Y_DLL_FINISH()
