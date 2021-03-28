@@ -123,6 +123,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_topology);
     Y_UTEST(thr_thread);
     Y_UTEST(thr_loop);
+    Y_UTEST(thr_runic);
     Y_UTEST(thr_pi_simt);
     Y_UTEST(thr_pipeline);
     

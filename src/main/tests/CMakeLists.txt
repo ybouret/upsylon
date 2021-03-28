@@ -148,6 +148,7 @@ test-thr-context.cpp
 test-thr-topology.cpp
 test-thr-thread.cpp
 test-thr-loop.cpp
+test-thr-runic.cpp
 test-thr-pi-simt.cpp
 test-thr-pipeline.cpp
 )
@@ -155,6 +156,7 @@ ADD_TEST(thr:context    test-main thr_context)
 ADD_TEST(thr:topology   test-main thr_topology)
 ADD_TEST(thr:thread     test-main thr_thread)
 ADD_TEST(thr:loop       test-main thr_loop)
+ADD_TEST(thr:runic      test-main thr_runic)
 ADD_TEST(thr:pi_simt    test-main thr_pi_simt)
 ADD_TEST(thr:pipeline   test-main thr_pipeline)
 
