@@ -16,7 +16,7 @@ class Engine:
         if( 0 != self.Init(num_procs) ):
             raise OSError('C++ code failure')
 
-        # average function
+        # average function, arguments are defined with numpy
         self.Average = self.lib.EngineAverage
         self.Average.restype = c_double
 

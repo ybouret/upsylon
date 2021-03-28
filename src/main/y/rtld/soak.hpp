@@ -206,13 +206,6 @@ namespace upsylon
 /**/    Y_SOAK_DECL_(CLASS), public BASE \
 /**/    Y_SOAK_INIT_(CLASS)
     
-    //__________________________________________________________________________
-    //
-    //! declare derived class
-    //__________________________________________________________________________
-#define Y_SOAK_DERIVED2(CLASS,BASE1,BASE2)              \
-/**/    Y_SOAK_DECL_(CLASS), public BASE1, public BASE2 \
-/**/    Y_SOAK_INIT_(CLASS)
     
 
     

@@ -1,5 +1,6 @@
 
 #include "y/rtld/soak.hpp"
+#include "y/concurrent/loop/runic.hpp"
 #include "y/concurrent/loop/simt.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/arc.hpp"
@@ -12,11 +13,8 @@ using namespace upsylon;
 
 
 
-typedef concurrent::simt SIMT;
-typedef arc_ptr<SIMT>    Threads;
-typedef memory::shack    Cache;
-typedef memory::shacks   Caches;
-
+typedef concurrent::simt  SIMT;
+typedef concurrent::runic Threads;
  
 
 //------------------------------------------------------------------------------
@@ -25,21 +23,19 @@ typedef memory::shacks   Caches;
 //
 //------------------------------------------------------------------------------
 
-Y_SOAK_DERIVED2(Engine,Threads,concurrent::runnable);
+Y_SOAK_DERIVED(Engine,Threads);
 
 
 // some declaration(s) to communitcate
 static int num_procs;
 
-Caches caches;
 
 // the constructor
 inline Engine() :
-Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) ),
-caches( (**this).size(), upsylon::memory::shacks::construct_filled )
+Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
 {
     soak::print(stderr,"#threads=%u\n", unsigned( (**this).size() ) );
-    caches.make<double>();
+    make<double>();
 }
 
 // the C++ functions
@@ -47,16 +43,49 @@ inline double Average(const double  *source,
                       const unsigned length) throw()
 {
     Y_SOAK_VERBOSE(soak::print(stderr, "<Engine::Average[%u]>\n",length));
+ 
     struct ops
     {
+        const double  *source;
+        unsigned       length;
+        static inline void run(const concurrent::context &cntx,
+                               memory::shack             &data,
+                               void                      *args,
+                               lockable &sync) throw()
+        {
+           
+            double local_sum = 0;
+            
+            {
+                ops     &self   = *static_cast<ops *>(args);
+                unsigned offset = 0;
+                unsigned length = self.length;
+                cntx.split(length,offset);
+                
+                if(soak::verbose)
+                {
+                    Y_LOCK(sync);
+                    soak::print(stderr, "\t<Engine::Average@%s: #%u>\n", cntx.label, length);
+                }
+                
+                const double *source = self.source;
+                while(length-- > 0 )
+                {
+                    local_sum += source[offset++];
+                }
+            }
+            
+            data.as<double>() = local_sum;
+        }
+        
     };
     
-    return 0;
+    ops task = { source, length };
     
-}
-
-inline virtual void run(const concurrent::context &ctx, lockable &) throw()
-{
+    (*this)( ops::run, &task );
+    
+    return sum<double>()/length;
+    
 }
 
 

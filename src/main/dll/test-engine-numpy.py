@@ -1,1 +1,1 @@
-from ctypes import *from engine import Engineimport numpy as npengine = Engine("./engine.dll",1)engine.Average.argtypes = [np.ctypeslib.ndpointer(dtype=np.float64,ndim=1,flags='C_CONTIGUOUS')]arr = np.array([1,2,3,4.2],dtype=np.float64)print(arr)print(engine.Average(arr,arr.size))
+from ctypes import *from engine import Engineimport numpy as npengine = Engine("./engine.dll",4)engine.Average.argtypes = [np.ctypeslib.ndpointer(dtype=np.float64,ndim=1,flags='C_CONTIGUOUS')]arr = np.array([1,2,3.2],dtype=np.float64)print(arr)print(engine.Average(arr,arr.size))
