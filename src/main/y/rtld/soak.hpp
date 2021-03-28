@@ -87,6 +87,10 @@ namespace upsylon
             //! soname from call_sign
             static inline const char *soname() throw() { return APPLICATION::call_sign; }
             
+            static inline APPLICATION *_() throw() {
+                assert(instance);
+                return (APPLICATION *)instance;
+            }
             
         protected:
             //! setup

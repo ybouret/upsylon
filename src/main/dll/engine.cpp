@@ -3,6 +3,7 @@
 #include "y/concurrent/loop/simt.hpp"
 #include "y/exception.hpp"
 #include "y/ptr/arc.hpp"
+#include "y/memory/shacks.hpp"
 
 #include <cmath>
 #include <cstdio>
@@ -31,7 +32,19 @@ Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
 
 int Engine::num_procs = 0;
 
+// interfacing
+Y_DLL_EXTERN()
 
+Y_EXPORT double Y_DLL_API EngineAverage(const double *arr, const unsigned n) throw()
+{
+    Engine *engine = Engine::_(); (void)engine;
+    assert(arr); assert(n>0);
+    double sum = 0;
+    for(unsigned i=0;i<n;++i) { sum += arr[i]; }
+    return sum/n;
+}
+
+Y_DLL_FINISH()
 
 
 static inline void enter() throw()
