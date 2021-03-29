@@ -22,12 +22,12 @@ namespace upsylon
             assert(Size>0);
             assert(Rank>=0);
             assert(Rank<Size);
-            T todo(length/Size);
+            T todo = T(U(length)/Size);
             for(U r=1;r<=Rank;++r)
             {
                 length -= todo;
                 offset += todo;
-                todo    = length/(Size-r);
+                todo    = T( U(length)/(Size-r) );
             }
             length = todo;
         }

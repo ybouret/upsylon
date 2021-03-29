@@ -66,8 +66,7 @@ namespace upsylon
         
         //! internal safe printf
         static void        print(FILE * stream, const char * format, ...) throw();
-        static bool        verbose;               //!< verbose flag
-        static inline void nope() throw() {}      //!< nope for leave/enter in dll
+        static bool        verbose; //!< verbose flag
 
         //! helper for verbose messages
         struct message
@@ -113,7 +112,7 @@ namespace upsylon
             //! cleanup
             inline static void quit() throw()
             {
-                Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> quit]\n",soname()));
+                message::disp(soname(),message::quit);
                 if(instance)
                 {
                     delete instance;
@@ -122,18 +121,17 @@ namespace upsylon
             }
             
             //! create/recall
-            inline static
-            APPLICATION *init() throw()
+            inline static APPLICATION *init() throw()
             {
                 Y_SOAK_TRY(soname())
                 {
                     if(instance)
                     {
-                        Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> call]\n",soname()));
+                        message::disp(soname(),message::call);
                     }
                     else
                     {
-                        Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> quit]\n",soname()));
+                        message::disp(soname(),message::init);
                         instance = (volatile APPLICATION *) new APPLICATION();
                     }
                     return (APPLICATION *)instance;
@@ -174,6 +172,11 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //! finalize the code
+    /**
+     - export a CLASSQuit function to delete instance
+     - export a CLASSInit(PARAMS) function, performing LOADER code before
+     calling the internal CLASS::Init()
+     */
     //__________________________________________________________________________
 #define Y_SOAK_FINISH(CLASS,PARAMS,LOADER)                               \
 /**/    private:                                                         \
@@ -225,7 +228,7 @@ namespace upsylon
     //! declare exported public function
     //__________________________________________________________________________
 #define Y_SOAK_PUBLIC(RETURN_TYPE,PROTO) \
-Y_DLL_EXTERN() \
+Y_DLL_EXTERN()                           \
 Y_EXPORT RETURN_TYPE Y_DLL_API PROTO
 
     //__________________________________________________________________________
