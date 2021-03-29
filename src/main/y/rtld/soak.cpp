@@ -18,7 +18,7 @@ namespace upsylon
     bool       soak:: verbose = false;
 
 
-    const char soak:: message:: fmt[]     = "-- [soak::app<%s> %s]\n";
+    const char soak:: message:: fmt[]     = "[[soak::app<%s> %s]]\n";
     const char soak:: message:: init[]    = "init";
     const char soak:: message:: call[]    = "call";
     const char soak:: message:: quit[]    = "quit";
