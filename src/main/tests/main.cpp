@@ -118,6 +118,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(pq);
     Y_UTEST(const_field);
     Y_UTEST(for_each);
+    Y_UTEST(hunt);
 
     Y_UTEST(thr_context);
     Y_UTEST(thr_topology);

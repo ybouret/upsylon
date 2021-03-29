@@ -267,6 +267,7 @@ test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp t
 test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
 test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp
 test-crates.cpp
+test-hunt.cpp
 )
 
 ADD_TEST(data:matrix      test-main matrix)
@@ -287,6 +288,7 @@ ADD_TEST(data:query       test-main query ${HERE}/words.db)
 ADD_TEST(data:pq          test-main pq)
 ADD_TEST(data:factory     test-main factory)
 ADD_TEST(data:tensors     test-main tensors)
+ADD_TEST(data:hunt        test-main hunt)
 
 SOURCE_GROUP(associative FILES
 test-lexicon.cpp
