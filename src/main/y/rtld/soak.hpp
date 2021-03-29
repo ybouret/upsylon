@@ -206,9 +206,22 @@ namespace upsylon
 /**/    Y_SOAK_DECL_(CLASS), public BASE \
 /**/    Y_SOAK_INIT_(CLASS)
     
+
+    //__________________________________________________________________________
+    //
+    //! declare exported public function
+    //__________________________________________________________________________
+#define Y_SOAK_PUBLIC(RETURN_TYPE,PROTO) \
+Y_DLL_EXTERN() \
+Y_EXPORT RETURN_TYPE Y_DLL_API PROTO
+
+    //__________________________________________________________________________
+    //
+    //! finish exported function
+    //__________________________________________________________________________
+#define Y_SOAK_RETURN()  Y_DLL_FINISH()
     
 
-    
 }
 
 #endif

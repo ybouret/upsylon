@@ -19,18 +19,24 @@ typedef concurrent::runic Threads;
 
 //------------------------------------------------------------------------------
 //
-// Declare internal Code
+// Declare main class
+//
+//------------------------------------------------------------------------------
+Y_SOAK_DERIVED(Engine,Threads);
+
+//------------------------------------------------------------------------------
+//
+// some declaration(s) to communicate
 //
 //------------------------------------------------------------------------------
 
-Y_SOAK_DERIVED(Engine,Threads);
-
-
-// some declaration(s) to communitcate
 static int num_procs;
 
-
+//------------------------------------------------------------------------------
+//
 // the constructor
+//
+//------------------------------------------------------------------------------
 inline Engine() :
 Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
 {
@@ -38,7 +44,11 @@ Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
     make<double>();
 }
 
-// the C++ functions
+//------------------------------------------------------------------------------
+//
+// methods
+//
+//------------------------------------------------------------------------------
 inline double Average(const double  *source,
                       const unsigned length) throw()
 {
@@ -88,6 +98,8 @@ inline double Average(const double  *source,
     
 }
 
+
+
 inline int Process(double *target, const double *source, const unsigned length) throw()
 {
     Y_SOAK_VERBOSE(soak::print(stderr, "<Engine::Process[%u]>\n",length));
@@ -136,27 +148,34 @@ Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
 
 int Engine::num_procs = 0;
 
+
+
 //------------------------------------------------------------------------------
 //
-// done
+// main class is done
 //
 //------------------------------------------------------------------------------
 
-// C-interfacing
-Y_DLL_EXTERN()
-
-Y_EXPORT double Y_DLL_API EngineAverage(const double *source, const unsigned length) throw()
+Y_SOAK_PUBLIC(double,EngineAverage(const double *source, const unsigned length) throw())
 {
+
     return Engine::_().Average(source,length);
 }
+Y_SOAK_RETURN()
 
-Y_EXPORT int Y_DLL_API EngineProcess(double *target, const double *source, const unsigned length) throw()
+Y_SOAK_PUBLIC(int,EngineProcess(double *target, const double *source, const unsigned length) throw())
 {
     return Engine::_().Process(target,source,length);
 }
+Y_SOAK_RETURN()
 
-Y_DLL_FINISH()
 
+
+//------------------------------------------------------------------------------
+//
+// option DLL init/quit
+//
+//------------------------------------------------------------------------------
 
 static inline void enter() throw()
 {
