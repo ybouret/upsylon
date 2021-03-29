@@ -18,23 +18,34 @@ namespace
         }
         const T xmax = x[n];
         std::cerr << x[1] << " -> " << x[n] << std::endl;
-        const T ampli = T(0.6) * xmax;
-        const T xhalf = xmax/2;
-
-        for(size_t iter=100;iter>0;--iter)
+        
+        std::cerr << "linear..." << std::endl;
+        for(T fac=0;fac<=1;fac+=T(0.01))
         {
-            size_t j=alea.leq(n+10);
-
-            hunt(xhalf+ampli*alea.symm<T>(),&x[1], n, j);
+            const T xx = clamp<T>(0,fac*xmax,xmax);
+            size_t  jlo = 1;
+            size_t  jhi = n;
+            hunt::track(xx, &x[1]-1, jlo, jhi);
         }
-
+       
+        std::cerr << "random..." << std::endl;
+        for(size_t iter=0;iter<10000;++iter)
+        {
+            const T xx  = clamp<T>(0,alea.to<T>()*xmax,xmax);
+            size_t  jlo = 1;
+            size_t  jhi = n;
+            hunt::track(xx, &x[1]-1, jlo, jhi);
+        }
+        
+      
+        
     }
 }
 
 
 Y_UTEST(hunt)
 {
-    
+    test_hunt<float>();
 }
 Y_UTEST_DONE()
 
