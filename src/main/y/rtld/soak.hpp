@@ -29,7 +29,7 @@ namespace upsylon
 /**/    }                                                                    \
 /**/    catch(...)                                                           \
 /**/    {                                                                    \
-/**/      soak::print(stderr,"[%s] %s",__soak_fn,soak::unhandled_exception); \
+/**/      soak::print(stderr,"[%s] %s",__soak_fn,soak::message::unknown);    \
 /**/    }                                                                    \
 /**/  } while(false)
     
@@ -66,9 +66,22 @@ namespace upsylon
         
         //! internal safe printf
         static void        print(FILE * stream, const char * format, ...) throw();
-        static const char  unhandled_exception[]; //!< "unhandled exception"
         static bool        verbose;               //!< verbose flag
         static inline void nope() throw() {}      //!< nope for leave/enter in dll
+
+        //! helper for verbose messages
+        struct message
+        {
+            static const char  unknown[];     //!< unknowned exception
+            static const char  fmt[];         //!< format to display
+            static const char  init[];        //!< "init"
+            static const char  quit[];        //!< "quit"
+            static const char  call[];        //!< "call"
+
+            //! Y_SOAK_VERBOSE(soak::print(stderr,fmt,id,msg))
+            static void        disp(const char *id, const char *msg) throw();
+        };
+
 
         //______________________________________________________________________
         //
@@ -94,13 +107,13 @@ namespace upsylon
             }
             
         protected:
-            //! setup
+            //! constructor
             inline explicit app() throw() {}
             
             //! cleanup
             inline static void quit() throw()
             {
-                Y_SOAK_VERBOSE(soak::print(stderr,"[%s] quit\n",soname()));
+                Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> quit]\n",soname()));
                 if(instance)
                 {
                     delete instance;
@@ -116,11 +129,11 @@ namespace upsylon
                 {
                     if(instance)
                     {
-                        Y_SOAK_VERBOSE(soak::print(stderr,"[%s] call\n",soname()));
+                        Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> call]\n",soname()));
                     }
                     else
                     {
-                        Y_SOAK_VERBOSE(soak::print(stderr,"[%s] init\n",soname()));
+                        Y_SOAK_VERBOSE(soak::print(stderr,"-- [soak::app<%s> quit]\n",soname()));
                         instance = (volatile APPLICATION *) new APPLICATION();
                     }
                     return (APPLICATION *)instance;

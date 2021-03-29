@@ -14,8 +14,22 @@ namespace upsylon
             va_end (args);
         }
     }
-    
-    const char soak:: unhandled_exception[] = "unhandled exception";
+
     bool       soak:: verbose = false;
+
+
+    const char soak:: message:: fmt[]     = "-- [soak::app<%s> %s]\n";
+    const char soak:: message:: init[]    = "init";
+    const char soak:: message:: call[]    = "call";
+    const char soak:: message:: quit[]    = "quit";
+    const char soak:: message:: unknown[] = "unhandled exception";
+
+    void soak:: message:: disp(const char *id, const char *msg) throw()
+    {
+        assert(id);
+        assert(msg);
+        Y_SOAK_VERBOSE(soak::print(stderr,fmt,id,msg));
+    }
+
 }
 
