@@ -9,8 +9,10 @@
 using namespace upsylon;
 using namespace graphic;
 
+
 Y_UTEST(ramp)
 {
+
     Y_USE_IMG();
 
     engine                  eng = new concurrent::simt();
