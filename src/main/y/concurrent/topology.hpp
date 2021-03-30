@@ -93,7 +93,7 @@ namespace upsylon
             template <typename ID>
             inline explicit topology(const ID &id) : nodes(), clusters()
             {
-                add(id);
+                parse(id);
             }
 
             //__________________________________________________________________
@@ -125,6 +125,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(topology);
 			void add_(nucleus::cluster *cls);
+            void parse(const string &info);
+            void parse(const char   *info);
         };
 
     }

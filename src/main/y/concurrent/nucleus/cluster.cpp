@@ -38,7 +38,7 @@ namespace upsylon
             static const char fn[] = "concurrent::cluster: ";
 
             cluster * cluster:: create(const size_t start,
-                                       const size_t width,
+                                       size_t       width,
                                        size_t       every)
             {
                 const size_t num_procs = hardware::nprocs();
@@ -46,13 +46,17 @@ namespace upsylon
                 {
                     throw exception("%sstart@%u>=%u",fn,unsigned(start),unsigned(num_procs));
                 }
+
                 const size_t max_width = num_procs-start;
+                if(width<=0) width     = max_width;
                 if(width>max_width)
                 {
                     throw exception("%swidth=%u>=%u",fn,unsigned(width),unsigned(max_width));
 
                 }
+
                 every = clamp<size_t>(1,every,width);
+
                 return new cluster(start,width,every);
             }
 

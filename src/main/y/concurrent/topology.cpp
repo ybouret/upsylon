@@ -87,6 +87,23 @@ namespace upsylon
             add(Y_CONCURRENT_TOPO_ARGS_);
         }
 
+
+        void topology:: parse(const string &info)
+        {
+            vector<string,memory::pooled> descriptions(4,as_capacity);
+            tokenizer<char>::split_with(descriptions,info,',');
+            for(size_t i=1;i<=descriptions.size();++i)
+            {
+                add(descriptions[i]);
+            }
+        }
+
+        void topology:: parse(const char *info)
+        {
+            const string _(info);
+            parse(_);
+        }
+
         topology:: topology() :
         nodes(),
         clusters()
@@ -94,12 +111,7 @@ namespace upsylon
             string info;
             if( environment::get(info,Y_NUM_THREADS) )
             {
-                vector<string,memory::pooled> descriptions(4,as_capacity);
-                tokenizer<char>::split_with(descriptions,info,',');
-                for(size_t i=1;i<=descriptions.size();++i)
-                {
-                    add(descriptions[i]);
-                }
+                parse(info);
             }
             else
             {

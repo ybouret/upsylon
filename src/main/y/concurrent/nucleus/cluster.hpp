@@ -41,7 +41,7 @@ namespace upsylon
 
                 //! setup with checking
                 static cluster *create(const size_t start_,
-                                       const size_t width_,
+                                       size_t       width_,
                                        const size_t every_);
 
                 //! parse with checking: width | start:width | start:width:every
