@@ -2,6 +2,7 @@
 #include "y/utest/run.hpp"
 #include <cstdio>
 #include "y/type/utils.hpp"
+#include "y/gfx/color/named.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -25,8 +26,13 @@ namespace {
     {
         const uint8_t cmin = min_of(fg,bg);
         const uint8_t cmax = max_of(fg,bg);
-        const uint8_t cmix = blend::mix(w,uint8_t(fg),uint8_t(bg));
+        const uint8_t cmix = blend::mixf(w,uint8_t(fg),uint8_t(bg));
         return cmin<=cmix && cmix <= cmax;
+    }
+
+    static inline bool within(const uint8_t a, const uint8_t b, const uint8_t c) throw()
+    {
+        return min_of(a,b) <= c && c <= max_of(a,b);
     }
 
 }
@@ -41,7 +47,7 @@ Y_UTEST(blend)
         Y_ASSERT( blend::shift[i] == i );
     }
 
-    std::cerr << "checking mix..." << std::endl;
+    std::cerr << "checking mixf..." << std::endl;
     for(int fg=0;fg<256;++fg)
     {
         for(int bg=0;bg<256;++bg)
@@ -54,6 +60,27 @@ Y_UTEST(blend)
             }
         }
     }
+
+    std::cerr << "checking mix..." << std::endl;
+
+    for(int i=0;i<Y_GFX_NAMED_COLORS;++i)
+    {
+        const rgb a = named_color::table[i];
+        for(int j=0;j<Y_GFX_NAMED_COLORS;++j)
+        {
+            const rgba b = named_color::table[j];
+            for(size_t iter=0;iter<128;++iter)
+            {
+                const rgb ab = blend::mix(alea.to<float>(),a,b);
+                Y_ASSERT( within(a.r,b.r,ab.r) );
+                Y_ASSERT( within(a.g,b.g,ab.g) );
+                Y_ASSERT( within(a.b,b.b,ab.b) );
+
+            }
+        }
+    }
+    
+
 
 
 }

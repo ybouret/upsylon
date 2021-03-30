@@ -63,6 +63,19 @@ namespace upsylon
                     return os;
                 }
 
+                //! integral comparison
+                friend inline bool operator==(const rgb &lhs, const rgb &rhs) throw()
+                {
+                    return (lhs.r==rhs.r) && (lhs.g==rhs.g) && (lhs.b==rhs.b);
+                }
+
+                //! integral comparison
+                friend inline bool operator!=(const rgb &lhs, const rgb &rhs) throw()
+                {
+                    return (lhs.r!=rhs.r) || (lhs.g!=rhs.g) || (lhs.b!=rhs.b);
+                }
+
+
             };
 
             //! RGBA
@@ -114,6 +127,25 @@ namespace upsylon
                 {
                     os << '(' << double(c.r) << ',' << double(c.g) << ',' << double(c.b) << ',' << double(c.a) << ')';
                     return os;
+                }
+
+
+                //! integral comparison
+                friend inline bool operator==(const rgba &lhs, const rgba &rhs) throw()
+                {
+                    return (lhs.r==rhs.r) && (lhs.g==rhs.g) && (lhs.b==rhs.b) && (lhs.a==rhs.a);
+                }
+
+                //! integral partial comparison
+                friend inline bool operator==(const rgb<T> &lhs, const rgba &rhs) throw()
+                {
+                    return (lhs.r==rhs.r) && (lhs.g==rhs.g) && (lhs.b==rhs.b);
+                }
+
+                //! integral partial comparison
+                friend inline bool operator==(const rgba &lhs, const rgb<T> &rhs) throw()
+                {
+                    return (lhs.r==rhs.r) && (lhs.g==rhs.g) && (lhs.b==rhs.b);
                 }
 
             };
