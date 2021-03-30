@@ -16,10 +16,10 @@ namespace {
         size_t count=1;
         for(int i=-255;i<=255;++i,++count)
         {
-            printf("%4d.0f,", i);
+            printf("%4d,", i);
             if(0==(++count%32)) printf("\n");
         }
-        printf(" 0.0f\n");
+        printf(" 0\n");
     }
 
     static inline bool check_blend(const float w, const int fg, const int bg)
@@ -40,11 +40,11 @@ namespace {
 
 Y_UTEST(blend)
 {
-    if(false) display_table();
+    if(true)         display_table();
     std::cerr << "checking table" << std::endl;
     for(int i=-255;i<=255;++i)
     {
-        Y_ASSERT( blend::shift[i] == i );
+        Y_ASSERT( blend::ishift[i] == i );
     }
 
     std::cerr << "checking mixf..." << std::endl;

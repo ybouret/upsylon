@@ -15,14 +15,33 @@ namespace upsylon
         struct blend
         {
 
-            static const float * const shift; //!< float[-255..255]
+            static const float * const fshift; //!< float[-255..255]
+            static const int   * const ishift; //!< float[-255..255]
 
             static inline
-            uint8_t mixf(const float   weight,
+            uint8_t mix1(const uint8_t alpha,
                          const uint8_t fg,
                          const uint8_t bg) throw()
             {
-                const float resf = shift[bg] + weight * shift[ int(fg) - int(bg) ];
+                switch(alpha)
+                {
+                    case 0x00: return bg;
+                    case 0xff: return fg;
+                    case 0x80: return uint8_t((unsigned(fg)+unsigned(bg))>>1);
+                    default:
+                        break;
+                }
+                const int FG = int ( unsigned(fg) << 8 );
+                const int BG = int(alpha) * ishift[ int(fg) - int(bg) ];
+                return unsigned(FG+BG)>>8;
+            }
+
+            static inline
+            uint8_t mixf(const float   alpha,
+                         const uint8_t fg,
+                         const uint8_t bg) throw()
+            {
+                const float resf = fshift[bg] + alpha * fshift[ int(fg) - int(bg) ];
                 return uint8_t( floorf(resf+0.5f) );
             }
 
