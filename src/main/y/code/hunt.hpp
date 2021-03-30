@@ -10,55 +10,26 @@
 namespace upsylon
 {
 
-    
+    //__________________________________________________________________________
+    //
+    //
+    //! hunting values withing increasing ranges
+    //
+    //__________________________________________________________________________
     struct hunt
     {
-        //______________________________________________________________________
-        //
-        //
-        //! x[jlo]<=x<=x[jhi] => x[jlo]<=xx<=x[jlo+1]
-        //
-        //______________________________________________________________________
-        template <typename T> static inline
-        size_t track(const T xx, const T x[], size_t jlo, size_t jhi) throw()
-        {
-            assert(xx>=x[jlo]);
-            assert(xx<=x[jhi]);
-            assert(jlo<jhi);
-            while(jhi-jlo>1)
-            {
-                const size_t jmid = (jlo+jhi)>>1;
-                const T      xmid = x[jmid];
-                if(xmid<xx)
-                {
-                    jlo = jmid;
-                }
-                else
-                {
-                    if(xx<xmid)
-                    {
-                        jhi = jmid;
-                    }
-                    else
-                    {
-                        return jmid;
-                    }
-                }
-            }
-            return jlo;
-        }
-
+        //! status of the last search
         enum status
         {
-            found_below = -1,
-            found_inner =  0,
-            found_above =  1,
+            found_below = -1, //!< below smallest value
+            found_inner =  0, //!< inner bracket
+            found_above =  1, //!< above greates valye
         };
 
         //______________________________________________________________________
         //
         //
-        //! look for x[j] <= xx <= x[j+1]
+        //! look for x[j] <= xx <= x[j+1], x[1..n]
         /**
          \param xx the value to locate
          \param x  array x[1..n], in increasing order
@@ -67,8 +38,8 @@ namespace upsylon
          */
         //
         //______________________________________________________________________
-        template <typename T> static inline
-        status find(const T xx, const T x[], const size_t n, size_t &j) throw()
+        template <typename T, typename SOURCE> static inline
+        status find(const T xx, SOURCE &x, const size_t n, size_t &j) throw()
         {
             //__________________________________________________________________
             //
@@ -113,7 +84,7 @@ namespace upsylon
                         //
                         // below current position
                         //______________________________________________________
-                        j = track(xx,x,1,jlo);
+                        j = track<T,SOURCE>(xx,x,1,jlo);
                         return found_inner;
                     }
                     else
@@ -126,7 +97,7 @@ namespace upsylon
                             //
                             // above current position
                             //__________________________________________________
-                            j = track(xx,x,jup,n);
+                            j = track<T,SOURCE>(xx,x,jup,n);
                             return found_inner;
                         }
                         else
@@ -143,8 +114,51 @@ namespace upsylon
                     }
                 }
             }
+        }
 
+        //______________________________________________________________________
+        //
+        //! find for x[1..x.size()]
+        //______________________________________________________________________
+        template <typename T, typename SOURCE> static inline
+        status find(const T xx, SOURCE &x, size_t &j) throw()
+        {
+            return find<T,SOURCE>(xx,x,x.size(),j);
+        }
 
+        //______________________________________________________________________
+        //
+        //
+        //! x[jlo]<=x<=x[jhi] => x[jlo]<=xx<=x[jlo+1]
+        //
+        //______________________________________________________________________
+        template <typename T, typename SOURCE> static inline
+        size_t track(const T xx, SOURCE &x, size_t jlo, size_t jhi) throw()
+        {
+            assert(xx>=x[jlo]);
+            assert(xx<=x[jhi]);
+            assert(jlo<jhi);
+            while(jhi-jlo>1)
+            {
+                const size_t jmid = (jlo+jhi)>>1;
+                const T      xmid = x[jmid];
+                if(xmid<xx)
+                {
+                    jlo = jmid;
+                }
+                else
+                {
+                    if(xx<xmid)
+                    {
+                        jhi = jmid;
+                    }
+                    else
+                    {
+                        return jmid;
+                    }
+                }
+            }
+            return jlo;
         }
         
     };

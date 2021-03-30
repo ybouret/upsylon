@@ -23,23 +23,25 @@ namespace
         std::cerr << x[1] << " -> " << x[n] << std::endl;
         
         std::cerr << "\ttrack linear..." << std::endl;
+        T *source = &x[1]-1;
         for(T fac=0;fac<=1;fac+=T(0.01))
         {
             const T xx = clamp<T>(0,fac*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            size_t  j   = hunt::track(xx, &x[1]-1, jlo, jhi);
+            size_t  j   = hunt::track(xx,source,jlo, jhi);
             Y_ASSERT(j>=jlo);
             Y_ASSERT(j<=jhi);
         }
-       
+
+#define ITER 100000
         std::cerr << "\ttrack random..." << std::endl;
-        for(size_t iter=0;iter<10000;++iter)
+        for(size_t iter=0;iter<ITER;++iter)
         {
             const T xx  = clamp<T>(0,alea.to<T>()*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            size_t  j   = hunt::track(xx, &x[1]-1, jlo, jhi);
+            size_t  j   = hunt::track(xx,source, jlo, jhi);
             Y_ASSERT(j>=jlo);
             Y_ASSERT(j<=jhi);
         }
@@ -48,10 +50,10 @@ namespace
         const T ampli = T(0.6) * xmax;
         const T xhalf = xmax/2;
         size_t  j     = 0;
-        for(size_t iter=0;iter<10000;++iter)
+        for(size_t iter=0;iter<ITER;++iter)
         {
             const T            xx  = xhalf + alea.symm<T>() * ampli;
-            const hunt::status res = hunt::find(xx,&x[1]-1,n,j);
+            const hunt::status res = hunt::find(xx,source,n,j);
             switch(res)
             {
                 case hunt::found_below: Y_ASSERT(xx<0);    break;
@@ -62,6 +64,11 @@ namespace
                     Y_ASSERT(xx>=x[j]);
                     Y_ASSERT(xx<=x[j+1]);
                     break;
+            }
+            {
+                size_t j2=0;
+                Y_ASSERT(res==hunt::find(xx,x,j2));
+                Y_ASSERT(j2==j);
             }
         }
         std::cerr << std::endl;
