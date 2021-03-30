@@ -65,7 +65,7 @@ namespace upsylon
         //______________________________________________________________________
         
         //! internal safe printf
-        static void        print(FILE * stream, const char * format, ...) throw();
+        static void        print(FILE * stream, const char * format, ...) throw() Y_PRINTF_CHECK(2,3);
         static bool        verbose; //!< verbose flag
 
         //! helper for verbose messages
