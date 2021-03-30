@@ -13,7 +13,12 @@ namespace upsylon
     
     struct hunt
     {
+        //______________________________________________________________________
+        //
+        //
         //! x[jlo]<=x<=x[jhi] => x[jlo]<=xx<=x[jlo+1]
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         size_t track(const T xx, const T x[], size_t jlo, size_t jhi) throw()
         {
@@ -50,10 +55,25 @@ namespace upsylon
             found_above =  1,
         };
 
-        //! x[j] <= xx <= x[j+1]
+        //______________________________________________________________________
+        //
+        //
+        //! look for x[j] <= xx <= x[j+1]
+        /**
+         \param xx the value to locate
+         \param x  array x[1..n], in increasing order
+         \param n  objects to match
+         \param j  result of a previous search
+         */
+        //
+        //______________________________________________________________________
         template <typename T> static inline
         status find(const T xx, const T x[], const size_t n, size_t &j) throw()
         {
+            //__________________________________________________________________
+            //
+            // routing according to n
+            //__________________________________________________________________
             switch(n)
             {
                 case  0: j=0; return found_below;                           // bad
@@ -64,74 +84,67 @@ namespace upsylon
 
             if(xx<x[1])
             {
+                //______________________________________________________________
+                //
                 // below smallest value
+                //______________________________________________________________
                 j=1; return found_below;
             }
             else
             {
-                if(x>x[n])
+                if(xx>x[n])
                 {
+                    //__________________________________________________________
+                    //
                     // above greatest value
+                    //__________________________________________________________
                     j=n; return found_above;
                 }
                 else
                 {
-
-                }
-            }
-
-
-#if 0
-
-            const size_t m   = n-1;
-            size_t       jlo = clamp<size_t>(1,j,m);
-            size_t       jup = jlo+1;
-            
-            if(xx<x[jlo])
-            {
-                if(xx<x[1])
-                {
-                    // extrapolate from x[1]..x[2]
-                    j=1;
-                    return found_below;
-                }
-                else
-                {
-                    jup = jlo;
-                    jlo = 1;
-                    goto BISECTION;
-                }
-            }
-            else
-            {
-                assert(xx>=x[jlo]);
-                if(xx>x[jup])
-                {
-                    if(xx>=x[m])
+                    //__________________________________________________________
+                    //
+                    // within range
+                    //__________________________________________________________
+                    const size_t jlo = clamp<size_t>(1,j,n-1);
+                    if(xx<x[jlo])
                     {
-                        // extrapolate from x[n-1]..x[n]
-                        j=m;
-                        return;
+                        //______________________________________________________
+                        //
+                        // below current position
+                        //______________________________________________________
+                        j = track(xx,x,1,jlo);
+                        return found_inner;
                     }
                     else
                     {
-                        jlo = jup;
-                        jup = n;
-                        goto BISECTION;
+                        assert(xx>=x[jlo]);
+                        const size_t jup = jlo+1;
+                        if(xx>x[jup])
+                        {
+                            //__________________________________________________
+                            //
+                            // above current position
+                            //__________________________________________________
+                            j = track(xx,x,jup,n);
+                            return found_inner;
+                        }
+                        else
+                        {
+                            assert(xx<=x[jup]);
+                            //__________________________________________________
+                            //
+                            // cache!
+                            //__________________________________________________
+                            j=jlo;
+                            return found_inner;
+                        }
+
                     }
-                    
-                }
-                else
-                {
-                    // xx <= x[jup] => cached
-                    return;
                 }
             }
-            
-        BISECTION:
-            assert(x[jlo]<=xx); assert(xx<=x[jup]);
-            j = track<T>(xx,x,jlo,jup);
-#endif
+
+
         }
         
     };
