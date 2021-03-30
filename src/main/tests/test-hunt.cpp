@@ -25,7 +25,9 @@ namespace
             const T xx = clamp<T>(0,fac*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            hunt::track(xx, &x[1]-1, jlo, jhi);
+            size_t  j   = hunt::track(xx, &x[1]-1, jlo, jhi);
+            Y_ASSERT(j>=jlo);
+            Y_ASSERT(j<=jhi);
         }
        
         std::cerr << "random..." << std::endl;
@@ -34,9 +36,13 @@ namespace
             const T xx  = clamp<T>(0,alea.to<T>()*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            hunt::track(xx, &x[1]-1, jlo, jhi);
+            size_t  j   = hunt::track(xx, &x[1]-1, jlo, jhi);
+            Y_ASSERT(j>=jlo);
+            Y_ASSERT(j<=jhi);
         }
-        
+
+
+
       
         
     }
@@ -46,6 +52,8 @@ namespace
 Y_UTEST(hunt)
 {
     test_hunt<float>();
+    test_hunt<double>();
+
 }
 Y_UTEST_DONE()
 
