@@ -75,7 +75,6 @@ Y_UTEST(blend)
                 Y_ASSERT( within(a.r,b.r,ab.r) );
                 Y_ASSERT( within(a.g,b.g,ab.g) );
                 Y_ASSERT( within(a.b,b.b,ab.b) );
-
             }
         }
     }
