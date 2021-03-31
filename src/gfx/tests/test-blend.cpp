@@ -26,7 +26,7 @@ namespace {
     {
         const uint8_t cmin = min_of(fg,bg);
         const uint8_t cmax = max_of(fg,bg);
-        const uint8_t cmix = blend_::mixf(w,uint8_t(fg),uint8_t(bg));
+        const uint8_t cmix = blend<float,uint8_t>::mix(w,uint8_t(fg),uint8_t(bg));
         return cmin<=cmix && cmix <= cmax;
     }
 
@@ -44,10 +44,10 @@ Y_UTEST(blend)
     std::cerr << "checking table" << std::endl;
     for(int i=-255;i<=255;++i)
     {
-        Y_ASSERT( blend_::ishift[i] == i );
+        Y_ASSERT( (blend<uint8_t,uint8_t>::shift[i] == i) );
     }
 
-    std::cerr << "checking mixf..." << std::endl;
+    std::cerr << "checking mix..." << std::endl;
     for(int fg=0;fg<256;++fg)
     {
         for(int bg=0;bg<256;++bg)
@@ -71,7 +71,7 @@ Y_UTEST(blend)
             const rgba b = named_color::table[j];
             for(size_t iter=0;iter<128;++iter)
             {
-                const rgb ab = blend_::mix(alea.to<float>(),a,b);
+                const rgb ab = blend<float,rgba>::mix(alea.to<float>(),a,b);
                 Y_ASSERT( within(a.r,b.r,ab.r) );
                 Y_ASSERT( within(a.g,b.g,ab.g) );
                 Y_ASSERT( within(a.b,b.b,ab.b) );

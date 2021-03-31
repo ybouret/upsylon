@@ -12,27 +12,38 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //! templates to implement 'mix' function
+        //______________________________________________________________________
         template <typename ALPHA, typename T>
-        struct blend
-        {
-            static T mix(const ALPHA alpha, const T fg, const T bg) throw();
-        };
+        struct blend;
 
-
+        //______________________________________________________________________
+        //
+        //! float with float => straighforward
+        //______________________________________________________________________
         template <>
         struct blend<float,float>
         {
+            //! floating point formula
             static inline float mix(const float alpha, const float fg, const float bg) throw()
             {
                 return bg + alpha*(fg-bg);
             }
         };
 
+        //______________________________________________________________________
+        //
+        //! blending with bytes
+        //______________________________________________________________________
         template <>
         struct blend<uint8_t,uint8_t>
         {
+            //! precomputed table
             static const int   * const shift; //!< int[-255..255]
 
+            //! alpha * fg + (255-alpha) *bg
             static inline
             uint8_t mix(const uint8_t alpha,
                         const uint8_t fg,
@@ -48,60 +59,114 @@ namespace upsylon
                 }
                 const int FG = int ( unsigned(fg) << 8 );
                 const int BG = int(alpha) * shift[ int(fg) - int(bg) ];
-                return unsigned(FG+BG)>>8;
+                return uint8_t(unsigned(FG+BG)>>8);
             }
         };
 
-
-
-
-        struct blend_
+        //______________________________________________________________________
+        //
+        //! blending bytes with float
+        //______________________________________________________________________
+        template <>
+        struct blend<float,uint8_t>
         {
+            //! precomputed table
+            static const float   * const shift; //!< int[-255..255]
 
-            static const float * const fshift; //!< float[-255..255]
-            static const int   * const ishift; //!< int[-255..255]
-
+            //! alpha * fg + (1-alpha) * bg
             static inline
-            uint8_t mix1(const uint8_t alpha,
-                         const uint8_t fg,
-                         const uint8_t bg) throw()
+            uint8_t mix(const float   alpha,
+                        const uint8_t fg,
+                        const uint8_t bg) throw()
             {
-                switch(alpha)
-                {
-                    case 0x00: return bg;
-                    case 0xff: return fg;
-                    case 0x80: return uint8_t((unsigned(fg)+unsigned(bg))>>1);
-                    default:
-                        break;
-                }
-                const int FG = int ( unsigned(fg) << 8 );
-                const int BG = int(alpha) * ishift[ int(fg) - int(bg) ];
-                return unsigned(FG+BG)>>8;
-            }
-
-            static inline
-            uint8_t mixf(const float   alpha,
-                         const uint8_t fg,
-                         const uint8_t bg) throw()
-            {
-                const float resf = fshift[bg] + alpha * fshift[ int(fg) - int(bg) ];
+                const float resf = shift[bg] + alpha * shift[ int(fg) - int(bg) ];
                 return uint8_t( floorf(resf+0.5f) );
             }
 
-            //! mix only rgb parts of LHS/RHS
-            template <typename LHS, typename RHS> static inline
-            rgb mix(const float w, const LHS lhs, const RHS rhs) throw()
+        };
+
+
+        //______________________________________________________________________
+        //
+        //! blending rgb with byte
+        //______________________________________________________________________
+        template <>
+        struct blend<uint8_t,rgb>
+        {
+            typedef blend<uint8_t,uint8_t> _; //!< bytewise ops
+
+            //! mix (r,g,b)
+            static inline
+            rgb mix(const uint8_t alpha, const rgb fg, const rgb bg) throw()
             {
-                return rgb(mixf(w,lhs.r,rhs.r),
-                           mixf(w,lhs.g,rhs.g),
-                           mixf(w,lhs.b,rhs.b));
+                return rgb(_::mix(alpha,fg.r,bg.r),
+                           _::mix(alpha,fg.g,bg.g),
+                           _::mix(alpha,fg.b,bg.b));
             }
-
-
-
 
         };
 
+        //______________________________________________________________________
+        //
+        //! blending rgba with byte
+        //______________________________________________________________________
+        template <>
+        struct blend<uint8_t,rgba>
+        {
+            typedef blend<uint8_t,uint8_t> _; //!< bytewise ops
+
+            //! mix (r,g,b) only
+            static inline
+            rgba mix(const uint8_t alpha, const rgba fg, const rgba bg) throw()
+            {
+                return rgba(_::mix(alpha,fg.r,bg.r),
+                            _::mix(alpha,fg.g,bg.g),
+                            _::mix(alpha,fg.b,bg.b));
+            }
+
+        };
+
+        //______________________________________________________________________
+        //
+        //! blending rgb with float
+        //______________________________________________________________________
+        template <>
+        struct blend<float,rgb>
+        {
+            typedef blend<float,uint8_t> _; //!< bytewise ops
+
+            //! mix (r,g,b)
+            static inline
+            rgb mix(const float alpha, const rgb fg, const rgb bg) throw()
+            {
+                return rgb(_::mix(alpha,fg.r,bg.r),
+                           _::mix(alpha,fg.g,bg.g),
+                           _::mix(alpha,fg.b,bg.b));
+            }
+
+        };
+
+        //______________________________________________________________________
+        //
+        //! blending rgba with float
+        //______________________________________________________________________
+        template <>
+        struct blend<float,rgba>
+        {
+            typedef blend<float,uint8_t> _; //!< bytewise ops
+
+            //! mix (r,g,b) only
+            static inline
+            rgba mix(const uint8_t alpha, const rgba fg, const rgba bg) throw()
+            {
+                return rgba(_::mix(alpha,fg.r,bg.r),
+                            _::mix(alpha,fg.g,bg.g),
+                            _::mix(alpha,fg.b,bg.b));
+            }
+
+        };
+
+        
 
     }
 
