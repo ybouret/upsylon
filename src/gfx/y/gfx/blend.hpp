@@ -12,7 +12,24 @@ namespace upsylon
     namespace graphic
     {
 
+        template <typename ALPHA, typename T>
         struct blend
+        {
+            static T mix(const ALPHA alpha, const T fg, const T bg) throw();
+        };
+
+
+        template <>
+        struct blend<float,float>
+        {
+            static inline float mix(const float alpha, const float fg, const float bg) throw()
+            {
+                return bg + alpha*(fg-bg);
+            }
+        };
+
+
+        struct blend_
         {
 
             static const float * const fshift; //!< float[-255..255]

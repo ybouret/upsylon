@@ -43,7 +43,7 @@ namespace upsylon
             241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0
         };
 
-        const float * const blend::fshift = blend_fdelta+255;
+        const float * const blend_::fshift = blend_fdelta+255;
 
 
         static
@@ -83,7 +83,7 @@ namespace upsylon
             241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0
         };
 
-        const int * const blend::ishift = blend_idelta+255;
+        const int * const blend_::ishift = blend_idelta+255;
 
 
 
