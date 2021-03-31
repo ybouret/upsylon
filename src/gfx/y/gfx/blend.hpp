@@ -28,12 +28,38 @@ namespace upsylon
             }
         };
 
+        template <>
+        struct blend<uint8_t,uint8_t>
+        {
+            static const int   * const shift; //!< int[-255..255]
+
+            static inline
+            uint8_t mix(const uint8_t alpha,
+                        const uint8_t fg,
+                        const uint8_t bg) throw()
+            {
+                switch(alpha)
+                {
+                    case 0x00: return bg;
+                    case 0xff: return fg;
+                    case 0x80: return uint8_t((unsigned(fg)+unsigned(bg))>>1);
+                    default:
+                        break;
+                }
+                const int FG = int ( unsigned(fg) << 8 );
+                const int BG = int(alpha) * shift[ int(fg) - int(bg) ];
+                return unsigned(FG+BG)>>8;
+            }
+        };
+
+
+
 
         struct blend_
         {
 
             static const float * const fshift; //!< float[-255..255]
-            static const int   * const ishift; //!< float[-255..255]
+            static const int   * const ishift; //!< int[-255..255]
 
             static inline
             uint8_t mix1(const uint8_t alpha,

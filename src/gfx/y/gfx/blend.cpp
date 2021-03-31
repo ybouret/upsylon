@@ -83,6 +83,9 @@ namespace upsylon
             241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 0
         };
 
+        const int * const blend<uint8_t,uint8_t>::shift = blend_idelta+255;
+
+
         const int * const blend_::ishift = blend_idelta+255;
 
 
