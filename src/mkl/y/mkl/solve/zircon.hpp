@@ -118,7 +118,9 @@ namespace upsylon
                          type              &g0,
                          const char        *trace=0)
             {
-                p  = clamp<int>(this->pmin,p,this->pmax);
+                //p  = clamp<int>(this->pmin,p,this->pmax);
+                if(p<this->pmin) p=this->pmin;
+                if(p>this->pmax) p=this->pmax;
                 g0 = -1;
                 
                 //--------------------------------------------------------------
