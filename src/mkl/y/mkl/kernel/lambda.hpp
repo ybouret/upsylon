@@ -14,6 +14,7 @@ namespace upsylon
         namespace kernel
         {
 
+
             //__________________________________________________________________
             //
             //
@@ -72,7 +73,9 @@ namespace upsylon
                     assert(idx>=pmin); assert(idx<=pmax);
                     return value[idx];
                 }
-                
+
+                static int clamped(const int p) throw();
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(lambdas);
                 size_t bytes;

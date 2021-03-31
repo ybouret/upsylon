@@ -118,10 +118,7 @@ namespace upsylon
                          type              &g0,
                          const char        *trace=0)
             {
-                static const int pmin = this->pmin;
-                //p  = clamp<int>(this->pmin,p,this->pmax);
-                if(p<pmin) p=pmin;
-                if(p>this->pmax) p=this->pmax;
+                p  = this->clamped(p);
                 g0 = -1;
                 
                 //--------------------------------------------------------------
