@@ -1,8 +1,9 @@
-#include "y/gfx/pixel/blend.hpp"
+#include "y/gfx/pixel/interpolation.hpp"
 #include "y/utest/run.hpp"
 #include <cstdio>
 #include "y/type/utils.hpp"
 #include "y/gfx/color/named.hpp"
+#include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -47,7 +48,7 @@ Y_UTEST(blend)
         Y_ASSERT( (blend<uint8_t,uint8_t>::shift[i] == i) );
     }
 
-    std::cerr << "checking mix..." << std::endl;
+    std::cerr << "checking integer mix..." << std::endl;
     for(int fg=0;fg<256;++fg)
     {
         for(int bg=0;bg<256;++bg)
@@ -61,7 +62,7 @@ Y_UTEST(blend)
         }
     }
 
-    std::cerr << "checking mix..." << std::endl;
+    std::cerr << "checking rgb mix..." << std::endl;
 
     for(int i=0;i<Y_GFX_NAMED_COLORS;++i)
     {
@@ -78,8 +79,19 @@ Y_UTEST(blend)
             }
         }
     }
-    
 
+    std::cerr << "checking interp..." << std::endl;
+
+    {
+        ios::ocstream fp("interp.dat");
+        uint8_t arr[] = { 10,20,30,40,50,60,70,80 };
+        static const unsigned num = sizeof(arr)/sizeof(arr[0]);
+        for(unsigned i=0;i<=100;++i)
+        {
+            const float x = i/100.0f;
+            fp("%g %u %u\n",x,interp::closest<uint8_t,num>(x,arr), interp::linear<uint8_t,num>(x,arr) );
+        }
+    }
 
 
 }
