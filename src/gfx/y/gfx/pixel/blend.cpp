@@ -1,5 +1,5 @@
 
-#include "y/gfx/blend.hpp"
+#include "y/gfx/pixel/blend.hpp"
 
 namespace upsylon
 {

@@ -26,10 +26,11 @@ namespace upsylon
             found_above =  1, //!< above greates valye
         };
 
+
         //______________________________________________________________________
         //
         //
-        //! look for x[j] <= xx <= x[j+1], x[1..n]
+        //! search with hysteresis for x[j] <= xx <= x[j+1], x[1..n]
         /**
          \param xx the value to locate
          \param x  array x[1..n], in increasing order
@@ -39,7 +40,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T, typename SOURCE> static inline
-        status find(const T xx, SOURCE &x, const size_t n, size_t &j) throw()
+        status search(const T xx, SOURCE &x, const size_t n, size_t &j) throw()
         {
             //__________________________________________________________________
             //
@@ -84,7 +85,7 @@ namespace upsylon
                         //
                         // below current position
                         //______________________________________________________
-                        j = track<T,SOURCE>(xx,x,1,jlo);
+                        j = __track<T,SOURCE>(xx,x,1,jlo);
                         return found_inner;
                     }
                     else
@@ -97,7 +98,7 @@ namespace upsylon
                             //
                             // above current position
                             //__________________________________________________
-                            j = track<T,SOURCE>(xx,x,jup,n);
+                            j = __track<T,SOURCE>(xx,x,jup,n);
                             return found_inner;
                         }
                         else
@@ -121,11 +122,13 @@ namespace upsylon
         //! find for x[1..x.size()]
         //______________________________________________________________________
         template <typename T, typename SOURCE> static inline
-        status find(const T xx, SOURCE &x, size_t &j) throw()
+        status search(const T xx, SOURCE &x, size_t &j) throw()
         {
-            return find<T,SOURCE>(xx,x,x.size(),j);
+            return search<T,SOURCE>(xx,x,x.size(),j);
         }
 
+
+        
         //______________________________________________________________________
         //
         //
@@ -133,7 +136,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T, typename SOURCE> static inline
-        size_t track(const T xx, SOURCE &x, size_t jlo, size_t jhi) throw()
+        size_t __track(const T xx, SOURCE &x, size_t jlo, size_t jhi) throw()
         {
             assert(xx>=x[jlo]);
             assert(xx<=x[jhi]);

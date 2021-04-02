@@ -29,7 +29,7 @@ namespace
             const T xx = clamp<T>(0,fac*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            size_t  j   = hunt::track(xx,source,jlo, jhi);
+            size_t  j   = hunt::__track(xx,source,jlo, jhi);
             Y_ASSERT(j>=jlo);
             Y_ASSERT(j<=jhi);
         }
@@ -41,7 +41,7 @@ namespace
             const T xx  = clamp<T>(0,alea.to<T>()*xmax,xmax);
             size_t  jlo = 1;
             size_t  jhi = n;
-            size_t  j   = hunt::track(xx,source, jlo, jhi);
+            size_t  j   = hunt::__track(xx,source, jlo, jhi);
             Y_ASSERT(j>=jlo);
             Y_ASSERT(j<=jhi);
         }
@@ -53,7 +53,7 @@ namespace
         for(size_t iter=0;iter<ITER;++iter)
         {
             const T            xx  = xhalf + alea.symm<T>() * ampli;
-            const hunt::status res = hunt::find(xx,source,n,j);
+            const hunt::status res = hunt::search(xx,source,n,j);
             switch(res)
             {
                 case hunt::found_below: Y_ASSERT(xx<0);    break;
@@ -67,7 +67,7 @@ namespace
             }
             {
                 size_t j2=0;
-                Y_ASSERT(res==hunt::find(xx,x,j2));
+                Y_ASSERT(res==hunt::search(xx,x,j2));
                 Y_ASSERT(j2==j);
             }
         }

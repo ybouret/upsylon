@@ -1,4 +1,4 @@
-#include "y/gfx/blend.hpp"
+#include "y/gfx/pixel/blend.hpp"
 #include "y/utest/run.hpp"
 #include <cstdio>
 #include "y/type/utils.hpp"
