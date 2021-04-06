@@ -6,13 +6,19 @@
 #define Y_GFX_INTERPOLATION_INCLUDED 1
 
 #include "y/gfx/pixel/blend.hpp"
+#include "y/code/hunt.hpp"
 
 namespace upsylon
 {
     namespace graphic
     {
 
-        //! function to interpolate pixels
+        //______________________________________________________________________
+        //
+        //
+        //! functions to interpolate pixels
+        //
+        //______________________________________________________________________
         struct interp
         {
             //! x[0..N-1] from 0<=xx<=1
@@ -24,6 +30,7 @@ namespace upsylon
                 return arr[ unsigned( floorf(xx*(N-1)+0.5f) ) ];
             }
 
+            //! x[0..N-1] from 0<=xx<=1 with alpha
             template <typename T, const unsigned N> static inline
             T linear(const float xx, const T arr[]) throw()
             {
@@ -34,6 +41,31 @@ namespace upsylon
                 const float    alpha = jp-xs;
                 return blend<float,T>::mix(alpha,arr[jm],arr[jp]);
             }
+
+
+            template <
+            typename T,
+            typename ABSCISSA,
+            typename ORDINATE> static inline
+            T linear(const float xx, ABSCISSA &x, ORDINATE &y, const size_t n, size_t &j) throw()
+            {
+                assert(n>0);
+                switch( hunt::search(xx,x,n,j) )
+                {
+                    case hunt::found_below: return y[1];
+                    case hunt::found_above: return y[n];
+                    case hunt::found_inner:
+                        break;
+                }
+                const size_t jm = j;
+                const size_t jp = j+1;
+                const float  xm = x[jm];
+                const float  xp = x[jp];
+                const float  dx = xp-xm;
+                const float  alpha = (xp-xx)/dx;
+                return blend<float,T>::mix(alpha,y[jm],y[jp]);
+            }
+
         };
 
     }

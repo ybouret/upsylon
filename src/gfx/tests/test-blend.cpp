@@ -93,6 +93,27 @@ Y_UTEST(blend)
         }
     }
 
+    {
+        const float   x[] = { 0.0f, 0.2f, 0.7f, 1.0f };
+        const uint8_t y[] = {   10,   20,   30,   40 };
+        {
+            ios::ocstream fp("linear-src.dat");
+            for(unsigned i=0;i<sizeof(x)/sizeof(x[0]);++i)
+            {
+                fp("%g %u\n",x[i],unsigned(y[i]));
+            }
+        }
+        {
+            ios::ocstream fp("linear-int.dat");
+            for(unsigned i=0;i<=100;++i)
+            {
+                size_t      j  = 0;
+                const float xx = i/100.0f;
+                fp("%g %u\n", xx, interp::linear<uint8_t,const float * const,const uint8_t * const>(xx, x-1, y-1, sizeof(x)/sizeof(x[0]), j) );
+            }
+        }
+    }
+
 
 }
 Y_UTEST_DONE()
