@@ -157,7 +157,7 @@ namespace upsylon
 
             //! mix (r,g,b) only
             static inline
-            rgba mix(const uint8_t alpha, const rgba fg, const rgba bg) throw()
+            rgba mix(const float alpha, const rgba fg, const rgba bg) throw()
             {
                 return rgba(_::mix(alpha,fg.r,bg.r),
                             _::mix(alpha,fg.g,bg.g),
