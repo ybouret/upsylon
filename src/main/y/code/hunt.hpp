@@ -85,7 +85,7 @@ namespace upsylon
                         //
                         // below current position
                         //______________________________________________________
-                        j = __track<T,SOURCE>(xx,x,1,jlo);
+                        j = track<T,SOURCE>(xx,x,1,jlo);
                         return found_inner;
                     }
                     else
@@ -98,7 +98,7 @@ namespace upsylon
                             //
                             // above current position
                             //__________________________________________________
-                            j = __track<T,SOURCE>(xx,x,jup,n);
+                            j = track<T,SOURCE>(xx,x,jup,n);
                             return found_inner;
                         }
                         else
@@ -128,6 +128,71 @@ namespace upsylon
         }
 
 
+        //______________________________________________________________________
+        //
+        //
+        //! search WITHOUT hysteresis for x[j] <= xx <= x[j+1], x[1..n]
+        /**
+         \param xx the value to locate
+         \param x  array x[1..n], in increasing order
+         \param n  objects to match
+         \param j  result of a previous search
+         */
+        //
+        //______________________________________________________________________
+        template <typename T, typename SOURCE> static inline
+        status lookup(const T xx, SOURCE &x, const size_t n, size_t &j) throw()
+        {
+            //__________________________________________________________________
+            //
+            // routing according to n
+            //__________________________________________________________________
+            switch(n)
+            {
+                case  0: j=0; return found_below;                           // bad
+                case  1: j=1; return (xx<x[1]) ? found_below : found_above; // bad
+                default: assert(n>=2);
+                    break;
+            }
+
+            if(xx<x[1])
+            {
+                //______________________________________________________________
+                //
+                // below smallest value
+                //______________________________________________________________
+                j=1; return found_below;
+            }
+            else
+            {
+                if(xx>x[n])
+                {
+                    //__________________________________________________________
+                    //
+                    // above greatest value
+                    //__________________________________________________________
+                    j=n; return found_above;
+                }
+                else
+                {
+
+                    j = track(xx,x,1,n);
+                    return found_inner;
+                }
+
+            }
+        }
+
+
+        //______________________________________________________________________
+        //
+        //! lookup in accessible type
+        //______________________________________________________________________
+        template <typename T, typename SOURCE> static inline
+        status lookup(const T xx, SOURCE &x,size_t &j) throw()
+        {
+            return lookup<T,SOURCE>(xx,x,x.size(),j);
+        }
         
         //______________________________________________________________________
         //
@@ -136,7 +201,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T, typename SOURCE> static inline
-        size_t __track(const T xx, SOURCE &x, size_t jlo, size_t jhi) throw()
+        size_t track(const T xx, SOURCE &x, size_t jlo, size_t jhi) throw()
         {
             assert(xx>=x[jlo]);
             assert(xx<=x[jhi]);

@@ -42,7 +42,7 @@ namespace upsylon
                 return blend<float,T>::mix(alpha,arr[jm],arr[jp]);
             }
 
-
+            //! linear interpolation xx in x[1..n] and y[1..n], with starting point j
             template <
             typename T,
             typename ABSCISSA,
