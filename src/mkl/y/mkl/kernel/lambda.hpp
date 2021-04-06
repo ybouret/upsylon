@@ -74,6 +74,7 @@ namespace upsylon
                     return value[idx];
                 }
 
+                //! return a clamped value of p
                 static int clamped(const int p) throw();
 
             private:

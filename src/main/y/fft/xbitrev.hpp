@@ -6,7 +6,12 @@
 
 namespace upsylon
 {
+    //__________________________________________________________________________
+    //
+    //
     //! extended bit reversal algorithm
+    //
+    //__________________________________________________________________________
     struct xbitrev
     {
 
@@ -107,8 +112,15 @@ xswap2( &brr[__I], &brr[__J] ); }
         }
     };
 
+    //__________________________________________________________________________
+    //
+    //
+    //! hard-wired xbitrev
+    //
+    //__________________________________________________________________________
     template <typename T,const size_t size> struct xbitrev_for
     {
+        //! generic call
         static void run(T arr[]) throw()
         {
             const size_t n = size << 1;
