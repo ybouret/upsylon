@@ -155,6 +155,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(hashed);
     
     Y_UTEST(fft);
+    Y_UTEST(fft1);
     Y_UTEST(network_sort);
     Y_UTEST(sort);
     Y_UTEST(sort_merge);

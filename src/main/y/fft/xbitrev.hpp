@@ -23,7 +23,6 @@ namespace upsylon
         }
 
         //! swap pair of items
-//#define Y_XBITREV_SWAP(I,J) core::bswap<2*sizeof(T)>( &arr[I], &arr[J] );
 #define Y_XBITREV_SWAP(I,J) xswap2( &arr[I], &arr[J] )
 
 #include "xbitrev-decl.hxx"

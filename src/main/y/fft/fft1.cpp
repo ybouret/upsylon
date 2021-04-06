@@ -1,8 +1,9 @@
 
-#include "y/fft/fft.hpp"
+#include "y/fft/fft1.hpp"
 
 namespace upsylon
 {
+
     //! compute a fraction of size, double version
 #define Y_FFT_SIN(LN2) sin(6.28318530717958623199592693708837032318115234375/(size_t(1)<<(LN2)))
     //! generate a table of sine fractions
@@ -15,26 +16,12 @@ Y_FFT_SIN(20), Y_FFT_SIN(21), Y_FFT_SIN(22), Y_FFT_SIN(23), Y_FFT_SIN(24),\
 Y_FFT_SIN(25), Y_FFT_SIN(26), Y_FFT_SIN(27), Y_FFT_SIN(28), Y_FFT_SIN(29),\
 Y_FFT_SIN(30), Y_FFT_SIN(31)
 
-    
+
 
     //! instance for table of double
-    template <>
-    const double fft<double>:: sin_table[32] =
+    const double fft1:: sin_table[sin_table_size] =
     {
         Y_FFT_TABLE()
     };
 
-#undef  Y_FFT_SIN
-    //! compute a fraction of sine, float version
-#define Y_FFT_SIN(LN2) sinf(6.28318530717958623199592693708837032318115234375f/(size_t(1)<<(LN2)))
-
-    //! instance for  table of float
-    template <>
-    const float fft<float>:: sin_table[32] =
-    {
-        Y_FFT_TABLE()
-    };
-
-#undef Y_FFT_SIN
-#undef Y_FFT_TABLE
 }
