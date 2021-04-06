@@ -31,7 +31,7 @@ namespace
                 {
                     v[i] = v0[i];
                 }
-                xbitrev::run_safe( &v[1].re-1,v.size());
+                xbitrev::run_( &v[1].re-1,v.size());
                 H.set();
                 H(v);
                 const uint64_t k1 = H.key<uint64_t>();
@@ -46,7 +46,7 @@ namespace
                 Y_ASSERT(k1==k2);
             }
             double speed1 = 0;
-            Y_TIMINGS(speed1,D, xbitrev::run_safe( &v[1].re-1,v.size()));
+            Y_TIMINGS(speed1,D, xbitrev::run_( &v[1].re-1,v.size()));
             //std::cerr << "\tspeed1 = " << speed1 << std::endl;
             double speed2 = 0;
             Y_TIMINGS(speed2,D, xbitrev::run( &v[1].re-1,v.size()));
@@ -171,7 +171,7 @@ namespace
             {
                 v[i] = v0[i];
             }
-            xbitrev::run_safe(&v[1].re-1,n);
+            xbitrev::run_(&v[1].re-1,n);
             H.set();
             H(v);
             const uint64_t k1 = H.key<uint64_t>();
@@ -188,7 +188,7 @@ namespace
         //std::cerr << std::endl; return;
 
         double speed1 = 0;
-        Y_TIMINGS(speed1,D, xbitrev::run_safe( &v[1].re-1,n) );
+        Y_TIMINGS(speed1,D, xbitrev::run_( &v[1].re-1,n) );
         double speed2 = 0;
         Y_TIMINGS(speed2,D, (xbitrev_for<T,n>::run( &v[1].re-1)) );
         std::cerr << "speedup: " << speed2/speed1 << std::endl;

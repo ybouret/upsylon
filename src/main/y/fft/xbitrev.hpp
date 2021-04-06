@@ -28,7 +28,7 @@ namespace upsylon
 #include "xbitrev-decl.hxx"
         //! reordering arr[1..size*2]
         template <typename T> static inline
-        void run_safe( T arr[], const size_t size) throw()
+        void run_( T arr[], const size_t size) throw()
         {
             const size_t n = size << 1;
             size_t       j = 1;
@@ -62,7 +62,7 @@ xswap2( &brr[__I], &brr[__J] ); }
 
         //! reordering arr[1..size*2] and brr[1..size*2]
         template <typename T> static inline
-        void run_safe( T arr[], T brr[], const size_t size) throw()
+        void run_( T arr[], T brr[], const size_t size) throw()
         {
             const size_t n = size << 1;
             size_t       j = 1;
@@ -90,7 +90,7 @@ xswap2( &brr[__I], &brr[__J] ); }
             {
 #include "xbitrev-impl.hxx"
                 default:
-                    run_safe(arr,size);
+                    run_(arr,size);
             }
         }
 
@@ -102,7 +102,7 @@ xswap2( &brr[__I], &brr[__J] ); }
             {
 #include "xbitrev-imp2.hxx"
                 default:
-                    run_safe(arr,brr,size);
+                    run_(arr,brr,size);
             }
         }
     };

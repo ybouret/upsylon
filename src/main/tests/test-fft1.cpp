@@ -20,8 +20,8 @@ namespace
 
             for(size_t i=n;i>0;--i) fourier[i] = source[i];
 
-            fft1::forward(&fourier[1].re-1,n);
-            fft1::reverse(&fourier[1].re-1,n);
+            fft1::forward_(&fourier[1].re-1,n);
+            fft1::reverse_(&fourier[1].re-1,n);
 
             T rms = 0;
             for(size_t i=n;i>0;--i)

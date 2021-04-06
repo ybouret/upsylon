@@ -21,8 +21,8 @@ namespace upsylon
         //! single FFT of data[1..2*size]
         //______________________________________________________________________
         template <typename real_t> static inline
-        void forward(real_t      *data,
-                     const size_t size) throw()
+        void forward_(real_t      *data,
+                      const size_t size) throw()
         {
             assert( data != NULL );
             assert( is_a_power_of_two(size) );
@@ -30,7 +30,7 @@ namespace upsylon
             //==================================================================
             // bit reversal algorithm
             //==================================================================
-            xbitrev::run(data,size);
+            xbitrev::run_(data,size);
 
             //==================================================================
             // Lanczos Algorithm
@@ -80,8 +80,8 @@ namespace upsylon
         //!  inverse FFT of data[1..2*size]
         //______________________________________________________________________
         template <typename real_t> static inline
-        void reverse(real_t      *data,
-                     const size_t size) throw()
+        void reverse_(real_t      *data,
+                      const size_t size) throw()
         {
             assert( data != NULL );
             assert( is_a_power_of_two(size) );
@@ -89,7 +89,7 @@ namespace upsylon
             //==================================================================
             // bit reversal algorithm
             //==================================================================
-            xbitrev::run(data, size);
+            xbitrev::run_(data, size);
 
             //==================================================================
             // Lanczos-Algorithm
