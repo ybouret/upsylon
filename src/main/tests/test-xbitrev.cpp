@@ -52,9 +52,10 @@ namespace
             Y_TIMINGS(speed2,D, xbitrev::run( &v[1].re-1,v.size()));
             //std::cerr << "\tspeed2 = " << speed2 << std::endl;
             std::cerr << "speedup: " << speed2/speed1 << std::endl;
-
         }
     }
+
+
 
     static inline void save_indices(ios::ostream &src, const array<size_t> &indices)
     {
@@ -80,7 +81,8 @@ namespace
                                 ios::ostream   &hdr,
                                 ios::ostream   &imp,
                                 ios::ostream   &src,
-                                ios::ostream   &im2)
+                                ios::ostream   &im2,
+                                ios::ostream   &inc)
     {
 
         {
@@ -112,6 +114,8 @@ namespace
             std::cerr << "\tnx=" << nx << std::endl;
             imp("case %5u:", (unsigned)size);
             im2("case %5u:", (unsigned)size);
+            inc("template <typename T> struct xbitrev_for<T,%u> {\n",(unsigned)size);
+
             if(nx>0)
             {
                 hdr("static const size_t indx%u[%u];//!< first  index\n",(unsigned)size,unsigned(nx));
@@ -129,11 +133,89 @@ namespace
                 imp(" for(size_t i=0;i<%5u;++i) Y_XBITREV_SWAP(indx%u[i],jndx%u[i]); ", unsigned(nx), unsigned(size), unsigned(size) );
                 im2(" for(size_t i=0;i<%5u;++i) Y_XBITREV_SWAP2(indx%u[i],jndx%u[i]) ", unsigned(nx), unsigned(size), unsigned(size) );
 
+                inc("\tstatic inline void run(T arr[]) throw() {\n");
+                inc("\tassert(arr);\n");
+                inc("\tfor(size_t i=0;i<%5u;++i) Y_XBITREV_SWAP(xbitrev::indx%u[i],xbitrev::jndx%u[i]);\n", unsigned(nx), unsigned(size), unsigned(size) );
+                inc("\t};\n");
             }
+            else
+            {
+                inc("\tstatic inline void run(T []) throw() {}\n");
+            }
+            inc("};\n\n");
             imp("break;\n");
             im2("break;\n");
         }
     }
+
+
+    template <typename T,size_t n>
+    static inline void do_test2(double D)
+    {
+
+
+        typedef complex<T> cplx;
+        hashing::sha1 H;
+
+        std::cerr << "n=" << std::setw(5) << n << " : "; std::cerr.flush();
+        vector<cplx> v0(n);
+        vector<cplx> v(n);
+        for(size_t iter=0;iter<10;++iter)
+        {
+            for(size_t i=1;i<=n;++i)
+            {
+                v0[i].re = alea.to<T>();
+                v0[i].im = alea.to<T>();
+            }
+            for(size_t i=1;i<=n;++i)
+            {
+                v[i] = v0[i];
+            }
+            xbitrev::run_safe(&v[1].re-1,n);
+            H.set();
+            H(v);
+            const uint64_t k1 = H.key<uint64_t>();
+            for(size_t i=1;i<=n;++i)
+            {
+                v[i] = v0[i];
+            }
+            xbitrev_for<T,n>::run( &v[1].re-1 );
+            H.set();
+            H(v);
+            const uint64_t k2 = H.key<uint64_t>();
+            Y_ASSERT(k1==k2);
+        }
+        //std::cerr << std::endl; return;
+
+        double speed1 = 0;
+        Y_TIMINGS(speed1,D, xbitrev::run_safe( &v[1].re-1,n) );
+        double speed2 = 0;
+        Y_TIMINGS(speed2,D, (xbitrev_for<T,n>::run( &v[1].re-1)) );
+        std::cerr << "speedup: " << speed2/speed1 << std::endl;
+    }
+
+    template <typename T>
+    static inline void do_tests(double D)
+    {
+        std::cerr << "templated sizeof(real)=" << sizeof(T) << std::endl;
+        do_test2<T,1>(D);
+        do_test2<T,2>(D);
+        do_test2<T,4>(D);
+        do_test2<T,8>(D);
+        do_test2<T,16>(D);
+        do_test2<T,32>(D);
+        do_test2<T,64>(D);
+        do_test2<T,128>(D);
+        do_test2<T,256>(D);
+        do_test2<T,512>(D);
+        do_test2<T,1024>(D);
+        do_test2<T,2048>(D);
+        do_test2<T,4096>(D);
+        do_test2<T,8192>(D);
+        do_test2<T,16384>(D);
+
+    }
+
 }
 
 Y_UTEST(xbitrev)
@@ -143,17 +225,22 @@ Y_UTEST(xbitrev)
     do_test<float >(D);
     do_test<double>(D);
 
+    do_tests<float >(D);
+    do_tests<double>(D);
+
+
     if(argc>2&& 0==strcmp(argv[2],"true"))
     {
         ios::ocstream hdr("xbitrev-decl.hxx");
         ios::ocstream imp("xbitrev-impl.hxx");
         ios::ocstream im2("xbitrev-imp2.hxx");
         ios::ocstream src("xbitrev-data.cxx");
+        ios::ocstream inc("xbitrev-for.hxx");
 
-        generate(0,hdr,imp,src,im2);
+        generate(0,hdr,imp,src,im2,inc);
         for(size_t size=1;size<=8192;size<<=1)
         {
-            generate(size,hdr,imp,src,im2);
+            generate(size,hdr,imp,src,im2,inc);
         }
     }
 

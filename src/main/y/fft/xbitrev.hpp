@@ -23,7 +23,7 @@ namespace upsylon
         }
 
         //! swap pair of items
-#define Y_XBITREV_SWAP(I,J) xswap2( &arr[I], &arr[J] )
+#define Y_XBITREV_SWAP(I,J) xbitrev::xswap2( &arr[I], &arr[J] )
 
 #include "xbitrev-decl.hxx"
         //! reordering arr[1..size*2]
@@ -106,6 +106,32 @@ xswap2( &brr[__I], &brr[__J] ); }
             }
         }
     };
+
+    template <typename T,const size_t size> struct xbitrev_for
+    {
+        static void run(T arr[]) throw()
+        {
+            const size_t n = size << 1;
+            size_t       j = 1;
+            for( size_t i=1; i<n; i+=2)
+            {
+                if(j>i)
+                {
+                    Y_XBITREV_SWAP(i,j);
+                }
+                size_t m = size;
+                while( (m>=2) && (j>m) )
+                {
+                    j -=  m;
+                    m >>= 1;
+                }
+                j += m;
+            }
+        }
+    };
+
+#include "xbitrev-for.hxx"
+    
 
 }
 
