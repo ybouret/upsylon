@@ -181,6 +181,7 @@ test-conveyor.cpp
 test-conveyors.cpp
 test-ios-align.cpp
 test-rename.cpp
+test-echo.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams ${HERE}/words.db)
@@ -201,6 +202,7 @@ ADD_TEST(ios:conveyor    test-main conveyor)
 ADD_TEST(ios:conveyors   test-main conveyors)
 ADD_TEST(ios:align       test-main ios_align)
 ADD_TEST(ios:rename      test-main rename)
+ADD_TEST(ios:echo        test-main echo)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp
@@ -219,7 +221,7 @@ ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 
-SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp)
+SOURCE_GROUP(mk FILES test-xbitrev.cpp test-fft.cpp test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp test-xbra.cpp)
 ADD_TEST(mk:xbitrev     test-main xbitrev 0.0)
 ADD_TEST(mk:fft         test-main fft)
 ADD_TEST(mk:triplet     test-main triplet)
@@ -231,6 +233,7 @@ ADD_TEST(mk:timings     test-main timings)
 ADD_TEST(mk:geomat      test-main geomat)
 ADD_TEST(mk:trigo       test-main trigo)
 ADD_TEST(mk:fft1        test-main fft1)
+ADD_TEST(mk:xbra        test-main xbra)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
 test-sort-merge.cpp)

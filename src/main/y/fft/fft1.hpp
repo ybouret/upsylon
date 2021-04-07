@@ -82,7 +82,7 @@ namespace upsylon
         }
         
       
-        
+        //! hard-wired fwd
         template <typename real_t, const size_t size> static inline
         void forward_(real_t *data) throw()
         {

@@ -130,6 +130,7 @@ Y_UTEST_INIT(256)
     
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
+    Y_UTEST(xbra);
 
 
     Y_UTEST(hashing);
@@ -137,6 +138,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(pearson);
     Y_UTEST(hmac);
     Y_UTEST(ostreams);
+    Y_UTEST(echo);
     Y_UTEST(istreams);
     Y_UTEST(mstreams);
     Y_UTEST(upacker);
