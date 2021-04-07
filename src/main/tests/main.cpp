@@ -130,6 +130,7 @@ Y_UTEST_INIT(256)
     
     Y_UTEST(complex);
     Y_UTEST(xbitrev);
+    Y_UTEST(xbra_gen);
     Y_UTEST(xbra);
 
 
