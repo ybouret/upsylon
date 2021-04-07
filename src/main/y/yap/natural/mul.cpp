@@ -1,8 +1,10 @@
 
 #include "y/yap/natural.hpp"
 #include "y/code/base2.hpp"
-#include "y/fft/fft.hpp"
+#include "y/fft/fft1.hpp"
 #include "y/os/endian.hpp"
+#include "y/type/complex.hpp"
+
 namespace upsylon
 {
     namespace yap
@@ -147,8 +149,9 @@ namespace upsylon
                     // forward transform
                     //----------------------------------------------------------
                     --fft1;
-                    fft<real_t>::forward(fft1,nn);
-                    
+                    //fft<real_t>::forward(fft1,nn);
+                    FFT1::Forward(fft1,nn);
+
                     //----------------------------------------------------------
                     // decode data
                     //----------------------------------------------------------
@@ -166,8 +169,9 @@ namespace upsylon
                     //----------------------------------------------------------
                     //reverse transform
                     //----------------------------------------------------------
-                    fft<real_t>::reverse(fft1,nn);
-                    
+                    //fft<real_t>::reverse(fft1,nn);
+                    FFT1::Reverse(fft1,nn);
+
                 }
                 
                 //--------------------------------------------------------------
@@ -250,12 +254,14 @@ namespace upsylon
                     real_t      *fft1 = &L[0].re;
                     encode_re(fft1,x.word,x.words);
                     --fft1;
-                    fft<real_t>::forward(fft1,nn);
+                    //fft<real_t>::forward(fft1,nn);
+                    FFT1::Forward(fft1,nn);
                     for(size_t i=0;i<nn;++i)
                     {
                         L[i].__square();
                     }
-                    fft<real_t>::reverse(fft1,nn);
+                    //fft<real_t>::reverse(fft1,nn);
+                    FFT1::Reverse(fft1,nn);
                 }
                 
                 //--------------------------------------------------------------

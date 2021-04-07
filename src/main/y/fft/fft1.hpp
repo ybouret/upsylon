@@ -17,9 +17,9 @@ namespace upsylon
     //! 1D Fast Fourier Transform
     //
     //__________________________________________________________________________
-    struct fft1
+    struct FFT1
     {
-        static const size_t sin_table_size = 32;         //!< precomputed sinus count
+        static const size_t sin_table_size = 32;              //!< precomputed sinus count
         static const double positive_sinus[ sin_table_size ]; //!< precomputed sinus table
         static const double negative_sinus[ sin_table_size ]; //!< precomputed sinus table
 
@@ -29,7 +29,7 @@ namespace upsylon
         //! generic forward FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t> static inline
-        void forward_(real_t      *data,
+        void Forward_(real_t      *data,
                      const size_t size) throw()
         {
             process(data,size,positive_sinus);
@@ -40,7 +40,7 @@ namespace upsylon
         //! specific forward FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t, const size_t size> static inline
-        void forward(real_t *data) throw()
+        void Forward(real_t *data) throw()
         {
             process<real_t,size>(data,positive_sinus);
         }
@@ -49,7 +49,7 @@ namespace upsylon
 #define Y_FFT1_FWD(SIZE) case SIZE: process<real_t,SIZE>(data,positive_sinus); break
 
 #define Y_FFT1_REPEAT(MACRO) \
-MACRO(1);   MACRO(2);   MACRO(4);   MACRO(8);    MACRO(16);   MACRO(32); MACRO(64);\
+MACRO(1);   MACRO(2);   MACRO(4);   MACRO(8);    MACRO(16);   MACRO(32);   MACRO(64);\
 MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO(8192)
 
         //______________________________________________________________________
@@ -57,7 +57,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         //! dispatched forward FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t> static inline
-        void forward(real_t      *data,
+        void Forward(real_t      *data,
                      const size_t size) throw()
         {
             switch(size)
@@ -74,7 +74,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         //! reverse FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t> static inline
-        void reverse_(real_t      *data,
+        void Reverse_(real_t      *data,
                      const size_t size) throw()
         {
             process(data,size,negative_sinus);
@@ -85,7 +85,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         //! reverse FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t, const size_t size> static inline
-        void reverse(real_t *data) throw()
+        void Reverse(real_t *data) throw()
         {
             process<real_t,size>(data,negative_sinus);
         }
@@ -98,7 +98,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         //! dispatched reverse FFT of data[1..2*size], unscaled
         //______________________________________________________________________
         template <typename real_t> static inline
-        void reverse(real_t      *data,
+        void Reverse(real_t      *data,
                      const size_t size) throw()
         {
             switch(size)

@@ -1,8 +1,10 @@
 #include "y/fft/fft1.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/timings.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/type/spec.hpp"
+
 using namespace upsylon;
 
 namespace
@@ -22,8 +24,8 @@ namespace
 
             for(size_t i=n;i>0;--i) fourier[i] = source[i];
 
-            fft1::forward_(&fourier[1].re-1,n);
-            fft1::reverse_(&fourier[1].re-1,n);
+            FFT1::Forward_(&fourier[1].re-1,n);
+            FFT1::Reverse_(&fourier[1].re-1,n);
 
             T rms = 0;
             for(size_t i=n;i>0;--i)
@@ -50,8 +52,8 @@ namespace
         
         for(size_t i=n;i>0;--i) fourier[i] = source[i];
         
-        fft1::forward<T,n>(&fourier[1].re-1);
-        fft1::reverse<T,n>(&fourier[1].re-1);
+        FFT1::Forward<T,n>(&fourier[1].re-1);
+        FFT1::Reverse<T,n>(&fourier[1].re-1);
         
         T rms = 0;
         for(size_t i=n;i>0;--i)
@@ -105,8 +107,8 @@ namespace
 
             for(size_t i=n;i>0;--i) fourier[i] = source[i];
 
-            fft1::forward(&fourier[1].re-1,n);
-            fft1::reverse(&fourier[1].re-1,n);
+            FFT1::Forward(&fourier[1].re-1,n);
+            FFT1::Reverse(&fourier[1].re-1,n);
 
             T rms = 0;
             for(size_t i=n;i>0;--i)
@@ -118,18 +120,50 @@ namespace
             rms = mkl::sqrt_of(rms);
             std::cerr << "rms#" << n << " = " << rms << std::endl;
         }
+     }
 
+    template <typename T>
+    static inline void do_test_tmx(const double D)
+    {
+        std::cerr << std::endl;
+        std::cerr << "timings for<" << type_name_of<T>() << ">" << std::endl;
+        typedef complex<T> cplx;
+
+        for(size_t n=1;n<=32768; n <<= 1)
+        {
+            std::cerr << std::setw(8) << n << " : ";
+            std::cerr.flush();
+
+            vector<cplx> fourier(n,0);
+            support::fill1D(fourier);
+
+            double speed0 = 0;
+            Y_TIMINGS(speed0,D,
+                      FFT1::Forward_(&fourier[1].re-1,n);
+                      FFT1::Reverse_(&fourier[1].re-1,n);
+                      );
+            double speed1 = 0;
+            Y_TIMINGS(speed1,D,
+                      FFT1::Forward(&fourier[1].re-1,n);
+                      FFT1::Reverse(&fourier[1].re-1,n);
+                      );
+
+            std::cerr << speed1/speed0 << std::endl;
+        }
 
     }
 
+
 }
+
+#include "y/string/convert.hpp"
 
 Y_UTEST(fft1)
 {
 
-    for(size_t i=0;i<fft1::sin_table_size;++i)
+    for(size_t i=0;i<FFT1::sin_table_size;++i)
     {
-        std::cerr << fft1::positive_sinus[i] << "," << fft1::negative_sinus[i] << std::endl;
+        std::cerr << FFT1::positive_sinus[i] << "," << FFT1::negative_sinus[i] << std::endl;
     }
     do_test<float>();
     do_test<double>();
@@ -139,6 +173,15 @@ Y_UTEST(fft1)
 
     do_test_opt<float>();
     do_test_opt<double>();
+
+    double D = 0.1;
+    if(argc>1)
+    {
+        D = string_convert::to<double>(argv[1],"D");
+    }
+    do_test_tmx<float> (D);
+    do_test_tmx<double>(D);
+
     
 }
 Y_UTEST_DONE()

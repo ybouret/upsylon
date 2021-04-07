@@ -20,13 +20,13 @@ Y_FFT_SIN(S,30), Y_FFT_SIN(S,31)
 
 
     //! instance for table of double
-    const double fft1:: positive_sinus[sin_table_size] =
+    const double FFT1:: positive_sinus[sin_table_size] =
     {
         Y_FFT_TABLE(+)
     };
 
     //! instance for table of double
-    const double fft1:: negative_sinus[sin_table_size] =
+    const double FFT1:: negative_sinus[sin_table_size] =
     {
         Y_FFT_TABLE(-)
     };

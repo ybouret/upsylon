@@ -232,7 +232,7 @@ ADD_TEST(mk:sobol       test-main sobol)
 ADD_TEST(mk:timings     test-main timings)
 ADD_TEST(mk:geomat      test-main geomat)
 ADD_TEST(mk:trigo       test-main trigo)
-ADD_TEST(mk:fft1        test-main fft1)
+ADD_TEST(mk:fft1        test-main fft1 0.02)
 ADD_TEST(mk:xbra        test-main xbra)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
