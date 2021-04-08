@@ -1,4 +1,3 @@
-
 #include "y/yap/natural.hpp"
 #include "y/code/base2.hpp"
 #include "y/fft/fft1.hpp"

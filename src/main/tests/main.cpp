@@ -129,7 +129,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_pipeline);
     
     Y_UTEST(complex);
-    Y_UTEST(xbitrev);
     Y_UTEST(xbra_gen);
     Y_UTEST(xbra);
 
@@ -157,7 +156,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(suffix);
     Y_UTEST(hashed);
     
-    Y_UTEST(fft);
     Y_UTEST(fft1);
     Y_UTEST(network_sort);
     Y_UTEST(sort);
