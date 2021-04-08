@@ -44,10 +44,17 @@ namespace upsylon
         {
             process<real_t,size>(data,positive_sinus);
         }
-
-
+        
+        //______________________________________________________________________
+        //
+        //! macro to process forward case
+        //______________________________________________________________________
 #define Y_FFT1_FWD(SIZE) case SIZE: process<real_t,SIZE>(data,positive_sinus); break
 
+        //______________________________________________________________________
+        //
+        //! macor to repeat a macro on 2^[0:13]
+        //______________________________________________________________________
 #define Y_FFT1_REPEAT(MACRO) \
 MACRO(1);   MACRO(2);   MACRO(4);   MACRO(8);    MACRO(16);   MACRO(32);   MACRO(64);\
 MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO(8192)
@@ -90,6 +97,10 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
             process<real_t,size>(data,negative_sinus);
         }
 
+        //______________________________________________________________________
+        //
+        //! macro to process reverse cases
+        //______________________________________________________________________
 #define Y_FFT1_REV(SIZE) case SIZE: process<real_t,SIZE>(data,negative_sinus); break
 
 
@@ -110,6 +121,11 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         
 
     private:
+        
+        //______________________________________________________________________
+        //
+        //! inner recurrent loop
+        //______________________________________________________________________
 #define Y_FFT1_LOOP() \
 /**/size_t mmax = 2;\
 /**/size_t mln2 = 1;\
