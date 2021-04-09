@@ -44,7 +44,7 @@ namespace upsylon {
             //------------------------------------------------------------------
             typedef unsigned_int<sizeof(void*)>::type core_type;                     //!< system native unsigned
             static  const size_t                      core_size = sizeof(core_type); //!< system native size
-            static  const size_t                      core_bits = core_size << 3;    //!< system native  bits
+            static  const size_t                      core_bits = core_size << 3;    //!< system native bits
 
             //------------------------------------------------------------------
             // word type, to handle memory
