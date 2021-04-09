@@ -238,6 +238,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(factorial);
     Y_UTEST(yap_mod_exp);
     Y_UTEST(yap_lcm);
+    Y_UTEST(yap_mul);
     
     Y_UTEST(jive_char);
     Y_UTEST(jive_tags);

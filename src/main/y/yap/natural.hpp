@@ -219,6 +219,12 @@ Y_APN_OPERATOR_API(OP,CALL)
 
             static natural square_of(const natural &x); //!< x*x
 
+            //! multiplicaion
+            Y_APN_OVERLOAD_API(lmul)
+
+
+
+
             //__________________________________________________________________
             //
             // division
@@ -425,6 +431,10 @@ Y_APN_OPERATOR_API(OP,CALL)
             //! multiplicaion
             static natural mul(const word_type *lhs, const size_t lnw,
                                const word_type *rhs, const size_t rnw);
+
+            //! long multiplication
+            static natural lmul(const word_type *lhs, const size_t lnw,
+                                const word_type *rhs, const size_t rnw);
 
             typedef word_type (*boolean_op)(const word_type,const word_type);
             
