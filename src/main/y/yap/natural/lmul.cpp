@@ -18,20 +18,20 @@ namespace upsylon
 
                 {
                     word_type   *ptr = res.word;
+                    word_type   *tgt = ptr+rnw;
                     for(size_t i=0;i<lnw;++i)
                     {
                         const core_type L     = lhs[i];
                         core_type       carry = 0;
+                        word_type      *sub   = ptr+i;
                         for(size_t j=0;j<rnw;++j)
                         {
-                            word_type        &p    = ptr[i+j];
-                            const core_type   temp = core_type(p) + carry + L * core_type(rhs[j]);
-                            //p      = word_type(temp%word_radix);
-                            //carry  = temp/word_radix;
-                            p        = word_type(temp&word_maximum);
-                            carry    = temp >> word_bits;
+                            word_type        &here = sub[j];
+                            const core_type   temp = core_type(here) + carry + L * core_type(rhs[j]);
+                            here  = word_type(temp&word_maximum);
+                            carry = temp >> word_bits;
                         }
-                        ptr[rnw+i] = word_type(carry);
+                        tgt[i] = word_type(carry);
                     }
                     
                 }
