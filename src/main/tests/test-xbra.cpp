@@ -49,7 +49,7 @@ namespace
 
 Y_UTEST(xbra_gen)
 {
-    unsigned pmax = 13;
+    unsigned pmax = 15;
 
     if(argc>1)
     {
@@ -315,6 +315,29 @@ Y_UTEST(xbra_gen)
     }
     {
         source << "}\n";
+    }
+    
+    {
+        source << "#if defined(XBRA_RUN)\n";
+        source << "#include <iostream>\n";
+        source << "#include <iomanip>\n";
+        source << "int main(int,char **) {\n";
+        for(unsigned p=0;p<=pmax;++p)
+        {
+            const unsigned size  = 1<<p;
+            const Swaps   &swaps = *code[p+1];
+            const unsigned count = unsigned(swaps.I.size());
+            source("\tstd::cerr << \"SIZE=%6u : #%6u\"",size,count);
+            if(count>0)
+            {
+                source(" << \" => \" << std::setw(8) << sizeof(upsylon::xbra::indx%u) << \" bytes\"",size);
+            }
+            source(" << std::endl;\n");
+        }
+        
+        source << " return 0;\n";
+        source << "}\n";
+        source << "#endif\n";
     }
 
 }

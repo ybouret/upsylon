@@ -99,6 +99,14 @@ for(size_t i=1; i<n; i+=2)  \
 		static const unsigned short indx8192[size8192]; //!< indx
 		static const unsigned short jndx8192[size8192]; //!< jndx
 
+		static const size_t         size16384=8128;      //!< size
+		static const unsigned short indx16384[size16384]; //!< indx
+		static const unsigned short jndx16384[size16384]; //!< jndx
+
+		static const size_t         size32768=16256;      //!< size
+		static const unsigned short indx32768[size32768]; //!< indx
+		static const unsigned short jndx32768[size32768]; //!< jndx
+
 		//! dispatching calls for one array
 		template <typename T> static inline void run(T arr[], const size_t size) throw() {
 			switch(size) {
@@ -117,6 +125,8 @@ for(size_t i=1; i<n; i+=2)  \
 				case 2048: for(size_t i=0;i<xbra::size2048;++i) Y_XBRA_SWAP(indx2048[i],jndx2048[i]); break;
 				case 4096: for(size_t i=0;i<xbra::size4096;++i) Y_XBRA_SWAP(indx4096[i],jndx4096[i]); break;
 				case 8192: for(size_t i=0;i<xbra::size8192;++i) Y_XBRA_SWAP(indx8192[i],jndx8192[i]); break;
+				case 16384: for(size_t i=0;i<xbra::size16384;++i) Y_XBRA_SWAP(indx16384[i],jndx16384[i]); break;
+				case 32768: for(size_t i=0;i<xbra::size32768;++i) Y_XBRA_SWAP(indx32768[i],jndx32768[i]); break;
 				default: run_(arr,size);
 			}
 		}
@@ -139,6 +149,8 @@ for(size_t i=1; i<n; i+=2)  \
 				case 2048: for(size_t i=0;i<xbra::size2048;++i) { Y_XBRA_SWAP2(indx2048[i],jndx2048[i]); }break;
 				case 4096: for(size_t i=0;i<xbra::size4096;++i) { Y_XBRA_SWAP2(indx4096[i],jndx4096[i]); }break;
 				case 8192: for(size_t i=0;i<xbra::size8192;++i) { Y_XBRA_SWAP2(indx8192[i],jndx8192[i]); }break;
+				case 16384: for(size_t i=0;i<xbra::size16384;++i) { Y_XBRA_SWAP2(indx16384[i],jndx16384[i]); }break;
+				case 32768: for(size_t i=0;i<xbra::size32768;++i) { Y_XBRA_SWAP2(indx32768[i],jndx32768[i]); }break;
 				default: run_(arr,brr,size);
 			}
 		}
@@ -309,6 +321,30 @@ for(size_t i=1; i<n; i+=2)  \
 		//! two arrays
 		static inline void run(T arr[], T brr[]) throw() {
 			for(size_t i=0;i<xbra::size8192;++i) { Y_XBRA_SWAP2(xbra::indx8192[i],xbra::jndx8192[i]); }
+		}
+	};
+
+	//! for SIZE=16384
+	template <typename T> struct xbra_for<T,16384> {
+		//! one array
+		static inline void run(T arr[])          throw() {
+			for(size_t i=0;i<xbra::size16384;++i) Y_XBRA_SWAP(xbra::indx16384[i],xbra::jndx16384[i]);
+		}
+		//! two arrays
+		static inline void run(T arr[], T brr[]) throw() {
+			for(size_t i=0;i<xbra::size16384;++i) { Y_XBRA_SWAP2(xbra::indx16384[i],xbra::jndx16384[i]); }
+		}
+	};
+
+	//! for SIZE=32768
+	template <typename T> struct xbra_for<T,32768> {
+		//! one array
+		static inline void run(T arr[])          throw() {
+			for(size_t i=0;i<xbra::size32768;++i) Y_XBRA_SWAP(xbra::indx32768[i],xbra::jndx32768[i]);
+		}
+		//! two arrays
+		static inline void run(T arr[], T brr[]) throw() {
+			for(size_t i=0;i<xbra::size32768;++i) { Y_XBRA_SWAP2(xbra::indx32768[i],xbra::jndx32768[i]); }
 		}
 	};
 }

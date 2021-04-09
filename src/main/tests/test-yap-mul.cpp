@@ -6,7 +6,7 @@ using namespace upsylon;
 
 Y_UTEST(yap_mul)
 {
-    size_t maxbits = 1024;
+    size_t maxbits = 256;
     if(argc>1)
     {
         maxbits = string_convert::to<size_t>(argv[1],"maxbits");
@@ -23,9 +23,9 @@ Y_UTEST(yap_mul)
             const apn b(alea,rbits);
 
 
-            const apn ab0 = apn:: mul(a,b);
+            const apn ab0 = apn::fmul(a,b);
             const apn ab1 = apn::lmul(a,b);
-            const apn ba0 = apn:: mul(b,a);
+            const apn ba0 = apn::fmul(b,a);
             const apn ba1 = apn::lmul(b,a);
             Y_ASSERT(ab0==ab1);
             Y_ASSERT(ba0==ab0);
@@ -76,7 +76,7 @@ Y_UTEST(yap_perf)
             apn       ab0, ab1;
             {
                 const uint64_t mark = clk.ticks();
-                ab0  = apn::mul(a,b);
+                ab0  = apn::fmul(a,b);
                 fticks += clk.ticks() - mark;
             }
 

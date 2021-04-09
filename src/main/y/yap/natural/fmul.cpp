@@ -110,84 +110,82 @@ namespace upsylon
         
         typedef memory::tight::exp2_field<cplx_t> complexes;
         
-        natural natural:: mul(const word_type *lhs, const size_t lnw,
-                              const word_type *rhs, const size_t rnw)
+        natural natural:: fmul(const word_type *lhs, const size_t lnw,
+                               const word_type *rhs, const size_t rnw)
         {
-            if(lnw>0&&rnw>0)
+            assert(lhs);
+            assert(rhs);
+            assert(lnw>0);
+            assert(rnw>0);
+            
+            
+            static memory_allocator &mgr = instance();
+            
+            //--------------------------------------------------------------
+            // initialize product memory
+            //--------------------------------------------------------------
+            const size_t p_words = lnw+rnw;              // required words for product
+            const size_t p_bytes = p_words << word_exp2; // required bytes for product
+            natural      p(p_bytes,as_capacity);         // product
+            
+            //--------------------------------------------------------------
+            // get common power of two bytes
+            //--------------------------------------------------------------
+            const size_t nn = p.width; assert( is_a_power_of_two(nn) ); assert(nn>=p_bytes);
+            
+            //--------------------------------------------------------------
+            // get memory to hold two arrays of complexes
+            //--------------------------------------------------------------
+            complexes cplx(mgr,nn<<1);
+            cplx_t   *L = *cplx;
+            
+            
             {
-                static memory_allocator &mgr = instance();
+                //----------------------------------------------------------
+                // encode data
+                //----------------------------------------------------------
+                real_t *fft1 = &L[0].re;
+                encode_re(fft1,lhs,lnw);
+                encode_im(fft1,rhs,rnw);
                 
-                //--------------------------------------------------------------
-                // initialize product memory
-                //--------------------------------------------------------------
-                const size_t p_words = lnw+rnw;              // required words for product
-                const size_t p_bytes = p_words << word_exp2; // required bytes for product
-                natural      p(p_bytes,as_capacity);         // product
+                //----------------------------------------------------------
+                // forward transform
+                //----------------------------------------------------------
+                --fft1;
+                FFT1::Forward(fft1,nn);
                 
-                //--------------------------------------------------------------
-                // get common power of two bytes
-                //--------------------------------------------------------------
-                const size_t nn = p.width; assert( is_a_power_of_two(nn) ); assert(nn>=p_bytes);
+                //----------------------------------------------------------
+                // decode data
+                //----------------------------------------------------------
+                cplx_t *R          = L+nn;
+                decode_data(fft1,&R[0].re-1,nn);
                 
-                //--------------------------------------------------------------
-                // get memory to hold two arrays of complexes
-                //--------------------------------------------------------------
-                complexes cplx(mgr,nn<<1);
-                cplx_t   *L = *cplx; //mgr.acquire_field<cplx_t>(cplx_count,cplx_bytes,cplx_shift);
-                
-                
+                //----------------------------------------------------------
+                // convolution
+                //----------------------------------------------------------
+                for(size_t i=0;i<nn;++i)
                 {
-                    //----------------------------------------------------------
-                    // encode data
-                    //----------------------------------------------------------
-                    real_t *fft1 = &L[0].re;
-                    encode_re(fft1,lhs,lnw);
-                    encode_im(fft1,rhs,rnw);
-                    
-                    //----------------------------------------------------------
-                    // forward transform
-                    //----------------------------------------------------------
-                    --fft1;
-                    //fft<real_t>::forward(fft1,nn);
-                    FFT1::Forward(fft1,nn);
-
-                    //----------------------------------------------------------
-                    // decode data
-                    //----------------------------------------------------------
-                    cplx_t *R          = L+nn;
-                    decode_data(fft1,&R[0].re-1,nn);
-                    
-                    //----------------------------------------------------------
-                    // convolution
-                    //----------------------------------------------------------
-                    for(size_t i=0;i<nn;++i)
-                    {
-                        L[i] *= R[i];
-                    }
-                    
-                    //----------------------------------------------------------
-                    //reverse transform
-                    //----------------------------------------------------------
-                    //fft<real_t>::reverse(fft1,nn);
-                    FFT1::Reverse(fft1,nn);
-
+                    L[i] *= R[i];
                 }
                 
-                //--------------------------------------------------------------
-                // finalizing product
-                //--------------------------------------------------------------
-                finalize((uint8_t *)(p.word), p_bytes, L,nn);
-                
-                
-                p.bytes=p_bytes;
-                p.update();
-                return p;
+                //----------------------------------------------------------
+                //reverse transform
+                //----------------------------------------------------------
+                //fft<real_t>::reverse(fft1,nn);
+                FFT1::Reverse(fft1,nn);
                 
             }
-            else
-            {
-                return natural();
-            }
+            
+            //--------------------------------------------------------------
+            // finalizing product
+            //--------------------------------------------------------------
+            finalize((uint8_t *)(p.word), p_bytes, L,nn);
+            
+            
+            p.bytes=p_bytes;
+            p.update();
+            return p;
+            
         }
         
         static const uint16_t sq16[256] =

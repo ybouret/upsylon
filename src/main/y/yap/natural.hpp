@@ -215,14 +215,17 @@ Y_APN_OPERATOR_API(OP,CALL)
             //
             // multiplication
             //__________________________________________________________________
+            //! long multiplicaion for lhs>0 and rhs>0
+            Y_APN_OVERLOAD_API(lmul)
+            
+            //! FFT multiplication for lhs>0 and rhs>0 
+            Y_APN_OVERLOAD_API(fmul)
+            
             Y_APN_STANDARD_API(*,mul)
 
             static natural square_of(const natural &x); //!< x*x
 
-            //! multiplicaion
-            Y_APN_OVERLOAD_API(lmul)
-
-
+           
 
 
             //__________________________________________________________________
@@ -436,6 +439,10 @@ Y_APN_OPERATOR_API(OP,CALL)
             static natural lmul(const word_type *lhs, const size_t lnw,
                                 const word_type *rhs, const size_t rnw);
 
+            //! long multiplication
+            static natural fmul(const word_type *lhs, const size_t lnw,
+                                const word_type *rhs, const size_t rnw);
+            
             typedef word_type (*boolean_op)(const word_type,const word_type);
             
             //! implementing logical operators

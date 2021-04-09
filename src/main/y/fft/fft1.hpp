@@ -56,8 +56,8 @@ namespace upsylon
         //! macor to repeat a macro on 2^[0:13]
         //______________________________________________________________________
 #define Y_FFT1_REPEAT(MACRO) \
-MACRO(1);   MACRO(2);   MACRO(4);   MACRO(8);    MACRO(16);   MACRO(32);   MACRO(64);\
-MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO(8192)
+MACRO(1);   MACRO(2);   MACRO(4);    MACRO(8);    MACRO(16);   MACRO(32);   MACRO(64);    MACRO(128); \
+MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO(8192); MACRO(16384); MACRO(32768)
 
         //______________________________________________________________________
         //
