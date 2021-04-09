@@ -30,7 +30,7 @@ namespace upsylon
         //______________________________________________________________________
         template <typename real_t> static inline
         void Forward_(real_t      *data,
-                     const size_t size) throw()
+                      const size_t size) throw()
         {
             process(data,size,positive_sinus);
         }
@@ -72,7 +72,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
                 case  0: break; Y_FFT1_REPEAT(Y_FFT1_FWD);
                 default: process<real_t>(data,size,positive_sinus);
             }
-         }
+        }
 
 
 
@@ -82,7 +82,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         //______________________________________________________________________
         template <typename real_t> static inline
         void Reverse_(real_t      *data,
-                     const size_t size) throw()
+                      const size_t size) throw()
         {
             process(data,size,negative_sinus);
         }
@@ -124,47 +124,6 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
         
         //______________________________________________________________________
         //
-        //! inner recurrent loop
-        //______________________________________________________________________
-#define Y_FFT1_LOOP() \
-/**/size_t mmax = 2;\
-/**/size_t mln2 = 1;\
-/**/while (n > mmax) {\
-/**/  const size_t istep = mmax << 1;\
-/**/  const size_t isln2 = mln2+1;\
-/**/  double       wtemp = table[isln2]; \
-/**/  const double wsq   = wtemp*wtemp; \
-/**/  double wpr         = -(wsq+wsq); \
-/**/  double wpi         = table[mln2]; \
-/**/  double wr          = 1.0;\
-/**/  double wi          = 0.0;\
-/**/  \
-/**/  for (size_t m=1; m<mmax; m+=2)\
-/**/  {\
-/**/    for (size_t i=m; i<=n; i+=istep)\
-/**/    {\
-/**/      real_t      *d_i   = data+i;\
-/**/      const size_t j     = i+mmax;\
-/**/      real_t      *d_j   = data+j;\
-/**/      const real_t rwr   = real_t(wr);\
-/**/      const real_t rwi   = real_t(wi);\
-/**/      const real_t tempr = rwr*d_j[0]-rwi*d_j[1];\
-/**/      const real_t tempi = rwr*d_j[1]+rwi*d_j[0];\
-/**/      \
-/**/      d_j[0]  = d_i[0]-tempr;\
-/**/      d_j[1]  = d_i[1]-tempi;\
-/**/      d_i[0] += tempr;\
-/**/      d_i[1] += tempi;\
-/**/    }\
-/**/    wr=(wtemp=wr)*wpr-wi*wpi+wr;\
-/**/    wi=wi*wpr+wtemp*wpi+wi;\
-/**/  }\
-/**/  mmax=istep;\
-/**/  mln2=isln2;\
-/**/}
-
-        //______________________________________________________________________
-        //
         //! process FFT of data[1..2*size] with a sin table
         //______________________________________________________________________
         template <typename real_t> static inline
@@ -184,7 +143,7 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
             // Lanczos Algorithm
             //==================================================================
             const size_t n    = size << 1;
-            Y_FFT1_LOOP()
+            fft_loop(data,n,table);
         }
 
         //______________________________________________________________________
@@ -207,7 +166,50 @@ MACRO(128); MACRO(256); MACRO(512); MACRO(1024); MACRO(2048); MACRO(4096); MACRO
             // Lanczos Algorithm
             //==================================================================
             static const size_t n = size << 1;
-            Y_FFT1_LOOP()
+            fft_loop(data,n,table);
+        }
+
+        template <typename real_t> static inline
+        void fft_loop(real_t             *data,
+                      const size_t        n,
+                      const double *const table) throw()
+        {
+            size_t mmax = 2;
+            size_t mln2 = 1;
+            while (n>mmax)
+            {
+                const size_t istep = mmax << 1;
+                const size_t isln2 = mln2+1;
+                double       wtemp = table[isln2];
+                const double wsq   = wtemp*wtemp;
+                double wpr         = -(wsq+wsq);
+                double wpi         = table[mln2];
+                double wr          = 1.0;
+                double wi          = 0.0;
+
+                for(size_t m=1; m<mmax; m+=2)
+                {
+                    for(size_t i=m; i<=n; i+=istep)
+                    {
+                        real_t      *d_i   = data+i;
+                        const size_t j     = i+mmax;
+                        real_t      *d_j   = data+j;
+                        const real_t rwr   = real_t(wr);
+                        const real_t rwi   = real_t(wi);
+                        const real_t tempr = rwr*d_j[0]-rwi*d_j[1];
+                        const real_t tempi = rwr*d_j[1]+rwi*d_j[0];
+
+                        d_j[0]  = d_i[0]-tempr;
+                        d_j[1]  = d_i[1]-tempi;
+                        d_i[0] += tempr;
+                        d_i[1] += tempi;
+                    }
+                    wr=(wtemp=wr)*wpr-wi*wpi+wr;
+                    wi=wi*wpr+wtemp*wpi+wi;
+                }
+                mmax=istep;
+                mln2=isln2;
+            }
         }
 
 
