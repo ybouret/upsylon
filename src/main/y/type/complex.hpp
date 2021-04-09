@@ -2,7 +2,7 @@
 #ifndef Y_TYPE_COMPLEX_INCLUDED
 #define Y_TYPE_COMPLEX_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/os/oor.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -242,6 +242,14 @@ namespace upsylon
         {
             return mkl::atan2_of(im,re);
         }
+
+
+        inline T       * re_addr()       throw() { return &re; }//!< &re
+        inline const T * re_addr() const throw() { return &re; }  //!< &re
+
+        inline T       *re_prev()       throw() { return out_of_reach::prev(&re); } //!< (&re)-1
+        inline const T *re_prev() const throw() { return out_of_reach::prev(&re); } //!< (&re)-1
+
     };
 
 

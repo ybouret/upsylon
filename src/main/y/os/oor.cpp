@@ -35,4 +35,15 @@ namespace upsylon {
             indices[i] = j;
         }
     }
+
+    void  *  out_of_reach:: shift(void *addr, const ptrdiff_t n) throw()
+    {
+        return static_cast<char *>(addr)+n;
+    }
+
+    const void  * out_of_reach:: shift(const void *addr, const ptrdiff_t n) throw()
+    {
+        return static_cast<const char *>(addr)+n;
+    }
+
 }

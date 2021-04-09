@@ -51,53 +51,53 @@ for(size_t i=1; i<n; i+=2)  \
 			Y_XBRA_LOOP(Y_XBRA_SWAP2)
 		}
 
-		static const unsigned size4=1;      //!< size
-		static const unsigned indx4[size4]; //!< indx
-		static const unsigned jndx4[size4]; //!< jndx
+		static const size_t         size4=1;      //!< size
+		static const unsigned short indx4[size4]; //!< indx
+		static const unsigned short jndx4[size4]; //!< jndx
 
-		static const unsigned size8=2;      //!< size
-		static const unsigned indx8[size8]; //!< indx
-		static const unsigned jndx8[size8]; //!< jndx
+		static const size_t         size8=2;      //!< size
+		static const unsigned short indx8[size8]; //!< indx
+		static const unsigned short jndx8[size8]; //!< jndx
 
-		static const unsigned size16=6;      //!< size
-		static const unsigned indx16[size16]; //!< indx
-		static const unsigned jndx16[size16]; //!< jndx
+		static const size_t         size16=6;      //!< size
+		static const unsigned short indx16[size16]; //!< indx
+		static const unsigned short jndx16[size16]; //!< jndx
 
-		static const unsigned size32=12;      //!< size
-		static const unsigned indx32[size32]; //!< indx
-		static const unsigned jndx32[size32]; //!< jndx
+		static const size_t         size32=12;      //!< size
+		static const unsigned short indx32[size32]; //!< indx
+		static const unsigned short jndx32[size32]; //!< jndx
 
-		static const unsigned size64=28;      //!< size
-		static const unsigned indx64[size64]; //!< indx
-		static const unsigned jndx64[size64]; //!< jndx
+		static const size_t         size64=28;      //!< size
+		static const unsigned short indx64[size64]; //!< indx
+		static const unsigned short jndx64[size64]; //!< jndx
 
-		static const unsigned size128=56;      //!< size
-		static const unsigned indx128[size128]; //!< indx
-		static const unsigned jndx128[size128]; //!< jndx
+		static const size_t         size128=56;      //!< size
+		static const unsigned short indx128[size128]; //!< indx
+		static const unsigned short jndx128[size128]; //!< jndx
 
-		static const unsigned size256=120;      //!< size
-		static const unsigned indx256[size256]; //!< indx
-		static const unsigned jndx256[size256]; //!< jndx
+		static const size_t         size256=120;      //!< size
+		static const unsigned short indx256[size256]; //!< indx
+		static const unsigned short jndx256[size256]; //!< jndx
 
-		static const unsigned size512=240;      //!< size
-		static const unsigned indx512[size512]; //!< indx
-		static const unsigned jndx512[size512]; //!< jndx
+		static const size_t         size512=240;      //!< size
+		static const unsigned short indx512[size512]; //!< indx
+		static const unsigned short jndx512[size512]; //!< jndx
 
-		static const unsigned size1024=496;      //!< size
-		static const unsigned indx1024[size1024]; //!< indx
-		static const unsigned jndx1024[size1024]; //!< jndx
+		static const size_t         size1024=496;      //!< size
+		static const unsigned short indx1024[size1024]; //!< indx
+		static const unsigned short jndx1024[size1024]; //!< jndx
 
-		static const unsigned size2048=992;      //!< size
-		static const unsigned indx2048[size2048]; //!< indx
-		static const unsigned jndx2048[size2048]; //!< jndx
+		static const size_t         size2048=992;      //!< size
+		static const unsigned short indx2048[size2048]; //!< indx
+		static const unsigned short jndx2048[size2048]; //!< jndx
 
-		static const unsigned size4096=2016;      //!< size
-		static const unsigned indx4096[size4096]; //!< indx
-		static const unsigned jndx4096[size4096]; //!< jndx
+		static const size_t         size4096=2016;      //!< size
+		static const unsigned short indx4096[size4096]; //!< indx
+		static const unsigned short jndx4096[size4096]; //!< jndx
 
-		static const unsigned size8192=4032;      //!< size
-		static const unsigned indx8192[size8192]; //!< indx
-		static const unsigned jndx8192[size8192]; //!< jndx
+		static const size_t         size8192=4032;      //!< size
+		static const unsigned short indx8192[size8192]; //!< indx
+		static const unsigned short jndx8192[size8192]; //!< jndx
 
 		//! dispatching calls for one array
 		template <typename T> static inline void run(T arr[], const size_t size) throw() {

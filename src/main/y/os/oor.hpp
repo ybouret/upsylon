@@ -17,6 +17,18 @@ namespace upsylon {
         static void fill_indices(size_t      *indices,
                                  const size_t length,
                                  const size_t offset) throw(); //!< indices[0..length-1] = [ offset...offset+length-1]
+
+        static void       *shift(void       *, const ptrdiff_t) throw(); //!< shift address
+        static const void *shift(const void *, const ptrdiff_t) throw(); //!< shift address
+
+        //! get previous address
+        template <typename T> static inline
+        T * prev(T *obj) throw()
+        {
+            return static_cast<T*>(shift(obj,-static_cast<ptrdiff_t>(sizeof(T))));
+        }
+
+
     };
 
 

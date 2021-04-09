@@ -29,12 +29,17 @@ namespace
 
     static inline void write_array(ios::ostream &fp, const accessible<unsigned> &arr)
     {
-        fp("\t%u",arr[1]);
-        for(size_t i=2;i<=arr.size();++i)
+        const size_t n  = arr.size();
+        bool        ret = false;
+        for(size_t i=1;i<=n;++i)
         {
-            fp(",%u",arr[i]);
+            fp("%6u",arr[i]);
+            if(i<n) fp << ',';
+            ret = false;
+            if(0==(i%16)) { ret=true; fp << '\n'; }
         }
-        fp << '\n';
+        if(!ret)
+            fp << '\n';
     }
 
 
@@ -180,15 +185,15 @@ Y_UTEST(xbra_gen)
         if(count>0)
         {
             header << '\n';
-            header("\t\tstatic const unsigned size%u=%u;      //!< size\n", size, count);
-            header("\t\tstatic const unsigned indx%u[size%u]; //!< indx\n", size, size);
-            header("\t\tstatic const unsigned jndx%u[size%u]; //!< jndx\n", size, size);
+            header("\t\tstatic const size_t         size%u=%u;      //!< size\n", size, count);
+            header("\t\tstatic const unsigned short indx%u[size%u]; //!< indx\n", size, size);
+            header("\t\tstatic const unsigned short jndx%u[size%u]; //!< jndx\n", size, size);
 
             source << '\n';
-            source("\tconst unsigned xbra::indx%u[size%u]={\n",size,size);
+            source("\tconst unsigned short xbra::indx%u[size%u]={\n",size,size);
             write_array(source,swaps.I);
             source("\t};\n");
-            source("\tconst unsigned xbra::jndx%u[size%u]={\n",size,size);
+            source("\tconst unsigned short xbra::jndx%u[size%u]={\n",size,size);
             write_array(source,swaps.J);
             source("\t};\n");
         }
@@ -400,14 +405,21 @@ namespace upsylon {
         do_test_xbra<T,8192>(D);
         do_test_xbra<T,16384>(D);
         do_test_xbra<T,32768>(D);
+        do_test_xbra<T,65536>(D);
 
     }
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(xbra)
 {
     double D = 0.1;
+    if(argc>1)
+    {
+        D = string_convert::to<float>(argv[1],"D");
+    }
     do_test_xbras<float>(D);
     do_test_xbras<double>(D);
 
