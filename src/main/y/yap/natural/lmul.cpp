@@ -26,20 +26,14 @@ namespace upsylon
                         {
                             word_type        &p    = ptr[i+j];
                             const core_type   temp = core_type(p) + carry + L * core_type(rhs[j]);
-                            p      = word_type(temp%word_radix);
-                            carry  = temp/word_radix;
+                            //p      = word_type(temp%word_radix);
+                            //carry  = temp/word_radix;
+                            p        = word_type(temp&word_maximum);
+                            carry    = temp >> word_bits;
                         }
                         ptr[rnw+i] = word_type(carry);
                     }
-
-#if 0
-                    std::cerr << '(';
-                    for(size_t i=0;i<pnw;++i)
-                    {
-                        std::cerr << ' ' << ptr[i];
-                    }
-                    std::cerr << ' ' << ')' << std::endl;
-#endif
+                    
                 }
 
                 res.words = pnw;

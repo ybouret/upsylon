@@ -54,12 +54,12 @@ namespace upsylon {
 #else
             typedef unsigned_int<(core_size>>1)>::type         word_type; //!< memory of word_type
 #endif
-            static const size_t                                word_size  = sizeof(word_type);            //!< word size
-            static const size_t                                word_bits  = word_size << 3;               //!< word bits
-            static const size_t                                word_exp2  = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
-            static const size_t                                word_mask  = word_size-1;                  //!< word_size - 1 = least significant bits
-            static const core_type                             word_max   = limit_of<word_type>::maximum; //!< maximum  for core_type
-            static const core_type                             word_radix = core_type(1) << word_bits;    //!< radix    for core_type
+            static const size_t                                word_size    = sizeof(word_type);            //!< word size
+            static const size_t                                word_bits    = word_size << 3;               //!< word bits
+            static const size_t                                word_exp2    = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
+            static const size_t                                word_mask    = word_size-1;                  //!< word_size - 1 = least significant bits
+            static const core_type                             word_maximum = limit_of<word_type>::maximum; //!< maximum  for core_type
+            static const core_type                             word_radix   = core_type(1) << word_bits;    //!< radix    for core_type
             static const size_t                                words_per_utype = sizeof(utype)/word_size; //!< number of words per utype
 
             //__________________________________________________________________
