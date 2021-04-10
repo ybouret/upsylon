@@ -240,7 +240,9 @@ Y_UTEST_INIT(256)
     Y_UTEST(yap_lcm);
     Y_UTEST(yap_mul);
     Y_UTEST(yap_perf);
-
+    Y_UTEST(yap_sq);
+    Y_UTEST(yap_sq_perf);
+    
     Y_UTEST(jive_char);
     Y_UTEST(jive_tags);
     Y_UTEST(jive_module);

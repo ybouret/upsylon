@@ -45,6 +45,11 @@ namespace upsylon
             
             return res;
         }
+        
+        natural natural::lsquare(const natural &x)
+        {
+            return lmul(x.word,x.words,x.word,x.words);
+        }
     }
     
 }

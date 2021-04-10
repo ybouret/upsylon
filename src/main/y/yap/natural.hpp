@@ -223,6 +223,13 @@ Y_APN_OPERATOR_API(OP,CALL)
             
             Y_APN_STANDARD_API(*,mul)
 
+            //__________________________________________________________________
+            //
+            // square
+            //__________________________________________________________________
+            
+            static natural fsquare(const natural &x);   //!< x*x, x>0, FFT  mul
+            static natural lsquare(const natural &x);   //!< x*x, x>0, long mul
             static natural square_of(const natural &x); //!< x*x
 
            
