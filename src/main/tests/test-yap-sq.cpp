@@ -54,14 +54,13 @@ Y_UTEST(yap_sq_perf)
     
     real_time_clock clk;
     
-    //std::cerr.precision(3);
-    //std::cerr << std::scientific;
+    std::cerr.precision(3);
     
     for(size_t nbits=32;nbits<=maxbits;nbits<<=1)
     {
         uint64_t lticks=0;
         uint64_t fticks=0;
-        std::cerr << std::setw(6) << nbits  << " bits/" << std::setw(6) << (nbits/8) << " bytes : ";
+        std::cerr << std::setw(8) << nbits << " bits/" << std::setw(7) << nbits/apn::word_bits << " words: ";
         std::cerr.flush();
         unsigned cycles = 0;
         double   ftime  = 0;
@@ -85,7 +84,9 @@ Y_UTEST(yap_sq_perf)
         std::cerr << human_readable(cycles);
         std::cerr << " | fft  : " <<  human_readable(fspeed) << "op/s";
         std::cerr << " | long : " <<  human_readable(lspeed) << "op/s";
-        std::cerr << " | r = " << double(fspeed)/double(lspeed);
+        const double r = double(fspeed)/double(lspeed);
+        std::cerr << " | r = " << r;
+        if(r>=1) { std::cerr << " (*)"; }
         std::cerr << std::endl;
     }
     std::cerr << std::endl;
