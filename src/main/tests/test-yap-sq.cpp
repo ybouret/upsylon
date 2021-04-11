@@ -88,6 +88,8 @@ Y_UTEST(yap_sq_perf)
         std::cerr << " | r = " << double(fspeed)/double(lspeed);
         std::cerr << std::endl;
     }
-    
+    std::cerr << std::endl;
+    std::cerr << "Memory Usage:" << std::endl;
+    std::cerr << *yap::natural::instance() << std::endl;
 }
 Y_UTEST_DONE()

@@ -100,7 +100,6 @@ Y_UTEST(yap_mul_perf)
         //ios::ocstream::echo(filename, "%u %g %g\n", unsigned(nbits), log10(fspeed), log10(lspeed));
     }
     std::cerr << std::endl;
-    std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;
     std::cerr << *yap::natural::instance() << std::endl;
 
