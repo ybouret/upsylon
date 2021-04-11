@@ -32,7 +32,7 @@ namespace upsylon
                     {
                         word_type        &here = *(sub++);
                         const core_type   temp = core_type(here) + carry + L * core_type(*(r++));
-                        here  = word_type(temp&word_maximum);
+                        here  = word_type(temp&word_maxi);
                         carry = temp >> word_bits;
                     }
                     *(tgt++) = word_type(carry);

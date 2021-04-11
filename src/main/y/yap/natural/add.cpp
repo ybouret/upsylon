@@ -36,7 +36,7 @@ namespace upsylon
                 carry += core_type(small_data[i])+core_type(large_data[i]);
                 sum[i] = word_type(carry);
                 carry >>= word_bits;
-                assert(carry<core_type(word_maximum));
+                assert(carry<core_type(word_maxi));
             }
 
             //--------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace upsylon
                 carry += core_type(large_data[i]);
                 sum[i] = word_type(carry);
                 carry >>= word_bits;
-                assert(carry<core_type(word_maximum));
+                assert(carry<core_type(word_maxi));
             }
 
             //__________________________________________________________________
