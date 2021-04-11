@@ -33,11 +33,15 @@ Y_UTEST_DONE()
 
 #include "y/os/real-time-clock.hpp"
 #include "y/code/hr-ints.hpp"
+#include "y/concurrent/nucleus/thread.hpp"
+#include "y/os/hw.hpp"
 
 Y_UTEST(yap_sq_perf)
 {
-    size_t   maxbits = 1024;
-    double   D       = 0.2;
+    concurrent::nucleus::thread::assign_current( hardware::nprocs()-1, program);
+
+    size_t   maxbits = 131072;
+    double   D       = 0.5;
     if(argc>1)
     {
         maxbits = string_convert::to<size_t>(argv[1],"maxbits");
@@ -50,39 +54,38 @@ Y_UTEST(yap_sq_perf)
     
     real_time_clock clk;
     
-    for(size_t nbits=8;nbits<=maxbits;nbits<<=1)
+    //std::cerr.precision(3);
+    //std::cerr << std::scientific;
+    
+    for(size_t nbits=32;nbits<=maxbits;nbits<<=1)
     {
         uint64_t lticks=0;
         uint64_t fticks=0;
-        std::cerr << std::setw(6) << nbits  << " : ";
+        std::cerr << std::setw(6) << nbits  << " bits/" << std::setw(6) << (nbits/8) << " bytes : ";
+        std::cerr.flush();
         unsigned cycles = 0;
+        double   ftime  = 0;
+        double   ltime  = 0;
         do
         {
             const apn a(alea,nbits);
             apn       x;
             apn       y;
-            
-            {
-                const uint64_t mark = clk.ticks();
-                x = apn::fsquare(a);
-                fticks += clk.ticks()-mark;
-            }
-            
-            {
-                const uint64_t mark = clk.ticks();
-                y = apn::lsquare(a);
-                lticks += clk.ticks()-mark;
-            }
-            
+            Y_RTC_ADD(fticks,x=apn::fsquare(a));
+            Y_RTC_ADD(lticks,y=apn::lsquare(a));
             Y_ASSERT(y==x);
             ++cycles;
+            ftime = clk(fticks);
+            ltime = clk(lticks);
         }
-        while( clk(lticks) < D);
+        while(ftime<D && ltime<D);
+        const int64_t fspeed = int64_t(floor( cycles/ftime + 0.5 ));
+        const int64_t lspeed = int64_t(floor( cycles/ltime + 0.5 ));
+        
         std::cerr << human_readable(cycles);
-        std::cerr << " | FFT  : " << clk(fticks);
-        std::cerr << " | LONG : " << clk(lticks);
-        //const double fspeed = cycles/clk(fticks);
-        //const double lspeed = cycles/clk(lticks);
+        std::cerr << " | fft  : " <<  human_readable(fspeed) << "op/s";
+        std::cerr << " | long : " <<  human_readable(lspeed) << "op/s";
+        std::cerr << " | r = " << double(fspeed)/double(lspeed);
         std::cerr << std::endl;
     }
     

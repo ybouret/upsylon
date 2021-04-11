@@ -43,10 +43,13 @@ Y_UTEST_DONE()
 #include "y/ios/ocstream.hpp"
 #include <cmath>
 #include "y/code/hr-ints.hpp"
-
-Y_UTEST(yap_perf)
+#include "y/concurrent/nucleus/thread.hpp"
+#include "y/os/hw.hpp"
+Y_UTEST(yap_mul_perf)
 {
-    size_t maxbits = 16384;
+    concurrent::nucleus::thread::assign_current( hardware::nprocs()-1, program);
+    
+    size_t maxbits = 131072;
     double D       = 0.25;
 
     if(argc>1)
@@ -60,40 +63,41 @@ Y_UTEST(yap_perf)
     }
 
 
-    const string filename = "yap-perf.dat";
-    ios::ocstream::overwrite(filename);
+    //const string filename = "yap-perf.dat";
+    //ios::ocstream::overwrite(filename);
     real_time_clock clk;
     for(size_t nbits=32;nbits<=maxbits; nbits <<= 1)
     {
-        std::cerr << std::setw(8) << nbits << " bits: "; std::cerr.flush();
+        std::cerr << std::setw(8) << nbits << " bits/" << std::setw(7) << nbits/8 << " bytes: ";
+        std::cerr.flush();
         uint64_t fticks = 0;
         uint64_t lticks = 0;
         unsigned cycles = 0;
+        double   ftime  = 0;
+        double   ltime  = 0;
         do
         {
             const apn a(alea,nbits);
             const apn b(alea,nbits);
             apn       ab0, ab1;
-            {
-                const uint64_t mark = clk.ticks();
-                ab0  = apn::fmul(a,b);
-                fticks += clk.ticks() - mark;
-            }
-
-            {
-                const uint64_t mark = clk.ticks();
-                ab1   = apn::lmul(a,b);
-                lticks += clk.ticks() - mark;
-            }
+            Y_RTC_ADD(fticks,ab0=apn::fmul(a,b));
+            Y_RTC_ADD(lticks,ab1=apn::lmul(a,b));
             Y_ASSERT(ab0==ab1);
             ++cycles;
+            ftime = clk(fticks);
+            ltime = clk(lticks);
         }
-        while( clk(lticks) < D);
-        std::cerr << "#" << human_readable(cycles) << " | fft: " << clk(fticks) << " | long: " << clk(lticks) << std::endl;
-
-        const double fspeed = double(cycles)/clk(fticks);
-        const double lspeed = double(cycles)/clk(lticks);
-        ios::ocstream::echo(filename, "%u %g %g\n", unsigned(nbits), log10(fspeed), log10(lspeed));
+        while(ftime<D && ltime<D);
+        
+        const int64_t fspeed = int64_t(floor( cycles/ftime + 0.5 ));
+        const int64_t lspeed = int64_t(floor( cycles/ltime + 0.5 ));
+        
+        std::cerr << human_readable(cycles);
+        std::cerr << " | fft  : " <<  human_readable(fspeed) << "op/s";
+        std::cerr << " | long : " <<  human_readable(lspeed) << "op/s";
+        std::cerr << " | r = " << double(fspeed)/double(lspeed);
+        std::cerr << std::endl;
+        //ios::ocstream::echo(filename, "%u %g %g\n", unsigned(nbits), log10(fspeed), log10(lspeed));
     }
     std::cerr << std::endl;
     std::cerr << std::endl;
