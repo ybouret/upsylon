@@ -61,7 +61,7 @@ namespace upsylon {
             static const core_type                             word_maxi       = limit_of<word_type>::maximum; //!< maximum  for core_type
             static const core_type                             word_radix      = core_type(1) << word_bits;    //!< radix    for core_type
             static const size_t                                words_per_utype = sizeof(utype)/word_size;      //!< number of words per utype
-            static       size_t                                switch_to_fft;                                  //!< bytes to switch to fft for mul/sq
+            static       size_t                                switch_to_fft;                                  //!< words to switch to fft for mul/sq
             
             //__________________________________________________________________
             //

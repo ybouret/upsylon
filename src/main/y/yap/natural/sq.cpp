@@ -49,7 +49,15 @@ namespace upsylon
                 case 1: assert(x<256); return sq16[ x.word[0] ];
                 default: break;
             }
-            return fsquare(x);
+            assert(x.words>0);
+            if(x.words>=switch_to_fft)
+            {
+                return fsquare(x);
+            }
+            else
+            {
+                return lsquare(x);
+            }
         }
         
     }
