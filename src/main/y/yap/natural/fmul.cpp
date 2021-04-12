@@ -71,7 +71,9 @@ namespace upsylon
             size_t i=0;
             for(size_t j=0;j<lnw;++j)
             {
+
 #if 1
+
 #    if Y_BYTE_ORDER == Y_LIT_ENDIAN
                 const word_t w = lhs[j];
 #    else
@@ -101,6 +103,7 @@ namespace upsylon
             {
 
 #if 1
+
 #    if Y_BYTE_ORDER == Y_LIT_ENDIAN
                 const word_t w = rhs[j];
 #    else
@@ -242,7 +245,6 @@ namespace upsylon
                 //----------------------------------------------------------
                 //reverse transform
                 //----------------------------------------------------------
-                //fft<real_t>::reverse(fft1,nn);
                 FFT1::Reverse(fft1,nn);
                 
             }
@@ -250,7 +252,7 @@ namespace upsylon
             //--------------------------------------------------------------
             // finalizing product
             //--------------------------------------------------------------
-            finalize((uint8_t *)(p.word), p_bytes, L,nn);
+            finalize((uint8_t *)(p.word),p_bytes, L,nn);
             
             
             p.bytes=p_bytes;

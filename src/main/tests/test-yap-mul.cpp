@@ -64,8 +64,6 @@ Y_UTEST(yap_mul_perf)
 
     std::cerr.precision(3);
     
-    //const string filename = "yap-perf.dat";
-    //ios::ocstream::overwrite(filename);
     real_time_clock clk;
     for(size_t nbits=32;nbits<=maxbits; nbits <<= 1)
     {
@@ -103,7 +101,6 @@ Y_UTEST(yap_mul_perf)
             std::cerr << " (*)";
         }
         std::cerr << std::endl;
-        //ios::ocstream::echo(filename, "%u %g %g\n", unsigned(nbits), log10(fspeed), log10(lspeed));
     }
     std::cerr << std::endl;
     std::cerr << "Memory Usage:" << std::endl;
