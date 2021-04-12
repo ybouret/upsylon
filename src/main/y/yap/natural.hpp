@@ -59,7 +59,7 @@ namespace upsylon {
             static const size_t                                word_exp2       = ilog2<word_size>::value;      //!< word_size = 1 << word_exp2
             static const size_t                                word_mask       = word_size-1;                  //!< word_size - 1 = least significant bits
             static const core_type                             word_maxi       = limit_of<word_type>::maximum; //!< maximum  for core_type
-            static const core_type                             word_radix      = core_type(1) << word_bits;    //!< radix    for core_type
+            static const core_type                             word_base       = core_type(1) << word_bits;    //!< base     for core_type
             static const size_t                                words_per_utype = sizeof(utype)/word_size;      //!< number of words per utype
             static       size_t                                switch_to_fft;                                  //!< words to switch to fft for mul/sq
             

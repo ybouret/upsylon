@@ -355,6 +355,7 @@ test-yap-mod-exp.cpp
 test-yap-lcm.cpp
 test-yap-mul.cpp
 test-yap-sq.cpp
+test-yap-w2r.cpp
 )
 ADD_TEST(yap:n    test-main yap_n)
 ADD_TEST(yap:z    test-main yap_z)

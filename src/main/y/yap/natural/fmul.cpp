@@ -12,8 +12,57 @@ namespace upsylon
         typedef double             real_t;
         typedef complex<real_t>    cplx_t;
         typedef natural::word_type word_t;
-        
-        
+
+        namespace
+        {
+            template <
+            const size_t LENGTH,
+            const size_t OFFSET> struct transfer;
+
+            template <const size_t OFFSET>
+            struct transfer<1,OFFSET>
+            {
+                static inline size_t run(real_t        *fft1,
+                                         const uint8_t *byte,
+                                         size_t         i) throw()
+                {
+                    fft1[ (i<<1)+OFFSET ] = byte[0];
+                    return ++i;
+                }
+            };
+
+            template <const size_t OFFSET>
+            struct transfer<2,OFFSET>
+            {
+                static inline size_t run(real_t        *fft1,
+                                         const uint8_t *byte,
+                                         const size_t   i) throw()
+                {
+                    fft1[ ( (i+0)<<1 )+OFFSET ] = byte[0];
+                    fft1[ ( (i+1)<<1 )+OFFSET ] = byte[1];
+                    return i+2;
+                }
+            };
+
+
+            template <const size_t OFFSET>
+            struct transfer<4,OFFSET>
+            {
+                static inline size_t run(real_t        *fft1,
+                                         const uint8_t *byte,
+                                         const size_t   i) throw()
+                {
+                    fft1[ ( (i+0)<<1 )+OFFSET ] = byte[0];
+                    fft1[ ( (i+1)<<1 )+OFFSET ] = byte[1];
+                    fft1[ ( (i+2)<<1 )+OFFSET ] = byte[2];
+                    fft1[ ( (i+3)<<1 )+OFFSET ] = byte[3];
+                    return i+4;
+                }
+            };
+
+        }
+
+
         static inline
         void encode_re(real_t       *fft1,
                        const word_t *lhs,
@@ -22,12 +71,22 @@ namespace upsylon
             size_t i=0;
             for(size_t j=0;j<lnw;++j)
             {
+#if 1
+#    if Y_BYTE_ORDER == Y_LIT_ENDIAN
+                const word_t w = lhs[j];
+#    else
+                const word_t w = swap_le(lhs[j]);
+#    endif
+                i = transfer<sizeof(word_t),0>::run(fft1,(const uint8_t *)&w,i);
+#else
                 word_t w = lhs[j];
                 for(size_t k=0;k<sizeof(word_t);++k,++i)
                 {
                     fft1[ (i<<1) ] = uint8_t(w);
                     w >>= 8;
                 }
+#endif
+
             }
         }
         
@@ -40,12 +99,22 @@ namespace upsylon
             size_t i=0;
             for(size_t j=0;j<rnw;++j)
             {
+
+#if 1
+#    if Y_BYTE_ORDER == Y_LIT_ENDIAN
+                const word_t w = rhs[j];
+#    else
+                const word_t w = swap_le(rhs[j]);
+#    endif
+                i = transfer<sizeof(word_t),1>::run(fft1,(const uint8_t *)&w,i);
+#else
                 word_t w = rhs[j];
                 for(size_t k=0;k<sizeof(word_t);++k,++i)
                 {
                     fft1[ (i<<1)+1 ] = uint8_t(w);
                     w >>= 8;
                 }
+#endif
             }
         }
         
@@ -144,7 +213,7 @@ namespace upsylon
                 //----------------------------------------------------------
                 // encode data
                 //----------------------------------------------------------
-                real_t *fft1 = &L[0].re;
+                real_t   *fft1 = &L[0].re;
                 encode_re(fft1,lhs,lnw);
                 encode_im(fft1,rhs,rnw);
                 

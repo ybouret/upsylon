@@ -12,7 +12,7 @@ namespace upsylon
             double ans = 0;
             for(size_t i=words;i>0;)
             {
-                ans *= word_radix;
+                ans *= word_base;
                 ans += word[--i];
             }
             return ans;

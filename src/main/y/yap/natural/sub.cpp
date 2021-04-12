@@ -14,7 +14,7 @@ namespace upsylon
 
             static const char fn[] = "yap::natural::sub: ";
             typedef signed_int<core_size>::type carry_t;
-            static  const  carry_t              radix(word_radix);
+            static  const  carry_t              radix(word_base);
 
             if(lnw<rnw)
             {
