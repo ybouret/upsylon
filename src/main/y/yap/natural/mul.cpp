@@ -8,7 +8,7 @@ namespace upsylon
     {
         
         
-        size_t natural:: switch_to_fft = 1024;
+        size_t natural:: switch_to_fft = 512;
         
         natural natural:: mul(const word_type *lhs, const size_t lnw, const word_type *rhs, const size_t rnw)
         {

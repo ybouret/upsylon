@@ -7,7 +7,12 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
+    //
     //! real time clock interface
+    //
+    //__________________________________________________________________________
     class real_time_clock
     {
     public:
@@ -32,14 +37,22 @@ namespace upsylon
         freq_type freq;
     };
 
-    
-#define Y_RTC_ADD(TMX,CODE) do {\
-/**/ const uint64_t __Y_RTC_MARK = real_time_clock::ticks(); \
-/**/ do { CODE; } while(false); \
-/**/ (TMX) += real_time_clock::ticks() - __Y_RTC_MARK; \
-/**/ } while(false)
-    
+    //__________________________________________________________________________
+    //
+    //! add ellpased ticks to TMX for executing CODE
+    //__________________________________________________________________________
+#define Y_RTC_ADD(TMX,CODE) do {                                \
+/**/    const uint64_t __Y_RTC_MARK = real_time_clock::ticks(); \
+/**/    do { CODE; } while(false);                              \
+/**/    (TMX) += real_time_clock::ticks() - __Y_RTC_MARK;       \
+/**/  } while(false)
+
+    //__________________________________________________________________________
+    //
+    //
     //! stopwatch interface
+    //
+    //__________________________________________________________________________
     class stopwatch : public real_time_clock
     {
     public:

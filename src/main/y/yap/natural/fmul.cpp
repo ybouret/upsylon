@@ -168,13 +168,15 @@ namespace upsylon
                 carry          = q;
             }
             prod[top] = uint8_t(carry);
-            
+
+#    if Y_BYTE_ORDER != Y_LIT_ENDIAN
             const size_t  nw = natural::words_for(p_bytes);
             word_t       *w  = (word_t *)prod;
             for(size_t i=0;i<nw;++i)
             {
                 w[i] = swap_le(w[i]);
             }
+#endif
         }
         
         typedef memory::tight::exp2_field<cplx_t> complexes;
