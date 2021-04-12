@@ -46,7 +46,7 @@ namespace upsylon
             switch(x.bytes)
             {
                 case 0: return natural();
-                case 1: assert(x<256); return sq16[ x.word[0] ];
+                case 1: assert(x<256); return natural( utype(sq16[ x.word[0] ]) );
                 default: break;
             }
             assert(x.words>0);
