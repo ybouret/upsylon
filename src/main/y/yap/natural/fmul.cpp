@@ -156,13 +156,13 @@ namespace upsylon
         
         static inline
         void finalize(uint8_t      *prod,
-                      const size_t  p_bytes,
+                      const size_t  size,
                       const cplx_t *L,
                       const size_t  nn) throw()
         {
             const real_t fac   = 1.0/nn;
             real_t       carry = 0.0;
-            const size_t top   = p_bytes - 1;
+            const size_t top   = size - 1;
             for(size_t i=0;i<top;++i)
             {
                 const real_t q = floor( (carry += (L[i].re*fac + 0.5) ) * 0.00390625 );
@@ -173,7 +173,7 @@ namespace upsylon
             prod[top] = uint8_t(carry);
 
 #    if Y_BYTE_ORDER != Y_LIT_ENDIAN
-            const size_t  nw = natural::words_for(p_bytes);
+            const size_t  nw = natural::words_for(size);
             word_t       *w  = (word_t *)prod;
             for(size_t i=0;i<nw;++i)
             {
