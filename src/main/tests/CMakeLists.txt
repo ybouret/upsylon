@@ -209,7 +209,8 @@ test-hmac.cpp
 test-kr-sc.cpp test-kr-bc.cpp test-uuid.cpp test-digest.cpp 
 test-mperf.cpp
 test-pearson.cpp
-test-md.cpp)
+test-md.cpp
+test-kr-rsa.cpp)
 
 ADD_TEST(crypto:hashing     test-main hashing)
 ADD_TEST(crypto:mperf       test-main mperf ${HERE}/ten.db)
@@ -220,6 +221,7 @@ ADD_TEST(crypto:kr_bc       test-main kr_bc)
 ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
+ADD_TEST(crypto:rsa         test-main kr_rsa)
 
 SOURCE_GROUP(mk FILES test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp test-xbra.cpp)
 ADD_TEST(mk:triplet     test-main triplet)
