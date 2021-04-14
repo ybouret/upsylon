@@ -8,8 +8,11 @@
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
+
+        
+
         //______________________________________________________________________
         //
         //

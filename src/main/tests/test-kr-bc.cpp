@@ -115,7 +115,7 @@ namespace
 
                 c->flush(*enc,*ini,length);
 
-                // restor state
+                // restorw state
                 c->last_plain = P;
                 c->last_crypt = C;
                 c->flush(*dec,*enc,length);

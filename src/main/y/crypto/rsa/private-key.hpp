@@ -9,7 +9,7 @@
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
 
 
@@ -26,7 +26,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            static const char CLID[];
+            static const char CLID[]; //!< "rsa_private_key";
 
             //__________________________________________________________________
             //
@@ -60,6 +60,12 @@ namespace upsylon
 
             //! check consistency
             void check() const;
+
+            //! apply by CRT
+            apn CRT(const apn &M) const;
+
+            //! create a test key
+            static rsa_private_key *prv(const apn &p, const apn &q, const apn &e);
 
             //__________________________________________________________________
             //

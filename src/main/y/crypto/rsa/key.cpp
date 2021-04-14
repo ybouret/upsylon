@@ -3,7 +3,7 @@
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
         rsa_key:: ~rsa_key() throw()
         {

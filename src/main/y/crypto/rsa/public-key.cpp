@@ -3,10 +3,11 @@
 
 #include "y/crypto/rsa/public-key.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
 
         const char rsa_public_key:: CLID[] = "rsa_public_key";
@@ -34,6 +35,13 @@ namespace upsylon
         Y_RSA_KEY_FIELD(publicExponent)
         {
             
+        }
+
+        rsa_public_key * rsa_public_key:: pub(const apn &p, const apn &q, const apn &e)
+        {
+            if(p==q) throw exception("%s.pub(p=q)",CLID);
+            const apn n = p*q;
+            return new rsa_public_key(n,e);
         }
 
     }

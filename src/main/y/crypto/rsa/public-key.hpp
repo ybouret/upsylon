@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
         //! helper for constructor
 #define Y_RSA_KEY_FIELD(NAME) NAME(NAME##_)
@@ -26,7 +26,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            static const char CLID[];
+            static const char CLID[]; //!< "rsa_public_key"
 
             //__________________________________________________________________
             //
@@ -48,12 +48,22 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            // methods
+            //__________________________________________________________________
+
+            //! create a manual public key from two primes and an exponent
+            static rsa_public_key *pub(const apn &p, const apn &q, const apn &e);
+
+
+            //__________________________________________________________________
+            //
             // members
             //__________________________________________________________________
             const apn modulus;        //!< RSA modulus
             const apn publicExponent; //!< publicExponent
 
-            
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(rsa_public_key);

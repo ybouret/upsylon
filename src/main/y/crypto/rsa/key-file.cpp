@@ -8,7 +8,7 @@
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
 
         key_file:: ~key_file() throw()
@@ -134,7 +134,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
 
         rsa_public_key * key_file:: pub() const

@@ -7,7 +7,7 @@
 #include "y/associative/hash/map.hpp"
 namespace upsylon
 {
-    namespace crytpo
+    namespace crypto
     {
         //______________________________________________________________________
         //
