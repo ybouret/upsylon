@@ -5,6 +5,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/string.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/os/real-time-clock.hpp"
 
 using namespace upsylon;
 
@@ -13,7 +14,64 @@ Y_UTEST(kr_rsa)
 {
 
 
+   
+
+    if(argc>1)
     {
+        const string     filename = argv[1];
+        ios::icstream    fp(filename);
+        crypto::key_file kf(fp);
+
+        std::cerr << "creating public  key..." << std::endl;
+        auto_ptr<crypto::rsa_public_key> pub = kf.pub();
+
+        std::cerr << "creating private key..." << std::endl;
+        auto_ptr<crypto::rsa_private_key> prv = kf.prv();
+
+        prv->check();
+
+        std::cerr << "done" << std::endl;
+        const size_t bits = pub->modulus.bits();
+        std::cerr << "#bits=" << bits << std::endl;
+        {
+            ios::ocstream fp("pub.bin");
+            pub->serialize_class(fp);
+        }
+
+        {
+            ios::ocstream fp("prv.bin");
+            prv->serialize_class(fp);
+        }
+
+        std::cerr << std::hex;
+        const apn message(alea,bits/2);
+        (std::cerr << "message: " << message << std::endl).flush();
+        
+        uint64_t       mark    = real_time_clock::ticks();
+        const apn      encoded = apn::mod_exp(message,pub->publicExponent,  pub->modulus);
+        const uint64_t enc     = real_time_clock::ticks()-mark;
+        
+        (std::cerr << "encoded: " << encoded << std::endl).flush();
+        (std::cerr << "        \\_ticks=" << enc << std::endl).flush();
+        
+        mark                   = real_time_clock::ticks();
+        const apn      decoded = apn::mod_exp(encoded,prv->privateExponent, prv->modulus);
+        const uint64_t dec     = real_time_clock::ticks()-mark;
+        (std::cerr << "decoded: " << decoded << std::endl).flush();
+        (std::cerr << "        \\_ticks=" << dec << std::endl).flush();
+
+        mark                  = real_time_clock::ticks();
+        const apn decoded_crt = prv->CRT(encoded);
+        const uint64_t    crt = real_time_clock::ticks()-mark;
+        (std::cerr << "decoded: " << decoded_crt << std::endl).flush();
+        (std::cerr << "        \\_ticks=" << crt << std::endl).flush();
+
+        Y_CHECK(decoded_crt==decoded);
+        Y_CHECK(decoded==message);
+    }
+    
+    {
+        std::cerr << std::dec;
         std::cerr << "Testing manual RSA" << std::endl;
         const apn p = 61;
         const apn q = 53;
@@ -37,45 +95,8 @@ Y_UTEST(kr_rsa)
             Y_ASSERT(D==P);
         }
         std::cerr << std::endl;
-
-
-    }
-
-    if(argc>1)
-    {
-        const string     filename = argv[1];
-        ios::icstream    fp(filename);
-        crypto::key_file kf(fp);
-
-        std::cerr << "creating public  key..." << std::endl;
-        auto_ptr<crypto::rsa_public_key> pub = kf.pub();
-
-        std::cerr << "creating private key..." << std::endl;
-        auto_ptr<crypto::rsa_private_key> prv = kf.prv();
-
-        prv->check();
-
-        std::cerr << "done" << std::endl;
-
-        {
-            ios::ocstream fp("pub.bin");
-            pub->serialize_class(fp);
-        }
-
-        {
-            ios::ocstream fp("prv.bin");
-            prv->serialize_class(fp);
-        }
-
-        std::cerr << std::hex;
-        const apn message = 0x1234;
-        const apn encoded = apn::mod_exp(message,pub->publicExponent,  pub->modulus);
-        const apn decoded = apn::mod_exp(encoded,prv->privateExponent, prv->modulus);
-        std::cerr << "message: " << message << std::endl;
-        std::cerr << "encoded: " << encoded << std::endl;
-        std::cerr << "decoded: " << decoded << std::endl;
-
-
+        
+        
     }
 }
 Y_UTEST_DONE()
