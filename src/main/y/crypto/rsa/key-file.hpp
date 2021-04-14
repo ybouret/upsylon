@@ -32,8 +32,8 @@ namespace upsylon
 
             const apn & operator[](const char *id) const; //!< access
 
-            rsa_public_key  *pub() const;
-            rsa_private_key *prv() const;
+            rsa_public_key  *pub() const; //!< return a public key
+            rsa_private_key *prv() const; //!< return a private key
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(key_file);

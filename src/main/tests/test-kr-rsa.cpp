@@ -28,7 +28,18 @@ Y_UTEST(kr_rsa)
 
         std::cerr << "done" << std::endl;
 
-        const apn message = 1234;
+        {
+            ios::ocstream fp("pub.bin");
+            pub->serialize_class(fp);
+        }
+
+        {
+            ios::ocstream fp("prv.bin");
+            prv->serialize_class(fp);
+        }
+
+        std::cerr << std::hex;
+        const apn message = 0x1234;
         const apn encoded = apn::mod_exp(message,pub->publicExponent,  pub->modulus);
         const apn decoded = apn::mod_exp(encoded,prv->privateExponent, prv->modulus);
         std::cerr << "message: " << message << std::endl;

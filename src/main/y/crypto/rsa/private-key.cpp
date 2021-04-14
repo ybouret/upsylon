@@ -7,7 +7,26 @@ namespace upsylon
 {
     namespace crytpo
     {
-        static const char fn[] = "rsa_private_key: ";
+
+
+        const char  rsa_private_key:: CLID[] = "rsa_private_key";
+
+        const char *rsa_private_key:: className() const throw() { return CLID; }
+
+        size_t      rsa_private_key:: serialize(ios::ostream &fp) const
+        {
+            size_t res = 0;
+            res += modulus.serialize(fp);
+            res += publicExponent.serialize(fp);
+            res += privateExponent.serialize(fp);
+            res += prime1.serialize(fp);
+            res += prime2.serialize(fp);
+            res += exponent1.serialize(fp);
+            res += exponent2.serialize(fp);
+            res += coefficient.serialize(fp);
+            return res;
+        }
+
 
         rsa_private_key:: ~rsa_private_key() throw()
         {
@@ -34,14 +53,15 @@ namespace upsylon
 
         void rsa_private_key:: check() const
         {
+
             if(modulus!=prime1*prime2)
             {
-                throw exception("%smodulus/primes error",fn);
+                throw exception("%s.modulus/primes error",CLID);
             }
 
             if(prime1<=prime2)
             {
-                throw exception("%sprime1<=prime2",fn);
+                throw exception("%s.prime1<=prime2",CLID);
             }
 
             const apn p1m = prime1-1;
@@ -49,12 +69,17 @@ namespace upsylon
 
             if( (privateExponent%p1m) != exponent1 )
             {
-                throw exception("%sexponent1",fn);
+                throw exception("%s.exponent1 error",CLID);
             }
 
             if( (privateExponent%p2m) != exponent2 )
             {
-                throw exception("%sexponent2",fn);
+                throw exception("%sexponent2 error",CLID);
+            }
+
+            if( apn::mod_inv(prime2,prime1) != coefficient )
+            {
+                throw exception("%s.coefficient error",CLID);
             }
 
         }

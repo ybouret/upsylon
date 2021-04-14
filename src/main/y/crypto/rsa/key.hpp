@@ -16,11 +16,11 @@ namespace upsylon
         //! base class for rsa_key
         //
         //______________________________________________________________________
-        class rsa_key : public counted, public object
+        class rsa_key : public counted, public object, public ios::serializable
         {
         public:
             virtual ~rsa_key() throw(); //!< cleanup
-            
+
 
         protected:
             explicit rsa_key() throw(); //!< setup

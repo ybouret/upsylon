@@ -22,13 +22,16 @@ namespace upsylon
         class rsa_private_key : public rsa_public_key
         {
         public:
-            const apn privateExponent; //!< private exponent
-            const apn prime1;          //!< first prime
-            const apn prime2;          //!< second prime, prime2<prime1
-            const apn exponent1;       //!< precomputed exponent
-            const apn exponent2;       //!< precomputed exponent
-            const apn coefficient;     //!< precomputed exponent
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char CLID[];
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
 
             //! setup
             explicit rsa_private_key(const apn &modulus_,
@@ -43,8 +46,31 @@ namespace upsylon
             //! cleanup
             virtual ~rsa_private_key() throw();
 
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
+            virtual const char *className() const throw();       //!< CLID
+            virtual size_t      serialize(ios::ostream &) const; //!< pub+all fields
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
             //! check consistency
             void check() const;
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const apn privateExponent; //!< privateExponent
+            const apn prime1;          //!< first prime
+            const apn prime2;          //!< second prime, prime2<prime1
+            const apn exponent1;       //!< privateExponent % (prime1-1)
+            const apn exponent2;       //!< privateExponent % (prime2-1)
+            const apn coefficient;     //!< mod_inv(prime2,prime1)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(rsa_private_key);

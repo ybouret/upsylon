@@ -10,7 +10,7 @@ namespace upsylon
 {
     namespace crytpo
     {
-
+        //! helper for constructor
 #define Y_RSA_KEY_FIELD(NAME) NAME(NAME##_)
 
         //______________________________________________________________________
@@ -22,12 +22,37 @@ namespace upsylon
         class rsa_public_key : public rsa_key
         {
         public:
-            const apn modulus;
-            const apn publicExponent;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char CLID[];
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! setup
             explicit rsa_public_key(const apn &modulus_,
                                     const apn &publicExponent_);
+            //! cleanup
             virtual ~rsa_public_key() throw();
+
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
+            virtual const char *className() const throw();        //!< CLID
+            virtual size_t      serialize(ios::ostream &) const;  //!< mod+exp
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const apn modulus;        //!< RSA modulus
+            const apn publicExponent; //!< publicExponent
+
             
 
         private:
