@@ -59,10 +59,9 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const apn modulus;        //!< RSA modulus
-            const apn publicExponent; //!< publicExponent
-
-
+            const apn    modulus;        //!< RSA modulus
+            const apn    publicExponent; //!< publicExponent
+            
 
 
         private:

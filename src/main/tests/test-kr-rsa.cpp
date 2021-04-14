@@ -9,6 +9,23 @@
 
 using namespace upsylon;
 
+static inline
+void check_max_bits(const apn &modulus)
+{
+    
+    const apn    nmax = modulus-1;
+    const size_t nbit = nmax.bits()-1;
+    std::cerr << "modulus: " << modulus << std::endl;
+    std::cerr << "nmax   : " << nmax   << ", bits=" << nmax.bits() << std::endl;
+    apn    top = 0;
+    for(size_t i=0;i<nbit;++i)
+    {
+        top <<= 1;
+        top |= 1;
+    }
+    std::cerr << "top    : " << top   << ", bits=" << top.bits() << std::endl;
+    
+}
 
 Y_UTEST(kr_rsa)
 {
@@ -81,6 +98,8 @@ Y_UTEST(kr_rsa)
         std::cerr << "publicExponent  : " << pub->publicExponent  << std::endl;
         std::cerr << "privateExponent : " << prv->privateExponent << std::endl;
         std::cerr << "modulus         : " << prv->modulus << std::endl;
+        check_max_bits(prv->modulus);
+        
         Y_CHECK(pub->modulus==prv->modulus);
         Y_CHECK(pub->publicExponent==prv->publicExponent);
         (std::cerr << "checking..." << std::endl).flush();
@@ -95,8 +114,6 @@ Y_UTEST(kr_rsa)
             Y_ASSERT(D==P);
         }
         std::cerr << std::endl;
-        
-        
     }
 }
 Y_UTEST_DONE()
