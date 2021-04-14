@@ -326,14 +326,20 @@ INSTALL( FILES ${geometry_iso2d_decl} DESTINATION include/y/geometry/iso2d )
 FILE(GLOB kr_sc_decl y/crypto/sc/*.hpp)
 FILE(GLOB kr_sc_code y/crypto/sc/*.cpp)
 SET(kr_sc_srcs ${kr_sc_decl} ${kr_sc_code})
-SOURCE_GROUP( kr/sc FILES ${kr_sc_srcs} )
-INSTALL( FILES ${kr_sc_decl} DESTINATION include/y/kr/sc )
+SOURCE_GROUP( crypto/sc FILES ${kr_sc_srcs} )
+INSTALL( FILES ${kr_sc_decl} DESTINATION include/y/crypto/sc )
 
 FILE(GLOB kr_bc_decl y/crypto/bc/*.hpp)
 FILE(GLOB kr_bc_code y/crypto/bc/*.cpp)
 SET(kr_bc_srcs ${kr_bc_decl} ${kr_bc_code})
-SOURCE_GROUP( kr/bc FILES ${kr_bc_srcs} )
-INSTALL( FILES ${kr_bc_decl} DESTINATION include/y/kr/bc )
+SOURCE_GROUP( crypto/bc FILES ${kr_bc_srcs} )
+INSTALL( FILES ${kr_bc_decl} DESTINATION include/y/crypto/bc )
+
+FILE(GLOB kr_rsa_decl y/crypto/rsa/*.hpp)
+FILE(GLOB kr_rsa_code y/crypto/rsa/*.cpp)
+SET(kr_rsa_srcs ${kr_rsa_decl} ${kr_rsa_code})
+SOURCE_GROUP( crypto/rsa FILES ${kr_rsa_srcs} )
+INSTALL( FILES ${kr_rsa_decl} DESTINATION include/y/crypto/rsa )
 
 FILE(GLOB sparse_decl y/sparse/*.h*)
 FILE(GLOB sparse_code y/sparse/*.cpp)
@@ -465,7 +471,7 @@ ${fs_disk_srcs}
 ${fs_local_srcs}
 ${rtld_srcs}
 ${geometry_srcs} ${geometry_iso2d_srcs} ${geometry_iso3d_srcs}
-${kr_sc_srcs} ${kr_bc_srcs}
+${kr_sc_srcs} ${kr_bc_srcs} ${kr_rsa_srcs}
 ${sparse_srcs}
 ${counting_srcs}
 ${tensor_srcs}
