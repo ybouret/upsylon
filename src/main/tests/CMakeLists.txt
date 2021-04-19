@@ -359,6 +359,7 @@ test-yap-lcm.cpp
 test-yap-mul.cpp
 test-yap-sq.cpp
 test-yap-w2r.cpp
+test-yap-hmul.cpp
 )
 ADD_TEST(yap:n    test-main yap_n)
 ADD_TEST(yap:z    test-main yap_z)
@@ -376,6 +377,8 @@ ADD_TEST(yap:mod_exp test-main yap_mod_exp 7 4 5)
 ADD_TEST(yap:lcm  test-main yap_lcm 10 11 12)
 ADD_TEST(yap:mul  test-main yap_mul)
 ADD_TEST(yap:sq   test-main yap_sq)
+ADD_TEST(yap:hmul test-main yap_hmul)
+
 
 SOURCE_GROUP(jive FILES
 test-jive-tags.cpp

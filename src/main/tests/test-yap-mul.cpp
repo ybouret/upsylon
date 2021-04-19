@@ -1,8 +1,11 @@
 #include "y/utest/run.hpp"
 #include "y/yap/natural.hpp"
 #include "y/string/convert.hpp"
+#include "y/type/complex.hpp"
 
 using namespace upsylon;
+
+
 
 Y_UTEST(yap_mul)
 {
