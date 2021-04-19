@@ -199,11 +199,21 @@ Y_UTEST(sc_rsa)
 
         std::cerr << "encryptedBits: " << prv->encryptedBits << std::endl;
         std::cerr << "decryptedBits: " << prv->decryptedBits << std::endl;
+        std::cerr.flush();
 
-        const apn P(alea,prv->decryptedBits);
-        const apn C = prv->pub_encrypt(P);
-        
+        {
+            const apn Plain(alea,prv->decryptedBits);  (std::cerr << "Plain: " << Plain.to_hex() << std::endl).flush();
+            const apn Crypt = pub->pub_encrypt(Plain); (std::cerr << "Crypt: " << Crypt.to_hex() << std::endl).flush();
+            const apn Recov = prv->prv_decrypt(Crypt);
+            Y_CHECK(Plain==Recov);
+        }
 
+        {
+            const apn Plain(alea,prv->decryptedBits);  (std::cerr << "Plain: " << Plain.to_hex() << std::endl).flush();
+            const apn Crypt = prv->prv_encrypt(Plain); (std::cerr << "Crypt: " << Crypt.to_hex() << std::endl).flush();
+            const apn Recov = pub->pub_decrypt(Crypt);
+            Y_CHECK(Plain==Recov);
+        }
 
 
     }
