@@ -24,13 +24,123 @@ namespace
         }
     };
 
+#define Y_HMUL_MARK() static const unsigned IMARK = __LINE__ + 1
+#define Y_HMUL_INDEX (__LINE__-IMARK)
+#define Y_HMUL_IMPL() L[Y_HMUL_INDEX] *= R[Y_HMUL_INDEX]
+    
     template <typename T> struct h_mul<T,1>
     {
         static inline void run(T *L, const T *R) throw()
         {
-            L[0] *= R[0];
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
         }
     };
+    
+    template <typename T> struct h_mul<T,2>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+    
+    
+    template <typename T> struct h_mul<T,4>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+    
+
+    template <typename T> struct h_mul<T,8>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+    
+    template <typename T> struct h_mul<T,16>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+    
+    template <typename T> struct h_mul<T,32>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+    
 
     template <typename T> static inline
     void h_safe(T *L, const T *R, const size_t N) throw()
@@ -110,8 +220,8 @@ namespace
 
 Y_UTEST(yap_hmul)
 {
-    double D = 0.2;
-    do_test<float>(D);
+    double D = 0.5;
+    //do_test<float>(D);
     do_test< complex<double> >(D);
 
 }
