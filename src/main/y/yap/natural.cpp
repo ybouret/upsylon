@@ -157,7 +157,7 @@ word( acquire(count,width,shift) )
             return get_byte(word,i);
         }
 
-        uint8_t &natural::get_byte(const word_type *w, const size_t i)
+        uint8_t & natural::get_byte(const word_type *w, const size_t i)
         {
             assert(w);
             uint8_t *addr = (uint8_t*) &w[i>>word_exp2];

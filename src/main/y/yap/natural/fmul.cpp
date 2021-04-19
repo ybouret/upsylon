@@ -123,8 +123,8 @@ namespace upsylon
         
         
         static inline
-        void decode_data(real_t *fft1,
-                         real_t *fft2,
+        void decode_data(real_t      *fft1,
+                         real_t      *fft2,
                          const size_t n) throw()
         {
             const size_t np1 = n+1;
@@ -138,14 +138,30 @@ namespace upsylon
                 const size_t jp1   = j+1;
                 const size_t nn2mj = nn2 - j;
                 const size_t nn3mj = nn3 - j;
+
+#if 0
                 const real_t rep=(0.5)*(fft1[j]   + fft1[nn2mj]);
                 const real_t rem=(0.5)*(fft1[j]   - fft1[nn2mj]);
                 const real_t aip=(0.5)*(fft1[jp1] + fft1[nn3mj]);
                 const real_t aim=(0.5)*(fft1[jp1] - fft1[nn3mj]);
+#endif
+
+                const real_t A  = fft1[j];
+                const real_t B  = fft1[nn2mj];
+                const real_t C  = fft1[jp1];
+                const real_t D  = fft1[nn3mj];
+
+                const real_t rep=(0.5)*(A+B);
+                const real_t rem=(0.5)*(A-B);
+                const real_t aip=(0.5)*(C+D);
+                const real_t aim=(0.5)*(C-D);
+
+
                 fft1[j]     =  rep;
                 fft1[jp1]   =  aim;
                 fft1[nn2mj] =  rep;
                 fft1[nn3mj] = -aim;
+                
                 fft2[j]     =  aip;
                 fft2[jp1]   = -rem;
                 fft2[nn2mj] =  aip;
@@ -243,16 +259,15 @@ namespace upsylon
                 }
                 
                 //----------------------------------------------------------
-                //reverse transform
+                // reverse transform
                 //----------------------------------------------------------
                 FFT1::Reverse(fft1,nn);
-                
             }
             
             //--------------------------------------------------------------
             // finalizing product
             //--------------------------------------------------------------
-            finalize((uint8_t *)(p.word),p_bytes, L,nn);
+            finalize((uint8_t *)(p.word),p_bytes,L,nn);
             
             
             p.bytes=p_bytes;

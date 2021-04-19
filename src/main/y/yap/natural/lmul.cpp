@@ -28,7 +28,7 @@ namespace upsylon
                     core_type        carry = 0;
                     word_type       *sub   = ptr+i;
                     const word_type *r     = rhs;
-                    for(size_t j=0;j<rnw;++j)
+                    for(size_t j=rnw;j>0;--j)
                     {
                         word_type        &here = *(sub++);
                         const core_type   temp = core_type(here) + carry + L * core_type(*(r++));

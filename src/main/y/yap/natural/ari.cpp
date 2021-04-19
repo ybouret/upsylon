@@ -194,30 +194,40 @@ namespace upsylon
                 assert(E.bits()>0);
                 natural        base  = B;
                 const size_t   nbit  = E.bits()-1;
-                //const uint8_t *ebit  = E.byte;
 
                 for(size_t i=0; i<nbit; ++i)
                 {
 
-                    //if( ebit[i>>3] & bits_table::value[ (i&0x7) ] )
                     if( E.get(i>>3) & bits_table::value[ (i&0x7) ] )
                     {
-                        //result = ( result * base ) % N;
+                        //______________________________________________________
+                        //
+                        // result = ( result * base ) % N;
+                        //______________________________________________________
                         const natural rb   = result * base;
                         natural       tmp1 = modulo(rb,N);//__mod( rb.byte, rb.bytes, N.byte, N.bytes );
                         tmp1.xch( result );
                     }
 
-                    //base = ( base * base ) % N;
+                    //__________________________________________________________
+                    //
+                    // base = ( base * base ) % N;
+                    //__________________________________________________________
                     const natural bsq  = square_of(base);
                     natural       tmp2 = modulo(bsq,N); //__mod(bsq.byte,bsq.bytes,N.byte,N.bytes);
                     base.xch(tmp2);
                 }
 
+                //__________________________________________________________
+                //
                 //-- most significant bit !
+                //__________________________________________________________
                 assert( (E.get(nbit>>3) & bits_table::value[ (nbit&7) ]) != 0 );
 
-                //result = ( result * base ) % N;
+                //__________________________________________________________
+                //
+                // result = ( result * base ) % N;
+                //__________________________________________________________
                 {
                     const natural rb   = result * base;
                     natural       tmp3 = modulo(rb,N);//__mod( rb.byte, rb.bytes, N.byte, N.bytes );
