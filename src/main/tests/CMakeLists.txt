@@ -222,6 +222,7 @@ ADD_TEST(crypto:uuid        test-main uuid)
 ADD_TEST(crypto:digest      test-main digest)
 ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 ADD_TEST(crypto:rsa         test-main kr_rsa ${HERE}/sample512.key)
+ADD_TEST(crypto:rsa2        test-main sc_rsa ${HERE}/sample512.key ${HERE}/sample1024.key)
 
 SOURCE_GROUP(mk FILES test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp test-xbra.cpp)
 ADD_TEST(mk:triplet     test-main triplet)

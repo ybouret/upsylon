@@ -181,17 +181,22 @@ Y_UTEST_DONE()
 
 Y_UTEST(sc_rsa)
 {
-    if(argc>1)
+    for(int i=1;i<argc;++i)
     {
-        const string     filename = argv[1];
-        ios::icstream    fp(filename);
-        crypto::key_file kf(fp);
-        
-        std::cerr << "creating public  key..." << std::endl;
-        auto_ptr<crypto::rsa_public_key> pub = kf.pub();
+        auto_ptr<crypto::rsa_public_key>  pub = NULL;
+        auto_ptr<crypto::rsa_private_key> prv = NULL;
 
-        std::cerr << "creating private key..." << std::endl;
-        auto_ptr<crypto::rsa_private_key> prv = kf.prv();
+        {
+            const string     filename = argv[1];
+            ios::icstream    fp(filename);
+            crypto::key_file kf(fp);
+
+            std::cerr << "creating public  key..." << std::endl;
+            pub = kf.pub();
+
+            std::cerr << "creating private key..." << std::endl;
+            prv = kf.prv();
+        }
 
         std::cerr << "checking..." << std::endl;
         prv->check();
@@ -200,16 +205,15 @@ Y_UTEST(sc_rsa)
         std::cerr << "encryptedBits: " << prv->encryptedBits << std::endl;
         std::cerr << "decryptedBits: " << prv->decryptedBits << std::endl;
         std::cerr.flush();
+        const apn Plain(alea,prv->decryptedBits);  (std::cerr << "Plain: " << Plain.to_hex() << std::endl).flush();
 
         {
-            const apn Plain(alea,prv->decryptedBits);  (std::cerr << "Plain: " << Plain.to_hex() << std::endl).flush();
             const apn Crypt = pub->pub_encrypt(Plain); (std::cerr << "Crypt: " << Crypt.to_hex() << std::endl).flush();
             const apn Recov = prv->prv_decrypt(Crypt);
             Y_CHECK(Plain==Recov);
         }
 
         {
-            const apn Plain(alea,prv->decryptedBits);  (std::cerr << "Plain: " << Plain.to_hex() << std::endl).flush();
             const apn Crypt = prv->prv_encrypt(Plain); (std::cerr << "Crypt: " << Crypt.to_hex() << std::endl).flush();
             const apn Recov = pub->pub_decrypt(Crypt);
             Y_CHECK(Plain==Recov);
