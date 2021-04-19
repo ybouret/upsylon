@@ -98,7 +98,7 @@ namespace upsylon
                         {
                             // decimal info
                             const string temp = words[2];
-                            if( tokenizer<char>::split_with(words,temp,' ') != 2) throw exception("%sinvalid decimal+hex format",fn);
+                            if( tokenizer<char>::split_with(words,temp,' ') <= 0 ) throw exception("%sinvalid decimal(+hex) format",fn);
                             data = apn::dec(words[1]);
                         }
                         else
@@ -115,9 +115,9 @@ namespace upsylon
                         std::cerr << std::hex;
                         std::cerr << data;
                         std::cerr << std::dec;
+                        std::cerr << std::endl;
 
                         if(!insert(name,data)) throw exception("%smultiple field '%s'",fn,*name);
-                        std::cerr << std::endl;
                     }
                 }
 

@@ -67,6 +67,16 @@ namespace upsylon
             //! create a test key
             static rsa_private_key *prv(const apn &p, const apn &q, const apn &e);
 
+
+            //! encrypt a plain message, P.bits() <= decryptedBits
+            apn prv_encrypt( const apn &P ) const;
+
+            //! decrypt a coded message, C < modulus check plain validity
+            apn prv_decrypt( const apn &C ) const;
+
+            //! save as key-file
+            void save_key_file(ios::ostream &) const;
+
             //__________________________________________________________________
             //
             // members

@@ -132,6 +132,91 @@ namespace upsylon
             return new rsa_private_key(modulus,publicExponent,privateExponent,prime1,prime2,exponent1,exponent2,coefficient);
         }
 
+
+        apn rsa_private_key:: prv_encrypt( const apn &P ) const
+        {
+            assert(P.bits()<=decryptedBits);
+            return CRT(P);
+        }
+
+        apn rsa_private_key:: prv_decrypt( const apn &C ) const
+        {
+            assert(C<modulus);
+            const apn P = CRT(C);
+            if(P.bits()>decryptedBits) throw exception("%s.prv_decrypt(invalid cipher)",CLID);
+            return P;
+        }
+
+
+    }
+
+}
+
+#include "y/ios/ostream.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+#include "y/code/utils.hpp"
+#include "y/string.hpp"
+
+namespace upsylon
+{
+    namespace crypto
+    {
+
+        static inline
+        void save_field(ios::ostream &fp, const char *name, apn value)
+        {
+            static const char   indent[] = "    ";
+            static const size_t every    = 15;
+
+            assert(name);
+            assert(value>0);
+            fp("%s:\n",name);
+            const size_t sz = value.size();
+            fp << indent;
+            if(sz<=1)
+            {
+                fp << value.to_dec();
+            }
+            else
+            {
+                vector<uint8_t,memory::dyadic> bv(sz,as_capacity);
+                const apn mask = 0xff;
+                for(size_t i=0;i<sz;++i)
+                {
+                    const apn b = value & mask;
+                    value >>= 8;
+                    bv.push_back_( b.cast_to<uint8_t>("field byte") );
+                }
+
+                fp << hexadecimal::uppercase[bv[sz]];
+                size_t count=1;
+                for(size_t i=sz-1;i>0;--i)
+                {
+                    fp << ':' << hexadecimal::uppercase[bv[i]];
+                    if(0==(++count%every)) fp << '\n' << indent;
+                }
+
+
+            }
+            fp << '\n';
+        }
+
+#define Y_RSA_PRV_SAVE(FIELD) save_field(fp,#FIELD,FIELD)
+
+        void rsa_private_key:: save_key_file(ios::ostream &fp) const
+        {
+            fp("RSA Private-Key: (%u bit, 2 primes)\n", unsigned(encryptedBits));
+            Y_RSA_PRV_SAVE(modulus);
+            Y_RSA_PRV_SAVE(publicExponent);
+            Y_RSA_PRV_SAVE(privateExponent);
+            Y_RSA_PRV_SAVE(prime1);
+            Y_RSA_PRV_SAVE(prime2);
+            Y_RSA_PRV_SAVE(exponent1);
+            Y_RSA_PRV_SAVE(exponent2);
+            Y_RSA_PRV_SAVE(coefficient);
+        }
+
     }
 
 }

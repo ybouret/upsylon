@@ -32,7 +32,10 @@ namespace upsylon
         rsa_public_key:: rsa_public_key(const apn &modulus_,
                                         const apn &publicExponent_) :
         Y_RSA_KEY_FIELD(modulus),
-        Y_RSA_KEY_FIELD(publicExponent)
+        Y_RSA_KEY_FIELD(publicExponent),
+        extremum(modulus-1),
+        encryptedBits(extremum.bits()),
+        decryptedBits(encryptedBits-1)
         {
             
         }
@@ -43,6 +46,21 @@ namespace upsylon
             const apn n = p*q;
             return new rsa_public_key(n,e);
         }
+
+        apn rsa_public_key:: pub_encrypt( const apn &P ) const
+        {
+            assert(P.bits()<=decryptedBits);
+            return apn::mod_exp(P,publicExponent,modulus);
+        }
+
+        apn rsa_public_key:: pub_decrypt( const apn &C ) const
+        {
+            assert(C<modulus);
+            const apn P = apn::mod_exp(C,publicExponent,modulus);
+            if(P.bits()>decryptedBits) throw exception("%s.pub_decrypt(invalid cipher)",CLID);
+            return P;
+        }
+
 
     }
 

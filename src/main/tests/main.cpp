@@ -217,6 +217,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(kr_sc);
     Y_UTEST(uuid);
     Y_UTEST(kr_rsa);
+    Y_UTEST(sc_rsa);
 
     Y_UTEST(sparse_array);
     Y_UTEST(sparse_matrix);

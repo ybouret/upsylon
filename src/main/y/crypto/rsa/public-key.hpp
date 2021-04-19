@@ -54,6 +54,11 @@ namespace upsylon
             //! create a manual public key from two primes and an exponent
             static rsa_public_key *pub(const apn &p, const apn &q, const apn &e);
 
+            //! encrypt a plain message, P.bits() <= decryptedBits
+            apn pub_encrypt( const apn &P ) const;
+
+            //! decrypt a coded message, C < modulus check plain validity
+            apn pub_decrypt( const apn &C ) const;
 
             //__________________________________________________________________
             //
@@ -61,8 +66,9 @@ namespace upsylon
             //__________________________________________________________________
             const apn    modulus;        //!< RSA modulus
             const apn    publicExponent; //!< publicExponent
-            
-
+            const apn    extremum;       //!< modulus-1
+            const size_t encryptedBits;  //!< extremum.bits
+            const size_t decryptedBits;  //!< decryptedBits-1
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(rsa_public_key);

@@ -42,25 +42,32 @@ static inline apn small_prime(const size_t nbit)
 Y_UTEST(kr_rsa)
 {
 
-
-
     if(argc>1)
     {
-        const string     filename = argv[1];
-        ios::icstream    fp(filename);
-        crypto::key_file kf(fp);
 
-        std::cerr << "creating public  key..." << std::endl;
-        auto_ptr<crypto::rsa_public_key> pub = kf.pub();
+        auto_ptr<crypto::rsa_public_key>  pub = NULL;
+        auto_ptr<crypto::rsa_private_key> prv = NULL;
 
-        std::cerr << "creating private key..." << std::endl;
-        auto_ptr<crypto::rsa_private_key> prv = kf.prv();
+        {
+            const string     filename = argv[1];
+            ios::icstream    fp(filename);
+            crypto::key_file kf(fp);
+
+            std::cerr << "creating public  key..." << std::endl;
+            pub = kf.pub();
+
+            std::cerr << "creating private key..." << std::endl;
+            prv = kf.prv();
+        }
 
         prv->check();
 
         std::cerr << "done" << std::endl;
         const size_t bits = pub->modulus.bits();
-        std::cerr << "#bits=" << bits << std::endl;
+        std::cerr << "encryptedBits=" << pub->encryptedBits << std::endl;
+        std::cerr << "decryptedBits=" << pub->decryptedBits << std::endl;
+
+
         {
             ios::ocstream fp("pub.bin");
             pub->serialize_class(fp);
@@ -143,11 +150,62 @@ Y_UTEST(kr_rsa)
         const double ratio = double(raw_ticks)/double(crt_ticks);
         std::cerr << "crt speed up: " << ratio << std::endl;
 
+        (std::cerr << "sampling..." << std::endl).flush();
         hsort(crypted,apn::compare);
+        for(size_t i=1;i<=n;++i)
+        {
+            const apn P(i-1);
+            Y_ASSERT(P==crypted[i]);
+        }
 
+        std::cerr << "saving key file..." << std::endl;
+        {
+            ios::ocstream fp("small.key");
+            prv->save_key_file(fp);
+        }
+
+        std::cerr << "reloading key file..." << std::endl;
+        auto_ptr<crypto::rsa_private_key> sub = NULL;
+        {
+            const string     filename = "small.key";
+            ios::icstream    fp(filename);
+            crypto::key_file kf(fp);
+            sub = kf.prv();
+            sub->check();
+        }
 
 
     }
 }
 Y_UTEST_DONE()
 
+Y_UTEST(sc_rsa)
+{
+    if(argc>1)
+    {
+        const string     filename = argv[1];
+        ios::icstream    fp(filename);
+        crypto::key_file kf(fp);
+        
+        std::cerr << "creating public  key..." << std::endl;
+        auto_ptr<crypto::rsa_public_key> pub = kf.pub();
+
+        std::cerr << "creating private key..." << std::endl;
+        auto_ptr<crypto::rsa_private_key> prv = kf.prv();
+
+        std::cerr << "checking..." << std::endl;
+        prv->check();
+        std::cerr << "done" << std::endl;
+
+        std::cerr << "encryptedBits: " << prv->encryptedBits << std::endl;
+        std::cerr << "decryptedBits: " << prv->decryptedBits << std::endl;
+
+        const apn P(alea,prv->decryptedBits);
+        const apn C = prv->pub_encrypt(P);
+        
+
+
+
+    }
+}
+Y_UTEST_DONE()
