@@ -110,10 +110,10 @@ namespace upsylon
             return *this;
         }
 
-        //! unary plus
+        //! unary minus
         inline complex operator-() const throw() { return complex(-re,-im); }
 
-        //! binary add
+        //! binary sub
         inline friend complex operator-( const complex lhs, const complex rhs ) throw()
         {
             return complex(lhs.re-rhs.re,lhs.im-rhs.im);
@@ -125,10 +125,10 @@ namespace upsylon
             return complex(lhs-rhs.re,rhs.im);
         }
 
-        //! binary add
+        //! binary sub
         inline friend complex operator-( const complex lhs, const real_type rhs ) throw()
         {
-            return complex(lhs.re+-rhs,lhs.im);
+            return complex(lhs.re-rhs,lhs.im);
         }
 
         //______________________________________________________________________
@@ -140,8 +140,6 @@ namespace upsylon
         inline complex & operator*=(const complex rhs) throw()
         {
             const complex   lhs(*this);
-            //const real_type r = lhs.re * rhs.re - lhs.im * rhs.im;
-            //const real_type i = lhs.re * rhs.im + lhs.im * rhs.re;
             re = lhs.re * rhs.re - lhs.im * rhs.im;
             im = lhs.re * rhs.im + lhs.im * rhs.re;
             return *this;
@@ -192,7 +190,7 @@ namespace upsylon
         inline complex & operator/=(const complex c) throw()
         {
             const real_type  den = c.mod2();          assert(den>0);
-            const complex    num = *this * c.conj();
+            const complex    num = (*this) * c.conj();
             re = num.re/den;
             im = num.im/den;
             return *this;
@@ -247,7 +245,7 @@ namespace upsylon
         }
 
 
-        inline T       * re_addr()       throw() { return &re; }//!< &re
+        inline T       * re_addr()       throw() { return &re; }  //!< &re
         inline const T * re_addr() const throw() { return &re; }  //!< &re
 
         inline T       *re_prev()       throw() { return out_of_reach::prev(&re); } //!< (&re)-1
