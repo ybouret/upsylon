@@ -140,7 +140,80 @@ namespace
             Y_HMUL_IMPL();
         }
     };
-    
+
+    template <typename T> struct h_mul<T,64>
+    {
+        static inline void run(T *L, const T *R) throw()
+        {
+            Y_HMUL_MARK();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+            Y_HMUL_IMPL();
+        }
+    };
+
+
 
     template <typename T> static inline
     void h_safe(T *L, const T *R, const size_t N) throw()
@@ -218,9 +291,15 @@ namespace
 
 }
 
+#include "y/string/convert.hpp"
+
 Y_UTEST(yap_hmul)
 {
     double D = 0.5;
+    if(argc>1)
+    {
+        D = string_convert::to<double>(argv[1],"D");
+    }
     //do_test<float>(D);
     do_test< complex<double> >(D);
 
