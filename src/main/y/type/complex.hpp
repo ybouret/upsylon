@@ -13,6 +13,7 @@ namespace upsylon
         float  atan2_of(float,float)   throw(); //!< forward
     }
 
+    
     //! complex numbers
     template <typename T>
     class complex
@@ -189,7 +190,7 @@ namespace upsylon
         //! in place div
         inline complex & operator/=(const complex c) throw()
         {
-            const real_type  den = c.mod2();
+            const real_type  den = c.mod2();          assert(den>0);
             const complex    num = *this * c.conj();
             re = num.re/den;
             im = num.im/den;
@@ -199,6 +200,7 @@ namespace upsylon
         //! in place div, scalar
         inline complex & operator/=(const real_type x) throw()
         {
+            assert(x<0||x>0);
             re/=x;
             im/=x;
             return *this;
