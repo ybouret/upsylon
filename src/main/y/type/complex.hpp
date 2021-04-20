@@ -137,12 +137,13 @@ namespace upsylon
         //______________________________________________________________________
         
         //! in place mul
-        inline complex & operator*=(const complex c) throw()
+        inline complex & operator*=(const complex rhs) throw()
         {
-            const real_type r = re * c.re - im * c.im;
-            const real_type i = re * c.im + im * c.re;
-            re = r;
-            im = i;
+            const complex   lhs(*this);
+            //const real_type r = lhs.re * rhs.re - lhs.im * rhs.im;
+            //const real_type i = lhs.re * rhs.im + lhs.im * rhs.re;
+            re = lhs.re * rhs.re - lhs.im * rhs.im;
+            im = lhs.re * rhs.im + lhs.im * rhs.re;
             return *this;
         }
 
