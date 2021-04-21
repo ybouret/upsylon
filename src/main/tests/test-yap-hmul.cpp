@@ -176,13 +176,12 @@ namespace
 }
 
 #include "y/string/convert.hpp"
-#include "y/concurrent/nucleus/thread.hpp"
-#include "y/os/hw.hpp"
+#include "y/concurrent/assign-main.hpp"
 
 Y_UTEST(yap_hmul)
 {
-    concurrent::nucleus::thread::assign_current( hardware::nprocs()-1, program);
-
+    std::cerr << "@cpu: " << assign_main::by_pid(program) << std::endl;
+    
     double D = 0.5;
     if(argc>1)
     {

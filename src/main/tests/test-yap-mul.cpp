@@ -46,12 +46,12 @@ Y_UTEST_DONE()
 #include "y/ios/ocstream.hpp"
 #include <cmath>
 #include "y/code/hr-ints.hpp"
-#include "y/concurrent/nucleus/thread.hpp"
-#include "y/os/hw.hpp"
+#include "y/concurrent/assign-main.hpp"
+
 Y_UTEST(yap_mul_perf)
 {
-    concurrent::nucleus::thread::assign_current( hardware::nprocs()-1, program);
-    
+    std::cerr << "@cpu: " << assign_main::by_pid(program) << std::endl;
+
     size_t maxbits = 131072;
     double D       = 0.5;
 
