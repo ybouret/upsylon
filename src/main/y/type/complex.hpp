@@ -7,6 +7,7 @@
 
 namespace upsylon
 {
+
     namespace mkl
     {
         double atan2_of(double,double) throw(); //!< forward
@@ -28,16 +29,16 @@ namespace upsylon
         //
         // settings
         //______________________________________________________________________
-        inline  complex() throw() : re(0), im(0) {} //!< default constructor
-        inline ~complex() throw() {}                //!< default destructor
-        inline  complex(const complex &c) throw() : re(c.re), im(c.im) {} //!< just copy
-        inline  complex & operator=( const complex c ) throw() { re=c.re; im=c.im; return *this; return *this; } //!< just assign
-        inline  complex(const real_type x) throw() : re(x), im(0) {} //!< build with real part
-        inline  complex(const real_type x, const real_type y) throw() : re(x), im(y) {} //!< build with both parts
-        inline  complex & operator=( const real_type x ) throw() { re=x; im=0; return *this; } //!< assign real part
+        inline  complex() throw() : re(0), im(0) {}                                                //!< default constructor
+        inline ~complex() throw() {}                                                               //!< default destructor
+        inline  complex(const complex &c) throw() : re(c.re), im(c.im) {}                          //!< just copy
+        inline  complex & operator=( const complex c ) throw() { re=c.re; im=c.im; return *this; } //!< just assign
+        inline  complex(const real_type x) throw() : re(x), im(0) {}                               //!< build with real part
+        inline  complex(const real_type x, const real_type y) throw() : re(x), im(y) {}            //!< build with both parts
+        inline  complex & operator=( const real_type x ) throw() { re=x; im=0; return *this; }     //!< assign real part
 
         //! output
-        inline friend std::ostream & operator<<( std::ostream &os, const complex c)
+        inline friend std::ostream & operator<<(std::ostream &os, const complex c)
         {
             return (os << '(' << c.re << ',' << c.im << ')');
         }
@@ -78,7 +79,7 @@ namespace upsylon
         }
 
         //! binary add
-        inline friend complex operator+( const real_type lhs, const complex rhs ) throw()
+        inline friend complex operator+(const real_type lhs, const complex rhs) throw()
         {
             return complex(lhs+rhs.re,rhs.im);
         }
@@ -122,7 +123,7 @@ namespace upsylon
         //! binary add
         inline friend complex operator-( const real_type lhs, const complex rhs ) throw()
         {
-            return complex(lhs-rhs.re,rhs.im);
+            return complex(lhs-rhs.re,-rhs.im);
         }
 
         //! binary sub
@@ -139,7 +140,7 @@ namespace upsylon
         //! in place mul
         inline complex & operator*=(const complex rhs) throw()
         {
-            const complex   lhs(*this);
+            const complex lhs(*this);
             re = lhs.re * rhs.re - lhs.im * rhs.im;
             im = lhs.re * rhs.im + lhs.im * rhs.re;
             return *this;
@@ -179,10 +180,12 @@ namespace upsylon
             im = i_half+i_half;
             re = r_full;
         }
+
         //______________________________________________________________________
         //
         // division
         //______________________________________________________________________
+
         //! squared modulus
         inline real_type mod2() const throw() { return re*re+im*im; }
         
@@ -216,6 +219,7 @@ namespace upsylon
         //! binary div, scalar
         inline friend complex operator/(const complex lhs, const real_type x) throw()
         {
+            assert(x<0||x>0);
             return complex(lhs.re/x,lhs.im/x);
         }
 
@@ -225,6 +229,11 @@ namespace upsylon
             const complex lhs(x);
             return lhs/rhs;
         }
+
+        //______________________________________________________________________
+        //
+        // other methods
+        //______________________________________________________________________
 
         //! default equality testing
         inline friend bool operator==( const complex &lhs, const complex &rhs ) throw()
