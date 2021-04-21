@@ -74,7 +74,7 @@ Y_UTEST(yap_p)
         for(size_t i=1;i<=n;++i)
         {
             const uint64_t mark = real_time_clock::ticks();
-            p = apl.next_prime_(p);
+            p   = apl.next_prime_(p);
             t1 += real_time_clock::ticks()-mark;
             Y_ASSERT(p==P[i]);
             bar.print(std::cerr,i,n,0.5);

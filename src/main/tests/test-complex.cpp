@@ -23,18 +23,22 @@ namespace
         a = b+c;      std::cerr << a << std::endl;
         a = b + 1;    std::cerr << a << std::endl;
         a = 1 + b;    std::cerr << a << std::endl;
+
         std::cerr << "-- sub" << std::endl;
         b = -a;       std::cerr << b << std::endl;
         b += c;       std::cerr << b << std::endl;
-        b = c+3;      std::cerr << b << std::endl;
-        b = 3+c;      std::cerr << b << std::endl;
+        b = c-T(3);   std::cerr << b << std::endl;
+        b = T(3)-c;   std::cerr << b << std::endl;
+
         std::cerr << "-- mul" << std::endl;
         b *= a;       std::cerr << b << std::endl;
         b  = a*c;     std::cerr << b << std::endl;
         b  = a*2;     std::cerr << b << std::endl;
         b  = 2*a;     std::cerr << b << std::endl;
+
         std::cerr << "-- conj" << std::endl;
         std::cerr << b.conj() << std::endl;
+
         std::cerr << "-- div" << std::endl;
         b /= a;       std::cerr << b << std::endl;
         b += cplx(0,1);
@@ -43,11 +47,13 @@ namespace
         b  = a/2;     std::cerr << b << std::endl;
         c  = 2/a;     std::cerr << c << std::endl;
         cplx d = b*c; std::cerr << d << std::endl;
+
         std::cerr << "-- sqr" << std::endl;
         cplx f(2,3), g=f;
         std::cerr << f << std::endl;
         f.__square();
         std::cerr << "->" << f << " | " << g*g << std::endl;
+
         std::cerr << "-- arg" << std::endl;
         std::cerr << "g ->" << g.arg() << std::endl;
         std::cerr << "g2->" << f.arg() << std::endl;

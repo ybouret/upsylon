@@ -55,7 +55,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! in place addition
-        inline complex & operator+=( const complex c ) throw()
+        inline complex & operator+=(const complex c) throw()
         {
             re += c.re;
             im += c.im;
@@ -63,7 +63,7 @@ namespace upsylon
         }
 
         //! in place addition, scalar
-        inline complex & operator+=( const real_type x ) throw()
+        inline complex & operator+=(const real_type x) throw()
         {
             re += x;
             return *this;
@@ -73,18 +73,18 @@ namespace upsylon
         inline complex operator+() const throw() { return *this; }
 
         //! binary add
-        inline friend complex operator+( const complex lhs, const complex rhs ) throw()
+        inline friend complex operator+(const complex lhs, const complex rhs) throw()
         {
             return complex(lhs.re+rhs.re,lhs.im+rhs.im);
         }
 
-        //! binary add
+        //! binary add, scalar lhs
         inline friend complex operator+(const real_type lhs, const complex rhs) throw()
         {
             return complex(lhs+rhs.re,rhs.im);
         }
 
-        //! binary add
+        //! binary add, scalar rhs
         inline friend complex operator+( const complex lhs, const real_type rhs ) throw()
         {
             return complex(lhs.re+rhs,lhs.im);
@@ -97,7 +97,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! in place sub
-        inline complex & operator-=( const complex c ) throw()
+        inline complex & operator-=(const complex c) throw()
         {
             re -= c.re;
             im -= c.im;
@@ -105,7 +105,7 @@ namespace upsylon
         }
 
         //! in place sub, scalar
-        inline complex & operator-=( const real_type x ) throw()
+        inline complex & operator-=(const real_type x) throw()
         {
             re -= x;
             return *this;
@@ -115,19 +115,19 @@ namespace upsylon
         inline complex operator-() const throw() { return complex(-re,-im); }
 
         //! binary sub
-        inline friend complex operator-( const complex lhs, const complex rhs ) throw()
+        inline friend complex operator-(const complex lhs, const complex rhs)  throw()
         {
             return complex(lhs.re-rhs.re,lhs.im-rhs.im);
         }
 
-        //! binary add
-        inline friend complex operator-( const real_type lhs, const complex rhs ) throw()
+        //! binary sub, scalar lhs
+        inline friend complex operator-(const real_type lhs, const complex rhs) throw()
         {
             return complex(lhs-rhs.re,-rhs.im);
         }
 
-        //! binary sub
-        inline friend complex operator-( const complex lhs, const real_type rhs ) throw()
+        //! binary sub, scalar rhs
+        inline friend complex operator-(const complex lhs, const real_type rhs ) throw()
         {
             return complex(lhs.re-rhs,lhs.im);
         }
@@ -175,8 +175,9 @@ namespace upsylon
         //! in place square
         inline void __square() throw()
         {
-            const real_type i_half = re*im;
-            const real_type r_full = re*re - im*im;
+            const complex   _      = *this;
+            const real_type i_half = _.re*_.im;
+            const real_type r_full = _.re*_.re - _.im*_.im;
             im = i_half+i_half;
             re = r_full;
         }
