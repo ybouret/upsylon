@@ -180,8 +180,8 @@ namespace
 
 Y_UTEST(yap_hmul)
 {
-    std::cerr << "@cpu: " << assign_main::by_pid(program) << std::endl;
-    
+    (void) assign_main::by_pid(program);
+
     double D = 0.5;
     if(argc>1)
     {
@@ -192,8 +192,8 @@ Y_UTEST(yap_hmul)
     {
         pmax = string_convert::to<size_t>(argv[2],"pmax");
     }
-    do_test<float>(D,pmax);
-    //do_test< complex<double> >(D,pmax);
+    //do_test<float>(D,pmax);
+    do_test< complex<double> >(D,pmax);
 
 }
 Y_UTEST_DONE()

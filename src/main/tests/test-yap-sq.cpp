@@ -37,7 +37,7 @@ Y_UTEST_DONE()
 
 Y_UTEST(yap_sq_perf)
 {
-    std::cerr << "@cpu: " << assign_main::by_pid(program) << std::endl;
+    (void) assign_main::by_pid(program);
 
     size_t   maxbits = 131072;
     double   D       = 0.5;
