@@ -55,7 +55,7 @@ namespace upsylon {
             {
                 assert(level>=min_level);
                 assert(level<=max_level);
-				static const size_t one   = 1;
+                static const size_t one   = 1;
                 static const T      half  = T(0.5);
                 const  size_t       iter  = one << (level-2);  // local number of iterations
                 T                   value[max_iters];          // local stack
@@ -100,6 +100,8 @@ namespace upsylon {
                 static const T four  = T(4);
                 static const T three = T(3);
 
+                std::cerr << "\tquad([" << a << ":" << b << "]@<" << ftol << ">)" << std::endl;;
+
                 //______________________________________________________________
                 //
                 // initialize at level 1
@@ -114,30 +116,40 @@ namespace upsylon {
                 //
                 // iterate at level>=2
                 //______________________________________________________________
-                for(size_t level=2;level<=max_level;++level)
+                for(size_t level=2;level<warmup;++level)
                 {
                     sum_trapz = trapezes(sum_trapz, a, w, F, level);  // trapezes at this level
                     sum_accel = (s=(four*sum_trapz-old_trapz)/three); // Simpson's at this level
-                    if(level>warmup)
-                    {
-                        //______________________________________________________
-                        //
-                        // test convergences
-                        //______________________________________________________
-                        {
-                            const T delta_trapz = fabs_of( sum_trapz - old_trapz );
-                            if( delta_trapz <= fabs( ftol * old_trapz ) )
-                            {
-                                return true;
-                            }
-                        }
+                    old_trapz = sum_trapz;
+                    old_accel = sum_accel;
+                }
 
+                //______________________________________________________________
+                //
+                // iterate at level>=2
+                //______________________________________________________________
+                for(size_t level=warmup;level<=max_level;++level)
+                {
+                    sum_trapz = trapezes(sum_trapz, a, w, F, level);  // trapezes at this level
+                    sum_accel = (s=(four*sum_trapz-old_trapz)/three); // Simpson's at this level
+
+                    //______________________________________________________
+                    //
+                    // test convergences
+                    //______________________________________________________
+                    {
+                        const T delta_trapz = fabs_of( sum_trapz - old_trapz );
+                        if( delta_trapz <= fabs( ftol * old_trapz ) )
                         {
-                            const T delta_accel = fabs_of( sum_accel - old_accel );
-                            if( delta_accel <= fabs( ftol * old_accel ) )
-                            {
-                                return true;
-                            }
+                            return true;
+                        }
+                    }
+
+                    {
+                        const T delta_accel = fabs_of( sum_accel - old_accel );
+                        if( delta_accel <= fabs( ftol * old_accel ) )
+                        {
+                            return true;
                         }
                     }
                     old_trapz = sum_trapz;

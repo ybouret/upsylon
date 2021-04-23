@@ -71,8 +71,11 @@ namespace {
                 std::cerr << "failure" << std::endl;
             }
             std::cerr << "sum1=" << sum << std::endl;
-            sum = integrate::compute(f<T>,a,b,ftol);
-            std::cerr << "sum2=" << sum <<  std::endl;
+            if(false)
+            {
+                sum = integrate::compute(f<T>,a,b,ftol);
+                std::cerr << "sum2=" << sum <<  std::endl;
+            }
         }
 
         {
@@ -90,8 +93,11 @@ namespace {
             }
             std::cerr << "sum1=" << sum << std::endl;
 
-            sum = integrate::compute(g<T>,a,b,ftol);
-            std::cerr << "sum2=" << sum << std::endl;
+            if(false)
+            {
+                sum = integrate::compute(g<T>,a,b,ftol);
+                std::cerr << "sum2=" << sum << std::endl;
+            }
         }
     }
 
