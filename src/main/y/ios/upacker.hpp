@@ -7,7 +7,6 @@
 #include "y/code/ilog2.hpp"
 #include "y/code/round.hpp"
 #include "y/type/ints.hpp"
-#include "y/ios/gist.hpp"
 
 namespace upsylon {
     
@@ -27,7 +26,29 @@ namespace upsylon {
             
             //! functions to encode
             struct encode {
-                
+
+                //! shift 8 bits right for more than 2 bytes unsigned
+                template <typename T> static inline void shr8(T &x, const int2type<true> &) throw()
+                {
+                    assert(sizeof(T)>1);
+                    x >>= 8;
+                }
+
+                //! shift 8 bits right for one byte => 0
+                template <typename T> static inline void shr8(T &x, const int2type<false> &) throw()
+                {
+                    assert(sizeof(T)==1);
+                    x=0;
+                }
+
+                //! shit 8 bits right selector
+                template <typename T> static inline void shr8(T &x) throw()
+                {
+                    static const int2type< (sizeof(T)>1) > choice = {};
+                    shr8(x,choice);
+                }
+
+
                 //! compute the prolog and the requested extra bytes
                 template <typename T> static inline
                 uint8_t init( T &value, size_t &extra_bytes) throw()
@@ -60,7 +81,7 @@ namespace upsylon {
                     static const T value_mask = 0xff;
                     assert(value>0);
                     const uint8_t ans = uint8_t(value&value_mask);
-                    gist::shr8(value, int2type< (sizeof(T)>1) >() );
+                    shr8(value);
                     return ans;
                 }
                 
