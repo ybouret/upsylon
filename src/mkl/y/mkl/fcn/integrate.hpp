@@ -12,17 +12,27 @@ namespace upsylon {
 
     namespace mkl {
 
+        //______________________________________________________________________
+        //
+        //
         //! functions for integration
+        //
+        //______________________________________________________________________
         struct integrate
         {
-
+            //__________________________________________________________________
+            //
+            // definitions
+            //__________________________________________________________________
             static const size_t min_level = 2;                            //!< for refinement
             static const size_t max_level = 11;                           //!< 2^(max_level-1)-1 calls
             static const size_t max_iters = 1 << (max_level-2);           //!< max iterations for local memory
             static const size_t warmup    = ((max_level+min_level)>>1)-1; //!< accumulations before tests
 
-
+            //__________________________________________________________________
+            //
             //! compare values for standard qsort
+            //__________________________________________________________________
             template <typename T>
             static inline int compare_by_increasing_abs( const void *lhs, const void *rhs)
             {
@@ -32,8 +42,10 @@ namespace upsylon {
                 return ( (L<R) ? -1 : ( (R<L) ? 1 : 0 ) );
             }
 
-
+            //__________________________________________________________________
+            //
             //! refine a value, initialized with 0.5*w*(F(a)+F(b))
+            //__________________________________________________________________
             template <typename T,typename FUNC> static inline
             T trapezes(const T      s,
                        const T      a,
@@ -46,9 +58,13 @@ namespace upsylon {
 				static const size_t one   = 1;
                 static const T      half  = T(0.5);
                 const  size_t       iter  = one << (level-2);  // local number of iterations
-                T                   value[max_iters];        // local stack
+                T                   value[max_iters];          // local stack
 
+                //--------------------------------------------------------------
+                //
                 // accumulate values
+                //
+                //--------------------------------------------------------------
                 {
                     const T             delta = w/iter;
                     T                   x     = a + half*delta;
@@ -57,7 +73,12 @@ namespace upsylon {
                         value[j] = F(x);
                     }
                 }
+
+                //--------------------------------------------------------------
+                //
                 // order to reduce roundoff errors
+                //
+                //--------------------------------------------------------------
                 qsort(value,iter,sizeof(T),compare_by_increasing_abs<T>);
                 T sum = 0;
                 for(size_t j=0;j<iter;++j)
@@ -67,9 +88,14 @@ namespace upsylon {
                 return half*(s+(w*sum)/iter);
             }
 
+            //__________________________________________________________________
+            //
+            //
             //! try to perform quadrature
+            //
+            //__________________________________________________________________
             template <typename T, typename FUNC> static inline
-            bool quad(T &s, FUNC &F, const T a, const T b, const T ftol )
+            bool quad(T &s, FUNC &F, const T a, const T b, const T ftol)
             {
                 static const T four  = T(4);
                 static const T three = T(3);
@@ -78,7 +104,6 @@ namespace upsylon {
                 //
                 // initialize at level 1
                 //______________________________________________________________
-
                 const T w         = b-a;
                 T       sum_trapz = (s=T(0.5) * w * (F(b)+F(a)));
                 T       sum_accel = sum_trapz;
@@ -107,7 +132,6 @@ namespace upsylon {
                             }
                         }
 
-                        //if(false)
                         {
                             const T delta_accel = fabs_of( sum_accel - old_accel );
                             if( delta_accel <= fabs( ftol * old_accel ) )
