@@ -32,10 +32,15 @@ namespace upsylon
         
         void carrier:: throw_missing_bytes() const
         {
-            const string &id = type_name_for(clsid);
-            throw exception("ios::carrier::missing bytes for<%s>", *id);
+            throw exception("ios::carrier::missing bytes for<%s>", *which() );
         }
 
+        const string & carrier:: which() const
+        {
+            return type_name_for(clsid);
+        }
+
+        
     }
     
 }
