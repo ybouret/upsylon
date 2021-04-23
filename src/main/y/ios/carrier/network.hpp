@@ -1,11 +1,13 @@
 
+
 //! \file
 
-#ifndef Y_IOS_CARRIER_PRIMARY_INCLUDED
-#define Y_IOS_CARRIER_PRIMARY_INCLUDED 1
+#ifndef Y_IOS_CARRIER_NETWORK_INCLUDED
+#define Y_IOS_CARRIER_NETWORK_INCLUDED 1
 
 
 #include "y/ios/carrier.hpp"
+#include "y/type/args.hpp"
 
 namespace upsylon
 {
@@ -16,19 +18,21 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! primary carrier: fixed size in an homogeneous environment
+        //! network carrier: fixed size in an heterogeneous environment
         //
         //______________________________________________________________________
         template <typename T>
-        class primary_carrier : public carrier_of<T>
+        class network_carrier : public carrier_of<T>
         {
         public:
-            inline explicit primary_carrier() throw() :
-            carrier_of<T>(comms::computed_block_size, comms::homogeneous)
+            Y_DECL_ARGS(T,type);
+            
+            inline explicit network_carrier() throw() :
+            carrier_of<T>(comms::computed_block_size,comms::distributed)
             {
             }
             
-            inline virtual ~primary_carrier() throw() {}
+            inline virtual ~network_carrier() throw() {}
             
             inline virtual size_t copy(void *target, const void *source) const
             {
@@ -41,18 +45,20 @@ namespace upsylon
             inline virtual size_t save(ios::ostream &fp, const void *source) const
             {
                 assert(source);
-                fp.output(source,sizeof(T));
+                fp.write_nbo( *static_cast<const_type*>(source) );
                 return sizeof(T);
             }
             
             inline virtual size_t load(void *target, ios::istream &fp) const
             {
-                if( sizeof(T) != fp.try_query(target,sizeof(T))) this->throw_missing_bytes();
+                size_t shift = 0;
+                if( !fp.query_nbo(*static_cast<mutable_type*>(target),shift) ) this->throw_missing_bytes();
+                assert(sizeof(T)==shift);
                 return sizeof(T);
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(primary_carrier);
+            Y_DISABLE_COPY_AND_ASSIGN(network_carrier);
         };
     }
     
