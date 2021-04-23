@@ -21,7 +21,7 @@ namespace upsylon
         Y_GIANT_LOCK();
 #if defined(Y_BSD)
         const int res = getpagesize();
-        if(res<=0) throw libc::exception(EINVAL,"getpagesize");
+        if(res<=0) throw libc::exception(EINVAL,"getpagesize=%d",res);
         return size_t(res);
 #endif
 
