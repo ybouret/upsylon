@@ -206,6 +206,12 @@ SET(ios_conveyor_srcs ${ios_conveyor_decl} ${ios_conveyor_code})
 SOURCE_GROUP( ios/conveyor FILES ${ios_conveyor_srcs} )
 INSTALL( FILES ${ios_conveyor_decl} DESTINATION include/y/ios/conveyor )
 
+FILE(GLOB ios_carrier_decl y/ios/carrier/*.hpp)
+FILE(GLOB ios_carrier_code y/ios/carrier/*.cpp)
+SET(ios_carrier_srcs ${ios_carrier_decl} ${ios_carrier_code})
+SOURCE_GROUP( ios/carrier FILES ${ios_carrier_srcs} )
+INSTALL( FILES ${ios_carrier_decl} DESTINATION include/y/ios/carrier )
+
 FILE(GLOB information_decl y/information/*.hpp)
 FILE(GLOB information_code y/information/*.cpp)
 SET(information_srcs ${information_decl} ${information_code})
@@ -453,7 +459,7 @@ ${sequence_srcs}
 ${ordered_srcs}
 ${associative_srcs} ${associative_suffix_srcs} ${associative_hash_srcs}
 ${concurrent_srcs}  ${concurrent_nucleus_srcs} ${concurrent_sync_srcs} ${concurrent_loop_srcs}  ${concurrent_task_srcs} 
-${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} 
+${ios_srcs} ${ios_tools_srcs} ${ios_conveyor_srcs} ${ios_carrier_srcs} 
 ${information_srcs} 
 ${information_modulation_srcs} 
 ${information_translator_srcs} 

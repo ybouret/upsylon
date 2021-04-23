@@ -182,6 +182,7 @@ test-conveyors.cpp
 test-ios-align.cpp
 test-rename.cpp
 test-echo.cpp
+test-ios-carrier.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams ${HERE}/words.db)
@@ -203,6 +204,7 @@ ADD_TEST(ios:conveyors   test-main conveyors)
 ADD_TEST(ios:align       test-main ios_align)
 ADD_TEST(ios:rename      test-main rename)
 ADD_TEST(ios:echo        test-main echo)
+ADD_TEST(ios:carrier     test-main carrier)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp
