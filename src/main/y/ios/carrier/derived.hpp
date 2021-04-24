@@ -29,15 +29,30 @@ namespace upsylon
         class derived_carrier : public carrier_of<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            Y_DECL_ARGS(T,type); //!< aliases
             
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            
+            //! setup
             inline explicit derived_carrier() :
-            carrier_of<T>(comms::computed_block_size,comms::distributed),
+            carrier_of<T>(comms::flexible_block_size,comms::distributed),
             id( *(this->which()) )
             {
             }
             
             inline virtual ~derived_carrier() throw() {}
+            
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
             
             //! use C++ api
             inline virtual size_t copy(void *target, const void *source) const

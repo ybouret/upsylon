@@ -25,8 +25,16 @@ namespace upsylon
         class network_carrier : public carrier_of<T>
         {
         public:
-            Y_DECL_ARGS(T,type);
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            Y_DECL_ARGS(T,type); //!< aliases
             
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             inline explicit network_carrier() throw() :
             carrier_of<T>(comms::computed_block_size,comms::distributed)
             {
@@ -34,6 +42,10 @@ namespace upsylon
             
             inline virtual ~network_carrier() throw() {}
             
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
             inline virtual size_t copy(void *target, const void *source) const
             {
                 assert(target);

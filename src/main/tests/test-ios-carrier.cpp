@@ -11,64 +11,76 @@ using namespace upsylon;
 
 namespace
 {
+    
+    template <typename T>
+    void do_test(const ios::carrier &io)
+    {
+        std::cerr << "Testing " << io << std::endl;
+        ios::ovstream   fp;
+        const size_t    n = 10 + alea.leq(10);
+        vector<T>       source(n,as_capacity);
+        vector<T>       target(n,as_capacity);
+        
+        for(size_t i=n;i>0;--i)
+        {
+            {
+                const T tmp = support::get<T>();
+                source.push_back_(tmp);
+            }
+            
+            {
+                const T tmp = support::get<T>();
+                target.push_back_(tmp);
+            }
+            
+        }
+        
+        size_t sum = 0;
+        for(size_t i=1;i<=n;++i)
+        {
+            Y_ASSERT( sizeof(T) == io.copy(&target[i],&source[i]) );
+            Y_ASSERT( target[i] == source[i]);
+            sum += io.save(fp,&source[i]);
+        }
+        Y_ASSERT(sum==fp.size());
+        
+        sum = 0;
+        {
+            ios::imstream in(fp);
+            for(size_t i=1;i<=n;++i)
+            {
+                {
+                    const T tmp = support::get<T>();
+                    target[i] = tmp;
+                }
+                
+                sum += io.load(&target[i],in);
+                Y_ASSERT(target[i]==source[i]);
+            }
+        }
+        Y_ASSERT(fp.size()==sum);
+        
+    }
+    
     template <typename T>
     void test_plain()
     {
-        ios::primary_carrier<T> loc;
-        ios::network_carrier<T> nbo;
-        ios::ovstream           fp;
-        
-        const T source = support::get<T>(); std::cerr << "source=" << source << std::endl;
-        T       target = 0;
-        loc.copy(&target,&source);
-        Y_CHECK(target==source);
-        Y_CHECK(sizeof(T)==loc.save(fp, &source));
-        Y_CHECK(sizeof(T)==nbo.save(fp, &source));
-        for(size_t i=1;i<=fp.size();++i)
         {
-            std::cerr << ' ' << hexadecimal::lowercase[ fp[i] ];
+            ios::primary_carrier<T> io;
+            do_test<T>(io);
         }
-        std::cerr << std::endl;
         
         {
-            ios::imstream in(fp);
-            target = 0;
-            Y_CHECK(sizeof(T)==loc.load(&target,in));
-            Y_CHECK(target==source);
-
-            target = 0;
-            Y_CHECK(sizeof(T)==nbo.load(&target,in));
-            Y_CHECK(target==source);
+            ios::network_carrier<T> io;
+            do_test<T>(io);
         }
     }
     
     template <typename T>
     void test_class()
     {
-        ios::derived_carrier<T> carry;
-        ios::ovstream           fp;
-        
-        T       source = support::get<T>(); std::cerr << "source=" << source << std::endl;
-        T       target;
-        carry.copy(&target,&source);
-        Y_CHECK(target==source);
-        
-        source = support::get<T>(); std::cerr << "source=" << source << std::endl;
-        const size_t nw = carry.save(fp,&source);
-        Y_CHECK(nw == fp.size() );
-        for(size_t i=1;i<=fp.size();++i)
-        {
-            std::cerr << ' ' << hexadecimal::lowercase[ fp[i] ];
-        }
-        std::cerr << std::endl;
-        {
-            ios::imstream in(fp);
-            const size_t nr = carry.load(&target,in);
-            Y_CHECK(fp.size()==nr);
-            Y_CHECK(target==source);
-        }
-        
-        
+        ios::derived_carrier<T> io;
+        do_test<T>(io);
     }
     
 }
@@ -76,13 +88,16 @@ namespace
 Y_UTEST(ios_carrier)
 {
     
+    
+    
     test_plain<uint8_t>();
     test_plain<int16_t>();
     test_plain<uint32_t>();
     test_plain<uint64_t>();
-
+    
     test_class<string>();
     test_class<apq>();
+    
 
 }
 Y_UTEST_DONE()

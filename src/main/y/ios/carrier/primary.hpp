@@ -23,6 +23,10 @@ namespace upsylon
         class primary_carrier : public carrier_of<T>
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             inline explicit primary_carrier() throw() :
             carrier_of<T>(comms::computed_block_size, comms::homogeneous)
             {
@@ -30,6 +34,10 @@ namespace upsylon
             
             inline virtual ~primary_carrier() throw() {}
             
+            //__________________________________________________________________
+            //
+            // interface
+            //__________________________________________________________________
             inline virtual size_t copy(void *target, const void *source) const
             {
                 assert(target);

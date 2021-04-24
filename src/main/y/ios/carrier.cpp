@@ -5,6 +5,7 @@
 #include "y/type/spec.hpp"
 #include "y/exception.hpp"
 #include "y/type/spec.hpp"
+#include <iostream>
 
 namespace upsylon
 {
@@ -38,6 +39,13 @@ namespace upsylon
         const string & carrier:: which() const
         {
             return type_name_for(clsid);
+        }
+        
+        std::ostream & operator<<(std::ostream &os, const carrier &self)
+        {
+            os << "carrier<" << self.which() << ">";
+            os << " [" << comms::shipping_style_id(self.style) << ":" << comms::infrastructure_id(self.infra) << "]";
+            return os;
         }
 
         

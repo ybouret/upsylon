@@ -30,7 +30,7 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-            virtual       ~carrier() throw();
+            virtual       ~carrier() throw();                                        //!< cleanup
             virtual size_t copy(void *target, const void *source)         const = 0; //!< direct and local copy
             virtual size_t save(ios::ostream &target, const void *source) const = 0; //!< save for later
             virtual size_t load(void *target, ios::istream &source)       const = 0; //!< reload
@@ -39,7 +39,8 @@ namespace upsylon
             //
             // non-virtual interface
             //__________________________________________________________________
-            const string &which() const;
+            const  string       & which() const;                              //!< type id
+            friend std::ostream & operator<<(std::ostream &, const carrier&); //!< display
             
             //__________________________________________________________________
             //
@@ -51,25 +52,34 @@ namespace upsylon
             const size_t                   bytes;  //!< sizeof(T)
             
         protected:
+            //! setup
             explicit carrier(const comms::shipping_style _style,
                              const comms::infrastructure _infra,
                              const std::type_info       &_clsid,
                              const size_t                _bytes) throw();
             
-            void throw_missing_bytes() const;
+            void throw_missing_bytes() const; //!< throw with name
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(carrier);
            
         };
      
+        //______________________________________________________________________
+        //
+        //
+        //! base class to register type and size
+        //
+        //______________________________________________________________________
         template <typename T>
         class carrier_of : public carrier
         {
         public:
+            //! cleanup
             inline virtual ~carrier_of() throw() {}
             
         protected:
+            //! setup
             inline explicit carrier_of(const comms::shipping_style _style,
                                        const comms::infrastructure _infra ) throw() :
             carrier(_style,_infra,typeid( typename type_traits<T>::mutable_type ), sizeof(T) )
