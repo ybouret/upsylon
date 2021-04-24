@@ -1,9 +1,13 @@
 #include "y/ios/carrier/primary.hpp"
 #include "y/ios/carrier/network.hpp"
 #include "y/ios/carrier/derived.hpp"
+#include "y/ios/carrier/tuple.hpp"
+
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/utest/run.hpp"
+#include "y/utest/sizeof.hpp"
+
 #include "support.hpp"
 #include "y/code/utils.hpp"
 
@@ -83,22 +87,53 @@ namespace
         do_test<T>(io);
     }
     
+    
+    template <
+    template <typename> class TUPLE,
+    typename                  T,
+    template <typename> class CONVEYOR
+    >
+    static inline void test_tuple()
+    {
+        ios::tuple_carrier<TUPLE,T,CONVEYOR> io;
+        std::cerr << io << std::endl;
+        
+        
+        
+        Y_UTEST_SIZEOF(io);
+    }
+    
 }
 
 Y_UTEST(ios_carrier)
 {
     
-    
-    
     test_plain<uint8_t>();
     test_plain<int16_t>();
     test_plain<uint32_t>();
-    test_plain<uint64_t>();
+    test_plain<int64_t>();
     
     test_class<string>();
     test_class<apq>();
     
+    test_tuple<complex,float,ios::primary_carrier>();
+    test_tuple<complex,float,ios::network_carrier>();
+    test_tuple<point2d,float,ios::network_carrier>();
+    test_tuple<point3d,double,ios::primary_carrier>();
 
+    
+    
+    Y_UTEST_SIZEOF(ios::primary_carrier<uint8_t>);
+    Y_UTEST_SIZEOF(ios::network_carrier<uint8_t>);
+
+    Y_UTEST_SIZEOF(ios::primary_carrier<uint64_t>);
+    Y_UTEST_SIZEOF(ios::network_carrier<uint64_t>);
+    
+    Y_UTEST_SIZEOF(ios::derived_carrier<string>);
+    Y_UTEST_SIZEOF(ios::derived_carrier<apn>);
+    Y_UTEST_SIZEOF(ios::derived_carrier<apq>);
+
+    
 }
 Y_UTEST_DONE()
 
