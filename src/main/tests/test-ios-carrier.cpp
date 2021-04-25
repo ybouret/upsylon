@@ -153,26 +153,43 @@ Y_UTEST(ios_carrier)
     Y_UTEST_SIZEOF(ios::derived_carrier<apn>);
     Y_UTEST_SIZEOF(ios::derived_carrier<apq>);
     
+    std::cerr << std::endl << "Testing some hashing..." << std::endl;
     do_test_hash<hashing::crc32>();
     do_test_hash<hashing::fnv>();
+    
+    std::cerr << std::endl << "Testing databases..." << std::endl;
 
-    ios::carriers &cdb = ios::carriers::instance();
-    
-    std::cerr << "homogeneous:" << std::endl;
-    for(ios::carriers::iterator it=cdb.homogeneous.begin();
-        it != cdb.homogeneous.end(); ++it )
     {
-        const ios::carrier &io = **it;
-        std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+        ios::carriers &cdb = ios::carriers::instance();
+        
+        std::cerr << "homogeneous:" << std::endl;
+        for(ios::carriers::iterator it=cdb.homogeneous.begin();
+            it != cdb.homogeneous.end(); ++it )
+        {
+            const ios::carrier &io = **it;
+            std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+        }
+        
+        std::cerr << "distributed:" << std::endl;
+        for(ios::carriers::iterator it=cdb.distributed.begin();
+            it != cdb.distributed.end(); ++it )
+        {
+            const ios::carrier &io = **it;
+            std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+        }
     }
     
-    std::cerr << "distributed:" << std::endl;
-    for(ios::carriers::iterator it=cdb.distributed.begin();
-        it != cdb.distributed.end(); ++it )
+    std::cerr << std::endl << "Testing access to database..." << std::endl;
+
     {
-        const ios::carrier &io = **it;
-        std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+        std::cerr << ios::carrier_for<char>(comms::homogeneous) << std::endl;
+        std::cerr << ios::carrier_for<char>(comms::distributed) << std::endl;
+        
+        std::cerr << ios::carrier_for<string>(comms::homogeneous) << std::endl;
+        std::cerr << ios::carrier_for<apn>(comms::distributed)    << std::endl;
+
     }
+    
     
 }
 Y_UTEST_DONE()

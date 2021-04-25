@@ -2,8 +2,9 @@
 #include "y/ios/carrier/db.hpp"
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
-
 #include "y/yap.hpp"
+
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -63,9 +64,41 @@ namespace upsylon
             
         }
         
-        
-        
+        const carrier * carriers:: search(const std::type_info       &tid,
+                                          const comms::infrastructure infra) const throw()
+        {
+ 
 
+            switch(infra)
+            {
+                case comms::homogeneous:
+                {
+                    const carrier::pointer *ppC = homogeneous.search(tid);
+                    if(ppC) return & (**ppC);
+                } /* FALLTHRU */
+                case comms::distributed:
+                {
+                    const carrier::pointer *ppC = distributed.search(tid);
+                    if(ppC) return & (**ppC);
+                }
+            }
+            return NULL;
+        }
+        
+        const carrier & carriers:: get(const std::type_info       &tid,
+                                       const comms::infrastructure infra,
+                                       const char                 *where) const
+        {
+            
+            const carrier *p = search(tid,infra);
+            if(!p)
+            {
+                if(!where) where="program";
+                throw exception("ios::carriers<%s>: unhandled (in %s)", tid.name(), where);
+            }
+            return *p;
+        }
+        
     }
     
 }
