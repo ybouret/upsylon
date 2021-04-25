@@ -27,6 +27,8 @@ namespace upsylon
         class carrier : public counted, public object
         {
         public:
+            typedef intr_ptr<std::type_info,carrier> pointer; //!< alias
+            
             //__________________________________________________________________
             //
             // virtual interface
@@ -40,8 +42,9 @@ namespace upsylon
             //
             // non-virtual interface
             //__________________________________________________________________
-            const  string       & which() const;                              //!< type id
-            friend std::ostream & operator<<(std::ostream &, const carrier&); //!< display
+            const  string         & which() const;                              //!< type id
+            friend std::ostream   & operator<<(std::ostream &, const carrier&); //!< display
+            const std::type_info  & key() const throw();                        //!< clsid
             
             //__________________________________________________________________
             //

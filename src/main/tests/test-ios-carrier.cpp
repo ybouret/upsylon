@@ -2,6 +2,7 @@
 #include "y/ios/carrier/network.hpp"
 #include "y/ios/carrier/derived.hpp"
 #include "y/ios/carrier/tuple.hpp"
+#include "y/ios/carrier/db.hpp"
 
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
@@ -106,7 +107,6 @@ namespace
 }
 
 #include "y/hashing/crc32.hpp"
-#include "y/hashing/fnv.hpp"
 
 template <typename HASHER>
 void do_test_hash()
@@ -156,7 +156,23 @@ Y_UTEST(ios_carrier)
     do_test_hash<hashing::crc32>();
     do_test_hash<hashing::fnv>();
 
+    ios::carriers &cdb = ios::carriers::instance();
     
+    std::cerr << "homogeneous:" << std::endl;
+    for(ios::carriers::iterator it=cdb.homogeneous.begin();
+        it != cdb.homogeneous.end(); ++it )
+    {
+        const ios::carrier &io = **it;
+        std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+    }
+    
+    std::cerr << "distributed:" << std::endl;
+    for(ios::carriers::iterator it=cdb.distributed.begin();
+        it != cdb.distributed.end(); ++it )
+    {
+        const ios::carrier &io = **it;
+        std::cerr << "\t" << io << " (" << it->key().name() << ")" << std::endl;
+    }
     
 }
 Y_UTEST_DONE()

@@ -9,6 +9,7 @@
 
 #include "y/ios/carrier.hpp"
 #include "y/type/args.hpp"
+#include "y/string.hpp"
 
 namespace upsylon
 {

@@ -47,7 +47,11 @@ namespace upsylon
             os << " [" << comms::shipping_style_id(self.style) << ":" << comms::infrastructure_id(self.infra) << "]";
             return os;
         }
-
+        
+        const std::type_info  & carrier:: key() const throw()
+        {
+            return clsid;
+        }
         
     }
     
