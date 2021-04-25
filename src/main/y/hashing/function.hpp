@@ -77,7 +77,7 @@ namespace upsylon
             // digest interface
             //__________________________________________________________________
             digest md();                                   //!< get a digest after a set/run
-            digest md( const void *buffer, size_t buflen); //!< get a digest of a buffer
+            digest md(const void *buffer, size_t buflen);  //!< get a digest of a buffer
             digest md(const memory::ro_buffer &buffer);    //!< get a digest of a buffer
             digest md(const char *text);                   //!< get a digest of a text
             

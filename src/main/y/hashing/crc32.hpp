@@ -15,6 +15,9 @@ namespace upsylon
             //! prototype
 			Y_HASHING_FUNCTION_DECL(crc32,4,4);
 			
+            //! for text
+            static size_t of(const char *text) throw();
+            
 		private:
 			uint32_t    hash;
 			Y_DISABLE_COPY_AND_ASSIGN(crc32);

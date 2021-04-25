@@ -105,6 +105,26 @@ namespace
     
 }
 
+#include "y/hashing/crc32.hpp"
+#include "y/hashing/fnv.hpp"
+
+template <typename HASHER>
+void do_test_hash()
+{
+    HASHER H;
+    std::cerr << "testing [" << H.name() << "]" << std::endl;
+    
+    for(size_t iter=0;iter<1024;++iter)
+    {
+        const string src = support::get<string>();
+        const size_t key1 = H.template key<size_t>(src);
+        const size_t key2 = HASHER::of( *src );
+        
+        Y_ASSERT( (key1&0xffffffff) ==key2);
+    }
+    
+}
+
 Y_UTEST(ios_carrier)
 {
     
@@ -120,19 +140,23 @@ Y_UTEST(ios_carrier)
     test_tuple<complex,float,ios::network_carrier>();
     test_tuple<point2d,float,ios::network_carrier>();
     test_tuple<point3d,double,ios::primary_carrier>();
-
+    
     
     
     Y_UTEST_SIZEOF(ios::primary_carrier<uint8_t>);
     Y_UTEST_SIZEOF(ios::network_carrier<uint8_t>);
-
+    
     Y_UTEST_SIZEOF(ios::primary_carrier<uint64_t>);
     Y_UTEST_SIZEOF(ios::network_carrier<uint64_t>);
     
     Y_UTEST_SIZEOF(ios::derived_carrier<string>);
     Y_UTEST_SIZEOF(ios::derived_carrier<apn>);
     Y_UTEST_SIZEOF(ios::derived_carrier<apq>);
+    
+    do_test_hash<hashing::crc32>();
+    do_test_hash<hashing::fnv>();
 
+    
     
 }
 Y_UTEST_DONE()

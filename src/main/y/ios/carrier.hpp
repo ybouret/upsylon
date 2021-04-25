@@ -8,6 +8,7 @@
 #include "y/ios/istream.hpp"
 #include "y/ios/comms.hpp"
 #include "y/ptr/counted.hpp"
+#include "y/ptr/intr.hpp"
 #include "y/type/traits.hpp"
 #include <typeinfo>
 
