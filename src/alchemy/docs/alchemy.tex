@@ -1,0 +1,65 @@
+\documentclass[aps,12pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{chemarr}
+\usepackage{bm}
+\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{xfrac}
+\usepackage{dejavu}
+\usepackage{dsfont}
+
+
+\begin{document}
+
+Let us consider a species within a chemical potential:
+\begin{equation}
+	\mu_i(\vec{r}) = \mu_i^0(T) + RT \ln C_i(\vec{r}) +  z_i \mathcal{F} V(\vec{r})
+\end{equation}
+
+The isothermal molar force field is:
+\begin{equation}
+	\vec{F}_i(\vec{r}) = -\vec{\nabla} \mu_{i} = -\frac{RT}{C_i} \vec{\nabla} C_i + z_i \mathcal{F} \vec{E}
+\end{equation}
+One particle with mass $m_i$ and a friction coefficient $\eta_i$ moves with:
+\begin{equation}
+	m_i  \ddot{\vec{OM}} = -\eta_i  \dot{\vec{OM}} + \dfrac{1}{\mathcal{N}_A} \vec{F}_i
+\end{equation}
+The relaxed velocity is:
+\begin{equation}
+	\vec{v}_i = \dfrac{1}{\eta_i\mathcal{N}_A} \vec{F}_i = -\dfrac{kT}{\eta_i C_i} \vec{\nabla} C_i + \frac{z_i e}{\eta_i} \vec{E}
+\end{equation}
+The flux is:
+\begin{equation}
+	\vec{J}_i = C_i \vec{v}_i = -\dfrac{kT}{\eta_i} \vec{\nabla} C_i + \dfrac{z_i e}{\eta_i} C_i \vec{E}.
+\end{equation}
+The electric flux is:
+\begin{equation}
+	\vec{J}^{el}_i = z_i e \vec{J_i} = -\dfrac{ez_ikT}{\eta_i} \vec{\nabla} C_i + \dfrac{z_i^2 e^2}{\eta_i} C_i \vec{E}.
+\end{equation}
+We use
+\begin{equation}
+	D_i = \dfrac{kT}{\eta_i}, 
+\end{equation}
+
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+\vec{J}_i & = &  -D_i \vec{\nabla} C_i + C_i \dfrac{z_i D_i}{\Psi_0}  \vec{E} \;\; (\Psi_0=\dfrac{kT}{e}\simeq 25.7 mV)\\
+\\
+\vec{J}^{el}_i & = & - z_i D_i e  \vec{\nabla} C_i + C_i \dfrac{z_i^2 D_i e}{\Psi_0}  \vec{E} \\
+\end{array}
+\right.
+\end{equation}
+
+
+The matter conservation writes:
+\begin{equation}
+	\mathrm{div} \vec{J}_i + \partial_t C_i = 0
+\end{equation}
+The charge conservation writes:
+\begin{equation}
+	\mathrm{div} \left( \sum_i \vec{J}^{el}_i \right) + \partial_t \rho = 0, \;\; \rho = e \sum_i z_i C_i
+\end{equation}
+
+\end{document}
