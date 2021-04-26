@@ -1,4 +1,4 @@
-#include "y/container/const-field.hpp"
+#include "y/container/frozen.hpp"
 #include "support.hpp"
 
 #include "y/utest/run.hpp"
@@ -13,16 +13,16 @@ namespace {
     {
         assert(ID);
         std::cerr << "const_field<" << ID << ">" << std::endl;
-        const_field<T> zf;
-        std::cerr << "|_bytes=" << zf.item_size << std::endl;
-        std::cerr << "|_[" << zf.value << "]" << std::endl;
+        frozen<T> zf;
+        std::cerr << "|_bytes=" << zf.block_size << std::endl;
+        std::cerr << "|_[" << *zf << "]" << std::endl;
     }
 
 }
 
 #define Y_ZF(TYPE) do_zf<TYPE>( #TYPE )
 
-Y_UTEST(const_field)
+Y_UTEST(frozen)
 {
     Y_ZF(int);
     Y_ZF(float);
@@ -36,18 +36,18 @@ Y_UTEST(const_field)
     Y_ZF(apq);
 
     {
-        const_field<string> cfs( "hello" );
-        std::cerr << "cfs.value=[" << cfs.value << "]" << std::endl;
+        frozen<string> cfs( "hello" );
+        std::cerr << "cfs=[" << *cfs << "]" << std::endl;
     }
 
     {
-        const_field<apq> cfq(10);
-        std::cerr << "cfq.value=[" << cfq.value << "]" << std::endl;
+        frozen<apq> cfq(10);
+        std::cerr << "cfq=[" << *cfq << "]" << std::endl;
     }
     
     {
-        const_field<apq> cfq(10,20);
-        std::cerr << "cfq.value=[" << cfq.value << "]" << std::endl;
+        frozen<apq> cfq(10,20);
+        std::cerr << "cfq=[" << *cfq << "]" << std::endl;
     }
 
 }

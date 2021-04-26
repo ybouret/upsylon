@@ -3,7 +3,7 @@
 #define Y_SPARSE_MATRIX_INCLUDED 1
 
 #include "y/sparse/dok.hpp"
-#include "y/container/const-field.hpp"
+#include "y/container/frozen.hpp"
 #include "y/comparison.hpp"
 #include "y/sequence/accessible.hpp"
 #include "y/type/utils.hpp"
@@ -74,7 +74,7 @@ namespace upsylon
     template <typename T>
     class sparse_matrix :
     public sparse::matrix_info,
-    public const_field<T>
+    public frozen<T>
     {
     public:
         //----------------------------------------------------------------------
@@ -98,14 +98,14 @@ namespace upsylon
 
         //! setup with rows=nr and cols=nc
         inline explicit sparse_matrix( const size_t nr, const size_t nc ) :
-        sparse::matrix_info(nr,nc), const_field<T>(), items(), core(items)
+        sparse::matrix_info(nr,nc), frozen<T>(), items(), core(items)
         {
         }
 
 
         //! copy
         inline explicit sparse_matrix( const sparse_matrix &other ) :
-        sparse::matrix_info(other), const_field<T>(), items(other.items), core(items)
+        sparse::matrix_info(other), frozen<T>(), items(other.items), core(items)
         {
 
 
@@ -114,7 +114,7 @@ namespace upsylon
         //! build a diagonal matrix
         template <typename U>
         inline explicit sparse_matrix( const accessible<U> &diag ) :
-        sparse::matrix_info(diag.size(),diag.size()), const_field<T>(), items(), core(items)
+        sparse::matrix_info(diag.size(),diag.size()), frozen<T>(), items(), core(items)
         {
             sparse_matrix &self = *this;
             for(size_t i=1;i<=diag.size();++i)
@@ -153,7 +153,7 @@ namespace upsylon
             }
             else
             {
-                return create_at(ik,this->value);
+                return create_at(ik,**this);
             }
         }
 
@@ -163,7 +163,7 @@ namespace upsylon
             check_indices(r,c);
             const key_type  ik(r,c);
             const item_ptr *pp = items.search( ik );
-            return (pp!=NULL) ? (***pp) : this->value;
+            return (pp!=NULL) ? (***pp) : **this;
         }
 
 

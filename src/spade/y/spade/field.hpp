@@ -4,7 +4,7 @@
 #define Y_SPADE_FIELD_INCLUDED 1
 
 #include "y/spade/layout/metrics.hpp"
-#include "y/container/const-field.hpp"
+#include "y/container/frozen.hpp"
 #include "y/memory/embed.hpp"
 #include "y/string.hpp"
 #include <typeinfo>

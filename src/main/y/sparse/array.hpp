@@ -3,7 +3,7 @@
 #define Y_SPARSE_ARRAY_INCLUDED 1
 
 #include "y/sparse/dok.hpp"
-#include "y/container/const-field.hpp"
+#include "y/container/frozen.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon
@@ -40,7 +40,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename T>
-    class sparse_array : public sparse::array_info, public const_field<T>
+    class sparse_array : public sparse::array_info, public frozen<T>
     {
     public:
         //______________________________________________________________________
@@ -64,7 +64,7 @@ namespace upsylon
 
         //! initialize with a virtual size
         inline explicit sparse_array(const size_t n=0) :
-        sparse::array_info(n), const_field<T>(), items(), core(items)
+        sparse::array_info(n), frozen<T>(), items(), core(items)
         {
         }
 
@@ -132,7 +132,7 @@ namespace upsylon
             }
             else
             {
-                typename dok_type::item_ptr p = new typename dok_type::item_type(i,this->value);
+                typename dok_type::item_ptr p = new typename dok_type::item_type(i,**this);
                 if(!items.insert(p)) insert_failure(i);
                 return p->value;
             }
@@ -149,7 +149,7 @@ namespace upsylon
             }
             else
             {
-                return this->value;
+                return **this;
             }
         }
 

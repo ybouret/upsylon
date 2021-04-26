@@ -204,7 +204,7 @@ ADD_TEST(ios:conveyors   test-main conveyors)
 ADD_TEST(ios:align       test-main ios_align)
 ADD_TEST(ios:rename      test-main rename)
 ADD_TEST(ios:echo        test-main echo)
-ADD_TEST(ios:carrier     test-main carrier)
+ADD_TEST(ios:carrier     test-main ios_carrier)
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp
@@ -271,7 +271,7 @@ ADD_TEST(info:codecs       test-main codecs)
 
 SOURCE_GROUP(data FILES
 test-matrix.cpp test-slots.cpp test-sequence.cpp test-pipe.cpp test-arrays.cpp test-heap.cpp test-avl.cpp 
-test-const-field.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
+test-frozen.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-addressable.cpp test-query.cpp
 test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp
 test-crates.cpp
 test-hunt.cpp
@@ -286,7 +286,7 @@ ADD_TEST(data:pipe        test-main pipe)
 ADD_TEST(data:arrays      test-main arrays)
 ADD_TEST(data:heap        test-main heap)
 ADD_TEST(data:avl         test-main avl)
-ADD_TEST(data:const-field test-main const_field)
+ADD_TEST(data:frozen      test-main frozen)
 ADD_TEST(data:for_each    test-main for_each)
 ADD_TEST(data:ordered     test-main ordered)
 ADD_TEST(data:key-address test-main key_address)

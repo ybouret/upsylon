@@ -113,16 +113,16 @@ namespace upsylon
             }
             
             //! get, unsafe
-            const carrier & get(const std::type_info       &tid,
-                                const comms::infrastructure infra,
-                                const char                 *where) const;
+            const carrier & query(const std::type_info       &tid,
+                                  const comms::infrastructure infra,
+                                  const char                 *where) const;
             
             //! get, unsafe, weapper
             template <typename T> inline
-            const carrier & get(const comms::infrastructure infra,
-                                const char                 *where) const
+            const carrier & query(const comms::infrastructure infra,
+                                  const char                 *where) const
             {
-                return get(typeid(T),infra,where);
+                return query(typeid(T),infra,where);
             }
             
             //__________________________________________________________________
@@ -152,7 +152,7 @@ namespace upsylon
                                    const char           *where=NULL)
         {
             static const carriers &cdb = carriers::instance();
-            return cdb.get<T>(infra,where);
+            return cdb.query<T>(infra,where);
         }
     }
     

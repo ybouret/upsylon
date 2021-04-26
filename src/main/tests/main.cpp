@@ -116,7 +116,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(avl);
     Y_UTEST(ordered);
     Y_UTEST(pq);
-    Y_UTEST(const_field);
+    Y_UTEST(frozen);
     Y_UTEST(for_each);
     Y_UTEST(hunt);
 

@@ -85,9 +85,9 @@ namespace upsylon
             return NULL;
         }
         
-        const carrier & carriers:: get(const std::type_info       &tid,
-                                       const comms::infrastructure infra,
-                                       const char                 *where) const
+        const carrier & carriers:: query(const std::type_info       &tid,
+                                         const comms::infrastructure infra,
+                                         const char                 *where) const
         {
             
             const carrier *p = search(tid,infra);

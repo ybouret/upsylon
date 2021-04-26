@@ -11,6 +11,16 @@ namespace upsylon
     namespace alchemy
     {
         
+        class species : public counted, public object
+        {
+        public:
+            const string name;
+            const int    z;
+            
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(species);
+        };
+        
     }
     
 }
