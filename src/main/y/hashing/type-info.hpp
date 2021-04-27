@@ -18,8 +18,8 @@ namespace upsylon
         class type_info_hasher
         {
         public:
-            inline explicit type_info_hasher() throw() {} //!< setup
-            inline virtual ~type_info_hasher() throw() {} //!< cleanup
+            inline  type_info_hasher() throw() {} //!< setup
+            inline ~type_info_hasher() throw() {} //!< cleanup
             
             //! use name as text
             inline size_t operator()(const std::type_info &tid) const throw()
