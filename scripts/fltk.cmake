@@ -3,7 +3,7 @@
 ## Simplified FLTK configuration, based on fltk-config
 ##
 ########################################################################
-MESSAGE( STATUS "Adding FTLK support" )
+MESSAGE( STATUS "<FTLK>" )
 
 ########################################################################
 ##
@@ -62,7 +62,7 @@ MESSAGE( STATUS "@FLTK fluid='${FLUID}" )
 #MESSAGE( STATUS "  @FLTK query cxxflags..." )
 EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
 IF(FLTK_VERBOSE)
-	MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
+	MESSAGE( STATUS "@FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 ENDIF()
 
 #-----------------------------------------------------------------------
@@ -72,7 +72,7 @@ STRING( REGEX MATCHALL "[-][I]([^ ;])+" FLTK-INCLUDES ${FLTK-CXXFLAGS} )
 STRING( REPLACE  "-I" "" FLTK-INCLUDES "${FLTK-INCLUDES}")
 LIST(REMOVE_DUPLICATES FLTK-INCLUDES)
 IF(FLTK_VERBOSE)
-MESSAGE( STATUS "  @FLTK-INCLUDES='${FLTK-INCLUDES}'" )
+	MESSAGE( STATUS "@FLTK-INCLUDES='${FLTK-INCLUDES}'" )
 ENDIF()
 INCLUDE_DIRECTORIES(${FLTK-INCLUDES})
 
@@ -80,8 +80,10 @@ INCLUDE_DIRECTORIES(${FLTK-INCLUDES})
 # extract definitions
 #-----------------------------------------------------------------------
 STRING( REGEX MATCHALL "[-][D]([^ ;])+" FLTK-DEFINES ${FLTK-CXXFLAGS} )
-#MESSAGE( STATUS "  @FLTK-DEFINES='${FLTK-DEFINES}'")
-ADD_DEFINITIONS( ${FLTK-DEFINES} )
+IF(FLTK_VERBOSE)
+	MESSAGE( STATUS "@FLTK-DEFINES='${FLTK-DEFINES}'")
+ENDIF()
+ADD_DEFINITIONS(${FLTK-DEFINES})
 
 #-----------------------------------------------------------------------
 # extract FLTK link directory
@@ -110,8 +112,10 @@ MACRO(TARGET_LINK_FLTK THE_TARGET)
 	#get all args
 	#MESSAGE( STATUS "@FLTK --> ${THE_TARGET} | 'fltk-config ${_fltk_ldflags}'" )
 	EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} ${_fltk_ldflags} OUTPUT_VARIABLE FLTK-LDFLAGS)
-	#MESSAGE( STATUS "FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
-
+	IF(FLTK_VERBOSE)
+		MESSAGE( STATUS "@FLTK-LDFLAGS='${FLTK-LDFLAGS}'")
+	ENDIF()
+	
 	#extract libraries, link directories is already set
 	#STRING( REGEX MATCHALL "([-][l]([^ ;])+)|(-framework ([^ ;])+)" FLTK-LIBS ${FLTK-LDFLAGS})
 	#STRING( REPLACE  "-l" "" FLTK-LIBS "${FLTK-LIBS}")
@@ -154,7 +158,7 @@ ENDMACRO(FLUID_UIC)
 ENDIF(FLTK_FOUND)
 
 MACRO(Y_FLTK_SILENCE)
-	MESSAGE( STATUS "Removing FLTK warnings" )
+	MESSAGE( STATUS "@FLTK: Removing warnings" )
 	FOREACH( word IN ITEMS "-Weffc++" "-Wextra" )
 	STRING(REPLACE "${word}" "" CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}"   )
 	STRING(REPLACE "${word}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" )
