@@ -1,6 +1,6 @@
 PROJECT(y-fltk CXX)
 
-INCLUDE(../../scripts/fltk.cmake)
+INCLUDE(../../etc/fltk.cmake)
 
 INCLUDE_DIRECTORIES(. ../main)
 

@@ -1,7 +1,7 @@
 PROJECT(y-mpi++ CXX)
 MESSAGE( STATUS "<MPI++>" )
 INCLUDE_DIRECTORIES(. ../main)
-INCLUDE(../../scripts/mpi.cmake)
+INCLUDE(../../etc/mpi.cmake)
 
 IF(MPI_FOUND)
 	FILE(GLOB main_decl y/mpi++/*.hpp)

@@ -2,7 +2,7 @@ PROJECT(r++)
 
 MESSAGE( STATUS "<r++>" )
 
-INCLUDE(../../scripts/r.cmake)
+INCLUDE(../../etc/r.cmake)
 
 	
 IF(R_FOUND)

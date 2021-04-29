@@ -8,11 +8,11 @@ PROJECT(upsylon)
 ##
 ##
 ########################################################################
-INCLUDE(../scripts/y.cmake)
+INCLUDE(../etc/y.cmake)
 SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/../sdk)
 MESSAGE( STATUS "SDK in ${CMAKE_INSTALL_PREFIX}")
 
-FILE(GLOB SCRIPTS ../scripts/*.cmake)
+FILE(GLOB SCRIPTS ../etc/*.cmake)
 INSTALL( FILES ${SCRIPTS} DESTINATION share/y )
 
 ########################################################################
