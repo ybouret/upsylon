@@ -13,7 +13,7 @@ namespace upsylon {
     
     namespace ios
     {
-        class conveyor;
+        class carrier;
     }
     
     namespace Spade {
@@ -62,7 +62,7 @@ namespace upsylon {
             const string          name;        //!< identifier
             const std::type_info &objectType;  //!< type_spec
             const size_t          objectSize;  //!< bytes per object
-            const ios::conveyor  *io;          //!< optional I/O
+            const ios::carrier   *io;          //!< optional I/O
             
             
         protected:

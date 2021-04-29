@@ -182,11 +182,11 @@ Y_UTEST(ios_carrier)
     std::cerr << std::endl << "Testing access to database..." << std::endl;
 
     {
-        std::cerr << ios::carrier_for<char>(comms::homogeneous) << std::endl;
-        std::cerr << ios::carrier_for<char>(comms::distributed) << std::endl;
+        std::cerr << ios::carrier_query<char>(comms::homogeneous) << std::endl;
+        std::cerr << ios::carrier_query<char>(comms::distributed) << std::endl;
         
-        std::cerr << ios::carrier_for<string>(comms::homogeneous) << std::endl;
-        std::cerr << ios::carrier_for<apn>(comms::distributed)    << std::endl;
+        std::cerr << ios::carrier_query<string>(comms::homogeneous) << std::endl;
+        std::cerr << ios::carrier_query<apn>(comms::distributed)    << std::endl;
 
     }
     

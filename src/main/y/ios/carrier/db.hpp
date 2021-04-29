@@ -148,12 +148,36 @@ namespace upsylon
         //
         //______________________________________________________________________
         template <typename T> inline
-        const carrier &carrier_for(comms::infrastructure infra,
+        const carrier &carrier_query(comms::infrastructure infra,
                                    const char           *where=NULL)
         {
             static const carriers &cdb = carriers::instance();
             return cdb.query<T>(infra,where);
         }
+        
+        //______________________________________________________________________
+        //
+        //
+        //! helper to find a carrier for a type and a given infrastructure
+        //
+        //______________________________________________________________________
+        template <typename T> inline
+        const carrier *carrier_search(comms::infrastructure infra,
+                                      const char           *where=NULL)
+        {
+            static const carriers &cdb = carriers::instance();
+            return cdb.query<T>(infra,where);
+        }
+        
+        //______________________________________________________________________
+        //
+        //
+        //! helper to find a carrier for a type and a given infrastructure
+        //
+        //______________________________________________________________________
+        const carrier *carrier_search(const std::type_info       &tid,
+                                      const comms::infrastructure infra);
+        
     }
     
 }

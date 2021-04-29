@@ -177,8 +177,6 @@ test-cmd.cpp
 test-serialize-tools.cpp
 test-srz-io.cpp
 test-upacker.cpp
-test-conveyor.cpp
-test-conveyors.cpp
 test-ios-align.cpp
 test-rename.cpp
 test-echo.cpp
@@ -199,8 +197,6 @@ ADD_TEST(ios:cmd         test-main cmd)
 ADD_TEST(ios:serialized  test-main serialize_tools)
 ADD_TEST(ios:srz_io      test-main srz_io)
 ADD_TEST(ios:upacker     test-main upacker)
-ADD_TEST(ios:conveyor    test-main conveyor)
-ADD_TEST(ios:conveyors   test-main conveyors)
 ADD_TEST(ios:align       test-main ios_align)
 ADD_TEST(ios:rename      test-main rename)
 ADD_TEST(ios:echo        test-main echo)

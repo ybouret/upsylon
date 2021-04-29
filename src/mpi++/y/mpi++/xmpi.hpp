@@ -5,7 +5,7 @@
 #define Y_XMPI_INCLUDED 1
 
 #include "y/mpi++/mpi.hpp"
-#include "y/ios/conveyor.hpp"
+#include "y/ios/carrier.hpp"
 #include "y/ios/ovstream.hpp"
 
 namespace upsylon {

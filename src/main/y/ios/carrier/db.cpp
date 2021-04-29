@@ -99,6 +99,14 @@ namespace upsylon
             return *p;
         }
         
+        const carrier *carrier_search(const std::type_info       &tid,
+                                      const comms::infrastructure infra)
+        {
+            static const carriers &db = carriers::instance();
+            return db.search(tid,infra);
+        }
+        
+        
     }
     
 }

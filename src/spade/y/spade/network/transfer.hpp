@@ -5,7 +5,7 @@
 
 #include "y/spade/layout/fragment.hpp"
 #include "y/spade/fields.hpp"
-#include "y/ios/conveyors.hpp"
+#include "y/ios/carrier/db.hpp"
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 
@@ -59,11 +59,11 @@ namespace upsylon {
             
             //! query I/O for a given type
             template <typename T> inline
-            const ios::conveyor & query() { return IO.query<T>(infra); }
+            const ios::carrier & query() { return ios::carrier_query<T>(infra); }
             
             //! query I/O for a tuple of type
             template <template <typename> class TUPLE, typename T> inline
-            const ios::conveyor & query() { return IO.query<TUPLE,T>(infra); }
+            const ios::carrier & query() { return ios::carrier_query<TUPLE,T>(infra); }
             
             //------------------------------------------------------------------
             //
@@ -156,7 +156,7 @@ namespace upsylon {
             const comms::infrastructure infra; //!< global
             const comms::shipping_style style; //!< local, based on types
             const size_t                chunk; //!< bytes per item
-            ios::conveyors             &IO;    //!< shared database
+            //ios::conveyors             &IO;    //!< shared database
 
             //------------------------------------------------------------------
             //
@@ -173,7 +173,7 @@ namespace upsylon {
             {
                 assert(field.contains(bulk));
                 assert(field.io);
-                const ios::conveyor &io = *field.io;
+                const ios::carrier &io = *field.io;
                 for(loop.reset(bulk.lower,bulk.upper);loop.good();loop.next())
                 {
                     io.save(block,&field[*loop]);
@@ -189,7 +189,7 @@ namespace upsylon {
             {
                 assert(field.contains(bulk));
                 assert(field.io);
-                const ios::conveyor &io = *field.io;
+                const ios::carrier &io = *field.io;
                 for(loop.reset(bulk.lower,bulk.upper);loop.good();loop.next())
                 {
                     io.load(&field[*loop],source);

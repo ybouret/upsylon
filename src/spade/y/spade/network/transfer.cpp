@@ -27,10 +27,8 @@ namespace upsylon {
         Transfer:: Transfer( const comms::infrastructure where) :
         infra(where),
         style(comms::computed_block_size),
-        chunk(0),
-        IO( ios::conveyors::instance() )
+        chunk(0)
         {
-            IO.import(infra);
         }
         
         void Transfer:: asyncSetup(const Field &field) throw()
@@ -82,8 +80,8 @@ namespace upsylon {
         
         void Transfer:: setup( Field &F ) const
         {
-            F.io             = IO.search(F.objectType,infra);
-            const string &id = type_spec::declare(F.objectType).name();
+            F.io             = ios::carrier_search(F.objectType,infra);
+            const string &id = type_name_for(F.objectType);
             if(!F.io) throw exception("Spade::Field<%s> '%s': no register I/O", *id, *F.name);
         }
         
@@ -92,7 +90,7 @@ namespace upsylon {
                                   const Ghost &ghost) const
         {
             assert(field.io);
-            const ios::conveyor &io = *field.io;
+            const ios::carrier &io = *field.io;
             size_t               n  = ghost.items; assert(ghost.items==ghost.size());
             
             while(n>0)
@@ -115,7 +113,7 @@ namespace upsylon {
                 while(j>0)
                 {
                     const Field         &field = *fields[j]; assert(field.io);
-                    const ios::conveyor &io    = *field.io;
+                    const ios::carrier  &io    = *field.io;
                     io.save(block,field.objectAt(i));
                     --j;
                 }
@@ -128,7 +126,7 @@ namespace upsylon {
                                   const Ghost   &ghost) const
         {
             assert(field.io);
-            const ios::conveyor &io = *field.io;
+            const ios::carrier &io = *field.io;
             size_t               n  = ghost.items; assert(ghost.items==ghost.size());
             while(n>0)
             {
@@ -158,7 +156,7 @@ namespace upsylon {
                 while(j>0)
                 {
                     Field               &field = *fields[j]; assert(field.io);
-                    const ios::conveyor &io    = *field.io;
+                    const ios::carrier  &io    = *field.io;
                     io.load(field.objectAt(i),source);
                     --j;
                 }
@@ -186,7 +184,7 @@ namespace upsylon {
             assert(field.io!=NULL);
             
             size_t               n  = innerFwd.size();
-            const ios::conveyor &io = *field.io;
+            const ios::carrier  &io = *field.io;
             while(n>0)
             {
                 io.copy( field.objectAt(outerFwd[n]), field.objectAt(innerRev[n]));
@@ -217,7 +215,7 @@ namespace upsylon {
                 while(j>0)
                 {
                     Field               &field = *fields[j]; assert(field.io);
-                    const ios::conveyor &io    = *field.io;
+                    const ios::carrier  &io    = *field.io;
                     io.copy( field.objectAt(outerFwd_), field.objectAt(innerRev_) );
                     io.copy( field.objectAt(outerRev_), field.objectAt(innerFwd_) );
                     --j;
