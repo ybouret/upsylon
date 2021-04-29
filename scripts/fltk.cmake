@@ -11,6 +11,7 @@ MESSAGE( STATUS "Adding FTLK support" )
 ##
 ########################################################################
 SET(FLTK_FOUND OFF)
+SET(FLTK_VERBOSE ON)
 
 IF(MSVC)
 
@@ -60,7 +61,9 @@ MESSAGE( STATUS "@FLTK fluid='${FLUID}" )
 #-----------------------------------------------------------------------
 #MESSAGE( STATUS "  @FLTK query cxxflags..." )
 EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
-#MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
+IF(FLTK_VERBOSE)
+	MESSAGE( STATUS "  @FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
+ENDIF()
 
 #-----------------------------------------------------------------------
 # extract include directories
@@ -68,7 +71,9 @@ EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
 STRING( REGEX MATCHALL "[-][I]([^ ;])+" FLTK-INCLUDES ${FLTK-CXXFLAGS} )
 STRING( REPLACE  "-I" "" FLTK-INCLUDES "${FLTK-INCLUDES}")
 LIST(REMOVE_DUPLICATES FLTK-INCLUDES)
-#MESSAGE( STATUS "  @FLTK-INCLUDES='${FLTK-INCLUDES}'" )
+IF(FLTK_VERBOSE)
+MESSAGE( STATUS "  @FLTK-INCLUDES='${FLTK-INCLUDES}'" )
+ENDIF()
 INCLUDE_DIRECTORIES(${FLTK-INCLUDES})
 
 #-----------------------------------------------------------------------
