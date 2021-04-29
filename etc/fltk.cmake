@@ -60,7 +60,7 @@ MESSAGE( STATUS "@FLTK fluid='${FLUID}" )
 # get cxxflags 
 #-----------------------------------------------------------------------
 #MESSAGE( STATUS "  @FLTK query cxxflags..." )
-EXEC_PROGRAM( bash ARGS ${FLTK-CONFIG} --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
+EXEC_PROGRAM( bash ARGS "${FLTK-CONFIG}" --cxxflags OUTPUT_VARIABLE FLTK-CXXFLAGS)
 IF(FLTK_VERBOSE)
 	MESSAGE( STATUS "@FLTK-CXXFLAGS='${FLTK-CXXFLAGS}'" )
 ENDIF()
