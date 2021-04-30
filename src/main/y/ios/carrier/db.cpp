@@ -68,17 +68,17 @@ namespace upsylon
                                           const comms::infrastructure infra) const throw()
         {
  
-
+            const rtti & key = rtti::of(tid);
             switch(infra)
             {
                 case comms::homogeneous:
                 {
-                    const carrier::pointer *ppC = homogeneous.search(tid);
+                    const carrier::pointer *ppC = homogeneous.search(key);
                     if(ppC) return & (**ppC);
                 } /* FALLTHRU */
                 case comms::distributed:
                 {
-                    const carrier::pointer *ppC = distributed.search(tid);
+                    const carrier::pointer *ppC = distributed.search(key);
                     if(ppC) return & (**ppC);
                 }
             }

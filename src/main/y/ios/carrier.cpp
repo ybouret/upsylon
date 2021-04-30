@@ -25,7 +25,7 @@ namespace upsylon
         object(),
         style(_style),
         infra(_infra),
-        clsid(_clsid),
+        clsid( rtti::of(_clsid) ),
         bytes(_bytes)
         {
             assert(bytes>0);
@@ -33,22 +33,18 @@ namespace upsylon
         
         void carrier:: throw_missing_bytes() const
         {
-            throw exception("ios::carrier::missing bytes for<%s>", *which() );
+            throw exception("ios::carrier::missing bytes for<%s>", clsid.text() );
         }
-
-        const string & carrier:: which() const
-        {
-            return type_name_for(clsid);
-        }
+        
         
         std::ostream & operator<<(std::ostream &os, const carrier &self)
         {
-            os << "carrier<" << self.which() << ">";
+            os << "carrier<" << self.clsid.name() << ">";
             os << " [" << comms::shipping_style_id(self.style) << ":" << comms::infrastructure_id(self.infra) << "]";
             return os;
         }
         
-        const std::type_info  & carrier:: key() const throw()
+        const rtti  & carrier:: key() const throw()
         {
             return clsid;
         }

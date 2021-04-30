@@ -7,10 +7,8 @@
 #include "y/ios/ostream.hpp"
 #include "y/ios/istream.hpp"
 #include "y/ios/comms.hpp"
-#include "y/ptr/counted.hpp"
-#include "y/ptr/intr.hpp"
 #include "y/type/traits.hpp"
-#include <typeinfo>
+#include "y/type/rtti.hpp"
 
 namespace upsylon
 {
@@ -27,7 +25,7 @@ namespace upsylon
         class carrier : public counted, public object
         {
         public:
-            typedef intr_ptr<std::type_info,carrier> pointer; //!< alias
+            typedef intr_ptr<rtti,carrier> pointer; //!< alias
             
             //__________________________________________________________________
             //
@@ -42,9 +40,8 @@ namespace upsylon
             //
             // non-virtual interface
             //__________________________________________________________________
-            const  string         & which() const;                              //!< type id
             friend std::ostream   & operator<<(std::ostream &, const carrier&); //!< display
-            const std::type_info  & key() const throw();                        //!< clsid
+            const rtti            & key() const throw();                        //!< clsid
             
             //__________________________________________________________________
             //
@@ -52,7 +49,7 @@ namespace upsylon
             //__________________________________________________________________
             const comms::shipping_style    style;  //!< [computed|flexible]_block_size
             const comms::infrastructure    infra;  //!< [homogeneous|distributed]
-            const std::type_info          &clsid;  //!< system type info
+            const rtti                    &clsid;  //!< system type info
             const size_t                   bytes;  //!< sizeof(T)
             
         protected:

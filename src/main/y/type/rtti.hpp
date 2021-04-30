@@ -77,6 +77,7 @@ namespace upsylon
         //______________________________________________________________________
         const string & key()  const throw();                              //!< uuid
         const string & name() const throw();                              //!< uuid or first alias
+        const char   * text() const throw();                              //!< from name()
         friend bool operator==(const rtti &lhs, const rtti &rhs) throw(); //!< test uuids
         friend bool operator!=(const rtti &lhs, const rtti &rhs) throw(); //!< test uuids
         friend std::ostream & operator<<( std::ostream &, const rtti &);  //!< display
@@ -121,6 +122,10 @@ namespace upsylon
             template <typename T, typename TAG> inline
             const rtti & use(const TAG &tag) { return (*this)( typeid(T), tag ); }
             
+            //! wrapper for type computation
+            template <typename T> inline
+            const rtti & of(const T & ) { return (*this)( typeid(T) ); }
+            
             //__________________________________________________________________
             //
             // members
@@ -141,8 +146,31 @@ namespace upsylon
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(rtti);
+    
+    public:
+        
+        //! fetch rtti for typeid
+        static const rtti & of(const std::type_info &);
+        
+        //! fetch rtti for type
+        template <typename T> inline
+        static const rtti & of()
+        {
+            return of( typeid(T) );
+        }
+        
+        //! fetch rtti name for typeid
+        static const string & name_of(const std::type_info &);
+        
+        //! fetch rttu name for type
+        template <typename T> inline
+        static const string & name_of()
+        {
+            return name_of( typeid(T) );
+        }
     };
-
+    
+    
 
 
 

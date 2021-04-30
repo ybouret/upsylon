@@ -17,7 +17,7 @@ namespace upsylon
     
 
     rtti :: rtti(const std::type_info &tid) :
-    uuid( tid.name()    ),
+    uuid( tid.name() ),
     user()
     {
     }
@@ -43,6 +43,11 @@ namespace upsylon
         return (user.size>0) ?  user.head->name : uuid;
     }
 
+    const char * rtti:: text() const throw()
+    {
+        return *name();
+    }
+    
     const string & rtti:: key() const throw()
     {
         return uuid;
@@ -72,6 +77,21 @@ namespace upsylon
         }
         return os;
     }
+    
+    const rtti & rtti::of(const std::type_info &tid)
+    {
+        static repo &mgr = repo::instance();
+        return mgr(tid);
+    }
+    
+    const string  & rtti:: name_of(const std::type_info &tid)
+    {
+        static repo &mgr = repo::instance();
+        return mgr(tid).name();
+    }
+    
+
+
     
 }
 
@@ -204,6 +224,16 @@ namespace upsylon
     
     void rtti:: repo:: import()
     {
+        Y_RTTI(int8_t);
+        Y_RTTI(int16_t);
+        Y_RTTI(int32_t);
+        Y_RTTI(int64_t);
+        
+        Y_RTTI(uint8_t);
+        Y_RTTI(uint16_t);
+        Y_RTTI(uint32_t);
+        Y_RTTI(uint64_t);
+        
         Y_RTTI(char);
         Y_RTTI(short);
         Y_RTTI(int);
@@ -219,16 +249,6 @@ namespace upsylon
         Y_RTTI(size_t);
 
         
-        Y_RTTI(int8_t);
-        Y_RTTI(int16_t);
-        Y_RTTI(int32_t);
-        Y_RTTI(int64_t);
-        
-        Y_RTTI(uint8_t);
-        Y_RTTI(uint16_t);
-        Y_RTTI(uint32_t);
-        Y_RTTI(uint64_t);
-
         Y_RTTI(float);
         Y_RTTI(double);
         Y_RTTI(long double);

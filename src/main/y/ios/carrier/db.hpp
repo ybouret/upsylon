@@ -11,7 +11,6 @@
 #include "y/ios/carrier/derived.hpp"
 #include "y/ios/carrier/tuple.hpp"
 
-#include "y/hashing/type-info.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/type/aliasing.hpp"
 
@@ -33,9 +32,8 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef hashing::type_info_hasher<hashing::fnv>          hasher;   //!< direct hasher
-            typedef hash_set<std::type_info,carrier::pointer,hasher> db_type;  //!< alias
-            typedef db_type::const_iterator                          iterator; //!< alias
+            typedef hash_set<rtti,carrier::pointer>  db_type;  //!< alias
+            typedef db_type::const_iterator          iterator; //!< alias
             
             
             //__________________________________________________________________
@@ -149,7 +147,7 @@ namespace upsylon
         //______________________________________________________________________
         template <typename T> inline
         const carrier &carrier_query(comms::infrastructure infra,
-                                   const char           *where=NULL)
+                                     const char           *where=NULL)
         {
             static const carriers &cdb = carriers::instance();
             return cdb.query<T>(infra,where);

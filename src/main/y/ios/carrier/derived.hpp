@@ -44,7 +44,7 @@ namespace upsylon
             //! setup
             inline explicit derived_carrier() :
             carrier_of<T>(comms::flexible_block_size,comms::distributed),
-            id( *(this->which()) )
+            id( this->clsid.text() )
             {
             }
             
