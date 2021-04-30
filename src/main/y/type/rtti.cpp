@@ -18,7 +18,6 @@ namespace upsylon
 
     rtti :: rtti(const std::type_info &tid) :
     uuid( tid.name()    ),
-    ulen( uuid.length() ),
     user()
     {
     }
@@ -31,11 +30,12 @@ namespace upsylon
     
     size_t rtti:: length() const throw()
     {
-        return ulen;
+        return uuid.length();
     }
     
     rtti:: ~rtti() throw()
     {
+        
     }
 
     const string & rtti:: name() const throw()
@@ -67,7 +67,7 @@ namespace upsylon
             os << ':';
             for(const rtti::alias *aka=info.user.head;aka;aka=aka->next)
             {
-                os << ' ' << aka->name;
+                os << ' ' << '[' << aka->name << ']';
             }
         }
         return os;
@@ -83,7 +83,10 @@ namespace upsylon
 {
     Y_SINGLETON_IMPL(rtti::repo);
 
-    rtti:: repo:: repo() : db(), id(), mx(0) {}
+    rtti:: repo:: repo() : db(), id(), mx(0)
+    {
+        import();
+    }
 
     rtti:: repo:: ~repo() throw()
     {
@@ -91,7 +94,7 @@ namespace upsylon
     
     const rtti &  rtti:: repo:: update_mx(const rtti &info) throw()
     {
-        aliasing::_(mx) = max_of(mx,info.ulen);
+        aliasing::_(mx) = max_of(mx,info.length());
         return info;
     }
 
@@ -184,9 +187,66 @@ namespace upsylon
     }
 
 
-
+    
 
 
 }
 
 
+#include "y/type/complex.hpp"
+#include "y/type/point3d.hpp"
+#include "y/yap.hpp"
+
+namespace upsylon
+{
+#define Y_RTTI(NAME) use<NAME>( #NAME )
+    
+    
+    void rtti:: repo:: import()
+    {
+        Y_RTTI(char);
+        Y_RTTI(short);
+        Y_RTTI(int);
+        Y_RTTI(long);
+        Y_RTTI(long long);
+        Y_RTTI(unit_t);
+        
+        Y_RTTI(unsigned char);
+        Y_RTTI(unsigned short);
+        Y_RTTI(unsigned int);
+        Y_RTTI(unsigned long);
+        Y_RTTI(unsigned long long);
+        Y_RTTI(size_t);
+
+        
+        Y_RTTI(int8_t);
+        Y_RTTI(int16_t);
+        Y_RTTI(int32_t);
+        Y_RTTI(int64_t);
+        
+        Y_RTTI(uint8_t);
+        Y_RTTI(uint16_t);
+        Y_RTTI(uint32_t);
+        Y_RTTI(uint64_t);
+
+        Y_RTTI(float);
+        Y_RTTI(double);
+        Y_RTTI(long double);
+        
+        Y_RTTI(complex<float>);
+        Y_RTTI(complex<double>);
+        
+        Y_RTTI(point2d<float>);
+        Y_RTTI(point2d<double>);
+        Y_RTTI(point2d<unit_t>);
+
+        Y_RTTI(point3d<float>);
+        Y_RTTI(point3d<double>);
+        Y_RTTI(point3d<unit_t>);
+
+        Y_RTTI(apn);
+        Y_RTTI(apz);
+        Y_RTTI(apq);
+        
+    }
+}

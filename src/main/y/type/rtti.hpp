@@ -7,6 +7,7 @@
 #include "y/string.hpp"
 #include "y/core/list.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/ptr/auto.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/associative/suffix/map.hpp"
 #include <typeinfo>
@@ -85,9 +86,7 @@ namespace upsylon
         // members
         //______________________________________________________________________
         const string   uuid; //!< type_info.name
-        const size_t   ulen; //!< length of uuid
         const aliases  user; //!< user names
-        
         
         //______________________________________________________________________
         //
@@ -135,6 +134,9 @@ namespace upsylon
             virtual ~repo() throw();
             Y_SINGLETON_DECL_WITH(string::life_time-4,repo);
             const rtti & update_mx(const rtti &) throw();
+            
+            void import();
+            
         };
 
     private:
