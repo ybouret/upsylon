@@ -1,12 +1,12 @@
 
 #include "y/type/rtti.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/hashing/fnv.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
     rtti:: alias:: alias(const string &_) :
-    object(), next(0), prev(0), name(_)
+    object(), next(0), prev(0), name(_), priv()
     {
     }
 
@@ -14,35 +14,28 @@ namespace upsylon
     {
     }
 
-
-    typedef hashing::fnv rtti_hasher;
-
-    size_t rtti:: hash(const char *id) throw()
-    {
-        assert(id);
-        return rtti_hasher::of(id);
-    }
-
-    size_t rtti:: hash(const std::type_info &tid) throw()
-    {
-        return hash( tid.name() );
-    }
-
-    size_t rtti:: hash(const string &id) throw()
-    {
-        return hash(*id);
-    }
+    
 
     rtti :: rtti(const std::type_info &tid) :
-    uuid( tid.name() ),
-    code( hash(uuid) ),
+    uuid( tid.name()    ),
+    ulen( uuid.length() ),
     user()
     {
     }
 
+    const void * rtti:: ro() const throw()
+    {
+        return *uuid;
+    }
+    
+    
+    size_t rtti:: length() const throw()
+    {
+        return ulen;
+    }
+    
     rtti:: ~rtti() throw()
     {
-        aliasing::_(code) = 0;
     }
 
     const string & rtti:: name() const throw()
@@ -54,8 +47,32 @@ namespace upsylon
     {
         return uuid;
     }
+    
+    bool operator==(const rtti &lhs, const rtti &rhs) throw()
+    {
+        return lhs.uuid == rhs.uuid;
+    }
+    
+    bool operator!=(const rtti &lhs, const rtti &rhs) throw()
+    {
+        return lhs.uuid != rhs.uuid;
+    }
 
-
+    std::ostream & operator<<(std::ostream &os, const rtti &info)
+    {
+        static const rtti::repo &mgr = rtti::repo::instance();
+        os << ios::align(info.uuid,ios::align::left,mgr.mx);
+        if(info.user.size)
+        {
+            os << ':';
+            for(const rtti::alias *aka=info.user.head;aka;aka=aka->next)
+            {
+                os << ' ' << aka->name;
+            }
+        }
+        return os;
+    }
+    
 }
 
 
@@ -71,93 +88,99 @@ namespace upsylon
     rtti:: repo:: ~repo() throw()
     {
     }
-
-    void rtti:: repo:: operator()(const std::type_info &tid)
+    
+    const rtti &  rtti:: repo:: update_mx(const rtti &info) throw()
     {
-        const rtti::pointer   tptr = new rtti(tid);
-        const string         &tkey = tptr->uuid;
-
-        if( aliasing::_(db).insert(tptr) )
-        {
-            //__________________________________________________________________
-            //
-            // new one => register id
-            //__________________________________________________________________
-            if( !aliasing::_(id).insert(tkey,tptr) )
-            {
-                (void) aliasing::_(db).remove(tkey);
-                throw  exception("%s(unexpected multiple <%s>)",call_sign,*tkey);
-            }
-        }
-        else
-        {
-            //__________________________________________________________________
-            //
-            // already registered
-            //__________________________________________________________________
-            assert( NULL != id.search(tptr->uuid) );
-        }
+        aliasing::_(mx) = max_of(mx,info.ulen);
+        return info;
     }
 
-    void rtti:: repo:: operator()(const std::type_info &tid, const string &tag)
+
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid)
     {
         const string         key = tid.name();
-        const rtti::pointer *ppr = id.search(tag);
+        const rtti::pointer *ppr = db.search(key);
+        const rtti::pointer *ppa = id.search(key);
         if(ppr)
         {
             //__________________________________________________________________
             //
-            // tag is not registered
+            // primary type already registered
             //__________________________________________________________________
-            throw exception("%s('%s' already used for <%s> while aliasing <%s>)", call_sign, *tag, *( (*ppr)->name()), *key);
+            if(!ppa)         throw exception("%s(<%s> corrupted)",call_sign,*key);
+            if(*ppa != *ppr) throw exception("%s(existing <%s> aliases by <%s>)",call_sign,*key, * (**ppa).uuid);
+            return **ppr;
         }
         else
         {
             //__________________________________________________________________
             //
-            // check if tid is registered
+            // register a new primary type
             //__________________________________________________________________
-            ppr = db.search(key);
-            if(!ppr)
-            {
-                const rtti::pointer   ptr = new rtti(tid);
-                if(!aliasing::_(db).insert(ptr)) throw exception("%s(unexpected insert error for <%s>)",call_sign,*key);
-                if( !(ppr = db.search(key) ) )   throw exception("%s(unexpected search error for <%s>)",call_sign,*key);
-            }
-
-            //__________________________________________________________________
-            //
-            // populate and register aliases
-            //__________________________________________________________________
-            aliases &aka = aliasing::_((**ppr).user);
-            aka.push_back( new alias(tag) );
+            if(ppa)
+                throw exception("%s(missing <%s> aliased by <%s>",call_sign,*key,* (**ppa).uuid );
+            
+            const rtti::pointer ptr = new rtti(tid);
+            if(!aliasing::_(db).insert(ptr))
+                throw exception("%s(<%s> unexpected insert failure)",call_sign,*key);
+           
             try
             {
-                if(! aliasing::_(id).insert(tag,*ppr) )
-                {
-                    throw exception("%s(unexpected insert error for <%s> as <%s>)",call_sign,*key,*tag);
-                }
+                if(!aliasing::_(id).insert(key,ptr))
+                    throw exception("%s(<%s> unexpected aliasing failure)",call_sign,*key);
             }
             catch(...)
             {
-                delete aka.pop_back();
+                (void) aliasing::_(db).remove(key);
                 throw;
             }
-
-            //__________________________________________________________________
-            //
-            // update
-            //__________________________________________________________________
-            aliasing::_(mx) = max_of(mx,tag.size());
-
+            
+            return update_mx(*ptr);
         }
-
     }
 
-    void rtti:: repo:: operator()(const std::type_info &tid, const char  *tag)
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const string &tag)
+    {
+        const rtti          &info = (*this)(tid);
+        const rtti::pointer *ppa  = id.search(tag);
+        if(ppa)
+        {
+            //__________________________________________________________________
+            //
+            // tag already exist!
+            //__________________________________________________________________
+            if (**ppa != info)
+                throw exception("%s(<%s> cannot be a.k.a. '%s' used for <%s>)",call_sign,*info.uuid,*tag, *(**ppa).uuid);
+            return info;
+        }
+        else
+        {
+            //__________________________________________________________________
+            //
+            // new tag => alias for info
+            //__________________________________________________________________
+            aliasing::_(info.user).push_back( new alias(tag) );
+            try
+            {
+                const rtti::pointer ptr = & aliasing::_(info);
+                if(!aliasing::_(id).insert(tag,ptr))
+                    throw exception("%s(<%s> aliasing failure by '%s')", call_sign, *info.uuid, *tag);
+            }
+            catch(...)
+            {
+                delete aliasing::_(info.user).pop_back();
+                throw;
+            }
+            return info;
+        }
+        
+        
+    }
+
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const char  *tag)
     {
         const string _(tag);
-        (*this)(tid,_);
+        return (*this)(tid,_);
     }
 
 

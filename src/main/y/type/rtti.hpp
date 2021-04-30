@@ -13,72 +13,128 @@
 
 namespace upsylon
 {
-
-    class rtti : public counted, public object
+    
+    //__________________________________________________________________________
+    //
+    //
+    //! Run Time Type Information
+    //
+    //__________________________________________________________________________
+    class rtti : public object, public counted, public memory::ro_buffer
     {
     public:
-        typedef intr_ptr<string,rtti>      pointer;
-        typedef hash_set<string,pointer>   db_type;
-        typedef suffix_map<string,pointer> id_type;
-        typedef db_type::const_iterator    db_iter;
-        typedef id_type::const_iterator    id_iter;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef intr_ptr<string,rtti>      pointer; //!< smart pointer
+        typedef hash_set<string,pointer>   db_type; //!< database of pointers
+        typedef suffix_map<string,pointer> id_type; //!< index of tag => pointers
+        typedef db_type::const_iterator    db_iter; //!< iterator on database
+        typedef id_type::const_iterator    id_iter; //!< iterator on index
 
-
+        //______________________________________________________________________
+        //
+        //! alias node
+        //______________________________________________________________________
         class alias : public object
         {
         public:
-            explicit alias(const string &);
-            virtual ~alias() throw();
-            alias       *next;
-            alias       *prev;
-            const string name;
-
+            explicit alias(const string &); //!< setup
+            virtual ~alias() throw();       //!< cleanup
+            alias       *next;              //!< for list
+            alias       *prev;              //!< for list
+            const string name;              //!< alias name
         private:
+            void *priv; //!< data alignment only
             Y_DISABLE_COPY_AND_ASSIGN(alias);
         };
 
+        //______________________________________________________________________
+        //
+        //! alias list
+        //______________________________________________________________________
         typedef core::list_of_cpp<alias> aliases;
 
-
-        static size_t hash(const char           *) throw();
-        static size_t hash(const std::type_info &) throw();
-        static size_t hash(const string         &) throw();
-
-        const string   uuid; //!< type_info.name
-        const size_t   code; //!< from internal hash
-        const aliases  user; //!< user names
-
-        const string & key()  const throw(); //!< uuid
-        const string & name() const throw(); //!< uuid or first alias
-
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
         virtual ~rtti() throw();
         explicit rtti(const std::type_info &);
-
+        
+        //______________________________________________________________________
+        //
+        // ro_buffer interface
+        //______________________________________________________________________
+        virtual const void  *ro()     const throw();
+        virtual size_t       length() const throw();
+        
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+        const string & key()  const throw();                              //!< uuid
+        const string & name() const throw();                              //!< uuid or first alias
+        friend bool operator==(const rtti &lhs, const rtti &rhs) throw(); //!< test uuids
+        friend bool operator!=(const rtti &lhs, const rtti &rhs) throw(); //!< test uuids
+        friend std::ostream & operator<<( std::ostream &, const rtti &);  //!< display
+        
+        //______________________________________________________________________
+        //
+        // members
+        //______________________________________________________________________
+        const string   uuid; //!< type_info.name
+        const size_t   ulen; //!< length of uuid
+        const aliases  user; //!< user names
+        
+        
+        //______________________________________________________________________
+        //
+        //! repository
+        //______________________________________________________________________
         class repo : public singleton<repo>
         {
         public:
+            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            
+            //! register a new primary type info
+            /**
+             ensure that rtti is register only once in db and id
+             */
+            const rtti & operator()(const std::type_info &);
+            
+            //! alias a new or existing rtti
+            const rtti & operator()(const std::type_info &, const string &);
+            
+            //! alias a new or existing rtti, wrapper
+            const rtti & operator()(const std::type_info &, const char   *);
+
+            //! wrapper for type computation
+            template <typename T> inline
+            const rtti & use() { return (*this)( typeid(T) ); }
+
+            //! wrapper for type computation
+            template <typename T, typename TAG> inline
+            const rtti & use(const TAG &tag) { return (*this)( typeid(T), tag ); }
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const db_type db; //!< database
             const id_type id; //!< glossary
             const size_t  mx; //!< uuid max length
-
-            void operator()(const std::type_info &);
-            void operator()(const std::type_info &, const string &);
-            void operator()(const std::type_info &, const char   *);
-
-            template <typename T> inline
-            void use() { (*this)( typeid(T) ); }
-
-            template <typename T, typename TAG> inline
-            void use(const TAG &tag) { (*this)( typeid(T), tag ); }
-
-
-
-
 
         private:
             explicit repo();
             virtual ~repo() throw();
             Y_SINGLETON_DECL_WITH(string::life_time-4,repo);
+            const rtti & update_mx(const rtti &) throw();
         };
 
     private:
