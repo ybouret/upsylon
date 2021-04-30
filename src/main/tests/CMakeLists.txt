@@ -53,12 +53,15 @@ test-ints-to-real.cpp
 test-i2i.cpp
 test-decomp.cpp
 test-type-authority.cpp
+test-rtti.cpp
 )
 ADD_TEST(type:cull         test-main cull)
 ADD_TEST(type:ints-to-real test-main i2r)
 ADD_TEST(type:int-to-int   test-main i2i)
 ADD_TEST(type:decomp       test-main decomp)
 ADD_TEST(type:authority    test-main type_authority)
+ADD_TEST(type:info         test-main rtti)
+
 
 SOURCE_GROUP(core FILES test-ppty.cpp test-lockable.cpp 
 test-code.cpp test-bits.cpp
