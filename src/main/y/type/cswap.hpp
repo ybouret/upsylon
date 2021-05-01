@@ -51,14 +51,18 @@ namespace upsylon
     template <typename T>
     void cswap_increasing(T &a, T &b)
     {
-        if(b<a) cswap(a,b); assert(a<=b);
+        if(b<a)
+            cswap(a,b);
+        assert(a<=b);
     }
 
     //! assert decreasing
     template <typename T>
     void cwap_decreasing(T &a, T &b)
     {
-        if(a<b) cswap(a,b); assert(b<=a);
+        if(a<b)
+            cswap(a,b);
+        assert(b<=a);
     }
 
 }
