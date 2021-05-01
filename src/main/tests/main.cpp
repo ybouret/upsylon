@@ -178,8 +178,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(trigo);
     Y_UTEST(tuple);
     Y_UTEST(release);
-    Y_UTEST(spec);
-    Y_UTEST(spec_db);
 
     Y_UTEST(mtf);
     Y_UTEST(delta);
