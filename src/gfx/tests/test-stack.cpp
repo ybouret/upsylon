@@ -1,7 +1,6 @@
 
 #include "y/gfx/stack.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
 #include "y/gfx/color/random.hpp"
 
 using namespace upsylon;

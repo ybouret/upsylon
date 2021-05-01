@@ -1,7 +1,7 @@
 #include "y/gfx/area/patch.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "support.hpp"
 #include "y/gfx/color/rgb.hpp"
 #include "y/gfx/pblock.hpp"
@@ -14,7 +14,7 @@ namespace {
     template <typename T>
     inline void do_patch()
     {
-        std::cerr << "patch<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "patch<" << rtti::name_of<T>() << ">" << std::endl;
 
 
         patch<T> p(alea.range<unit_t>(1,1000), alea.range<unit_t>(1,1000),alea.range<unit_t>(-100,100),alea.range<unit_t>(-100,100));

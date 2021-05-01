@@ -1,7 +1,7 @@
 #include "y/mkl/solve/zdriver.hpp"
 #include "y/mkl/solve/zbis.hpp"
 #include "y/mkl/solve/zrid.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -34,7 +34,7 @@ namespace {
     static inline void doZero()
     {
         zdriver<T,ALGO> solver;
-        std::cerr << "[" << solver.method() << "]/" << type_name_of<T>() << std::endl;
+        std::cerr << "[" << solver.method() << "]/" << rtti::name_of<T>() << std::endl;
         dummy<T>     F;
         const T      x0 = solver(F,0,2);
         std::cerr << "x0="    << x0      << std::endl;

@@ -2,7 +2,6 @@
 
 #include "y/gfx/image/io.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace graphic;

@@ -2,7 +2,7 @@
 #include "y/spade/layout.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -16,7 +16,7 @@ namespace {
     {
         
         std::cerr << std::endl;
-        std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
+        std::cerr << "Layout<" << rtti::name_of<COORD>() << ">" << std::endl;
         
         for(int iter=0;iter<8;++iter)
         {

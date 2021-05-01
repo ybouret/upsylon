@@ -3,7 +3,7 @@
 #include "y/mkl/fitting/sample.hpp"
 #include "y/mkl/fitting/least-squares.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
@@ -16,7 +16,7 @@ namespace {
     void do_gauss()
     {
 
-        const string &id = type_name_of<T>();
+        const string &id = rtti::name_of<T>();
 
         // make data
         typename series<T>::type t  = new vector<T>();

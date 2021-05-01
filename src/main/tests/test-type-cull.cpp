@@ -365,7 +365,7 @@ Y_UTEST(move_perf)
 }
 Y_UTEST_DONE()
 
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include <iomanip>
 
 namespace {
@@ -376,7 +376,7 @@ namespace {
         typedef cull<N>                        cull_type;
         typedef typename  cull_type::word_type word_type;
         std::cerr << "CHECK  cull<" << N << ">";
-        std::cerr << " word_type = " << std::setw(8) << *type_name_of<word_type>();
+        std::cerr << " word_type = " << std::setw(8) << *rtti::name_of<word_type>();
         std::cerr << " word_size = " << cull_type::word_size;
         std::cerr << " num_words = " << cull_type::num_words;
         std::cerr << std::endl;

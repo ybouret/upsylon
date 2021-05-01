@@ -4,7 +4,7 @@
 #include "support.hpp"
 
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -13,7 +13,7 @@ namespace {
     template <typename T>
     static inline void testStack()
     {
-        std::cerr << type_name_of<T>() << std::endl;
+        std::cerr << rtti::name_of<T>()<< std::endl;
         Y_DECL_ARGS_(T,type);
 
         const size_t n = 1 + alea.leq(30);

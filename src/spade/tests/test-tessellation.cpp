@@ -2,7 +2,7 @@
 #include "y/spade/layout/tessellation.hpp"
 #include "y/spade/fields.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
@@ -16,7 +16,7 @@ namespace {
                               const size_t numGhosts)
     {
         std::cerr << std::endl;
-        std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
+        std::cerr << "Layout<" << rtti::name_of<COORD>() << ">" << std::endl;
         const COORD   width = Coord::Parse<COORD>(args);
         const COORD   shift = Coord::Integer( 10 * Coord::Ones<COORD>(), alea);
         const COORD   lo    = Coord::Ones<COORD>() + shift;
@@ -67,7 +67,7 @@ namespace {
                               const size_t numGhosts)
     {
         std::cerr << std::endl;
-        std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
+        std::cerr << "Layout<" << rtti::name_of<COORD>() << ">" << std::endl;
         const COORD   width = Coord::Parse<COORD>(args);
         const COORD   shift = Coord::Integer( 10 * Coord::Ones<COORD>(), alea);
         const COORD   lo    = Coord::Ones<COORD>() + shift;

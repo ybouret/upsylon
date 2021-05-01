@@ -4,7 +4,7 @@
 #include "support.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "y/memory/allocator/dyadic.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -39,7 +39,7 @@ namespace
     template <typename T>
     static inline void test_crates()
     {
-        std::cerr << type_name_of<T>() << std::endl;
+        std::cerr << rtti::name_of<T>() << std::endl;
         do_crates<T,memory::global>();
         do_crates<T,memory::pooled>();
         do_crates<T,memory::dyadic>();

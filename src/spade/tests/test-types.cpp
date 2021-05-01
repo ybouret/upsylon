@@ -1,5 +1,5 @@
 #include "y/spade/types.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -10,7 +10,7 @@ namespace {
     template <typename COORD>
     static inline void show()
     {
-        std::cerr << type_name_of<COORD>() << std::endl;
+        std::cerr << rtti::name_of<COORD>() << std::endl;
         std::cerr << "\tDim=" << Coord::Get<COORD>::Dimensions << std::endl;
         COORD z = Coord::Zero<COORD>();
         COORD u = Coord::Ones<COORD>();

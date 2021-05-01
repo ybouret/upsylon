@@ -1,7 +1,7 @@
 
 #include "y/gfx/color/convert.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ios/align.hpp"
 
 using namespace upsylon;
@@ -12,7 +12,7 @@ namespace
     template <typename T, typename U>
     static inline void  Check(const T &value)
     {
-        std::cerr << "convert<" << type_name_of<T>() << "," << type_name_of<U>() << ">::from" << std::endl;
+        std::cerr << "convert<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << ">::from" << std::endl;
         std::cerr << "\t" << value << " -> " << convert<U,T>::from(value) << std::endl;
     }
 

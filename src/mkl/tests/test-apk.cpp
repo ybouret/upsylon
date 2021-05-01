@@ -2,7 +2,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/mkl/tao.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -12,7 +12,7 @@ namespace {
     template <typename T>
     static inline void test_idet(const size_t nmax)
     {
-        std::cerr << "for <" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "for <" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t n=1;n<=nmax;++n)
         {
             std::cerr << "\tn=" << n << std::endl;
@@ -81,7 +81,7 @@ namespace {
     template <typename T>
     static inline void test_adjoint_gram(const size_t n)
     {
-        std::cerr << "gram/adjoint for <" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "gram/adjoint for <" << rtti::name_of<T>() << ">" << std::endl;
 
         const size_t m = n + alea.leq(5);
         matrix<T>    M(n,m);

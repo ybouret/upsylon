@@ -2,7 +2,7 @@
 #include "y/gfx/pixmaps.hpp"
 #include "y/gfx/bitrow.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -37,7 +37,7 @@ namespace
     template <typename T>
     static inline void do_pixmap()
     {
-        std::cerr << "pixmap<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "pixmap<" << rtti::name_of<T>() << ">" << std::endl;
         Y_CHECK(sizeof(bitrow)==sizeof(pixrow<T>));
         
         

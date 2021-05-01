@@ -1,7 +1,7 @@
 
 
 #include "y/spade/vtk.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/associative/be-key.hpp"
 #include "y/exception.hpp"
 
@@ -62,7 +62,7 @@ namespace upsylon {
             };
 
 #define Y_VTK_NATIVE(TYPE,CAST,FMT) do {       \
-const type_spec &t = type_spec_of<TYPE>();     \
+const rtti      &t = rtti::of<TYPE>();     \
 const be_key     k = t;                        \
 if(!natives.search(k))    {                    \
 const INative w = new _Native<TYPE,CAST>(FMT); \
@@ -107,7 +107,7 @@ throw exception("%sunexpected failure for <%s>",fn, *t.name());\
 
         const vtk::Native & vtk:: getNative(const std::type_info &tid) const
         {
-            const type_spec &t = type_spec_for(tid);
+            const rtti      &t = rtti::of(tid);
             const be_key     k = t;
             const INative   *h = natives.search(k);
             if(!h) throw exception("%sno <%s>",fn, *t.name());

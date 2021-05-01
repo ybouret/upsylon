@@ -2,7 +2,7 @@
 #include "y/associative/suffix/map.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/string/convert.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
 
@@ -17,7 +17,7 @@ namespace {
                    const char            *usr)
     {
         assert(usr);
-        std::cerr << "lexicon<" << type_name_of<KEY>() << "," << type_name_of<T>() << "> = <" << usr << ">" << std::endl;
+        std::cerr << "lexicon<" << rtti::name_of<KEY>() << "," << rtti::name_of<T>() << "> = <" << usr << ">" << std::endl;
         // check
         Y_ASSERT(keys.size()==args.size());
         const size_t n = keys.size();

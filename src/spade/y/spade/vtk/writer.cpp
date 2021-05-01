@@ -1,6 +1,6 @@
 
 #include "y/spade/vtk.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/associative/be-key.hpp"
 #include "y/exception.hpp"
 #include "y/yap/rational.hpp"
@@ -115,7 +115,7 @@ namespace upsylon {
 
         const vtk::Writer & vtk::getWriter(const std::type_info &tid) const
         {
-            const type_spec &t = type_spec_for(tid); //std::cerr << "getWriter<" << t.name() << ">" << std::endl;
+            const rtti      &t = rtti::of(tid); //std::cerr << "getWriter<" << t.name() << ">" << std::endl;
             const be_key     k = t;
             const INative   *n = natives.search(k);
             if(n)
@@ -135,7 +135,7 @@ namespace upsylon {
 
         void vtk:: record(const std::type_info &tid, const IWriter &w)
         {
-            const type_spec &t = type_spec_for(tid);
+            const rtti      &t = rtti::of(tid);
             const be_key     k = t;
             if( !writers.insert(k,w) )
             {

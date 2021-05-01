@@ -4,7 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/mkl/tao.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -14,7 +14,7 @@ namespace
     template <typename T>
     void do_test()
     {
-        std::cerr << "tridiag<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "tridiag<" << rtti::name_of<T>() << ">" << std::endl;
 		T xtra = 0;
         for(size_t n=1;n<=3;++n)
         {

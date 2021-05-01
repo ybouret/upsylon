@@ -4,7 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/sort/heap.hpp"
 #include "y/os/wtime.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "support.hpp"
 #include "y/ios/ocstream.hpp"
 
@@ -117,7 +117,7 @@ namespace
     template <typename T>
     void perform()
     {
-        const string &tn = type_name_of<T>();
+        const string &tn = rtti::name_of<T>();
         std::cerr << "checking <" << tn << ">" << std::endl;
         ios::ocstream fp( "blk_" + tn + ".dat" );
         double std_speed=0, bis_speed=0;

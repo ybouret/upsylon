@@ -3,7 +3,7 @@
 #include "y/gfx/pblock.hpp"
 #include "y/gfx/color/rgb.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -35,7 +35,7 @@ namespace
     template <typename T> static inline
     void check_blocks()
     {
-        std::cerr << type_name_of<T>() << std::endl;
+        std::cerr << rtti::name_of<T>() << std::endl;
         for(size_t i=0; i <= 1000; i += alea.leq(100) )
         {
             pblock<T> iblk(i);

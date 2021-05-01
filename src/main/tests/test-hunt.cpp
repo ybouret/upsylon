@@ -1,7 +1,7 @@
 #include "y/code/hunt.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -11,7 +11,7 @@ namespace
     template <typename T> static inline
     void test_hunt()
     {
-        std::cerr << "hunting with " << type_name_of<T>() << std::endl;
+        std::cerr << "hunting with " << rtti::name_of<T>() << std::endl;
 
         const size_t n = 2 + alea.lt(100);
         vector<T>    x(n,0);

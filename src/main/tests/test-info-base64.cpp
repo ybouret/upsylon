@@ -5,7 +5,7 @@
 #include "y/utest/run.hpp"
 
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace Information;
@@ -32,7 +32,7 @@ namespace {
     template <typename T>
     static inline void doUUID()
     {
-        std::cerr << "uuid64<" << type_name_of<T>() << "> : sizeof=" << sizeof(uuid64<T>) << std::endl;
+        std::cerr << "uuid64<" << rtti::name_of<T>() << "> : sizeof=" << sizeof(uuid64<T>) << std::endl;
         std::cerr << "      |_type_size  = " << uuid64<T>::type_size << std::endl;
         std::cerr << "      |_type_num3  = " << uuid64<T>::type_num3 << std::endl;
         std::cerr << "      |_type_rem3  = " << uuid64<T>::type_rem3 << std::endl;

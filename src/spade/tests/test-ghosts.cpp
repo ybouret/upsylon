@@ -1,6 +1,6 @@
 #include "y/spade/layout/swaps.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace Spade;
@@ -11,7 +11,7 @@ namespace {
     void doTest()
     {
         std::cerr << std::endl;
-        std::cerr << "Layout<" << type_name_of<COORD>() << ">" << std::endl;
+        std::cerr << "Layout<" << rtti::name_of<COORD>() << ">" << std::endl;
 
         for(int iter=0;iter<8;++iter)
         {

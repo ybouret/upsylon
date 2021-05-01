@@ -4,7 +4,7 @@
 #include "y/ptr/intr.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -42,7 +42,7 @@ namespace {
     template <typename KEY>
     void doTest(const size_t nmax)
     {
-        std::cerr << "-- Test<" << type_name_of<KEY>() << ">(" << nmax << ")" << std::endl;
+        std::cerr << "-- Test<" << rtti::name_of<KEY>() << ">(" << nmax << ")" << std::endl;
         typedef dummy<KEY>              Dummy;
         typedef typename Dummy::pointer Pointer;
         

@@ -1,7 +1,7 @@
 #include "support.hpp"
 
 #include "y/mkl/kernel/gram-schmidt.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/kernel/determinant.hpp"
 
@@ -13,7 +13,7 @@ namespace {
     template <typename T>
     void doGS(const size_t maxDim=5)
     {
-        std::cerr << "GramSchmidt<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "GramSchmidt<" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t dim=1;dim<=maxDim;++dim)
         {
             std::cerr << "dim=" << dim << std::endl;
@@ -42,7 +42,7 @@ namespace {
     void doGSQ(const size_t maxDim=6)
     {
         std::cerr << std::endl;
-        std::cerr << "-------- Special GramSchmidt<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-------- Special GramSchmidt<" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t dim=1;dim<=maxDim;++dim)
         {
             std::cerr << "dim=" << dim << std::endl;
@@ -71,7 +71,7 @@ namespace {
     void doGSI(const size_t maxDim=6)
     {
         std::cerr << std::endl;
-        std::cerr << "-------- Integer GramSchmidt<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-------- Integer GramSchmidt<" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t dim=1;dim<=maxDim;++dim)
         {
             std::cerr << "dim=" << dim << std::endl;

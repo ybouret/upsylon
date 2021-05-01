@@ -5,7 +5,7 @@
 #include "y/type/complex.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/code/hr-ints.hpp"
 #include <cstring>
 
@@ -123,7 +123,7 @@ namespace
     template <typename T>
     static inline void do_test(const double D, const size_t pmax)
     {
-        std::cerr << "h-mul with [" << type_name_of<T>() << "]" << std::endl;
+        std::cerr << "h-mul with [" << rtti::name_of<T>() << "]" << std::endl;
         for(size_t p=0;p<=pmax;++p)
         {
             const size_t n = size_t(1) << p;

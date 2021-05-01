@@ -91,7 +91,29 @@ namespace upsylon
     }
     
 
-
+    string rtti:: to_file_name(const string &source)
+    {
+        string target = source;
+        for(size_t i=0;i<source.size();++i)
+        {
+            switch(i)
+            {
+                case '_':
+                case '>':
+                case '<':
+                case ' ':
+                case '.':
+                    target[i] = '_';
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        }
+            
+        return target;
+    }
     
 }
 

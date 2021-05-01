@@ -2,7 +2,7 @@
 #include "y/spade/vertices.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
@@ -16,7 +16,7 @@ namespace {
         vtk &VTK = vtk::instance();
         ios::ocstream fp(ios::cstderr);
 
-        std::cerr << type_name_of<T>() << std::endl;
+        std::cerr << rtti::name_of<T>() << std::endl;
         const vtk::Writer &w = VTK.getWriter<T>();
         std::cerr << "|_type: '" << w.dataType() << "'" << std::endl;
         std::cerr << "|_comp: " << w.components() << std::endl;

@@ -3,7 +3,7 @@
 #include "y/gfx/area/tiles.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/gfx/color/random.hpp"
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/color/random.hpp"

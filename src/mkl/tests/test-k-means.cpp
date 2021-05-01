@@ -3,7 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/memory/allocator/pooled.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
@@ -15,7 +15,7 @@ namespace {
     void doTest()
     {
         std::cerr << std::endl;
-        std::cerr << "k_means<" << type_name_of<T>() << "," << type_name_of<VERTEX>() << ">" << std::endl;
+        std::cerr << "k_means<" << rtti::name_of<T>() << "," << rtti::name_of<VERTEX>() << ">" << std::endl;
         vector<VERTEX> vertices;
         for(size_t i=100+alea.leq(100);i>0;--i)
         {
@@ -68,7 +68,7 @@ namespace {
                 }
                 std::cerr << "centroids: " << centroids << std::endl;
             }
-            const string id = type_spec::to_file_name(type_name_of<VERTEX>()) + "-data.dat";
+            const string id = rtti::to_file_name(rtti::name_of<VERTEX>()) + "-data.dat";
             ios::ocstream fp(id);
             if(success)
             {
@@ -124,7 +124,7 @@ namespace {
                 }
                 std::cerr << "centroids2: " << centroids2 << std::endl;
             }
-            const string id = type_spec::to_file_name(type_name_of<VERTEX>()) + "-data2.dat";
+            const string id = rtti::to_file_name(rtti::name_of<VERTEX>()) + "-data2.dat";
             ios::ocstream fp(id);
             if(success)
             {

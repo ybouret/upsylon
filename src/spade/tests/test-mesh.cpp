@@ -2,7 +2,7 @@
 #include "y/spade/mesh/curvilinear.hpp"
 #include "y/spade/mesh/points.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -122,7 +122,7 @@ namespace {
             PointMesh<COORD,SPACE,T> pmesh( "pmesh", L );
             std::cerr << pmesh.label << " : " << pmesh.category() << " : " << pmesh << std::endl;
             typedef typename PointMesh<COORD,SPACE,T>::Vertex Vertex;
-            std::cerr << "\tvertex=" << type_name_of<Vertex>() << std::endl;
+            std::cerr << "\tvertex=" << rtti::name_of<Vertex>() << std::endl;
 
             typename Layout<COORD>::Loop loop(pmesh.lower,pmesh.upper);
             for( loop.boot(); loop.good(); loop.next() )

@@ -1,7 +1,7 @@
 #include "y/mkl/solve/zircon.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -42,7 +42,7 @@ namespace
     template <typename T>
     void runZircon(const T y0)
     {
-        const string trace = "zircon-" + type_name_of<T>()  + ".dat";
+        const string trace = "zircon-" + rtti::name_of<T>()  + ".dat";
         ios::ocstream::overwrite(trace);
         vector<T> X(2,0);
 

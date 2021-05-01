@@ -1,7 +1,7 @@
 #include "y/counting/mloop.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -12,7 +12,7 @@ namespace
     {
         assert(lo.size()==dim);
         assert(hi.size()==dim);
-        std::cerr << "Create MLoop<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "Create MLoop<" << rtti::name_of<T>() << ">" << std::endl;
         core::mloop<T> loop(dim,*lo,*hi);
         vector< core::mloop<T> > loops(loop.count,as_capacity);
 

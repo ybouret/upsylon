@@ -3,7 +3,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/comparator.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -12,7 +12,7 @@ namespace {
     template <typename T>
     static inline void doPQ()
     {
-        std::cerr << std::endl << type_name_of<T>() << std::endl;
+        std::cerr << std::endl << rtti::name_of<T>() << std::endl;
         const size_t n = 1+alea.leq(20);
         vector<T>    data(n,as_capacity);
         vector<T*>   meta(n,0);

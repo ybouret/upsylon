@@ -4,7 +4,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/associative/hash/set.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ios/ocstream.hpp"
 
 using namespace upsylon;
@@ -16,7 +16,7 @@ namespace {
 #if 1
     static inline string type2file( const std::type_info &tid)
     {
-        string id = type_name_for(tid);
+        string id = rtti::name_of(tid);
         for(size_t i=0;i<id.size();++i)
         {
             char C = id[i];
@@ -45,7 +45,7 @@ namespace {
         typedef typename PointType::Pointer PointerType;
         typedef typename PointType::vertex  vertex;
 
-        std::cerr << "points: " << type_name_of<vertex>() << std::endl;
+        std::cerr << "points: " << rtti::name_of<vertex>() << std::endl;
         std::cerr << "  dims: " << PointType::Dimensions << std::endl;
 
         typedef hash_set<PointKey,PointerType> Points;

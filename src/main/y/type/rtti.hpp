@@ -162,12 +162,16 @@ namespace upsylon
         //! fetch rtti name for typeid
         static const string & name_of(const std::type_info &);
         
-        //! fetch rttu name for type
+        //! fetch rtti name for type
         template <typename T> inline
         static const string & name_of()
         {
             return name_of( typeid(T) );
         }
+        
+        //! name() -> filename
+        static string to_file_name(const string &);
+        
     };
     
     

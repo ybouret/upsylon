@@ -3,7 +3,7 @@
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace  upsylon;
 
@@ -12,7 +12,7 @@ namespace
     template <typename T>
     static inline void doSequences(mpi &MPI)
     {
-        MPI.Printf0(stderr, "-- sequence<%s>\n", *type_name_of<T>() );
+        MPI.Printf0(stderr, "-- sequence<%s>\n", *rtti::name_of<T>() );
         vector<T> V;
         list<T>   L;
         if(MPI.head)

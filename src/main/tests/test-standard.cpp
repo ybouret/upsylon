@@ -1,16 +1,16 @@
 #include "y/type/standard.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
 
 Y_UTEST(standard)
 {
-    std::cerr << type_spec_of<int>()       << std::endl;
-    std::cerr << type_spec_of<long>()      << std::endl;
-    std::cerr << type_spec_of<long long>() << std::endl;
-    std::cerr << type_spec_of<unit_t>()    << std::endl;
+    std::cerr << rtti::of<int>()       << std::endl;
+    std::cerr << rtti::of<long>()      << std::endl;
+    std::cerr << rtti::of<long long>() << std::endl;
+    std::cerr << rtti::of<unit_t>()    << std::endl;
 
     {
         typedef core::standard<unit_t> ustd;

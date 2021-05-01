@@ -2,7 +2,7 @@
 #include "y/type/ints-to-real.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include <cfloat>
 
 using namespace upsylon;
@@ -87,8 +87,8 @@ template <typename T> static inline void display_i2r()
 {
     typedef typename  i2r<T>::itype itype;
 
-    std::cerr << "i2r<" << type_name_of<T>() << ">" << std::endl;
-    std::cerr << "|_integer : <" << type_name_of<itype>() << ">" << std::endl;
+    std::cerr << "i2r<" << rtti::name_of<T>() << ">" << std::endl;
+    std::cerr << "|_integer : <" << rtti::name_of<itype>() << ">" << std::endl;
     std::cerr << "|_mantissa: " <<  i2r<T>::info_type::mantissa << std::endl;
     std::cerr << "|_minimum : " <<  i2r<T>::minimum  << std::endl;
     std::cerr << "|_maximum : " <<  i2r<T>::maximum  << std::endl;

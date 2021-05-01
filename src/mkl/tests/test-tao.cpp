@@ -3,7 +3,7 @@
 #include "y/mkl/tao.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -74,7 +74,7 @@ namespace
     template <typename T> static inline
     void test_ld_(const bool check)
     {
-        std::cerr << "ld<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "ld<" << rtti::name_of<T>() << ">" << std::endl;
         {
             const T x = support::get<T>();
             const T y = support::get<T>();
@@ -134,7 +134,7 @@ namespace
     template <typename T, typename U> static inline
     void test_set_()
     {
-        std::cerr << "set<" << type_name_of<T>() << "," << type_name_of<U>() << ">" << std::endl;
+        std::cerr << "set<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << ">" << std::endl;
         
         {
             const T xt = support::get<T>();
@@ -186,7 +186,7 @@ namespace
     template <typename T, typename U, typename W> static inline
     void test_add_()
     {
-        std::cerr << "addops<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+        std::cerr << "addops<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << "," << rtti::name_of<W>() <<">" << std::endl;
         
         for(size_t n=1;n<=128;n <<= 1)
         {
@@ -229,7 +229,7 @@ namespace
     template <typename T> static inline
     void test_mul_(const bool check)
     {
-        std::cerr << "mulops<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "mulops<" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t n=1;n<=128;n <<= 1)
         {
             vector<T> p;
@@ -288,7 +288,7 @@ namespace
     template <typename T> static inline
     void test_dot_(const bool check)
     {
-        std::cerr << "dot<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "dot<" << rtti::name_of<T>() << ">" << std::endl;
         vector<T> l(1024,as_capacity);
         list<T>   r(1024,as_capacity);
         for(size_t n=1;n<=64;n <<= 1)
@@ -323,7 +323,7 @@ namespace
     template <typename T, typename U, typename W> static inline
     void test_mul_v2_()
     {
-        std::cerr << "mulv2<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+        std::cerr << "mulv2<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << "," << rtti::name_of<W>() <<">" << std::endl;
         for(size_t r=1;r<=64;r <<= 1)
         {
             for(size_t c=1;c<=64;c <<= 1)
@@ -363,7 +363,7 @@ namespace
     template <typename T, typename U, typename W> static inline
     void test_mul_v3_()
     {
-        std::cerr << "mulv3<" << type_name_of<T>() << "," << type_name_of<U>() << "," << type_name_of<W>() <<">" << std::endl;
+        std::cerr << "mulv3<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << "," << rtti::name_of<W>() <<">" << std::endl;
         
         for(size_t r=1;r<=64;r <<= 1)
         {
@@ -409,7 +409,7 @@ namespace
     template <typename T, typename U>
     void test_gram_(const bool  check)
     {
-        std::cerr << "gram<" << type_name_of<T>() << "," << type_name_of<U>() << ">" << std::endl;
+        std::cerr << "gram<" << rtti::name_of<T>() << "," << rtti::name_of<U>() << ">" << std::endl;
         for(size_t r=1;r<=64;r <<= 1)
         {
             matrix<T> M(r,r);

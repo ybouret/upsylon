@@ -2,9 +2,7 @@
 
 #include "y/ios/carrier.hpp"
 #include "y/type/block/zset.hpp"
-#include "y/type/spec.hpp"
 #include "y/exception.hpp"
-#include "y/type/spec.hpp"
 #include <iostream>
 
 namespace upsylon

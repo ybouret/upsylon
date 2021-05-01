@@ -4,7 +4,7 @@
 #include "y/ios/ovstream.hpp"
 #include "y/ios/imstream.hpp"
 #include "y/utest/timings.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 #include "support.hpp"
 
@@ -13,7 +13,7 @@ using namespace upsylon;
 template <typename T>
 static inline void doSRZ(double D, sequence<string> &tid, sequence<double> &spd)
 {
-    const string &id = type_name_of<T>();
+    const string &id = rtti::name_of<T>();
     tid << id;
     std::cerr << "[testing <" << id << "> ]" << std::endl;
     ios::ovstream  fp;

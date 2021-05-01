@@ -3,7 +3,7 @@
 #include "y/mkl/fitting/least-squares.hpp"
 #include "y/mkl/fitting/sequential/explode.hpp"
 #include "y/mkl/fitting/sample.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
@@ -76,7 +76,7 @@ namespace {
     template <typename T>
     void doAdjust()
     {
-        const string &sfx = type_name_of<T>();
+        const string &sfx = rtti::name_of<T>();
         
         const size_t                   n = 10 + alea.leq(10);
         typename sample<T,T>::pointer  s = sample<T,T>::create("sample",n);

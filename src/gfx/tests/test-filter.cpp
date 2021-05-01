@@ -8,7 +8,7 @@
 
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -45,7 +45,7 @@ namespace {
     template <typename T>
     static inline void do_filter()
     {
-        std::cerr << "do_filter<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "do_filter<" << rtti::name_of<T>() << ">" << std::endl;
         {
             crux::filter::patch<T> p3y( &rect[0][0], coord(-2,-1), coord(2,1) );
             p3y.display(std::cerr << "p3y:" << std::endl);

@@ -6,7 +6,6 @@
 
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
-#include "y/type/spec.hpp"
 
 using namespace upsylon;
 using namespace graphic;

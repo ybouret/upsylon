@@ -345,8 +345,7 @@ Y_UTEST_DONE()
 
 #include "y/fft/xbra.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 namespace upsylon {
 
@@ -411,7 +410,7 @@ namespace upsylon {
     template <typename T>
     void do_test_xbras(const double D)
     {
-        std::cerr << "with " << type_name_of<T>() << std::endl;
+        std::cerr << "with " << rtti::name_of<T>() << std::endl;
         do_test_xbra<T,1>(D);
         do_test_xbra<T,2>(D);
         do_test_xbra<T,4>(D);

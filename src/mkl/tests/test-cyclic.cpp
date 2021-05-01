@@ -3,7 +3,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/mkl/tao.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -21,7 +21,7 @@ static inline void do_cyclic(const bool   check,
         array<T>  &r = C[0];
         array<T>  &u = C[1];
         array<T>  &x = C[2];
-        std::cerr << "cyclic<" << n << "> for <" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "cyclic<" << n << "> for <" << rtti::name_of<T>() << ">" << std::endl;
 
         if(n==3)
         {

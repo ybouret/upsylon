@@ -1,6 +1,6 @@
 
 #include "y/associative/ledger.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sequence/list.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
@@ -18,7 +18,7 @@ namespace {
     template <typename T> static inline
     void doTest(const char *name)
     {
-        const string &tid = type_name_of<T>();
+        const string &tid = rtti::name_of<T>();
         std::cerr << "ledger_of<" << tid << ">" << std::endl;
         
         std::cerr << "\tcreating..." << std::endl;

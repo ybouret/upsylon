@@ -1,5 +1,5 @@
 #include "y/spade/network/transfer.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon {
@@ -81,7 +81,7 @@ namespace upsylon {
         void Transfer:: setup( Field &F ) const
         {
             F.io             = ios::carrier_search(F.objectType,infra);
-            const string &id = type_name_for(F.objectType);
+            const string &id = rtti::name_of(F.objectType);
             if(!F.io) throw exception("Spade::Field<%s> '%s': no register I/O", *id, *F.name);
         }
         

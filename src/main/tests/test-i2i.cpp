@@ -9,10 +9,10 @@ namespace  {
     template <typename TARGET,typename SOURCE>
     void doTest(const SOURCE value)
     {
-        std::cerr << "target=" << type_name_of<TARGET>() << std::endl;
-        std::cerr << "     |_" << type_name_of< typename integral_of<TARGET>::type >() << std::endl;
-        std::cerr << "source=" << type_name_of<SOURCE>() << std::endl;
-        std::cerr << "     |_" << type_name_of< typename integral_of<SOURCE>::type >() << std::endl;
+        std::cerr << "target=" << rtti::name_of<TARGET>() << std::endl;
+        std::cerr << "     |_" << rtti::name_of< typename integral_of<TARGET>::type >() << std::endl;
+        std::cerr << "source=" << rtti::name_of<SOURCE>() << std::endl;
+        std::cerr << "     |_" << rtti::name_of< typename integral_of<SOURCE>::type >() << std::endl;
         
         const TARGET tgt = i2i<TARGET,SOURCE>(value);
         std::cerr << "i2i(" << value << ")=" << tgt << std::endl;

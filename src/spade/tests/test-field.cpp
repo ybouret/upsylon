@@ -3,7 +3,7 @@
 #include "y/spade/field/ops.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 
@@ -30,7 +30,7 @@ namespace {
         {
             const coord      rng = nmax[dims] * Coord::Ones<coord>();
             const LayoutType L( Coord::Integer(rng,alea), Coord::Integer(rng,alea) );
-            FIELD F(vformat("Field%uD<%s>",LayoutType::Dimensions, *type_name_of<type>()),L);
+            FIELD F(vformat("Field%uD<%s>",LayoutType::Dimensions, *rtti::name_of<type>()),L);
             std::cerr << F.name << " : " << F << std::endl;
             std::cerr << "\tlocalMemory=" << F.localMemory() << std::endl;
             std::cerr << "\tobjectBytes=" << F.objectBytes() << std::endl;

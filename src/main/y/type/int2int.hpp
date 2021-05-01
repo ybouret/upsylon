@@ -3,7 +3,7 @@
 #define Y_TYPE_I2I_INCLUDED 1
 
 #include "y/type/ints.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/os/endian.hpp"
 
 namespace upsylon {
@@ -14,12 +14,12 @@ namespace upsylon {
         struct _i2i
         {
             //! throw on overflow
-            static void overflow_exception(const type_spec &target,
-                                           const type_spec &source);
+            static void overflow_exception(const rtti &target,
+                                           const rtti &source);
 
             //! throw on negative to positive
-            static void negative_exception(const type_spec &target,
-                                           const type_spec &source);
+            static void negative_exception(const rtti &target,
+                                           const rtti &source);
         };
 
         //! converting according to integral type
@@ -73,7 +73,7 @@ namespace upsylon {
             {
                 assert(sizeof(SOURCE)>sizeof(TARGET) );
                 static const SOURCE source_max = static_cast<SOURCE>( limit_of<TARGET>::maximum );
-                if(source>source_max) _i2i:: overflow_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                if(source>source_max) _i2i:: overflow_exception( rtti::of<TARGET>(), rtti::of<SOURCE>() );
                 source = swap_le(source);
                 return swap_le( *(const TARGET *)&source );
             }
@@ -94,7 +94,7 @@ namespace upsylon {
                            int2type<false>         // LARGER_SOURCE
             )
             {
-                if(source<0) _i2i::negative_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                if(source<0) _i2i::negative_exception( rtti::of<TARGET>(), rtti::of<SOURCE>() );
                 return static_cast<TARGET>( source );
             }
 
@@ -130,7 +130,7 @@ namespace upsylon {
             {
                 static const SOURCE source_max = static_cast<SOURCE>( limit_of<TARGET>::maximum );
                 static const SOURCE source_min = static_cast<SOURCE>( limit_of<TARGET>::minimum );
-                if(source<source_min||source>source_max) _i2i:: overflow_exception( type_spec_of<TARGET>(), type_spec_of<SOURCE>() );
+                if(source<source_min||source>source_max) _i2i:: overflow_exception( rtti::of<TARGET>(), rtti::of<SOURCE>() );
                 return static_cast<TARGET>( source );
             }
 

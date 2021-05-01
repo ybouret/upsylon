@@ -1,6 +1,6 @@
 #include "y/sequence/list.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "support.hpp"
 
 using namespace upsylon;
@@ -10,7 +10,7 @@ namespace {
     template <typename T>
     void testListOf()
     {
-        std::cerr << "-- list<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-- list<" << rtti::name_of<T>() << ">" << std::endl;
         {
             list<T> L;
         }

@@ -3,7 +3,7 @@
 #include "y/utest/timings.hpp"
 #include "support.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -14,7 +14,7 @@ namespace
     static inline void do_test()
     {
         std::cerr << std::endl;
-        std::cerr << "Generic test<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "Generic test<" << rtti::name_of<T>() << ">" << std::endl;
         typedef complex<T> cplx;
 
 
@@ -73,7 +73,7 @@ namespace
     static inline void do_tests()
     {
         std::cerr << std::endl;
-        std::cerr << "Specific test<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "Specific test<" << rtti::name_of<T>() << ">" << std::endl;
         do_test2<T,1>();
         do_test2<T,2>();
         do_test2<T,4>();
@@ -99,7 +99,7 @@ namespace
     static inline void do_test_opt()
     {
         std::cerr << std::endl;
-        std::cerr << "dispatched test<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "dispatched test<" << rtti::name_of<T>() << ">" << std::endl;
         typedef complex<T> cplx;
 
         for(size_t n=1;n<=65536; n <<= 1)
@@ -129,7 +129,7 @@ namespace
     static inline void do_test_tmx(const double D)
     {
         std::cerr << std::endl;
-        std::cerr << "Timings for<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "Timings for<" << rtti::name_of<T>() << ">" << std::endl;
         typedef complex<T> cplx;
 
         for(size_t n=1;n<=65536; n <<= 1)

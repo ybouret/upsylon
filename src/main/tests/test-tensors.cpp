@@ -1,7 +1,7 @@
 #include "y/tensor/tensor4d.hpp"
 #include "y/utest/run.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sequence/list.hpp"
 #include "y/tensor/loops.hpp"
 
@@ -14,7 +14,7 @@ namespace {
     static inline void doTest()
     {
         std::cerr << std::endl;
-        const string &id = type_name_of<T>();
+        const string &id = rtti::name_of<T>();
         
         list<T>     collect;
         for(size_t iter=0;iter<8;++iter)

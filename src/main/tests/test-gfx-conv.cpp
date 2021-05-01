@@ -1,7 +1,7 @@
 #include "y/gfx/color/rgba-to-type.hpp"
 #include "y/gfx/color/type-to-rgba.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -11,7 +11,7 @@ namespace
     template <typename T>
     void do_check( const T &data )
     {
-        std::cerr << "checking with <" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "checking with <" << rtti::name_of<T>() << ">" << std::endl;
         get_rgba<T> io_get;
 
         rgba c = io_get(&data);

@@ -7,7 +7,7 @@
 
 
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/list.hpp"
@@ -26,7 +26,7 @@ namespace
     void dispNode()
     {
         typedef suffix_node<CODE>  node_type;
-        std::cerr << "-- suffix_node<" << type_name_of<CODE>() << "> \t: " << sizeof(node_type) << std::endl;
+        std::cerr << "-- suffix_node<" << rtti::name_of<CODE>() << "> \t: " << sizeof(node_type) << std::endl;
         auto_ptr<node_type>        root( new node_type(0,0,0) );
         for(size_t i=1+alea.leq(100);i>0;--i)
         {
@@ -50,7 +50,7 @@ namespace
     template <typename CODE>
     void testTree()
     {
-        const string &tid = type_name_of<CODE>();
+        const string &tid = rtti::name_of<CODE>();
         std::cerr << "-- suffix_tree<" << tid << ">" << std::endl;
         suffix_tree<CODE>    tree1;
         suffix_tree<CODE>    tree2;
@@ -156,7 +156,7 @@ namespace
         typedef  suffix_knot<T>           knot_type;
         typedef typename  knot_type::list_type list_type;
         typedef typename  knot_type::pool_type pool_type;
-        std::cerr << "-- suffix_knot<" << type_name_of<T>() << "> : " << sizeof(knot_type) << std::endl;
+        std::cerr << "-- suffix_knot<" << rtti::name_of<T>() << "> : " << sizeof(knot_type) << std::endl;
         
         list_type kl;
         pool_type kp;
@@ -183,7 +183,7 @@ namespace
     template <typename CODE, typename T> static inline
     void testGraph()
     {
-        std::cerr << "-- suffix_graph<" << type_name_of<CODE>() << "," << type_name_of<T>()  << ">" << std::endl;
+        std::cerr << "-- suffix_graph<" << rtti::name_of<CODE>() << "," << rtti::name_of<T>()  << ">" << std::endl;
 
         typedef suffix_graph<CODE,T> graph_type;
 
@@ -270,7 +270,7 @@ namespace
     template <typename KEY>
     static inline void testKeys()
     {
-        std::cerr << "-- key_to_path<" << type_name_of<KEY>() << ">" << std::endl;
+        std::cerr << "-- key_to_path<" << rtti::name_of<KEY>() << ">" << std::endl;
         for(size_t iter=0;iter<8;++iter)
         {
             const KEY    tmp = support::get<KEY>();
@@ -391,7 +391,7 @@ namespace
     template <typename CODE>
     static inline void testInventory()
     {
-        std::cerr << "-- prefix_inventory<" << type_name_of<CODE>() << ">" << std::endl;
+        std::cerr << "-- prefix_inventory<" << rtti::name_of<CODE>() << ">" << std::endl;
         
         suffix_inventory<CODE> db1,db2;
         typedef vector<CODE>   key_type;
@@ -426,7 +426,7 @@ namespace
     template <typename T> static inline
     void testStorage() 
     {
-        std::cerr << "-- prefix_storage<" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-- prefix_storage<" << rtti::name_of<T>() << ">" << std::endl;
         suffix_storage<T,suffix_collection> a1,a2;
         suffix_storage<T,container>         b1,b2;
 

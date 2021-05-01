@@ -1,7 +1,7 @@
 #include "y/code/decomp.hpp"
 #include "y/utest/run.hpp"
 #include "y/yap/rational.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -11,7 +11,7 @@ namespace {
     static inline
     void doDecomp()
     {
-        std::cerr << "using <" << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "using <" <<rtti::name_of<T>() << ">" << std::endl;
         typename decompose<T>::plist l;
         for(T n=1;n<=20;++n)
         {

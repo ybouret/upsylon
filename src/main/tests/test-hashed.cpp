@@ -5,7 +5,7 @@
 #include "y/utest/sizeof.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/sort/heap.hpp"
 #include "y/hashing/sha1.hpp"
 
@@ -146,7 +146,7 @@ namespace
     template <typename KEY, typename T>
     void doTestTable()
     {
-        std::cerr << "-- testing Table<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-- testing Table<" << rtti::name_of<KEY>() << "," <<rtti::name_of<T>()<< ">" << std::endl;
 
         typedef KNode<KEY,T> Node;
         hash_table<Node>     table;
@@ -287,7 +287,7 @@ namespace
         static inline
         void doTest()
         {
-            std::cerr << "-- testing Proto<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
+            std::cerr << "-- testing Proto<" << rtti::name_of<KEY>() << "," << rtti::name_of<T>()  << ">" << std::endl;
             my_proto    proto;
             vector<KEY> keys;
             for(size_t i=100+alea.leq(1000);i>0;--i)
@@ -362,7 +362,7 @@ namespace
     template <typename KEY>
     static inline void doTestHashSet()
     {
-        std::cerr << "-- testing HashSet<" << type_name_of<KEY>() << ">" << std::endl;
+        std::cerr << "-- testing HashSet<" << rtti::name_of<KEY>() << ">" << std::endl;
 
         typedef Dummy<KEY>   KDummy;
         hash_set<KEY,KDummy> db;
@@ -429,7 +429,7 @@ namespace
     template <typename KEY, typename T>
     static inline void doTestHashMap()
     {
-        std::cerr << "-- testing HashMap<" << type_name_of<KEY>() << "," << type_name_of<T>() << ">" << std::endl;
+        std::cerr << "-- testing HashMap<" << rtti::name_of<KEY>() << "," << rtti::name_of<T>() << ">" << std::endl;
 
         hash_map<KEY,T> db;
         vector<KEY>     keys;

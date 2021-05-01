@@ -1,5 +1,5 @@
 #include "y/ios/upacker.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -39,7 +39,7 @@ static inline T doDecode( const uint8_t *buffer )
 template <typename T>
 static inline void doUpack()
 {
-    std::cerr << "upack<" << type_name_of<T>() << ">" << std::endl;
+    std::cerr << "upack<" << rtti::name_of<T>() << ">" << std::endl;
     static const T direct_value_max = upacker::direct_mask;
     std::cerr << "|_direct_value_max=" << uint64_t(direct_value_max) << std::endl;
     
@@ -71,7 +71,7 @@ static inline void doUpack()
             if(value!=temp)
             {
                 std::cerr << "error " << uint64_t(value) << " => " << uint64_t(temp) << std::endl;
-                throw exception("decode mismatch for %s", *type_name_of<T>());
+                throw exception("decode mismatch for %s", *rtti::name_of<T>());
             }
         }
     }

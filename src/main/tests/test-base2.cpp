@@ -1,6 +1,6 @@
 #include "y/code/base2.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -9,7 +9,7 @@ using namespace upsylon;
 template <typename T>
 static inline void show2()
 {
-    std::cerr << type_name_of<T>() << std::endl;
+    std::cerr << rtti::name_of<T>() << std::endl;
     SHOW(signed_value);
     SHOW(max_shift);
     SHOW(max_power_of_two);

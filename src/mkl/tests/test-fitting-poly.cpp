@@ -6,7 +6,7 @@
 
 #include "y/ios/ocstream.hpp"
 #include "y/utest/run.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 using namespace mkl;
@@ -49,7 +49,7 @@ namespace
         
         
         least_squares<T,T> ls(true);
-        const string fileName = "poly-" + type_name_of<T>() + ".dat";
+        const string fileName = "poly-" + rtti::name_of<T>() + ".dat";
         
         {
             ios::ocstream fp(fileName);

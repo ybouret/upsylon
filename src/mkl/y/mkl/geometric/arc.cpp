@@ -1,6 +1,6 @@
 
 #include "y/mkl/geometric/arc.hpp"
-#include "y/type/spec.hpp"
+#include "y/type/rtti.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -18,7 +18,7 @@ namespace upsylon
 
             void Arc_:: nodeInsertFailure(const std::type_info &tid) const
             {
-                const char *id = *type_name_for(tid);
+                const char *id = *rtti::name_of(tid);
                 throw exception("Arc<%s> cannot insert NEW node...",id);
             }
 
