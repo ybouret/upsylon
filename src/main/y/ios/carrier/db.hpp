@@ -12,6 +12,8 @@
 #include "y/ios/carrier/tuple.hpp"
 
 #include "y/associative/hash/set.hpp"
+#include "y/associative/suffix/set.hpp"
+
 #include "y/type/aliasing.hpp"
 
 namespace upsylon

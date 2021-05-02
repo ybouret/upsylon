@@ -3,6 +3,7 @@
 #define Y_MEMORY_BUFFER_INCLUDED 1
 
 #include "y/os/platform.hpp"
+#include "y/ios/case.hpp"
 
 namespace upsylon
 {
@@ -27,8 +28,9 @@ namespace upsylon
             //------------------------------------------------------------------
             // non virtual interface
             //------------------------------------------------------------------
-            uint8_t               byte_at(size_t i) const throw();     //!< virtual never ending byte access
-
+            uint8_t               byte_at(size_t i) const throw();                     //!< virtual never ending byte access
+            const char           *hexa_at(const size_t, const CharCase) const throw(); //!< for code
+            
             //! see as<T>
             template <typename T> inline
             const T *as() const throw() { return static_cast<const T *>( ro() ); }
@@ -40,6 +42,18 @@ namespace upsylon
             //! check all zero
             bool is_zeroed() const throw();
 
+            //! template to display
+            template <typename OSTREAM> inline
+            OSTREAM & print_to( OSTREAM &os, const CharCase t=Lowercase ) const
+            {
+                const size_t n = length();
+                for(size_t i=0;i<n;++i)
+                {
+                    os << hexa_at(i,t);
+                }
+                return os;
+            }
+            
         protected:
             explicit ro_buffer() throw();                            //!< constructor
 

@@ -15,22 +15,37 @@ namespace upsylon
     }
 
     
+    static inline
+    size_t make_bkey(const rtti *t) throw()
+    {
+        union
+        {
+            unsigned_int<sizeof(void*)>::type u;
+            const void                       *t;
+            size_t                            s;
+        } alias = { 0 };
+        alias.t = t;
+        
+        return swap_be_as(alias.s);
+    }
 
     rtti :: rtti(const std::type_info &tid) :
     uuid( tid.name() ),
-    user()
+    user(),
+    bkey( make_bkey(this) )
     {
+        
     }
 
     const void * rtti:: ro() const throw()
     {
-        return *uuid;
+        return &bkey;
     }
     
     
     size_t rtti:: length() const throw()
     {
-        return uuid.length();
+        return sizeof(bkey);
     }
     
     rtti:: ~rtti() throw()

@@ -61,8 +61,8 @@ namespace upsylon
         //
         // C++
         //______________________________________________________________________
-        virtual ~rtti() throw();
-        explicit rtti(const std::type_info &);
+        virtual ~rtti() throw();               //!< cleanup
+        explicit rtti(const std::type_info &); //!< full setup
         
         //______________________________________________________________________
         //
@@ -145,6 +145,7 @@ namespace upsylon
         };
 
     private:
+        const size_t bkey; //!< big-endian key
         Y_DISABLE_COPY_AND_ASSIGN(rtti);
     
     public:

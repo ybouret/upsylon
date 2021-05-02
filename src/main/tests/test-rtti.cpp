@@ -25,10 +25,12 @@ Y_UTEST(rtti)
     for(rtti::db_iter it=types.db.begin();it!=types.db.end();++it)
     {
         const rtti &tid = **it;
-        std::cerr << tid << " ==> [" << tid.name() << "]" << std::endl;
+        std::cerr << tid << " ==> [" << tid.name() << "] : buffer=[";
+        tid.print_to(std::cerr);
+        std::cerr << "]" << std::endl;
     }
     
-   
+    //types.id.get_root().graphViz("types.dot");
 
 }
 Y_UTEST_DONE()

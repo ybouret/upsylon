@@ -1,4 +1,5 @@
 #include "y/memory/buffer.hpp"
+#include "y/code/utils.hpp"
 
 namespace upsylon
 {
@@ -17,6 +18,16 @@ namespace upsylon
             return (i>=length()) ? 0 : *(static_cast<const uint8_t *>( ro() ) + i);
         }
 
+        const char * ro_buffer:: hexa_at(const size_t i, const CharCase t) const throw()
+        {
+            switch(t)
+            {
+                case Lowercase: return hexadecimal::lowercase[ byte_at(i) ];
+                case Uppercase: return hexadecimal::uppercase[ byte_at(i) ];
+            }
+            return "??";
+        }
+        
         bool ro_buffer:: is_zeroed() const throw()
         {
             const uint8_t *ptr = static_cast<const uint8_t *>( ro() );
