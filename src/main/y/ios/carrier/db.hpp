@@ -34,8 +34,8 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef hash_set<rtti,carrier::pointer>  db_type;  //!< alias
-            typedef db_type::const_iterator          iterator; //!< alias
+            typedef suffix_set<rtti,carrier::pointer>  db_type;  //!< alias
+            typedef db_type::const_iterator            iterator; //!< alias
             
             
             //__________________________________________________________________

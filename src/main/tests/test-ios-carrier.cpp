@@ -190,6 +190,10 @@ Y_UTEST(ios_carrier)
 
     }
     
+    ios::carriers::instance().homogeneous.get_root().graphViz("homogeneous.dot");
+    ios::carriers::instance().distributed.get_root().graphViz("distributed.dot");
+
+    
     
 }
 Y_UTEST_DONE()
