@@ -93,25 +93,30 @@ namespace upsylon
 
     string rtti:: to_file_name(const string &source)
     {
-        string target = source;
+        const size_t  len = source.size();
+        string        target(len,as_capacity,false);
         for(size_t i=0;i<source.size();++i)
         {
-            switch(i)
+            const char C = source[i];
+            switch(C)
             {
                 case '_':
                 case '>':
                 case '<':
                 case ' ':
                 case '.':
-                    target[i] = '_';
+                    if(i+1<len)
+                        target << '_';
                     break;
                     
                 default:
+                    target << C;
                     break;
             }
             
         }
-            
+        
+        std::cerr << "[" << source << "] => [" << target <<  "]" << std::endl;
         return target;
     }
     
