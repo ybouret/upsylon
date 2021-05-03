@@ -10,7 +10,7 @@ namespace upsylon
     //__________________________________________________________________________
     //
     //
-    //! read-only buffer
+    //! using unique addresses as optimized keys
     //
     //__________________________________________________________________________
     class suffix_address : public memory::ro_buffer

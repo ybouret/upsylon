@@ -9,7 +9,8 @@
 #include "y/ptr/intr.hpp"
 #include "y/ptr/auto.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/associative/suffix/map.hpp"
+#include "y/associative/hash/map.hpp"
+#include "y/associative/suffix/address.hpp"
 #include <typeinfo>
 
 namespace upsylon
@@ -21,7 +22,7 @@ namespace upsylon
     //! Run Time Type Information
     //
     //__________________________________________________________________________
-    class rtti : public object, public counted, public memory::ro_buffer
+    class rtti : public object, public counted, public suffix_address
     {
     public:
         //______________________________________________________________________
@@ -30,7 +31,7 @@ namespace upsylon
         //______________________________________________________________________
         typedef intr_ptr<string,rtti>      pointer; //!< smart pointer
         typedef hash_set<string,pointer>   db_type; //!< database of pointers
-        typedef suffix_map<string,pointer> id_type; //!< index of tag => pointers
+        typedef hash_map<string,pointer>   id_type; //!< index of tag => pointers
         typedef db_type::const_iterator    db_iter; //!< iterator on database
         typedef id_type::const_iterator    id_iter; //!< iterator on index
 
@@ -47,7 +48,7 @@ namespace upsylon
             alias       *prev;              //!< for list
             const string name;              //!< alias name
         private:
-            void *priv; //!< data alignment only
+            void *priv;                      //!< data alignment only
             Y_DISABLE_COPY_AND_ASSIGN(alias);
         };
 
@@ -64,13 +65,7 @@ namespace upsylon
         virtual ~rtti() throw();               //!< cleanup
         explicit rtti(const std::type_info &); //!< full setup
         
-        //______________________________________________________________________
-        //
-        // ro_buffer interface
-        //______________________________________________________________________
-        virtual const void  *ro()     const throw();
-        virtual size_t       length() const throw();
-        
+
         //______________________________________________________________________
         //
         // methods
@@ -145,11 +140,15 @@ namespace upsylon
         };
 
     private:
-        const size_t bkey; //!< big-endian key
         Y_DISABLE_COPY_AND_ASSIGN(rtti);
     
     public:
-        
+
+        //______________________________________________________________________
+        //
+        // static API to use global repo
+        //______________________________________________________________________
+
         //! fetch rtti for typeid
         static const rtti & of(const std::type_info &);
         
