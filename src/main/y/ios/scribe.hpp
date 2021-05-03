@@ -26,7 +26,7 @@ namespace upsylon
             //
             // non-virtual interface
             //__________________________________________________________________
-            const   rtti  &key() const throw();
+            const   rtti  &key() const throw(); //!< for int_ptr
 
             //__________________________________________________________________
             //

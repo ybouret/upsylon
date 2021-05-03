@@ -1,6 +1,7 @@
 
 
 #include "y/ios/scribe/tuple.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -28,6 +29,15 @@ namespace upsylon
             return ans;
         }
 
+        void scribeND:: check_base_is(const std::type_info &tid) const
+        {
+            const rtti &guess = rtti::of(tid);
+            if( guess != base.info )
+            {
+                throw exception("scribeND(mismatch base<%s> != <%s>)", base.info.text(), guess.text() );
+            }
+
+        }
     }
 
 }

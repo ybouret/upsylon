@@ -10,12 +10,19 @@ namespace upsylon
 {
     namespace ios
     {
+        //______________________________________________________________________
+        //
+        //
+        //! scribe with one item
+        //
+        //______________________________________________________________________
         class scribe1D : public scribe
         {
         public:
-            virtual ~scribe1D() throw();
+            virtual ~scribe1D() throw(); //!< cleanup
 
         protected:
+            //! setup
             explicit scribe1D(const std::type_info &tid,
                               const size_t          tsz);
 
