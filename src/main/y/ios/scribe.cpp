@@ -16,7 +16,11 @@ namespace upsylon
             
         }
         
-        
+        const   rtti  &scribe:: key() const throw()
+        {
+            return info;
+        }
+
         
     }
 

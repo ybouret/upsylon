@@ -138,7 +138,7 @@ namespace upsylon
     
     const rtti &  rtti:: repo:: update_mx(const rtti &info) throw()
     {
-        aliasing::_(mx) = max_of(mx,info.length());
+        aliasing::_(mx) = max_of(mx,info.uuid.length());
         return info;
     }
 

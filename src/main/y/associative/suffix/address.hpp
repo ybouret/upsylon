@@ -28,8 +28,10 @@ namespace upsylon
         //______________________________________________________________________
         virtual ~suffix_address() throw();                   //!< cleanup
         suffix_address(const suffix_address &) throw();      //!< copy
+
+        //! setup
         template <typename T> inline
-        suffix_address(T &obj) throw() : data( be(&obj) ) {} //!< setup
+        suffix_address(T &obj) throw() : memory::ro_buffer(), data( be(&obj) ) {}
 
         //______________________________________________________________________
         //

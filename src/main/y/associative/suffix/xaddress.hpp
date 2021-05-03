@@ -50,18 +50,23 @@ namespace upsylon
         //______________________________________________________________________
 
         //! cleanup
-        inline virtual ~suffix_xaddress() throw() { memset(wksp,0,sizeof(wksp)); }
+        inline virtual ~suffix_xaddress() throw() { clr(); }
 
         //! copy data
-        inline suffix_xaddress(const suffix_xaddress &other) throw() : wksp()
+        inline suffix_xaddress(const suffix_xaddress &other) throw() :
+        memory::ro_buffer(),
+        wksp()
         {
             memcpy(wksp,other.wksp,sizeof(wksp));
         }
 
         //! construct
         template <typename U> inline
-        explicit suffix_xaddress(const U &obj, param_type pod) throw() : wksp()
+        explicit suffix_xaddress(const U &obj, param_type pod) throw() :
+        memory::ro_buffer(),
+        wksp()
         {
+            clr();
             const void *ptr = core::suffix_xaddr::be(&obj);
             memcpy                (&wksp[0],&ptr,addr_size);
             core::suffix_xaddr::be(&wksp[1],&pod,type_size);
@@ -84,6 +89,7 @@ namespace upsylon
     private:
         Y_DISABLE_ASSIGN(suffix_xaddress);
         word_t wksp[num_words];
+        inline void clr() throw() { memset(wksp,0,sizeof(wksp) ); }
 
     };
 }

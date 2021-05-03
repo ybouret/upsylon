@@ -17,6 +17,7 @@ namespace upsylon
     }
 
     suffix_address:: suffix_address(const suffix_address &other) throw() :
+    memory::ro_buffer(),
     data( other.data )
     {
     }
