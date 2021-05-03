@@ -294,6 +294,8 @@ namespace upsylon
         Y_RTTI(float);
         Y_RTTI(double);
         Y_RTTI(long double);
+
+        Y_RTTI(string);
         
         Y_RTTI(complex<float>);
         Y_RTTI(complex<double>);

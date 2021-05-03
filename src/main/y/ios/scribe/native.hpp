@@ -10,16 +10,20 @@ namespace upsylon
 {
     namespace ios
     {
-        
+        //______________________________________________________________________
+        //
+        //
         //! class to write native types
+        //
+        //______________________________________________________________________
         class native_scribe : public scribe
         {
         public:
-            virtual ~native_scribe() throw();
-            
-            string fmt;
+            virtual ~native_scribe() throw(); //!< cleanup
+            string fmt;                       //!< user defined format
             
         protected:
+            //! setup with type and default format
             explicit native_scribe(const std::type_info &tid,
                                    const char           *how);
             

@@ -10,18 +10,26 @@ namespace upsylon
 {
     namespace ios
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! base class to convert a type into a string
+        //
+        //______________________________________________________________________
         class scribe : public object, public counted
         {
         public:
-            virtual       ~scribe() throw();
-            virtual string write(const void *) const = 0;
-      
-            const rtti &info;
+            virtual       ~scribe() throw();               //!< cleanup
+            virtual string write(const void *) const = 0;  //!< virtual interface
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const rtti &info; //!< unique type info
 
         protected:
-            explicit scribe(const std::type_info &tid);
+            explicit scribe(const std::type_info &tid); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(scribe);

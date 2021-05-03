@@ -300,13 +300,14 @@ SOURCE_GROUP(associative FILES
 test-lexicon.cpp
 test-catalog.cpp
 test-ledger.cpp
-test-suffix.cpp
+test-suffix.cpp test-suffix-address.cpp
 test-hashed.cpp
 )
 ADD_TEST(associative:lexicon test-main lexicon)
 ADD_TEST(associative:catalog test-main catalog)
 ADD_TEST(associative:ledger  test-main ledger)
 ADD_TEST(associative:suffix  test-main suffix ${HERE}/words.db)
+ADD_TEST(associative:suffix  test-main suffix_address)
 ADD_TEST(associative:hashed  test-main hashed)
 
 SOURCE_GROUP(sparse FILES test-sparse-array.cpp test-sparse-matrix.cpp)

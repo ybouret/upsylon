@@ -155,7 +155,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(ledger);
     Y_UTEST(suffix);
     Y_UTEST(hashed);
-    
+    Y_UTEST(suffix_address);
+ 
     Y_UTEST(fft1);
     Y_UTEST(network_sort);
     Y_UTEST(sort);
