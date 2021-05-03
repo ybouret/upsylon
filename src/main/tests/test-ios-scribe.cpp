@@ -46,6 +46,9 @@ Y_UTEST(ios_scribe)
     do_test<apz>();
     do_test<apq>();
 
+    do_test< complex<float> >();
+    do_test< point2d<float> >();
+    do_test< point3d<double> >();
 
 }
 Y_UTEST_DONE()

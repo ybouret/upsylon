@@ -10,8 +10,12 @@ namespace upsylon
         scribe:: ~scribe() throw()
         {}
         
-        scribe:: scribe(const std::type_info &tid) :
-        info( rtti::of(tid) )
+        scribe:: scribe(const std::type_info &tid,
+                        const size_t          tsz,
+                        const size_t          num) :
+        info( rtti::of(tid) ),
+        size( tsz ),
+        dims(num)
         {
             
         }

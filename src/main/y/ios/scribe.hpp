@@ -32,15 +32,20 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const rtti &info; //!< unique type info
+            const rtti  &info; //!< unique type info
+            const size_t size; //!< sizeof(object)
+            const size_t dims; //!< number of components
 
         protected:
-            explicit scribe(const std::type_info &tid); //!< setup
+            explicit scribe(const std::type_info &tid,
+                            const size_t          tsz,
+                            const size_t          num); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(scribe);
         };
 
+        
     }
 }
 

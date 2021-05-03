@@ -1,6 +1,8 @@
 #include "y/ios/scribe/db.hpp"
 #include "y/type/aliasing.hpp"
-
+#include "y/ios/scribe/tuple.hpp"
+#include "y/type/complex.hpp"
+#include "y/type/point3d.hpp"
 #include "y/yap.hpp"
 
 namespace upsylon
@@ -17,7 +19,7 @@ namespace upsylon
             {
             public:
                 inline explicit native_for(const char *how) :
-                native_scribe( typeid(T), how )
+                native_scribe( typeid(T), sizeof(T), how )
                 {
                 }
 
@@ -37,10 +39,10 @@ namespace upsylon
             };
 
 #define Y_SCRIBE_IMPL(CLASS,CODE) \
-/**/  class CLASS##_scribe : public scribe {\
+/**/  class CLASS##_scribe : public scribe1D {\
 /**/  Y_DISABLE_COPY_AND_ASSIGN(CLASS##_scribe);\
 /**/  public:\
-/**/  inline explicit CLASS##_scribe() : scribe( typeid(CLASS) ) {}\
+/**/  inline explicit CLASS##_scribe() : scribe1D( typeid(CLASS), sizeof(CLASS) ) {}\
 /**/  inline virtual ~CLASS##_scribe() throw() {}\
 /**/  inline virtual string write(const void *addr) const {\
 /**/      assert(addr); const CLASS &obj = *static_cast<const CLASS*>(addr);\
@@ -52,14 +54,14 @@ namespace upsylon
             Y_SCRIBE_IMPL(apn,return obj.to_dec());
             Y_SCRIBE_IMPL(apz,return obj.to_dec());
 
-            class apq_writer : public scribe
+            class apq_writer : public scribe1D
             {
                 Y_DISABLE_COPY_AND_ASSIGN(apq_writer);
                 const scribe &dbl;
 
             public:
                 inline explicit apq_writer(const scribe &_ ) :
-                scribe(typeid(apq)),
+                scribe1D(typeid(apq),sizeof(apq)),
                 dbl(_)
                 {
                 }
@@ -91,6 +93,9 @@ namespace upsylon
 
 #define Y_SCRIBE_NAT(TYPE,FMT) Y_SCRIBE_INAT(TYPE,TYPE,FMT)
 
+
+#define Y_SCRIBE_TUPLE(TUPLE,TYPE) insert_common( new tuple_scribe<TUPLE,TYPE>( native<TYPE>() ) )
+
         scribes:: scribes() : all(), nat()
         {
             Y_SCRIBE_BOTH(char, int,"%d","%u");
@@ -115,10 +120,19 @@ namespace upsylon
             Y_SCRIBE_NAT(double,"%.15g");
 
             insert_common( new string_scribe() );
-            insert_common( new apn_scribe() );
-            insert_common( new apz_scribe() );
-
+            insert_common( new apn_scribe()    );
+            insert_common( new apz_scribe()    );
             insert_common( new apq_writer( native<double>() ) );
+
+            Y_SCRIBE_TUPLE(complex,float);
+            Y_SCRIBE_TUPLE(complex,double);
+
+            Y_SCRIBE_TUPLE(point2d,float);
+            Y_SCRIBE_TUPLE(point2d,double);
+
+            Y_SCRIBE_TUPLE(point3d,float);
+            Y_SCRIBE_TUPLE(point3d,double);
+
         }
 
         void scribes:: insert_common(scribe *ptr)
