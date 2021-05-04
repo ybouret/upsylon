@@ -82,57 +82,12 @@ namespace {
     
 }
 
-#include "y/associative/xbe-key.hpp"
-#include "y/code/utils.hpp"
-
-
-namespace {
-
-    template <typename T>
-    static inline void displayXBE( const  xbe_key<T> &key )
-    {
-        const uint8_t *p = (uint8_t *) (key.ro());
-        for(size_t i=0;i<sizeof(void*);++i)
-        {
-            std::cerr << " 0x" << hexadecimal::uppercase[ p[i] ];
-        }
-        std::cerr << " |";
-        for(size_t i=sizeof(void*);i<key.length();++i)
-        {
-            std::cerr << " 0x" << hexadecimal::uppercase[ p[i] ];
-        }
-        //const uint64_t attr = uint64_t(key.xaddr.data.attr);
-        //std::cerr << " = @" << key.xaddr.data.addr << " $" << uint64_t(swap_be(key.xaddr.data.attr));
-        std::cerr << std::endl;
-    }
-    
-    template <typename T>
-    static inline void testXBE()
-    {
-        std::cerr << "xbe size=" <<  XBEaddress<T>::size << "/" << sizeof(XBEaddress<T>) << std::endl;
-        const string  hello = "hello";
-        xbe_key<T>    xk1(hello,1);
-        const string  world = "world";
-        xbe_key<T>    xk2(world,2);
-
-        std::cerr << xk1.template as<string>() << ", " << xk2.template as<string>() << std::endl;
-        displayXBE(xk1);
-        displayXBE(xk2);
-
-    }
-    
-}
-
 Y_UTEST(ledger)
 {
     doTest<int>("int");
     doTest<string>("string");
     doTest<float>("float");
-    
-    testXBE<uint8_t>();
-    testXBE<uint16_t>();
-    testXBE<uint32_t>();
-    testXBE<uint64_t>();
+
 
     
 }

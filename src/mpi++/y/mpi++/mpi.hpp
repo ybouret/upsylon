@@ -86,7 +86,7 @@ namespace upsylon
         
         //______________________________________________________________________
         //
-        //! tracing
+        //! tracing communication times
         //______________________________________________________________________
         class comm_tracer
         {
@@ -126,7 +126,7 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit comm_ticks()  throw(); //!< setup
+            explicit comm_ticks() throw();  //!< setup
             virtual ~comm_ticks() throw();  //!< cleanup
             
         private:
@@ -135,7 +135,7 @@ namespace upsylon
         
         //______________________________________________________________________
         //
-        //! tracing calls
+        //! tracing calls per data type
         //______________________________________________________________________
         class comm_data : public comm_tracer
         {
@@ -147,8 +147,11 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(comm_data);
         };
-        
+
+        //______________________________________________________________________
+        //
         //! full comm info
+        //______________________________________________________________________
         class comm_info
         {
         public:

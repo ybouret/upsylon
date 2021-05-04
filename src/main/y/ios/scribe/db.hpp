@@ -48,7 +48,7 @@ namespace upsylon
             //! get any scribe
             const scribe &get(const std::type_info &) const;
 
-            //! get aby scribe, wrapper
+            //! get any scribe, wrapper
             template <typename T> inline
             const scribe &get() const { return get( typeid(T) ); }
 
@@ -65,7 +65,6 @@ namespace upsylon
             Y_SINGLETON_DECL_WITH(0,scribes);
             explicit scribes();
             virtual ~scribes() throw();
-            
         };
     }
 

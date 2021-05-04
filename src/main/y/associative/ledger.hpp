@@ -53,7 +53,7 @@ namespace upsylon {
             return this->search_by( (const char *) & (addr.data), addr.size);
         }
         
-        //! remove object bny its address
+        //! remove object by its address
         inline void remove(const T &args) throw()
         {
             const BEaddress addr = args;

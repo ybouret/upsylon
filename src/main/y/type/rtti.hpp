@@ -152,27 +152,27 @@ namespace upsylon
         //______________________________________________________________________
 
         //! fetch rtti for typeid
-        static const rtti & of(const std::type_info &);
+        static const rtti & of(const std::type_info &, const size_t=0);
         
         //! fetch rtti for type
         template <typename T> inline
         static const rtti & of()
         {
-            return of( typeid(T) );
+            return of(typeid(T),sizeof(T));
         }
         
         //! fetch rtti name for typeid
-        static const string & name_of(const std::type_info &);
+        static const string & name_of(const std::type_info &,const size_t=0);
         
         //! fetch rtti name for type
         template <typename T> inline
         static const string & name_of()
         {
-            return name_of( typeid(T) );
+            return name_of( typeid(T), sizeof(T) );
         }
         
         //! name() -> filename
-        static string to_file_name(const string &);
+        static string to_file_name(const string &, const char sep='_');
         
     };
     

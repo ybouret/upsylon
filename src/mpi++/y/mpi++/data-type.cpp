@@ -10,7 +10,7 @@ namespace upsylon
     typedef  mpi::data_type::store mpi_db;
 
     mpi:: data_type:: data_type(const MPI_Datatype value,
-                                const unsigned bytes) throw() :
+                                const unsigned     bytes) throw() :
     uuid(value),
     size(bytes)
     {
@@ -73,8 +73,8 @@ if(sz==ptr->size) return ptr->uuid;                   \
     
     void mpi:: build_data_types()
     {
-#define Y_MPI_REG(type,TYPE) do {\
-__register<type>(types,TYPE);\
+#define Y_MPI_REG(type,TYPE) do {                  \
+__register<type>(types,TYPE);                      \
 assert(TYPE         == data_type_for<type>().uuid);\
 assert(sizeof(type) == data_type_for<type>().size);\
 } while(false)
@@ -151,11 +151,11 @@ assert( sizeof(type) == data_type_for<type>().size );\
         }
     }
     
-    const mpi::data_type &mpi:: data_type_for( const std::type_info &tid ) const
+    const mpi::data_type &mpi:: data_type_for(const std::type_info &tid) const
     {
         const rtti      &key = rtti::of(tid);
         const data_type *ptr = types.search(key);
-        if(!ptr) throw upsylon::exception("missing mpi::data_type for <%s>", tid.name() );
+        if(!ptr) throw upsylon::exception("missing mpi::data_type for <%s>", key.text() );
         return *ptr;
     }
 

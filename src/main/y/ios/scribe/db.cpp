@@ -129,9 +129,12 @@ namespace upsylon
 
             Y_SCRIBE_TUPLE(point2d,float);
             Y_SCRIBE_TUPLE(point2d,double);
+            Y_SCRIBE_TUPLE(point2d,unit_t);
+
 
             Y_SCRIBE_TUPLE(point3d,float);
             Y_SCRIBE_TUPLE(point3d,double);
+            Y_SCRIBE_TUPLE(point3d,unit_t);
 
         }
 
@@ -192,7 +195,11 @@ namespace upsylon
             return **pps;
         }
 
-
+        const scribe & scribe:: query(const std::type_info &tid)
+        {
+            static const scribes &mgr = scribes::instance();
+            return mgr.get(tid);
+        }
 
         
     }

@@ -10,10 +10,11 @@ namespace
     template <typename T>
     inline void do_test()
     {
+        std::cerr << "scribe for [" << rtti::name_of<T>() << "] ";
         ios::scribes &io = ios::scribes::instance();
         const T tmp = support::get<T>();
-        
         std::cerr << tmp << " -> " << io.get<T>().write(&tmp) << std::endl;
+        std::cerr << "print: "; ios::scribe::print(std::cerr,tmp) << std::endl;
     }
 
 }
@@ -45,7 +46,6 @@ Y_UTEST(ios_scribe)
     do_test<apn>();
     do_test<apz>();
     do_test<apq>();
-
     do_test< complex<float> >();
     do_test< point2d<float> >();
     do_test< point3d<double> >();

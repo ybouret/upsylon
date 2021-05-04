@@ -77,20 +77,20 @@ namespace upsylon
         return os;
     }
     
-    const rtti & rtti::of(const std::type_info &tid)
+    const rtti & rtti::of(const std::type_info &tid, const size_t tsz)
     {
         static repo &mgr = repo::instance();
-        return mgr(tid);
+        return mgr(tid,tsz);
     }
     
-    const string  & rtti:: name_of(const std::type_info &tid)
+    const string  & rtti:: name_of(const std::type_info &tid,const size_t tsz)
     {
         static repo &mgr = repo::instance();
-        return mgr(tid).name();
+        return mgr(tid,tsz).name();
     }
     
 
-    string rtti:: to_file_name(const string &source)
+    string rtti:: to_file_name(const string &source, const char sep)
     {
         const size_t  len = source.size();
         string        target(len,as_capacity,false);
@@ -105,7 +105,7 @@ namespace upsylon
                 case ' ':
                 case '.':
                     if(i+1<len)
-                        target << '_';
+                        target << sep;
                     break;
                     
                 default:
