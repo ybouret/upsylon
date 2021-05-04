@@ -477,7 +477,8 @@ namespace
     static inline void testIterString()
     {
         std::cerr << "Test Iter String" << std::endl;
-        suffix_storage<int> db;
+        typedef suffix_storage<int> db_type;
+        db_type             db;
         vector<string>      keys;
 
         for(int i=10+alea.leq(100);i>0;--i)
@@ -490,14 +491,54 @@ namespace
         }
 
         int j=0;
-        for(suffix_storage<int>::iterator it=db.begin(); it != db.end(); ++it)
+        for(db_type::iterator it=db.begin(); it != db.end(); ++it)
         {
             //std::cerr << *it << std::endl;
-            const suffix_storage<int>::tree_node *node = db.iter_node(it);
+            const db_type::tree_node *node = db.iter_node(it);
             const string k =  suffix_node_::to_string(node);
             Y_ASSERT(k==keys[++j]);
         }
-        
+
+        j=0;
+        const db_type &cdb = db;
+        for(db_type::const_iterator it=cdb.begin(); it != cdb.end(); ++it)
+        {
+            //std::cerr << *it << std::endl;
+            const db_type::tree_node *node = db.iter_node(it);
+            const string k =  suffix_node_::to_string(node);
+            Y_ASSERT(k==keys[++j]);
+        }
+
+    }
+
+    static inline void testIterAddr()
+    {
+        std::cerr << "Test Iter Address" << std::endl;
+
+        typedef suffix_storage<int> db_type;
+        const rtti &ti = rtti::of( typeid(int)    );
+        const rtti &tf = rtti::of( typeid(float)  );
+        const rtti &td = rtti::of( typeid(double) );
+
+        db_type db;
+        {
+            int i=0;
+            Y_CHECK( db.insert(ti,i++) );
+            Y_CHECK( db.insert(tf,i++) );
+            Y_CHECK( db.insert(td,i++) );
+
+        }
+        for(db_type::iterator it=db.begin(); it != db.end(); ++it)
+        {
+            const db_type::tree_node *node = db.iter_node(it);
+            const void               *addr = suffix_node_::to_address(node);
+            Y_ASSERT(addr);
+            const rtti &tid = *static_cast<const rtti *>(addr);
+            std::cerr << " -> " << tid << std::endl;
+        }
+
+
+
     }
     
 }
@@ -541,6 +582,7 @@ Y_UTEST(suffix)
     testInventory<uint64_t>();
 
     testIterString();
+    testIterAddr();
 
     if(argc>1)
     {
