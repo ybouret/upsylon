@@ -112,7 +112,7 @@ Y_UTEST(xmpi)
         doSequences<double>(MPI);
         doSequences<string>(MPI);
         doBuffer(MPI);
-        MPI.Printf(stderr, "send: %lu | recv: %lu\n", (unsigned long) MPI.commSend.data.full, (unsigned long) MPI.commRecv.data.full );
+        MPI.Printf(stderr, "send: %lu | recv: %lu\n", (unsigned long) MPI.commSend.full, (unsigned long) MPI.commRecv.full );
     }
     
 }

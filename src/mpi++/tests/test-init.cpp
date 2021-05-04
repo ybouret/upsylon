@@ -86,8 +86,8 @@ Y_UTEST(init)
     
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
     MPI.Printf(stderr, "send: %lu | recv: %lu\n",
-               (unsigned long)MPI.commSend.data.full,
-               (unsigned long)MPI.commRecv.data.full);
+               (unsigned long)MPI.commSend.full,
+               (unsigned long)MPI.commRecv.full);
     
     
     MPI.sequential(DoSomethingWith);

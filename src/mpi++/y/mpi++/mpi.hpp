@@ -89,15 +89,15 @@ namespace upsylon
         //
         //! tracing communication times
         //______________________________________________________________________
-        class comm_tracer
+        class commTicks
         {
         public:
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit comm_tracer() throw(); //!< setup
-            virtual ~comm_tracer() throw(); //!< cleanup
+            commTicks()  throw(); //!< setup
+            ~commTicks() throw(); //!< cleanup
             
             //__________________________________________________________________
             //
@@ -110,60 +110,13 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            uint64_t last;         //!< last count
-            uint64_t full;         //!< cumulative count
+            const uint64_t last;         //!< last count
+            const uint64_t full;         //!< cumulative count
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(comm_tracer);
+            Y_DISABLE_COPY_AND_ASSIGN(commTicks);
         };
         
-        //______________________________________________________________________
-        //
-        //! tracing comms
-        //______________________________________________________________________
-        class comm_ticks : public comm_tracer
-        {
-        public:
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            explicit comm_ticks() throw();  //!< setup
-            virtual ~comm_ticks() throw();  //!< cleanup
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(comm_ticks);
-        };
-        
-        //______________________________________________________________________
-        //
-        //! tracing calls per data type
-        //______________________________________________________________________
-        class comm_data : public comm_tracer
-        {
-        public:
-            explicit comm_data()  throw();
-            virtual ~comm_data() throw();
-            MPI_Datatype type; //!< last type
-            
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(comm_data);
-        };
 
-        //______________________________________________________________________
-        //
-        //! full comm info
-        //______________________________________________________________________
-        class comm_info
-        {
-        public:
-            comm_info()  throw();     //!< setup
-            ~comm_info() throw();     //!< cleanup
-            void reset_all() throw(); //!< reset all members
-            comm_ticks ticks;         //!< ticks
-            comm_data  data;          //!< data
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(comm_info);
-        };
         
         //______________________________________________________________________
         //
@@ -204,8 +157,8 @@ namespace upsylon
         const bool         head;          //!< 0==rank
         const bool         tail;          //!< last==rank
         const bool         bulk;          //!< !head && !tail
-        mutable comm_info  commSend;      //!< tracking time
-        mutable comm_info  commRecv;      //!< tracking time
+        mutable commTicks  commSend;      //!< tracking time
+        mutable commTicks  commRecv;      //!< tracking time
         const string       processorName; //!< the processor name
         const string       nodeName;      //!< size.rank
         const int          threadLevel;   //!< current thread level
@@ -241,8 +194,8 @@ namespace upsylon
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
             Send(buffer,count,datatype,dest,io_tag,MPI_COMM_WORLD);
-            commSend.data.type = datatype;
-            commSend.data( datasize*count );
+            //commSend.data.type = datatype;
+            //commSend.data( datasize*count );
         }
         
         
@@ -288,8 +241,8 @@ namespace upsylon
             static const size_t        datasize = _.size;
             MPI_Status status;
             Recv(buffer,count,datatype,source,io_tag,MPI_COMM_WORLD,status);
-            commRecv.data.type = datatype;
-            commRecv.data( datasize*count );
+            //commRecv.data.type = datatype;
+            //commRecv.data( datasize*count );
         }
         
         //! Recv one datum
@@ -341,8 +294,8 @@ namespace upsylon
             MPI_Status status;
             Sendrecv(sendbuf, sendcount, s_type, dest, io_tag,
                      recvbuf, recvcount, r_type, source, io_tag, MPI_COMM_WORLD, status);
-            commRecv.data.type = r_type; commRecv.data( r_size*recvcount );
-            commSend.data.type = s_type; commSend.data( s_size*sendcount );
+            //commRecv.data.type = r_type; commRecv.data( r_size*recvcount );
+            //commSend.data.type = s_type; commSend.data( s_size*sendcount );
         }
         
         //! Sendrecv 1 args
@@ -397,9 +350,9 @@ namespace upsylon
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
             Bcast(buffer,count,datatype,root,MPI_COMM_WORLD);
-            const uint64_t bytes = count * datasize;
-            commRecv.data.type = datatype; commRecv.data( bytes );
-            commSend.data.type = datatype; commSend.data( bytes );
+            //const uint64_t bytes = count * datasize;
+            //commRecv.data.type = datatype; commRecv.data( bytes );
+            //commSend.data.type = datatype; commSend.data( bytes );
         }
         
         //! one datum Bcast
@@ -433,9 +386,9 @@ namespace upsylon
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
             Reduce(sendbuffer,recvbuffer,count,datatype,op,root,MPI_COMM_WORLD);
-            const uint64_t bytes = count * datasize;
-            commRecv.data.type = datatype; commRecv.data( bytes );
-            commSend.data.type = datatype; commSend.data( bytes );
+            //const uint64_t bytes = count * datasize;
+            //commRecv.data.type = datatype; commRecv.data( bytes );
+            //commSend.data.type = datatype; commSend.data( bytes );
         }
         
         //! generic 1 datum reduction
@@ -475,9 +428,9 @@ namespace upsylon
             static const MPI_Datatype  datatype = _.uuid;
             static const size_t        datasize = _.size;
             Allreduce(sendbuffer,recvbuffer,count,datatype,op,MPI_COMM_WORLD);
-            const uint64_t bytes = count * datasize;
-            commRecv.data.type = datatype; commRecv.data( bytes );
-            commSend.data.type = datatype; commSend.data( bytes );
+            //const uint64_t bytes = count * datasize;
+            //commRecv.data.type = datatype; commRecv.data( bytes );
+            //commSend.data.type = datatype; commSend.data( bytes );
         }
         
         //! generic 1 datum all-reduction
