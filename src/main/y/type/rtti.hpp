@@ -63,7 +63,7 @@ namespace upsylon
         // C++
         //______________________________________________________________________
         virtual ~rtti() throw();               //!< cleanup
-        explicit rtti(const std::type_info &); //!< full setup
+        explicit rtti(const std::type_info &, const size_t=0); //!< full setup
         
 
         //______________________________________________________________________
@@ -82,6 +82,7 @@ namespace upsylon
         // members
         //______________________________________________________________________
         const string   uuid; //!< type_info.name
+        const size_t   size; //!< sizeof(type)
         const aliases  user; //!< user names
         
         //______________________________________________________________________
@@ -101,25 +102,25 @@ namespace upsylon
             /**
              ensure that rtti is register only once in db and id
              */
-            const rtti & operator()(const std::type_info &);
+            const rtti & operator()(const std::type_info &, const size_t=0);
             
             //! alias a new or existing rtti
-            const rtti & operator()(const std::type_info &, const string &);
+            const rtti & operator()(const std::type_info &, const string &, const size_t=0);
             
             //! alias a new or existing rtti, wrapper
-            const rtti & operator()(const std::type_info &, const char   *);
+            const rtti & operator()(const std::type_info &, const char   *, const size_t=0);
 
             //! wrapper for type computation
             template <typename T> inline
-            const rtti & use() { return (*this)( typeid(T) ); }
+            const rtti & use() { return (*this)( typeid(T), sizeof(T) ); }
 
             //! wrapper for type computation
             template <typename T, typename TAG> inline
-            const rtti & use(const TAG &tag) { return (*this)( typeid(T), tag ); }
+            const rtti & use(const TAG &tag) { return (*this)( typeid(T), tag, sizeof(T) ); }
             
             //! wrapper for type computation
             template <typename T> inline
-            const rtti & of(const T & ) { return (*this)( typeid(T) ); }
+            const rtti & of(const T & ) { return (*this)( typeid(T), sizeof(T) ); }
             
             //__________________________________________________________________
             //
@@ -128,6 +129,7 @@ namespace upsylon
             const db_type db; //!< database
             const id_type id; //!< glossary
             const size_t  mx; //!< uuid max length
+            const size_t  ms; //!< max size
 
         private:
             explicit repo();

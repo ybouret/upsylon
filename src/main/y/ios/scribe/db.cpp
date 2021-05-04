@@ -19,7 +19,7 @@ namespace upsylon
             {
             public:
                 inline explicit native_for(const char *how) :
-                native_scribe( typeid(T), sizeof(T), how )
+                native_scribe(typeid(T), how)
                 {
                 }
 
@@ -42,7 +42,7 @@ namespace upsylon
 /**/  class CLASS##_scribe : public scribe1D {\
 /**/  Y_DISABLE_COPY_AND_ASSIGN(CLASS##_scribe);\
 /**/  public:\
-/**/  inline explicit CLASS##_scribe() : scribe1D( typeid(CLASS), sizeof(CLASS) ) {}\
+/**/  inline explicit CLASS##_scribe() : scribe1D( typeid(CLASS) ) {}\
 /**/  inline virtual ~CLASS##_scribe() throw() {}\
 /**/  inline virtual string write(const void *addr) const {\
 /**/      assert(addr); const CLASS &obj = *static_cast<const CLASS*>(addr);\
@@ -61,7 +61,7 @@ namespace upsylon
 
             public:
                 inline explicit apq_writer(const scribe &_ ) :
-                scribe1D(typeid(apq),sizeof(apq)),
+                scribe1D(typeid(apq)),
                 dbl(_)
                 {
                 }

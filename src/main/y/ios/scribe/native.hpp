@@ -25,7 +25,6 @@ namespace upsylon
         protected:
             //! setup with type and default format
             explicit native_scribe(const std::type_info &tid,
-                                   const size_t          tsz,
                                    const char           *how);
             
         private:

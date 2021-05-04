@@ -35,9 +35,10 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            inline explicit network_carrier() throw() :
+            inline explicit network_carrier() :
             carrier_of<T>(comms::computed_block_size,comms::distributed)
             {
+                assert(sizeof(T)==this->clsid.size);
             }
             
             inline virtual ~network_carrier() throw() {}

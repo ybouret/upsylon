@@ -69,10 +69,11 @@ namespace upsylon {
             }
             
             //! setup
-            inline explicit limited_carrier(const std::type_info &_) throw() :
+            inline explicit limited_carrier(const std::type_info &_) :
             base_type(),
-            carrier(this->io.style,this->io.infra,_,block_size)
+            carrier(this->io.style,this->io.infra,_)
             {
+
             }
             
             //__________________________________________________________________
@@ -102,7 +103,7 @@ namespace upsylon {
                 for(size_t i=BLOCKS;i>0;--i)
                 {
                     total += this->io.save(target,q);
-                    q += sizeof(T);
+                    q     += sizeof(T);
                 }
                 return total;
             }

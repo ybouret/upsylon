@@ -23,8 +23,7 @@ namespace upsylon
 
         protected:
             //! setup
-            explicit scribe1D(const std::type_info &tid,
-                              const size_t          tsz);
+            explicit scribe1D(const std::type_info &tid);
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(scribe1D);

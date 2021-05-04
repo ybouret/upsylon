@@ -27,9 +27,10 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            inline explicit primary_carrier() throw() :
+            inline explicit primary_carrier() :
             carrier_of<T>(comms::computed_block_size, comms::homogeneous)
             {
+                assert(sizeof(T)==this->clsid.size);
             }
             
             inline virtual ~primary_carrier() throw() {}

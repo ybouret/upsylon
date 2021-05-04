@@ -25,8 +25,13 @@ namespace upsylon
         class carrier : public counted, public object
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef intr_ptr<rtti,carrier> pointer; //!< alias
-            
+            static const char              CLSID[]; //!< "ios::carrier"
+
             //__________________________________________________________________
             //
             // virtual interface
@@ -50,14 +55,12 @@ namespace upsylon
             const comms::shipping_style    style;  //!< [computed|flexible]_block_size
             const comms::infrastructure    infra;  //!< [homogeneous|distributed]
             const rtti                    &clsid;  //!< system type info
-            const size_t                   bytes;  //!< sizeof(T)
-            
+
         protected:
             //! setup
             explicit carrier(const comms::shipping_style _style,
                              const comms::infrastructure _infra,
-                             const std::type_info       &_clsid,
-                             const size_t                _bytes) throw();
+                             const std::type_info       &_clsid);
             
             void throw_missing_bytes() const; //!< throw with name
             
@@ -82,8 +85,8 @@ namespace upsylon
         protected:
             //! setup
             inline explicit carrier_of(const comms::shipping_style _style,
-                                       const comms::infrastructure _infra ) throw() :
-            carrier(_style,_infra,typeid( typename type_traits<T>::mutable_type ), sizeof(T) )
+                                       const comms::infrastructure _infra ):
+            carrier(_style,_infra,typeid( typename type_traits<T>::mutable_type ) )
             {
             }
             

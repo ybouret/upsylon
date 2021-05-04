@@ -13,7 +13,7 @@ namespace upsylon
         scribeND:: scribeND(const std::type_info &tid,
                             const scribe1D       &one,
                             const size_t          num) :
-        scribe(tid,one.size*num,num),
+        scribe(tid,num),
         base(one)
         {
         }
@@ -24,7 +24,7 @@ namespace upsylon
             string          ans = base.write(ptr);
             for(size_t i=1;i<dims;++i)
             {
-                ans << ' ' << base.write(ptr+=base.size);
+                ans << ' ' << base.write(ptr+=base.info.size);
             }
             return ans;
         }

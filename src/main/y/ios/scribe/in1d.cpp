@@ -7,9 +7,8 @@ namespace upsylon
         scribe1D:: ~scribe1D() throw()
         {}
 
-        scribe1D:: scribe1D(const std::type_info &tid,
-                            const size_t          tsz) :
-        scribe(tid,tsz,1)
+        scribe1D:: scribe1D(const std::type_info &tid) :
+        scribe(tid,1)
         {
         }
 

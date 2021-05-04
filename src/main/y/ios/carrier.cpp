@@ -1,7 +1,6 @@
 
 
 #include "y/ios/carrier.hpp"
-#include "y/type/block/zset.hpp"
 #include "y/exception.hpp"
 #include <iostream>
 
@@ -12,32 +11,33 @@ namespace upsylon
     {
         carrier:: ~carrier() throw()
         {
-            _bzset(bytes);
         }
+
+        const char carrier:: CLSID[] = "ios::carrier";
         
         carrier:: carrier(const comms::shipping_style _style,
                           const comms::infrastructure _infra,
-                          const std::type_info       &_clsid,
-                          const size_t                _bytes) throw() :
+                          const std::type_info       &_clsid) :
         counted(),
         object(),
         style(_style),
         infra(_infra),
-        clsid( rtti::of(_clsid) ),
-        bytes(_bytes)
+        clsid( rtti::of(_clsid) )
         {
-            assert(bytes>0);
+            if(clsid.size<=0) throw exception("%s(unset <%s>.size)", CLSID, clsid.text() );
         }
         
         void carrier:: throw_missing_bytes() const
         {
-            throw exception("ios::carrier::missing bytes for<%s>", clsid.text() );
+            throw exception("%s(missing bytes for<%s>)", CLSID, clsid.text() );
         }
+
+       
         
         
         std::ostream & operator<<(std::ostream &os, const carrier &self)
         {
-            os << "carrier<" << self.clsid.name() << ">";
+            os << carrier::CLSID << '<' << self.clsid.name() << '>';
             os << " [" << comms::shipping_style_id(self.style) << ":" << comms::infrastructure_id(self.infra) << "]";
             return os;
         }

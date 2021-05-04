@@ -11,9 +11,8 @@ namespace upsylon
         }
         
         native_scribe:: native_scribe(const std::type_info &tid,
-                                      const size_t          tsz,
-                                      const char *how) :
-        scribe1D(tid,tsz),
+                                      const char           *how) :
+        scribe1D(tid),
         fmt(how)
         {
         }

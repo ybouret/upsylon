@@ -19,11 +19,12 @@ namespace upsylon
 
 namespace upsylon
 {
-    rtti :: rtti(const std::type_info &tid) :
+    rtti :: rtti(const std::type_info &tid, const size_t sz) :
     object(),
     counted(),
     suffix_address(*this),
     uuid( tid.name() ),
+    size(sz),
     user()
     {
         
@@ -64,9 +65,10 @@ namespace upsylon
     {
         static const rtti::repo &mgr = rtti::repo::instance();
         os << ios::align(info.uuid,ios::align::left,mgr.mx);
+        os << ':' << ' ' << '[' << info.size << ']';
+
         if(info.user.size)
         {
-            os << ':';
             for(const rtti::alias *aka=info.user.head;aka;aka=aka->next)
             {
                 os << ' ' << '[' << aka->name << ']';
@@ -127,7 +129,7 @@ namespace upsylon
 {
     Y_SINGLETON_IMPL(rtti::repo);
 
-    rtti:: repo:: repo() : db(), id(), mx(0)
+    rtti:: repo:: repo() : db(), id(), mx(0), ms(0)
     {
         import();
     }
@@ -139,11 +141,12 @@ namespace upsylon
     const rtti &  rtti:: repo:: update_mx(const rtti &info) throw()
     {
         aliasing::_(mx) = max_of(mx,info.uuid.length());
+        aliasing::_(ms) = max_of(ms,info.size);
         return info;
     }
 
 
-    const rtti & rtti:: repo:: operator()(const std::type_info &tid)
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const size_t sz)
     {
         const string         key = tid.name();
         const rtti::pointer *ppr = db.search(key);
@@ -156,7 +159,23 @@ namespace upsylon
             //__________________________________________________________________
             if(!ppa)         throw exception("%s(<%s> corrupted)",call_sign,*key);
             if(*ppa != *ppr) throw exception("%s(existing <%s> aliases by <%s>)",call_sign,*key, * (**ppa).uuid);
-            return **ppr;
+            const rtti &info = **ppr;
+            if(sz>0)
+            {
+                if(info.size<=0)
+                {
+                    // setup non-existing size
+                    aliasing::_(info.size) = sz;
+                    (void) update_mx(info);
+                }
+                else
+                {
+                    // check size
+                    if(sz!=info.size)
+                        throw exception("%s(<%s>.size=%u mismatch new size=%u)",call_sign,*key, unsigned(info.size), unsigned(sz) );
+                }
+            }
+            return info;
         }
         else
         {
@@ -167,7 +186,7 @@ namespace upsylon
             if(ppa)
                 throw exception("%s(missing <%s> aliased by <%s>",call_sign,*key,* (**ppa).uuid );
             
-            const rtti::pointer ptr = new rtti(tid);
+            const rtti::pointer ptr = new rtti(tid,sz);
             if(!aliasing::_(db).insert(ptr))
                 throw exception("%s(<%s> unexpected insert failure)",call_sign,*key);
            
@@ -186,9 +205,9 @@ namespace upsylon
         }
     }
 
-    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const string &tag)
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const string &tag, const size_t sz)
     {
-        const rtti          &info = (*this)(tid);
+        const rtti          &info = (*this)(tid,sz);
         const rtti::pointer *ppa  = id.search(tag);
         if(ppa)
         {
@@ -224,10 +243,10 @@ namespace upsylon
         
     }
 
-    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const char  *tag)
+    const rtti & rtti:: repo:: operator()(const std::type_info &tid, const char  *tag, const size_t sz)
     {
         const string _(tag);
-        return (*this)(tid,_);
+        return (*this)(tid,_,sz);
     }
 
 
