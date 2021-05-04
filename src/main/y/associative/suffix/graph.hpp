@@ -268,6 +268,12 @@ catch(...) { dpool.store(node); throw; }
         const_iterator begin() const throw()   { return const_iterator( dlist.head ); } //!< begin forward const
         const_iterator end()   const throw()   { return const_iterator(0);            } //!< end forward const
 
+        //! iterator -> tree_node
+        static inline tree_node       *iter_node(iterator &it) throw() { return static_cast<tree_node*>(it.get().hook); }
+
+        //! iterator -> tree_node
+        static inline const tree_node *iter_node(const_iterator &it) throw() { return static_cast<const tree_node*>(it.get().hook); }
+
         //______________________________________________________________________
         //
         //! accessing root

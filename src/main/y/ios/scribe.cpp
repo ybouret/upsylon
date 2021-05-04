@@ -20,7 +20,7 @@ namespace upsylon
             assert( 0==(size%dims) );
         }
         
-        const   rtti  &scribe:: key() const throw()
+        const rtti  &scribe:: key() const throw()
         {
             return info;
         }

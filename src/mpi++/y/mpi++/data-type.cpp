@@ -1,16 +1,16 @@
 
 #include "y/mpi++/mpi.hpp"
 #include "y/type/aliasing.hpp"
-#include "y/associative/be-key.hpp"
+#include "y/type/rtti.hpp"
 #include "y/associative/suffix/node-to.hpp"
 
-#include <typeinfo>
 
 namespace upsylon
 {
-    typedef  mpi::data_type::store mpi_data_type_db;
+    typedef  mpi::data_type::store mpi_db;
 
-    mpi:: data_type:: data_type(const MPI_Datatype value, const unsigned bytes) throw() :
+    mpi:: data_type:: data_type(const MPI_Datatype value,
+                                const unsigned bytes) throw() :
     uuid(value),
     size(bytes)
     {
@@ -29,24 +29,24 @@ namespace upsylon
     }
     
     template <typename T>
-    static inline void __register(mpi_data_type_db  &db,
+    static inline void __register(mpi_db            &db,
                                   const MPI_Datatype dt)
     {
-        const be_key         key = typeid(T);
+        const rtti          &key = rtti::of( typeid(T) );
         const mpi::data_type mdt(dt,sizeof(T));
         (void) db.insert(key,mdt);
     }
  
-#define Y_MPI_FIND(type) do {                \
-const be_key          key = typeid(type);    \
-const mpi::data_type *ptr = db.search(key);  \
-assert(ptr);                                 \
-if(sz==ptr->size) return ptr->uuid;          \
+#define Y_MPI_FIND(type) do {                         \
+const rtti           &key = rtti::of( typeid(type) ); \
+const mpi::data_type *ptr = db.search(key);           \
+assert(ptr);                                          \
+if(sz==ptr->size) return ptr->uuid;                   \
 } while(false)
 
     static inline
-    MPI_Datatype __ifind(const mpi_data_type_db &db,
-                         const unsigned          sz)
+    MPI_Datatype __ifind(const mpi_db    &db,
+                         const unsigned   sz)
     {
         Y_MPI_FIND(char);
         Y_MPI_FIND(short);
@@ -58,8 +58,8 @@ if(sz==ptr->size) return ptr->uuid;          \
     }
     
     static inline
-    MPI_Datatype __ufind(const mpi_data_type_db &db,
-                         const unsigned          sz)
+    MPI_Datatype __ufind(const mpi_db   &db,
+                         const unsigned  sz)
     {
         Y_MPI_FIND(unsigned char);
         Y_MPI_FIND(unsigned short);
@@ -153,7 +153,7 @@ assert( sizeof(type) == data_type_for<type>().size );\
     
     const mpi::data_type &mpi:: data_type_for( const std::type_info &tid ) const
     {
-        const be_key     key = tid;
+        const rtti      &key = rtti::of(tid);
         const data_type *ptr = types.search(key);
         if(!ptr) throw upsylon::exception("missing mpi::data_type for <%s>", tid.name() );
         return *ptr;
@@ -161,12 +161,11 @@ assert( sizeof(type) == data_type_for<type>().size );\
 
     void mpi:: display_data_types() const
     {
-        for( suffix_storage<data_type>::const_iterator it=types.begin();it!=types.end();++it)
+        for( mpi_db::const_iterator it=types.begin();it!=types.end();++it)
         {
-
-            const void           *ptr = suffix_node_::to_address( static_cast<suffix_storage<data_type>::tree_node *>(it.get().hook) );
-            const std::type_info &tid = *static_cast<const std::type_info *>(ptr);
-            fprintf(stderr,"\t'%s'\n", tid.name() );
+            const void           *ptr = suffix_node_::to_address( mpi_db::iter_node(it) );
+            const rtti           &tid = *static_cast<const rtti *>(ptr);
+            fprintf(stderr,"\t'%s'\n", tid.text() );
         }
     }
 

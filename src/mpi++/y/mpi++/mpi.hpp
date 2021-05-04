@@ -44,11 +44,11 @@ namespace upsylon
         class exception : public upsylon::exception
         {
         public:
-            explicit exception( int err, const char *fmt,... ) throw(); //!< initialize
-            exception( const exception & ) throw();                     //!< copy
-            virtual ~exception() throw();                               //!< destructor
-            virtual const char *what() const throw();                   //!< Uses MPI_Error_string(...) to format the error code.
-            const int code;                                             //!< MPI error
+            explicit exception(int err, const char *fmt,... ) throw(); //!< initialize
+            exception(const exception &) throw();                      //!< copy
+            virtual            ~exception() throw();                   //!< destructor
+            virtual const char *what() const throw();                  //!< Uses MPI_Error_string(...) to format the error code.
+            const int           code;                                  //!< MPI error
         private:
             Y_DISABLE_ASSIGN(exception);
             static const size_t elen = MPI_MAX_ERROR_STRING + 1;
@@ -58,7 +58,7 @@ namespace upsylon
         
         //______________________________________________________________________
         //
-        //! wrapping MPI_Datatype to build a persistent database
+        //! wrapping MPI_Datatype to build a database of persistent type
         //______________________________________________________________________
         class data_type
         {
@@ -70,8 +70,8 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             data_type(const MPI_Datatype, const unsigned) throw(); //!< setup
-            data_type(const data_type &) throw();                //!< copy
-            ~data_type() throw();                                //!< cleanup
+            data_type(const data_type &) throw();                  //!< copy
+            ~data_type() throw();                                  //!< cleanup
             
             //__________________________________________________________________
             //

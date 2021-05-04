@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
+#include "y/type/rtti.hpp"
 
 using namespace upsylon;
 
@@ -12,7 +13,7 @@ namespace {
     template <typename T>
     void doRing(const mpi &MPI, const size_t n)
     {
-        MPI.Printf0(stderr, "-- doRing<%s>\n", typeid(T).name() );
+        MPI.Printf0(stderr, "-- doRing<%s>\n", *rtti::name_of<T>() );
         if(MPI.parallel)
         {
             vector<T> toSend(n,0);

@@ -391,7 +391,7 @@ namespace
     template <typename CODE>
     static inline void testInventory()
     {
-        std::cerr << "-- prefix_inventory<" << rtti::name_of<CODE>() << ">" << std::endl;
+        std::cerr << "-- suffix_inventory<" << rtti::name_of<CODE>() << ">" << std::endl;
         
         suffix_inventory<CODE> db1,db2;
         typedef vector<CODE>   key_type;
@@ -426,7 +426,7 @@ namespace
     template <typename T> static inline
     void testStorage() 
     {
-        std::cerr << "-- prefix_storage<" << rtti::name_of<T>() << ">" << std::endl;
+        std::cerr << "-- suffix_storage<" << rtti::name_of<T>() << ">" << std::endl;
         suffix_storage<T,suffix_collection> a1,a2;
         suffix_storage<T,container>         b1,b2;
 
@@ -467,7 +467,38 @@ namespace
 
     }
 
+}
 
+#include "y/associative/suffix/node-to.hpp"
+
+namespace
+{
+
+    static inline void testIterString()
+    {
+        std::cerr << "Test Iter String" << std::endl;
+        suffix_storage<int> db;
+        vector<string>      keys;
+
+        for(int i=10+alea.leq(100);i>0;--i)
+        {
+            const string tmp = support::get<string>();
+            if( db.insert(tmp,i) )
+            {
+                keys.push_back(tmp);
+            }
+        }
+
+        int j=0;
+        for(suffix_storage<int>::iterator it=db.begin(); it != db.end(); ++it)
+        {
+            //std::cerr << *it << std::endl;
+            const suffix_storage<int>::tree_node *node = db.iter_node(it);
+            const string k =  suffix_node_::to_string(node);
+            Y_ASSERT(k==keys[++j]);
+        }
+        
+    }
     
 }
 
@@ -508,6 +539,8 @@ Y_UTEST(suffix)
     testInventory<uint16_t>();
     testInventory<uint32_t>();
     testInventory<uint64_t>();
+
+    testIterString();
 
     if(argc>1)
     {
