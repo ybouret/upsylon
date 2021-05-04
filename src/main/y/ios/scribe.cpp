@@ -17,7 +17,7 @@ namespace upsylon
         size( tsz ),
         dims(num)
         {
-            
+            assert( 0==(size%dims) );
         }
         
         const   rtti  &scribe:: key() const throw()

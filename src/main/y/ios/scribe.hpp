@@ -34,7 +34,7 @@ namespace upsylon
             //__________________________________________________________________
             const rtti  &info; //!< unique type info
             const size_t size; //!< sizeof(object)
-            const size_t dims; //!< number of components
+            const size_t dims; //!< number of components: 0=size%dims
 
         protected:
             explicit scribe(const std::type_info &tid,
