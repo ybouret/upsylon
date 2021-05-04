@@ -56,49 +56,35 @@ namespace upsylon
             static const size_t alen = Y_MEMORY_ALIGN(elen);
             char string_[alen];
         };
-        
-        //______________________________________________________________________
-        //
-        //! wrapping MPI_Datatype to build a database of persistent type
-        //______________________________________________________________________
-        class data_type
-        {
-        public:
-            typedef suffix_storage<data_type> store; //!< alias
 
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            data_type(const MPI_Datatype, const unsigned) throw(); //!< setup
-            data_type(const data_type &) throw();                  //!< copy
-            ~data_type() throw();                                  //!< cleanup
-            
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            const MPI_Datatype uuid; //!< unique
-            const unsigned     size; //!< associated size
-            
-        private:
-            Y_DISABLE_ASSIGN(data_type);
-        };
-        
         //______________________________________________________________________
         //
-        //! tracing communication times
+        //! system_type to MPI_Datatype
         //______________________________________________________________________
-        class commTicks
+        class system_type
         {
         public:
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            commTicks()  throw(); //!< setup
-            ~commTicks() throw(); //!< cleanup
-            
+            typedef suffix_storage<system_type> store; //!< alias
+
+            system_type(const MPI_Datatype,const unsigned) throw();
+            system_type(const system_type &) throw();
+            ~system_type() throw();
+
+            const MPI_Datatype type;
+            const unsigned     indx; //!< from idata
+
+        private:
+            Y_DISABLE_ASSIGN(system_type);
+        };
+
+
+
+        class commTracer
+        {
+        public:
+            explicit commTracer()  throw(); //!< setup
+            virtual ~commTracer() throw();  //!< cleanup
+
             //__________________________________________________________________
             //
             // methods
@@ -110,12 +96,58 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const uint64_t last;         //!< last count
-            const uint64_t full;         //!< cumulative count
+            const uint64_t last; //!< last count
+            const uint64_t full; //!< cumulative count
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(commTracer);
+        };
+
+        class commTicks : public commTracer
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            commTicks()  throw(); //!< setup
+            ~commTicks() throw(); //!< cleanup
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(commTicks);
         };
-        
+
+
+        class commBytes : public commTracer
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            commBytes()  throw(); //!< setup
+            ~commBytes() throw(); //!< cleanup
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(commBytes);
+        };
+
+        class commState
+        {
+        public:
+            commState() throw();
+            ~commState() throw();
+
+            commTicks ticks;
+            commBytes bytes;
+
+            void reset() throw();
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(commState);
+        };
 
         
         //______________________________________________________________________
@@ -157,8 +189,8 @@ namespace upsylon
         const bool         head;          //!< 0==rank
         const bool         tail;          //!< last==rank
         const bool         bulk;          //!< !head && !tail
-        mutable commTicks  commSend;      //!< tracking time
-        mutable commTicks  commRecv;      //!< tracking time
+        mutable commState  commSend;      //!< tracking time
+        mutable commState  commRecv;      //!< tracking time
         const string       processorName; //!< the processor name
         const string       nodeName;      //!< size.rank
         const int          threadLevel;   //!< current thread level
@@ -184,18 +216,17 @@ namespace upsylon
                   const MPI_Comm     comm) const;
         
         
-        //! Send some data, commSend.data is updated
+        //! Send some data, commSend.bytes is updated
         template <typename T> inline
-        void Send(const T      *buffer,
+        void Send(const T       *buffer,
                   const size_t   count,
                   const int      dest) const
         {
-            static const data_type   & _        = data_type_for<T>();
-            static const MPI_Datatype  datatype = _.uuid;
-            static const size_t        datasize = _.size;
+            static const system_type   &_        = system_type_for<T>();
+            static const MPI_Datatype   datatype = _.type;
+            const size_t                datasize = count * sizeof(T);
             Send(buffer,count,datatype,dest,io_tag,MPI_COMM_WORLD);
-            //commSend.data.type = datatype;
-            //commSend.data( datasize*count );
+            commSend.bytes(datasize);
         }
         
         
@@ -219,7 +250,7 @@ namespace upsylon
         // Recv
         //______________________________________________________________________
         
-        //! MPI_Recv
+        //! MPI_Recv, commSend.ticks is updated
         void Recv(void              *buffer,
                   const size_t       count,
                   const MPI_Datatype datatype,
@@ -230,19 +261,18 @@ namespace upsylon
        
         
         
-        //! Recv some data
+        //! Recv some data, commSend.bytes is update
         template <typename T> inline
         void Recv(T             *buffer,
                   const size_t   count,
                   const int      source) const
         {
-            static const data_type   & _        = data_type_for<T>();
-            static const MPI_Datatype  datatype = _.uuid;
-            static const size_t        datasize = _.size;
+            static const system_type   &_        = system_type_for<T>();
+            static const MPI_Datatype   datatype = _.type;
+            const size_t                datasize = count * sizeof(T);
             MPI_Status status;
             Recv(buffer,count,datatype,source,io_tag,MPI_COMM_WORLD,status);
-            //commRecv.data.type = datatype;
-            //commRecv.data( datasize*count );
+            commRecv.bytes(datasize);
         }
         
         //! Recv one datum
@@ -262,7 +292,7 @@ namespace upsylon
         // Sendrecv
         //______________________________________________________________________
         
-        //! MPI_Sendrecv
+        //! MPI_Sendrecv, ticks are update
         void Sendrecv(const void        *sendbuf,
                       const size_t       sendcount,
                       const MPI_Datatype sendtype,
@@ -285,17 +315,20 @@ namespace upsylon
                       const size_t recvcount,
                       const int    source) const
         {
-            static const data_type   & s_info = data_type_for<T>();
-            static const MPI_Datatype  s_type = s_info.uuid;
-            static const size_t        s_size = s_info.size;
-            static const data_type   & r_info = data_type_for<U>();
-            static const MPI_Datatype  r_type = r_info.uuid;
-            static const size_t        r_size = r_info.size;
+            static const system_type   &s_info = system_type_for<T>();
+            static const MPI_Datatype   s_type = s_info.type;
+            const size_t                s_size = sizeof(T) * sendcount;
+            static const system_type   &r_info = system_type_for<U>();
+            static const MPI_Datatype   r_type = r_info.type;
+            const size_t                r_size = sizeof(U) * recvcount;
+
             MPI_Status status;
             Sendrecv(sendbuf, sendcount, s_type, dest, io_tag,
                      recvbuf, recvcount, r_type, source, io_tag, MPI_COMM_WORLD, status);
-            //commRecv.data.type = r_type; commRecv.data( r_size*recvcount );
-            //commSend.data.type = s_type; commSend.data( s_size*sendcount );
+
+            commSend.bytes(s_size);
+            commRecv.bytes(r_size);
+
         }
         
         //! Sendrecv 1 args
@@ -336,23 +369,22 @@ namespace upsylon
         // MPI methods: collective
         //
         //______________________________________________________________________
-        //! MPI_Barrier(MPI_COMM_WORLD)
+        //! MPI_Barrier(MPI_COMM_WORLD), update times
         void Barrier() const;
         
-        //! MPI_Bcast
+        //! MPI_Bcast, update timings
         void Bcast(void *buffer, const size_t count, MPI_Datatype datatype, const int root, MPI_Comm comm) const;
         
         //! generic Bcast
         template <typename T>
         void Bcast(T *buffer, const size_t count, const int root) const
         {
-            static const data_type   & _        = data_type_for<T>();
-            static const MPI_Datatype  datatype = _.uuid;
-            static const size_t        datasize = _.size;
+            static const system_type   &_        = system_type_for<T>();
+            static const MPI_Datatype   datatype = _.type;
+            const size_t                datasize = count * sizeof(T);
             Bcast(buffer,count,datatype,root,MPI_COMM_WORLD);
-            //const uint64_t bytes = count * datasize;
-            //commRecv.data.type = datatype; commRecv.data( bytes );
-            //commSend.data.type = datatype; commSend.data( bytes );
+            commRecv.bytes( datasize );
+            commSend.bytes( datasize );
         }
         
         //! one datum Bcast
@@ -365,7 +397,7 @@ namespace upsylon
         //! Bcast sizes
         void BcastSize(size_t &args, const int root) const;
         
-        //! MPI_Reduce
+        //! MPI_Reduce, update timings
         void Reduce(const void*        send_data,
                     void *             recv_data,
                     const size_t       count,
@@ -374,7 +406,7 @@ namespace upsylon
                     const int          root,
                     const MPI_Comm     comm) const;
         
-        //! generic reduction
+        //! generic reduction, update timings
         template <typename T> inline
         void Reduce(const T     *sendbuffer,
                     T           *recvbuffer,
@@ -382,9 +414,8 @@ namespace upsylon
                     const MPI_Op op,
                     const int    root) const
         {
-            static const data_type   & _        = data_type_for<T>();
-            static const MPI_Datatype  datatype = _.uuid;
-            static const size_t        datasize = _.size;
+            static const system_type   &_        = system_type_for<T>();
+            static const MPI_Datatype   datatype = _.type;
             Reduce(sendbuffer,recvbuffer,count,datatype,op,root,MPI_COMM_WORLD);
             //const uint64_t bytes = count * datasize;
             //commRecv.data.type = datatype; commRecv.data( bytes );
@@ -424,9 +455,8 @@ namespace upsylon
                        const size_t count,
                        const MPI_Op op) const
         {
-            static const data_type   & _        = data_type_for<T>();
-            static const MPI_Datatype  datatype = _.uuid;
-            static const size_t        datasize = _.size;
+            static const system_type   &_        = system_type_for<T>();
+            static const MPI_Datatype   datatype = _.type;
             Allreduce(sendbuffer,recvbuffer,count,datatype,op,MPI_COMM_WORLD);
             //const uint64_t bytes = count * datasize;
             //commRecv.data.type = datatype; commRecv.data( bytes );
@@ -459,11 +489,11 @@ namespace upsylon
         //
         //______________________________________________________________________
         //! convert type_info into a unique internal data_type
-        const data_type & data_type_for( const std::type_info & ) const;
+        const system_type & system_type_for( const std::type_info & ) const;
         
         //! wrapper to get a data_type
         template <typename T> inline
-        const data_type & data_type_for() const { return data_type_for( typeid(T) ); }
+        const system_type & system_type_for() const { return system_type_for( typeid(T) ); }
 
         //! info only
         void display_data_types() const;
@@ -499,10 +529,7 @@ namespace upsylon
         explicit mpi();
         void finalize() throw(); //!< MPI_Finalize()
         void build_data_types(); //!< build the database of primary types
-      
         
-        data_type::store types; //!< persistent database of types+sizes
-
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)
         {
@@ -519,7 +546,10 @@ namespace upsylon
         //
         //______________________________________________________________________
         Y_SINGLETON_DECL_WITH(object::life_time-2,mpi); //!< setup
-        const mphash     idata; //!< type conversion
+        const mphash              dataHash; //!< MPI_Datatype => index
+        const system_type::store  sysTypes; //!< system type  => MPI_Datatype
+
+        unsigned index_of(const MPI_Datatype) const;
 
     };
     

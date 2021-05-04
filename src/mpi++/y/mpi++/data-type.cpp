@@ -7,177 +7,203 @@
 
 namespace upsylon
 {
-    typedef  mpi::data_type::store mpi_db;
 
-    mpi:: data_type:: data_type(const MPI_Datatype value,
-                                const unsigned     bytes) throw() :
-    uuid(value),
-    size(bytes)
+    mpi::system_type:: system_type(const MPI_Datatype dt,
+                                   const unsigned     id) throw() :
+    type(dt),
+    indx(id)
+    {
+        assert(id>0);
+    }
+
+    mpi::system_type:: system_type(const system_type &other) throw() :
+    type(other.type),
+    indx(other.indx)
     {
     }
-    
-    mpi:: data_type:: data_type(const data_type &_) throw() :
-    uuid(_.uuid),
-    size(_.size)
+
+    mpi:: system_type:: ~system_type() throw()
     {
+        aliasing::_(type) = MPI_DATATYPE_NULL;
+        aliasing::_(indx) = 0;
     }
-    
-    mpi:: data_type:: ~data_type() throw()
-    {
-        aliasing::_(uuid) = MPI_DATATYPE_NULL;
-        aliasing::_(size) = 0;
-    }
-    
+
+
     template <typename T>
-    static inline void __register(mpi_db            &db,
-                                  const MPI_Datatype dt)
+    static inline void __register(mpi::system_type::store  &db,
+                                  const MPI_Datatype        dt,
+                                  const unsigned            id)
     {
-        const rtti          &key = rtti::of( typeid(T) );
-        const mpi::data_type mdt(dt,sizeof(T));
+        const rtti            &key = rtti::of( typeid(T) );
+        const mpi::system_type mdt(dt,id);
         (void) db.insert(key,mdt);
     }
- 
-#define Y_MPI_FIND(type) do {                         \
-const rtti           &key = rtti::of( typeid(type) ); \
-const mpi::data_type *ptr = db.search(key);           \
-assert(ptr);                                          \
-if(sz==ptr->size) return ptr->uuid;                   \
-} while(false)
 
-    static inline
-    MPI_Datatype __ifind(const mpi_db    &db,
-                         const unsigned   sz)
+    unsigned mpi:: index_of(const MPI_Datatype dt) const
     {
-        Y_MPI_FIND(char);
-        Y_MPI_FIND(short);
-        Y_MPI_FIND(int);
-        Y_MPI_FIND(long);
-        Y_MPI_FIND(long long);
+        const native_key<int64_t> k = int64_t(dt);
+        const unsigned            i = dataHash(k);
+        if(mphash::invalid==i) throw upsylon::exception("%s(invalid datatype)",call_sign);
+        return i;
+    }
 
-        throw exception("mpi: no registered sizeof(signed data type)=%u",sz);
-    }
-    
-    static inline
-    MPI_Datatype __ufind(const mpi_db   &db,
-                         const unsigned  sz)
+#define Y_MPI_SYS_FIND(TYPE) do {\
+/**/ const rtti &key = rtti::of<TYPE>();\
+/**/   if(key.size==tid.size) {\
+/**/     const mpi::system_type *p = db.search(key); assert(p);\
+/**/     if(!db.insert(tid,*p))\
+/**/       throw upsylon::exception("%s(failure to register <%s>)",mpi::call_sign,tid.text());\
+/**/     return;\
+/**/   }\
+/**/ } while(false)
+
+    template <typename T>
+    static inline void __register_signed(mpi::system_type::store &db)
     {
-        Y_MPI_FIND(unsigned char);
-        Y_MPI_FIND(unsigned short);
-        Y_MPI_FIND(unsigned);
-        Y_MPI_FIND(unsigned long);
-        Y_MPI_FIND(unsigned long long);
-        
-        throw exception("mpi: no registered sizeof(unsigned data type)=%u",sz);
+        const rtti &tid = rtti::of<T>();
+        if(db.search(tid)) return;
+
+        Y_MPI_SYS_FIND(char);
+        Y_MPI_SYS_FIND(short);
+        Y_MPI_SYS_FIND(int);
+        Y_MPI_SYS_FIND(long);
+        Y_MPI_SYS_FIND(long long);
+
+        throw upsylon::exception("%s(cannot match <%s>)", mpi::call_sign, tid.text() );
     }
-    
-    
+
+    template <typename T>
+    static inline void __register_unsigned(mpi::system_type::store &db)
+    {
+        const rtti &tid = rtti::of<T>();
+        if(db.search(tid)) return;
+
+        Y_MPI_SYS_FIND(unsigned char);
+        Y_MPI_SYS_FIND(unsigned short);
+        Y_MPI_SYS_FIND(unsigned);
+        Y_MPI_SYS_FIND(unsigned long);
+        Y_MPI_SYS_FIND(unsigned long long);
+
+        throw upsylon::exception("%s(cannot match <%s>)", mpi::call_sign, tid.text() );
+    }
+
+
     void mpi:: build_data_types()
     {
+        //----------------------------------------------------------------------
+        //
+        // create table of MPI_Datatype => index in 1..num
+        //
+        //----------------------------------------------------------------------
 
-        // register all known types
+#define Y_MPI_IDATA(TYPE) \
+/**/ do {\
+/**/   const native_key<int64_t> k = int64_t(TYPE);\
+/**/   if(!tdb.search(k)) tdb(k,++idx);\
+/**/ } while(false)
 
-#define Y_MPI_REG(type,TYPE) do {                  \
-__register<type>(types,TYPE);                      \
-assert(TYPE         == data_type_for<type>().uuid);\
-assert(sizeof(type) == data_type_for<type>().size);\
-} while(false)
-
-        
-        Y_MPI_REG(char,MPI_CHAR);
-        Y_MPI_REG(short,MPI_SHORT);
-        Y_MPI_REG(int,MPI_INT);
-        Y_MPI_REG(long,MPI_LONG);
-        Y_MPI_REG(long long,MPI_LONG_LONG);
-        
-#define Y_MPI_IREG(type) __register<type>(types,__ifind(types,sizeof(type)) );
-        
-        Y_MPI_IREG(int8_t);
-        Y_MPI_IREG(int16_t);
-        Y_MPI_IREG(int32_t);
-        Y_MPI_IREG(int64_t);
-
-        
-         
-        Y_MPI_REG(unsigned char,MPI_UNSIGNED_CHAR);
-        Y_MPI_REG(unsigned short,MPI_UNSIGNED_SHORT);
-        Y_MPI_REG(unsigned int,MPI_UNSIGNED);
-        Y_MPI_REG(unsigned long,MPI_UNSIGNED_LONG);
-        Y_MPI_REG(unsigned long long,MPI_UNSIGNED_LONG_LONG);
-        
-        
-#define Y_MPI_UREG(type) __register<type>(types,__ufind(types,sizeof(type)) );
-        
-        Y_MPI_UREG(uint8_t);
-        Y_MPI_UREG(uint16_t);
-        Y_MPI_UREG(uint32_t);
-        Y_MPI_UREG(uint64_t);
-        
-        __register<float>(types,MPI_FLOAT);
-        __register<double>(types,MPI_DOUBLE);
-        
-        // create reverse table index
         {
             unsigned idx=0;
-            mphash  &tdb = aliasing::_(idata);
-            for(mpi_db::iterator it=types.begin();it!=types.end();++it)
-            {
-                const data_type           &dt = *it;
-                const native_key<int64_t>  nk = int64_t(dt.uuid);
-                if(tdb.search(nk)) continue;
-                tdb(nk,idx++);
-            }
+            mphash  &tdb = aliasing::_(dataHash);
+            Y_MPI_IDATA(MPI_CHAR);
+            Y_MPI_IDATA(MPI_SHORT);
+            Y_MPI_IDATA(MPI_INT);
+            Y_MPI_IDATA(MPI_LONG);
+            Y_MPI_IDATA(MPI_LONG_LONG);
+            Y_MPI_IDATA(MPI_UNSIGNED_CHAR);
+            Y_MPI_IDATA(MPI_UNSIGNED_SHORT);
+            Y_MPI_IDATA(MPI_UNSIGNED);
+            Y_MPI_IDATA(MPI_UNSIGNED_LONG);
+            Y_MPI_IDATA(MPI_UNSIGNED_LONG_LONG);
+            Y_MPI_IDATA(MPI_FLOAT);
+            Y_MPI_IDATA(MPI_DOUBLE);
         }
 
-        if(head)
-        {
-            //types.get_root().graphViz("mpi-data-types.dot");
+        //----------------------------------------------------------------------
+        //
+        // register system types
+        //
+        //----------------------------------------------------------------------
+#define Y_MPI_SYSREG(TYPE,MPI_TYPE) __register<TYPE>(aliasing::_(sysTypes),MPI_TYPE,index_of(MPI_TYPE));
+
+        Y_MPI_SYSREG(char,MPI_CHAR);
+        Y_MPI_SYSREG(short,MPI_SHORT);
+        Y_MPI_SYSREG(int,MPI_INT);
+        Y_MPI_SYSREG(long,MPI_LONG);
+        Y_MPI_SYSREG(long long,MPI_LONG_LONG);
+
+        Y_MPI_SYSREG(unsigned char,MPI_UNSIGNED_CHAR);
+        Y_MPI_SYSREG(unsigned short,MPI_UNSIGNED_SHORT);
+        Y_MPI_SYSREG(unsigned,MPI_UNSIGNED);
+        Y_MPI_SYSREG(unsigned long,MPI_UNSIGNED_LONG);
+        Y_MPI_SYSREG(unsigned long long,MPI_UNSIGNED_LONG_LONG);
+
+        Y_MPI_SYSREG(float,MPI_FLOAT);
+        Y_MPI_SYSREG(double,MPI_DOUBLE);
+
+#define Y_MPI_SYSREG_I(TYPE) __register_signed<TYPE>(aliasing::_(sysTypes))
+
+        Y_MPI_SYSREG_I(int8_t);
+        Y_MPI_SYSREG_I(int16_t);
+        Y_MPI_SYSREG_I(int32_t);
+        Y_MPI_SYSREG_I(int64_t);
+        Y_MPI_SYSREG_I(ptrdiff_t);
+
+#define Y_MPI_SYSREG_U(TYPE) __register_unsigned<TYPE>(aliasing::_(sysTypes))
+
+        Y_MPI_SYSREG_U(uint8_t);
+        Y_MPI_SYSREG_U(uint16_t);
+        Y_MPI_SYSREG_U(uint32_t);
+        Y_MPI_SYSREG_U(uint64_t);
+        Y_MPI_SYSREG_U(size_t);
+
 
 #define Y_MPI_CHK(type) do {\
-assert( sizeof(type) == data_type_for<type>().size );\
+assert( sysTypes.search( rtti::of<type>() ) );\
 } while(false)
-            
-            Y_MPI_CHK(char);
-            Y_MPI_CHK(unsigned char);
-            Y_MPI_CHK(short);
-            Y_MPI_CHK(unsigned short);
-            Y_MPI_CHK(int);
-            Y_MPI_CHK(unsigned int);
-            Y_MPI_CHK(long);
-            Y_MPI_CHK(unsigned long);
-            Y_MPI_CHK(long long);
-            Y_MPI_CHK(unsigned long long);
-            
-            Y_MPI_CHK(float);
-            Y_MPI_CHK(double);
-            
-            Y_MPI_CHK(int8_t);
-            Y_MPI_CHK(int16_t);
-            Y_MPI_CHK(int32_t);
-            Y_MPI_CHK(int64_t);
-            
-            Y_MPI_CHK(uint8_t);
-            Y_MPI_CHK(uint16_t);
-            Y_MPI_CHK(uint32_t);
-            Y_MPI_CHK(uint64_t);
-            
-            Y_MPI_CHK(size_t);
-            Y_MPI_CHK(ptrdiff_t);
-        }
+
+        Y_MPI_CHK(char);
+        Y_MPI_CHK(unsigned char);
+        Y_MPI_CHK(short);
+        Y_MPI_CHK(unsigned short);
+        Y_MPI_CHK(int);
+        Y_MPI_CHK(unsigned int);
+        Y_MPI_CHK(long);
+        Y_MPI_CHK(unsigned long);
+        Y_MPI_CHK(long long);
+        Y_MPI_CHK(unsigned long long);
+
+        Y_MPI_CHK(float);
+        Y_MPI_CHK(double);
+
+        Y_MPI_CHK(int8_t);
+        Y_MPI_CHK(int16_t);
+        Y_MPI_CHK(int32_t);
+        Y_MPI_CHK(int64_t);
+
+        Y_MPI_CHK(uint8_t);
+        Y_MPI_CHK(uint16_t);
+        Y_MPI_CHK(uint32_t);
+        Y_MPI_CHK(uint64_t);
+
+        Y_MPI_CHK(size_t);
+        Y_MPI_CHK(ptrdiff_t);
+
     }
-    
-    const mpi::data_type &mpi:: data_type_for(const std::type_info &tid) const
+
+    const mpi::system_type & mpi:: system_type_for(const std::type_info &tid) const
     {
-        const rtti      &key = rtti::of(tid);
-        const data_type *ptr = types.search(key);
-        if(!ptr) throw upsylon::exception("missing mpi::data_type for <%s>", key.text() );
-        return *ptr;
+        const rtti        &k = rtti::of(tid);
+        const system_type *p = sysTypes.search(k);
+        if(!p) throw upsylon::exception("%s(missing system_type_for<%s>)", call_sign, k.text());
+        return *p;
     }
 
     void mpi:: display_data_types() const
     {
-        for( mpi_db::const_iterator it=types.begin();it!=types.end();++it)
+        for( system_type::store::const_iterator it=sysTypes.begin(); it != sysTypes.end(); ++it)
         {
-            const void           *ptr =  suffix_node_::to_address( mpi_db::iter_node(it) );
+            const void           *ptr =  suffix_node_::to_address( system_type::store::iter_node(it) );
             const rtti           &tid = *static_cast<const rtti *>(ptr);
             fprintf(stderr,"\t'%s'\n", tid.text() );
         }

@@ -8,8 +8,8 @@ namespace upsylon {
         const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Barrier(MPI_COMM_WORLD));
         const uint64_t delta = real_time_clock::ticks() - mark;
-        commRecv(delta);
-        commSend(delta);
+        commRecv.ticks(delta);
+        commSend.ticks(delta);
     }
     
     void mpi:: Bcast(void *buffer, const size_t count, MPI_Datatype datatype, const int root, MPI_Comm comm) const
@@ -22,8 +22,8 @@ namespace upsylon {
         const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Bcast(buffer,nbcast,datatype,root,comm));
         const uint64_t delta = real_time_clock::ticks() - mark;
-        commRecv(delta);
-        commSend(delta);
+        commRecv.ticks(delta);
+        commSend.ticks(delta);
     }
     
     void mpi:: BcastSize(size_t &args, const int root) const
@@ -77,8 +77,8 @@ namespace upsylon {
         const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Reduce((void*)send_data, recv_data, nred, datatype, op, root, comm));
         const uint64_t delta = real_time_clock::ticks() - mark;
-        commRecv(delta);
-        commSend(delta);
+        commRecv.ticks(delta);
+        commSend.ticks(delta);
     }
     
     void mpi:: Allreduce(const void*        send_data,
@@ -95,8 +95,8 @@ namespace upsylon {
         const uint64_t mark = real_time_clock::ticks();
         Y_MPI_CHECK(MPI_Allreduce((void*)send_data, recv_data, nred, datatype, op,comm));
         const uint64_t delta = real_time_clock::ticks() - mark;
-        commRecv(delta);
-        commSend(delta);
+        commRecv.ticks(delta);
+        commSend.ticks(delta);
     }
     
     

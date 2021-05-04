@@ -86,8 +86,8 @@ Y_UTEST(init)
     
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
     MPI.Printf(stderr, "send: %lu | recv: %lu\n",
-               (unsigned long)MPI.commSend.full,
-               (unsigned long)MPI.commRecv.full);
+               (unsigned long)MPI.commSend.bytes.full,
+               (unsigned long)MPI.commRecv.bytes.full);
     
     
     MPI.sequential(DoSomethingWith);
@@ -104,10 +104,10 @@ Y_UTEST(init)
     }
     MPI.Printf0(stderr,"<data_types/>\n");
 
-    MPI.Printf0(stderr,"Found #MPI_Datatype: %u\n", unsigned(MPI.idata.size()) );
+    MPI.Printf0(stderr,"Found #MPI_Datatype: %u\n", unsigned(MPI.dataHash.size()) );
     if(MPI.head)
     {
-        MPI.idata.get_root().graphViz("mpi-index.dot");
+        MPI.dataHash.get_root().graphViz("mpi-index.dot");
     }
 
 

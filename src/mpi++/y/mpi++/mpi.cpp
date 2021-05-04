@@ -104,9 +104,7 @@ namespace upsylon {
     commRecv(),
     processorName(),
     nodeName(),
-    threadLevel(-1),
-    types(),
-    idata()
+    threadLevel(-1)
     {
         //______________________________________________________________________
         //
