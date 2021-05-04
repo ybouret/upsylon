@@ -105,7 +105,8 @@ namespace upsylon {
     processorName(),
     nodeName(),
     threadLevel(-1),
-    types()
+    types(),
+    idata()
     {
         //______________________________________________________________________
         //
@@ -168,7 +169,7 @@ namespace upsylon {
             //__________________________________________________________________
             build_data_types();
             
-            
+
             
         }
         catch(...)

@@ -136,7 +136,7 @@ namespace upsylon
             const suffix_node *curr = this;
             while(curr->parent)
             {
-                excp.hdr("%s",suffix::code_to_text(code));
+                excp.hdr("%s",suffix::code_to_text(curr->code));
                 curr=curr->parent;
             }
         }

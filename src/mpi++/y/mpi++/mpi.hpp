@@ -9,6 +9,7 @@
 #include "y/concurrent/singleton.hpp"
 #include "y/associative/suffix/storage.hpp"
 #include "y/ios/cfile.hpp"
+#include "y/hashing/mph.hpp"
 
 #include <cstdio>
 #include <typeinfo>
@@ -34,9 +35,9 @@ namespace upsylon
         // types and definitions
         //
         //______________________________________________________________________
-        
-        static const int io_tag = 7; //!< default channel
-        
+        static const int                 io_tag = 7; //!< default channel
+        typedef hashing::minimal_perfect mphash;     //!< datatype->index
+
         //______________________________________________________________________
         //
         //! dedicated error handling
@@ -208,7 +209,7 @@ namespace upsylon
         const string       processorName; //!< the processor name
         const string       nodeName;      //!< size.rank
         const int          threadLevel;   //!< current thread level
-        
+
         //______________________________________________________________________
         //
         //
@@ -504,7 +505,7 @@ namespace upsylon
         // higher level methods
         //
         //______________________________________________________________________
-        //! convert type_info into a unique internal dta_type
+        //! convert type_info into a unique internal data_type
         const data_type & data_type_for( const std::type_info & ) const;
         
         //! wrapper to get a data_type
@@ -548,7 +549,7 @@ namespace upsylon
       
         
         data_type::store types; //!< persistent database of types+sizes
-        
+
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)
         {
@@ -565,6 +566,7 @@ namespace upsylon
         //
         //______________________________________________________________________
         Y_SINGLETON_DECL_WITH(object::life_time-2,mpi); //!< setup
+        const mphash     idata; //!< type conversion
 
     };
     
@@ -582,7 +584,7 @@ namespace upsylon
     
     //! specialized string sending
     template <> void mpi::Send<string>(const string  &str,
-                                        const int      dest) const;
+                                       const int      dest) const;
     
     //! specialized string receiving
     template <> string mpi::Recv<string>(const int source) const;

@@ -3,7 +3,7 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/rtti.hpp"
 #include "y/associative/suffix/node-to.hpp"
-
+#include "y/associative/native-key.hpp"
 
 namespace upsylon
 {
@@ -73,6 +73,9 @@ if(sz==ptr->size) return ptr->uuid;                   \
     
     void mpi:: build_data_types()
     {
+
+        // register all known types
+
 #define Y_MPI_REG(type,TYPE) do {                  \
 __register<type>(types,TYPE);                      \
 assert(TYPE         == data_type_for<type>().uuid);\
@@ -112,7 +115,18 @@ assert(sizeof(type) == data_type_for<type>().size);\
         __register<float>(types,MPI_FLOAT);
         __register<double>(types,MPI_DOUBLE);
         
-
+        // create reverse table index
+        {
+            unsigned idx=0;
+            mphash  &tdb = aliasing::_(idata);
+            for(mpi_db::iterator it=types.begin();it!=types.end();++it)
+            {
+                const data_type           &dt = *it;
+                const native_key<int64_t>  nk = int64_t(dt.uuid);
+                if(tdb.search(nk)) continue;
+                tdb(nk,idx++);
+            }
+        }
 
         if(head)
         {

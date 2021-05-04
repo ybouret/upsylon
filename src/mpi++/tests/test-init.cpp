@@ -100,10 +100,16 @@ Y_UTEST(init)
     MPI.Printf0(stderr,"<data_types>\n");
     if(MPI.head)
     {
-
         MPI.display_data_types();
     }
     MPI.Printf0(stderr,"<data_types/>\n");
+
+    MPI.Printf0(stderr,"Found #MPI_Datatype: %u\n", unsigned(MPI.idata.size()) );
+    if(MPI.head)
+    {
+        MPI.idata.get_root().graphViz("mpi-index.dot");
+    }
+
 
 }
 Y_UTEST_DONE()
