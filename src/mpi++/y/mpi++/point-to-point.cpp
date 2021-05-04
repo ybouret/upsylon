@@ -14,11 +14,13 @@ namespace upsylon {
         assert(dest>=0);
         assert(dest!=rank);
         assert(dest<size);
-        
         if(count>0)
         {
+            // use MPI types
             const int items = static_cast<int>(count);
             if(items<0) throw exception(MPI_ERR_COUNT, "mpi::Send(count overflow)");
+
+            // send with timing
             const uint64_t mark = real_time_clock::ticks();
             Y_MPI_CHECK(MPI_Send((void*)buffer,items,datatype,dest,tag,comm));
             commSend.ticks( real_time_clock::ticks() - mark );

@@ -163,7 +163,7 @@ assert( sizeof(type) == data_type_for<type>().size );\
     {
         for( mpi_db::const_iterator it=types.begin();it!=types.end();++it)
         {
-            const void           *ptr = suffix_node_::to_address( mpi_db::iter_node(it) );
+            const void           *ptr =  suffix_node_::to_address( mpi_db::iter_node(it) );
             const rtti           &tid = *static_cast<const rtti *>(ptr);
             fprintf(stderr,"\t'%s'\n", tid.text() );
         }
