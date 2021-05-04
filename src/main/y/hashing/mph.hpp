@@ -17,7 +17,7 @@ namespace upsylon
         //
         //! minimal perfect hashing
         /**
-         based on an affix_tree
+         based on a suffix_tree
          */
         //
         //______________________________________________________________________
@@ -73,7 +73,7 @@ namespace upsylon
             }
 
             //! emit defines
-            void emit( ios::ostream &fp ) const;
+            void emit(ios::ostream &fp) const;
 
 
         private:

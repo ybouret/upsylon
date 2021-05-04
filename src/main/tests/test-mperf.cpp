@@ -1,4 +1,5 @@
 #include "y/hashing/mph.hpp"
+#include "y/associative/native-key.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/ios/icstream.hpp"
@@ -58,11 +59,35 @@ Y_UTEST(mperf)
             }
         }
 
+    }
 
+    {
+        hashing::minimal_perfect H;
+
+        enum localInfo
+        {
+            first,
+            second,
+            third = 0x1234
+        };
+
+        native_key<uint32_t> k = unsigned(first);
+        H(k,0);
+        k.print_to(std::cerr) << std::endl;
+
+        k=unsigned(second);
+        H(k,2);
+        k.print_to(std::cerr) << std::endl;
+
+        k=unsigned(third);
+        H(k,3);
+        k.print_to(std::cerr) << std::endl;
+
+
+        H.get_root().graphViz("mph-nat.dot");
 
 
     }
-
 
 }
 Y_UTEST_DONE()
