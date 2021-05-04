@@ -100,7 +100,7 @@ Y_UTEST(init)
     MPI.Printf0(stderr,"<data_types>\n");
     if(MPI.head)
     {
-        MPI.display_data_types();
+        MPI.display_types();
     }
     MPI.Printf0(stderr,"<data_types/>\n");
 
@@ -109,7 +109,8 @@ Y_UTEST(init)
     {
         MPI.dataHash.get_root().graphViz("mpi-index.dot");
     }
-
+    MPI.Printf0(stderr, "sizeof(commState)=%u\n", unsigned(sizeof(mpi::commState)));
+    MPI.Printf0(stderr, "sizeof(cppblock)=%u\n", unsigned(sizeof(memory::cppblock<int>)));
 
 }
 Y_UTEST_DONE()

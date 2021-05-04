@@ -9,6 +9,12 @@ namespace upsylon
     full(0)
     {
     }
+    
+    mpi::commTracer:: commTracer(const commTracer &_) throw() :
+    last(_.last),
+    full(_.full)
+    {
+    }
 
 
     mpi:: commTracer:: ~commTracer() throw()
@@ -33,11 +39,19 @@ namespace upsylon
 {
     mpi::commTicks:: commTicks() throw() : commTracer() {}
     mpi::commTicks:: ~commTicks() throw() {}
+    
+    mpi::commTicks:: commTicks(const commTicks &_) throw() : commTracer(_) {}
+
 }
 namespace upsylon
 {
     mpi::commBytes::  commBytes() throw() : commTracer() {}
     mpi::commBytes:: ~commBytes() throw() {}
+    
+    mpi::commBytes::  commBytes(const commBytes &_) throw() :
+    commTracer(_)
+    {}
+
 }
 
 namespace upsylon
@@ -55,5 +69,10 @@ namespace upsylon
     {
         ticks.reset();
         bytes.reset();
+    }
+    
+    mpi:: commState:: commState(const commState &cs) throw() :
+    ticks(cs.ticks), bytes(cs.bytes)
+    {
     }
 }

@@ -10,7 +10,7 @@
 #include "y/associative/suffix/storage.hpp"
 #include "y/ios/cfile.hpp"
 #include "y/hashing/mph.hpp"
-
+#include "y/sequence/vector.hpp"
 #include <cstdio>
 #include <typeinfo>
 
@@ -47,7 +47,7 @@ namespace upsylon
         public:
             explicit exception(int err, const char *fmt,... ) throw(); //!< initialize
             exception(const exception &) throw();                      //!< copy
-            virtual            ~exception() throw();                   //!< destructor
+            virtual            ~exception()  throw();                  //!< destructor
             virtual const char *what() const throw();                  //!< Uses MPI_Error_string(...) to format the error code.
             const int           code;                                  //!< MPI error
         private:
@@ -57,40 +57,29 @@ namespace upsylon
             char string_[alen];
         };
 
+       
+
         //______________________________________________________________________
         //
-        //! system_type to MPI_Datatype
+        //! base type to trace full/last amount of operations
         //______________________________________________________________________
-        class system_type
-        {
-        public:
-            typedef suffix_storage<system_type> store; //!< alias
-
-            system_type(const MPI_Datatype,const unsigned) throw();
-            system_type(const system_type &) throw();
-            ~system_type() throw();
-
-            const MPI_Datatype type;
-            const unsigned     indx; //!< from idata
-
-        private:
-            Y_DISABLE_ASSIGN(system_type);
-        };
-
-
-
         class commTracer
         {
         public:
-            explicit commTracer()  throw(); //!< setup
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit commTracer() throw();  //!< setup
             virtual ~commTracer() throw();  //!< cleanup
-
+            commTracer(const commTracer &) throw(); //!< copy
+            
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
             void operator()(const uint64_t delta) throw(); //!< full += (last=delta)
-            void reset() throw(); //!< last=full=0
+            void reset()                          throw(); //!< last=full=0
 
             //__________________________________________________________________
             //
@@ -100,9 +89,13 @@ namespace upsylon
             const uint64_t full; //!< cumulative count
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(commTracer);
+            Y_DISABLE_ASSIGN(commTracer);
         };
 
+        //______________________________________________________________________
+        //
+        //! tracing the communication ticks
+        //______________________________________________________________________
         class commTicks : public commTracer
         {
         public:
@@ -112,13 +105,16 @@ namespace upsylon
             //__________________________________________________________________
             commTicks()  throw(); //!< setup
             ~commTicks() throw(); //!< cleanup
-
+            commTicks(const commTicks &) throw(); //!< copy
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(commTicks);
+            Y_DISABLE_ASSIGN(commTicks);
         };
 
-
+        //______________________________________________________________________
+        //
+        //! tracing the communication bytes
+        //______________________________________________________________________
         class commBytes : public commTracer
         {
         public:
@@ -128,28 +124,69 @@ namespace upsylon
             //__________________________________________________________________
             commBytes()  throw(); //!< setup
             ~commBytes() throw(); //!< cleanup
-
+            
+            commBytes(const commBytes &) throw();
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(commBytes);
+            Y_DISABLE_ASSIGN(commBytes);
         };
 
+        //______________________________________________________________________
+        //
+        //! full state
+        //______________________________________________________________________
         class commState
         {
         public:
-            commState() throw();
-            ~commState() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            commState()  throw();                //!< setup
+            ~commState() throw();                //!< cleanup
+            commState(const commState&) throw(); //!< copy
+            void reset() throw();                //!< reset all
 
-            commTicks ticks;
-            commBytes bytes;
-
-            void reset() throw();
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            commTicks ticks; //!< global ticks
+            commBytes bytes; //!< global bytes
+            
+        private:
+            Y_DISABLE_ASSIGN(commState);
+        };
+        
+        //______________________________________________________________________
+        //
+        //! system_type to MPI_Datatype
+        //______________________________________________________________________
+        class system_type
+        {
+        public:
+            typedef suffix_storage<system_type> store; //!< alias
+            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            system_type(const MPI_Datatype, commBytes &, commBytes &)  throw(); //!< setup type and index
+            system_type(const system_type &) throw(); //!< copy
+            ~system_type() throw();           //!< cleanup
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const MPI_Datatype type; //!< associated type
+            commBytes         &send;  //!< associated io
+            commBytes         &recv;  //!< associated io
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(commState);
+            Y_DISABLE_ASSIGN(system_type);
         };
 
-        
         //______________________________________________________________________
         //
         //
@@ -222,11 +259,14 @@ namespace upsylon
                   const size_t   count,
                   const int      dest) const
         {
-            static const system_type   &_        = system_type_for<T>();
-            static const MPI_Datatype   datatype = _.type;
-            const size_t                datasize = count * sizeof(T);
-            Send(buffer,count,datatype,dest,io_tag,MPI_COMM_WORLD);
-            commSend.bytes(datasize);
+            static const system_type   &st = system_type_for<T>();
+            static const MPI_Datatype   dt = st.type;
+            static commBytes           &cs = st.send;
+            
+            const size_t bs  = count * sizeof(T);
+            Send(buffer,count,dt,dest,io_tag,MPI_COMM_WORLD);
+            commSend.bytes(bs);
+            cs(bs);
         }
         
         
@@ -267,12 +307,15 @@ namespace upsylon
                   const size_t   count,
                   const int      source) const
         {
-            static const system_type   &_        = system_type_for<T>();
-            static const MPI_Datatype   datatype = _.type;
-            const size_t                datasize = count * sizeof(T);
-            MPI_Status status;
-            Recv(buffer,count,datatype,source,io_tag,MPI_COMM_WORLD,status);
-            commRecv.bytes(datasize);
+            static const system_type   &st = system_type_for<T>();
+            static const MPI_Datatype   dt = st.type;
+            static commBytes           &cr = st.recv;
+            
+            const size_t bs = count * sizeof(T);
+            MPI_Status   status;
+            Recv(buffer,count,dt,source,io_tag,MPI_COMM_WORLD,status);
+            commRecv.bytes(bs);
+            cr(bs);
         }
         
         //! Recv one datum
@@ -317,17 +360,20 @@ namespace upsylon
         {
             static const system_type   &s_info = system_type_for<T>();
             static const MPI_Datatype   s_type = s_info.type;
-            const size_t                s_size = sizeof(T) * sendcount;
+            static commBytes           &s_data = s_info.send;
             static const system_type   &r_info = system_type_for<U>();
             static const MPI_Datatype   r_type = r_info.type;
-            const size_t                r_size = sizeof(U) * recvcount;
-
-            MPI_Status status;
+            static commBytes           &r_data = r_info.recv;
+            
+            const size_t s_size = sizeof(T) * sendcount;
+            const size_t r_size = sizeof(U) * recvcount;
+            MPI_Status   status;
+            
             Sendrecv(sendbuf, sendcount, s_type, dest, io_tag,
                      recvbuf, recvcount, r_type, source, io_tag, MPI_COMM_WORLD, status);
 
-            commSend.bytes(s_size);
-            commRecv.bytes(r_size);
+            commSend.bytes(s_size); s_data(s_size);
+            commRecv.bytes(r_size); r_data(r_size);
 
         }
         
@@ -496,7 +542,7 @@ namespace upsylon
         const system_type & system_type_for() const { return system_type_for( typeid(T) ); }
 
         //! info only
-        void display_data_types() const;
+        void display_types() const;
 
         //! print only on head node
         void Printf0(FILE *,const char *fmt,...) const Y_PRINTF_CHECK(3,4);
@@ -546,10 +592,11 @@ namespace upsylon
         //
         //______________________________________________________________________
         Y_SINGLETON_DECL_WITH(object::life_time-2,mpi); //!< setup
-        const mphash              dataHash; //!< MPI_Datatype => index
-        const system_type::store  sysTypes; //!< system type  => MPI_Datatype
+        unsigned index_of(const MPI_Datatype) const;    //!< get the index of the type from dataHash
 
-        unsigned index_of(const MPI_Datatype) const;
+        const mphash              dataHash; //!< MPI_Datatype => index
+        const vector<commBytes>   ioBytes;  //!< I/O status per type
+        const system_type::store  sysTypes; //!< system type  => MPI_Datatype
 
     };
     

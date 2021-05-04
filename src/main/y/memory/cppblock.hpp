@@ -35,7 +35,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! setup empty
-            inline explicit cppblock() throw() : cblock(), items(0), item(0) {}
+            inline explicit cppblock() throw() : cblock(), items(0), item(0)  {}
 
             //! setup with rounding
             inline explicit cppblock(const size_t n) :
@@ -114,6 +114,7 @@ namespace upsylon
             const size_t  items;
             mutable_type *item;
             Y_DISABLE_COPY_AND_ASSIGN(cppblock);
+            
         };
 
     }

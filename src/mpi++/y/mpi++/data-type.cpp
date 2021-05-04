@@ -8,42 +8,46 @@
 namespace upsylon
 {
 
+    typedef native_key<int64_t> internal_key;
+    
     mpi::system_type:: system_type(const MPI_Datatype dt,
-                                   const unsigned     id) throw() :
+                                   commBytes &cs,
+                                   commBytes &cr) throw() :
     type(dt),
-    indx(id)
+    send(cs),
+    recv(cr)
     {
-        assert(id>0);
     }
 
     mpi::system_type:: system_type(const system_type &other) throw() :
     type(other.type),
-    indx(other.indx)
+    send(other.send),
+    recv(other.recv)
     {
     }
 
     mpi:: system_type:: ~system_type() throw()
     {
         aliasing::_(type) = MPI_DATATYPE_NULL;
-        aliasing::_(indx) = 0;
     }
 
 
     template <typename T>
     static inline void __register(mpi::system_type::store  &db,
                                   const MPI_Datatype        dt,
-                                  const unsigned            id)
+                                  mpi::commBytes           &cs,
+                                  mpi::commBytes           &cr)
     {
         const rtti            &key = rtti::of( typeid(T) );
-        const mpi::system_type mdt(dt,id);
+        const mpi::system_type mdt(dt,cs,cr);
         (void) db.insert(key,mdt);
     }
 
     unsigned mpi:: index_of(const MPI_Datatype dt) const
     {
-        const native_key<int64_t> k = int64_t(dt);
+        const internal_key        k = internal_key::type(dt);
         const unsigned            i = dataHash(k);
-        if(mphash::invalid==i) throw upsylon::exception("%s(invalid datatype)",call_sign);
+        if(mphash::invalid==i) throw upsylon::exception("%s(invalid index_of datatype)",call_sign);
         return i;
     }
 
@@ -98,12 +102,12 @@ namespace upsylon
 
 #define Y_MPI_IDATA(TYPE) \
 /**/ do {\
-/**/   const native_key<int64_t> k = int64_t(TYPE);\
+/**/   const internal_key k = internal_key::type(TYPE);\
 /**/   if(!tdb.search(k)) tdb(k,++idx);\
 /**/ } while(false)
 
         {
-            unsigned idx=0;
+            size_t   idx = 0;
             mphash  &tdb = aliasing::_(dataHash);
             Y_MPI_IDATA(MPI_CHAR);
             Y_MPI_IDATA(MPI_SHORT);
@@ -121,10 +125,25 @@ namespace upsylon
 
         //----------------------------------------------------------------------
         //
+        // build comms
+        //
+        //----------------------------------------------------------------------
+        const size_t       ncom = dataHash.size();
+        vector<commBytes> &coms = aliasing::_(ioBytes);
+        assert(0==coms.size());
+        coms.adjust(2*ncom,commSend.bytes);
+        
+        //----------------------------------------------------------------------
+        //
         // register system types
         //
         //----------------------------------------------------------------------
-#define Y_MPI_SYSREG(TYPE,MPI_TYPE) __register<TYPE>(aliasing::_(sysTypes),MPI_TYPE,index_of(MPI_TYPE));
+#define Y_MPI_SYSREG(TYPE,MPI_TYPE) \
+/**/  do { \
+/**/    const size_t pos = ((index_of(MPI_TYPE) -1)<<1)+1;\
+/**/    __register<TYPE>(aliasing::_(sysTypes),MPI_TYPE,coms[pos],coms[pos+1]);\
+/**/  } while(false)
+        
 
         Y_MPI_SYSREG(char,MPI_CHAR);
         Y_MPI_SYSREG(short,MPI_SHORT);
@@ -158,6 +177,9 @@ namespace upsylon
         Y_MPI_SYSREG_U(size_t);
 
 
+       
+        
+        
 #define Y_MPI_CHK(type) do {\
 assert( sysTypes.search( rtti::of<type>() ) );\
 } while(false)
@@ -199,13 +221,13 @@ assert( sysTypes.search( rtti::of<type>() ) );\
         return *p;
     }
 
-    void mpi:: display_data_types() const
+    void mpi:: display_types() const
     {
         for( system_type::store::const_iterator it=sysTypes.begin(); it != sysTypes.end(); ++it)
         {
             const void           *ptr =  suffix_node_::to_address( system_type::store::iter_node(it) );
             const rtti           &tid = *static_cast<const rtti *>(ptr);
-            fprintf(stderr,"\t'%s'\n", tid.text() );
+            fprintf(stderr,"\t%16s send@%p recv@%p\n", tid.text(), &(it->send), &(it->recv) );
         }
     }
 
