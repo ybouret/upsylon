@@ -12,6 +12,7 @@
 #include "y/hashing/mph.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sequence/crates.hpp"
+#include "y/type/rtti.hpp"
 
 #include <cstdio>
 #include <typeinfo>
@@ -126,9 +127,9 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            system_type(const MPI_Datatype, commFlux & )  throw(); //!< setup type and index
-            system_type(const system_type &) throw();              //!< copy
-            ~system_type() throw();                                //!< cleanup
+            system_type(const MPI_Datatype, commFlux &, const rtti &)  throw(); //!< setup
+            system_type(const system_type &) throw();                           //!< copy
+            ~system_type() throw();                                             //!< cleanup
             
             //__________________________________________________________________
             //
@@ -136,6 +137,7 @@ namespace upsylon
             //__________________________________________________________________
             const MPI_Datatype type;  //!< associated type
             commFlux          &flux;  //!< for data I/O
+            const rtti        &info;  //!< globbing
 
         private:
             Y_DISABLE_ASSIGN(system_type);

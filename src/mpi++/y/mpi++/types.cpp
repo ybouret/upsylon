@@ -11,15 +11,18 @@ namespace upsylon
     typedef native_key<int64_t> internal_key;
     
     mpi::system_type:: system_type(const MPI_Datatype dt,
-                                   commFlux          &fx) throw() :
+                                   commFlux          &fx,
+                                   const rtti        &id) throw() :
     type(dt),
-    flux(fx)
+    flux(fx),
+    info(id)
     {
     }
 
     mpi::system_type:: system_type(const system_type &other) throw() :
     type(other.type),
-    flux(other.flux)
+    flux(other.flux),
+    info(other.info)
     {
     }
 
@@ -35,7 +38,7 @@ namespace upsylon
                                   mpi::commFlux            &fx)
     {
         const rtti            &key = rtti::of( typeid(T) );
-        const mpi::system_type mdt(dt,fx);
+        const mpi::system_type mdt(dt,fx,key);
         (void) db.insert(key,mdt);
     }
 
