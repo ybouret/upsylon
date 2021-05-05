@@ -9,6 +9,6 @@ Y_UTEST_INIT(8)
     Y_UTEST(coll);
     Y_UTEST(xmpi);
     Y_UTEST(spade);
-    Y_UTEST(p2p);
+    Y_UTEST(com);
 }
 Y_UTEST_EXEC()

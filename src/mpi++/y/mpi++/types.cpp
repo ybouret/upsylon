@@ -213,7 +213,7 @@ assert( sysTypes.search( rtti::of<type>() ) );\
 
     }
 
-    const mpi::system_type & mpi:: system_type_for(const std::type_info &tid) const
+    const mpi::system_type & mpi:: systemTypeFor(const std::type_info &tid) const
     {
         const rtti        &k = rtti::of(tid);
         const system_type *p = sysTypes.search(k);
@@ -221,7 +221,7 @@ assert( sysTypes.search( rtti::of<type>() ) );\
         return *p;
     }
 
-    void mpi:: display_types() const
+    void mpi:: displayTypes() const
     {
         for( system_type::store::const_iterator it=sysTypes.begin(); it != sysTypes.end(); ++it)
         {

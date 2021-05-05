@@ -90,7 +90,7 @@ namespace upsylon {
     }
     
     
-    void mpi:: reset() throw()
+    void mpi:: reset() const throw()
     {
         commBytes.reset();
         commTicks.reset();

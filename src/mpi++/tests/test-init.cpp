@@ -109,7 +109,7 @@ Y_UTEST(init)
     MPI.Printf0(stderr,"<data_types>\n");
     if(MPI.head)
     {
-        MPI.display_types();
+        MPI.displayTypes();
     }
     MPI.Printf0(stderr,"<data_types/>\n");
 

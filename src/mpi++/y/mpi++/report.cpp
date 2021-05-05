@@ -24,7 +24,7 @@ namespace upsylon
             if(fx.send.full||fx.recv.full)
             {
                 const string tag = vformat("%u",unsigned(fx.info.size));
-                ans.fill(' ',ws) << "Data : send=" << u2s(fx.send.full) << " | recv= "<< u2s(fx.recv.full) << " | (" << fx.info.text() << "#" << tag << ")\n";
+                ans.fill(' ',ws) << "Data : send=" << u2s(fx.send.full) << " | recv= "<< u2s(fx.recv.full) << " | sizeof(" << fx.info.text() << ")=" << tag << "\n";
             }
         }
 
