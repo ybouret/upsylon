@@ -99,19 +99,32 @@ namespace upsylon
         //
         //! couple of tracers to follow send/recv
         //______________________________________________________________________
-        class commFlux
+        class commFlux_
         {
         public:
-            commFlux()                 throw(); //!< setup
-            commFlux(const commFlux &) throw(); //!< copy
-            ~commFlux()                throw(); //!< cleanup
-            void reset()               throw(); //!< reset all
+            commFlux_()                  throw(); //!< setup
+            commFlux_(const commFlux_ &) throw(); //!< copy
+            virtual ~commFlux_()         throw(); //!< cleanup
+            void reset()                 throw(); //!< reset all
 
             commTracer send; //!< send tracer
             commTracer recv; //!< recv tracer
         private:
+            Y_DISABLE_ASSIGN(commFlux_);
+        };
+
+        class commFlux : public commFlux_
+        {
+        public:
+            explicit commFlux(const rtti &) throw();
+            virtual ~commFlux() throw();
+            commFlux(const commFlux &) throw();
+
+            const rtti &info; //!< from MPI_Datatype
+        private:
             Y_DISABLE_ASSIGN(commFlux);
         };
+
 
         
         //______________________________________________________________________
@@ -127,9 +140,9 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            system_type(const MPI_Datatype, commFlux &, const rtti &)  throw(); //!< setup
-            system_type(const system_type &) throw();                           //!< copy
-            ~system_type() throw();                                             //!< cleanup
+            system_type(const MPI_Datatype, commFlux &)  throw(); //!< setup
+            system_type(const system_type &) throw();             //!< copy
+            ~system_type() throw();                               //!< cleanup
             
             //__________________________________________________________________
             //
@@ -137,8 +150,7 @@ namespace upsylon
             //__________________________________________________________________
             const MPI_Datatype type;  //!< associated type
             commFlux          &flux;  //!< for data I/O
-            const rtti        &info;  //!< globbing
-
+            
         private:
             Y_DISABLE_ASSIGN(system_type);
         };
@@ -182,8 +194,8 @@ namespace upsylon
         const bool         head;          //!< 0==rank
         const bool         tail;          //!< last==rank
         const bool         bulk;          //!< !head && !tail
-        mutable commFlux   commTicks;     //!< tracking time
-        mutable commFlux   commBytes;     //!< tracking time
+        mutable commFlux_  commTicks;     //!< tracking time
+        mutable commFlux_  commBytes;     //!< tracking time
         const string       processorName; //!< the processor name
         const string       nodeName;      //!< size.rank
         const int          threadLevel;   //!< current thread level
@@ -568,7 +580,7 @@ namespace upsylon
         virtual ~mpi() throw();
         explicit mpi();
         void finalize() throw(); //!< MPI_Finalize()
-        void build_data_types(); //!< build the database of primary types
+        void build_types(); //!< build the database of primary types
         
         template <typename FUNC> static inline
         void callSequential(const mpi &self, void *args)
@@ -585,7 +597,7 @@ namespace upsylon
         // helpers
         //
         //______________________________________________________________________
-        Y_SINGLETON_DECL_WITH(object::life_time-2,mpi); //!< setup
+        Y_SINGLETON_DECL_WITH(object::life_time-8,mpi); //!< setup
         unsigned index_of(const MPI_Datatype) const;    //!< get the index of the type from dataHash
 
         const mphash              dataHash; //!< MPI_Datatype => index

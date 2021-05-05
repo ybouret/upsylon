@@ -20,6 +20,7 @@ namespace {
 
 Y_UTEST(init)
 {
+    concurrent::singleton::verbose = 1;
     Y_MPI(SINGLE);
     
     MPI.Printf0(stderr, "ProcessorName=<%s>\n", *MPI.processorName);
@@ -88,8 +89,8 @@ Y_UTEST(init)
 
     
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
-    const string report = MPI.report();
-    MPI.Printf(stderr,"%s\n",*report);
+    //const string report = MPI.report();
+    //MPI.Printf(stderr,"%s\n",*report);
     /*
      MPI.Printf(stderr, "send: %lu | recv: %lu\n",
      (unsigned long)MPI.commBytes.send.full,

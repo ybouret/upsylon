@@ -37,11 +37,11 @@ namespace upsylon
 
 namespace upsylon
 {
-    mpi::commFlux::  commFlux() throw() : send(), recv() {}
-    mpi::commFlux:: ~commFlux() throw() {}
-    mpi::commFlux::  commFlux(const commFlux &_) throw() : send(_.send), recv(_.send) {}
+    mpi::commFlux_::  commFlux_() throw() : send(), recv() {}
+    mpi::commFlux_:: ~commFlux_() throw() {}
+    mpi::commFlux_::  commFlux_(const commFlux_ &_) throw() : send(_.send), recv(_.send) {}
 
-    void mpi::commFlux:: reset() throw()
+    void mpi::commFlux_:: reset() throw()
     {
         send.reset();
         recv.reset();
@@ -49,3 +49,21 @@ namespace upsylon
 
 }
 
+namespace upsylon
+{
+    mpi::commFlux:: ~commFlux() throw() {}
+
+    mpi::commFlux:: commFlux(const commFlux &other) throw() :
+    commFlux_(other), info(other.info)
+    {
+    }
+
+    mpi::commFlux:: commFlux(const rtti &tid) throw() :
+    commFlux_(),
+    info(tid)
+    {
+    }
+    
+
+
+}

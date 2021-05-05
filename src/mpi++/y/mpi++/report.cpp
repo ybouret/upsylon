@@ -17,6 +17,7 @@ namespace upsylon
         string ans = "<I/O report>\n";
         ans.fill(' ',ws) << "Ticks: send=" << u2s(commTicks.send.full) << " | recv= "<< u2s(commTicks.recv.full) << "\n";
         ans.fill(' ',ws) << "Bytes: send=" << u2s(commBytes.send.full) << " | recv= "<< u2s(commBytes.recv.full) << "\n";
+#if 0
         for(system_type::store::const_iterator it=sysTypes.begin();it!=sysTypes.end();++it)
         {
             const system_type &st = *it;
@@ -26,6 +27,7 @@ namespace upsylon
                 ans.fill(' ',ws) << st.info.name() << '\n';
             }
         }
+#endif
         ans.fill(' ',ws) << "<I/O report/>";
         return ans;
     }

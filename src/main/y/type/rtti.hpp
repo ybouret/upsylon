@@ -134,7 +134,7 @@ namespace upsylon
         private:
             explicit repo();
             virtual ~repo() throw();
-            Y_SINGLETON_DECL_WITH(string::life_time-4,repo);
+            Y_SINGLETON_DECL_WITH(object::life_time-4,repo);
             const rtti & update_mx(const rtti &) throw();
             
             void import();
