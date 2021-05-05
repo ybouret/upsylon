@@ -20,9 +20,14 @@ namespace {
 
 Y_UTEST(init)
 {
-    concurrent::singleton::verbose = 1;
     Y_MPI(SINGLE);
+
+    if(MPI.head)
+    {
+        concurrent::singleton::verbose = 1;
+    }
     
+
     MPI.Printf0(stderr, "ProcessorName=<%s>\n", *MPI.processorName);
     MPI.Printf0(stderr, "ThreadLevel  =<%s>\n", MPI.threadLevelText());
     
