@@ -15,6 +15,7 @@ Y_MPI(ring      test-mpi++ ring)
 Y_MPI(coll      test-mpi++ coll)
 Y_MPI(xmpi      test-mpi++ xmpi)
 Y_MPI(spade     test-mpi++ spade)
+Y_MPI(p2p       test-mpi++ p2p)
 
 ADD_CUSTOM_TARGET(utest-mpi++
 COMMAND ${CMAKE_CTEST_COMMAND} --progress -C $<CONFIG>

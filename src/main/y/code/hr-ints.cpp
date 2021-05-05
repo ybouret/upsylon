@@ -9,7 +9,7 @@
 
 namespace upsylon {
     
-    static const char rx[] = { 'b', 'k', 'M', 'G', 'T', 'E', 'Z' };
+    static const char rx[] = { 'u', 'k', 'M', 'G', 'T', 'E', 'Z' };
     
     human_readable:: human_readable( int64_t i ) throw() :
     value(0),

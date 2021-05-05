@@ -2,9 +2,8 @@
 #ifndef Y_HR_INTS_INCLUDED
 #define Y_HR_INTS_INCLUDED 1
 
-#include "y/os/platform.hpp"
-#include <iosfwd>
 #include "y/strfwd.hpp"
+#include <iosfwd>
 
 namespace upsylon
 {
