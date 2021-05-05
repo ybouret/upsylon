@@ -3,6 +3,7 @@
 #include "y/core/ipower.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/string.hpp"
 #include <iostream>
 #include <cstdio>
 
@@ -64,5 +65,10 @@ namespace upsylon {
         snprintf(buffer, sizeof(buffer)-1, "%8.2f", hr.value);
         os << &buffer[0] << hr.radix;
         return os;
+    }
+
+    string human_readable:: to_string() const
+    {
+        return vformat("%8.2f%c",value,radix);
     }
 }

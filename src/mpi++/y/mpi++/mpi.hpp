@@ -127,8 +127,8 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             system_type(const MPI_Datatype, commFlux & )  throw(); //!< setup type and index
-            system_type(const system_type &) throw(); //!< copy
-            ~system_type() throw();           //!< cleanup
+            system_type(const system_type &) throw();              //!< copy
+            ~system_type() throw();                                //!< cleanup
             
             //__________________________________________________________________
             //
@@ -557,7 +557,8 @@ namespace upsylon
         void flush( const ios::cstdout_t & ) const throw(); //!< flush stdout and std::cout
         void flush( const ios::cstderr_t & ) const throw(); //!< flush stderr and std::cerr
 
-        void reset() throw(); //!< reset all comms
+        void   reset() throw(); //!< reset all comms
+        string report() const;  //!< build I/O report
 
     private:
         Y_DISABLE_COPY_AND_ASSIGN(mpi);

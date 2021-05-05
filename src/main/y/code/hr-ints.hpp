@@ -4,6 +4,8 @@
 
 #include "y/os/platform.hpp"
 #include <iosfwd>
+#include "y/strfwd.hpp"
+
 namespace upsylon
 {
 
@@ -24,6 +26,7 @@ namespace upsylon
         ~human_readable() throw();                                                 //!< cleanup
         human_readable & operator=( const human_readable & ) throw();              //!< assign
         friend std::ostream & operator<<( std::ostream &, const human_readable &); //!< display
+        string to_string() const;
     };
 
 }

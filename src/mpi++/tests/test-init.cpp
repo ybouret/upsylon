@@ -13,7 +13,7 @@ namespace {
     {
         MPI.flush(ios::cstderr);
         std::cerr << "doing something sequential @" << MPI.nodeName << std::endl;
-        MPI.flush(ios::cstderr);        
+        MPI.flush(ios::cstderr);
     }
     
 }
@@ -29,6 +29,7 @@ Y_UTEST(init)
     {
         static const size_t sz[] = { 0x00, 0xab, 0xab00, 0xab0000, 0xab000000 };
         long         data[ITEMS];
+
         if(MPI.head)
         {
             for(size_t i=0;i<ITEMS;++i) data[i] = alea.full<long>();
@@ -77,18 +78,24 @@ Y_UTEST(init)
             MPI.Recv(wksp,ITEMS,0);
             MPI.Send(wksp,ITEMS,0);
         }
+
+        
     }
     else
     {
         
     }
-  
+
     
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
-    MPI.Printf(stderr, "send: %lu | recv: %lu\n",
-               (unsigned long)MPI.commBytes.send.full,
-               (unsigned long)MPI.commBytes.recv.full);
-    
+    const string report = MPI.report();
+    MPI.Printf(stderr,"%s\n",*report);
+    /*
+     MPI.Printf(stderr, "send: %lu | recv: %lu\n",
+     (unsigned long)MPI.commBytes.send.full,
+     (unsigned long)MPI.commBytes.recv.full);
+     */
+
     
     MPI.sequential(DoSomethingWith);
     MPI.flush(ios::cstderr);
