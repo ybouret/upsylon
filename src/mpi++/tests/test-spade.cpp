@@ -129,7 +129,7 @@ namespace {
                 }
 
             };
-            Y_MPI_NODE(std::cerr << MPI.nodeName << " send: " << MPI.commSend.ticks.full << " | recv: " << MPI.commRecv.ticks.full << std::endl);
+            Y_MPI_NODE(std::cerr << MPI.nodeName << " send: " << MPI.commTicks.send.full << " | recv: " << MPI.commTicks.recv.full << std::endl);
         }
 
     }

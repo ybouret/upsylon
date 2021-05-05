@@ -88,7 +88,9 @@ Y_UTEST(ring)
             }
         }
         
-        MPI.Printf(stderr, "send: %lu | recv: %lu\n", (unsigned long) MPI.commSend.bytes.full, (unsigned long) MPI.commRecv.bytes.full );
+        MPI.Printf(stderr, "send: %lu | recv: %lu\n",
+                   (unsigned long)MPI.commBytes.send.full,
+                   (unsigned long)MPI.commBytes.recv.full);
     }
 
 }

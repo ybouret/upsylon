@@ -176,6 +176,9 @@ namespace upsylon
         //! build emtpy object
         inline void build(void) { assert(this->has_space()); new (entry+size_) T(); ++size_; }
 
+        //! build empty objects
+        inline void vbuild(size_t n) { while(n-- > 0) build(); }
+
         //! build with 1 arg
         template <typename U>
         inline void build( typename type_traits<U>::parameter_type args )

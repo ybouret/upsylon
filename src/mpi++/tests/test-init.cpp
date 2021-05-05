@@ -86,8 +86,8 @@ Y_UTEST(init)
     
     MPI.Printf(stderr,"ThreadLevel=%s\n",MPI.threadLevelText());
     MPI.Printf(stderr, "send: %lu | recv: %lu\n",
-               (unsigned long)MPI.commSend.bytes.full,
-               (unsigned long)MPI.commRecv.bytes.full);
+               (unsigned long)MPI.commBytes.send.full,
+               (unsigned long)MPI.commBytes.recv.full);
     
     
     MPI.sequential(DoSomethingWith);
@@ -109,8 +109,8 @@ Y_UTEST(init)
     {
         MPI.dataHash.get_root().graphViz("mpi-index.dot");
     }
-    MPI.Printf0(stderr, "sizeof(commState)=%u\n", unsigned(sizeof(mpi::commState)));
-    MPI.Printf0(stderr, "sizeof(cppblock)=%u\n", unsigned(sizeof(memory::cppblock<int>)));
+
+    
 
 }
 Y_UTEST_DONE()

@@ -23,15 +23,16 @@ namespace upsylon
         //
         // types and definition
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type); //!< aliases
+        Y_DECL_ARGS(T,type);                 //!< aliases
+        typedef memory::ro_buffer base_type; //!< alias
 
         //______________________________________________________________________
         //
         // C++
         //______________________________________________________________________
-        inline virtual ~native_key() throw() { data=0; }                               //!< cleanup
-        inline native_key(param_type value)    throw() : data( swap_be_as(value) )  {} //!< setup
-        inline native_key(const native_key &k) throw() : data(k.data) {}               //!< copy
+        inline virtual ~native_key() throw() { data=0; }                                            //!< cleanup
+        inline native_key(param_type value)    throw() : base_type(), data( swap_be_as(value) )  {} //!< setup
+        inline native_key(const native_key &k) throw() : base_type(), data(k.data) {}               //!< copy
 
         //! copy
         inline native_key & operator=(const native_key &other) throw()

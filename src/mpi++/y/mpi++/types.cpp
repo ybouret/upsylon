@@ -11,18 +11,15 @@ namespace upsylon
     typedef native_key<int64_t> internal_key;
     
     mpi::system_type:: system_type(const MPI_Datatype dt,
-                                   commBytes &cs,
-                                   commBytes &cr) throw() :
+                                   commFlux          &fx) throw() :
     type(dt),
-    send(cs),
-    recv(cr)
+    flux(fx)
     {
     }
 
     mpi::system_type:: system_type(const system_type &other) throw() :
     type(other.type),
-    send(other.send),
-    recv(other.recv)
+    flux(other.flux)
     {
     }
 
@@ -35,11 +32,10 @@ namespace upsylon
     template <typename T>
     static inline void __register(mpi::system_type::store  &db,
                                   const MPI_Datatype        dt,
-                                  mpi::commBytes           &cs,
-                                  mpi::commBytes           &cr)
+                                  mpi::commFlux            &fx)
     {
         const rtti            &key = rtti::of( typeid(T) );
-        const mpi::system_type mdt(dt,cs,cr);
+        const mpi::system_type mdt(dt,fx);
         (void) db.insert(key,mdt);
     }
 
@@ -129,10 +125,12 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
         const size_t       ncom = dataHash.size();
-        vector<commBytes> &coms = aliasing::_(ioBytes);
-        assert(0==coms.size());
-        coms.adjust(2*ncom,commSend.bytes);
-        
+        crates<commFlux>  &coms = aliasing::_(ioFluxes); assert(0==coms.size());
+        if(ncom>ioFluxes.capacity())
+            throw upsylon::exception("%s(not enough fluxes to hold MPI_Datatypes)",call_sign);
+        coms.vbuild(ncom);
+        assert(coms.size() == ncom);
+
         //----------------------------------------------------------------------
         //
         // register system types
@@ -140,8 +138,7 @@ namespace upsylon
         //----------------------------------------------------------------------
 #define Y_MPI_SYSREG(TYPE,MPI_TYPE) \
 /**/  do { \
-/**/    const size_t pos = ((index_of(MPI_TYPE) -1)<<1)+1;\
-/**/    __register<TYPE>(aliasing::_(sysTypes),MPI_TYPE,coms[pos],coms[pos+1]);\
+/**/    __register<TYPE>(aliasing::_(sysTypes),MPI_TYPE,coms[index_of(MPI_TYPE)]);\
 /**/  } while(false)
         
 
@@ -227,7 +224,7 @@ assert( sysTypes.search( rtti::of<type>() ) );\
         {
             const void           *ptr =  suffix_node_::to_address( system_type::store::iter_node(it) );
             const rtti           &tid = *static_cast<const rtti *>(ptr);
-            fprintf(stderr,"\t%16s send@%p recv@%p\n", tid.text(), &(it->send), &(it->recv) );
+            fprintf(stderr,"\t%16s\n",tid.text());
         }
     }
 

@@ -90,7 +90,16 @@ namespace upsylon {
     }
     
     
-    
+    void mpi:: reset() throw()
+    {
+        commBytes.reset();
+        commTicks.reset();
+        for(size_t n=ioFluxes.size();n>0;--n)
+        {
+            aliasing::_(ioFluxes[n]).reset();
+        }
+    }
+
     
     mpi:: mpi() :
     size(-1),
@@ -100,12 +109,14 @@ namespace upsylon {
     head(false),
     tail(false),
     bulk(0),
-    commSend(),
-    commRecv(),
+    commTicks(),
+    commBytes(),
     processorName(),
     nodeName(),
     threadLevel(-1),
-    ioBytes()
+    dataHash(),
+    ioFluxes(16),
+    sysTypes()
     {
         //______________________________________________________________________
         //

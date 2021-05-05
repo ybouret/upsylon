@@ -37,42 +37,15 @@ namespace upsylon
 
 namespace upsylon
 {
-    mpi::commTicks:: commTicks() throw() : commTracer() {}
-    mpi::commTicks:: ~commTicks() throw() {}
-    
-    mpi::commTicks:: commTicks(const commTicks &_) throw() : commTracer(_) {}
+    mpi::commFlux::  commFlux() throw() : send(), recv() {}
+    mpi::commFlux:: ~commFlux() throw() {}
+    mpi::commFlux::  commFlux(const commFlux &_) throw() : send(_.send), recv(_.send) {}
 
-}
-namespace upsylon
-{
-    mpi::commBytes::  commBytes() throw() : commTracer() {}
-    mpi::commBytes:: ~commBytes() throw() {}
-    
-    mpi::commBytes::  commBytes(const commBytes &_) throw() :
-    commTracer(_)
-    {}
+    void mpi::commFlux:: reset() throw()
+    {
+        send.reset();
+        recv.reset();
+    }
 
 }
 
-namespace upsylon
-{
-    mpi:: commState:: commState() throw() :
-    ticks(), bytes()
-    {
-    }
-
-    mpi::commState:: ~commState() throw()
-    {
-    }
-
-    void mpi:: commState:: reset() throw()
-    {
-        ticks.reset();
-        bytes.reset();
-    }
-    
-    mpi:: commState:: commState(const commState &cs) throw() :
-    ticks(cs.ticks), bytes(cs.bytes)
-    {
-    }
-}
