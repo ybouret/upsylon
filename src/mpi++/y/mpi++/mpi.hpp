@@ -359,7 +359,7 @@ namespace upsylon
             }
 
             commBytes.send(sendcount*sizeof(T)); s_flux(sendcount);
-            commBytes.recv(recvcount*sizeof(T)); r_flux(recvcount);
+            commBytes.recv(recvcount*sizeof(U)); r_flux(recvcount);
 
         }
         
