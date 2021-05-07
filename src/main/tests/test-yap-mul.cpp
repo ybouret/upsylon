@@ -45,7 +45,7 @@ Y_UTEST_DONE()
 #include "y/os/real-time-clock.hpp"
 #include "y/ios/ocstream.hpp"
 #include <cmath>
-#include "y/code/hr-ints.hpp"
+#include "y/code/human-readable.hpp"
 #include "y/concurrent/assign-main.hpp"
 
 Y_UTEST(yap_mul_perf)

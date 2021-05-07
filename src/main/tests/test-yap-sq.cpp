@@ -32,7 +32,7 @@ Y_UTEST_DONE()
 
 
 #include "y/os/real-time-clock.hpp"
-#include "y/code/hr-ints.hpp"
+#include "y/code/human-readable.hpp"
 #include "y/concurrent/assign-main.hpp"
 
 Y_UTEST(yap_sq_perf)

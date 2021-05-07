@@ -93,6 +93,10 @@ namespace upsylon {
         //! build emtpy object
         inline void build(void) { assert(this->has_space()); new (addr+size_) T(); ++size_; }
 
+        //! build empty objects
+        inline void vbuild(size_t n) { while(n-- > 0) build(); }
+
+
         //! build with 1 arg
         template <typename U>
         inline void build( typename type_traits<U>::parameter_type args )
@@ -137,6 +141,21 @@ namespace upsylon {
         {
             assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX,argY); ++size_;
         }
+
+        //! meta building, for smart pointers
+        template <typename U> inline void meta_build()
+        {
+            assert(this->has_space()); new (addr+size_) T( new U() ); ++size_;
+
+        }
+
+        //! meta building, for smart pointers
+        template <typename U> inline void meta_build(size_t n)
+        {
+            while(n-- > 0) meta_build<U>();
+        }
+
+
 
         //! display
         inline friend std::ostream & operator<<( std::ostream &os, const slots &s )

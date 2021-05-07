@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_HR_INTS_INCLUDED
-#define Y_HR_INTS_INCLUDED 1
+#ifndef Y_HR_INCLUDED
+#define Y_HR_INCLUDED 1
 
 #include "y/strfwd.hpp"
 #include <iosfwd>
