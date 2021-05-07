@@ -17,14 +17,14 @@ namespace
 #if  defined(_MSC_VER)
 #if 0
 #    define Y_FSINCOS_ASM 1
-		_asm {
-			finit
-			fld DWORD PTR alpha
-			fsincos
-			fstp DWORD PTR c
-			fstp DWORD PTR s
-			fwait
-	}
+        _asm {
+            finit
+            fld DWORD PTR alpha
+            fsincos
+            fstp DWORD PTR c
+            fstp DWORD PTR s
+            fwait
+        }
 #endif
 #endif
 
@@ -54,27 +54,27 @@ namespace
 Y_UTEST(sincos)
 {
     test_fsincos<float>();
-   // test_fsincos<double>();
+    // test_fsincos<double>();
 
 #if 0
-	double x = 1.0;
-	double sinx=0, cosx=0;
+    double x = 1.0;
+    double sinx=0, cosx=0;
 
-	/* 
-	 * Inline the "fsincos" x86 intruction: fsincos pops the value
-	 * at the top of the FP stack, and pushes on the same stack
-	 * the computed values of its sine and cosine.
-	 *
-	 *  "=t" is an output (sin x) operand, at the top of the FP stack.
-	 *
-	 *  "=u" is an output (cos x) operand, next-to-top on the FP stack.
-	 *
-	 *  "0"  is an input (x) operand, identified with the first output
-	 *       operand ("=t"), located at the top of the FP stack.
-	 */
+    /*
+     * Inline the "fsincos" x86 intruction: fsincos pops the value
+     * at the top of the FP stack, and pushes on the same stack
+     * the computed values of its sine and cosine.
+     *
+     *  "=t" is an output (sin x) operand, at the top of the FP stack.
+     *
+     *  "=u" is an output (cos x) operand, next-to-top on the FP stack.
+     *
+     *  "0"  is an input (x) operand, identified with the first output
+     *       operand ("=t"), located at the top of the FP stack.
+     */
 
-	/* display results */
-	printf("x=%e : sin(x)=%e, cos(x)=%e\n", x, sinx, cosx);
+    /* display results */
+    printf("x=%e : sin(x)=%e, cos(x)=%e\n", x, sinx, cosx);
 #endif
 
 
