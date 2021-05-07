@@ -3,7 +3,7 @@
 namespace
 {
     template <typename T> inline
-    void fsincos(T &s, T &c, const T alpha) throw()
+    void callsincos(T &s, T &c, const T alpha) throw()
     {
 #undef Y_FSINCOS_ASM
 
@@ -12,6 +12,20 @@ namespace
 #        define Y_FSINCOS_ASM 1
         asm ( "fsincos" : "=t" (c), "=u" (s) : "0" (alpha) );
 #    endif
+#endif
+
+#if  defined(_MSC_VER)
+#if 0
+#    define Y_FSINCOS_ASM 1
+		_asm {
+			finit
+			fld DWORD PTR alpha
+			fsincos
+			fstp DWORD PTR c
+			fstp DWORD PTR s
+			fwait
+	}
+#endif
 #endif
 
 #if !defined(Y_FSINCOS_ASM)
@@ -23,12 +37,12 @@ namespace
     template <typename T>
     void test_fsincos()
     {
-        for(T alpha=-6.3;alpha<=6.3;alpha+=T(0.1))
+        for(T alpha=T(-6.3);alpha<=T(6.3);alpha+=T(0.1))
         {
             const T c = cos(alpha);
             const T s = sin(alpha);
             T cc=0,ss=0;
-            fsincos(ss,cc,alpha);
+            callsincos(ss,cc,alpha);
             std::cerr << alpha << " => cos: " << cc << "/" << c << " sin : " << ss << "/" << s << std::endl;
         }
     }
@@ -40,7 +54,7 @@ namespace
 Y_UTEST(sincos)
 {
     test_fsincos<float>();
-    test_fsincos<double>();
+   // test_fsincos<double>();
 
 #if 0
 	double x = 1.0;
