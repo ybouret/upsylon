@@ -86,7 +86,7 @@ namespace upsylon
         //
         //! class to handle one instance of an APPLICATION
         /**
-         the APPLICATION must have a call_sign
+         the APPLICATION must have a 'call_sign'
          */
         //______________________________________________________________________
         template <typename APPLICATION>
@@ -99,7 +99,7 @@ namespace upsylon
             //! soname from call_sign
             static inline const char *soname() throw() { return APPLICATION::call_sign; }
             
-            //! get initialized instance
+            //! get initialized (by derived class) instance
             static inline APPLICATION &_() throw() {
                 assert(instance);
                 return *(APPLICATION *)instance;
@@ -154,7 +154,9 @@ namespace upsylon
 
     //__________________________________________________________________________
     //
+    //
     //! common code to initialize CLASS Init/Quit an call_sign
+    //
     //__________________________________________________________________________
 #define Y_SOAK_INIT_(CLASS) \
 /**/  {                                                                            \

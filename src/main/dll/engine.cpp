@@ -37,8 +37,7 @@ static int num_procs;
 // the constructor
 //
 //------------------------------------------------------------------------------
-inline Engine() :
-Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
+inline Engine() : Threads( num_procs<= 0 ? new SIMT() : new SIMT(0,num_procs,1) )
 {
     soak::print(stderr,"#threads=%u\n", unsigned( (**this).size() ) );
     make<double>();
