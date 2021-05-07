@@ -132,6 +132,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(complex);
     Y_UTEST(xbra_gen);
     Y_UTEST(xbra);
+    Y_UTEST(sincos);
 
 
     Y_UTEST(hashing);

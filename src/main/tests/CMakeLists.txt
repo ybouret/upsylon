@@ -227,7 +227,7 @@ ADD_TEST(crypto:md          test-main md ${HERE}/words.db)
 ADD_TEST(crypto:rsa         test-main kr_rsa ${HERE}/sample512.key)
 ADD_TEST(crypto:rsa2        test-main sc_rsa ${HERE}/sample512.key ${HERE}/sample1024.key)
 
-SOURCE_GROUP(mk FILES test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp test-xbra.cpp)
+SOURCE_GROUP(mk FILES test-triplet.cpp test-points.cpp test-primality.cpp test-complex.cpp test-sobol.cpp test-timings.cpp test-geomat.cpp test-trigo.cpp test-fft1.cpp test-xbra.cpp test-sincos.cpp)
 ADD_TEST(mk:triplet     test-main triplet)
 ADD_TEST(mk:points      test-main points)
 ADD_TEST(mk:primality   test-main primality)
@@ -238,6 +238,7 @@ ADD_TEST(mk:geomat      test-main geomat)
 ADD_TEST(mk:trigo       test-main trigo)
 ADD_TEST(mk:fft1        test-main fft1 0.02)
 ADD_TEST(mk:xbra        test-main xbra)
+ADD_TEST(mk:sincos      test-main sincos)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
 test-sort-merge.cpp)
