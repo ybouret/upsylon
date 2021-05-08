@@ -86,7 +86,9 @@ namespace upsylon
         //
         //! class to handle one instance of an APPLICATION
         /**
-         the APPLICATION must have a 'call_sign'
+         - the APPLICATION must have a 'call_sign'
+         - the APPLICATION must have a default constructor,
+         and the arguments may be set by some static members
          */
         //______________________________________________________________________
         template <typename APPLICATION>
@@ -121,6 +123,9 @@ namespace upsylon
             }
             
             //! create/recall
+            /**
+             use static members for initialization
+             */
             inline static APPLICATION *init() throw()
             {
                 Y_SOAK_TRY(soname())
