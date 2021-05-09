@@ -6,7 +6,9 @@
 namespace upsylon
 {
     
-    exe_paths:: exe_paths() throw()
+    exe_paths:: exe_paths() throw() :
+    ro_strings(),
+    dirs() 
     {
     }
     
@@ -75,5 +77,36 @@ namespace upsylon
         
         return extra;
     }
+    
+    bool exe_paths:: ok(const string &fn)
+    {
+        static const vfs   &fs   = local_fs::instance();
+        return fs.is_reg(fn);
+    }
+
+    
+#if 0
+    const exe_paths::ro_strings & exe_paths:: operator()(const string &name) const
+    {
+        static const vfs   &fs   = local_fs::instance();
+        exes.free();
+        const size_t ndir = dirs.size();
+        for(size_t i=1;i<=ndir;++i)
+        {
+            const string fn = dirs[i] + name;
+            if(fs.is_reg(fn))
+            {
+                //std::cerr << "found '" << fn << "'" << std::endl;
+                exes << fn;
+            }
+        }
+        return exes;
+    }
+    
+    const exe_paths::ro_strings & exe_paths:: operator()(const char *name) const
+    {
+        const string _(name); return (*this)(_);
+    }
+#endif
     
 }
