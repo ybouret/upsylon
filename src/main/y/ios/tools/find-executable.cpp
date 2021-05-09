@@ -9,7 +9,7 @@ namespace upsylon
                                  const char *path_env_name)
     {
        
-#if Y_WINDOWS
+#if Y_WIN
         const char sep = ';';
 #endif
         
