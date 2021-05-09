@@ -78,12 +78,28 @@ namespace upsylon
         return extra;
     }
     
-    bool exe_paths:: ok(const string &fn)
+    bool exe_paths:: ok(string &fn)
     {
         static const vfs   &fs   = local_fs::instance();
-        const        bool   ans  = fs.is_reg(fn);
-        std::cerr << (ans?'+':'-') << '[' << fn << ']' << std::endl;
-        return fs.is_reg(fn);
+        const char         *ext  = vfs::get_extension(fn);
+        if(!ext)
+        {
+            static const char *xx[] = { "", ".exe" };
+            for(size_t i=0;i<sizeof(xx)/sizeof(xx[0]);++i)
+            {
+                string tmp = fn + xx[i];
+                if(fs.is_reg(tmp))
+                {
+                    fn = tmp;
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return fs.is_reg(fn);
+        }
     }
 
     

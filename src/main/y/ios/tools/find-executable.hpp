@@ -52,7 +52,7 @@ namespace upsylon
             const size_t ndir = dirs.size();
             for(size_t i=1;i<=ndir;++i)
             {
-                const string fn = dirs[i] + xname;
+                string fn = dirs[i] + xname;
                 if(ok(fn))
                 {
                     which << fn;
@@ -67,7 +67,7 @@ namespace upsylon
     private:
         typedef vector<const string,memory::pooled> strings;
         strings dirs;
-        static bool ok(const string &);
+        static bool ok(string &);
     };
     
     
