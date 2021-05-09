@@ -87,7 +87,8 @@ namespace upsylon
             static const char *xx[] = { "", ".exe" };
             for(size_t i=0;i<sizeof(xx)/sizeof(xx[0]);++i)
             {
-                string tmp = fn + xx[i];
+                const string tmp = fn + xx[i];
+                std::cerr << "Testing [" << tmp << "]" << std::endl;
                 if(fs.is_reg(tmp))
                 {
                     fn = tmp;
