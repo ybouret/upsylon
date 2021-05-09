@@ -44,6 +44,7 @@ namespace upsylon
         bool   add(const string &d);             //!< add: check exists, no multiple
         size_t load(const char *path_env_name);  //!< load paths from env variable
         
+        //! detect exe name in registered dirs
         template <typename SEQUENCE, typename FILENAME> inline
         size_t operator()(SEQUENCE &which, const FILENAME &xname) const
         {
