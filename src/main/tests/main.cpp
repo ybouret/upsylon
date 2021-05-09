@@ -150,6 +150,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(ios_scribe);
     Y_UTEST(ios_align);
     Y_UTEST(rename);
+    Y_UTEST(find_exe);
 
     // assoc
     Y_UTEST(lexicon);
