@@ -12,4 +12,5 @@ clean:
 	rm -f zero.pdf
 	rm -f splines.pdf
 	rm -f zircon.pdf
-
+	rm -f diffusion.pdf
+	rm -f fvm.pdf
