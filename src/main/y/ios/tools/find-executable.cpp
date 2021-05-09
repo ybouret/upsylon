@@ -8,10 +8,12 @@ namespace upsylon
     size_t find_exe:: load_paths(strings    &paths,
                                  const char *path_env_name)
     {
-        size_t       extra = 0;
-        const string path_env_label = path_env_name;
-        string       path_env_value;
-        const vfs  &fs     = local_fs::instance();
+        static const size_t num = 2;
+        static const char   sep[num] = { ':', ';' };
+        size_t              extra = 0;
+        string              path_env_value;
+        const string        path_env_label = path_env_name;
+        const vfs          &fs             = local_fs::instance();
         
         if( environment::get(path_env_value,path_env_label))
         {
@@ -19,7 +21,7 @@ namespace upsylon
             std::cerr << "$" << path_env_label << "='" << path_env_value << "'" << std::endl;
             
             tokenizer<char> tknz(path_env_value);
-            while( tknz.next_with(':') )
+            while( tknz.next_with(sep,num) )
             {
                 string str( tknz.token(), tknz.units() );
                 //std::cerr << "-> '" << str << "'" << std::endl;
