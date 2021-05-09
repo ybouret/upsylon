@@ -5,10 +5,48 @@
 
 namespace upsylon
 {
-    size_t find_exe:: load_paths(strings    &paths,
-                                 const char *path_env_name)
+    
+    exe_paths:: exe_paths() throw()
     {
-       
+    }
+    
+    exe_paths:: ~exe_paths() throw()
+    {
+    }
+    
+    size_t exe_paths:: size() const throw()
+    {
+        return dirs.size();
+    }
+    
+    const string & exe_paths:: operator[](const size_t i) const throw()
+    {
+        assert(i>0);
+        assert(i<=size());
+        return dirs[i];
+    }
+    
+    bool exe_paths:: add(const string &d)
+    {
+        static const vfs   &fs   = local_fs::instance();
+        const        string temp = vfs::to_directory(d);
+        
+        // check is_dir
+        if(!fs.is_dir(temp)) return false;
+        
+        // check no multiple
+        for(size_t i=dirs.size();i>0;--i)
+        {
+            if(temp==dirs[i]) return false;
+        }
+        dirs << temp;
+        return true;
+    }
+    
+    
+    size_t  exe_paths:: load(const char *path_env_name)
+    {
+        
 #if Y_WIN
         const char sep = ';';
 #endif
@@ -19,23 +57,17 @@ namespace upsylon
         size_t              extra = 0;
         string              path_env_value;
         const string        path_env_label = path_env_name;
-        const vfs          &fs             = local_fs::instance();
         
         if( environment::get(path_env_value,path_env_label))
         {
-            // ok, found someting
-            std::cerr << "$" << path_env_label << "='" << path_env_value << "'" << std::endl;
             
             tokenizer<char> tknz(path_env_value);
             while( tknz.next_with(sep) )
             {
-                string str( tknz.token(), tknz.units() );
-                //std::cerr << "-> '" << str << "'" << std::endl;
-                if(fs.is_dir(str))
+                const string str = tknz.to_string();
+                if( add(str) )
                 {
-                    //std::cerr << "\tvalid!" << std::endl;
-                    vfs::as_directory(str);
-                    paths << str;
+                    ++extra;
                 }
             }
             
@@ -43,5 +75,5 @@ namespace upsylon
         
         return extra;
     }
-
+    
 }

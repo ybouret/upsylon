@@ -7,11 +7,26 @@
 
 namespace upsylon
 {
-    struct find_exe
+    
+    class exe_paths : public accessible<const string>
     {
+    public:
+        explicit exe_paths() throw();
+        virtual ~exe_paths() throw();
+        
+        
+        virtual size_t        size()                   const throw();
+        virtual const string &operator[](const size_t) const throw();
+     
+        bool   add(const string &d);
+        size_t load(const char *path_env_name);
+        
+    private:
         typedef vector<string,memory::pooled> strings;
-        static size_t load_paths(strings &paths, const char *path_env_name);
+        strings dirs;
     };
+    
+    
 }
 
 #endif

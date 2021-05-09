@@ -6,9 +6,9 @@ using namespace upsylon;
 Y_UTEST(find_exe)
 {
     
-    find_exe::strings paths;
-    find_exe::load_paths(paths, "PATH");
-    std::cerr << paths << std::endl;
+    exe_paths xpaths;
+    xpaths.load("PATH");
+    std::cerr << "xpaths=" << xpaths << std::endl;
 }
 Y_UTEST_DONE()
 
