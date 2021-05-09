@@ -14,7 +14,7 @@ namespace upsylon
     //! handling exe paths for program look-up
     //
     //__________________________________________________________________________
-    class exe_paths : public accessible<const string>
+    class xpaths : public accessible<const string>
     {
     public:
         //______________________________________________________________________
@@ -27,8 +27,8 @@ namespace upsylon
         //
         // C++
         //______________________________________________________________________
-        explicit exe_paths() throw(); //!< setup
-        virtual ~exe_paths() throw(); //!< cleanup
+        explicit xpaths() throw(); //!< setup
+        virtual ~xpaths() throw(); //!< cleanup
         
         //______________________________________________________________________
         //
@@ -65,6 +65,7 @@ namespace upsylon
         
         
     private:
+        Y_DISABLE_COPY_AND_ASSIGN(xpaths);
         typedef vector<const string,memory::pooled> strings;
         strings dirs;
         static bool ok(string &);

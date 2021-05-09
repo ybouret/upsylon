@@ -1,4 +1,4 @@
-#include "y/ios/tools/find-executable.hpp"
+#include "y/ios/tools/xpaths.hpp"
 #include "y/string/env.hpp"
 #include "y/string/tokenizer.hpp"
 #include "y/fs/local/fs.hpp"
@@ -6,29 +6,29 @@
 namespace upsylon
 {
     
-    exe_paths:: exe_paths() throw() :
+    xpaths:: xpaths() throw() :
     ro_strings(),
     dirs() 
     {
     }
     
-    exe_paths:: ~exe_paths() throw()
+    xpaths:: ~xpaths() throw()
     {
     }
     
-    size_t exe_paths:: size() const throw()
+    size_t xpaths:: size() const throw()
     {
         return dirs.size();
     }
     
-    const string & exe_paths:: operator[](const size_t i) const throw()
+    const string & xpaths:: operator[](const size_t i) const throw()
     {
         assert(i>0);
         assert(i<=size());
         return dirs[i];
     }
     
-    bool exe_paths:: add(const string &d)
+    bool xpaths:: add(const string &d)
     {
         static const vfs   &fs   = local_fs::instance();
         const        string temp = vfs::to_directory(d);
@@ -46,7 +46,7 @@ namespace upsylon
     }
     
     
-    size_t  exe_paths:: load(const char *path_env_name)
+    size_t  xpaths:: load(const char *path_env_name)
     {
         
 #if Y_WIN
@@ -78,7 +78,7 @@ namespace upsylon
         return extra;
     }
     
-    bool exe_paths:: ok(string &fn)
+    bool xpaths:: ok(string &fn)
     {
         static const vfs   &fs   = local_fs::instance();
         const char         *ext  = vfs::get_extension(fn);

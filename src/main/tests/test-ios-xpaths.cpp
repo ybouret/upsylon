@@ -1,4 +1,4 @@
-#include "y/ios/tools/find-executable.hpp"
+#include "y/ios/tools/xpaths.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/list.hpp"
 
@@ -6,7 +6,7 @@ using namespace upsylon;
 
 namespace
 {
-    static void xtest(const char *name, const exe_paths &xp)
+    static void xtest(const char *name, const xpaths &xp)
     {
         std::cerr << name << " => ";
         list<string> which;
@@ -21,16 +21,16 @@ namespace
     }
 }
 
-Y_UTEST(find_exe)
+Y_UTEST(xpaths)
 {
     
-    exe_paths xpaths;
-    xpaths.load("PATH");
-    std::cerr << "xpaths=" << xpaths << std::endl;
+    xpaths xp;
+    xp.load("PATH");
+    std::cerr << "xpaths=" << xp << std::endl;
 
-    xtest("dot",xpaths);
-    xtest("ls",xpaths);
-    xtest("dir",xpaths);
+    xtest("dot",xp);
+    xtest("ls",xp);
+    xtest("dir",xp);
     
 }
 Y_UTEST_DONE()
