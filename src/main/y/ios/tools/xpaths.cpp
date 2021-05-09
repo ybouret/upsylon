@@ -82,14 +82,12 @@ namespace upsylon
     {
         static const vfs   &fs   = local_fs::instance();
         const char         *ext  = vfs::get_extension(fn);
-        std::cerr << "Passing [" << fn << "]" << std::endl;
         if(!ext)
         {
             static const char *xx[] = { "", ".exe" };
             for(size_t i=0;i<sizeof(xx)/sizeof(xx[0]);++i)
             {
                 const string tmp = fn + xx[i];
-                std::cerr << "Testing [" << tmp << "]" << std::endl;
                 if(fs.is_reg(tmp))
                 {
                     fn = tmp;
