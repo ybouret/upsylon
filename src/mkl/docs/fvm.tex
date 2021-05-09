@@ -2,8 +2,11 @@
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath,amsthm}
 \usepackage{bm}
+\usepackage{xfrac}
 
 \usepackage{bookman}
+
+\newcommand{\half}{{\sfrac{1}{2}}}
 
 \begin{document}
 
@@ -29,5 +32,25 @@ We define the $N$ internal estimations $\hat{C_1},\ldots,\hat{C}_{N-1}$ for each
 \end{array}
 \right.
 \end{equation}
+
+With three points, fixed boundary conditions:
+\begin{equation}
+\begin{bmatrix}
+\hat{C}_1\\
+\hat{C}_2\\
+\end{bmatrix}
+= 
+\begin{pmatrix}
+	0.5 \\
+	0.5 \\
+\end{pmatrix}
+C_2
++
+\begin{pmatrix}
+	0.5 C_1 \\
+	0.5 C_3 \\
+\end{pmatrix}
+\end{equation}
+
 
 \end{document}
