@@ -1,6 +1,9 @@
 #include "y/fs/local/fs.hpp"
 #include "y/exceptions.hpp"
 #include "y/memory/allocator/pooled.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/string/env.hpp"
+#include "y/string/tokenizer.hpp"
 
 #if defined(Y_BSD)
 #include <sys/stat.h>
@@ -31,20 +34,115 @@ BOOL WINAPI GetFileSizeEx(
 
 #endif
 
+
 namespace upsylon
 {
 
-    
-    Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,local_fs);
-
-    local_fs:: local_fs() throw() 
+    namespace
     {
+        typedef vector<const string,memory::pooled> ro_strings;
+    }
+
+
+    Y_SINGLETON_IMPL_WITH(object::life_time-1,local_fs);
+
+    local_fs:: local_fs() :
+    impl( new ro_strings() )
+    {
+
     }
 
     local_fs:: ~local_fs() throw()
     {
-
+        if(impl)
+        {
+            delete static_cast<ro_strings *>(impl);
+            impl = NULL;
+        }
     }
+
+    const accessible<const string> &local_fs:: xpaths() const
+    {
+        assert(impl);
+        return *static_cast<ro_strings *>(impl);
+    }
+
+    bool local_fs:: add_xpath(const string &d)
+    {
+        if( is_dir(d) )
+        {
+            const string str = to_directory(d);
+            ro_strings  &xps = *static_cast<ro_strings *>(impl);
+            for(size_t i=xps.size();i>0;--i)
+            {
+                if(str==xps[i]) return false;
+            }
+            xps << str;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    size_t  local_fs:: to_xpaths(const char *path_env_name)
+    {
+
+#if Y_WIN
+        const char sep = ';';
+#endif
+
+#if Y_BSD
+        const char sep = ':';
+#endif
+        size_t              extra = 0;
+        string              path_env_value;
+        const string        path_env_label = path_env_name;
+
+        if( environment::get(path_env_value,path_env_label))
+        {
+
+            tokenizer<char> tknz(path_env_value);
+            while( tknz.next_with(sep) )
+            {
+                const string str = tknz.to_string();
+                if( add_xpath(str) )
+                {
+                    ++extra;
+                }
+            }
+        }
+
+        return extra;
+    }
+
+    bool  local_fs:: check_xpath(string &fn) const
+    {
+        const char *ext  = get_extension(fn);
+        if(!ext)
+        {
+            static const char *xx[] = { "", ".exe" };
+            for(size_t i=0;i<sizeof(xx)/sizeof(xx[0]);++i)
+            {
+                const string tmp = fn + xx[i];
+                if(is_reg(tmp))
+                {
+                    fn = tmp;
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return  is_reg(fn);
+        }
+    }
+
+
+
+
 
     vfs::entry::attribute local_fs:: query_attribute( const string &path, bool &is_link ) const throw()
     {
