@@ -11,6 +11,13 @@ namespace upsylon
     dirs() 
     {
     }
+
+    xpaths:: xpaths(const char *path_env_name) :
+    ro_strings(),
+    dirs()
+    {
+        (void) load(path_env_name);
+    }
     
     xpaths:: ~xpaths() throw()
     {

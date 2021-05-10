@@ -37,7 +37,7 @@ namespace upsylon
     
     Y_SINGLETON_IMPL_WITH(memory::pooled::life_time-1,local_fs);
 
-    local_fs:: local_fs() throw()
+    local_fs:: local_fs() throw() 
     {
     }
 

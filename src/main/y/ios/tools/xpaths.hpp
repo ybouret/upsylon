@@ -27,9 +27,10 @@ namespace upsylon
         //
         // C++
         //______________________________________________________________________
-        explicit xpaths() throw(); //!< setup
-        virtual ~xpaths() throw(); //!< cleanup
-        
+        explicit xpaths() throw();     //!< setup
+        virtual ~xpaths() throw();     //!< cleanup
+        explicit xpaths(const char *); //!< setup and load
+
         //______________________________________________________________________
         //
         // interface

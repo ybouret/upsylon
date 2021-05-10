@@ -4,12 +4,16 @@
 
 #include "y/fs/vfs.hpp"
 #include "y/concurrent/singleton.hpp"
+#include "y/ios/tools/xpaths.hpp"
 
 namespace upsylon
 {
 
     //! local file system
-    class local_fs : public singleton<local_fs>, public vfs
+    class local_fs :
+    public singleton<local_fs>,
+    public vfs,
+    public xpaths
     {
     public:
         virtual entry::attribute query_attribute( const string &path, bool &is_link ) const throw();
@@ -19,6 +23,8 @@ namespace upsylon
         virtual scanner *new_scanner( const string &dirname ) const;
         virtual uint64_t get_file_size( const string &path ) const;
         virtual void     rename_path(const string&,const string &) const;
+
+
 
     private:
         explicit local_fs() throw();
