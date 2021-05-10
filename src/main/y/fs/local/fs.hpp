@@ -7,12 +7,19 @@
 
 namespace upsylon
 {
-
+    //__________________________________________________________________________
+    //
+    //
     //! local file system
+    //
+    //__________________________________________________________________________
     class local_fs : public singleton<local_fs>, public vfs
     {
     public:
-
+        //______________________________________________________________________
+        //
+        // vfs interface
+        //______________________________________________________________________
         virtual entry::attribute query_attribute(const string &path, bool &is_link) const throw();
         virtual void             create_dir(const string &dirname, const bool allow_already_exists);
         virtual void             remove_dir(const string &dirname);
@@ -21,9 +28,13 @@ namespace upsylon
         virtual uint64_t         get_file_size(const string &path) const;
         virtual void             rename_path(const string&,const string &) const;
 
-        const accessible<const string> &xpaths() const;
-        bool                            add_xpath(const string &);
-        size_t                          to_xpaths(const char *path_env_name);
+        //______________________________________________________________________
+        //
+        // using PATH
+        //______________________________________________________________________
+        const accessible<const string> &xpaths() const;                       //!< from impl
+        bool                            add_xpath(const string &);            //!< existing, non multiple
+        size_t                          to_xpaths(const char *path_env_name); //!< parse
 
         //! detect exe name in registered dirs
         template <typename SEQUENCE, typename FILENAME> inline

@@ -15,6 +15,8 @@ namespace upsylon {
             {
                 throw exception("GraphViz: %s does not exists", *filename );
             }
+            
+
             string pngfile = filename;
             vfs::change_extension(pngfile,"png");
             fs.try_remove_file(pngfile);

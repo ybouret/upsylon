@@ -49,7 +49,7 @@ namespace upsylon
     local_fs:: local_fs() :
     impl( new ro_strings() )
     {
-
+        to_xpaths("PATH");
     }
 
     local_fs:: ~local_fs() throw()
