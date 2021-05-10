@@ -178,7 +178,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 
                             case '.':
                                 ++curr; //! skip dot
-                                p->push_front( posix::dot() );
+                                //p->push_front( posix::dot() );
+                                p->push_back( posix::dot() );
                                 break;
 
                             case IGN: {

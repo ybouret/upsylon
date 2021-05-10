@@ -12,16 +12,18 @@ Y_PROGRAM_START()
     {
         Token        token;
         Matching     keep = argv[1];
-        keep.motif->save_to( "grep.bin" );
+        keep.motif->save_to(  "grep.bin" );
+        keep.motif->graphViz( "grep.dot" );
         const string      fileName = (argc > 2) ? argv[2] : Y_STDIN;
         ios::icstream     input(  fileName     );
         ios::ocstream     output( ios::cstdout );
         string            line;
         while( input.gets(line) )
         {
-            if( keep.isFoundIn(line) )
+            const Token *tkn = keep.isFoundIn(line);
+            if( tkn )
             {
-                output << line << '\n';
+                output << line << " => [" << *tkn << "]\n";
             }
         }
     }

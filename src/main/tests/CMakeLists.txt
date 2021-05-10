@@ -185,6 +185,7 @@ test-rename.cpp
 test-echo.cpp
 test-ios-carrier.cpp
 test-ios-scribe.cpp
+test-ios-xpaths.cpp
 )
 ADD_TEST(ios:ostreams    test-main ostreams)
 ADD_TEST(ios:istreams    test-main istreams ${HERE}/words.db)
@@ -206,6 +207,8 @@ ADD_TEST(ios:rename      test-main rename)
 ADD_TEST(ios:echo        test-main echo)
 ADD_TEST(ios:carrier     test-main ios_carrier)
 ADD_TEST(ios:scribe      test-main ios_scribe)
+ADD_TEST(ios:xpaths      test-main xpaths)
+
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp
 test-hmac.cpp

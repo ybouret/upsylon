@@ -1,0 +1,56 @@
+\documentclass[aps,onecolumn]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{xfrac}
+
+\usepackage{bookman}
+
+\newcommand{\half}{{\sfrac{1}{2}}}
+
+\begin{document}
+
+\title{FVM}
+\maketitle
+
+\subsection{1D}
+
+\noindent Let $C_1,\ldots,C_N$ be a field of $N$ concentrations on points $x_1,\ldots,x_n$.\\
+We have the internal $N-2$ degrees of freedom $C_2,\ldots,C_{N-1}$
+and two boundary conditions.
+We define the $N$ internal estimations $\hat{C_1},\ldots,\hat{C}_{N-1}$ for each $[x_{i}:x_{i+1}]$ interval.
+
+\begin{equation}
+	\vec{\hat{C}} = \bm{P} \vec{C} + \bm{L}_0 \vec{C} + \vec{W}_0 + \bm{L}_N \vec{C} + \vec{W}_N
+\end{equation}
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\bm{P} & \in & \mathcal{M}_{N,N-2}\\
+	\bm{L}_0,\bm{L}_M &\in& \mathcal{M}_{N,N-2}\\
+	\vec{W}_0, \vec{W}_N &\in& \mathbb{R}^N\\
+\end{array}
+\right.
+\end{equation}
+
+With three points, fixed boundary conditions:
+\begin{equation}
+\begin{bmatrix}
+\hat{C}_1\\
+\hat{C}_2\\
+\end{bmatrix}
+= 
+\begin{pmatrix}
+	0.5 \\
+	0.5 \\
+\end{pmatrix}
+C_2
++
+\begin{pmatrix}
+	0.5 C_1 \\
+	0.5 C_3 \\
+\end{pmatrix}
+\end{equation}
+
+
+\end{document}
