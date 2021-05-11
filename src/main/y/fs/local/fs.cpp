@@ -4,6 +4,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/string/env.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/associative/hash/map.hpp"
 
 #if defined(Y_BSD)
 #include <sys/stat.h>
@@ -25,10 +26,10 @@
 #if defined(__GNUC__)
 extern "C"
 {
-BOOL WINAPI GetFileSizeEx(
-    HANDLE         hFile,
-    PLARGE_INTEGER lpFileSize
-);
+    BOOL WINAPI GetFileSizeEx(
+                              HANDLE         hFile,
+                              PLARGE_INTEGER lpFileSize
+                              );
 }
 #endif
 
@@ -40,7 +41,20 @@ namespace upsylon
 
     namespace
     {
-        typedef vector<const string,memory::pooled> ro_strings;
+        typedef vector<const string,memory::pooled> ro_strings_;
+
+        class ro_strings : public ro_strings_
+        {
+        public:
+            explicit ro_strings() : ro_strings_(), store()  {}
+            virtual ~ro_strings() throw() {}
+
+            mutable hash_map<string,string> store; //!< database
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(ro_strings);
+        };
+
     }
 
 
@@ -119,7 +133,8 @@ namespace upsylon
 
     bool  local_fs:: check_xpath(string &fn) const
     {
-        const char *ext  = get_extension(fn);
+
+        const char   *ext  = get_extension(fn);
         if(!ext)
         {
             static const char *xx[] = { "", ".exe" };
@@ -138,8 +153,46 @@ namespace upsylon
         {
             return  is_reg(fn);
         }
+
     }
 
+    const string * local_fs:: query_path_handle(const string &xname) const
+    {
+        Y_LOCK(access);
+        assert(impl);
+        ro_strings   &xps = *static_cast<ro_strings*>(impl);
+        const string *prg = xps.store.search(xname);
+        if(prg)
+        {
+            //std::cerr << xname << " -> " << *prg << " (cached)" << std::endl;
+            return prg;
+        }
+        else
+        {
+            ro_strings_  w;
+            const size_t n = which(w,xname);
+            if(n>0)
+            {
+                if(!xps.store.insert(xname,w[1]))
+                {
+                    throw exception("%s(unexpected multiple '%s')",call_sign,*xname);
+                }
+               //std::cerr << xname << " -> " << w[1] << " (new)" << std::endl;
+                return xps.store.search(xname); 
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+    }
+
+
+    const string * local_fs:: query_path_handle(const char *xname) const
+    {
+        const  string _(xname);
+        return query_path_handle(_);
+    }
 
 
 
@@ -326,10 +379,10 @@ namespace upsylon
 #endif
 
 #if defined(Y_WIN)
-		if (! ::MoveFile(*old_path, *new_path))
-		{
-			throw win32::exception( ::GetLastError(), "MoveFile(%s,%s)", *old_path, *new_path);
-		}
+        if (! ::MoveFile(*old_path, *new_path))
+        {
+            throw win32::exception( ::GetLastError(), "MoveFile(%s,%s)", *old_path, *new_path);
+        }
 #endif
 
     }

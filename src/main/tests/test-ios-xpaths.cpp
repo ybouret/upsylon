@@ -13,11 +13,16 @@ namespace
         if( fs.which(which,name) > 0 )
         {
             std::cerr << which << std::endl;
+            const string *prg = fs.query_path_handle(name);
+            Y_ASSERT(prg!=NULL);
+            Y_ASSERT(prg==fs.query_path_handle(name));
         }
         else
         {
             std::cerr << "not found" << std::endl;
         }
+
+
     }
 }
 

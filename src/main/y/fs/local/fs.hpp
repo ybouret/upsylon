@@ -55,6 +55,14 @@ namespace upsylon
             return xtra;
         }
 
+
+        //! default path
+        const string * query_path_handle(const string &xname) const;
+
+        //! default path, wrapper
+        const string * query_path_handle(const char *xname) const;
+
+
     private:
         explicit local_fs();
         virtual ~local_fs() throw();
@@ -62,6 +70,7 @@ namespace upsylon
         Y_SINGLETON_DECL(local_fs);
         void *impl;
         bool  check_xpath(string &fn) const;
+        
 
     };
 

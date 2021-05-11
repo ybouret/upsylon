@@ -10,33 +10,41 @@ namespace upsylon {
         bool GraphViz:: Render(const string &filename, bool keepFile )
         {
 
-            vfs &fs = local_fs::instance();
+            local_fs &fs = local_fs::instance();
             if( !fs.is_reg(filename) )
             {
                 throw exception("GraphViz: %s does not exists", *filename );
             }
-            
 
-            string pngfile = filename;
-            vfs::change_extension(pngfile,"png");
-            fs.try_remove_file(pngfile);
-
-            const string cmd = "dot -Tpng " + filename + " -o " + pngfile;
-            std::cerr << "[" << cmd << "]" << std::endl;
-
-            if( 0 != system(*cmd) )
+            const string *pdot = fs.query_path_handle("dot");
+            if(pdot)
             {
-                //std::cerr << "[failure]" << std::endl;
-                return false;
+                string pngfile = filename;
+                vfs::change_extension(pngfile,"png");
+                fs.try_remove_file(pngfile);
+
+                const string cmd = *pdot + " -Tpng " + filename + " -o " + pngfile;
+                std::cerr << "[" << cmd << "]" << std::endl;
+
+                if( 0 != system(*cmd) )
+                {
+                    //std::cerr << "[failure]" << std::endl;
+                    return false;
+                }
+                else
+                {
+                    //std::cerr << "[success]" << std::endl;
+                    if(!keepFile)
+                    {
+                        fs.try_remove_file(filename);
+                    }
+                    return true;
+                }
             }
             else
             {
-                //std::cerr << "[success]" << std::endl;
-                if(!keepFile)
-                {
-                    fs.try_remove_file(filename);
-                }
-                return true;
+                std::cerr << "[ GrapViz not detected ]" << std::endl;
+                return false;
             }
         }
     }
