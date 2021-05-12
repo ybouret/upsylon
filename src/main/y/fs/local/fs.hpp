@@ -33,8 +33,8 @@ namespace upsylon
         // using PATH
         //______________________________________________________________________
         const accessible<const string> &xpaths() const;                       //!< from impl
-        bool                            add_xpath(const string &);            //!< existing, non multiple
-        size_t                          to_xpaths(const char *path_env_name); //!< parse
+        bool                            add_xpath(const string &);            //!< check existing, non multiple
+        size_t                          to_xpaths(const char *path_env_name); //!< parse the variable name
 
         //! detect exe name in registered dirs
         template <typename SEQUENCE, typename FILENAME> inline
@@ -56,7 +56,7 @@ namespace upsylon
         }
 
 
-        //! default path
+        //! default path, with caching in impl
         const string * query_path_handle(const string &xname) const;
 
         //! default path, wrapper

@@ -157,7 +157,6 @@ int Engine::num_procs = 0;
 
 Y_SOAK_PUBLIC(double,EngineAverage(const double *source, const unsigned length) throw())
 {
-
     return Engine::_().Average(source,length);
 }
 Y_SOAK_RETURN()
