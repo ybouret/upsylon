@@ -89,6 +89,9 @@ namespace upsylon
          - the APPLICATION must have a 'call_sign'
          - the APPLICATION must have a default constructor,
          and the arguments may be set by some static members
+         - once the DLL is loaded, the user can setup some global
+         communication variables, then call Init(). When done,
+         the use should call Quit()
          */
         //______________________________________________________________________
         template <typename APPLICATION>
@@ -138,7 +141,6 @@ namespace upsylon
                     {
                         message::disp(soname(),message::init);
                         instance    = (volatile APPLICATION *) new APPLICATION();
-                        initialized = true;
                     }
                     return (APPLICATION *)instance;
                 }
@@ -151,14 +153,12 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(app);
             static volatile APPLICATION *instance;
-            static bool                  initialized;
-        };
+         };
 
         
     };
     
     template <typename T>  volatile T *  soak::app<T>::instance    = 0;
-    template <typename T>  bool          soak::app<T>::initialized = false;
 
     //__________________________________________________________________________
     //
