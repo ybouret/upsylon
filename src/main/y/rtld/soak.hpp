@@ -186,6 +186,7 @@ namespace upsylon
      - export a CLASSQuit function to delete instance
      - export a CLASSInit(PARAMS) function, performing LOADER code before
      calling the internal CLASS::Init()
+     - implement the call_sign for the CLASS
      */
     //__________________________________________________________________________
 #define Y_SOAK_FINISH(CLASS,PARAMS,LOADER)                               \
