@@ -1,5 +1,6 @@
 
-ADD_LIBRARY(engine MODULE engine.cpp engine.py test-engine.py test-engine-numpy.py)
+ADD_LIBRARY(engine MODULE engine.cpp 
+engine.py test-engine.py test-engine-numpy.py test-engine-io.py)
 TARGET_LINK_Y(engine)
 
 SET(the_engine ${CMAKE_CURRENT_SOURCE_DIR}/engine.dll)

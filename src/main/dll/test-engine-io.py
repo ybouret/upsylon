@@ -1,0 +1,1 @@
+from ctypes import *from engine import Engineengine1 = Engine("./engine.dll",0)engine2 = Engine("./engine.dll",0)
