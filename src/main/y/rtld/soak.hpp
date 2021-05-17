@@ -6,6 +6,7 @@
 #include "y/rtld/dll.h"
 #include "y/exception.hpp"
 #include <cstdio>
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -106,7 +107,11 @@ namespace upsylon
             
             //! get initialized (by derived class) instance
             static inline APPLICATION &_() throw() {
-                assert( was_init() || die("not initialized"));
+                if(!was_init())
+                {
+                    soak::print(stderr,"%s was not initialized!!\n",APPLICATION::call_sign);
+                    exit(EXIT_FAILURE);
+                }
                 return *(APPLICATION *)instance;
             }
 

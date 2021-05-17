@@ -8,4 +8,4 @@ if not engine.WasInit():
     engine.Init(2);
     
 print('WasInit=',engine.WasInit())
-
+print('hash',engine.Hash(b'Hello'))
