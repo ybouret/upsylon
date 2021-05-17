@@ -1,8 +1,11 @@
 from ctypes import *
 from engine import Engine
 
-engine = Engine("./engine.dll",0)
- 
-engine.Quit()
+engine = Engine("./engine.dll")
+print('WasInit=',engine.WasInit())
 
-engine.Init(2)
+if not engine.WasInit():
+    engine.Init(2);
+    
+print('WasInit=',engine.WasInit())
+
