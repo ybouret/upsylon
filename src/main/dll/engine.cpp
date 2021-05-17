@@ -5,6 +5,7 @@
 #include "y/exception.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/memory/shacks.hpp"
+#include "y/hashing/sha1.hpp"
 
 #include <cmath>
 #include <cstdio>
@@ -142,6 +143,13 @@ inline int Process(double *target, const double *source, const unsigned length) 
     return 0;
 }
 
+inline unsigned Hash(const char *text)
+{
+    hashing::sha1 H;
+
+    return H.key<unsigned>(text);
+}
+
 
 Y_SOAK_FINISH(Engine,unsigned np,Engine::num_procs=np);
 
@@ -167,6 +175,11 @@ Y_SOAK_PUBLIC(int,EngineProcess(double *target, const double *source, const unsi
 }
 Y_SOAK_RETURN()
 
+Y_SOAK_PUBLIC(unsigned,EngineHash(const char *text) throw())
+{
+    return Engine::_().Hash(text);
+}
+Y_SOAK_RETURN()
 
 
 

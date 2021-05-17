@@ -11,13 +11,13 @@ class Engine:
         # Quit function
         self.Quit = self.lib.EngineQuit
 
-        # Init function, here take the NumProcs args
-        self.__Init = self.lib.EngineInit
+        # __Init function, here take the NumProcs args
+        self.__Init          = self.lib.EngineInit
         self.__Init.argtypes = [c_uint]
         self.__Init.restype  =  c_int
 
-        # Was Init function
-        self.WasInit = self.lib.EngineWasInit
+        # WasInit() function
+        self.WasInit         = self.lib.EngineWasInit
         self.WasInit.restype = c_int
 
         #if( 0 != self.Init(num_procs) ):
@@ -29,8 +29,14 @@ class Engine:
 
         # process function, arguments are defined with numpy
         self.Process         = self.lib.EngineProcess
-        self.Process.restype = c_int;
+        self.Process.restype = c_int
+
+        # Hash function
+        self.Hash          = self.lib.EngineHash
+        self.Hash.restype  = c_uint
+        self.Hash.argstype = [ c_char_p ]
         
+        #python Init function with args
     def Init(self,NumProcs=0):
         if( 0 != self.__Init(NumProcs) ):
             raise OSError('C++ code failure')

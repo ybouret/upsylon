@@ -146,7 +146,7 @@ namespace upsylon
                     return (APPLICATION *)instance;
                 }
                 Y_SOAK_CATCH();
-                return 0;
+                return NULL;
             }
 
         private:
