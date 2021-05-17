@@ -84,7 +84,7 @@ namespace upsylon
 
         //______________________________________________________________________
         //
-        //! class to handle one instance of an APPLICATION
+        //! class to handle ONE instance of an APPLICATION
         /**
          - the APPLICATION must have a 'call_sign'
          - the APPLICATION must have a default constructor,
@@ -106,9 +106,16 @@ namespace upsylon
             
             //! get initialized (by derived class) instance
             static inline APPLICATION &_() throw() {
-                assert(instance!=NULL || die("invalid DLL state!"));
+                assert( was_init() || die("not initialized"));
                 return *(APPLICATION *)instance;
             }
+
+            //! return status
+            static inline int was_init() throw()
+            {
+                return (NULL!=instance) ? 1 : 0;
+            }
+
             
         protected:
             //! constructor
@@ -125,35 +132,27 @@ namespace upsylon
                 }
             }
             
-            //! create/recall
+            //! create the instance
             /**
              use static members for initialization
              */
             inline static APPLICATION *init() throw()
             {
+                assert(!was_init()||die("alread initialized"));
                 Y_SOAK_TRY(soname())
                 {
-                    if(instance)
-                    {
-                        message::disp(soname(),message::call);
-                    }
-                    else
-                    {
-                        message::disp(soname(),message::init);
-                        instance    = (volatile APPLICATION *) new APPLICATION();
-                    }
+                    message::disp(soname(),message::init);
+                    instance    = (volatile APPLICATION *) new APPLICATION();
                     return (APPLICATION *)instance;
                 }
                 Y_SOAK_CATCH();
                 return 0;
             }
-            
-        
-            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(app);
             static volatile APPLICATION *instance;
-         };
+        };
 
         
     };
@@ -167,10 +166,11 @@ namespace upsylon
     //
     //__________________________________________________________________________
 #define Y_SOAK_INIT_(CLASS) \
-/**/  {                                                                            \
-/**/    public:                                                                    \
-/**/      inline static void   Quit() throw() { soak::app<CLASS>::quit();        } \
-/**/      inline static CLASS *Init() throw() { return soak::app<CLASS>::init(); } \
+/**/  {                                                                                   \
+/**/    public:                                                                           \
+/**/      inline static void   Quit()    throw() { soak::app<CLASS>::quit();            } \
+/**/      inline static CLASS *Init()    throw() { return soak::app<CLASS>::init();     } \
+/**/      inline static int    WasInit() throw() { return soak::app<CLASS>::was_init(); } \
 /**/      static const char call_sign[]
     
     //! no parameters macro
@@ -186,6 +186,7 @@ namespace upsylon
      - export a CLASSQuit function to delete instance
      - export a CLASSInit(PARAMS) function, performing LOADER code before
      calling the internal CLASS::Init()
+     - export a CLASSWasInit() function to check status
      - implement the call_sign for the CLASS
      */
     //__________________________________________________________________________
@@ -201,6 +202,8 @@ namespace upsylon
 /**/   do { LOADER; } while(false);                                      \
 /**/   return (NULL != CLASS::Init()) ? Y_SOAK_SUCCESS : Y_SOAK_FAILURE; \
 /**/ }                                                                   \
+/**/ Y_EXPORT int Y_DLL_API CLASS##WasInit() throw()                     \
+/**/   { return CLASS::WasInit(); }                                      \
 /**/ Y_DLL_FINISH()                                                      \
 /**/ const char CLASS::call_sign[] = #CLASS
     
