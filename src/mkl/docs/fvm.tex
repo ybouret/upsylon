@@ -1,4 +1,4 @@
-\documentclass[aps,onecolumn]{revtex4}
+\documentclass[aps,onecolumn,11pt]{revtex4}
 \usepackage{graphicx}
 \usepackage{amssymb,amsfonts,amsmath,amsthm}
 \usepackage{bm}
@@ -15,10 +15,37 @@
 
 \subsection{Change in mapping}
 Let $\vec{C}$ be a set of concentrations on a domain $\mathcal{V}$,
-with a given matter quantity $Q=\vec{J}\cdot\vec{C}$.
+with a given matter quantity 
+$$Q=\vec{J}\cdot\vec{C}.$$
+
 Let $\vec{C}'$ be a set of concentrations on the same $\mathcal{V}$, obtained by
 a used-defined operation. The total quantity is now
-defined by $\vec{Q}'=\vec{J}' \cdot \vec{C}'$.
+defined by 
+$$Q'=\vec{J}' \cdot \vec{C}'.$$
+We define the corrected concentration $\vec{C}''$ such that $Q=\vec{J}'\cdot\vec{C}''$.
+We use the possible degrees of freedom $\vec{\omega}$ of $\vec{C}$ and their dispatch matrix
+$\bm{W}$ such that
+$$
+	\vec{C}'' = \vec{C}' + \bm{W} \vec{\omega}
+$$
+We want to minimize $\vec{\omega}$ with the constraint $Q=\vec{J}' . \left( \vec{C}' + \bm{W} \vec{\omega}\right)$.
+We want to minimize
+$$
+	L = \dfrac{1}{2} \vec{\omega}^2 - \lambda\left[ \vec{J}' . \left( \vec{C}' + \bm{W} \vec{\omega}\right) - Q \right]
+	= \dfrac{1}{2} \vec{\omega}^2 - \lambda\left[ \left(\vec{J}' \vec{C}' - Q\right) + \vec{\omega} \cdot \left( \bm{W}^T \vec{J}'\right)\right]
+$$
+so that
+$$
+	\vec{\omega} = \lambda \bm{W}^T \vec{J}'
+$$
+
+$$
+	\vec{\omega} = \dfrac{\left( Q - \vec{J}' \cdot \vec{C}' \right)}{(\bm{W}^T \vec{J}')^2} \bm{W}^T \vec{J}'
+$$
+
+$$
+	\vec{C}'' = \vec{C}' + \dfrac{\left( Q - \vec{J}' \cdot \vec{C}' \right)}{(\bm{W}^T \vec{J}')^2} \bm{W}\bm{W}^T \vec{J}'
+$$
 
 
 \subsection{1D}
