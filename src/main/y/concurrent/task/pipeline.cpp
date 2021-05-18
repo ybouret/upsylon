@@ -176,7 +176,7 @@ verbose( nucleus::thread::verbosity(Y_VERBOSE_THREADS) )
             // wake up on a LOCKED mutex: what do I find ?
             //
             //------------------------------------------------------------------
-            if (replica->deal)
+            if (replica->deal != NULL)
             {
             RECYCLE:
                 //--------------------------------------------------------------

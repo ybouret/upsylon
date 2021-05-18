@@ -57,8 +57,9 @@ namespace upsylon
             if(!addr) throw libc::exception(errno,"acquire_locked(%lu)", (unsigned long)bs);
             if(mlock(addr,bs)!=0)
             {
+                const libc::exception excp(errno,"mlock(%p,%lu)",addr,(unsigned long)bs);
                 free(addr);
-                throw libc::exception(errno,"mlock(%p,%lu)",addr,(unsigned long)bs);
+                throw excp;
             }
 #endif
             memset(addr,0,bs);
