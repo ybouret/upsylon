@@ -29,7 +29,7 @@ namespace upsylon
             object(), inode<cluster>(),
             start(start_),
             width(width_),
-            every(every_),
+            every(max_of<size_t>(every_,1)),
             count(width/every)
             {
                 aliasing::_(width) = count*every;

@@ -143,6 +143,7 @@ namespace upsylon {
             Operands feebleList;
             while(size)
             {
+                assert(NULL!=head);
                 if(head->feeble())
                 {
                     feebleList.push_back( pop_front() );

@@ -60,6 +60,9 @@ head = tail = node; increase_size()
                 }
                 else
                 {
+                    assert(head!=NULL);
+                    assert(tail!=NULL);
+                    assert(size>0);
                     node->prev = tail;
                     tail->next = node;
                     tail       = node;
@@ -79,6 +82,8 @@ head = tail = node; increase_size()
                 else
                 {
                     assert(head!=NULL);
+                    assert(tail!=NULL);
+                    assert(size>0);
                     node->next = head;
                     head->prev = node;
                     head       = node;
