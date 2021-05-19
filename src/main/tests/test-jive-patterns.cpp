@@ -17,7 +17,7 @@ namespace {
         const string cls_name = motif->className();
         std::cerr << "<" << cls_name << ">" << std::endl;
         Y_CHECK(motif->self != NULL);
-        string       basename = cls_name;string_convert::to_lower(basename);
+        const string basename = string_convert::to_lower(cls_name);
         const string bin      = motif->to_binary();
 
         // check cloning

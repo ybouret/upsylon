@@ -24,9 +24,7 @@ ENDIF()
 CLI(y_bin2dat)
 CLI(y_hexdump)
 CLI(y_grep)
-#INCLUDE_DIRECTORIES(../../jive)
-#CLI(y_patch_conviv)
-#TARGET_LINK_LIBRARIES(y_patch_conviv y-jive)
+CLI(y_md)
 
 IF(NOT MSVC)
 # generate rsa keys with msys-openssl
@@ -39,6 +37,7 @@ IF(Y_DARWIN)
 ENDIF()
 
 CLI(y_mpi_xcopy)
+
 
 MESSAGE( STATUS "<Command Line Interface Tools/>" )
 MESSAGE( STATUS "")

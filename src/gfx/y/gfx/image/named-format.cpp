@@ -18,7 +18,7 @@ namespace upsylon
             string rx_to_format_rx(const char *rx)
             {
                 string tmp = rx;
-                string_convert::to_lower(tmp);
+                string_convert::make_lower(tmp);
                 return '(' + tmp + ')' + '&';
             }
 

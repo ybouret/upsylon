@@ -8,7 +8,7 @@
 namespace upsylon
 {
 
-    void string_convert:: to_lower( string &s )
+    void string_convert:: make_lower( string &s )
     {
         for(size_t i=0;i<s.size();++i)
         {
@@ -16,13 +16,27 @@ namespace upsylon
         }
     }
 
-    void string_convert:: to_upper( string &s )
+
+    void string_convert:: make_upper( string &s )
     {
         for(size_t i=0;i<s.size();++i)
         {
             s[i] = toupper(s[i]);
         }
     }
+
+
+    string string_convert:: to_lower(const string &s)
+    {
+        string tmp = s; make_lower(tmp); return tmp;
+    }
+
+    string string_convert:: to_upper(const string &s)
+    {
+        string tmp = s; make_upper(tmp); return tmp;
+    }
+
+    
 
     string string_convert:: to_visible(const string &s)
     {

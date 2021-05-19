@@ -68,7 +68,7 @@ Y_UTEST(named)
                 //std::cerr << words << std::endl;
 
                 string     id = "Y_" + words[1];
-                string_convert::to_upper(id);
+                string_convert::make_upper(id);
                 rgb           C;
                 uint8_t      *f = &C.r;
                 for(size_t i=0;i<3;++i)

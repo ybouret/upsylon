@@ -213,7 +213,7 @@ namespace upsylon
 		string content;
 		if (env_get_clean(content, name))
 		{
-			string_convert::to_lower(content);
+			string_convert::make_lower(content);
 			for (unsigned i = 0; i < sizeof(ok) / sizeof(ok[0]); ++i)
 			{
 				if (ok[i] == content)
