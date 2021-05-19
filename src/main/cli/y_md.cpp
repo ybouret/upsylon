@@ -21,13 +21,42 @@ using namespace upsylon;
 typedef core::cpp_node_of<string>   argument;
 typedef core::list_of_cpp<argument> arguments;
 
+typedef arc_ptr<hashing::function>    pHashFn;
+typedef core::cpp_node_of<pHashFn>    HashFnNode;
+typedef core::list_of_cpp<HashFnNode> HashFnList;
+
+#define DECL(NAME) do { const pHashFn p = new hashing::NAME(); hlist.push_back( new HashFnNode(p) ); } while(false)
+
 #define ALGO(NAME) do { if(#NAME==algo) { H = new hashing::NAME(); delete args.pop_front(); goto READY; } } while(false)
 
 Y_PROGRAM_START()
 {
+    HashFnList                  hlist;
+    DECL(md5);
+    DECL(sha1);
+    DECL(crc32);
+    DECL(md4);
+    DECL(md2);
+    DECL(rmd128);
+    DECL(rmd160);
+    DECL(sha224);
+    DECL(sha256);
+    DECL(sha384);
+    DECL(sha512);
+
+    if(argc>1&&0==strcmp("-h", argv[1]) )
+    {
+        std::cout << program << " functions:";
+        for(const HashFnNode *node=hlist.head;node;node=node->next)
+        {
+            std::cout << ' ' << (***node).name();
+        }
+        std::cout << std::endl;
+        return 0;
+    }
+
     auto_ptr<hashing::function> H = NULL;
     arguments                   args;
-
     //--------------------------------------------------------------------------
     //
     // change algorithm ?
