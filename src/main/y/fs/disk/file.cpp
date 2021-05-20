@@ -262,7 +262,7 @@ namespace upsylon
 {
     namespace ios
     {
-    
+        
         typedef zblock<char,memory::dyadic> io_block;
         
         void disk_file:: copy(const string &target,
@@ -309,16 +309,6 @@ namespace upsylon
         
         
         
-    }
-    
-}
-
-#include "y/hashing/function.hpp"
-
-namespace upsylon {
-    
-    namespace ios {
-        
         void readable_disk_file:: run_hash( hashing::function &H, readable_disk_file &src)
         {
             io_block      blk(BUFSIZ);
@@ -332,9 +322,6 @@ namespace upsylon {
                 H.run(buf,nr);
             }
         }
-
-        
-        
         
     }
 }
