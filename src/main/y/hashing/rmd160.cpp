@@ -338,7 +338,7 @@ namespace upsylon
         }
         
         
-        const char rmd160:: CLID[] = "RMD-160";
+        const char rmd160:: CLID[] = "rmd160";
         
         
         void rmd160:: set() throw()

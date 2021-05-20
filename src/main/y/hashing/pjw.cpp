@@ -15,7 +15,7 @@ namespace upsylon
 		}
 		
         
-        const char pjw::CLID[] = "PJW";
+        const char pjw::CLID[] = "pjw";
 
 		void pjw:: set() throw()
 		{

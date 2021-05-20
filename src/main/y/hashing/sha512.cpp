@@ -302,7 +302,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-		const char sha512:: CLID[] = "SHA-512";
+		const char sha512:: CLID[] = "sha512";
 
         void sha512:: set() throw()
 		{
@@ -333,7 +333,7 @@ d += temp1; h = temp1 + temp2;              \
 		{
 		}
 		
-        const char sha384:: CLID[] = "SHA-384";
+        const char sha384:: CLID[] = "sha384";
 		
 		
 		void sha384:: set() throw()

@@ -15,7 +15,7 @@ namespace upsylon
 		}
 		
         
-        const char sfh::CLID[] = "SFH";
+        const char sfh::CLID[] = "sfh";
 
 		void sfh:: set() throw()
 		{

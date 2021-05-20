@@ -290,7 +290,7 @@ namespace upsylon
 		{
 		}
 
-        const char md5:: CLID[] = "MD5";
+        const char md5:: CLID[] = "md5";
         
 
 

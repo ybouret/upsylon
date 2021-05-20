@@ -15,7 +15,7 @@ namespace upsylon
 			hash = 0;
 		}
 		
-        const char  bjh32:: CLID[] =  "BJH32";
+        const char  bjh32:: CLID[] =  "bjh32";
 		
 		void bjh32:: set() throw()
 		{

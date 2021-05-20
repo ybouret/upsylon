@@ -14,6 +14,9 @@
 #include "y/fs/disk/file.hpp"
 #include "y/ios/icstream.hpp"
 #include "y/core/node.hpp"
+
+#include "y/associative/hash/map.hpp"
+
 #include "y/program.hpp"
 
 using namespace upsylon;
@@ -21,17 +24,22 @@ using namespace upsylon;
 typedef core::cpp_node_of<string>   argument;
 typedef core::list_of_cpp<argument> arguments;
 
-typedef arc_ptr<hashing::function>    pHashFn;
-typedef core::cpp_node_of<pHashFn>    HashFnNode;
-typedef core::list_of_cpp<HashFnNode> HashFnList;
+typedef arc_ptr<hashing::function>  hproc;
+typedef hash_map<string,hproc>      hpmap;
 
-#define DECL(NAME) do { const pHashFn p = new hashing::NAME(); hlist.push_back( new HashFnNode(p) ); } while(false)
+#define DECL(NAME) do { \
+hproc  p = new hashing::NAME();\
+if(!H) H = & *p;\
+const string k = p->name();          \
+if(!db.insert(k,p)) throw exception("%s: multiple '%s'",program,*k);\
+} while(false)
 
 #define ALGO(NAME) do { if(#NAME==algo) { H = new hashing::NAME(); delete args.pop_front(); goto READY; } } while(false)
 
 Y_PROGRAM_START()
 {
-    HashFnList                  hlist;
+    hashing::function *H = 0;
+    hpmap db;
     DECL(md5);
     DECL(sha1);
     DECL(crc32);
@@ -43,53 +51,46 @@ Y_PROGRAM_START()
     DECL(sha256);
     DECL(sha384);
     DECL(sha512);
-
+    assert(H);
+    
     if(argc>1&&0==strcmp("-h", argv[1]) )
     {
-        std::cout << program << " functions:";
-        for(const HashFnNode *node=hlist.head;node;node=node->next)
+        std::cout << "usage:" << std::endl;
+        std::cout << program << '[';
+        size_t n=db.size();
+        for(hpmap::iterator it=db.begin();it!=db.end();++it)
         {
-            std::cout << ' ' << (***node).name();
+            std::cout << it.get().key();
+            if(--n>0) std::cout << '|';
         }
-        std::cout << std::endl;
+        std::cout << ']' << " [files]" << std::endl;
         return 0;
     }
-
-    auto_ptr<hashing::function> H = NULL;
-    arguments                   args;
+    
+    arguments           args;
+    for(int i=1;i<argc;++i)
+    {
+        const string a = argv[i];
+        args.push_back( new argument(a) );
+    }
     //--------------------------------------------------------------------------
     //
     // change algorithm ?
     //
     //--------------------------------------------------------------------------
+    
+    if(args.size>0)
     {
-        for(int i=1;i<argc;++i)
+        const string algo = string_convert::to_lower( **args.head );
+        hproc       *ppH  = db.search(algo);
+        if(ppH)
         {
-            const string a = argv[i];
-            args.push_back( new argument(a) );
+            H = & **ppH;
+            delete args.pop_front();
         }
-        if(args.size>0)
-        {
-            const string algo = string_convert::to_lower( **args.head );
-            ALGO(md5);
-            ALGO(sha1);
-            ALGO(crc32);
-            ALGO(md4);
-            ALGO(md2);
-            ALGO(rmd128);
-            ALGO(rmd160);
-            ALGO(sha224);
-            ALGO(sha256);
-            ALGO(sha384);
-            ALGO(sha512);
-        }
-        assert( H.is_empty() );
-        H = new hashing::md5();
-
-    READY:
-        assert(H.is_valid());
     }
-
+    
+    
     //--------------------------------------------------------------------------
     //
     // check args

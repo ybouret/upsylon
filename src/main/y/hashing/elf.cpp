@@ -15,7 +15,7 @@ namespace upsylon
 		}
 		
         
-        const char elf::CLID[] = "ELF";
+        const char elf::CLID[] = "elf";
 
 		void elf:: set() throw()
 		{

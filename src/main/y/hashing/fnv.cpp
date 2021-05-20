@@ -14,7 +14,7 @@ namespace upsylon
 			hash = 0;
 		}
 		
-		const char fnv::CLID[] = "FNV";
+		const char fnv::CLID[] = "fnv";
 		
 		void fnv:: set() throw()
 		{

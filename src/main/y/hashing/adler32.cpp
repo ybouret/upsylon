@@ -14,7 +14,7 @@ namespace upsylon
 			a = 0;
 		}
         
-        const char adler32::CLID[] = "ADLER32";
+        const char adler32::CLID[] = "adler32";
 
 		void adler32:: set() throw()
 		{
