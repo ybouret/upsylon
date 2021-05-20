@@ -21,11 +21,11 @@ Y_UTEST(rename)
     }
 
     hashing::sha1 h;
-    const digest  old_digest = ios::disk_file::md(h,old_path);
+    const digest  old_digest = ios::readable_disk_file::md(h,old_path);
     fs.rename_path(old_path,new_path);
     Y_CHECK(false==fs.is_reg(old_path));
     Y_CHECK(true==fs.is_reg(new_path));
-    const digest new_digest = ios::disk_file::md(h,new_path);
+    const digest new_digest = ios::readable_disk_file::md(h,new_path);
     Y_CHECK(new_digest==old_digest);
     fs.try_remove_file(new_path);
 

@@ -98,11 +98,14 @@ Y_PROGRAM_START()
     //--------------------------------------------------------------------------
     if(args.size<=0)
     {
+#if 0
         ios::icstream fp(ios::cstdin);
         H->set();
         char C = 0;
         while(fp.query(C)) H->run(&C,1);
         const digest md = H->md();
+#endif
+        const digest md = ios::readable_disk_file::md(*H,ios::cstdin);
         std::cout << md << ' ' << H->name() << "(stdin)" << std::endl;
     }
     else
@@ -110,7 +113,7 @@ Y_PROGRAM_START()
         while(args.size)
         {
             const string &file_id = **args.head;
-            const digest  file_md = ios::disk_file::md(*H,file_id);
+            const digest  file_md = ios::readable_disk_file::md(*H,file_id);
             std::cout << file_md << ' ' << H->name() << '(' << file_id << ')' << std::endl;
             delete args.pop_front();
         }

@@ -18,7 +18,7 @@ Y_UTEST(md)
         const string baseName = vfs::get_base_name(fileName);
         string_display::align(std::cerr,baseName,32);
         {
-            const digest d = ios::disk_file::md(h_md5, fileName);
+            const digest d = ios::readable_disk_file::md(h_md5, fileName);
             std::cerr << " " << h_md5.name() << ":" << d;
         }
         std::cerr << std::endl;

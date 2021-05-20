@@ -178,6 +178,7 @@ namespace upsylon
             return done;
         }
         
+        
     }
 }
 
@@ -318,13 +319,12 @@ namespace upsylon {
     
     namespace ios {
         
-        void disk_file:: hash_with( hashing::function &H, const string &source)
+        void readable_disk_file:: run_hash( hashing::function &H, readable_disk_file &src)
         {
             io_block      blk(BUFSIZ);
             char         *buf = *blk;
             const size_t  len =  blk.count;
             
-            readable_disk_file src(source);
             while(true)
             {
                 const size_t nr = src.get(buf,len);
@@ -332,14 +332,10 @@ namespace upsylon {
                 H.run(buf,nr);
             }
         }
+
         
-        digest disk_file:: md(hashing::function &H, const string &source)
-        {
-            H.set();
-            hash_with(H,source);
-            return H.md();
-        }
+        
+        
     }
-    
 }
 

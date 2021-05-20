@@ -4,17 +4,13 @@
 #define Y_FS_DISK_FILE_INCLUDED 1
 
 #include "y/fs/local/file.hpp"
-#include "y/ptr/counted.hpp"
 #include "y/ptr/arc.hpp"
 #include "y/core/chainable.hpp"
+#include "y/hashing/function.hpp"
 
 namespace upsylon
 {
-    class digest;
-
-    namespace hashing {
-        class function;
-    }
+    
     
     namespace ios
     {
@@ -67,11 +63,8 @@ namespace upsylon
             //! wrapper
             static size_t load( chainable<uint8_t> &target, const string &source );
 
-            //! direct hashing
-            static void hash_with( hashing::function &H, const string &source);
-
-            //! full md
-            static digest md( hashing::function &H, const string &source);
+            
+           
         };
 
 
@@ -106,6 +99,24 @@ namespace upsylon
 
         private:
             Y_DISABLE_ASSIGN(readable_disk_file);
+            static void run_hash( hashing::function &, readable_disk_file &_);
+            
+        public:
+            template <typename CHANNEL> static inline
+            void hash_with(hashing::function &H, const CHANNEL &channel)
+            {
+                readable_disk_file src(channel);
+                run_hash(H,src);
+            }
+            
+            template <typename CHANNEL> static inline
+            digest md( hashing::function &H, const CHANNEL &channel)
+            {
+                H.set();
+                hash_with(H,channel);
+                return H.md();
+            }
+            
             
         };
 

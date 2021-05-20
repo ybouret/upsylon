@@ -159,8 +159,8 @@ namespace upsylon {
                 if(fileName != Y_STDIN )
                 {
                     hashing::sha1 H;
-                    const digest  MDfile = ios::disk_file::md(H,fileName);
-                    const digest  MDback = ios::disk_file::md(H,backName);
+                    const digest  MDfile = ios::readable_disk_file::md(H,fileName);
+                    const digest  MDback = ios::readable_disk_file::md(H,backName);
                     std::cerr << "\t" << H.name() << "  : " << MDfile << "/" << MDback << std::endl;
                     if(MDfile!=MDback) throw exception("%s: invalid checksum", fn);
                 }
