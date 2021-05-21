@@ -75,48 +75,21 @@ namespace
 
 Y_UTEST(hashing)
 {
-
     hashing::factory                    &hf = hashing::factory::instance();
     vector< hashing::function::pointer > phash(hf.size(),as_capacity);
-    for( hashing::factory::const_iterator i = hf.begin(); i != hf.end(); ++i )
+    for( hashing::factory::iterator i = hf.begin(); i != hf.end(); ++i )
     {
         std::cerr << "[" << i.get().key() << "]" << std::endl;
         const hashing::function::pointer p = hf( i.get().key() );
         phash.push_back(p);
     }
 
-#if 0
-#define __REGISTER(CLASS) \
-do { hashing::function::pointer p = new hashing:: CLASS(); phash.push_back(p); \
-std::cerr << "sizeof(" #CLASS ")=" << sizeof(hashing:: CLASS)<< std::endl;     \
-std::cerr << "sizeof(key_hasher." #CLASS ")=" << sizeof(key_hasher<string,hashing::CLASS>)<< std::endl;     \
-} while(false)
-
-    __REGISTER(adler32);
-    __REGISTER(bjh32);
-    __REGISTER(crc16);
-    __REGISTER(crc32);
-    __REGISTER(elf);
-    __REGISTER(fnv);
-    __REGISTER(pjw);
-    __REGISTER(sfh);
-    __REGISTER(sha1);
-    __REGISTER(md2);
-    __REGISTER(md4);
-    __REGISTER(md5);
-    __REGISTER(rmd128);
-    __REGISTER(rmd160);
-    __REGISTER(sha224);
-    __REGISTER(sha256);
-    __REGISTER(sha384);
-    __REGISTER(sha512);
-#endif
-
     std::cerr << "Hashing Functions: " << std::endl;
     for(size_t i=1;i<=phash.size();++i)
     {
         std::cerr << "\t" << phash[i]->name() << std::endl;
     }
+
     const string s = "Hello, World";
 
     {

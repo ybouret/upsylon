@@ -3,14 +3,14 @@
 #define Y_HASHING_FACTORY_INCLUDED 1
 
 #include "y/concurrent/singleton.hpp"
-#include "y/container/xfactory.hpp"
+#include "y/container/workshop.hpp"
 
 namespace upsylon {
 
     namespace hashing {
 
-        //! a repository of implemented hash functions and more
-        class factory : public xfactory<function>, public singleton<factory>
+         //! a repository of implemented hash functions and more
+        class factory : public workshop<function>, public singleton<factory>
         {
         public:
 

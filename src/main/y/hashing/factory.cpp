@@ -4,7 +4,7 @@ namespace upsylon {
 
     namespace hashing {
 
-        factory:: factory() : xfactory<function>(32)
+        factory:: factory() : workshop<function>(32)
         {
             initialize();
         }
@@ -12,10 +12,10 @@ namespace upsylon {
         factory:: ~factory() throw()
         {
         }
-        
 
     }
 }
+
 
 #include "y/hashing/adler32.hpp"
 #include "y/hashing/bjh32.hpp"
@@ -41,7 +41,7 @@ namespace upsylon {
     
     namespace hashing {
 
-#define Y_H_DECL(NAME) use( NAME::CLID, NAME::create )
+#define Y_H_DECL(NAME) declare( NAME::CLID, NAME::create )
 
         void factory:: initialize()
         {
@@ -67,3 +67,5 @@ namespace upsylon {
     }
 
 }
+
+

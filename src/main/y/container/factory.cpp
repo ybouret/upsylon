@@ -3,8 +3,10 @@
 #include "y/exception.hpp"
 #include "y/type/rtti.hpp"
 
+
 namespace upsylon {
 
+#if 0
     void factory_::throw_multiple_keys( ) const
     {
         throw exception("multiple key for [%s] creator",*typeName);
@@ -26,4 +28,5 @@ namespace upsylon {
     }
 
     const at_exit::longevity factory_::minimum_life_time = rtti::repo::life_time-1;
+#endif
 }
