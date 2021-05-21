@@ -1,22 +1,7 @@
-#include "y/hashing/adler32.hpp"
-#include "y/hashing/bjh32.hpp"
-#include "y/hashing/crc16.hpp"
-#include "y/hashing/crc32.hpp"
-#include "y/hashing/elf.hpp"
-#include "y/hashing/fnv.hpp"
-#include "y/hashing/pjw.hpp"
-#include "y/hashing/sfh.hpp"
-#include "y/hashing/sha1.hpp"
-#include "y/hashing/md2.hpp"
-#include "y/hashing/md4.hpp"
-#include "y/hashing/md5.hpp"
-#include "y/hashing/rmd128.hpp"
-#include "y/hashing/rmd160.hpp"
-#include "y/hashing/sha256.hpp"
-#include "y/hashing/sha512.hpp"
 
 
 #include "y/utest/run.hpp"
+#include "y/hashing/sha1.hpp"
 
 #include "y/sequence/vector.hpp"
 #include "y/ios/icstream.hpp"

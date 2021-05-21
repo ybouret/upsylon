@@ -1,15 +1,6 @@
-#include "y/hashing/sha1.hpp"
-#include "y/hashing/md5.hpp"
-#include "y/hashing/crc32.hpp"
-#include "y/hashing/md4.hpp"
-#include "y/hashing/md2.hpp"
-#include "y/hashing/rmd128.hpp"
-#include "y/hashing/rmd160.hpp"
-#include "y/hashing/sha256.hpp"
-#include "y/hashing/sha512.hpp"
+#include "y/hashing/factory.hpp"
 
 #include "y/string/convert.hpp"
-
 #include "y/fs/local/fs.hpp"
 #include "y/fs/disk/file.hpp"
 #include "y/ios/icstream.hpp"
@@ -24,41 +15,18 @@ using namespace upsylon;
 typedef core::cpp_node_of<string>   argument;
 typedef core::list_of_cpp<argument> arguments;
 
-typedef arc_ptr<hashing::function>  hproc;
-typedef hash_map<string,hproc>      hpmap;
 
-#define DECL(NAME) do { \
-hproc  p = new hashing::NAME();\
-if(!H) H = & *p;\
-const string k = p->name();          \
-if(!db.insert(k,p)) throw exception("%s: multiple '%s'",program,*k);\
-} while(false)
-
-#define ALGO(NAME) do { if(#NAME==algo) { H = new hashing::NAME(); delete args.pop_front(); goto READY; } } while(false)
 
 Y_PROGRAM_START()
 {
-    hashing::function *H = 0;
-    hpmap db;
-    DECL(md5);
-    DECL(sha1);
-    DECL(crc32);
-    DECL(md4);
-    DECL(md2);
-    DECL(rmd128);
-    DECL(rmd160);
-    DECL(sha224);
-    DECL(sha256);
-    DECL(sha384);
-    DECL(sha512);
-    assert(H);
+    hashing::factory &hfac = hashing::factory::instance();
     
     if(argc>1&&0==strcmp("-h", argv[1]) )
     {
         std::cout << "usage:" << std::endl;
         std::cout << program << '[';
-        size_t n=db.size();
-        for(hpmap::iterator it=db.begin();it!=db.end();++it)
+        size_t n=hfac.size();
+        for(hashing::factory::iterator it=hfac.begin();it!=hfac.end();++it)
         {
             std::cout << it.get().key();
             if(--n>0) std::cout << '|';
@@ -78,17 +46,17 @@ Y_PROGRAM_START()
     // change algorithm ?
     //
     //--------------------------------------------------------------------------
-    
+    auto_ptr<hashing::function> H = NULL;
     if(args.size>0)
     {
         const string algo = string_convert::to_lower( **args.head );
-        hproc       *ppH  = db.search(algo);
-        if(ppH)
+        if( hfac.search(algo) )
         {
-            H = & **ppH;
+            H = hfac( algo );
             delete args.pop_front();
         }
     }
+    if(H.is_empty()) H = hfac("md5");
     
     
     //--------------------------------------------------------------------------
@@ -98,13 +66,6 @@ Y_PROGRAM_START()
     //--------------------------------------------------------------------------
     if(args.size<=0)
     {
-#if 0
-        ios::icstream fp(ios::cstdin);
-        H->set();
-        char C = 0;
-        while(fp.query(C)) H->run(&C,1);
-        const digest md = H->md();
-#endif
         const digest md = ios::readable_disk_file::md(*H,ios::cstdin);
         std::cout << md << ' ' << H->name() << "(stdin)" << std::endl;
     }
