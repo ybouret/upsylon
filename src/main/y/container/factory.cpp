@@ -1,23 +1,29 @@
 
 #include "y/container/factory.hpp"
 #include "y/exception.hpp"
+#include "y/type/rtti.hpp"
 
 namespace upsylon {
 
-    namespace core {
+    void factory_::throw_multiple_keys( ) const
+    {
+        throw exception("multiple key for [%s] creator",*typeName);
+    }
 
-        const char factory:: default_name[] = "factory";
+    void factory_:: throw_no_creator() const
+    {
+        throw exception("no key for creator from [%s]",*typeName);
+    }
 
-        void factory::throw_multiple_keys(const char *name)
-        {
-            throw exception("multiple key for [%s] creator", name ? name : default_name );
-        }
+    factory_:: ~factory_() throw()
+    {
+    }
 
-        void factory:: throw_no_creator(const char *name)
-        {
-            throw exception("no key for creator from [%s]",name ? name : default_name );
-        }
+    factory_:: factory_(const std::type_info &tid) :
+    typeName( rtti::name_of(tid) )
+    {
 
     }
 
+    const at_exit::longevity factory_::minimum_life_time = rtti::repo::life_time-1;
 }

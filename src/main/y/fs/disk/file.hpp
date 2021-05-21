@@ -14,7 +14,12 @@ namespace upsylon
     
     namespace ios
     {
+        //______________________________________________________________________
+        //
+        //
         //! base class to have a shared disk file pointer
+        //
+        //______________________________________________________________________
         class on_disk : public counted_object, public local_file
         {
         public:
@@ -34,8 +39,12 @@ namespace upsylon
         };
 
 
-
+        //______________________________________________________________________
+        //
+        //
         //! disk file pointer
+        //
+        //______________________________________________________________________
         class disk_file : public on_disk::pointer
         {
         public:
@@ -67,8 +76,12 @@ namespace upsylon
            
         };
 
-
+        //______________________________________________________________________
+        //
+        //
         //! random access disk file
+        //
+        //______________________________________________________________________
         class rw_disk_file : public disk_file
         {
         public:
@@ -84,8 +97,12 @@ namespace upsylon
             Y_DISABLE_ASSIGN(rw_disk_file);
         };
 
-
+        //______________________________________________________________________
+        //
+        //
         //! read only disk file
+        //
+        //______________________________________________________________________
         class readable_disk_file : public disk_file
         {
         public:
@@ -102,13 +119,15 @@ namespace upsylon
             static void run_hash( hashing::function &, readable_disk_file &_);
             
         public:
+            //! update hashing filename/cstdin
             template <typename CHANNEL> static inline
             void hash_with(hashing::function &H, const CHANNEL &channel)
             {
                 readable_disk_file src(channel);
                 run_hash(H,src);
             }
-            
+
+            //! single full hashing of filename/cstdin
             template <typename CHANNEL> static inline
             digest md( hashing::function &H, const CHANNEL &channel)
             {
@@ -120,7 +139,12 @@ namespace upsylon
             
         };
 
+        //______________________________________________________________________
+        //
+        //
         //! write only disk file
+        //
+        //______________________________________________________________________
         class writable_disk_file : public disk_file
         {
         public:

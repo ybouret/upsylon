@@ -5,42 +5,76 @@
 
 
 #include "y/associative/hash/map.hpp"
+#include "y/string.hpp"
 
 namespace upsylon {
 
-    namespace core {
 
-        //! base class for admin
-        struct factory
-        {
-            static const char default_name[]; //!< "factory"
-            static void throw_multiple_keys(const char *name); //!< throw
-            static void throw_no_creator(const char *name); //!< throw
-        };
 
-    }
+    //__________________________________________________________________________
+    //
+    //
+    //! base class for factory<...>
+    //
+    //__________________________________________________________________________
+    class factory_
+    {
+    public:
+        static const at_exit::longevity minimum_life_time;  //!< from rtti
+        virtual                        ~factory_() throw(); //!< cleanup
+        const string                    typeName;           //!< from rtti
 
+
+    protected:
+        explicit factory_(const std::type_info &); //!< initialize
+        void     throw_multiple_keys() const;      //!< throw
+        void     throw_no_creator()    const;      //!< throw
+    };
+
+
+    //__________________________________________________________________________
+    //
+    //
     //! fully configurable factory
+    //
+    //__________________________________________________________________________
     template <
     typename T,
     typename KEY,
     typename CREATOR    = T * (*)(),
     typename KEY_HASHER = key_hasher<KEY>
     >
-    class factory
+    class factory : public factory_
     {
     public:
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
         typedef  hash_map<KEY,CREATOR,KEY_HASHER> db_type;         //!< alias
         typedef  typename db_type::const_iterator const_iterator;  //!< alias
-        Y_DECL_ARGS(KEY,key_type);                                      //!< aliases
+        Y_DECL_ARGS(KEY,key_type);                                 //!< aliases
+        Y_DECL_ARGS(T,type);                                       //!< aliases
 
-        //! reconfigurable name
-        virtual const char * name() const throw() { return core::factory::default_name; };
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
 
-        inline explicit factory() throw() : db() {}                    //!< setup
-        inline explicit factory(const size_t n) : db(n,as_capacity) {} //!< setup
-        inline virtual ~factory() throw() {}                           //!< cleanup
+        //! default setup
+        inline explicit factory() : factory_(typeid(type)), db() {}
 
+        //! setup with capacity
+        inline explicit factory(const size_t n) : factory_(typeid(type)),db(n,as_capacity) {}
+
+        //! cleanup
+        inline virtual ~factory() throw() {}
+        
+
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
         //! wrapper
         inline const_iterator begin() throw() { return static_cast<const db_type&>( db ).begin(); }
 
@@ -48,12 +82,12 @@ namespace upsylon {
         inline const_iterator end()   throw() { return static_cast<const db_type&>( db ).end();   }
 
         //! wrapper
-        inline size_t size() const throw() { return db.size(); }
+        inline size_t         size() const throw() { return db.size(); }
 
-        //! declare a new createor
-        inline void declare( param_key_type key, const CREATOR &creator )
+        //! declare a new creator
+        inline void declare(param_key_type key, const CREATOR &creator)
         {
-            if( !db.insert(key,creator) ) core::factory::throw_multiple_keys( name() );
+            if( !db.insert(key,creator) ) throw_multiple_keys();
         }
 
         //! query if possible to create
@@ -63,7 +97,7 @@ namespace upsylon {
         }
 
         //! zero-arg creator
-        inline T * create( param_key_type key ) const
+        inline T * create(param_key_type key) const
         {
             CREATOR &creator = find(key);
             return creator();
@@ -83,7 +117,7 @@ namespace upsylon {
         inline CREATOR & find( const key_type &key ) const
         {
             const CREATOR *p = db.search(key);
-            if(!p) core::factory::throw_no_creator( name() );
+            if(!p)  throw_no_creator();
             return (CREATOR &) *p;
         }
         Y_DISABLE_COPY_AND_ASSIGN(factory);

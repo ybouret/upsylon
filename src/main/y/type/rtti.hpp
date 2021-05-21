@@ -132,13 +132,14 @@ namespace upsylon
             const size_t  ms; //!< max size
 
         private:
-            explicit repo();
-            virtual ~repo() throw();
-            Y_SINGLETON_DECL_WITH(object::life_time-4,repo);
+            explicit     repo();
+            virtual     ~repo() throw();
             const rtti & update_mx(const rtti &) throw();
-            
-            void import();
-            
+            void         import();
+
+        public:
+            Y_SINGLETON_DECL_WITH(object::life_time-4,repo); //!< setup
+
         };
 
     private:

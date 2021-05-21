@@ -5,7 +5,6 @@
 #define Y_XFACTORY_INCLUDED 1
 
 #include "y/container/factory.hpp"
-#include "y/string.hpp"
 
 namespace upsylon {
 
