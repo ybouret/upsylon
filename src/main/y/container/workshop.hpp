@@ -22,20 +22,36 @@ namespace upsylon
     class workshop : public factory<T,string,CREATOR,KEY_HASHER>
     {
     public:
-        typedef factory<T,string,CREATOR,KEY_HASHER> factory_type;
+        //______________________________________________________________________
+        //
+        // types and definitions
+        //______________________________________________________________________
+        typedef factory<T,string,CREATOR,KEY_HASHER> factory_type; //!< alias
+        typedef typename factory_type::creator_type  creator_type; //!< alias
 
-        inline virtual ~workshop() throw() {}
-        inline explicit workshop() : factory_type() {}
-        inline explicit workshop(const size_t n) : factory_type(n) {}
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        inline virtual ~workshop() throw() {}                          //!< cleanup
+        inline explicit workshop() : factory_type() {}                 //!< setup
+        inline explicit workshop(const size_t n) : factory_type(n) {}  //!< setup with capacity
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! automatic insertion
         inline void declare(const string &key, const CREATOR &creator)
         {
             if(!this->insert(key,creator))
             {
-                throw exception("%s<%s> use(mutliple '%s')",this->CLID,*(this->typeName),*key);
+                throw exception("%s<%s> use(multiple '%s')",this->CLID,*(this->typeName),*key);
             }
         }
 
+        //! automatic insertion wrapper
         inline void declare(const char *key, const CREATOR &creator)
         {
             const string _(key); declare(_,creator);

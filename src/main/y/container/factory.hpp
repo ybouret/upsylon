@@ -29,6 +29,7 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
+        typedef  CREATOR                          creator_type;    //!< alias
         typedef  hash_map<KEY,CREATOR,KEY_HASHER> db_type;         //!< alias
         typedef  typename db_type::const_iterator const_iterator;  //!< alias
         Y_DECL_ARGS(KEY,key_type);                                 //!< aliases
