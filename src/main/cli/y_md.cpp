@@ -24,7 +24,7 @@ Y_PROGRAM_START()
     if(argc>1&&0==strcmp("-h", argv[1]) )
     {
         std::cout << "usage:" << std::endl;
-        std::cout << program << '[';
+        std::cout << program << ' ' << '[';
         size_t n=hfac.size();
         for(hashing::factory::iterator it=hfac.begin();it!=hfac.end();++it)
         {
