@@ -24,11 +24,11 @@ namespace upsylon
 #define LBRACK '['
 #define RBRACK ']'
 #define IGN    '&'
-
+            
 #define CARET  '^'
 #define DASH   '-'
 #define COLON  ':'
-
+            
 #define Y_RX_PRINTLN(OUTPUT) \
 do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::endl; } } while(false)
             
@@ -155,7 +155,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                                 
                                 //----------------------------------------------
                                 //
-                                // jokers
+                                // jokers (function get_previous increases curr)
                                 //
                                 //----------------------------------------------
                             case '*':
@@ -177,11 +177,10 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             } break;
                                 
                             case '.':
-                                ++curr; //! skip dot
-                                //p->push_front( posix::dot() );
+                                ++curr; // skip dot
                                 p->push_back( posix::dot() );
                                 break;
-
+                                
                             case IGN: {
                                 auto_ptr<Pattern> arg = get_previous(*p);
                                 p->push_back( Pattern::IgnoreCase( & *arg ) );
@@ -200,7 +199,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             case '\\':
                                 p->push_back( compileEscape() );
                                 break;
-
+                                
                                 //----------------------------------------------
                                 //
                                 // clusters
@@ -278,11 +277,11 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                             //--------------------------------------------------
                             const char  *rbrace = curr++;     // skip rbrace
                             const string ctx(org,rbrace-org);
-
+                            
                             Y_RX_PRINTLN("<braces: {" << ctx <<"}>");
-
+                            
                             if(ctx.size()<=0) throw exception("%sempty braces in '%s'",fn,expr);
-
+                            
                             if(isDigit(ctx[0]))
                             {
                                 //----------------------------------------------
@@ -338,8 +337,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     }
                     throw exception("%sunfinished braces in '%s'",fn,expr);
                 }
-
-
+                
+                
                 //--------------------------------------------------------------
                 //
                 // helper
@@ -349,8 +348,8 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                 {
                     return (C>='0'&&C<='9');
                 }
-
-
+                
+                
                 //--------------------------------------------------------------
                 //
                 // helper
@@ -371,7 +370,7 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     }
                     return ans;
                 }
-
+                
                 
                 //--------------------------------------------------------------
                 //
@@ -397,19 +396,19 @@ do { if(RegExpCompiler::Verbose) { indent(std::cerr << "|_") << OUTPUT << std::e
                     if(curr>=last) throw exception("%smissing first escaped hexa in '%s'",fn,expr);
                     const int hi = hexadecimal::to_decimal(*curr);
                     if(hi<0) throw exception("%sinvalid first escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
-
+                    
                     //----------------------------------------------------------
                     // get lo
                     //----------------------------------------------------------
                     if(++curr>=last) throw exception("%smissing second escaped hexa in '%s'",fn,expr);
                     const int lo = hexadecimal::to_decimal(*curr);
                     if(lo<0) throw exception("%sinvalid second escaped hexa '%s' in '%s'",fn, cchars::visible[uint8_t(*curr)],expr);
-
+                    
                     //----------------------------------------------------------
                     // skip lo char
                     //----------------------------------------------------------
                     ++curr;
-
+                    
                     //----------------------------------------------------------
                     // build code
                     //----------------------------------------------------------
@@ -457,7 +456,7 @@ case 't': return Single::Create('\t')
                     
                     throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::visible[ uint8_t(C) ],expr);
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 //
@@ -504,14 +503,14 @@ case 't': return Single::Create('\t')
                             case RBRACK:
                                 ++curr;
                                 goto END_OF_CLUSTER;
-
+                                
                                 //----------------------------------------------
                                 // recursive nested cluster
                                 //----------------------------------------------
                             case LBRACK:
                                 p->push_back( cluster() );
                                 break;
-
+                                
                                 //----------------------------------------------
                                 // range
                                 //----------------------------------------------
@@ -525,15 +524,15 @@ case 't': return Single::Create('\t')
                                 if(lower>upper) cswap(lower,upper);
                                 p->push_back(  Rework::Single2Range( rhs.yield(), lower, upper) );
                             } break;
-
-
+                                
+                                
                                 //----------------------------------------------
                                 // escape sequence
                                 //----------------------------------------------
                             case '\\':
                                 p->push_back(clusterEscape());
                                 break;
-
+                                
                             default:
                                 Y_RX_PRINTLN("add '" << cchars::to_visible(C)<< "'");
                                 p->add( C );
@@ -542,7 +541,7 @@ case 't': return Single::Create('\t')
                         }
                     }
                     throw exception("%sunfinished cluster in '%s'",fn,expr);
-
+                    
                 END_OF_CLUSTER:
                     Y_RX_PRINTLN("<cluster/>");
                     if(p->size<=0)
@@ -556,7 +555,7 @@ case 't': return Single::Create('\t')
                     }
                     return p.yield();
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 //
@@ -579,15 +578,15 @@ case 't': return Single::Create('\t')
                         case  LBRACK:
                         case  RBRACK:
                             return Single::Create(C);
-
+                            
                             TRY_ESCAPE();
-
+                            
                         default: break;
                     }
-
+                    
                     throw exception("%sunknown escape sequence \\x%s... in '%s'",fn,cchars::to_visible(C),expr);
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 //
@@ -597,27 +596,27 @@ case 't': return Single::Create('\t')
                 //--------------------------------------------------------------
                 inline Single *clusterRangeRHS()
                 {
-
+                    
                     assert(DASH==*curr);
                     if(++curr>=last) throw exception("%sunfinished range in '%s'",fn,expr);
                     const char C = *curr;
                     switch(C)
                     {
                         case '\\':  return clusterEscape();
-
+                            
                         case DASH:
                         case LBRACK:
                         case RBRACK:
                         case CARET:
                             throw exception("%sinvalid right hand side '%s' for range in '%s'",fn,cchars::to_visible(C),expr);
-
+                            
                         default: break;
                     }
                     ++curr;
                     return Single::Create(C);
-
+                    
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 //
@@ -629,7 +628,7 @@ case 't': return Single::Create('\t')
                 {
                     assert(curr[-1]==LBRACK);
                     assert(curr[ 0]==COLON);
-
+                    
                     //----------------------------------------------------------
                     //
                     // loop to end of id
@@ -656,7 +655,7 @@ case 't': return Single::Create('\t')
                     }
                     throw exception("%sunfinished posix ID in '%s",fn,expr);
                 }
-
+                
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(RegExpCompiler);
@@ -667,7 +666,7 @@ case 't': return Single::Create('\t')
             bool RegExpCompiler::Verbose = false;
             
         }
-
+        
         bool & RegExpVerbose() throw()
         {
             return RegExpCompiler::Verbose;
@@ -696,7 +695,7 @@ case 't': return Single::Create('\t')
         {
             return Single::Create(C);
         }
-
+        
     }
     
 }

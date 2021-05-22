@@ -14,7 +14,8 @@ using namespace Jive;
 Y_UTEST(jive_rx)
 {
     
-
+    if(argc<=1)
+    {
 #define COM_RX(NAME) do {\
 std::cerr << "compiling " << #NAME << std::endl;  \
 const Motif  m  = RegExp( RegExpFor::NAME,NULL); \
@@ -22,14 +23,15 @@ m->save_to(  #NAME ".bin" );\
 m->graphViz( #NAME ".dot" );\
 std::cerr << "|_feeble: " << m->feeble() << std::endl;\
 } while(false)
-
-
-    COM_RX(Identifier);
-    COM_RX(Unsigned);
-    COM_RX(Integer);
-    COM_RX(Double);
-    COM_RX(Float);
-
+        
+        
+        COM_RX(Identifier);
+        COM_RX(Unsigned);
+        COM_RX(Integer);
+        COM_RX(Double);
+        COM_RX(Float);
+    }
+    
     Dictionary        dict;
     //RegExpVerbose() = true;
     if(!dict.use("DIGIT","[:digit:]"))
@@ -63,7 +65,7 @@ std::cerr << "|_feeble: " << m->feeble() << std::endl;\
             r->save_to("ign.bin");
             r->graphViz("ign.dot");
         }
-
+        
         if(argc>2)
         {
             const string  fileName = argv[2];
@@ -78,7 +80,7 @@ std::cerr << "|_feeble: " << m->feeble() << std::endl;\
                 p->test(source);
                 ++iline;
             }
-
+            
         }
     }
     
