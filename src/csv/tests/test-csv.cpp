@@ -5,9 +5,9 @@ using namespace upsylon;
 
 Y_UTEST(CSV)
 {
-    CSV::Parser parser;
+    CSV::Parser          parser;
     Jive::Syntax::Axiom::Verbose = true;
-    
+
     if(argc>1)
     {
         Jive::Source               source( Jive::Module::OpenFile(argv[1]));
