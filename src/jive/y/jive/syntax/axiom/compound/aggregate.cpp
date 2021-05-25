@@ -103,10 +103,22 @@ namespace upsylon
                 //--------------------------------------------------------------
 
                 Y_JIVE_PRINTLN("=> accepted #" << chld.size);
-                if(chld.size>0)
+
+                switch(type)
                 {
-                    Grow(tree,node.yield());
+                    case Standard:
+                        Grow(tree,node.yield());
+                        break;
+
+                    case Variadic:
+                    case Grouping:
+                        if(chld.size>0)
+                        {
+                            Grow(tree,node.yield());
+                        }
+                        break;
                 }
+
                 return true;
             }
 
