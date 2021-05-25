@@ -17,29 +17,27 @@ namespace upsylon
         {
 
             Aggregate &self = agg(label);
-
             {
-                Aggregate &Line = agg("Line");
 
-                Line << terminal("data", "[:alpha:]+");
 
-                self << zeroOrMore(Line);
+                const Axiom &Field = terminal("Field","[:alpha:]+");
+
+
+                {
+                    Aggregate   &Line  = agg("Line");
+                    Line << Field << zeroOrMore( cat( division(','), Field ));
+                    self << zeroOrMore(Line);
+                }
 
                 // lexical
-                {
-                    const char __endl[] = "[:endl:]";
-                    endl(__endl,__endl);
-                }
-
-                {
-                    const char __blank[] = "[:blank:]";
-                    drop(__blank,__blank);
-                }
-
-                graphViz("csv-grammar.dot");
-
-                validate();
+                { const char __endl[]  = "[:endl:]";  endl(__endl,__endl);   }
+                { const char __blank[] = "[:blank:]"; drop(__blank,__blank); }
             }
+
+            graphViz("csv-grammar.dot");
+
+            validate();
+
 
         }
         
