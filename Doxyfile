@@ -868,8 +868,10 @@ INPUT                  = src/main/y \
                          src/mkl/y \
 			 src/gfx/y \
                          src/aqua/y \
+			 src/alchemy/y \
                          src/jive/y \
                          src/json/y \
+			 src/csv/y  \
                          src/spade/y \
                          src/mpi++/y \
                          src/net/y \
