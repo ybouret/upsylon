@@ -6,7 +6,7 @@ using namespace upsylon;
 Y_UTEST(CSV)
 {
     CSV::Parser          parser;
-    Jive::Syntax::Axiom::Verbose = true;
+    //Jive::Syntax::Axiom::Verbose = true;
 
     if(argc>1)
     {
