@@ -41,7 +41,14 @@ namespace {
 
 Y_UTEST(endl)
 {
+    Syntax::Axiom::Verbose = true;
     ENDL_Parser p;
+
+    if(argc>1)
+    {
+        Source         source( Module::OpenFile(argv[1]));
+        XNode::Pointer xnode( p.parse(source) );
+    }
 }
 Y_UTEST_DONE()
 
