@@ -20,8 +20,8 @@ namespace upsylon
             const Axiom &TEXTDATA    = terminal("TEXTDATA", "[\\x20-\\x21\\x23-\\x2B\\x2D-\\x7E]");
             const Axiom &DQUOTE      = terminal("DQUOTE",'"');
             const Axiom &COMMA       = terminal("COMMA",',');
-            const Axiom &CR          = end_line("CR","\\x0D");
-            const Axiom &LR          = end_line("LF","\\x0A");
+            //const Axiom &CR          = end_line("CR","\\x0D");
+            //const Axiom &LR          = end_line("LF","\\x0A");
             const Axiom &non_escaped = repeat("non_escaped", TEXTDATA, 0);
             Aggregate   &escaped     = agg("escaped");
             escaped << DQUOTE;

@@ -132,17 +132,7 @@ namespace upsylon
                     return add( new Terminal(i,k) );
                 }
 
-                //--------------------------------------------------------------
-                //! create a named end line
-                //--------------------------------------------------------------
-                template <typename ID>
-                const EndLine & end_line(const ID &i)
-                {
-                    return add( new EndLine(i) );
-                }
-
-
-
+                
                 //--------------------------------------------------------------
                 //! create a named repeat
                 //--------------------------------------------------------------

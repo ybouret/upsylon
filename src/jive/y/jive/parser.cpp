@@ -20,13 +20,21 @@ namespace upsylon
             return xnode.yield();
         }
 
-        void Parser:: checkStrong(const Lexical::Rule &rule) const
+        const Lexical::Rule & Parser:: checkStrong(const Lexical::Rule &rule) const
         {
             if(!rule.motif->strong())
             {
                 throw exception("%s has weak terminal <%s>",**name,**rule.label);
             }
+            return rule;
         }
+
+        Syntax::Terminal::Type Parser:: queryTypeOf(const Lexical::Rule &rule) const
+        {
+            assert(rule.motif->strong());
+            return rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard;
+        }
+
     }
 
 }

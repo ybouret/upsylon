@@ -33,7 +33,6 @@ namespace upsylon
             typedef Syntax::Compound  Compound;   //!< alias
             typedef Syntax::Repeat    Repeat;     //!< alias
             typedef Syntax::Option    Option;     //!< alias
-            typedef Syntax::EndLine   EndLine;    //!< alias
 
             //__________________________________________________________________
             //
@@ -60,9 +59,7 @@ namespace upsylon
             const Terminal & terminal(const ID &id,
                                       const RX &rx)
             {
-                const Lexical::Rule &rule = emit(id,rx);
-                checkStrong(rule);
-                return term(id,rule.motif->univocal() ? Terminal::Univocal : Terminal::Standard );
+                return term(id,queryTypeOf(checkStrong(emit(id,rx))));
             }
 
             //! Standard/Univocal Terminal ID = ID
@@ -77,7 +74,7 @@ namespace upsylon
             const Terminal & division(const ID &id,
                                       const RX &rx)
             {
-                checkStrong( emit(id,rx) );
+                (void) checkStrong( emit(id,rx) );
                 return term(id,Terminal::Division);
             }
 
@@ -92,22 +89,17 @@ namespace upsylon
             template <typename PLUGIN,typename ID>
             const Terminal & plugin(const ID &id)
             {
-                const Lexical::Rule &r = call( plug<PLUGIN>(id) );
-                return term(r.label,Terminal::Standard);
+                return term(call(plug<PLUGIN>(id)).label,Terminal::Standard);
             }
 
-            //__________________________________________________________________
-            //
-            // end line
-            //__________________________________________________________________
-            template <typename ID, typename RX> inline
-            const EndLine & end_line(const ID &id,
-                                     const RX &rx)
+            //! new_line
+            template <typename ID,typename RX> inline
+            const Terminal & new_line(const ID &id,
+                                      const RX &rx)
             {
-                Grammar &self = *this;
-                checkStrong( emit(id,rx) );
-                return self.end_line(id);
+                return term(id,queryTypeOf(checkStrong(emit_endl(id,rx))));
             }
+
 
 
             //__________________________________________________________________
@@ -130,8 +122,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
-
-           void checkStrong(const Lexical::Rule &) const;
+            const Lexical::Rule & checkStrong(const Lexical::Rule &) const;
+            Terminal::Type        queryTypeOf(const Lexical::Rule &) const;
         };
     }
 

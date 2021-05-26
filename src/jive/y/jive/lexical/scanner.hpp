@@ -198,7 +198,15 @@ namespace upsylon
                 {
                     return discard(label,regexp,this,&Scanner::newLine);
                 }
-                
+
+                //! emit end-line marker, and call newLine
+                template <typename LABEL, typename REGEXP>
+                const Rule &emit_endl(const LABEL &label, const REGEXP &regexp)
+                {
+                    return forward(label,regexp,this,&Scanner::newLine);
+                }
+
+
                 //------------------------------------------------------------------
                 //
                 //

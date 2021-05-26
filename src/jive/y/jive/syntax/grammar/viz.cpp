@@ -25,10 +25,6 @@ namespace upsylon
                         fp << "[label=\"" << axiom.gvName() << "\",shape=box,style=\"" << style << "\"]";
                     } break;
 
-                    case EndLine::UUID: {
-                        const char    *style = "bold,filled";
-                        fp << "[label=\"" << axiom.gvName() << "\",shape=box,style=\"" << style << "\"]";
-                    } break;
 
 
 
