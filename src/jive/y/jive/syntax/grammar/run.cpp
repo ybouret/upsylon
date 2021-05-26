@@ -109,11 +109,13 @@ namespace upsylon
                 Observer      guess   = { NULL, NULL, NULL };
                 if( root->accept(tree,lexer,source,guess,0) )
                 {
+                    Y_JIVE_GRAMLN("success=<"<<root->name<<"/>");
                     return processSuccess(tree,guess,lexer,source);
                 }
                 else
                 {
                     assert(NULL==tree);
+                    Y_JIVE_GRAMLN("failure=<"<<root->name<<"/>");
                     processFailure(guess,lexer,source);
                     return NULL;
                 }
@@ -148,7 +150,6 @@ namespace upsylon
                 const Aggregate *hold = guess.parent;
 
 
-                Y_JIVE_GRAMLN("success");
                 dispLexeme(name,"last",last);
                 if(hold)
                 {
@@ -276,7 +277,6 @@ namespace upsylon
         {
             void Grammar:: processFailure(const Observer &guess, Lexer &lexer, Source &source) const
             {
-                Y_JIVE_GRAMLN("failure");
                 const Lexeme *last = guess.lexeme;
                 exception     excp;
                 if(last)
