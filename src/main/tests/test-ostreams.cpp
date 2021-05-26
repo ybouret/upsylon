@@ -153,4 +153,19 @@ Y_UTEST(ostreams)
 }
 Y_UTEST_DONE()
 
+#include "y/ios/endl.hpp"
+
+Y_UTEST(endl)
+{
+    string str;
+    {
+        ios::osstream fp(str);
+        fp << ios::cr << ios::lf << ios::crlf;
+    }
+    str.save_to("endl.bin");
+    std::cerr << ios::cr << ios::lf << ios::crlf;
+
+}
+Y_UTEST_DONE()
+
 

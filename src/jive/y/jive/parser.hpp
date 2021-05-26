@@ -92,13 +92,23 @@ namespace upsylon
                 return term(call(plug<PLUGIN>(id)).label,Terminal::Standard);
             }
 
-            //! new_line
+            //! new line as a terminal
             template <typename ID,typename RX> inline
             const Terminal & new_line(const ID &id,
                                       const RX &rx)
             {
                 return term(id,queryTypeOf(checkStrong(emit_endl(id,rx))));
             }
+
+            //! end line as a division
+            template <typename ID,typename RX> inline
+            const Terminal & end_line(const ID &id,
+                                      const RX &rx)
+            {
+                (void) checkStrong(emit_endl(id,rx));
+                return term(id,Terminal::Division);
+            }
+
 
 
 

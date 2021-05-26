@@ -208,6 +208,7 @@ ADD_TEST(ios:echo        test-main echo)
 ADD_TEST(ios:carrier     test-main ios_carrier)
 ADD_TEST(ios:scribe      test-main ios_scribe)
 ADD_TEST(ios:xpaths      test-main xpaths)
+ADD_TEST(ios:endl        test-main endl)
 
 
 SOURCE_GROUP(crypto FILES test-hashing.cpp

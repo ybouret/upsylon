@@ -140,6 +140,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(pearson);
     Y_UTEST(hmac);
     Y_UTEST(ostreams);
+    Y_UTEST(endl);
     Y_UTEST(echo);
     Y_UTEST(istreams);
     Y_UTEST(mstreams);

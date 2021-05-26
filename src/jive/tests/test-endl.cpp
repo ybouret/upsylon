@@ -20,7 +20,7 @@ namespace {
             Aggregate &self   = agg(label);
             Alternate &choice = alt("choice");
 
-            choice << new_line("CRLF","\\r\\n");
+            choice << end_line("CRLF","\\r\\n");
             choice << new_line("CR", "\\r");
             choice << new_line("LF", "\\n");
             choice << terminal("ID","[:alpha:]+");
