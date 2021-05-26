@@ -11,7 +11,7 @@ namespace upsylon
     namespace ios
     {
 
-        //! implementinf a self containt endl type
+        //! implementing a self containt endl type
 #define Y_IOS_DECL_ENDL(CLASS,BYTES) \
 /**/    class CLASS##_t { \
 /**/      public:\
