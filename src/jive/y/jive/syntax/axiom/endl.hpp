@@ -1,6 +1,7 @@
+
 //! \file
-#ifndef Y_JIVE_SYNTAX_TERMINAL_INCLUDED
-#define Y_JIVE_SYNTAX_TERMINAL_INCLUDED 1
+#ifndef Y_JIVE_SYNTAX_ENDL_INCLUDED
+#define Y_JIVE_SYNTAX_ENDL_INCLUDED 1
 
 #include "y/jive/syntax/axiom.hpp"
 
@@ -14,14 +15,14 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! a terminal Axiom
+            //! an end-line axion
             /**
              - accept lexeme with *label==*name
-             - reject if EOS of different label
+             - reject if EOS or different label
              */
             //
             //__________________________________________________________________
-            class Terminal : public Axiom
+            class EndLine : public Axiom
             {
             public:
                 //______________________________________________________________
@@ -29,16 +30,8 @@ namespace upsylon
                 // types and definitions
                 //______________________________________________________________
 
-                //! type of terminal
-                enum Type
-                {
-                    Standard, //!< regular expression
-                    Univocal, //!< univocal (regular) expression
-                    Division  //!< whatever, division only
-                };
-                
                 //! identifier
-                static const uint32_t UUID = TermUUID;
+                static const uint32_t UUID = Y_FOURCC('E', 'N', 'D', 'L');
 
                 //______________________________________________________________
                 //
@@ -46,16 +39,14 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! cleanup
-                virtual ~Terminal() throw();
+                virtual ~EndLine() throw();
 
                 //! setup
                 template <typename ID> inline
-                explicit Terminal(const ID   &i,
-                                  const Type &k) :
-                Axiom(UUID,Tags::Make(i)),
-                type(k)
+                explicit EndLine(const ID   &i) :
+                Axiom(UUID,Tags::Make(i))
                 {
-                    Y_JIVE_AXIOM(Terminal);
+                    Y_JIVE_AXIOM(EndLine);
                 }
 
                 //______________________________________________________________
@@ -63,16 +54,12 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 Y_JIVE_AXIOM_ATTACH_DECL();
-
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                const Type type; //!< kind
+                
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Terminal);
+                Y_DISABLE_COPY_AND_ASSIGN(EndLine);
                 Y_JIVE_AXIOM_ACCEPT_DECL();
+
             };
 
         }

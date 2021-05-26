@@ -6,7 +6,6 @@
 
 
 #include "y/jive/syntax/grammar.hpp"
-
 namespace upsylon
 {
     
@@ -95,6 +94,18 @@ namespace upsylon
                 const Lexical::Rule &r = call( plug<PLUGIN>(id) );
                 return term(r.label,Terminal::Standard);
             }
+
+            //__________________________________________________________________
+            //
+            // end line
+            //__________________________________________________________________
+            template <typename ID, typename RX> inline
+            const EndLine & end_line(const ID &id,
+                                     const RX &rx)
+            {
+
+            }
+
 
             //__________________________________________________________________
             //

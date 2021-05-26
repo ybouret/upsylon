@@ -1,4 +1,5 @@
-#include "y/jive/syntax/axiom/terminal.hpp"
+
+#include "y/jive/syntax/axiom/endl.hpp"
 
 namespace upsylon
 {
@@ -6,13 +7,13 @@ namespace upsylon
     {
         namespace Syntax
         {
-            Terminal:: ~Terminal() throw()
+            EndLine:: ~EndLine() throw()
             {
             }
 
-            Y_JIVE_AXIOM_ACCEPT_IMPL(Terminal)
+            Y_JIVE_AXIOM_ACCEPT_IMPL(EndLine)
             {
-                
+
                 //--------------------------------------------------------------
                 //
                 // get lexeme
@@ -33,6 +34,7 @@ namespace upsylon
                         Lexeme *lx = lexeme.yield();
                         Grow(tree,Node::Acquire(*this,lx));
                         guess.mind(lx);
+                        source.newLine();
                         return true;
                     }
                     else
@@ -51,12 +53,12 @@ namespace upsylon
 
             }
 
-            void Terminal:: attach(Axiom::Registry &db) const
+            void EndLine:: attach(Axiom::Registry &db) const
             {
                 (void) new_in(db);
             }
 
-            
+
         }
 
     }

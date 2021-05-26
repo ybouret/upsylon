@@ -19,6 +19,8 @@ namespace upsylon
     }
 }
 
+#include "y/ptr/auto.hpp"
+
 namespace upsylon
 {
 

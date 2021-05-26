@@ -16,23 +16,22 @@ namespace upsylon
         Parser:: Parser() : Jive::Parser("CSV")
         {
 
-            Aggregate &self = agg(label);
-            {
+            Aggregate   &self = agg(label);
+            const Axiom &TEXTDATA    = terminal("TEXTDATA", "[\\x20-\\x21\\x23-\\x2B\\x2D-\\x7E]");
+            const Axiom &DQUOTE      = terminal("DQUOTE",'"');
+            const Axiom &COMMA       = terminal("COMMA",',');
+            const Axiom &CR          = end_line("CR","\\x0D");
+            const Axiom &LR          = end_line("LF","\\x0A");
 
+            const Axiom &non_escaped = repeat("non_escaped", TEXTDATA, 0);
+            Aggregate   &escaped     = agg("escaped");
+            escaped << DQUOTE;
+            
+            escaped << DQUOTE;
 
-                const Axiom &Field = terminal("Field","[:alpha:]+");
+            // lexical
+            { const char __endl[]  = "[:endl:]";  endl(__endl,__endl);   }
 
-
-                {
-                    Aggregate   &Line  = agg("Line");
-                    Line << Field << zeroOrMore( cat( division(','), Field ));
-                    self << zeroOrMore(Line);
-                }
-
-                // lexical
-                { const char __endl[]  = "[:endl:]";  endl(__endl,__endl);   }
-                { const char __blank[] = "[:blank:]"; drop(__blank,__blank); }
-            }
 
             graphViz("csv-grammar.dot");
 

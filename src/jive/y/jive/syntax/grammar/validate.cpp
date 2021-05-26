@@ -67,11 +67,24 @@ namespace upsylon
                 Y_JIVE_GRAMLN(db);
 
                 //--------------------------------------------------------------
-                //
+                // checking
                 //--------------------------------------------------------------
                 for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
                     Y_JIVE_GRAMLN("\t"<< ios::align(*(axiom->name),ios::align::left,maxNameLength) << " <== " << axiom->from );
+                    switch(axiom->uuid)
+                    {
+                        case Aggregate::UUID: {
+                            const Aggregate &agg = axiom->as<Aggregate>();
+                            if(agg.size<=0)
+                            {
+                                throw exception("%s: aggregate <%s> is empty!",**name,**(axiom->name));
+                            }
+                        } break;
+
+                        default:
+                            break;
+                    }
 
                 }
 
