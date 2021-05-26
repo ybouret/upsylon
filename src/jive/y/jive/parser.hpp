@@ -4,8 +4,8 @@
 #ifndef Y_JIVE_PARSER_INCLUDED
 #define Y_JIVE_PARSER_INCLUDED 1
 
-
 #include "y/jive/syntax/grammar.hpp"
+
 namespace upsylon
 {
     
@@ -33,7 +33,8 @@ namespace upsylon
             typedef Syntax::Compound  Compound;   //!< alias
             typedef Syntax::Repeat    Repeat;     //!< alias
             typedef Syntax::Option    Option;     //!< alias
-            
+            typedef Syntax::EndLine   EndLine;    //!< alias
+
             //__________________________________________________________________
             //
             // C++
@@ -103,7 +104,9 @@ namespace upsylon
             const EndLine & end_line(const ID &id,
                                      const RX &rx)
             {
-
+                Grammar &self = *this;
+                checkStrong( emit(id,rx) );
+                return self.end_line(id);
             }
 
 

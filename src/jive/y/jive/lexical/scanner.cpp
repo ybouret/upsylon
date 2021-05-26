@@ -122,8 +122,21 @@ namespace upsylon {
             }
 
 
-            
-            
+            const Pattern & Scanner:: pattern_for(const string &id)
+            {
+                const Pattern *p = queryPattern(id);
+                if(!p)
+                {
+                    throw exception("[[%s]] missing pattern for <%s>", **label, *id);
+                }
+                return *p;
+            }
+
+            const Pattern & Scanner:: pattern_for(const char *id)
+            {
+                const string _(id);
+                return pattern_for(_);
+            }
 
         }
 

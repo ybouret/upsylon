@@ -75,10 +75,16 @@ namespace upsylon
                     switch(axiom->uuid)
                     {
                         case Aggregate::UUID: {
-                            const Aggregate &agg = axiom->as<Aggregate>();
-                            if(agg.size<=0)
+                            if(axiom->as<Aggregate>().size<=0)
                             {
                                 throw exception("%s: aggregate <%s> is empty!",**name,**(axiom->name));
+                            }
+                        } break;
+
+                        case Alternate::UUID: {
+                            if(axiom->as<Alternate>().size<=0)
+                            {
+                                throw exception("%s: alternate <%s> is empty!",**name,**(axiom->name));
                             }
                         } break;
 

@@ -1,5 +1,5 @@
 
-#include "y/jive/syntax/axiom/endl.hpp"
+#include "y/jive/syntax/axiom/end-line.hpp"
 
 namespace upsylon
 {

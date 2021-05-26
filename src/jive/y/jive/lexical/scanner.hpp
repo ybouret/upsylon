@@ -295,8 +295,13 @@ namespace upsylon
                         return NULL;
                     }
                 }
-                
-                
+
+                //! query pattern by name
+                const Pattern & pattern_for(const string &id);
+
+                //! query pattern by name, wrapper
+                const Pattern & pattern_for(const char   *id);
+
                 //--------------------------------------------------------------
                 //
                 //! the flex-like probing function
