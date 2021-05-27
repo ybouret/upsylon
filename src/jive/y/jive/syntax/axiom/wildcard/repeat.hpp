@@ -37,6 +37,12 @@ namespace upsylon
                 virtual ~Repeat() throw();
 
                 //! setup
+                /**
+                 \param i identifier
+                 \param a axiom to repeat
+                 \param n minimal number of times
+                 \param f flag: true=>already marker, false=>no extra marker
+                 */
                 template <typename ID> inline
                 explicit Repeat(const ID    &i,
                                 const Axiom &a,

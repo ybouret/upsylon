@@ -134,29 +134,38 @@ namespace upsylon
 
                 
                 //--------------------------------------------------------------
-                //! create a named repeat
+                //! create a repeat
                 //--------------------------------------------------------------
                 template <typename ID>
                 const Axiom & repeat(const ID    &id,
                                      const Axiom &axiom,
                                      const size_t atLeast,
-                                     const bool   isNamed)
+                                     const bool   hasMark)
                 {
-                    return add( new Repeat(id,axiom,atLeast,isNamed) );
+                    return add( new Repeat(id,axiom,atLeast,hasMark) );
                 }
 
                 //--------------------------------------------------------------
                 //! create an automatic repeat
+                /**
+                 append a Repeat::CreateMark(atLeast) to axiom's name
+                 */
                 //--------------------------------------------------------------
                 const Axiom & repeat(const Axiom &axiom, const size_t atLeast);
 
                 //--------------------------------------------------------------
-                //! create an zero or more
+                //! create a zero or more
+                /**
+                 append a Repeat::CreateMark(0) to axiom's name
+                 */
                 //--------------------------------------------------------------
                 const Axiom & zeroOrMore(const Axiom &);
 
                 //--------------------------------------------------------------
                 //! create an automatic one or more
+                /**
+                 append a Repeat::CreateMark(1) to axiom's name
+                 */
                 //--------------------------------------------------------------
                 const Axiom & oneOrMore(const Axiom &);
 
@@ -171,6 +180,9 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //! create an automatic option
+                /**
+                 append the '?' mark to axiom's name
+                 */
                 //--------------------------------------------------------------
                 const Axiom & option(const Axiom &axiom);
 
