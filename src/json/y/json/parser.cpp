@@ -85,7 +85,7 @@ namespace upsylon
             }
 
             //graphViz("json-grammar.dot");
-            validate();
+            validate(this);
         }
 
 

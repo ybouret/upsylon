@@ -65,7 +65,7 @@ namespace upsylon
                 {
                     Aggregate &PluginDecl = agg("Plugin");
                     PluginDecl << terminal("PluginName", "@{NAME}") << SEP << BSTRING;
-                    PluginDecl << repeat("PluginArgs",STRING,0);
+                    PluginDecl << repeat("PluginArgs",STRING,0,false);
                     PluginDecl << END;
                     STATEMENT << PluginDecl;
                 }
@@ -98,7 +98,7 @@ namespace upsylon
                 drop("blank","[:blank:]");
                 
                 graphViz("dialect-grammar.dot");
-                validate();
+                validate(this);
                 
             }
         }

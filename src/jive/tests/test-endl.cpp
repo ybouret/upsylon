@@ -30,12 +30,12 @@ namespace {
 
             graphViz("endl-grammar.dot");
 
-            std::cerr << "CR:   " << pattern_for("CR").to_printable() << std::endl;
-            std::cerr << "LF:   " << pattern_for("LF").to_printable() << std::endl;
-            std::cerr << "CRLF: " << pattern_for("CRLF").to_printable() << std::endl;
+            std::cerr << "CR:   " << getPattern("CR").toRegExp()   << std::endl;
+            std::cerr << "LF:   " << getPattern("LF").toRegExp()   << std::endl;
+            std::cerr << "CRLF: " << getPattern("CRLF").toRegExp() << std::endl;
 
 
-            validate();
+            validate(this);
         }
 
     };

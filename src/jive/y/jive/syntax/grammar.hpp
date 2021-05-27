@@ -114,7 +114,7 @@ namespace upsylon
                  ensure all nodes are properly connected
                  */
                 //--------------------------------------------------------------
-                void  validate() const;
+                void  validate(const Lexical::Scanner *) const;
 
                 //--------------------------------------------------------------
                 //
@@ -137,9 +137,12 @@ namespace upsylon
                 //! create a named repeat
                 //--------------------------------------------------------------
                 template <typename ID>
-                const Axiom & repeat(const ID &id, const Axiom &axiom, const size_t atLeast)
+                const Axiom & repeat(const ID    &id,
+                                     const Axiom &axiom,
+                                     const size_t atLeast,
+                                     const bool   isNamed)
                 {
-                    return add( new Repeat(id,axiom,atLeast) );
+                    return add( new Repeat(id,axiom,atLeast,isNamed) );
                 }
 
                 //--------------------------------------------------------------
@@ -258,6 +261,11 @@ namespace upsylon
                 //! query internal list of axioms
                 //--------------------------------------------------------------
                 const Axiom::List     & getList() const;
+                
+                //--------------------------------------------------------------
+                //! helper: display terms with their regexps
+                //--------------------------------------------------------------
+                std::ostream & displayTerminals(std::ostream &, const Lexical::Scanner *) const;
                 
                 //______________________________________________________________
                 //

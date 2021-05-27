@@ -11,7 +11,6 @@ namespace upsylon
             ios::ostream &Grammar:: graphTag(ios::ostream &fp, const Axiom &axiom) const
             {
 
-
                 switch(axiom.uuid)
                 {
                     case Terminal::UUID: {
@@ -24,12 +23,13 @@ namespace upsylon
                         }
                         fp << "[label=\"" << axiom.gvName() << "\",shape=box,style=\"" << style << "\"]";
                     } break;
-
-
-
-
+                        
                     case Repeat::UUID: {
-                        fp << "[label=\"" << axiom.gvName() << "\",shape=oval]";
+                        const Repeat &rep = axiom.as<Repeat>();
+                        string        var;
+                        if(!rep.hasMark) var = Repeat::CreateMark(rep.atLeast);
+                        fp << "[label=\"" << rep.gvName() << var << "\",shape=oval]";
+
                     } break;
 
                     case Option::UUID: {

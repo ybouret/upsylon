@@ -9,6 +9,20 @@ namespace upsylon
     {
         namespace Syntax
         {
+            string Repeat:: CreateMark(const size_t n)
+            {
+                switch(n)
+                {
+                    case 0: return string('*');
+                    case 1: return string('+');
+                    default:
+                        break;
+                }
+                return vformat(">=%lu",static_cast<unsigned long>(n));
+            }
+            
+
+            
             Repeat:: ~Repeat() throw()
             {
             }

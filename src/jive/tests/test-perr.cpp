@@ -28,7 +28,7 @@ namespace
             drop("blank","[:blank:]");
             endl("endl", "[:endl:]");
             graphViz("perr.dot");
-            validate();
+            validate(this);
         }
 
         inline virtual ~P() throw()

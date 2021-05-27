@@ -11,11 +11,11 @@ namespace upsylon
         namespace Syntax
         {
 #define Y_JIVE_GRAMLN(MSG) do { if(Axiom::Verbose) { std::cerr << "[[" << name << "]] " << MSG << std::endl; } } while(false)
-
-            void  Grammar:: validate() const
+            
+            void  Grammar:: validate(const Lexical::Scanner *scanner) const
             {
                 Y_JIVE_GRAMLN("<validating>");
-
+                
                 //--------------------------------------------------------------
                 //
                 // checking axiom
@@ -26,7 +26,7 @@ namespace upsylon
                 {
                     throw exception("%s has no axiom!!!", **name);
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 // visit axioms
@@ -34,7 +34,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Axiom::Registry db;
                 axioms.head->attach(db);
-
+                
                 //--------------------------------------------------------------
                 //
                 // checking database
@@ -65,41 +65,55 @@ namespace upsylon
                     }
                 }
                 Y_JIVE_GRAMLN(db);
-
+                
                 //--------------------------------------------------------------
                 // checking
                 //--------------------------------------------------------------
                 for(Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
                 {
-                    Y_JIVE_GRAMLN("\t"<< ios::align(*(axiom->name),ios::align::left,maxNameLength) << " <== " << axiom->from );
+                    const string &aname = *(axiom->name);
+                    Y_JIVE_GRAMLN("\t"<< ios::align(aname,ios::align::left,maxNameLength) << " <== " << axiom->from );
                     switch(axiom->uuid)
                     {
                         case Aggregate::UUID: {
                             if(axiom->as<Aggregate>().size<=0)
                             {
-                                throw exception("%s: aggregate <%s> is empty!",**name,**(axiom->name));
+                                throw exception("%s: aggregate <%s> is empty!",**name,*aname);
                             }
                         } break;
-
+                            
                         case Alternate::UUID: {
                             if(axiom->as<Alternate>().size<=0)
                             {
-                                throw exception("%s: alternate <%s> is empty!",**name,**(axiom->name));
+                                throw exception("%s: alternate <%s> is empty!",**name,*aname);
                             }
                         } break;
-
+                            
+                        case Terminal::UUID:
+                            if(scanner)
+                            {
+                                const Pattern *pt = scanner->queryPattern(aname);
+                                if(!pt)
+                                {
+                                    throw exception("%s: missing pattern for <%s>!",**name,*aname);
+                                }
+                                const string   rx = pt->toRegExp();
+                                Y_JIVE_GRAMLN("\t\\_'" << rx << "'");
+                            }
+                            break;
+                            
                         default:
                             break;
                     }
-
+                    
                 }
-
+                
                 Y_JIVE_GRAMLN("<validating/>");
-
+                
             }
-
+            
         }
-
+        
     }
 }
 

@@ -8,7 +8,7 @@
 #include "y/jive/lexical/unit.hpp"
 #include "y/jive/regexp.hpp"
 #include "y/jive/scatter.hpp"
-#include "y/ptr/arc.hpp"
+#include "y/ptr/ref.hpp"
 
 namespace upsylon
 {
@@ -46,7 +46,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 static  bool                     Verbose; //!< global lexical verbosity
                 typedef suffix_storage<Rule*>    RulesDB; //!< rules database
-                typedef arc_ptr<Scanner>         Pointer; //!< for lexer
+                typedef ref_ptr<Scanner>         Pointer; //!< for lexer
                 
                 //! what happens when End of Stream if met during a call
                 enum AtEOS
@@ -283,7 +283,7 @@ namespace upsylon
                 
                 //! query rule by name
                 template <typename ID>
-                const Rule * queryRule(const ID &id)
+                const Rule * queryRule(const ID &id) const
                 {
                     Rule * const *ppR = hoard.search(id);
                     return ppR ? *ppR : NULL;
@@ -291,7 +291,7 @@ namespace upsylon
                 
                 //! query pattern by name
                 template <typename ID>
-                const Pattern * queryPattern(const ID &id)
+                const Pattern * queryPattern(const ID &id) const
                 {
                     Rule * const *ppR = hoard.search(id);
                     if(ppR)
@@ -305,10 +305,10 @@ namespace upsylon
                 }
 
                 //! query pattern by name
-                const Pattern & pattern_for(const string &id);
+                const Pattern & getPattern(const string &id) const;
 
                 //! query pattern by name, wrapper
-                const Pattern & pattern_for(const char   *id);
+                const Pattern & getPattern(const char   *id) const;
 
                 //--------------------------------------------------------------
                 //

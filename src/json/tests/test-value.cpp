@@ -34,6 +34,10 @@ Y_UTEST(value)
         ios::ocstream fp( ios::cstderr );
         value.display(fp);
     }
+    else
+    {
+        json.parser.graphViz("json-grammar.dot");
+    }
 
 #if 0
     JSON::Compiler json;

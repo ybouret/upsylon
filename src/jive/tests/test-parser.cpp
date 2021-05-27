@@ -59,7 +59,7 @@ namespace {
             
             setRoot( alt("JSON") << ARRAY << OBJECT );
             graphViz("json.dot");
-            validate();
+            validate(this);
         }
 
 

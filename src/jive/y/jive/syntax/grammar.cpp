@@ -2,6 +2,7 @@
 #include "y/jive/syntax/grammar.hpp"
 #include "y/exception.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
@@ -63,14 +64,8 @@ namespace upsylon
 
             const Axiom & Grammar:: repeat( const Axiom &axiom, const size_t atLeast)
             {
-                string       id = *axiom.name;
-                switch(atLeast)
-                {
-                    case 0: id += '*'; break;
-                    case 1: id += '+'; break;
-                    default: id += vformat(">=%u",unsigned(atLeast)); break;
-                }
-                const Axiom &ax = repeat(id,axiom,atLeast);
+                const string id = *axiom.name + Repeat::CreateMark(atLeast);
+                const Axiom &ax = repeat(id,axiom,atLeast,true);
                 return ax;
             }
 
@@ -89,7 +84,7 @@ namespace upsylon
                 return ax;
             }
 
-#define Y_JIVE_CAT_SYMBOL ""
+#define Y_JIVE_CAT_SYMBOL ":"
 
             const Axiom & Grammar:: cat(const Axiom &a, const Axiom &b)
             {
@@ -141,6 +136,34 @@ namespace upsylon
             {
                 return registry;
             }
+            
+            
+            std::ostream & Grammar:: displayTerminals(std::ostream &os, const Lexical::Scanner *scanner) const
+            {
+                os << "<" << **name << ".Terminals>" << std::endl;
+                for(const Axiom *axiom=axioms.head;axiom;axiom=axiom->next)
+                {
+                    switch(axiom->uuid)
+                    {
+                        case Terminal::UUID: {
+                            const string &aname = *(axiom->name);
+                            os << "\t" << ios::align(aname,ios::align::left,maxNameLength) << ":";
+                            if(scanner)
+                            {
+                                std::cerr << '\'' << scanner->getPattern(aname).toRegExp() << '\'';
+                            }
+                            os << std::endl;
+                        } break;
+                            
+                        default:
+                            break;
+                    }
+                }
+                os << "<" << **name << ".Terminals/>" << std::endl;
+                return os;
+            }
+
+            
         }
         
     }

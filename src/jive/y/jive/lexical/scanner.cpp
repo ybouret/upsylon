@@ -122,7 +122,7 @@ namespace upsylon {
             }
 
 
-            const Pattern & Scanner:: pattern_for(const string &id)
+            const Pattern & Scanner:: getPattern(const string &id) const
             {
                 const Pattern *p = queryPattern(id);
                 if(!p)
@@ -132,10 +132,10 @@ namespace upsylon {
                 return *p;
             }
 
-            const Pattern & Scanner:: pattern_for(const char *id)
+            const Pattern & Scanner:: getPattern(const char *id) const
             {
                 const string _(id);
-                return pattern_for(_);
+                return getPattern(_);
             }
 
         }
