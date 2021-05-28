@@ -171,7 +171,12 @@ Y_SOAK_RETURN()
 
 Y_SOAK_PUBLIC(int,EngineProcess(double *target, const double *source, const unsigned length) throw())
 {
-    return Engine::_().Process(target,source,length);
+    Y_SOAK_TRY("EngineProcess")
+    {
+        return Engine::_().Process(target,source,length);
+    }
+    Y_SOAK_CATCH();
+    return Y_SOAK_FAILURE;
 }
 Y_SOAK_RETURN()
 
