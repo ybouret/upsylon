@@ -13,6 +13,50 @@
 \title{FVM}
 \maketitle
 
+\subsection{Change mapping under constraints}
+Let $\vec{C}$ be a initial set of concentrations on a domain $\mathcal{V}$.
+Let $\vec{C}'$ be a set of concentrations on the same $\mathcal{V}$, obtained by
+a used-defined operation.\\
+We want to correct $\vec{C}'$ into $\vec{C}''$ such that a set of linear constraints is verified:
+\begin{equation}
+	\forall k \in [1:K], \vec{\Psi}_k \cdot \vec{C}'' = \mu_k.
+\end{equation}
+Let $\vec{\omega}$ be the degrees of freedom of $\vec{C}''$ such that:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{C}'' & = &\vec{C}' + \bm{W} \vec{\omega}\\
+	 \dim(\vec{\omega}) & \leq & \dim(\vec{C}'')\\
+	 \bm{W}_{ij} & \in & \lbrace 0,1\rbrace\\
+\end{array}
+\right.
+\end{equation}
+The smallest correction is obtain by minimising the following Lagrangian and
+the help of $\lambda_1,\ldots,\lambda_K$:
+\begin{equation}
+\begin{array}{rcl}
+	\mathcal{L} & = &\dfrac{1}{2} \vec{\omega}^2 - 
+	\sum_k \lambda_k \left[\vec{\Psi}_k \cdot \left( \vec{C}'+\bm{W} \vec{\omega}\right) - \mu_k\right] \\
+	\\
+	& = & \dfrac{1}{2} \vec{\omega}^2 - 
+	\sum_k \lambda_k \left[\vec{\Psi}_k \cdot \bm{W} \vec{\omega} - \left(\mu_k-\vec{\Psi}_k\cdot\vec{C}'\right)\right] 
+\end{array}
+\end{equation}
+We find:
+\begin{equation}
+	\vec{0} = \vec{\omega} - \sum_k \lambda_k \bm{W}^T \vec{\Psi}_k,
+\end{equation}
+leading to the following system to compute the Lagrange multipliers:
+\begin{equation}
+\begin{bmatrix}
+ \langle \Psi_i \vert \bm{W} \bm{W}^T \vert \Psi_j \rangle
+\end{bmatrix} \vec{\lambda}
+	=  
+\begin{bmatrix}
+	\mu_i - \vec{\Psi}_i\cdot\vec{C}'
+\end{bmatrix}
+\end{equation}
+
 \subsection{Change in mapping}
 Let $\vec{C}$ be a set of concentrations on a domain $\mathcal{V}$,
 with a given matter quantity 
