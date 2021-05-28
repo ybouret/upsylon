@@ -14,7 +14,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(parser);
     Y_UTEST(list);
     Y_UTEST(perr);
-    Y_UTEST(dialect);
     Y_UTEST(endl);
 }
 Y_UTEST_EXEC()
