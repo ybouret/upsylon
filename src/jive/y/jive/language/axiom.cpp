@@ -7,6 +7,10 @@ namespace upsylon
     {
         namespace Language
         {
+            string   Axiom:: gvName() const
+            {
+                return name->to_printable();
+            }
 
             Axiom:: ~Axiom() throw()
             {

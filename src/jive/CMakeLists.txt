@@ -110,7 +110,7 @@ ADD_LIBRARY( y-jive STATIC
  ${syntax_grammar_srcs}
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
- ${language_srcs} 
+ ${language_srcs} ${language_axiom_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

@@ -1,5 +1,5 @@
 
-#include "y/jive/language/axiom/terminal.hpp"
+#include "y/jive/language/axiom/dull.hpp"
 
 namespace upsylon
 {
@@ -9,12 +9,12 @@ namespace upsylon
 
         namespace Language
         {
-            Terminal:: ~Terminal() throw()
+
+            Dull:: ~Dull() throw()
             {
             }
-            
-        }
 
+        }
     }
 }
 

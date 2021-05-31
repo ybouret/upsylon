@@ -14,16 +14,21 @@ namespace upsylon
         namespace Language
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Axiom
+            //
+            //__________________________________________________________________
             class Axiom : public CountedObject, public inode<Axiom>
             {
             public:
                 const Tag      name;
                 const uint32_t uuid;
 
-                string gvName() const; //!< graphViz name
-
+                string   gvName() const; //!< graphViz name
                 virtual ~Axiom() throw();
-
+                
             protected:
                 template <typename ID> inline
                 explicit Axiom(const ID &i, const uint32_t t) :
