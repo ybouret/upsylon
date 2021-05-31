@@ -2,13 +2,18 @@ PROJECT(jive CXX)
 
 MESSAGE( STATUS "<Jive>" )
 
-
 FILE( GLOB decl y/jive/*.hpp)
 FILE( GLOB impl y/jive/*.cpp)
 SET( srcs ${decl} ${impl})
 INSTALL( FILES ${decl} DESTINATION include/y/jive )
 SOURCE_GROUP( jive FILES ${srcs} )
  
+########################################################################
+## 
+## lexical
+##
+########################################################################
+
 FILE( GLOB lexical_decl y/jive/lexical/*.hpp)
 FILE( GLOB lexical_impl y/jive/lexical/*.cpp)
 SET( lexical_srcs ${lexical_decl} ${lexical_impl})
@@ -34,6 +39,11 @@ SET( lexical_editor_srcs ${lexical_editor_decl} ${lexical_editor_impl})
 INSTALL( FILES ${lexical_editor_decl} DESTINATION include/y/jive/lexical/editor )
 SOURCE_GROUP( jive/lexical/editor FILES ${lexical_editor_srcs} )
 
+########################################################################
+## 
+## syntax
+##
+########################################################################
 FILE( GLOB syntax_decl y/jive/syntax/*.hpp)
 FILE( GLOB syntax_impl y/jive/syntax/*.cpp)
 SET( syntax_srcs ${syntax_decl} ${syntax_impl})
@@ -70,11 +80,25 @@ SET( syntax_xnode_srcs ${syntax_xnode_decl} ${syntax_xnode_impl})
 INSTALL( FILES ${syntax_xnode_decl} DESTINATION include/y/jive/syntax/xnode )
 SOURCE_GROUP( jive/syntax/xnode FILES ${syntax_xnode_srcs} )
 
-#FILE( GLOB dialect_decl y/jive/dialect/*.hpp)
-#FILE( GLOB dialect_impl y/jive/dialect/*.cpp)
-#SET( dialect_srcs ${dialect_decl} ${dialect_impl})
-#INSTALL( FILES ${dialect_decl} DESTINATION include/y/jive/dialect )
-#SOURCE_GROUP( jive/dialect FILES ${dialect_srcs} )
+########################################################################
+## 
+## language
+##
+########################################################################
+FILE( GLOB language_decl y/jive/language/*.hpp)
+FILE( GLOB language_impl y/jive/language/*.cpp)
+SET( language_srcs ${language_decl} ${language_impl})
+INSTALL( FILES ${language_decl} DESTINATION include/y/jive/language )
+SOURCE_GROUP( jive/language FILES ${language_srcs} )
+ 
+FILE( GLOB language_axiom_decl y/jive/language/axiom/*.hpp)
+FILE( GLOB language_axiom_impl y/jive/language/axiom/*.cpp)
+SET( language_axiom_srcs ${language_axiom_decl} ${language_axiom_impl})
+INSTALL( FILES ${language_axiom_decl} DESTINATION include/y/jive/language/axiom )
+SOURCE_GROUP( jive/language/axiom FILES ${language_axiom_srcs} )
+
+
+
 
 INCLUDE_DIRECTORIES( . ../main )
 
@@ -86,7 +110,7 @@ ADD_LIBRARY( y-jive STATIC
  ${syntax_grammar_srcs}
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
- #${dialect_srcs}
+ ${language_srcs} 
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

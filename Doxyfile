@@ -871,7 +871,6 @@ INPUT                  = src/main/y \
 			 src/alchemy/y \
                          src/jive/y \
                          src/json/y \
-			 src/csv/y  \
                          src/spade/y \
                          src/mpi++/y \
                          src/net/y \

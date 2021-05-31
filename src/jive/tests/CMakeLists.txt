@@ -12,6 +12,9 @@ ADD_TEST(lexer     test-jive lexer)
 ADD_TEST(editor    test-jive editor   ${HERE}/../../main/tests/words.db)
 ADD_TEST(editor64  test-jive editor64 ${HERE}/../../main/tests/words.db)
 ADD_TEST(ed_snake  test-jive ed_snake)
+
+ADD_TEST(lang:axiom test-jive lang_axiom)
+
 ADD_TEST(axiom     test-jive axiom)
 ADD_TEST(grammar   test-jive grammar)
 ADD_TEST(perr      test-jive perr)
