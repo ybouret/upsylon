@@ -55,7 +55,7 @@ namespace {
             }
 
             drop("blank","[:blank:]");
-            endl("endl", "[:endl:]");
+            drop_endl("endl", "[:endl:]");
             
             setRoot( alt("JSON") << ARRAY << OBJECT );
             graphViz("json.dot");

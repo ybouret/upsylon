@@ -38,6 +38,20 @@ namespace upsylon
                 string   gvName()  const; //!< create graphViz name
                 virtual ~Axiom() throw(); //!< cleanup
 
+                //! get derived class
+                template <typename T> T &as() throw()
+                {
+                    assert(self); assert(uuid==T::UUID);
+                    return *static_cast<T*>(self);
+                }
+
+                //! get derived class, const
+                template <typename T> const T &as() const throw()
+                {
+                    assert(self); assert(uuid==T::UUID);
+                    return *static_cast<T*>(self);
+                }
+
                 //______________________________________________________________
                 //
                 // members
@@ -48,11 +62,19 @@ namespace upsylon
             protected:
                 //! setup
                 template <typename ID> inline
-                explicit Axiom(const ID &i, const uint32_t t) : name( Tags::Make(i) ), uuid( t ) {}
+                explicit Axiom(const ID &i, const uint32_t t) : name( Tags::Make(i) ), uuid( t ), self(NULL) {}
+
+                //! signature, mandatory in derived constructors
+                template <typename T> inline
+                void I_am() throw()
+                {
+                    aliasing::_(self) = static_cast<T*>(this);
+                }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
+                void    *self; //!< derived class pointer
             };
 
         }

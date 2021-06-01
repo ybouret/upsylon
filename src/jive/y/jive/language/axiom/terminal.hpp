@@ -48,7 +48,7 @@ namespace upsylon
                 template <typename ID> inline
                 explicit Terminal(const ID  &i,
                                   const Type t) :
-                Axiom(i, UUID), type(t) { }
+                Axiom(i, UUID), type(t) { I_am<Terminal>(); }
 
 
                 //______________________________________________________________

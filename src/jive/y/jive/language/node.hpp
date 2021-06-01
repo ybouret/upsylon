@@ -34,9 +34,7 @@ namespace upsylon
                 typedef Supply::auto_ptr       Pointer; //!< alias
                 typedef Lexeme::Pointer        Lptr;    //!< alias
                 static  const char             CLID[];  //!< "LNode"
-                static  const uint8_t          TerminalMarker = 'T'; //!< to write terminals
-                static  const uint8_t          InternalMarker = 'I'; //!< to write internals
-
+                
 
                 //! kind of node
                 enum State
@@ -51,7 +49,7 @@ namespace upsylon
                 //______________________________________________________________
                 virtual const char *className()       const throw(); //!< CLID
                 virtual size_t      serialize(ios::ostream &) const; //!< serialize
-                static  Node       *Load(Source &source, const Grammar &);
+                static  Node       *Load(Module *,const Grammar &);  //!< reload a tree
 
                 //______________________________________________________________
                 //
@@ -79,13 +77,16 @@ namespace upsylon
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);
-                virtual     ~Node() throw();
-                explicit     Node(const Axiom &) throw();           //!< a new internal node
-                explicit     Node(const Axiom &, Lexeme *) throw(); //!< a new terminal node
-                Lptr  &     _Lptr() const throw(); //!< if IsTerminal
-                List  &     _List() const throw(); //!< if IsInternal
-                void         init() throw();       //!< clear workspace
-                virtual void vizCore(ios::ostream &fp) const;
+                virtual      ~Node() throw();
+                explicit      Node(const Axiom &) throw();           //!< a new internal node
+                explicit      Node(const Axiom &, Lexeme *) throw(); //!< a new terminal node
+                Lptr  &      _Lptr() const throw(); //!< if IsTerminal
+                List  &      _List() const throw(); //!< if IsInternal
+                void          init() throw();       //!< clear workspace
+                virtual void  vizCore(ios::ostream &fp) const;
+                static  Node *Reload(Source        &source,
+                                     const Grammar &grammar,
+                                     size_t        &stamp);
 
                 friend class memory::magazine<Node>;
                 uint64_t     wksp[ Y_U64_FOR_ITEM(List) ];

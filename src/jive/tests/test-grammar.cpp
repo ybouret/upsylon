@@ -22,7 +22,7 @@ namespace {
             emit("INT", RegExpFor::Integer);
             emit("XML", "<[:alpha:]+>");
             call( plug<CppComments>("cppComments") );
-            endl("endl","[:endl:]");
+            drop_endl("endl","[:endl:]");
             drop("blank","[:blank:]");
         }
 

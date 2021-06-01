@@ -192,7 +192,7 @@ namespace upsylon
                 
                 //! default endl
                 template <typename LABEL, typename REGEXP>
-                const Rule &endl(const LABEL &label, const REGEXP &regexp)
+                const Rule &drop_endl(const LABEL &label, const REGEXP &regexp)
                 {
                     return discard(label,regexp,this,&Scanner::newLine);
                 }

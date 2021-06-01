@@ -76,7 +76,7 @@ namespace upsylon
             //------------------------------------------------------------------
             {
                 const char __endl[] = "[:endl:]";
-                endl(__endl,__endl);
+                drop_endl(__endl,__endl);
             }
 
             {

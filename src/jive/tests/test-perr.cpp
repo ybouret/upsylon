@@ -26,7 +26,7 @@ namespace
 
             // lexical only
             drop("blank","[:blank:]");
-            endl("endl", "[:endl:]");
+            drop_endl("endl", "[:endl:]");
             graphViz("perr.dot");
             validate(this);
         }

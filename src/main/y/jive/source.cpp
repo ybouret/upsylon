@@ -152,7 +152,6 @@ namespace upsylon {
         void Source:: store(char C)
         {
             cache.push_front( Char::Acquire(*handle,C) );
-            
         }
     }
 
