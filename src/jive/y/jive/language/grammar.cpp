@@ -30,9 +30,9 @@ namespace upsylon
                     throw;
                 }
                 const size_t sz = axiom->name->size();
-                if(sz>maxNameLength)
+                if(sz>aligned)
                 {
-                    aliasing::_(maxNameLength) = sz;
+                    aliasing::_(aligned) = sz;
                 }
             }
 

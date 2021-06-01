@@ -14,7 +14,8 @@ namespace upsylon
         {
 
             class Axiom;
-
+            class Grammar;
+            
             //__________________________________________________________________
             //
             //
@@ -50,6 +51,7 @@ namespace upsylon
                 //______________________________________________________________
                 virtual const char *className()       const throw(); //!< CLID
                 virtual size_t      serialize(ios::ostream &) const; //!< serialize
+                static  Node       *Load(Source &source, const Grammar &);
 
                 //______________________________________________________________
                 //

@@ -38,8 +38,7 @@ Y_UTEST(lang_axiom)
     Language::Dull     D("Internal");
 
     LTree tree( LNode::Acquire(D) );
-
-
+    
     tree->leaves().push_back( LNode::Acquire(D) );
     tree->leaves().push_back( LNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
     tree->leaves().push_back( LNode::Acquire(B,create_lexeme(ctx,tag,stm)) );

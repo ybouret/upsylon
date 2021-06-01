@@ -27,7 +27,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Grammar(const ID &id) :
-                name( Tags::Make(id) ), axioms(), registry(), maxNameLength(0)
+                name( Tags::Make(id) ), axioms(), registry(), aligned(0)
                 {}
 
                 //! cleanup
@@ -82,10 +82,10 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag             name;          //!< shared name
-                const Axiom::List     axioms;        //!< axioms
-                const Axiom::Registry registry;      //!< registry
-                const size_t          maxNameLength; //!< max of axioms name length
+                const Tag             name;      //!< shared name
+                const Axiom::List     axioms;    //!< axioms
+                const Axiom::Registry registry;  //!< registry
+                const size_t          aligned;   //!< max of axioms name length
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
