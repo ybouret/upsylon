@@ -14,15 +14,20 @@ namespace upsylon
 
         namespace Language
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //! just a dull internal node to test
+            //
+            //__________________________________________________________________
             class Dull : public Internal
             {
             public:
-                static const uint32_t UUID   = Y_FOURCC('D','U','L','L');
+                static const uint32_t UUID   = Y_FOURCC('D','U','L','L'); //!< UUID
 
                 template <typename ID> inline
-                explicit Dull(const ID &i) : Internal(i,UUID) {}
-                virtual ~Dull() throw();
+                explicit Dull(const ID &i) : Internal(i,UUID) {} //!< setup
+                virtual ~Dull() throw();                         //!< cleanup
 
 
             private:

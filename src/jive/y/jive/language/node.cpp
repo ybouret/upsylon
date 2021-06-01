@@ -14,6 +14,7 @@ namespace upsylon
             const char Node:: CLID[] = "LNode";
 
 
+
             Node::Lptr  & Node:: _Lptr() const throw()
             {
                 assert(IsTerminal==state);
@@ -130,7 +131,12 @@ namespace upsylon
                 Release(node);
             }
 
-           
+
+            const char * Node::className() const throw()
+            {
+                return CLID;
+            }
+
 
         }
     }

@@ -27,21 +27,9 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::list_of_cpp<Axiom> List;
-                typedef Axiom                   *Handle;
-                typedef suffix_storage<Handle>   RegistryType;
-
-                //! a registry for Axiom look-up
-                class Registry : public RegistryType
-                {
-                public:
-                    explicit Registry();
-                    virtual ~Registry() throw();
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Registry);
-                };
-
+                typedef core::list_of_cpp<Axiom> List;      //!< alias
+                typedef Axiom                   *Handle;    //!< alias
+                typedef suffix_storage<Handle>   Registry;  //!< alias
 
                 //______________________________________________________________
                 //
@@ -58,6 +46,7 @@ namespace upsylon
                 const uint32_t uuid; //!< UUID
 
             protected:
+                //! setup
                 template <typename ID> inline
                 explicit Axiom(const ID &i, const uint32_t t) : name( Tags::Make(i) ), uuid( t ) {}
 

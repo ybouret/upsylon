@@ -21,7 +21,7 @@ namespace upsylon
             //! flexible Node for Terminal/Internal
             //
             //__________________________________________________________________
-            class Node : public inode<Node>, public Vizible
+            class Node : public inode<Node>, public Vizible, public Serializable
             {
             public:
                 //______________________________________________________________
@@ -33,6 +33,9 @@ namespace upsylon
                 typedef Supply::auto_ptr       Pointer; //!< alias
                 typedef Lexeme::Pointer        Lptr;    //!< alias
                 static  const char             CLID[];  //!< "LNode"
+                static  const uint8_t          TerminalMarker = 'T'; //!< to write terminals
+                static  const uint8_t          InternalMarker = 'I'; //!< to write internals
+
 
                 //! kind of node
                 enum State
@@ -41,6 +44,12 @@ namespace upsylon
                     IsInternal  //!< an internal, got child(ren)
                 };
 
+                //______________________________________________________________
+                //
+                // Serializable
+                //______________________________________________________________
+                virtual const char *className()       const throw(); //!< CLID
+                virtual size_t      serialize(ios::ostream &) const; //!< serialize
 
                 //______________________________________________________________
                 //
@@ -58,15 +67,13 @@ namespace upsylon
                 const Lexeme *lexeme()     const throw(); //!< IsTerminal : content()
                 const List   &leaves()     const throw(); //!< IsInternal : List()
                 List         &leaves()           throw(); //!< IsInternal : List()
-                bool          isTerminal() const throw(); //!< from axiom
-                bool          isInternal() const throw(); //!< from axiom
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                const Axiom &axiom;
-                const State  state;
+                const Axiom &axiom; //!< referenced axiom
+                const State  state; //!< internal/terminal
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Node);

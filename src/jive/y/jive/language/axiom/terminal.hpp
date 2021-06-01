@@ -28,8 +28,7 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
-
-                static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
+                static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M'); //!< UUID
 
                 //! type of terminal
                 enum Type
@@ -56,7 +55,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Type type;
+                const Type type; //!< semantic
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

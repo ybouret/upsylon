@@ -12,16 +12,7 @@ namespace upsylon
             Terminal:: ~Terminal() throw()
             {
             }
-
-            bool Node:: isTerminal() const throw()
-            {
-                return axiom.uuid == Terminal::UUID;
-            }
-
-            bool Node:: isInternal() const throw()
-            {
-                return axiom.uuid != Terminal::UUID;
-            }
+            
         }
 
     }

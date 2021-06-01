@@ -48,6 +48,9 @@ Y_UTEST(lang_axiom)
 
     tree->graphViz("ltree.dot");
 
+    const size_t sz = tree->save_to("ltree.bin");
+    std::cerr << "written=" << sz << std::endl;
+
     
 }
 Y_UTEST_DONE()

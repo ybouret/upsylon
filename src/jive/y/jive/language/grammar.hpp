@@ -24,12 +24,13 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
+                //! setup
                 template <typename ID> inline
                 explicit Grammar(const ID &id) :
-                name( Tags::Make(id) ), axioms(), registry(),
-                maxNameLength(0)
+                name( Tags::Make(id) ), axioms(), registry(), maxNameLength(0)
                 {}
 
+                //! cleanup
                 virtual ~Grammar() throw();
 
                 //______________________________________________________________
@@ -67,7 +68,14 @@ namespace upsylon
                 //
                 // creating Axioms
                 //______________________________________________________________
-                
+
+                //! a new terminal
+                template <typename ID>
+                const Terminal & term(const ID            &i,
+                                      const Terminal::Type t)
+                {
+                    return add( new Terminal(i,t) );
+                }
 
 
                 //______________________________________________________________

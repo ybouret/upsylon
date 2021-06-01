@@ -17,17 +17,17 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! Internal
+            //! Internal Axiom base class
             //
             //__________________________________________________________________
             class Internal : public Axiom
             {
             public:
-
-                virtual ~Internal() throw();
+                virtual ~Internal() throw(); //!< cleanup
 
 
             protected:
+                //! setup
                 template <typename ID>
                 explicit Internal(const ID &i, const uint32_t t) :
                 Axiom(i,t)
