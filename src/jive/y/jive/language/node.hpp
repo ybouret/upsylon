@@ -55,9 +55,11 @@ namespace upsylon
                 //
                 // utility methods
                 //______________________________________________________________
-                const Lexeme *lexeme() const throw(); //!< IsTerminal : content()
-                const List   &leaves() const throw(); //!< IsInternal : List()
-                List         &leaves()       throw(); //!< IsInternal : List()
+                const Lexeme *lexeme()     const throw(); //!< IsTerminal : content()
+                const List   &leaves()     const throw(); //!< IsInternal : List()
+                List         &leaves()           throw(); //!< IsInternal : List()
+                bool          isTerminal() const throw(); //!< from axiom
+                bool          isInternal() const throw(); //!< from axiom
 
                 //______________________________________________________________
                 //

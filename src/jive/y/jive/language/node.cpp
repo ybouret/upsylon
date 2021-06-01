@@ -27,6 +27,22 @@ namespace upsylon
             }
 
 
+            const Lexeme * Node:: lexeme() const throw()
+            {
+                assert(IsTerminal==state);
+                return _Lptr().content();
+            }
+
+            const Node::List & Node:: leaves() const throw()
+            {
+                return _List();
+            }
+
+            Node::List & Node:: leaves() throw()
+            {
+                return _List();
+            }
+
             Node:: ~Node() throw()
             {
                 switch(state)

@@ -10,8 +10,6 @@ namespace upsylon
         namespace Language
         {
 
-            const char Dull:: CLID[] = "Dull";
-            
             Dull:: ~Dull() throw()
             {
             }

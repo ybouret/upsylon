@@ -24,14 +24,39 @@ namespace upsylon
             class Terminal : public Axiom
             {
             public:
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
+
                 static const uint32_t UUID = Y_FOURCC('T', 'E', 'R', 'M');
 
-                virtual ~Terminal() throw();
-                
+                //! type of terminal
+                enum Type
+                {
+                    Standard, //!< regular expression
+                    Univocal, //!< univocal (regular) expression
+                    Division  //!< whatever, division only
+                };
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~Terminal() throw(); //!< cleanup
+
+                //! setup
                 template <typename ID> inline
-                explicit Terminal( const ID &id ) : Axiom( id, UUID) { }
+                explicit Terminal(const ID  &i,
+                                  const Type t) :
+                Axiom(i, UUID), type(t) { }
 
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Type type;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Terminal);

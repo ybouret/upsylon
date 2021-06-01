@@ -1,4 +1,5 @@
 #include "y/jive/language/axiom.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -9,7 +10,7 @@ namespace upsylon
         {
             string   Axiom:: gvName() const
             {
-                return name->to_printable();
+                return string_convert::to_printable(*name);
             }
 
             Axiom:: ~Axiom() throw()

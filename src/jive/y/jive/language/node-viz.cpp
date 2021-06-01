@@ -3,12 +3,13 @@
 
 namespace upsylon
 {
-
-
     namespace Jive
     {
         namespace Language
         {
+
+         
+
             void Node:: vizCore(ios::ostream &fp) const
             {
 
