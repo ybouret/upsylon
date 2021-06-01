@@ -46,7 +46,7 @@ Y_UTEST(lang_axiom)
     tree->leaves().push_back( LNode::Acquire(C,create_lexeme(ctx,tag,stm)) );
     tree->leaves().head->leaves().push(LNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
 
-    tree->graphViz("ltree.dot",true);
+    tree->graphViz("ltree.dot");
 
     
 }

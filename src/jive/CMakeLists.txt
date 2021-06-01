@@ -97,6 +97,12 @@ SET( language_axiom_srcs ${language_axiom_decl} ${language_axiom_impl})
 INSTALL( FILES ${language_axiom_decl} DESTINATION include/y/jive/language/axiom )
 SOURCE_GROUP( jive/language/axiom FILES ${language_axiom_srcs} )
 
+FILE( GLOB language_grammar_decl y/jive/language/grammar/*.hpp)
+FILE( GLOB language_grammar_impl y/jive/language/grammar/*.cpp)
+SET( language_grammar_srcs ${language_grammar_decl} ${language_grammar_impl})
+INSTALL( FILES ${language_grammar_decl} DESTINATION include/y/jive/language/grammar )
+SOURCE_GROUP( jive/language/grammar FILES ${language_grammar_srcs} )
+
 
 
 
@@ -110,7 +116,7 @@ ADD_LIBRARY( y-jive STATIC
  ${syntax_grammar_srcs}
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
- ${language_srcs} ${language_axiom_srcs}
+ ${language_srcs} ${language_axiom_srcs} ${language_grammar_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

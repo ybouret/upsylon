@@ -51,7 +51,7 @@ namespace upsylon {
             //__________________________________________________________________
             void record(const void *, const uint8_t);   //!< record address at code
             void record(const void *, const Leading &); //!< record address for all codes
-            void remove(const void *addr) throw();      //!< remove from all slots
+            void remove(const void *addr)      throw(); //!< remove from all slots
 
             
 

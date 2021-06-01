@@ -10,6 +10,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(ed_snake);
 
     Y_UTEST(lang_axiom);
+    Y_UTEST(lang_grammar);
 
     Y_UTEST(axiom);
     Y_UTEST(grammar);

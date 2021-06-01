@@ -23,18 +23,43 @@ namespace upsylon
             class Axiom : public CountedObject, public inode<Axiom>
             {
             public:
-                const Tag      name;
-                const uint32_t uuid;
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                typedef core::list_of_cpp<Axiom> List;
+                typedef Axiom                   *Handle;
+                typedef suffix_storage<Handle>   RegistryType;
 
-                string   gvName() const; //!< graphViz name
-                virtual ~Axiom() throw();
-                
+                //! a registry for Axiom look-up
+                class Registry : public RegistryType
+                {
+                public:
+                    explicit Registry();
+                    virtual ~Registry() throw();
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Registry);
+                };
+
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                string   gvName()  const; //!< create graphViz name
+                virtual ~Axiom() throw(); //!< cleanup
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Tag      name; //!< label
+                const uint32_t uuid; //!< UUID
+
             protected:
                 template <typename ID> inline
-                explicit Axiom(const ID &i, const uint32_t t) :
-                name( Tags::Make(i) ), uuid( t )
-                {
-                }
+                explicit Axiom(const ID &i, const uint32_t t) : name( Tags::Make(i) ), uuid( t ) {}
 
 
             private:
