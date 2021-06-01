@@ -45,9 +45,15 @@ namespace upsylon {
             explicit Scatter();         //!< acquire 256 * sizeof(Slot)
             virtual ~Scatter() throw(); //!< release all
 
+            //__________________________________________________________________
+            //
+            // generic function
+            //__________________________________________________________________
             void record(const void *, const uint8_t);   //!< record address at code
             void record(const void *, const Leading &); //!< record address for all codes
             void remove(const void *addr) throw();      //!< remove from all slots
+
+            
 
             //! display with optional callback
             void display(std::ostream&, void (*proc)(std::ostream&,const void*) ) const;

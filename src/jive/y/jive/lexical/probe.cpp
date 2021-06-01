@@ -22,7 +22,9 @@ namespace upsylon {
 
 
                 //! try accept and restore source
-                static inline bool tryAccept(const Rule &rule, Token &token, Source &source)
+                static inline bool tryAccept(const Rule &rule,
+                                             Token      &token,
+                                             Source     &source)
                 {
                     assert(0==token.size);
                     if(rule.motif->accept(token,source))

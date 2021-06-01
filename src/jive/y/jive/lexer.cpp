@@ -31,6 +31,7 @@ namespace upsylon {
             scan    = this;
             hist.free();
             io.release();
+            
         }
 
         void Lexer:: initialize()

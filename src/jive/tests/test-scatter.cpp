@@ -19,7 +19,9 @@ namespace
 Y_UTEST(scatter)
 {
 
+    // record single byte patterns
     {
+        std::cerr << "single byte patterns in scatter table" << std::endl;
         Scatter     table;
         list<Motif> motifs;
         for(unsigned i=0;i<256;++i)
@@ -36,6 +38,7 @@ Y_UTEST(scatter)
     }
     
     {
+        std::cerr << "Record [:digit:]+ in scatters table..." << std::endl;
         Scatter     table;
         const Motif m1 = RegExp("[:digit:]+",NULL);
         {
@@ -43,6 +46,8 @@ Y_UTEST(scatter)
             m1->start(fc);
             table.record(m1.content(),fc);
         }
+
+        std::cerr << "Record [a-z]? in table..." << std::endl;
         const Motif m2 = RegExp("[a-z]?",NULL);
         {
             Leading fc;
@@ -51,6 +56,8 @@ Y_UTEST(scatter)
         }
 
         table.display(std::cerr,dispMotif);
+
+        std::cerr << "removing last pattern..." << std::endl;
         table.remove(m2.content());
         table.display(std::cerr,dispMotif);
     }

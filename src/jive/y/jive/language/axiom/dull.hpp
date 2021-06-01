@@ -19,7 +19,7 @@ namespace upsylon
             {
             public:
                 static const uint32_t UUID   = Y_FOURCC('D','U','L','L');
-                static const char    *CLID;
+                static const char     CLID[];
 
                 template <typename ID> inline
                 explicit Dull() : Internal(CLID,UUID) {}

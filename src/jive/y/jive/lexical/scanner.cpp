@@ -27,6 +27,7 @@ namespace upsylon {
                 }
                 return "";
             }
+ 
 
             const char *Scanner:: getEOS() const throw()
             {
@@ -51,7 +52,7 @@ namespace upsylon {
             {
                 //--------------------------------------------------------------
                 //
-                // store rule in list
+                // store rule in list (safety first)
                 //
                 //--------------------------------------------------------------
                 assert(r);

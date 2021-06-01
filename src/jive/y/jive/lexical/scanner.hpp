@@ -104,11 +104,9 @@ namespace upsylon
                  - the first chars of r->motifs are included in first chars db
                  - r is scattered into the table for all its first chars
                  */
-                const Rule & add(Rule *r);
-                
-                
+                const Rule   & add(Rule *r);
                 const string & key()    const throw();  //!< get key for pointer
-                const char   * getEOS() const throw();  //!< named atEOS
+                const char   * getEOS() const throw();  //!< named atEOS policy
                 
                 //--------------------------------------------------------------
                 //
@@ -118,9 +116,9 @@ namespace upsylon
                 const Tag    label;  //!< label for this rule
                 const AtEOS  atEOS;  //!< what happens if EOS is met
             private:
-                size_t       stamp_;
+                size_t       stamp_; //!< internal stamp
             public:
-                size_t      &stamp; //!< reference
+                size_t       &stamp; //!< reference to stamp_ or other stamp
                 
                 //--------------------------------------------------------------
                 //
@@ -322,8 +320,7 @@ namespace upsylon
                  */
                 //--------------------------------------------------------------
                 Unit *probe(Source &, Directive &);
-                
-                
+
                 
                 const Rules   rules; //!< list of rules
                 const RulesDB hoard; //!< database of rules
@@ -354,7 +351,8 @@ namespace upsylon
                     const Event::Handle  ruleEvent  = new REGULAR(ruleAction);
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
-                
+
+                // create a leap rule
                 template <
                 typename LABEL,
                 typename REGEXP,
@@ -374,12 +372,13 @@ namespace upsylon
                     return add( new Rule(ruleLabel,ruleMotif,ruleEvent) );
                 }
                 
-                Unit     *endOfStream(const Source &) const;
-                Unit     *tokenToUnit(Token  &, const Tag &) const;
-                exception syntaxError(Source &) const;
+                Unit     *endOfStream(const Source &) const;         //!< NULL or error
+                Unit     *tokenToUnit(Token  &, const Tag &) const;  //!< create lexeme from token
+                exception syntaxError(Source &) const;               //!< upon mismatch
                 
             protected:
                 Source                  *origin; //!< currently processed source
+
             public:
                 const size_t             lmax;   //!< max rule label length
                 const Dictionary * const dict;   //!< shared dictionary
