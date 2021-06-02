@@ -15,16 +15,34 @@ namespace upsylon
         namespace Language
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! make an optional axion
+            //
+            //__________________________________________________________________
             class Option : public Wildcard
             {
             public:
-                static const uint32_t UUID = Y_FOURCC('O', 'P', 'T', 'N');
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+                static const uint32_t UUID = Y_FOURCC('O', 'P', 'T', 'N'); //!< UUID
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
+                //! setup
                 template <typename ID> inline
                 explicit Option(const ID &i, const Axiom &a) : Wildcard(i,UUID,a) {}
+
+                //! cleanup
                 virtual ~Option() throw();
 
-
+                Y_LANG_AXIOM_DECL();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Option);

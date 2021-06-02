@@ -5,6 +5,7 @@
 
 #include "y/jive/language/node.hpp"
 #include "y/ios/indent.hpp"
+#include "y/momentary/increase.hpp"
 
 namespace upsylon
 {
@@ -15,15 +16,20 @@ namespace upsylon
         namespace Language
         {
 
+            //__________________________________________________________________
+            //
+            //! observing grammar run
+            //__________________________________________________________________
             struct Observer
             {
-                unsigned    depth;
-                ios::indent indent() const throw();
+                typedef const momentary_increase_by<1,unsigned> Increase; //!< alias
+                ios::indent indent() const throw();                       //!< to indent with depth
+                unsigned    depth;                                        //!< current depth
             };
 
 #define Y_LANG_AXIOM_ARGS   xNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
-#define Y_LANG_AXIOM_DECL() virtual bool accept(Y_LANG_AXIOM_ARGS) const              //!< declare accept()
-#define Y_LANG_AXIOM_IMPL(CLASS) bool CLASS:: accept(Y_LANG_AXIOM_ARGS) const         //!< implement accept()
+#define Y_LANG_AXIOM_DECL() virtual bool accept(Y_LANG_AXIOM_ARGS) const               //!< declare accept()
+#define Y_LANG_AXIOM_IMPL(CLASS) bool CLASS:: accept(Y_LANG_AXIOM_ARGS) const          //!< implement accept()
 
             //__________________________________________________________________
             //
@@ -42,6 +48,8 @@ namespace upsylon
                 typedef Axiom                   *Handle;    //!< alias
                 typedef suffix_storage<Handle>   Registry;  //!< alias
                 static  bool                     Verbose;   //!< global language verbosity
+                static  const char               Accepted[];  //!< "ACCEPTED"
+                static  const char               Rejected[];  //!< "REJECTED"
 
                 //______________________________________________________________
                 //

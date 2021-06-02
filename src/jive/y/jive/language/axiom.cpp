@@ -9,7 +9,11 @@ namespace upsylon
         {
 
             bool Axiom::Verbose = false;
-            
+
+            const char  Axiom:: Accepted[] = "accepted";
+            const char  Axiom:: Rejected[] = "rejected";
+
+
             string   Axiom:: gvName() const
             {
                 return string_convert::to_printable(*name);

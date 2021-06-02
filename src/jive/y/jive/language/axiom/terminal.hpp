@@ -52,6 +52,12 @@ namespace upsylon
                                   const Type t) :
                 Axiom(i, UUID), type(t) { I_am<Terminal>(); }
 
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                static const char *TypeText(const Type t) throw(); //!< convert Type
+                const char        *typeText()       const throw(); //!< convert Type
 
                 //______________________________________________________________
                 //

@@ -30,7 +30,9 @@ namespace
     public:
         explicit MyGrammar() : Language::Grammar("MyGrammar")
         {
-            const Language::Axiom &ID = term("ID", Language::Terminal::Standard);
+            const Axiom &ID  = term("ID",Language::Terminal::Standard);
+            const Axiom &REP = rep(ID,0);
+            setRoot(REP);
         }
 
         virtual ~MyGrammar() throw()

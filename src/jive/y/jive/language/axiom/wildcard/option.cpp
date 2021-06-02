@@ -16,6 +16,26 @@ namespace upsylon
             {
             }
 
+            Y_LANG_AXIOM_IMPL(Option)
+            {
+                Y_LANG_PRINTLN( obs.indent() << "Option<" << name << ">");
+                Node *node = NULL;
+                ++obs.depth;
+                if(axiom.accept(node, source, lexer, obs))
+                {
+                    Node::Grow(tree,node);
+                    --obs.depth;
+                    Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Accepted << "]");
+                }
+                else
+                {
+                    --obs.depth;
+                    Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Rejected << "]");
+                }
+
+                return true;
+            }
+
         }
 
     }

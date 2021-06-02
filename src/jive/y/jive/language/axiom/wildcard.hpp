@@ -14,13 +14,20 @@ namespace upsylon
         namespace Language
         {
 
+            //__________________________________________________________________
+            //
+            //
+            //! Wildcard base class
+            //
+            //__________________________________________________________________
             class Wildcard : public Axiom
             {
             public:
-                virtual ~Wildcard() throw();
-                const Axiom &axiom;
+                virtual ~Wildcard() throw(); //!< cleanup
+                const Axiom &axiom;          //!< axiom to handle
 
             protected:
+                //! setup
                 template <typename ID> inline
                 explicit Wildcard(const ID &i, const uint32_t t, const Axiom &a) :
                 Axiom(i,t),

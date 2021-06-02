@@ -10,31 +10,49 @@ namespace upsylon
 
         namespace Language
         {
+
+            const char * Terminal:: TypeText(const Type t) throw()
+            {
+                switch(t)
+                {
+                    case Standard: return "Standard";
+                    case Univocal: return "Univocal";
+                    case Division: return "Division";
+                }
+                return "???";
+            }
+
+            const char * Terminal:: typeText() const throw()
+            {
+                return TypeText(type);
+            }
+
+
             Terminal:: ~Terminal() throw()
             {
             }
 
             Y_LANG_AXIOM_IMPL(Terminal)
             {
-                Y_LANG_PRINTLN( obs.indent() << "<" << name << ">");
+                Y_LANG_PRINTLN( obs.indent() << typeText() << " <" << name << ">");
                 Lexeme *lx = lexer.get(source);
                 if(!lx)
                 {
-                    Y_LANG_PRINTLN(  obs.indent() << "=> [reject EOS]" );
+                    Y_LANG_PRINTLN(  obs.indent() << " [" << Rejected << " EOS]" );
                     return false;
                 }
                 else
                 {
                     if(lx->label != name)
                     {
-                        Y_LANG_PRINTLN(  obs.indent() << "=> [reject " << lx->label << "]" );
+                        Y_LANG_PRINTLN(  obs.indent() << " [" << Rejected << " <" << lx->label << ">]" );
                         lexer.unget(lx);
                         return false;
                     }
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
-                        Y_LANG_PRINTLN(  obs.indent() << "=> [accept]" );
+                        Y_LANG_PRINTLN(  obs.indent() << "+ [" << Accepted << " <" << name << ">]" );
                         return true;
                     }
 

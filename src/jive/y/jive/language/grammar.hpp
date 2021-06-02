@@ -20,6 +20,8 @@ namespace upsylon
             class Grammar
             {
             public:
+                typedef Axiom Axiom; //!< alias
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -64,9 +66,10 @@ namespace upsylon
                     return ptr ? *ptr : NULL;
                 }
 
+
                 //______________________________________________________________
                 //
-                // creating Axioms
+                // terminal
                 //______________________________________________________________
 
                 //! a new terminal
@@ -79,6 +82,41 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                // repeat
+                //______________________________________________________________
+
+                //! create a named repeat
+                template <typename ID>
+                const Repeat & rep(const ID    &id,
+                                   const Axiom &axiom,
+                                   const size_t atLeast)
+                {
+                    return add( new Repeat(id,axiom,atLeast,false) );
+                }
+
+                //! create an automatic repeat
+                const Repeat & rep(const Axiom &axiom,
+                                   const size_t atLeast);
+
+
+
+                //______________________________________________________________
+                //
+                // option
+                //______________________________________________________________
+
+                //! create a named option
+                template <typename ID>
+                const Option & opt(const ID &id, const Axiom &axiom)
+                {
+                    return add( new Option(id,axiom) );
+                }
+
+                //! create an automatic option
+                const Option & opt(const Axiom &axiom);
+
+                //______________________________________________________________
+                //
                 // running on source
                 //______________________________________________________________
 
@@ -86,7 +124,7 @@ namespace upsylon
                 xNode *run(Source &source, Lexer &lexer);
 
 
-
+                
                 //______________________________________________________________
                 //
                 // members

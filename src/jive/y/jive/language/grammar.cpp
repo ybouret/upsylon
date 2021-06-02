@@ -52,6 +52,20 @@ namespace upsylon
                 return axioms.head;
             }
 
+
+            const Repeat & Grammar:: rep(const Axiom &axiom, const size_t atLeast)
+            {
+                const string id = *(axiom.name) + Repeat::Mark(atLeast);
+                return add( new Repeat(id,axiom,atLeast,true) );
+            }
+
+            const Option & Grammar:: opt(const Axiom &axiom)
+            {
+                const string id = *(axiom.name) + '?';
+                return opt(id,axiom);
+            }
+
+
         }
 
     }

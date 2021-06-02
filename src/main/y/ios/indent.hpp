@@ -11,16 +11,23 @@ namespace upsylon
 
     namespace ios
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! automatic indentation
+        //
+        //______________________________________________________________________
         class indent
         {
         public:
-            const size_t width;
-            const char   space;
-            indent(const size_t w, const char c=' ') throw();
-            indent(const indent &) throw();
-            ~indent() throw();
+            const size_t width; //!< width
+            const char   space; //!< printed
 
+            indent(const size_t w, const char c=' ') throw(); //!< create
+            indent(const indent &) throw();                   //!< copy
+            ~indent() throw();                                //!< cleanup
+
+            //! flexible output
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const indent &self)
             {
