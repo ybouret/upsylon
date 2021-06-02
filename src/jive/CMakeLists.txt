@@ -103,6 +103,13 @@ SET( language_axiom_wildcard_srcs ${language_axiom_wildcard_decl} ${language_axi
 INSTALL( FILES ${language_axiom_wildcard_decl} DESTINATION include/y/jive/language/axiom/wildcard )
 SOURCE_GROUP( jive/language/axiom/wildcard FILES ${language_axiom_wildcard_srcs} )
 
+FILE( GLOB language_axiom_compound_decl y/jive/language/axiom/compound/*.hpp)
+FILE( GLOB language_axiom_compound_impl y/jive/language/axiom/compound/*.cpp)
+SET( language_axiom_compound_srcs ${language_axiom_compound_decl} ${language_axiom_compound_impl})
+INSTALL( FILES ${language_axiom_compound_decl} DESTINATION include/y/jive/language/axiom/compound )
+SOURCE_GROUP( jive/language/axiom/compound FILES ${language_axiom_compound_srcs} )
+
+
 FILE( GLOB language_grammar_decl y/jive/language/grammar/*.hpp)
 FILE( GLOB language_grammar_impl y/jive/language/grammar/*.cpp)
 SET( language_grammar_srcs ${language_grammar_decl} ${language_grammar_impl})
@@ -128,7 +135,7 @@ ADD_LIBRARY( y-jive STATIC
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
  ${language_srcs} 
- ${language_axiom_srcs} ${language_axiom_wildcard_srcs} 
+ ${language_axiom_srcs} ${language_axiom_wildcard_srcs} ${language_axiom_compound_srcs} 
  ${language_xnode_srcs}
  ${language_grammar_srcs}
  )

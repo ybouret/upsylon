@@ -40,7 +40,7 @@ namespace upsylon
                                 const size_t n,
                                 const bool   m ) :
                 Wildcard(i,UUID,a), atLeast(n), hasMark(m)
-                {}
+                { I_am<Repeat>(); }
 
                 //! cleanup
                 virtual ~Repeat() throw();

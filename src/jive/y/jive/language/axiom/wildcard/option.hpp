@@ -37,7 +37,7 @@ namespace upsylon
 
                 //! setup
                 template <typename ID> inline
-                explicit Option(const ID &i, const Axiom &a) : Wildcard(i,UUID,a) {}
+                explicit Option(const ID &i, const Axiom &a) : Wildcard(i,UUID,a) { I_am<Option>(); }
 
                 //! cleanup
                 virtual ~Option() throw();
