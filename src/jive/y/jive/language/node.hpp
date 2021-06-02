@@ -94,8 +94,8 @@ namespace upsylon
 
         }
 
-        typedef Language::Node LNode; //!< alias
-        typedef LNode::Pointer LTree; //!< alias
+        typedef Language::Node xNode; //!< alias
+        typedef xNode::Pointer xTree; //!< alias
 
     }
 }

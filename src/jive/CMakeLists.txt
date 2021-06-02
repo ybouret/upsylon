@@ -104,6 +104,11 @@ INSTALL( FILES ${language_grammar_decl} DESTINATION include/y/jive/language/gram
 SOURCE_GROUP( jive/language/grammar FILES ${language_grammar_srcs} )
 
 
+FILE( GLOB language_xnode_decl y/jive/language/xnode/*.hpp)
+FILE( GLOB language_xnode_impl y/jive/language/xnode/*.cpp)
+SET( language_xnode_srcs ${language_xnode_decl} ${language_xnode_impl})
+INSTALL( FILES ${language_xnode_decl} DESTINATION include/y/jive/language/xnode )
+SOURCE_GROUP( jive/language/xnode FILES ${language_xnode_srcs} )
 
 
 INCLUDE_DIRECTORIES( . ../main )
@@ -116,7 +121,10 @@ ADD_LIBRARY( y-jive STATIC
  ${syntax_grammar_srcs}
  ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
  ${syntax_xnode_srcs}
- ${language_srcs} ${language_axiom_srcs} ${language_grammar_srcs}
+ ${language_srcs} 
+ ${language_axiom_srcs} 
+ ${language_xnode_srcs}
+ ${language_grammar_srcs}
  )
 INSTALL( TARGETS y-jive ARCHIVE DESTINATION lib )
 

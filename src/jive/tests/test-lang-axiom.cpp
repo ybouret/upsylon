@@ -26,7 +26,7 @@ namespace
 
 Y_UTEST(lang_axiom)
 {
-    Y_UTEST_SIZEOF(Jive::LNode);
+    Y_UTEST_SIZEOF(Jive::xNode);
     const Tag     tag = Tags::Make("term");
     const Context ctx("context");
     size_t        stm = 0;
@@ -37,13 +37,13 @@ Y_UTEST(lang_axiom)
     Language::Terminal C("Division",Language::Terminal::Division);
     Language::Dull     D("Internal");
 
-    LTree tree( LNode::Acquire(D) );
+    xTree tree( xNode::Acquire(D) );
     
-    tree->leaves().push_back( LNode::Acquire(D) );
-    tree->leaves().push_back( LNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
-    tree->leaves().push_back( LNode::Acquire(B,create_lexeme(ctx,tag,stm)) );
-    tree->leaves().push_back( LNode::Acquire(C,create_lexeme(ctx,tag,stm)) );
-    tree->leaves().head->leaves().push(LNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
+    tree->leaves().push_back( xNode::Acquire(D) );
+    tree->leaves().push_back( xNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
+    tree->leaves().push_back( xNode::Acquire(B,create_lexeme(ctx,tag,stm)) );
+    tree->leaves().push_back( xNode::Acquire(C,create_lexeme(ctx,tag,stm)) );
+    tree->leaves().head->leaves().push(xNode::Acquire(A,create_lexeme(ctx,tag,stm)) );
 
     tree->graphViz("ltree.dot");
 
