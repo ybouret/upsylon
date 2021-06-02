@@ -14,6 +14,14 @@ namespace upsylon
             {
             }
 
+            Y_LANG_AXIOM_IMPL(Dull)
+            {
+                (void) lexer;
+                (void) source;
+                (void) tree;
+                (void) obs;
+                return false;
+            }
         }
     }
 }

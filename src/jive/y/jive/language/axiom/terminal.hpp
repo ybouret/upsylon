@@ -42,6 +42,8 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
+                Y_LANG_AXIOM_DECL();
+
                 virtual ~Terminal() throw(); //!< cleanup
 
                 //! setup

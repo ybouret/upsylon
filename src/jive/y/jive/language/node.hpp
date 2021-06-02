@@ -67,6 +67,7 @@ namespace upsylon
                 const Lexeme *lexeme()     const throw(); //!< IsTerminal : content()
                 const List   &leaves()     const throw(); //!< IsInternal : List()
                 List         &leaves()           throw(); //!< IsInternal : List()
+                static void   Grow(Node * &tree, Node *node) throw();
 
                 //______________________________________________________________
                 //

@@ -23,12 +23,11 @@ namespace upsylon
             class Dull : public Internal
             {
             public:
-                static const uint32_t UUID   = Y_FOURCC('D','U','L','L'); //!< UUID
-
                 template <typename ID> inline
-                explicit Dull(const ID &i) : Internal(i,UUID) {} //!< setup
-                virtual ~Dull() throw();                         //!< cleanup
-
+                explicit              Dull(const ID &i) : Internal(i,UUID) {} //!< setup
+                virtual              ~Dull() throw();                         //!< cleanup
+                static const uint32_t UUID   = Y_FOURCC('D','U','L','L');     //!< UUID
+                Y_LANG_AXIOM_DECL(); //!< false
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Dull);

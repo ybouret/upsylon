@@ -138,6 +138,20 @@ namespace upsylon
             }
 
 
+            void Node::Grow(Node *&tree, Node *node) throw()
+            {
+                assert(node);
+                if(tree)
+                {
+                    assert(IsInternal==tree->state);
+                    tree->leaves().push_back(node);
+                }
+                else
+                {
+                    tree = node;
+                }
+            }
+
         }
     }
 }

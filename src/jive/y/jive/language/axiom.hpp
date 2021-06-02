@@ -4,6 +4,7 @@
 #define Y_JIVE_LANG_AXIOM_INCLUDED 1
 
 #include "y/jive/language/node.hpp"
+#include "y/ios/indent.hpp"
 
 namespace upsylon
 {
@@ -13,6 +14,16 @@ namespace upsylon
 
         namespace Language
         {
+
+            struct Observer
+            {
+                unsigned    depth;
+                ios::indent indent() const throw();
+            };
+
+#define Y_LANG_AXIOM_ARGS   xNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
+#define Y_LANG_AXIOM_DECL() virtual bool accept(Y_LANG_AXIOM_ARGS) const              //!< declare accept()
+#define Y_LANG_AXIOM_IMPL(CLASS) bool CLASS:: accept(Y_LANG_AXIOM_ARGS) const         //!< implement accept()
 
             //__________________________________________________________________
             //
@@ -30,6 +41,7 @@ namespace upsylon
                 typedef core::list_of_cpp<Axiom> List;      //!< alias
                 typedef Axiom                   *Handle;    //!< alias
                 typedef suffix_storage<Handle>   Registry;  //!< alias
+                static  bool                     Verbose;   //!< global language verbosity
 
                 //______________________________________________________________
                 //
@@ -54,6 +66,14 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                // interface
+                //______________________________________________________________
+
+                //! accept method
+                Y_LANG_AXIOM_DECL() = 0;
+                
+                //______________________________________________________________
+                //
                 // members
                 //______________________________________________________________
                 const Tag      name; //!< label
@@ -66,16 +86,16 @@ namespace upsylon
 
                 //! signature, mandatory in derived constructors
                 template <typename T> inline
-                void I_am() throw()
-                {
-                    aliasing::_(self) = static_cast<T*>(this);
-                }
+                void I_am() throw() { aliasing::_(self) = static_cast<T*>(this); }
 
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
                 void    *self; //!< derived class pointer
             };
+
+            //! message for verbosity
+#define Y_LANG_PRINTLN(MSG) do { if(Jive::Language::Axiom::Verbose) { std::cerr << MSG << std::endl; } } while(false)
 
         }
     }
