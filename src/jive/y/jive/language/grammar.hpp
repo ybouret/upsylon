@@ -38,7 +38,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
-                //! axiom is pushed at the back of the axioms
+                //! axiom is pushed at the back of the axioms and registerd
                 void declare(Axiom *axiom);
 
                 //! helper
