@@ -52,10 +52,16 @@ namespace
     };
 
 }
+#include "y/fs/local/fs.hpp"
 
 Y_UTEST(lang_grammar)
 {
     Language::Axiom::Verbose = true;
+    vfs &fs = local_fs::instance();
+
+    fs.try_remove_file("tree.dot");
+    fs.try_remove_file("tree.png");
+
 
     {
         Language::Grammar         G("G");
