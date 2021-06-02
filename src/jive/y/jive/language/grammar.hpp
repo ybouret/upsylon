@@ -20,8 +20,10 @@ namespace upsylon
             class Grammar
             {
             public:
-                typedef Axiom Axiom; //!< alias
-                
+                typedef Language::Axiom     Axiom;     //!< alias
+                typedef Language::Aggregate Aggregate; //!< alias
+                typedef Language::Alternate Alternate; //!< alias
+
                 //______________________________________________________________
                 //
                 // C++
@@ -114,6 +116,26 @@ namespace upsylon
 
                 //! create an automatic option
                 const Option & opt(const Axiom &axiom);
+
+                //______________________________________________________________
+                //
+                // aggregate
+                //______________________________________________________________
+
+                //! named aggregate
+                template <typename ID>
+                Aggregate & agg(const ID &id) {
+                    return add( new Aggregate(id) );
+                }
+
+                //______________________________________________________________
+                //
+                // alternate
+                //______________________________________________________________
+                template <typename ID>
+                Alternate & alt(const ID &id) {
+                    return add( new Alternate(id) );
+                }
 
                 //______________________________________________________________
                 //

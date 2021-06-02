@@ -30,36 +30,39 @@ namespace upsylon
             Y_LANG_AXIOM_IMPL(Repeat)
             {
                 Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast);
-                size_t count = 0;
-                xTree  branch( Node::Acquire(*this) );
+                xTree       branch( Node::Acquire(*this) );
+                Node::List &leaves = branch->leaves();
 
                 {
-                    Observer::Increase scoped(obs.depth);
-                    Node::List        &leaves = branch->leaves();
+                    Observer::Increase scopred(obs.depth);
+                    while(true)
                     {
                         Node *node = 0;
-                        while( axiom.accept( node, source, lexer, obs) )
+                        if(axiom.accept(node,source,lexer,obs))
                         {
-                            if(!node)
-                            {
-                                throw exception("invalid repeated <%s>", **(axiom.name) );
-                            }
+                            if(!node) throw exception("found invalid repeating empty <%s> ", **(axiom.name) );
                             leaves.push( node );
-                            ++count;
+                        }
+                        else
+                        {
+                            assert(NULL==node);
+                            break;
                         }
                     }
                 }
 
+
+                const size_t count = leaves.size;
                 if(count>=atLeast)
                 {
-                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Accepted << " count=" << count << "]");
                     Node::Grow(tree,branch.yield());
+                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Accepted << " count=" << count << "]");
                     return true;
                 }
                 else
                 {
-                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
                     Node::ReturnTo(lexer,branch.yield());
+                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
                     return false;
                 }
             }

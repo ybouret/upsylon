@@ -14,15 +14,28 @@ namespace upsylon
 
         namespace Language
         {
-
+            //__________________________________________________________________
+            //
+            //
+            //! a list of other atoms
+            //
+            //__________________________________________________________________
             class Compound : public Axiom, public Axiom::Manifest
             {
             public:
-
-                virtual ~Compound() throw();
+                virtual   ~Compound() throw();        //!< cleanup
+                Compound & operator<<(const Axiom &); //!< append an axiom
 
             protected:
-                
+                //! setup
+                template <typename ID> inline
+                explicit Compound(const ID &i, const uint32_t t) :
+                Axiom(i,t),
+                Axiom:: Manifest()
+                {
+                }
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Compound);
             };

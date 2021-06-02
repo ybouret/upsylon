@@ -38,21 +38,21 @@ namespace upsylon
                 Lexeme *lx = lexer.get(source);
                 if(!lx)
                 {
-                    Y_LANG_PRINTLN(  obs.indent() << " [" << Rejected << " EOS]" );
+                    Y_LANG_PRINTLN(  obs.indent() << "[" << Rejected << " EOS]" );
                     return false;
                 }
                 else
                 {
                     if(lx->label != name)
                     {
-                        Y_LANG_PRINTLN(  obs.indent() << " [" << Rejected << " <" << lx->label << ">]" );
+                        Y_LANG_PRINTLN(  obs.indent() << "[" << Rejected << " <" << lx->label << "> = '" << *lx << "']" );
                         lexer.unget(lx);
                         return false;
                     }
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
-                        Y_LANG_PRINTLN(  obs.indent() << "+ [" << Accepted << " <" << name << ">]" );
+                        Y_LANG_PRINTLN(  obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
                         return true;
                     }
 

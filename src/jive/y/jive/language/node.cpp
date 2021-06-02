@@ -144,12 +144,13 @@ namespace upsylon
                 if(tree)
                 {
                     assert(IsInternal==tree->state);
-                    tree->leaves().push_back(node);
+                    tree->leaves().push(node);
                 }
                 else
                 {
                     tree = node;
                 }
+
             }
 
         }

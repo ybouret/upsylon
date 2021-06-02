@@ -14,7 +14,8 @@ namespace
     public:
         explicit MyLexer() : Lexer("MyLexer")
         {
-            (void) emit("ID", "[:word:]+");
+            (void) emit("ID", "[:alpha:]+");
+            (void) emit("INT", "[:digit:]+" );
             drop_endl("[:endl:]", "[:endl:]");
             drop("[:blank:]", "[:blank:]");
         }
@@ -30,9 +31,16 @@ namespace
     public:
         explicit MyGrammar() : Language::Grammar("MyGrammar")
         {
+
             const Axiom &ID  = term("ID",Language::Terminal::Standard);
-            const Axiom &REP = rep(ID,0);
-            setRoot(REP);
+            const Axiom &INT = term("INT",Language::Terminal::Standard);
+            const Axiom &WHO = (agg("WHO") << ID <<  opt(INT) );
+            setRoot(WHO);
+
+            {
+                const Axiom &REP = rep(WHO,0);
+                setRoot(REP);
+            }
         }
 
         virtual ~MyGrammar() throw()
@@ -50,8 +58,7 @@ Y_UTEST(lang_grammar)
     Language::Axiom::Verbose = true;
 
     {
-        Language::Grammar G("G");
-
+        Language::Grammar         G("G");
         const Language::Terminal &ID  = G.term("ID", Language::Terminal::Standard);
         const Language::Axiom    &INT = G.term("INT",Language::Terminal::Standard);
         Y_CHECK(G.query("ID"));
@@ -66,7 +73,10 @@ Y_UTEST(lang_grammar)
     {
         Source source( Module::OpenFile(argv[1]));
         xTree  tree( grammar.run(source,lexer) );
-
+        if( tree.is_valid() )
+        {
+            tree->graphViz("tree.dot");
+        }
     }
 
 }

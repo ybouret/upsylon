@@ -1,3 +1,4 @@
+//! \file
 
 #ifndef Y_JIVE_LANG_REPEAT_INCLUDED
 #define Y_JIVE_LANG_REPEAT_INCLUDED 1

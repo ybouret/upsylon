@@ -14,7 +14,12 @@ namespace upsylon
             {
             }
 
-            
+            Compound & Compound:: operator<<(const Axiom &axiom)
+            {
+                push_back( new Axiom::Reference(axiom) );
+                return *this;
+            }
+
 
         }
 

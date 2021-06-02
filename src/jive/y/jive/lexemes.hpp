@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_JIVE_LEXEMES_INCLUDED

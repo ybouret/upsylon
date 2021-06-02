@@ -4,6 +4,7 @@
 
 #include "y/jive/language/axiom/terminal.hpp"
 #include "y/jive/language/axiom/wildcard/all.hpp"
+#include "y/jive/language/axiom/compound/all.hpp"
 
 #endif
 
