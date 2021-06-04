@@ -28,14 +28,17 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
+              
+                //! UUID
                 static const uint32_t UUID = Y_FOURCC('A','L','T','R');
 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                virtual ~Alternate() throw();
+                virtual ~Alternate() throw(); //!< cleanup
 
+                //! setup
                 template <typename ID> inline
                 explicit Alternate(const ID &i) :
                 Compound(i,UUID)

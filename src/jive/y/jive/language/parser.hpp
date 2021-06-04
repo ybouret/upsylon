@@ -20,19 +20,25 @@ namespace upsylon
             //__________________________________________________________________
             class Parser : public Grammar, public Lexer
             {
-            public:
-                Y_LANG_ECHO(Axiom);
-                Y_LANG_ECHO(Terminal);
-                Y_LANG_ECHO(Aggregate);
-                Y_LANG_ECHO(Alternate);
-                
-
+            private:
                 enum TerminalUsage
                 {
                     SemanticTerminal,
                     DivisionTerminal
                 };
-
+                
+                Terminal::Type Check(const Lexical::Rule &, const TerminalUsage ) const;
+                
+            public:
+                //______________________________________________________________
+                //
+                // Types and definitions
+                //______________________________________________________________
+                Y_LANG_ECHO(Axiom);
+                Y_LANG_ECHO(Terminal);
+                Y_LANG_ECHO(Aggregate);
+                Y_LANG_ECHO(Alternate);
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -43,10 +49,6 @@ namespace upsylon
                 //
                 // building Terminals
                 //______________________________________________________________
-
-                Terminal::Type Check(const Lexical::Rule &, const TerminalUsage ) const;
-
-
                 template <typename ID, typename RX> inline
                 const Terminal & terminal(const ID &id, const RX &rx)
                 {
@@ -101,6 +103,8 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Parser);
+              
+                
             };
         }
     }

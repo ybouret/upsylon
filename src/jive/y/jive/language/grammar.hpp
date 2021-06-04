@@ -12,6 +12,7 @@ namespace upsylon
         namespace Language
         {
 
+            //! echo typedef into class
 #define Y_LANG_ECHO(CLASS) typedef Language::CLASS CLASS
 
             //__________________________________________________________________
@@ -23,10 +24,9 @@ namespace upsylon
             class Grammar
             {
             public:
-                Y_LANG_ECHO(Axiom);
-                Y_LANG_ECHO(Aggregate);
-                Y_LANG_ECHO(Alternate);
-
+                Y_LANG_ECHO(Axiom);       //!< alias
+                Y_LANG_ECHO(Aggregate);   //!< alias
+                Y_LANG_ECHO(Alternate);   //!< alias
 
                 //______________________________________________________________
                 //
@@ -152,6 +152,8 @@ namespace upsylon
                 //
                 // alternate
                 //______________________________________________________________
+                
+                //! named alternate
                 template <typename ID>
                 Alternate & alt(const ID &id) {
                     return add( new Alternate(id) );

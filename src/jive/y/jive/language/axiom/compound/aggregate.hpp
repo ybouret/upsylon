@@ -44,8 +44,9 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
-                virtual ~Aggregate() throw();
+                virtual ~Aggregate() throw(); //!< cleanup
 
+                //! setup
                 template <typename ID> inline
                 explicit Aggregate(const ID &i, const Type t) :
                 Compound(i,UUID), type(t)
@@ -59,7 +60,7 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Type type;
+                const Type type; //!< acting as...
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

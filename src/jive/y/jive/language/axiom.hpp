@@ -24,12 +24,17 @@ namespace upsylon
             //__________________________________________________________________
             struct Observer
             {
+                //! base class to momentarily increase indentation
                 typedef momentary_increase_by<1,unsigned> IncreaseType;
 
+                //! local class to momentarily increase depth
                 class Increase : public IncreaseType
                 {
                 public:
+                    //! ++obs.depth
                     inline  Increase(Observer &obs) throw() : IncreaseType(obs.depth) {}
+                    
+                    //! --obs.depth
                     inline ~Increase() throw() {}
 
                 private:
