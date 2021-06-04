@@ -65,6 +65,15 @@ namespace upsylon
                 return opt(id,axiom);
             }
 
+            const Repeat & Grammar:: zeroOrMore(const Axiom &axiom)
+            {
+                return rep(axiom,0);
+            }
+
+            const Repeat & Grammar:: oneOrMore(const Axiom &axiom)
+            {
+                return rep(axiom,1);
+            }
 
         }
 

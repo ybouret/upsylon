@@ -28,7 +28,17 @@ namespace upsylon
                 //
                 // types and definition
                 //______________________________________________________________
+
+                //! UUID
                 static const uint32_t UUID = Y_FOURCC('A','G','G','R');
+
+                //! type of aggregate
+                enum Type
+                {
+                    Standard, //!< a named entity
+                    Variadic, //!< merge if only one member
+                    Grouping  //!< transient => merge always
+                };
 
                 //______________________________________________________________
                 //
@@ -37,14 +47,19 @@ namespace upsylon
                 virtual ~Aggregate() throw();
 
                 template <typename ID> inline
-                explicit Aggregate(const ID &i) :
-                Compound(i,UUID)
+                explicit Aggregate(const ID &i, const Type t) :
+                Compound(i,UUID), type(t)
                 {
                     I_am<Aggregate>();
                 }
 
                 Y_LANG_AXIOM_DECL();
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Type type;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Aggregate);

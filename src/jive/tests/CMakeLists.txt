@@ -15,6 +15,7 @@ ADD_TEST(ed_snake  test-jive ed_snake)
 
 ADD_TEST(lang:axiom   test-jive lang_axiom)
 ADD_TEST(lang:grammar test-jive lang_grammar)
+ADD_TEST(lang:parser  test-jive lang_parser)
 
 ADD_TEST(axiom     test-jive axiom)
 ADD_TEST(grammar   test-jive grammar)

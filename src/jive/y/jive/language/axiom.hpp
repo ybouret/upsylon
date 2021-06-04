@@ -24,7 +24,17 @@ namespace upsylon
             //__________________________________________________________________
             struct Observer
             {
-                typedef const momentary_increase_by<1,unsigned> Increase; //!< alias
+                typedef momentary_increase_by<1,unsigned> IncreaseType;
+
+                class Increase : public IncreaseType
+                {
+                public:
+                    inline  Increase(Observer &obs) throw() : IncreaseType(obs.depth) {}
+                    inline ~Increase() throw() {}
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(Increase);
+                };
                 ios::indent indent() const throw();                       //!< to indent with depth
                 unsigned    depth;                                        //!< current depth
             };
@@ -55,6 +65,7 @@ namespace upsylon
                 static  bool                         Verbose;   //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
                 static  const char                   Rejected[];  //!< "REJECTED"
+                static  const char                  *Status(const bool) throw(); //!< accepted|rejected
 
                 //______________________________________________________________
                 //

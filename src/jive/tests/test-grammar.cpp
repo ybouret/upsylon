@@ -85,6 +85,8 @@ Y_UTEST(grammar)
         MyGrammar        G;
         MyLexer          L;
         Syntax::Dull     dull("empty");
+        
+
         if(argc>1)
         {
             Syntax::Axiom::Verbose = true;

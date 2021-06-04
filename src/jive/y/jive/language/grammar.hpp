@@ -11,6 +11,9 @@ namespace upsylon
     {
         namespace Language
         {
+
+#define Y_LANG_ECHO(CLASS) typedef Language::CLASS CLASS
+
             //__________________________________________________________________
             //
             //
@@ -20,9 +23,10 @@ namespace upsylon
             class Grammar
             {
             public:
-                typedef Language::Axiom     Axiom;     //!< alias
-                typedef Language::Aggregate Aggregate; //!< alias
-                typedef Language::Alternate Alternate; //!< alias
+                Y_LANG_ECHO(Axiom);
+                Y_LANG_ECHO(Aggregate);
+                Y_LANG_ECHO(Alternate);
+
 
                 //______________________________________________________________
                 //
@@ -68,6 +72,8 @@ namespace upsylon
                     return ptr ? *ptr : NULL;
                 }
 
+                //! try to validate
+                void validateWith(const Lexer *) const;
 
                 //______________________________________________________________
                 //
@@ -100,6 +106,8 @@ namespace upsylon
                 const Repeat & rep(const Axiom &axiom,
                                    const size_t atLeast);
 
+                const Repeat & zeroOrMore(const Axiom &); //!< rep(axiom,0)
+                const Repeat & oneOrMore(const Axiom  &); //!< rep(axiom,1)
 
 
                 //______________________________________________________________
@@ -125,9 +133,21 @@ namespace upsylon
                 //! named aggregate
                 template <typename ID>
                 Aggregate & agg(const ID &id) {
-                    return add( new Aggregate(id) );
+                    return add( new Aggregate(id,Aggregate::Standard) );
                 }
 
+                //! named aggregate
+                template <typename ID>
+                Aggregate & grp(const ID &id) {
+                    return add( new Aggregate(id,Aggregate::Grouping) );
+                }
+
+                //! named aggregate
+                template <typename ID>
+                Aggregate & var(const ID &id) {
+                    return add( new Aggregate(id,Aggregate::Variadic) );
+                }
+                
                 //______________________________________________________________
                 //
                 // alternate

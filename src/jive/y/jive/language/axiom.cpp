@@ -27,6 +27,11 @@ namespace upsylon
             {
                 return ios::indent(depth);
             }
+
+            const char * Axiom:: Status(const bool flag) throw()
+            {
+                return flag ? Accepted : Rejected;
+            }
         }
     }
 

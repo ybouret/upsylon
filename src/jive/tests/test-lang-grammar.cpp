@@ -75,6 +75,8 @@ Y_UTEST(lang_grammar)
 
     MyLexer   lexer;
     MyGrammar grammar;
+    grammar.validateWith(&lexer);
+    
     if(argc>1)
     {
         Source source( Module::OpenFile(argv[1]));

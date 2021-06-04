@@ -24,11 +24,11 @@ namespace upsylon
                 size_t num=1;
 
                 {
-                    Observer::Increase   outer(obs.depth);
+                    Observer::Increase   outer(obs);
                     for(const Reference *ref=head;ref;ref=ref->next,++num)
                     {
-                        Y_LANG_PRINTLN( obs.indent() << "|_<" << name << ">@" << num << "/" << size);
-                        Observer::Increase   inner(obs.depth);
+                        Y_LANG_PRINTLN( obs.indent() << "|_agg<" << name << ">@" << num << "/" << size);
+                        Observer::Increase   inner(obs);
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
                         {
