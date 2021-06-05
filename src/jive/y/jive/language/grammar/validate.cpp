@@ -18,7 +18,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
 #define Y_AXIOM_FILL_COMPOUND(CLASS) \
 /**/    case CLASS::UUID:\
-/**/        for(const Axiom::Reference *ref=axiom->as<Aggregate>().head;ref;ref=ref->next) fillDB(db, & **ref);\
+/**/        for(const Axiom::Reference *ref=axiom->as<CLASS>().head;ref;ref=ref->next) fillDB(db, & **ref);\
 /**/        break
 
 
@@ -43,6 +43,8 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 }
 
             }
+            
+            
             void Grammar:: validateWith(const Lexer *lexer) const
             {
                 const char  *id   = **name;

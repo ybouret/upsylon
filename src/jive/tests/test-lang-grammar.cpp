@@ -77,6 +77,8 @@ Y_UTEST(lang_grammar)
     MyGrammar grammar;
     grammar.validateWith(&lexer);
     
+    grammar.graphViz("grammar.dot");
+    
     if(argc>1)
     {
         Source source( Module::OpenFile(argv[1]));

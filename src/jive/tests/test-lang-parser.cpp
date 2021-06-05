@@ -48,9 +48,11 @@ Y_UTEST(lang_parser)
     fs.try_remove_file("tree.png");
 
     MyParser parser;
+    parser.graphViz("parser.dot");
 
     if(argc>1)
     {
+        //parser.reset();
         Source source( Module::OpenFile(argv[1]));
         xTree  tree( parser.parse(source) );
         if( tree.is_valid() )

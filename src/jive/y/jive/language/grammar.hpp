@@ -179,7 +179,8 @@ namespace upsylon
 
                 //! accept the root Axiom
                 xNode *run(Source &source, Lexer &lexer);
-
+                
+                void   graphViz(const string &fileName) const;
 
                 
                 //______________________________________________________________

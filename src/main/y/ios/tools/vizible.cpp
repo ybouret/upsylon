@@ -17,10 +17,9 @@ namespace upsylon {
 
         ostream & vizible:: vizJoin(ostream &fp, const vizible *p) const
         {
-            static const char arrow[] = " -> ";
             assert(p);
             vizName(fp);
-            fp.output(arrow,sizeof(arrow)-1);
+            arrow(fp);
             return p->vizName(fp);
         }
 
@@ -29,6 +28,12 @@ namespace upsylon {
             fp << ';' << '\n';
         }
 
+        ostream & vizible:: arrow(ostream &fp)
+        {
+            static const char arrow[] = " -> ";
+            fp.output(arrow,sizeof(arrow)-1);
+            return fp;
+        }
 
         void vizible:: vizSave(ostream &fp) const
         {

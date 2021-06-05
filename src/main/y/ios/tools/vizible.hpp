@@ -40,10 +40,11 @@ namespace upsylon {
             // static helpers
             //
             //------------------------------------------------------------------
-            static void  endl(ostream &);                             //!< append ";\n"
-            static void  enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
-            static void  enterDigraph(ostream &fp, const char   *id); //!< wrapper
-            static void  leaveDigraph(ostream &fp);                   //!< "}\n"
+            static void     endl(ostream &);                             //!< append ";\n"
+            static void     enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
+            static void     enterDigraph(ostream &fp, const char   *id); //!< wrapper
+            static void     leaveDigraph(ostream &fp);                   //!< "}\n"
+            static ostream &arrow(ostream &fp);                          //!< " -> "
             
         protected:
             explicit vizible() throw(); //! setup
