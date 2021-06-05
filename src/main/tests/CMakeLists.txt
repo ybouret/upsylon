@@ -281,6 +281,7 @@ test-frozen.cpp test-for-each.cpp test-ordered.cpp test-key-address.cpp test-add
 test-pq.cpp test-factory.cpp test-list.cpp test-tensors.cpp
 test-crates.cpp
 test-hunt.cpp
+test-addresses.cpp
 )
 
 ADD_TEST(data:matrix      test-main matrix)
@@ -302,6 +303,8 @@ ADD_TEST(data:pq          test-main pq)
 ADD_TEST(data:factory     test-main factory)
 ADD_TEST(data:tensors     test-main tensors)
 ADD_TEST(data:hunt        test-main hunt)
+ADD_TEST(data:addresses   test-main addresses)
+
 
 SOURCE_GROUP(associative FILES
 test-lexicon.cpp

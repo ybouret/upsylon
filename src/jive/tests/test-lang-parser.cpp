@@ -1,6 +1,8 @@
 
 
 #include "y/jive/language/parser.hpp"
+#include "y/jive/lexical/plugin/jstring.hpp"
+
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -15,7 +17,8 @@ namespace
 
         MyParser() : Language::Parser("Sample")
         {
-            const Terminal &ID = terminal("ID", "[:alpha:]+");
+            const Terminal &ID  = terminal("ID", "[:alpha:]+");
+            const Terminal &STR = plugin<Lexical::jString>("STR");
             setRoot( zeroOrMore(ID) );
 
             drop("[:blank:]", "[:blank:]" );

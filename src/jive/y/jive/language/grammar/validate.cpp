@@ -1,6 +1,7 @@
 
 #include "y/jive/language/grammar.hpp"
 #include "y/ios/align.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -97,7 +98,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 }
                 if(orphan)
                 {
-                    throw exception("%s has orphans:%s", **name, *orphans);
+                    throw exception("%s grammar has orphan%s:%s", **name, textual::plural_s(orphan), *orphans);
                 }
 
                 Y_LANG_PRINTLN("<" << id << "/>");

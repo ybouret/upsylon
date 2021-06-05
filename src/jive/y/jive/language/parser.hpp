@@ -34,10 +34,10 @@ namespace upsylon
                 //
                 // Types and definitions
                 //______________________________________________________________
-                Y_LANG_ECHO(Axiom);
-                Y_LANG_ECHO(Terminal);
-                Y_LANG_ECHO(Aggregate);
-                Y_LANG_ECHO(Alternate);
+                Y_LANG_ECHO(Axiom);     //!< alias
+                Y_LANG_ECHO(Terminal);  //!< alias
+                Y_LANG_ECHO(Aggregate); //!< alias
+                Y_LANG_ECHO(Alternate); //!< alias
                 
                 //______________________________________________________________
                 //
@@ -49,18 +49,22 @@ namespace upsylon
                 //
                 // building Terminals
                 //______________________________________________________________
+                
+                //! standard/univocal terminal
                 template <typename ID, typename RX> inline
                 const Terminal & terminal(const ID &id, const RX &rx)
                 {
                     return term(id, Check(emit(id,rx),SemanticTerminal) ) ;
                 }
 
+                //! standard/univocal terminal
                 template <typename ID> inline
                 const Terminal & terminal(const ID &id)
                 {
                     return terminal(id,id);
                 }
 
+                //! terminal acting as division only
                 template <typename ID, typename RX> inline
                 const Terminal &division(const ID &id, const RX &rx)
                 {
@@ -68,6 +72,7 @@ namespace upsylon
                 }
 
 
+                //! terminal acting as division only
                 template <typename ID> inline
                 const Terminal & division(const ID &id)
                 {
@@ -86,7 +91,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
 
-                //! validate
+                //! validateWith(this)
                 void validate() const;
 
                 //! parse
@@ -94,6 +99,7 @@ namespace upsylon
 
 
             protected:
+                //! setup a new parser
                 template <typename ID> inline
                 explicit Parser(const ID &id) :
                 Grammar(id), Lexer(id)

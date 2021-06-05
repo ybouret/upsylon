@@ -112,6 +112,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(key_address);
     Y_UTEST(addressable);
     Y_UTEST(factory);
+    Y_UTEST(addresses);
 
     Y_UTEST(heap);
     Y_UTEST(avl);
