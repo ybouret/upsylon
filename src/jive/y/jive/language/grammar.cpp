@@ -75,6 +75,40 @@ namespace upsylon
                 return rep(axiom,1);
             }
 
+            bool Grammar::  owns(const Axiom &axiom) const throw()
+            {
+                return axioms.owns( &axiom );
+            }
+            
+            string Grammar:: makeAxiomsID(const Axioms &ax,
+                                        const char   *fn,
+                                        const char    sep) const
+            {
+                assert(fn);
+                if(ax.size<=0) throw exception("%s.%s(empty list)",**name,fn);
+                for(size_t i=0;i<ax.size;++i)
+                {
+                    const Axiom &axiom = ax[i];
+                    if(!owns(axiom)) throw exception("%s.%s(unregistered <%s>)",**name,fn,**(axiom.name));
+                }
+                
+                string id = *(ax[0].name);
+                for(size_t i=1;i<ax.size;++i)
+                {
+                    id << sep << *(ax[i].name);
+                }
+                return id;
+                
+            }
+
+            
+            const Axiom & Grammar:: cat(const Axioms &ax)
+            {
+                const string    id = makeAxiomsID(ax, "cat", ':');
+                const Compound &cm = grp(id);
+                return          cm;
+            }
+
         }
 
     }

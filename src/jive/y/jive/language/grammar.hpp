@@ -4,6 +4,7 @@
 #define Y_LANG_GRAMMAR_INCLUDED 1
 
 #include "y/jive/language/axiom/all.hpp"
+#include "y/container/addresses.hpp"
 
 namespace upsylon
 {
@@ -12,6 +13,8 @@ namespace upsylon
         namespace Language
         {
 
+            typedef addresses<const Axiom> Axioms;
+            
             //! echo typedef into class
 #define Y_LANG_ECHO(CLASS) typedef Language::CLASS CLASS
 
@@ -71,7 +74,10 @@ namespace upsylon
                     const Axiom * const *ptr = registry.search(id);
                     return ptr ? *ptr : NULL;
                 }
-
+                
+                //! test ownersip
+                bool owns(const Axiom &axiom) const throw();
+                
                 //! try to validate
                 void validateWith(const Lexer *) const;
 
@@ -136,17 +142,20 @@ namespace upsylon
                     return add( new Aggregate(id,Aggregate::Standard) );
                 }
 
-                //! named aggregate
+                //! named grouping aggregate
                 template <typename ID>
                 Aggregate & grp(const ID &id) {
                     return add( new Aggregate(id,Aggregate::Grouping) );
                 }
 
-                //! named aggregate
+                //! named variadic aggregate
                 template <typename ID>
                 Aggregate & var(const ID &id) {
                     return add( new Aggregate(id,Aggregate::Variadic) );
                 }
+                
+                //! grouping of axioms
+                const Axiom & cat(const Axioms &);
                 
                 //______________________________________________________________
                 //
@@ -158,7 +167,10 @@ namespace upsylon
                 Alternate & alt(const ID &id) {
                     return add( new Alternate(id) );
                 }
-
+                
+                ///! automatic alternate
+                
+                
                 //______________________________________________________________
                 //
                 // running on source
@@ -180,6 +192,9 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
+                string makeAxiomsID(const Axioms &ax,
+                                    const char   *fn,
+                                    const char    sep) const;
             };
         }
     }

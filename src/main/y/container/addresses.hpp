@@ -9,10 +9,7 @@
 
 namespace upsylon
 {
-    
-#define Y_ADDRESSES_PROLOG(N) size(N), addr() { clr(); do //!< prolog for addresses constructor
-#define Y_ADDRESSES_EPILOG()  while(false); }             //!< prolog for addresses constructor
-#define Y_ADDRESSES(I)        addr[I] = (void*)&a##I      //!< setup addresses
+ 
     
     //__________________________________________________________________________
     //
@@ -52,54 +49,64 @@ namespace upsylon
         }
         
         //! setup empty
-        inline addresses() throw() : Y_ADDRESSES_PROLOG(0) {
-        } Y_ADDRESSES_EPILOG()
+        inline addresses() throw() : size(0), addr() { clr(); }
         
         //! setup 1 address
-        inline addresses(const_type &a0) throw() : Y_ADDRESSES_PROLOG(1) {
-            Y_ADDRESSES(0);
-        } Y_ADDRESSES_EPILOG()
-        
+        inline addresses(const_type &a0) throw() : size(1), addr()
+        {
+            clr();
+            addr[0] = (void *)&a0;
+        }
         
         //! setup 2 addresses
         inline addresses(const_type &a0,
-                         const_type &a1) throw() : Y_ADDRESSES_PROLOG(2) {
-            Y_ADDRESSES(0);
-            Y_ADDRESSES(1);
-        } Y_ADDRESSES_EPILOG()
+                         const_type &a1) throw() : size(2), addr()
+        {
+            clr();
+            addr[0] = (void *)&a0;
+            addr[1] = (void *)&a1;
+        }
         
         //! setup 3 addresses
         inline addresses(const_type &a0,
                          const_type &a1,
-                         const_type &a2) throw() : Y_ADDRESSES_PROLOG(3) {
-            Y_ADDRESSES(0);
-            Y_ADDRESSES(1);
-            Y_ADDRESSES(2);
-        } Y_ADDRESSES_EPILOG()
+                         const_type &a2) throw() : size(3), addr()
+        {
+            clr();
+            addr[0] = (void *)&a0;
+            addr[1] = (void *)&a1;
+            addr[2] = (void *)&a2;
+        }
         
         //! setup 4 addresses
         inline addresses(const_type &a0,
                          const_type &a1,
                          const_type &a2,
-                         const_type &a3) throw() : Y_ADDRESSES_PROLOG(4) {
-            Y_ADDRESSES(0);
-            Y_ADDRESSES(1);
-            Y_ADDRESSES(2);
-            Y_ADDRESSES(3);
-        } Y_ADDRESSES_EPILOG()
+                         const_type &a3) throw() : size(4), addr()
+        {
+            clr();
+            addr[0] = (void *)&a0;
+            addr[1] = (void *)&a1;
+            addr[2] = (void *)&a2;
+            addr[3] = (void *)&a3;
+        }
         
-        //! setup 5 addresses
+        //! setup 4 addresses
         inline addresses(const_type &a0,
                          const_type &a1,
                          const_type &a2,
                          const_type &a3,
-                         const_type &a4) throw() : Y_ADDRESSES_PROLOG(5) {
-            Y_ADDRESSES(0);
-            Y_ADDRESSES(1);
-            Y_ADDRESSES(2);
-            Y_ADDRESSES(3);
-            Y_ADDRESSES(4);
-        } Y_ADDRESSES_EPILOG()
+                         const_type &a4) throw() : size(5), addr()
+        {
+            clr();
+            addr[0] = (void *)&a0;
+            addr[1] = (void *)&a1;
+            addr[2] = (void *)&a2;
+            addr[3] = (void *)&a3;
+            addr[4] = (void *)&a4;
+        }
+        
+        
         
         //______________________________________________________________________
         //
