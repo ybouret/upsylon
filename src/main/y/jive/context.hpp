@@ -41,7 +41,7 @@ namespace upsylon {
             virtual ~Context() throw();                 //!< cleanup
 
             //! mark as "tag:line:column: "
-            exception & cat(exception &excp) const throw();
+            exception & cat_stamp(exception &excp) const throw();
 
             //__________________________________________________________________
             //

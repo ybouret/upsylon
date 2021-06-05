@@ -58,7 +58,7 @@ namespace upsylon {
                         /*--*/ YJS_PRINTLN("rejected!!!");
                         //------------------------------------------------------
                         exception excp;
-                        source.context().cat(excp).cat("[%s] unexpected end of stream",**label);
+                        source.context().cat_stamp(excp).cat("[%s] unexpected end of stream",**label);
                         throw excp;
                     }
 
@@ -148,7 +148,7 @@ namespace upsylon {
                 if(bestUnit.size<=0)
                 {
                     exception excp;
-                    source.context().cat(excp).cat("[%s] unexpected failure for <%s> to accept '%s...'!",**label,**(bestRule->label),cchars::visible[code]);
+                    source.context().cat_stamp(excp).cat("[%s] unexpected failure for <%s> to accept '%s...'!",**label,**(bestRule->label),cchars::visible[code]);
                 }
 
 
@@ -224,7 +224,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // put the first char, initialize exception with its context
                     //----------------------------------------------------------
-                    token.push_back( source.get() )->cat(excp);
+                    token.push_back( source.get() )->cat_stamp(excp);
 
                     //----------------------------------------------------------
                     // try to read until next delim
@@ -248,7 +248,7 @@ namespace upsylon {
                     }
                     excp.cat("%s syntax error ",**label);
                     excp << '\'';
-                    token.cat(excp);
+                    token.cat_chars(excp);
                     if(add_extra)
                     {
                         excp << "...";

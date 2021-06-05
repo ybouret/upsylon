@@ -33,21 +33,25 @@ namespace upsylon {
 
                 //______________________________________________________________
                 //
-                // types and definitions
+                // methods
                 //______________________________________________________________
                 static Unit *  Create(const Context &,
                                       const Tag     &,
-                                      size_t        &); //!< using supply
-                static void    Delete(Unit *) throw();  //!< using supply
-                static Supply &Instance();              //!< instance
-
+                                      size_t        &);  //!< using supply
+                static void    Delete(Unit *) throw();   //!< using supply
+                static Supply &Instance();               //!< instance
+                
+                exception & cat_label(exception &e) const throw(); //!< "<label>"
+                
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 const Tag     label; //!< creating rule label
                 const size_t  stamp; //!< creation stamp
-
+                
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);
                 virtual ~Unit() throw();                                           //!< cleanup

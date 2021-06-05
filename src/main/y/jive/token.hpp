@@ -43,17 +43,18 @@ namespace upsylon
             //__________________________________________________________________
             string       toString(size_t nskip=0,
                                   size_t ntrim=0) const; //!< codes->chars
-            string       toVisible()      const; //!< codes->visible
-            string       toPrintable()    const; //!< codes->printable
-            string       toEncoded()      const; //!< codes->encoded
-            exception &  cat(exception &) const throw(); //!< append to exception
-            Token     &  skip(size_t n) throw(); //!< skip n chars
-            Token     &  trim(size_t n) throw(); //!< skip n chars
-            Token     &  chop(size_t n) throw(); //!< trim(n).skip(n)
+            string       toVisible()       const; //!< codes->visible
+            string       toPrintable()     const; //!< codes->printable
+            string       toEncoded()       const; //!< codes->encoded
+            Token     &  skip(size_t n)  throw(); //!< skip n chars
+            Token     &  trim(size_t n)  throw(); //!< skip n chars
+            Token     &  chop(size_t n)  throw(); //!< trim(n).skip(n)
 
             Token & operator<<(Char *ch);      //!< push_back(ch)
             Token & operator<<(const Token &); //!< push_back a copy
 
+            exception &  cat_chars(exception &) const throw(); //!< append to exception
+            
         private:
             string translate(const char * table[]) const;
         };

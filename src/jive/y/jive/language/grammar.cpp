@@ -112,7 +112,7 @@ namespace upsylon
             
             const Axiom & Grammar:: cat(const Axioms &ax)
             {
-                const string id = makeAxiomsID(ax, "cat", ':');
+                const string id = makeAxiomsID(ax, "cat", ' ');
                 Compound    &cm = grp(id);
                 sendAxiomsTo(cm,ax);
                 return          cm;

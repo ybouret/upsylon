@@ -22,7 +22,21 @@ namespace upsylon
                     switch(axiom->uuid)
                     {
                         case Terminal::UUID:
-                            fp << " shape=box";
+                            switch(axiom->as<Terminal>().type)
+                            {
+                                case Terminal::Standard:
+                                    fp << " shape=box,style=\"filled,bold\"";
+                                    break;
+                                    
+                                case Terminal::Univocal:
+                                    fp << " shape=box,style=\"filled,bold,dashed\"";
+                                    break;
+                                    
+                                case Terminal::Division:
+                                    fp << " shape=circle,style=\"filled,solid\"";
+                                    break;
+                                    
+                            }
                             break;
                             
                         case Repeat::UUID:
@@ -136,7 +150,10 @@ namespace upsylon
                 
             }
             
-            
+            void   Grammar:: graphViz(const char *fileName) const
+            {
+                const string _(fileName); graphViz(_);
+            }
             
         }
         

@@ -59,6 +59,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 fillDB(db,root);
                 size_t linked = 0;
                 size_t orphan = 0;
+                size_t terms  = 0;
                 string orphans;
                 for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                 {
@@ -71,6 +72,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     switch(axiom->uuid)
                     {
                         case Terminal::UUID:
+                            ++terms;
                             if(lexer)
                             {
                                 if(! lexer->queryRule(aname))
@@ -79,7 +81,23 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                                 }
                             }
                             break;
-
+                            
+                        case Alternate::UUID:
+                            if(axiom->as<Alternate>().size <= 0)
+                            {
+                                throw exception("%s has empty alternate <%s>",**name,*aname);
+                            }
+                            break;
+                            
+                        case Aggregate::UUID: {
+                            const Aggregate &A = axiom->as<Aggregate>();
+                            if(A.size <= 0)
+                            {
+                                throw exception("%s has empty aggregate <%s>",**name,*aname);
+                            }
+                            
+                        } break;
+                            
                         default:
                             break;
                     }
@@ -102,7 +120,12 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 {
                     throw exception("%s grammar has orphan%s:%s", **name, textual::plural_s(orphan), *orphans);
                 }
-
+                
+                if(terms<=0)
+                {
+                    throw exception("%s grammar has no terminal!", **name);
+                }
+                
                 Y_LANG_PRINTLN("<" << id << "/>");
 
             }

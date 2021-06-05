@@ -86,6 +86,13 @@ namespace upsylon
                 {
                     return term(call(plug<PLUGIN>(id)).label,Terminal::Standard);
                 }
+                
+                //! standard/univocal end of line
+                template <typename ID, typename RX> inline
+                const Terminal & newline(const ID &id, const RX &rx)
+                {
+                    return term(id, Check(emit_endl(id,rx),SemanticTerminal) ) ;
+                }
 
                 //______________________________________________________________
                 //

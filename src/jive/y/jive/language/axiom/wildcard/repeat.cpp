@@ -55,7 +55,10 @@ namespace upsylon
                 const size_t count = leaves.size;
                 if(count>=atLeast)
                 {
-                    Node::Grow(tree,branch.yield());
+                    if(count>0)
+                    {
+                        Node::Grow(tree,branch.yield());
+                    }
                     Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Accepted << " count=" << count << "]");
                     return true;
                 }
