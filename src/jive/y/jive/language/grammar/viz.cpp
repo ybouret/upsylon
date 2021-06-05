@@ -19,6 +19,34 @@ namespace upsylon
                     
                     fp << "label=\"" << axiom->gvName() << "\"";
                     
+                    switch(axiom->uuid)
+                    {
+                        case Terminal::UUID:
+                            fp << " shape=box";
+                            break;
+                            
+                        case Repeat::UUID:
+                            fp << " shape=ellipse";
+                            break;
+                            
+                        case Option::UUID:
+                            fp << " shape=diamond";
+                            break;
+                            
+                        case Alternate::UUID:
+                            fp << " shape=tab";
+                            break;
+                            
+                        case Aggregate::UUID:
+                            fp << " shape=house";
+                            break;
+                            
+                        default:
+                            break;
+                            throw exception("[Jive::Grammar::gvAxiom(unhandled type %s)]", fourcc_(axiom->uuid));
+                    }
+                    
+                    
                     Vizible::endl(fp << ']');
                 }
                 
@@ -67,7 +95,7 @@ namespace upsylon
                             Y_GV_LINK_COMPOUND(Aggregate);
                             Y_GV_LINK_COMPOUND(Alternate);
                         case Terminal::UUID: break;
-                        default: throw exception("[Jive::Gramma::gvLinks(unhandled type %s)]", fourcc_(axiom->uuid));
+                        default: throw exception("[Jive::Grammar::gvLinks(unhandled type %s)]", fourcc_(axiom->uuid));
                     }
                     
                 }
