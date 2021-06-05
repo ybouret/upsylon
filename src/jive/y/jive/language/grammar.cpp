@@ -92,20 +92,37 @@ namespace upsylon
                     if(!owns(axiom)) throw exception("%s.%s(unregistered <%s>)",**name,fn,**(axiom.name));
                 }
                 
-                string id = *(ax[0].name);
+                string id = '(' + *(ax[0].name);
                 for(size_t i=1;i<ax.size;++i)
                 {
                     id << sep << *(ax[i].name);
                 }
+                id << ')';
                 return id;
                 
             }
-
+            
+            static inline void sendAxiomsTo(Compound &cm, const Axioms &ax)
+            {
+                for(size_t i=0;i<ax.size;++i)
+                {
+                    cm << ax[i];
+                }
+            }
             
             const Axiom & Grammar:: cat(const Axioms &ax)
             {
-                const string    id = makeAxiomsID(ax, "cat", ':');
-                const Compound &cm = grp(id);
+                const string id = makeAxiomsID(ax, "cat", ':');
+                Compound    &cm = grp(id);
+                sendAxiomsTo(cm,ax);
+                return          cm;
+            }
+            
+            const Axiom & Grammar:: pick(const Axioms &ax)
+            {
+                const string id = makeAxiomsID(ax, "pick", '|');
+                Compound    &cm = alt(id);
+                sendAxiomsTo(cm,ax);
                 return          cm;
             }
 

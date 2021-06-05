@@ -1,4 +1,4 @@
-#include "y/jive/language/axiom.hpp"
+#include "y/jive/language/axiom/terminal.hpp"
 
 namespace upsylon
 {
@@ -6,10 +6,10 @@ namespace upsylon
     {
         namespace Language
         {
-
+            
             void Node:: vizCore(ios::ostream &fp) const
             {
-
+                
                 switch(state)
                 {
                     case IsTerminal: {
@@ -24,7 +24,7 @@ namespace upsylon
                         fp << "\",shape=box]";
                         endl(fp);
                     } break;
-
+                        
                     case IsInternal:
                         endl(fp << "[label=\"" << *axiom.name << "\",shape=oval]");
                         for(const Node *node=leaves().head;node;node=node->next) {
@@ -32,8 +32,8 @@ namespace upsylon
                             endl(vizJoin(fp,node));
                         }  break;
                 }
-
-                }
+                
+            }
         }
     }
 }

@@ -35,6 +35,7 @@ namespace upsylon
                 // Types and definitions
                 //______________________________________________________________
                 Y_LANG_ECHO(Axiom);     //!< alias
+                Y_LANG_ECHO(Axioms);    //!< alias
                 Y_LANG_ECHO(Terminal);  //!< alias
                 Y_LANG_ECHO(Aggregate); //!< alias
                 Y_LANG_ECHO(Alternate); //!< alias

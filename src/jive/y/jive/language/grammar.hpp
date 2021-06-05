@@ -13,7 +13,7 @@ namespace upsylon
         namespace Language
         {
 
-            typedef addresses<const Axiom> Axioms;
+            typedef addresses<const Axiom> Axioms; //!< handle list of axioms
             
             //! echo typedef into class
 #define Y_LANG_ECHO(CLASS) typedef Language::CLASS CLASS
@@ -28,9 +28,10 @@ namespace upsylon
             {
             public:
                 Y_LANG_ECHO(Axiom);       //!< alias
+                Y_LANG_ECHO(Axioms);      //!< alias
                 Y_LANG_ECHO(Aggregate);   //!< alias
                 Y_LANG_ECHO(Alternate);   //!< alias
-
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -168,8 +169,8 @@ namespace upsylon
                     return add( new Alternate(id) );
                 }
                 
-                ///! automatic alternate
-                
+                //! automatic alternate
+                const Axiom &pick(const Axioms &);
                 
                 //______________________________________________________________
                 //

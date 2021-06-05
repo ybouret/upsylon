@@ -19,7 +19,7 @@ namespace
         {
             const Terminal &ID  = terminal("ID", "[:alpha:]+");
             const Terminal &STR = plugin<Lexical::jString>("STR");
-            setRoot( zeroOrMore(ID) );
+            setRoot( zeroOrMore( pick( Axioms(ID,STR) ) ) );
 
             drop("[:blank:]", "[:blank:]" );
             drop_endl("[:endl:]", "[:endl:]");
