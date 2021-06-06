@@ -40,8 +40,7 @@ namespace upsylon
                             default:
                                 break;
                         }
-                        return node;
-                    }
+                    } break;
                         
                         //------------------------------------------------------
                         //
@@ -122,12 +121,13 @@ namespace upsylon
                                     break;
                             }
                         }
-                        
                         output.swap_with(leaves);
-                        return node;
-                    }
+                    } break;
                 }
+                return node;
             }
+            
+            
         }
     }
 }

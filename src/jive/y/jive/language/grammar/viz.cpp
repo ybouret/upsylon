@@ -53,6 +53,19 @@ namespace upsylon
                             
                         case Aggregate::UUID:
                             fp << " shape=house";
+                            switch(axiom->as<Aggregate>().type)
+                            {
+                                case Aggregate::Standard:
+                                    fp << " style=\"filled,bold\"";
+                                    break;
+                                    
+                                case Aggregate::Grouping:
+                                    break;
+                                    
+                                case Aggregate::Variadic:
+                                    fp << " style=\"filled,bold,dashed\"";
+                                    break;
+                            }
                             break;
                             
                         default:
