@@ -16,7 +16,7 @@ namespace upsylon
             typedef addresses<const Axiom> Axioms; //!< handle list of axioms
             
             //! echo typedef into class
-#define Y_LANG_ECHO(CLASS) typedef Language::CLASS CLASS
+#define Y_LANG_GRAMMAR_ECHO(CLASS) typedef Language::CLASS CLASS
 
             //__________________________________________________________________
             //
@@ -27,10 +27,11 @@ namespace upsylon
             class Grammar
             {
             public:
-                Y_LANG_ECHO(Axiom);       //!< alias
-                Y_LANG_ECHO(Axioms);      //!< alias
-                Y_LANG_ECHO(Aggregate);   //!< alias
-                Y_LANG_ECHO(Alternate);   //!< alias
+                Y_LANG_GRAMMAR_ECHO(Axiom);       //!< alias
+                Y_LANG_GRAMMAR_ECHO(Axioms);      //!< alias
+                Y_LANG_GRAMMAR_ECHO(Aggregate);   //!< alias
+                Y_LANG_GRAMMAR_ECHO(Alternate);   //!< alias
+                Y_LANG_GRAMMAR_ECHO(Terminal);    //!< alias
                 
                 //______________________________________________________________
                 //

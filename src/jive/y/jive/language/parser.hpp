@@ -12,6 +12,8 @@ namespace upsylon
     {
         namespace Language
         {
+#define Y_LANG_PARSER_ECHO(CLASS) typedef Grammar::CLASS CLASS
+            
             //__________________________________________________________________
             //
             //
@@ -34,11 +36,11 @@ namespace upsylon
                 //
                 // Types and definitions
                 //______________________________________________________________
-                Y_LANG_ECHO(Axiom);     //!< alias
-                Y_LANG_ECHO(Axioms);    //!< alias
-                Y_LANG_ECHO(Terminal);  //!< alias
-                Y_LANG_ECHO(Aggregate); //!< alias
-                Y_LANG_ECHO(Alternate); //!< alias
+                Y_LANG_PARSER_ECHO(Axiom);     //!< alias
+                Y_LANG_PARSER_ECHO(Axioms);    //!< alias
+                Y_LANG_PARSER_ECHO(Terminal);  //!< alias
+                Y_LANG_PARSER_ECHO(Aggregate); //!< alias
+                Y_LANG_PARSER_ECHO(Alternate); //!< alias
                 
                 //______________________________________________________________
                 //
