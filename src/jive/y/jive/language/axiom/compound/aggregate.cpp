@@ -48,7 +48,7 @@ namespace upsylon
                 {
                     // success
                     const size_t accepted = leaves.size;
-                    Node::Grow(tree, branch.yield() );
+                    Node::Grow(tree,branch.yield());
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     return true;
                 }

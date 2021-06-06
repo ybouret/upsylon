@@ -24,6 +24,10 @@ namespace upsylon
                 
                 if(res)
                 {
+                    if(tree.is_empty())
+                    {
+                        throw exception("invalid empty tree");
+                    }
                     // error detection
                     Lexeme *next = lexer.get(source);
                     if(next)
@@ -40,14 +44,17 @@ namespace upsylon
                         }
                         throw excp;
                     }
+                    
+                    return Node::AST(tree.yield());
+                    
                 }
                 else
                 {
-                    
+                    throw exception("failure");
                 }
 
-
-                return tree.yield();
+                
+                
             }
 
         }

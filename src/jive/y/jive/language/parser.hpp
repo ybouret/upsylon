@@ -12,6 +12,8 @@ namespace upsylon
     {
         namespace Language
         {
+            
+            //! echo type into parser for easier setup
 #define Y_LANG_PARSER_ECHO(CLASS) typedef Grammar::CLASS CLASS
             
             //__________________________________________________________________

@@ -102,6 +102,9 @@ Y_UTEST(lang_parser)
         if( tree.is_valid() )
         {
             tree->graphViz("tree.dot");
+            tree->save_to("tree.bin");
+            xTree load( xNode::Load( Module::OpenFile("tree.bin"),parser) );
+            Y_CHECK( load->to_binary() == tree->to_binary() );
         }
     }
     

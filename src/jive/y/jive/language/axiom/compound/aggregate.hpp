@@ -37,7 +37,7 @@ namespace upsylon
                 {
                     Standard, //!< a named entity
                     Variadic, //!< merge if only one member
-                    Grouping  //!< transient => merge always
+                    Grouping  //!< transient => always merge
                 };
 
                 //______________________________________________________________

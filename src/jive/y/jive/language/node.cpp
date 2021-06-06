@@ -33,6 +33,12 @@ namespace upsylon
                 assert(IsTerminal==state);
                 return _Lptr().content();
             }
+            
+            Lexeme * Node:: lexeme()   throw()
+            {
+                assert(IsTerminal==state);
+                return _Lptr().content();
+            }
 
             const Node::List & Node:: leaves() const throw()
             {
@@ -152,6 +158,8 @@ namespace upsylon
                 }
 
             }
+            
+            
 
         }
     }

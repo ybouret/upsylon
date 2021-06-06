@@ -26,6 +26,7 @@ namespace upsylon
                     {
                         Char *ch = source.get();
                         if(!ch) throw exception("%s%s(missing char for <%s> lexeme)",fn,gn,*id);
+                        lx->push(ch);
                         --nn;
                     }
                     return Node::Acquire(*ax,lx.yield());

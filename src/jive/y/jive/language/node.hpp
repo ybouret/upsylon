@@ -66,6 +66,7 @@ namespace upsylon
                 // utility methods
                 //______________________________________________________________
                 const Lexeme *lexeme()     const throw(); //!< IsTerminal : content()
+                Lexeme       *lexeme()           throw(); //!< IsTerminal : content()
                 const List   &leaves()     const throw(); //!< IsInternal : List()
                 List         &leaves()           throw(); //!< IsInternal : List()
 
@@ -75,7 +76,11 @@ namespace upsylon
                  - tree = Internal => append node to leaves
                  */
                 static void   Grow(Node * &tree, Node *node) throw();
-
+                
+                //! produce AST from parsed node and grammar
+                static Node  *AST(Node *node) throw();
+                
+                
                 //______________________________________________________________
                 //
                 // members
@@ -96,6 +101,9 @@ namespace upsylon
                                      const Grammar &grammar,
                                      size_t        &stamp);
 
+                static  Node *AST_Terminal(Node *) throw();
+                static  Node *AST_Internal(Node *) throw();
+                
                 friend class memory::magazine<Node>;
                 uint64_t     wksp[ Y_U64_FOR_ITEM(List) ];
             };
