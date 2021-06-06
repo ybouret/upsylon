@@ -40,7 +40,7 @@ namespace upsylon
                         Node *node = 0;
                         if(axiom.accept(node,source,lexer,obs))
                         {
-                            if(!node) throw exception("found invalid repeating empty <%s> ", **(axiom.name) );
+                            if(!node) throw exception("Language found invalid repeating empty <%s> ", **(axiom.name) );
                             leaves.push( node );
                         }
                         else

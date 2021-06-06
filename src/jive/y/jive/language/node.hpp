@@ -100,9 +100,6 @@ namespace upsylon
                 static  Node *Reload(Source        &source,
                                      const Grammar &grammar,
                                      size_t        &stamp);
-
-                static  Node *AST_Terminal(Node *) throw();
-                static  Node *AST_Internal(Node *) throw();
                 
                 friend class memory::magazine<Node>;
                 uint64_t     wksp[ Y_U64_FOR_ITEM(List) ];
