@@ -135,6 +135,11 @@ namespace upsylon {
 
         }
 
+        const Lexeme * Lexer:: last() const throw()
+        {
+            return io.tail;
+        }
+
 
         void Lexer:: unget(Lexeme *lexeme) throw()
         {

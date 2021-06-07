@@ -138,6 +138,7 @@ namespace upsylon {
             void          reset()          throw();  //!< cleanup
             void          ready(Source &,size_t);    //!< try to grow IO cache
             const Lexeme *next(Source &);            //!< get/unget
+            const Lexeme *last() const throw();      //!< io.tail
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);

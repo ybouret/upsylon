@@ -53,14 +53,20 @@ namespace upsylon
                 Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.lastHost) );
                 Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.lastUnit) );
 
-
-
                 //--------------------------------------------------------------
                 //
                 // analyse result
                 //
                 //--------------------------------------------------------------
-                return res ? onAccept(tree.yield(),source,lexer,obs) : onReject(tree.yield(),source,lexer,obs);
+                if(res)
+                {
+                    return onAccept(tree.yield(),source,lexer,obs);
+                }
+                else
+                {
+                    assert(NULL==node);
+                    return onReject(source,lexer,obs);
+                }
 
             }
 
@@ -93,10 +99,9 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 assert(NULL!=node);
-                Lexeme *next = lexer.get(source);
+                const Lexeme *next = lexer.next(source);
                 if(next)
                 {
-                    lexer.unget(next);
                     exception excp;
                     next->stampTo(excp);
                     excp.cat("%s has extraneous ",**name);
@@ -118,18 +123,53 @@ namespace upsylon
                 return Node::AST(tree.yield());
             }
 
-            XNode * Grammar:: onReject(XNode          *node,
-                                       Source         &source,
+            XNode * Grammar:: onReject(Source         &source,
                                        Lexer          &lexer,
                                        const Observer &obs) const
             {
-                XTree tree(node);
+                //--------------------------------------------------------------
+                // initialize
+                //--------------------------------------------------------------
+                const Grammar &self = *this;
 
-                
+                //--------------------------------------------------------------
+                // test source
+                //--------------------------------------------------------------
+                {
+                    const Lexeme *next = lexer.next(source);
+                    if(NULL==next)
+                    {
+                        throw exception("%s does not accept an empty source",**name);
+                    }
+                    assert(NULL!=lexer.last());
+                }
 
+                const Lexeme *last = lexer.last(); assert(last);
+                exception excp;
+                last->stampTo(excp);
 
-                throw exception("%s was rejected",**name);
-                return tree.yield();
+                if(obs.lastHost)
+                {
+                    if(obs.lastUnit==last)
+                    {
+                        excp.cat("unfinished %s after ",**name);
+                        last->writeOn(excp,self);
+                        excp.cat(" of <%s>", **(obs.lastHost->name) );
+                    }
+                    else
+                    {
+                        excp.cat(" %s syntax error at ", **name);
+                        last->writeOn(excp,self);
+                        excp.cat(" after <%s>", **(obs.lastHost->name) );
+                    }
+                }
+                else
+                {
+                    excp.cat(" %s syntax error at ", **name);
+                    last->writeOn(excp,self);
+                }
+                throw excp;
+
             }
 
 
