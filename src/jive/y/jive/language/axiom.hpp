@@ -18,6 +18,8 @@ namespace upsylon
         namespace Language
         {
 
+            class Aggregate;
+
             //__________________________________________________________________
             //
             //! observing grammar run
@@ -41,11 +43,13 @@ namespace upsylon
                     Y_DISABLE_COPY_AND_ASSIGN(Increase);
                 };
                 ios::indent indent() const throw();                       //!< to indent with depth
-                unsigned    depth;                                        //!< current depth
+                unsigned         depth;                                   //!< current depth
+                const Aggregate *trial;                                   //!< last trial
+                const Aggregate *guess;                                   //!< last guess
             };
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
-#define Y_LANG_AXIOM_DECL() virtual bool accept(Y_LANG_AXIOM_ARGS) const               //!< declare accept()
+#define Y_LANG_AXIOM_DECL()      virtual bool accept(Y_LANG_AXIOM_ARGS) const          //!< declare accept()
 #define Y_LANG_AXIOM_IMPL(CLASS) bool CLASS:: accept(Y_LANG_AXIOM_ARGS) const          //!< implement accept()
 
             //__________________________________________________________________

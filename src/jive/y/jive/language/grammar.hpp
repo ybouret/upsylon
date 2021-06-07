@@ -203,6 +203,10 @@ namespace upsylon
                 string makeAxiomsID(const Axioms &ax,
                                     const char   *fn,
                                     const char    sep) const;
+
+                XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
+                XNode *onReject(XNode *node, Source &source, Lexer &lexer) const;
+
             };
         }
     }
