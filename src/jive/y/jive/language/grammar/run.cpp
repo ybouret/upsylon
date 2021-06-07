@@ -76,29 +76,27 @@ namespace upsylon
                 {
                     throw exception("%s returned an empty AST!",**name);
                 }
-                else
-                {
-                    Lexeme *next = lexer.get(source);
-                    if(next)
-                    {
-                        lexer.unget(next);
-                        exception excp;
-                        next->stampTo(excp);
-                        excp.cat("extraneous ");
-                        next->writeOn(excp,self);
-                        if(obs.lastHost)
-                        {
-                            excp.cat(" after ");
-                            if(obs.lastUnit)
-                            {
-                                obs.lastUnit->writeOn(excp,self);
-                                excp.cat(" of ");
-                            }
-                            excp.cat(" <%s>", **(obs.lastHost->name));
-                        }
-                        throw excp;
-                    }
 
+                assert(NULL!=node);
+                Lexeme *next = lexer.get(source);
+                if(next)
+                {
+                    lexer.unget(next);
+                    exception excp;
+                    next->stampTo(excp);
+                    excp.cat("%s has extraneous ",**name);
+                    next->writeOn(excp,self);
+                    if(obs.lastHost)
+                    {
+                        excp.cat(" after ");
+                        if(obs.lastUnit)
+                        {
+                            obs.lastUnit->writeOn(excp,self);
+                            excp.cat(" of ");
+                        }
+                        excp.cat(" <%s>", **(obs.lastHost->name));
+                    }
+                    throw excp;
                 }
 
 
