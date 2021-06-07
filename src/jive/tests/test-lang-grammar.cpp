@@ -82,7 +82,7 @@ Y_UTEST(grammar)
     if(argc>1)
     {
         Source source( Module::OpenFile(argv[1]));
-        xTree  tree( grammar.run(source,lexer) );
+        XTree  tree( grammar.run(source,lexer) );
         if( tree.is_valid() )
         {
             tree->graphViz("tree.dot");

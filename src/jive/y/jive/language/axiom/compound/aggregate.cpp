@@ -19,7 +19,7 @@ namespace upsylon
             {
                 Y_LANG_PRINTLN( obs.indent() << "agg<" << name << ">");
 
-                xTree        branch( Node::Acquire(*this) );
+                XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
                 size_t num=1;
 

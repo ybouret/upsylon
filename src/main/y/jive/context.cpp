@@ -43,7 +43,7 @@ namespace upsylon {
         {
         }
 
-        exception & Context:: cat_stamp(exception &excp) const throw()
+        exception & Context:: stampTo(exception &excp) const throw()
         {
             excp.cat("%s:%d:%d: ", **tag,line,column);
             return excp;

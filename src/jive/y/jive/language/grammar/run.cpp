@@ -7,19 +7,27 @@ namespace upsylon
         {
             
 
-            xNode * Grammar:: run(Source &source,
+            XNode * Grammar:: run(Source &source,
                                   Lexer  &lexer)
             {
+                //--------------------------------------------------------------
+                //
                 // initialize
+                //
+                //--------------------------------------------------------------
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
-                xNode    *node = NULL;
+                XNode    *node = NULL;
                 Observer  obs  = { 0 };
 
+                //--------------------------------------------------------------
+                //
                 // main acceptance
+                //
+                //--------------------------------------------------------------
                 Y_LANG_PRINTLN( "[" << name << "] root Axiom : <" << root->name << ">");
                 const bool res = root->accept(node,source,lexer,obs);
-                xTree      tree( node );
+                XTree      tree( node );
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
                 
                 if(res)
@@ -34,13 +42,13 @@ namespace upsylon
                     {
                         lexer.unget(next);
                         exception excp;
-                        next->cat_stamp(excp);
+                        next->stampTo(excp);
                         excp.cat("extraneous");
-                        next->cat_label(excp);
+                        next->labelTo(excp);
                         if(next->size)
                         {
                             excp.cat(" ");
-                            next->cat_chars(excp);
+                            next->charsTo(excp);
                         }
                         throw excp;
                     }

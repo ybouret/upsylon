@@ -48,7 +48,7 @@ Y_UTEST(list)
 
     if(argc>1)
     {
-        xNode::Pointer tree( parser.parseFile(argv[1]) );
+        XNode::Pointer tree( parser.parseFile(argv[1]) );
         tree->graphViz("list.dot");
         Language::Analyzer analyzer( parser.name );
         

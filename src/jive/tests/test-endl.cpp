@@ -50,7 +50,7 @@ Y_UTEST(endl)
     if(argc>1)
     {
         Source         source( Module::OpenFile(argv[1]));
-        xNode::Pointer xnode( p.parse(source) );
+        XNode::Pointer xnode( p.parse(source) );
         xnode->graphViz("endl.dot");
     }
 }

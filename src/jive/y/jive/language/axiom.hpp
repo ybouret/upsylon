@@ -44,7 +44,7 @@ namespace upsylon
                 unsigned    depth;                                        //!< current depth
             };
 
-#define Y_LANG_AXIOM_ARGS   xNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
+#define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
 #define Y_LANG_AXIOM_DECL() virtual bool accept(Y_LANG_AXIOM_ARGS) const               //!< declare accept()
 #define Y_LANG_AXIOM_IMPL(CLASS) bool CLASS:: accept(Y_LANG_AXIOM_ARGS) const          //!< implement accept()
 

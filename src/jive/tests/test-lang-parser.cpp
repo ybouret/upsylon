@@ -100,12 +100,12 @@ Y_UTEST(parser)
     {
         //parser.reset();
         Source source( Module::OpenFile(argv[1]));
-        xTree  tree( parser.parse(source) );
+        XTree  tree( parser.parse(source) );
         if( tree.is_valid() )
         {
             tree->graphViz("tree.dot");
             tree->save_to("tree.bin");
-            xTree load( xNode::Load( Module::OpenFile("tree.bin"),parser) );
+            XTree load( XNode::Load( Module::OpenFile("tree.bin"),parser) );
             Y_CHECK( load->to_binary() == tree->to_binary() );
             analyze.walk(tree.content());
         }

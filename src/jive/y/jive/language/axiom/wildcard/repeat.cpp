@@ -30,7 +30,7 @@ namespace upsylon
             Y_LANG_AXIOM_IMPL(Repeat)
             {
                 Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast);
-                xTree       branch( Node::Acquire(*this) );
+                XTree       branch( Node::Acquire(*this) );
                 Node::List &leaves = branch->leaves();
 
                 {

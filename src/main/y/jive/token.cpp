@@ -77,7 +77,7 @@ namespace upsylon {
 
 
 
-        exception & Token:: cat_chars(exception &excp) const throw()
+        exception & Token:: charsTo(exception &excp) const throw()
         {
             for(const Char *ch=head;ch;ch=ch->next)
             {

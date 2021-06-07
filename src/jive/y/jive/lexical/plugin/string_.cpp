@@ -81,9 +81,9 @@ namespace upsylon
             {
                 assert(t.size>0);
                 exception   excp;
-                t.head->cat_stamp(excp);            // context
+                t.head->stampTo(excp);              // context
                 excp.cat("[%s] invalid ",**label);  // message
-                t.cat_chars(excp);                  // token
+                t.charsTo(excp);                    // token
                 throw excp;
             }
             
@@ -91,9 +91,9 @@ namespace upsylon
             {
                 assert(t.size>0);
                 exception   excp;
-                t.head->cat_stamp(excp);                  // context
+                t.head->stampTo(excp);                  // context
                 excp.cat("[%s] invalid hexadecimal sequence ",**label);  // message
-                t.cat_chars(excp);                        // token
+                t.charsTo(excp);                        // token
                 throw excp;
             }
             

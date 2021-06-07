@@ -34,7 +34,7 @@ namespace upsylon
                 typedef Supply::list_          List;    //!< alias
                 typedef Supply::auto_ptr       Pointer; //!< alias
                 typedef Lexeme::Pointer        Lptr;    //!< alias
-                static  const char             CLID[];  //!< "LNode"
+                static  const char             CLID[];  //!< "XNode"
                 
 
                 //! kind of node
@@ -107,8 +107,8 @@ namespace upsylon
 
         }
 
-        typedef Language::Node xNode; //!< alias
-        typedef xNode::Pointer xTree; //!< alias
+        typedef Language::Node XNode; //!< alias
+        typedef XNode::Pointer XTree; //!< alias
 
     }
 }

@@ -53,7 +53,7 @@ namespace upsylon
             Token & operator<<(Char *ch);      //!< push_back(ch)
             Token & operator<<(const Token &); //!< push_back a copy
 
-            exception &  cat_chars(exception &) const throw(); //!< append to exception
+            exception &  charsTo(exception &) const throw(); //!< append to exception
             
         private:
             string translate(const char * table[]) const;

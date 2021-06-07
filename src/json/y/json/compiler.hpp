@@ -29,7 +29,7 @@ namespace upsylon
             void loadFile(const FILENAME &fileName, Value &value)
             {
                 parser.reset();
-                const Jive::xTree tree( parser.parseFile(fileName) );
+                const Jive::XTree tree( parser.parseFile(fileName) );
                 getValue(value,tree.content());
             }
 
@@ -38,7 +38,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Compiler);
-            void getValue(Value &value, const Jive::xNode *tree);
+            void getValue(Value &value, const Jive::XNode *tree);
         };
 
     }

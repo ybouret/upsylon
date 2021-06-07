@@ -45,7 +45,7 @@ namespace upsylon
                 mgr.release(unit);
             }
          
-            exception  & Unit:: cat_label(exception &e) const throw()
+            exception  & Unit:: labelTo(exception &e) const throw()
             {
                 e.cat("<%s>",**label);
                 return e;

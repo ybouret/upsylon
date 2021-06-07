@@ -40,8 +40,7 @@ namespace upsylon {
                                       size_t        &);  //!< using supply
                 static void    Delete(Unit *) throw();   //!< using supply
                 static Supply &Instance();               //!< instance
-                
-                exception & cat_label(exception &e) const throw(); //!< "<label>"
+                exception     &labelTo(exception &e) const throw(); //!< "<label>"
                 
                 
                 //______________________________________________________________

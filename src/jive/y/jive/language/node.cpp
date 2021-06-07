@@ -4,14 +4,14 @@
 namespace upsylon
 {
 
-    Y_MAGAZINE_IMPL(Jive::xNode::Supply, Jive::Lexical::Unit::Supply::life_time - 1);
+    Y_MAGAZINE_IMPL(Jive::XNode::Supply, Jive::Lexical::Unit::Supply::life_time - 1);
 
     namespace Jive
     {
         namespace Language
         {
 
-            const char Node:: CLID[] = "xNode";
+            const char Node:: CLID[] = "XNode";
 
 
 
