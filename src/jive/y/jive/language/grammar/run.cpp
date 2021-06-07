@@ -39,7 +39,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs  = { 0, 0, 0, 0};
+                Observer  obs  = { 0, 0, 0, 0, 0};
 
                 //--------------------------------------------------------------
                 //
@@ -52,6 +52,7 @@ namespace upsylon
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
                 Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.lastHost) );
                 Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.lastUnit) );
+                Y_LANG_PRINTLN( "[" << name << "].into : " << nameOfHost(obs.lastInto) );
 
                 //--------------------------------------------------------------
                 //
@@ -144,8 +145,11 @@ namespace upsylon
                     assert(NULL!=lexer.last());
                 }
 
+                //--------------------------------------------------------------
+                // format exception
+                //--------------------------------------------------------------
                 const Lexeme *last = lexer.last(); assert(last);
-                exception excp;
+                exception     excp;
                 last->stampTo(excp);
 
                 if(obs.lastHost)

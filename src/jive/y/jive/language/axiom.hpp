@@ -63,6 +63,8 @@ namespace upsylon
                 const Aggregate *lastHost;          //!< last valid host
                 const Lexeme    *lastUnit;          //!< last valid unit
                 const Lexeme    *currUnit;          //!< current unit
+                const Aggregate *lastInto;          //!< at least first part
+                
             };
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()

@@ -37,6 +37,7 @@ namespace upsylon
                             {
                                 leaves.push(node);
                             }
+                            obs.lastInto = this;
                         }
                         else
                         {
