@@ -30,6 +30,7 @@ namespace upsylon
             {
                 parser.reset();
                 const Jive::XTree tree( parser.parseFile(fileName) );
+                tree->graphViz("json.dot");
                 getValue(value,tree.content());
             }
 

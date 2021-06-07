@@ -23,11 +23,7 @@ namespace upsylon
                 Node::List  &leaves = branch->leaves();
                 size_t       num=1;
 
-                if(Grouping!=type)
-                {
-                    obs.trial = this;
-                }
-
+                
                 {
                     Observer::Increase   outer(obs);
                     for(const Reference *ref=head;ref;ref=ref->next,++num)
@@ -57,7 +53,8 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(Grouping!=type)
                     {
-                        obs.guess = this;
+                        obs.lastHost = this;
+                        obs.lastUnit = obs.currUnit;
                     }
                     return true;
                 }

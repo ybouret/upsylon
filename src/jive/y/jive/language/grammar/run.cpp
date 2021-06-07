@@ -6,10 +6,16 @@ namespace upsylon
         namespace Language
         {
 
-            static inline const char *nameOfAgg(const Aggregate *ax) throw()
+            static inline const char *nameOfHost(const Axiom *ax) throw()
             {
                 return ax ? **(ax->name) : "(nil)";
             }
+
+            static inline const char *nameOfUnit(const Lexeme *lx) throw()
+            {
+                return lx ? **(lx->label) : "(nil)";
+            }
+
 
             XNode * Grammar:: run(Source &source,
                                   Lexer  &lexer)
@@ -22,7 +28,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs  = { 0, 0, 0 };
+                Observer  obs  = { 0, 0, 0, 0};
 
                 //--------------------------------------------------------------
                 //
@@ -33,8 +39,8 @@ namespace upsylon
                 const bool res = root->accept(node,source,lexer,obs);
                 XTree      tree( node );
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
-                Y_LANG_PRINTLN( "[" << name << "].trial " << nameOfAgg(obs.trial) );
-                Y_LANG_PRINTLN( "[" << name << "].guess " << nameOfAgg(obs.guess) );
+                Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.lastHost) );
+                Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.lastUnit) );
 
 
 
@@ -47,7 +53,9 @@ namespace upsylon
 
             }
 
-            XNode *Grammar:: onAccept(XNode *node, Source &source, Lexer &lexer) const
+            XNode *Grammar:: onAccept(XNode  *node,
+                                      Source &source,
+                                      Lexer  &lexer) const
             {
                 XTree tree(node);
 
@@ -58,10 +66,7 @@ namespace upsylon
                 }
 
 
-
-
-
-                return tree.yield();
+                return Node::AST(tree.yield());
             }
 
             XNode * Grammar:: onReject(XNode *node, Source &source, Lexer &lexer) const

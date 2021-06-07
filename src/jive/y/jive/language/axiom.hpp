@@ -19,13 +19,19 @@ namespace upsylon
         {
 
             class Aggregate;
-
+            class Terminal;
+            
             //__________________________________________________________________
             //
             //! observing grammar run
             //__________________________________________________________________
             struct Observer
             {
+                //______________________________________________________________
+                //
+                // types and definitions
+                //______________________________________________________________
+
                 //! base class to momentarily increase indentation
                 typedef momentary_increase_by<1,unsigned> IncreaseType;
 
@@ -42,10 +48,21 @@ namespace upsylon
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(Increase);
                 };
-                ios::indent indent() const throw();                       //!< to indent with depth
-                unsigned         depth;                                   //!< current depth
-                const Aggregate *trial;                                   //!< last trial
-                const Aggregate *guess;                                   //!< last guess
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                ios::indent indent() const throw(); //!< to indent with depth
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                unsigned         depth;             //!< current depth
+                const Aggregate *lastHost;          //!< last valid host
+                const Lexeme    *lastUnit;          //!< last valid unit
+                const Lexeme    *currUnit;          //!< current unit
             };
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()

@@ -26,7 +26,7 @@ namespace upsylon
                 const Axiom &jNumber = terminal("number",Jive::RegExpFor::Double);
                 Alternate   &jValue  = alt("value");
                 jValue << terminal("null") << terminal("true") << terminal("false") << jString << jNumber;
-                const Axiom &COMA    = division(',');
+                const Axiom &COMMA    = division(',');
 
                 //--------------------------------------------------------------
                 // arrays
@@ -38,7 +38,7 @@ namespace upsylon
                         const Axiom &RBRACK = division(']');
                         jArray << ( agg("empty_array") << LBRACK << RBRACK );
                         jArray << ( agg("heavy_array") << LBRACK << jValue
-                                   << zeroOrMore( cat( Axioms(COMA,jValue) ) )
+                                   << zeroOrMore( cat( Axioms(COMMA,jValue) ) )
                                    << RBRACK);
                     }
                     jValue << jArray;
@@ -57,7 +57,7 @@ namespace upsylon
                         const Axiom &jPair = (agg("pair") << jString << division(':') << jValue);
                         jObject << (
                                     agg("heavy_object") << LBRACE << jPair
-                                    << zeroOrMore( cat( Axioms(COMA,jPair) ) )
+                                    << zeroOrMore( cat( Axioms(COMMA,jPair) ) )
                                     << RBRACE
                                     );
                     }

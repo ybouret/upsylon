@@ -159,7 +159,7 @@ namespace upsylon
                     
                 }
                 
-                ios::GraphViz::Render(fileName,true);
+                ios::GraphViz::Render(fileName);
                 
             }
             

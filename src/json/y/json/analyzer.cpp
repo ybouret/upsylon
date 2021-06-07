@@ -82,7 +82,7 @@ namespace upsylon
                 } break;
 
                 default:
-                    throw exception("%s unhandled <%s>", **name, *id);
+                    throw exception("%s Analyzer: unhandled <%s>", **name, *id);
             }
 
             return 0;

@@ -26,6 +26,7 @@ Y_UTEST(value)
         }
     }
 
+    Jive::Language::Axiom::Verbose = true;
     JSON::Compiler json;
     if(argc>1)
     {
