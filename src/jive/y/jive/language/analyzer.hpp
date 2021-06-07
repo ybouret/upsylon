@@ -1,7 +1,7 @@
 
 //! \file
 #ifndef Y_JIVE_LANGUAGE_ANALYZER_INCLUDED
-#define Y_JIVE_SYNTAX_ANALYZER_INCLUDED 1
+#define Y_JIVE_LANGUAGE_ANALYZER_INCLUDED 1
 
 #include "y/jive/language/node.hpp"
 

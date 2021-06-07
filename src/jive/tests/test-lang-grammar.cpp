@@ -54,7 +54,7 @@ namespace
 }
 #include "y/fs/local/fs.hpp"
 
-Y_UTEST(lang_grammar)
+Y_UTEST(grammar)
 {
     Language::Axiom::Verbose = true;
     vfs &fs = local_fs::instance();

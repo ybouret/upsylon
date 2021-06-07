@@ -24,7 +24,7 @@ namespace
 
 }
 
-Y_UTEST(lang_axiom)
+Y_UTEST(axiom)
 {
     Y_UTEST_SIZEOF(Jive::xNode);
     const Tag     tag = Tags::Make("term");

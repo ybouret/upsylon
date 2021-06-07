@@ -117,9 +117,11 @@ namespace upsylon
                 //! parse function
                 Node *parse(Source &source);
 
+                //! parse a file
                 template <typename ID> inline
                 Node *parseFile(const ID &fileName)
                 {
+                    reset();
                     Source source( Module::OpenFile(fileName) );
                     return parse(source);
                 }
