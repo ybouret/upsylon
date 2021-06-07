@@ -1,16 +1,16 @@
 
-#include "y/jive/parser.hpp"
+#include "y/jive/language/parser.hpp"
 #include "y/jive/lexical/plugin/strings.hpp"
 #include "y/utest/run.hpp"
 #include "y/jive/common-regexp.hpp"
-#include "y/jive/syntax/analyzer.hpp"
+#include "y/jive/language/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Jive;
 
 namespace {
 
-    class ENDL_Parser : public Parser
+    class ENDL_Parser : public Language::Parser
     {
     public:
         virtual ~ENDL_Parser() throw() {}
@@ -20,9 +20,9 @@ namespace {
             Aggregate &self   = agg(label);
             Alternate &choice = alt("choice");
 
-            choice << end_line("CRLF","\\r\\n");
-            choice << new_line("CR", "\\r");
-            choice << new_line("LF", "\\n");
+            choice << endline("CRLF","\\r\\n");
+            choice << newline("CR", "\\r");
+            choice << newline("LF", "\\n");
             choice << terminal("ID","[:alpha:]+");
 
             self << zeroOrMore(choice);
@@ -35,7 +35,7 @@ namespace {
             std::cerr << "CRLF: " << getPattern("CRLF").toRegExp() << std::endl;
 
 
-            validate(this);
+            validate();
         }
 
     };
@@ -44,13 +44,13 @@ namespace {
 
 Y_UTEST(endl)
 {
-    Syntax::Axiom::Verbose = true;
+    Language::Axiom::Verbose = true;
     ENDL_Parser p;
 
     if(argc>1)
     {
         Source         source( Module::OpenFile(argv[1]));
-        XNode::Pointer xnode( p.parse(source) );
+        xNode::Pointer xnode( p.parse(source) );
         xnode->graphViz("endl.dot");
     }
 }

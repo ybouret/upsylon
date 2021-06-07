@@ -13,12 +13,7 @@ Y_UTEST_INIT(16)
     Y_UTEST(lang_grammar);
     Y_UTEST(lang_parser);
 
-    Y_UTEST(axiom);
-    Y_UTEST(grammar);
-    Y_UTEST(types);
-    Y_UTEST(parser);
     Y_UTEST(list);
-    Y_UTEST(perr);
     Y_UTEST(endl);
 }
 Y_UTEST_EXEC()

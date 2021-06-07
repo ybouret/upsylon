@@ -32,7 +32,8 @@ namespace upsylon
                 Y_LANG_GRAMMAR_ECHO(Aggregate);   //!< alias
                 Y_LANG_GRAMMAR_ECHO(Alternate);   //!< alias
                 Y_LANG_GRAMMAR_ECHO(Terminal);    //!< alias
-                
+                Y_LANG_GRAMMAR_ECHO(Compound);    //!< alias
+
                 //______________________________________________________________
                 //
                 // C++

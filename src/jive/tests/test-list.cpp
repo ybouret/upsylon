@@ -1,14 +1,14 @@
-#include "y/jive/parser.hpp"
+#include "y/jive/language/parser.hpp"
 #include "y/utest/run.hpp"
 #include "y/jive/lexical/plugin/single-line-comments.hpp"
-#include "y/jive/syntax/analyzer.hpp"
+#include "y/jive/language/analyzer.hpp"
 
 using namespace upsylon;
 using namespace Jive;
 
 namespace
 {
-    class ListParser : public Parser
+    class ListParser : public Language::Parser
     {
     public:
         inline virtual ~ListParser() throw()
@@ -17,7 +17,7 @@ namespace
 
         }
 
-        inline explicit ListParser() : Parser("Lists")
+        inline explicit ListParser() : Language::Parser("Lists")
         {
             Aggregate   &LIST     = agg("list");
             const Axiom &NAME     = terminal("NAME","[:word:]+");
@@ -25,7 +25,7 @@ namespace
                 Aggregate &ELEMENTS = grp("elements");
                 LIST << division('[') << ELEMENTS << division(']');
                 Compound &ELEMENT  = alt("element") << NAME << LIST;
-                ELEMENTS << ELEMENT << zeroOrMore( cat( division(','), ELEMENT ) );
+                ELEMENTS << ELEMENT << zeroOrMore( cat( Axioms(division(','), ELEMENT) ) );
             }
 
             // lexical only
@@ -43,14 +43,14 @@ namespace
 
 Y_UTEST(list)
 {
-    Syntax::Axiom::Verbose = true;
+    Language::Axiom::Verbose = true;
     ListParser parser;
 
     if(argc>1)
     {
-        XNode::Pointer tree( parser.parseFile(argv[1]) );
+        xNode::Pointer tree( parser.parseFile(argv[1]) );
         tree->graphViz("list.dot");
-        Syntax::Analyzer analyzer( parser.name );
+        Language::Analyzer analyzer( parser.name );
         
         analyzer.walk( tree.content() );
 

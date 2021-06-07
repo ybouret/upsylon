@@ -41,47 +41,6 @@ SOURCE_GROUP( jive/lexical/editor FILES ${lexical_editor_srcs} )
 
 ########################################################################
 ## 
-## syntax
-##
-########################################################################
-FILE( GLOB syntax_decl y/jive/syntax/*.hpp)
-FILE( GLOB syntax_impl y/jive/syntax/*.cpp)
-SET( syntax_srcs ${syntax_decl} ${syntax_impl})
-INSTALL( FILES ${syntax_decl} DESTINATION include/y/jive/syntax )
-SOURCE_GROUP( jive/syntax FILES ${syntax_srcs} )
-
-FILE( GLOB syntax_grammar_decl y/jive/syntax/grammar/*.hpp)
-FILE( GLOB syntax_grammar_impl y/jive/syntax/grammar/*.cpp)
-SET( syntax_grammar_srcs ${syntax_grammar_decl} ${syntax_grammar_impl})
-INSTALL( FILES ${syntax_grammar_decl} DESTINATION include/y/jive/syntax/grammar )
-SOURCE_GROUP( jive/syntax/grammar FILES ${syntax_grammar_srcs} )
-
-FILE( GLOB syntax_axiom_decl y/jive/syntax/axiom/*.hpp)
-FILE( GLOB syntax_axiom_impl y/jive/syntax/axiom/*.cpp)
-SET( syntax_axiom_srcs ${syntax_axiom_decl} ${syntax_axiom_impl})
-INSTALL( FILES ${syntax_axiom_decl} DESTINATION include/y/jive/syntax/axiom )
-SOURCE_GROUP( jive/syntax/axiom FILES ${syntax_axiom_srcs} )
-
-FILE( GLOB syntax_axiom_wildcard_decl y/jive/syntax/axiom/wildcard/*.hpp)
-FILE( GLOB syntax_axiom_wildcard_impl y/jive/syntax/axiom/wildcard/*.cpp)
-SET( syntax_axiom_wildcard_srcs ${syntax_axiom_wildcard_decl} ${syntax_axiom_wildcard_impl})
-INSTALL( FILES ${syntax_axiom_wildcard_decl} DESTINATION include/y/jive/syntax/axiom/wildcard )
-SOURCE_GROUP( jive/syntax/axiom/wildcard FILES ${syntax_axiom_wildcard_srcs} )
-
-FILE( GLOB syntax_axiom_compound_decl y/jive/syntax/axiom/compound/*.hpp)
-FILE( GLOB syntax_axiom_compound_impl y/jive/syntax/axiom/compound/*.cpp)
-SET( syntax_axiom_compound_srcs ${syntax_axiom_compound_decl} ${syntax_axiom_compound_impl})
-INSTALL( FILES ${syntax_axiom_compound_decl} DESTINATION include/y/jive/syntax/axiom/compound )
-SOURCE_GROUP( jive/syntax/axiom/compound FILES ${syntax_axiom_compound_srcs} )
-
-FILE( GLOB syntax_xnode_decl y/jive/syntax/xnode/*.hpp)
-FILE( GLOB syntax_xnode_impl y/jive/syntax/xnode/*.cpp)
-SET( syntax_xnode_srcs ${syntax_xnode_decl} ${syntax_xnode_impl})
-INSTALL( FILES ${syntax_xnode_decl} DESTINATION include/y/jive/syntax/xnode )
-SOURCE_GROUP( jive/syntax/xnode FILES ${syntax_xnode_srcs} )
-
-########################################################################
-## 
 ## language
 ##
 ########################################################################
@@ -130,10 +89,6 @@ ADD_LIBRARY( y-jive STATIC
  ${srcs}
  ${lexical_srcs} ${lexical_event_srcs} ${lexical_plugin_srcs}
  ${lexical_editor_srcs}
- ${syntax_srcs} 
- ${syntax_grammar_srcs}
- ${syntax_axiom_srcs} ${syntax_axiom_wildcard_srcs} ${syntax_axiom_compound_srcs}
- ${syntax_xnode_srcs}
  ${language_srcs} 
  ${language_axiom_srcs} ${language_axiom_wildcard_srcs} ${language_axiom_compound_srcs} 
  ${language_xnode_srcs}

@@ -43,7 +43,8 @@ namespace upsylon
                 Y_LANG_PARSER_ECHO(Terminal);  //!< alias
                 Y_LANG_PARSER_ECHO(Aggregate); //!< alias
                 Y_LANG_PARSER_ECHO(Alternate); //!< alias
-                
+                Y_LANG_PARSER_ECHO(Compound); //!< alias
+
                 //______________________________________________________________
                 //
                 // C++
@@ -96,6 +97,13 @@ namespace upsylon
                 const Terminal & newline(const ID &id, const RX &rx)
                 {
                     return term(id, Check(emit_endl(id,rx),SemanticTerminal) ) ;
+                }
+
+                //! standard/univocal end of line
+                template <typename ID, typename RX> inline
+                const Terminal & endline(const ID &id, const RX &rx)
+                {
+                    return term(id, Check(drop_endl(id,rx),SemanticTerminal) ) ;
                 }
 
                 //______________________________________________________________
