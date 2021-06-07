@@ -69,14 +69,29 @@ namespace upsylon
                                       Lexer          &lexer,
                                       const Observer &obs) const
             {
+                //--------------------------------------------------------------
+                //
+                // initialize
+                //
+                //--------------------------------------------------------------
                 const Grammar &self = *this;
                 XTree tree(node);
 
+                //--------------------------------------------------------------
+                //
+                // NULL node
+                //
+                //--------------------------------------------------------------
                 if(NULL==node)
                 {
                     throw exception("%s returned an empty AST!",**name);
                 }
 
+                //--------------------------------------------------------------
+                //
+                // valid node: check no extraneous
+                //
+                //--------------------------------------------------------------
                 assert(NULL!=node);
                 Lexeme *next = lexer.get(source);
                 if(next)
@@ -109,6 +124,9 @@ namespace upsylon
                                        const Observer &obs) const
             {
                 XTree tree(node);
+
+                
+
 
                 throw exception("%s was rejected",**name);
                 return tree.yield();
