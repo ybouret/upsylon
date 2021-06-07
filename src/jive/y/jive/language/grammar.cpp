@@ -126,6 +126,29 @@ namespace upsylon
                 return          cm;
             }
 
+            Terminal::Type Grammar:: lexemeType(const Lexeme *lx) const
+            {
+                assert(lx);
+                const Axiom *axiom = query( *(lx->label) );
+                if(!axiom)
+                {
+                    throw exception("%s has no axiom for lexeme <%s>",**name,**(lx->label));
+                }
+                if(axiom->uuid!=Terminal::UUID)
+                {
+                    throw exception("%s axiom for <%s> is not a Language::Terminal!",**name,**(lx->label));
+                }
+                return axiom->as<Terminal>().type;
+            }
+
+
+            bool Grammar:: isStandard(const Lexeme *lx) const
+            {
+                assert(lx);
+                return Terminal::Standard == lexemeType(lx);
+            }
+
+
         }
 
     }

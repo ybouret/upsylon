@@ -50,6 +50,18 @@ namespace upsylon
                 e.cat("<%s>",**label);
                 return e;
             }
+
+            exception & Unit:: writeTo(exception &e, const bool withText) const throw()
+            {
+                labelTo(e);
+                if(withText&&size>0)
+                {
+                    e.cat(" = '");
+                    charsTo(e);
+                    e.cat("'");
+                }
+                return e;
+            }
  
         }
 

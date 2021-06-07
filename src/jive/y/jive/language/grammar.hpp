@@ -77,7 +77,13 @@ namespace upsylon
                     const Axiom * const *ptr = registry.search(id);
                     return ptr ? *ptr : NULL;
                 }
-                
+
+                //! query terminal and terminal type
+                Terminal::Type lexemeType(const Lexeme *lx) const;
+
+                //! find out if need to print content
+                bool isStandard(const Lexeme *lx) const;
+
                 //! test ownersip
                 bool owns(const Axiom &axiom) const throw();
                 
@@ -204,8 +210,8 @@ namespace upsylon
                                     const char   *fn,
                                     const char    sep) const;
 
-                XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
-                XNode *onReject(XNode *node, Source &source, Lexer &lexer) const;
+                XNode *onAccept(XNode *node, Source &source, Lexer &lexer, const Observer &obs) const;
+                XNode *onReject(XNode *node, Source &source, Lexer &lexer, const Observer &obs) const;
 
             };
         }

@@ -12,6 +12,11 @@ namespace upsylon {
 
     namespace Jive {
 
+        namespace Language
+        {
+            class Grammar;
+        }
+
         namespace Lexical {
 
             //__________________________________________________________________
@@ -41,8 +46,9 @@ namespace upsylon {
                 static void    Delete(Unit *) throw();   //!< using supply
                 static Supply &Instance();               //!< instance
                 exception     &labelTo(exception &e) const throw(); //!< "<label>"
-                
-                
+                exception     &writeTo(exception &e,const bool withText) const throw(); //!< "<label> = '...'"
+                exception     &writeOn(exception &e, const Language::Grammar &)   const throw(); //!< using Terminal::Type
+
                 //______________________________________________________________
                 //
                 // members

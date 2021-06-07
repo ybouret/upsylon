@@ -3,8 +3,19 @@ namespace upsylon
 {
     namespace Jive
     {
+
+        namespace Lexical
+        {
+            exception     & Unit:: writeOn(exception &e, const Language::Grammar &G)   const throw()
+            {
+                writeTo(e,G.isStandard(this));
+                return e;
+            }
+
+        }
         namespace Language
         {
+
 
             static inline const char *nameOfHost(const Axiom *ax) throw()
             {
@@ -49,27 +60,55 @@ namespace upsylon
                 // analyse result
                 //
                 //--------------------------------------------------------------
-                return res ? onAccept(tree.yield(), source, lexer) : onReject(tree.yield(),source,lexer);
+                return res ? onAccept(tree.yield(),source,lexer,obs) : onReject(tree.yield(),source,lexer,obs);
 
             }
 
-            XNode *Grammar:: onAccept(XNode  *node,
-                                      Source &source,
-                                      Lexer  &lexer) const
+            XNode *Grammar:: onAccept(XNode  *        node,
+                                      Source         &source,
+                                      Lexer          &lexer,
+                                      const Observer &obs) const
             {
+                const Grammar &self = *this;
                 XTree tree(node);
-
 
                 if(NULL==node)
                 {
                     throw exception("%s returned an empty AST!",**name);
+                }
+                else
+                {
+                    Lexeme *next = lexer.get(source);
+                    if(next)
+                    {
+                        lexer.unget(next);
+                        exception excp;
+                        next->stampTo(excp);
+                        excp.cat("extraneous ");
+                        next->writeOn(excp,self);
+                        if(obs.lastHost)
+                        {
+                            excp.cat(" after ");
+                            if(obs.lastUnit)
+                            {
+                                obs.lastUnit->writeOn(excp,self);
+                                excp.cat(" of ");
+                            }
+                            excp.cat(" <%s>", **(obs.lastHost->name));
+                        }
+                        throw excp;
+                    }
+
                 }
 
 
                 return Node::AST(tree.yield());
             }
 
-            XNode * Grammar:: onReject(XNode *node, Source &source, Lexer &lexer) const
+            XNode * Grammar:: onReject(XNode          *node,
+                                       Source         &source,
+                                       Lexer          &lexer,
+                                       const Observer &obs) const
             {
                 XTree tree(node);
 
