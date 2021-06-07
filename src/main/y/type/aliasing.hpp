@@ -20,6 +20,13 @@ namespace upsylon {
         template <typename T> static inline
         T &_( const T &args ) throw() { return (T&)args; }
 
+        //! force increase
+        template <typename T> static inline
+        void incr( const T &args ) { ++_(args); }
+
+        //! force decrease
+        template <typename T> static inline
+        void decr( const T &args ) { --_(args); }
 
         //______________________________________________________________________
         //

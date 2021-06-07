@@ -3,6 +3,7 @@
 #include "y/jive/language/parser.hpp"
 #include "y/jive/lexical/plugin/jstring.hpp"
 #include "y/jive/common-regexp.hpp"
+#include "y/jive/language/analyzer.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -23,7 +24,7 @@ namespace
             Alternate   &VALUE   = alt("value");
             const Axiom &STRING  = plugin<Lexical::jString>("string");
             const Axiom &NUMBER  = terminal("number",RegExpFor::Double);
-            VALUE << STRING << NUMBER << terminal("false") << terminal("true");
+            VALUE << STRING << NUMBER << terminal("false") << terminal("true") << terminal("null");
             const Axiom &COMMA   = division(',');
             
             {
@@ -93,7 +94,8 @@ Y_UTEST(lang_parser)
     
     MyParser parser;
     parser.graphViz("parser.dot");
-    
+    Language::Analyzer analyze(parser.name);
+
     if(argc>1)
     {
         //parser.reset();
@@ -105,6 +107,7 @@ Y_UTEST(lang_parser)
             tree->save_to("tree.bin");
             xTree load( xNode::Load( Module::OpenFile("tree.bin"),parser) );
             Y_CHECK( load->to_binary() == tree->to_binary() );
+            analyze.walk(tree.content());
         }
     }
     
