@@ -14,7 +14,7 @@ namespace upsylon
         {
         }
 
-        void  Compiler:: getValue(Value &value, const Jive::XNode *tree)
+        void  Compiler:: getValue(Value &value, const Jive::xNode *tree)
         {
             analyzer.reset();
             analyzer.walk( tree );

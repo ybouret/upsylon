@@ -21,7 +21,7 @@ namespace upsylon {
 
         void linked:: increase_size() throw()
         {
-            ++aliasing::_(size);
+            aliasing::incr(size);
         }
 
         void linked:: increase_size(const size_t n) throw()
@@ -33,7 +33,7 @@ namespace upsylon {
         void linked:: decrease_size() throw()
         {
             assert(size>0);
-            --aliasing::_(size);
+            aliasing::decr(size);
         }
 
         bool linked:: is_vacant() const throw() { return size<=0; }

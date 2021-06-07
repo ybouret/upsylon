@@ -19,7 +19,7 @@ namespace upsylon {
         {
             while(size>0)
             {
-                addr[--aliasing::_(size)]->release();
+                addr[aliasing::decr(size)]->release();
             }
         }
 

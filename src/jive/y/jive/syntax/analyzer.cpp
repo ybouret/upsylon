@@ -39,14 +39,14 @@ namespace upsylon
 
             int Analyzer:: walkDownInternal(const Node *node)
             {
-                ++aliasing::_(depth);
+                aliasing::incr(depth);
                 const Node::List &leaves = node->leaves();
                 for(const Node *child=leaves.head;child;child=child->next)
                 {
                     const int res = walkDown(child);
                     if(res!=0) return res;
                 }
-                --aliasing::_(depth);
+                aliasing::decr(depth);
                 return onInternal(*(node->axiom.name),leaves.size);
             }
 

@@ -63,7 +63,7 @@ namespace upsylon {
             if(Ch==Lo-1)
             {
                 std::cerr << "---> " << *lhs << " => ";
-                --aliasing::_(lhs->lower);
+                aliasing::decr(lhs->lower);
                 std::cerr << *lhs << std::endl;
                 return lhs;
             }
@@ -71,7 +71,7 @@ namespace upsylon {
             if(Ch==Up+1)
             {
                 std::cerr << "---> " << *lhs << " => ";
-                ++aliasing::_(lhs->upper);
+                aliasing::incr(lhs->upper);
                 std::cerr << *lhs << std::endl;
                 return lhs;
             }

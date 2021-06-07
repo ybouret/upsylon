@@ -203,7 +203,7 @@ namespace upsylon {
                 case 0:
                     assert(0==parts.size);
                     parts.push_front( new Interval(c) );
-                    ++aliasing::_(size);
+                    aliasing::incr(size);
                     assert( check() );
                     assert(1==size);
                     assert(1==parts.size);
@@ -242,7 +242,7 @@ namespace upsylon {
                     {
                         assert( Interval::AreApart(lhs,curr) );
                     }
-                    ++aliasing::_(size);
+                    aliasing::incr(size);
                     assert( check() );
                 } return true;
             }
@@ -269,7 +269,7 @@ namespace upsylon {
                         assert(node->next==next);
                         assert(next->prev==node);
                         Interval::Compact3(parts,curr,node,next);
-                        ++aliasing::_(size);
+                        aliasing::incr(size);
                         assert(check());
                     } return true;
                 }
@@ -296,7 +296,7 @@ namespace upsylon {
                 {
                     assert( Interval::AreApart(curr,rhs) );
                 }
-                ++aliasing::_(size);
+                aliasing::incr(size);
                 assert( check() );
             }
             return true;
@@ -360,7 +360,7 @@ namespace upsylon {
                     // num_lower=0 and num_upper>0
                     //----------------------------------------------------------
                     assert(num_upper>0);
-                    ++aliasing::_(node->lower);
+                    aliasing::incr(node->lower);
                 }
             }
             else
@@ -371,7 +371,7 @@ namespace upsylon {
                     //----------------------------------------------------------
                     // num_lower>0 and num_upper<=0
                     //----------------------------------------------------------
-                    --aliasing::_(node->upper);
+                    aliasing::decr(node->upper);
                 }
                 else
                 {
@@ -390,7 +390,7 @@ namespace upsylon {
                 }
             }
 
-            --aliasing::_(size);
+            aliasing::decr(size);
             return true;
         }
 
@@ -508,7 +508,7 @@ namespace upsylon {
         }
 
 
-      
+
     }
     
 }

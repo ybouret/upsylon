@@ -47,7 +47,7 @@ namespace upsylon {
                 assert(slots);
                 assert(count>0);
                 assert(count<=slots);
-                addr_type *curr = &slot[ --aliasing::_(count) ];
+                addr_type *curr = &slot[ aliasing::decr(count) ];
                 type      *addr = *curr;
                 *curr = 0;
                 return addr;

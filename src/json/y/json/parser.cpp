@@ -7,7 +7,7 @@ namespace upsylon
     namespace JSON
     {
 
-        Parser:: Parser() : Jive::Parser("JSON")
+        Parser:: Parser() : Jive::Language::Parser("JSON")
         {
 
             //------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace upsylon
                         const Axiom &RBRACK = division(']');
                         jArray << ( agg("empty_array") << LBRACK << RBRACK );
                         jArray << ( agg("heavy_array") << LBRACK << jValue
-                                   << zeroOrMore( cat(COMA,jValue) )
+                                   << zeroOrMore( cat( Axioms(COMA,jValue) ) )
                                    << RBRACK);
                     }
                     jValue << jArray;
@@ -57,7 +57,7 @@ namespace upsylon
                         const Axiom &jPair = (agg("pair") << jString << division(':') << jValue);
                         jObject << (
                                     agg("heavy_object") << LBRACE << jPair
-                                    << zeroOrMore( cat(COMA,jPair) )
+                                    << zeroOrMore( cat( Axioms(COMA,jPair) ) )
                                     << RBRACE
                                     );
                     }
@@ -85,7 +85,7 @@ namespace upsylon
             }
 
             //graphViz("json-grammar.dot");
-            validate(this);
+            validate();
         }
 
 

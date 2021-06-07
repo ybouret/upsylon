@@ -81,11 +81,11 @@ namespace upsylon
     void counting:: next()
     {
         try {
-            if( ++aliasing::_(index) <= count ) onNext();
+            if( aliasing::incr(index) <= count ) onNext();
         }
         catch(...)
         {
-            --aliasing::_(index);
+            aliasing::decr(index);
             throw;
         }
     }

@@ -3,7 +3,7 @@
 #ifndef Y_JSON_PARSER_INCLUDED
 #define Y_JSON_PARSER_INCLUDED 1
 
-#include "y/jive/parser.hpp"
+#include "y/jive/language/parser.hpp"
 
 namespace upsylon
 {
@@ -16,7 +16,7 @@ namespace upsylon
         //! JSON grammar and parser
         //
         //______________________________________________________________________
-        class Parser : public Jive::Parser
+        class Parser : public Jive::Language::Parser
         {
         public:
             explicit Parser();          //!< setup grammar

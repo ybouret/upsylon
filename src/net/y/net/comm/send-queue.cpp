@@ -84,8 +84,8 @@ assert(invalid+readable+writable==data->size)
             assert(writable);
             
             *(rw++) = code;
-            --aliasing::_(writable);
-            ++aliasing::_(readable);
+            aliasing::decr(writable);
+            aliasing::incr(readable);
             Y_SENDQ_CHECK();
         }
         
@@ -192,8 +192,8 @@ assert(invalid+readable+writable==data->size)
             while( count-- > 0)
             {
                 *(rw++) = pop();
-                --aliasing::_(writable);
-                ++aliasing::_(readable);
+                aliasing::decr(writable);
+                aliasing::incr(readable);
             }
             Y_SENDQ_CHECK();
             

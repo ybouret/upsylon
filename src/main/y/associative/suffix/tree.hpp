@@ -97,7 +97,7 @@ namespace upsylon
                 // need a new leaf
                 //--------------------------------------------------------------
                 node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
-                ++aliasing::_(load);
+                aliasing::incr(load);
                 assert(false==node->used);
             FOUND:;
             }
@@ -170,7 +170,7 @@ namespace upsylon
                 // need a new leaf
                 //--------------------------------------------------------------
                 node = node->leaves.push_back( tree_node::make(pool,node,code,0) );
-                ++aliasing::_(load);
+                aliasing::incr(load);
                 assert(false==node->used);
             FOUND:;
             }
@@ -285,7 +285,7 @@ namespace upsylon
                     if(frequency<=0)
                     {
                         parent->leaves.unlink(node)->return_to(pool);
-                        --aliasing::_(load);
+                        aliasing::decr(load);
                     }
                     parent->optimize();
                     node=parent;

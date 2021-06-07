@@ -418,7 +418,7 @@ namespace upsylon
                     }
                     if(count>0)
                     {
-                        ++aliasing::_(lines);
+                        aliasing::incr(lines);
                         total += count;
                     }
                 }
@@ -492,7 +492,7 @@ namespace upsylon
                     }
                     if(count)
                     {
-                        ++aliasing::_(lines);
+                        aliasing::incr(lines);
                         total += count;
                     }
                 }

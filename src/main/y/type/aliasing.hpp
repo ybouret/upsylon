@@ -22,11 +22,11 @@ namespace upsylon {
 
         //! force increase
         template <typename T> static inline
-        void incr( const T &args ) { ++_(args); }
+        const T &incr( const T &args ) { return ++_(args); }
 
         //! force decrease
         template <typename T> static inline
-        void decr( const T &args ) { --_(args); }
+        const T &decr( const T &args ) { return --_(args); }
 
         //______________________________________________________________________
         //

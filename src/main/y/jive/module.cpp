@@ -26,7 +26,7 @@ namespace upsylon {
             if(input->query(C))
             {
                 Char *ch = Char::Acquire(*this,C);
-                ++aliasing::_(column);
+                aliasing::incr(column);
                 return ch;
             }
             else
@@ -38,7 +38,7 @@ namespace upsylon {
         void Module:: newLine() throw()
         {
             aliasing::_(column) = 1;
-            ++aliasing::_(line);
+            aliasing::incr(line);
         }
 
        

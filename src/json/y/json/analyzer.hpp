@@ -4,7 +4,7 @@
 #ifndef Y_JSON_ANALYZER_INCLUDED
 #define Y_JSON_ANALYZER_INCLUDED 1
 
-#include "y/jive/syntax/analyzer.hpp"
+#include "y/jive/language/analyzer.hpp"
 #include "y/json/value.hpp"
 #include "y/hashing/mph.hpp"
 
@@ -20,7 +20,7 @@ namespace upsylon
         //! JSON AST analyzer
         //
         //______________________________________________________________________
-        class Analyzer : public Jive::Syntax::Analyzer
+        class Analyzer : public Jive::Language::Analyzer
         {
         public:
             explicit Analyzer(const Jive::Tag &);  //!< setup

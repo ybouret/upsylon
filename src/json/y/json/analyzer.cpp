@@ -36,7 +36,7 @@ namespace upsylon
         }
 
         Analyzer:: Analyzer(const Jive::Tag &id) :
-        Jive::Syntax::Analyzer(id),
+        Jive::Language::Analyzer(id),
         vstack(),
         pstack(),
         vhash(Y_MPH_WORDS(Terminals)),

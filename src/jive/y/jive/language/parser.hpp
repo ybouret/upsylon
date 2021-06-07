@@ -106,8 +106,16 @@ namespace upsylon
                 //! validateWith(this)
                 void validate() const;
 
-                //! parse
+                //! parse function
                 Node *parse(Source &source);
+
+                template <typename ID> inline
+                Node *parseFile(const ID &fileName)
+                {
+                    Source source( Module::OpenFile(fileName) );
+                    return parse(source);
+                }
+
 
 
             protected:

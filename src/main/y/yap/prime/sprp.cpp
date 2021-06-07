@@ -61,7 +61,7 @@ s(0)
             while(d.is_even())
             {
                 aliasing::_(d).shr(1);
-                ++aliasing::_(s);
+                aliasing::incr(s);
             }
 
 

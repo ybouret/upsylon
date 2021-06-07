@@ -109,7 +109,7 @@ namespace upsylon
                 if(!has_label)
                 {
                     singles.push_back( group::single(label) );
-                    ++aliasing::_(extraneous);
+                    aliasing::incr(extraneous);
                 }
             }
             merge_back(singles);

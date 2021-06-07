@@ -146,7 +146,7 @@ namespace upsylon
 
                     for(size_t j=M;j>0;--j)
                     {
-                        if(active[j]) ++aliasing::_(Ma);
+                        if(active[j]) aliasing::incr(Ma);
                     }
 
                     //----------------------------------------------------------

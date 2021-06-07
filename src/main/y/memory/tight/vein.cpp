@@ -21,7 +21,7 @@ namespace upsylon {
                 assert(count>0);
                 
                 mgr.__free(s,block_size);
-                --aliasing::_(count);
+                aliasing::decr(count);
             }
 
 
@@ -95,7 +95,7 @@ namespace upsylon {
             {
                 static global &mgr = global::instance();
                 void *addr = mgr.__calloc(1,block_size);
-                ++aliasing::_(count);
+                aliasing::incr(count);
                 return static_cast<ingot *>(addr);
             }
 

@@ -152,7 +152,7 @@ namespace upsylon {
             inline void clear() throw()
             {
                 assert(count<=slots);
-                while(count>0) slot[--aliasing::_(count)] = 0;
+                while(count>0) slot[aliasing::decr(count)] = 0;
             }
 
             //! soft copy queue structure
@@ -162,7 +162,7 @@ namespace upsylon {
                 type       **target    = slot;
                 const_type **source    = (const_type **)(other.slot);
                 const size_t new_count = other.count;
-                while(count>new_count) target[--aliasing::_(count)] = 0;
+                while(count>new_count) target[aliasing::decr(count)] = 0;
                 for(size_t i=0;i<new_count;++i)
                 {
                     target[i]=(type*)(source[i]);

@@ -41,7 +41,7 @@ namespace upsylon
         {
             assert(nb<4);
             assert(nx<16);
-            ++aliasing::_(length);
+            aliasing::incr(length);
             B[nb++] = b;
             if(nb>=4)
             {
