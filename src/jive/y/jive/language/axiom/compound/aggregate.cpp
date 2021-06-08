@@ -21,14 +21,19 @@ namespace upsylon
 
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
-                size_t       num=1;
+                size_t       number = 1;
 
-                
+                //--------------------------------------------------------------
+                //
+                // main loop over different components
+                //
+                //--------------------------------------------------------------
                 {
                     Observer::Increase   outer(obs);
-                    for(const Reference *ref=head;ref;ref=ref->next,++num)
+                    bool                 found = false;
+                    for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
-                        Y_LANG_PRINTLN( obs.indent() << "|_agg<" << name << ">@" << num << "/" << size);
+                        Y_LANG_PRINTLN( obs.indent() << "|_agg<" << name << ">@" << number << "/" << size);
                         Observer::Increase   inner(obs);
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
@@ -37,7 +42,15 @@ namespace upsylon
                             {
                                 leaves.push(node);
                             }
-                            obs.into = this;
+                            if(!found)
+                            {
+                                if(Grouping!=type)
+                                {
+                                    obs.into = this; // partially accepted
+                                    Y_LANG_PRINTLN( obs.indent() << "[<== into <" << name << ">]");
+                                }
+                                found    = true;
+                            }
                         }
                         else
                         {
@@ -46,9 +59,13 @@ namespace upsylon
                         }
                     }
                 }
-                
+
+                //--------------------------------------------------------------
+                //
+                // success
+                //
+                //--------------------------------------------------------------
                 {
-                    // success
                     const size_t accepted = leaves.size;
                     Node::Grow(tree,branch.yield());
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
@@ -60,10 +77,14 @@ namespace upsylon
                     return true;
                 }
 
+                //--------------------------------------------------------------
+                //
+                // failure
+                //
+                //--------------------------------------------------------------
                 {
-                    // failure
                 AGGREGATE_FAILURE:
-                    Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Rejected << " @" << num << "/" << size << "]" );
+                    Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Rejected << " @" << number << "/" << size << "]" );
                     Node::ReturnTo(lexer,branch.yield());
                     return false;
                 }
