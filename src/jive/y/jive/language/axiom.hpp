@@ -60,10 +60,10 @@ namespace upsylon
                 // members
                 //______________________________________________________________
                 unsigned         depth;             //!< current depth
-                const Aggregate *lastHost;          //!< last valid host
-                const Lexeme    *lastUnit;          //!< last valid unit
-                const Lexeme    *currUnit;          //!< current unit
-                const Aggregate *lastInto;          //!< at least first part
+                const Aggregate *host;          //!< last valid host
+                const Lexeme    *unit;          //!< last valid unit
+                const Lexeme    *curr;          //!< current unit
+                const Aggregate *into;          //!< at least first part
                 
             };
 

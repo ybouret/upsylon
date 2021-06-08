@@ -50,9 +50,9 @@ namespace upsylon
                 const bool res = root->accept(node,source,lexer,obs);
                 XTree      tree( node );
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
-                Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.lastHost) );
-                Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.lastUnit) );
-                Y_LANG_PRINTLN( "[" << name << "].into : " << nameOfHost(obs.lastInto) );
+                Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.host) );
+                Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.unit) );
+                Y_LANG_PRINTLN( "[" << name << "].into : " << nameOfHost(obs.into) );
 
                 //--------------------------------------------------------------
                 //
@@ -107,15 +107,15 @@ namespace upsylon
                     next->stampTo(excp);
                     excp.cat("%s has extraneous ",**name);
                     next->writeOn(excp,self);
-                    if(obs.lastHost)
+                    if(obs.host)
                     {
                         excp.cat(" after ");
-                        if(obs.lastUnit)
+                        if(obs.unit)
                         {
-                            obs.lastUnit->writeOn(excp,self);
+                            obs.unit->writeOn(excp,self);
                             excp.cat(" of ");
                         }
-                        excp.cat(" <%s>", **(obs.lastHost->name));
+                        excp.cat(" <%s>", **(obs.host->name));
                     }
                     throw excp;
                 }
@@ -152,19 +152,19 @@ namespace upsylon
                 exception     excp;
                 last->stampTo(excp);
 
-                if(obs.lastHost)
+                if(obs.host)
                 {
-                    if(obs.lastUnit==last)
+                    if(obs.unit==last)
                     {
                         excp.cat("unfinished %s after ",**name);
                         last->writeOn(excp,self);
-                        excp.cat(" of <%s>", **(obs.lastHost->name) );
+                        excp.cat(" of <%s>", **(obs.host->name) );
                     }
                     else
                     {
                         excp.cat(" %s syntax error at ", **name);
                         last->writeOn(excp,self);
-                        excp.cat(" after <%s>", **(obs.lastHost->name) );
+                        excp.cat(" after <%s>", **(obs.host->name) );
                     }
                 }
                 else

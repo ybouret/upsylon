@@ -37,7 +37,7 @@ namespace upsylon
                             {
                                 leaves.push(node);
                             }
-                            obs.lastInto = this;
+                            obs.into = this;
                         }
                         else
                         {
@@ -54,8 +54,8 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(Grouping!=type)
                     {
-                        obs.lastHost = this;
-                        obs.lastUnit = obs.currUnit;
+                        obs.host = this;
+                        obs.unit = obs.curr;
                     }
                     return true;
                 }
