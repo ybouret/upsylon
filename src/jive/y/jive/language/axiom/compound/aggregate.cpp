@@ -14,6 +14,17 @@ namespace upsylon
             {
             }
 
+            bool Aggregate:: isGrouping() const throw()
+            {
+                return Grouping == type;
+            }
+
+
+            bool Aggregate:: isApparent() const throw()
+            {
+                return Grouping != type;
+            }
+
 
             Y_LANG_AXIOM_IMPL(Aggregate)
             {
