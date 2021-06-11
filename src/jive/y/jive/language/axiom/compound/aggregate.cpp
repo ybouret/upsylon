@@ -60,6 +60,7 @@ namespace upsylon
                                 if(Grouping!=type)
                                 {
                                     Y_LANG_PRINTLN( obs.indent() << "[<== into <" << name << ">]");
+                                    obs.inside = this;
                                 }
                                 found    = true;
                             }
