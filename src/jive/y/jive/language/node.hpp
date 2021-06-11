@@ -77,9 +77,11 @@ namespace upsylon
                  */
                 static void   Grow(Node * &tree, Node *node) throw();
                 
-                //! produce AST from parsed node and grammar
+                //! produce AST from parsed node
                 static Node  *AST(Node *node) throw();
                 
+                //! look for last terminal
+                const Axiom *Last(const Node *node) throw();
                 
                 //______________________________________________________________
                 //

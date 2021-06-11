@@ -52,8 +52,8 @@ namespace upsylon
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
-                        Y_LANG_PRINTLN(  obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
-                        obs.curr = lx;
+                        Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
+                        obs.tmplex = lx;
                         return true;
                     }
 

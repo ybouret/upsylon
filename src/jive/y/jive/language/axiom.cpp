@@ -32,6 +32,14 @@ namespace upsylon
             {
                 return flag ? Accepted : Rejected;
             }
+            
+            void Observer:: mark(const Aggregate *agg) throw()
+            {
+                assert(agg);
+                passed = agg;
+                lexeme = tmplex;
+            }
+
         }
     }
 

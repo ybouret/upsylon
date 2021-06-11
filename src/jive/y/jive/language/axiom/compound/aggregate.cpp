@@ -39,7 +39,9 @@ namespace upsylon
                 // main loop over different components
                 //
                 //--------------------------------------------------------------
+                
                 {
+                    
                     Observer::Increase   outer(obs);
                     bool                 found = false;
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
@@ -57,7 +59,6 @@ namespace upsylon
                             {
                                 if(Grouping!=type)
                                 {
-                                    obs.into = this; // partially accepted
                                     Y_LANG_PRINTLN( obs.indent() << "[<== into <" << name << ">]");
                                 }
                                 found    = true;
@@ -82,8 +83,7 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(Grouping!=type)
                     {
-                        obs.host = this;
-                        obs.unit = obs.curr;
+                        obs.mark(this);
                     }
                     return true;
                 }

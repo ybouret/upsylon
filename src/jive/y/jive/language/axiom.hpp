@@ -54,16 +54,18 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 ios::indent indent() const throw(); //!< to indent with depth
-
+                
+                void        mark(const Aggregate *) throw();
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
-                unsigned         depth;             //!< current depth
-                const Aggregate *host;          //!< last valid host
-                const Lexeme    *unit;          //!< last valid unit
-                const Lexeme    *curr;          //!< current unit
-                const Aggregate *into;          //!< at least first part
+                unsigned         depth;   //!< current depth
+                const Aggregate *passed;  //!< last passed aggregate
+                const Lexeme    *lexeme;  //!< last accepted lexeme
+                const Lexeme    *tmplex;  //!< temporary lexeme
+                const Aggregate *inside;  //!< last inside aggregate
                 
             };
 

@@ -39,7 +39,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs  = { 0, 0, 0, 0, 0};
+                Observer  obs  = { 0, 0, 0, 0, 0 };
 
                 //--------------------------------------------------------------
                 //
@@ -50,10 +50,11 @@ namespace upsylon
                 const bool res = root->accept(node,source,lexer,obs);
                 XTree      tree( node );
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
-                Y_LANG_PRINTLN( "[" << name << "].host : " << nameOfHost(obs.host) );
-                Y_LANG_PRINTLN( "[" << name << "].unit : " << nameOfUnit(obs.unit) );
-                Y_LANG_PRINTLN( "[" << name << "].into : " << nameOfHost(obs.into) );
+                Y_LANG_PRINTLN( "[" << name << "].passed : " << nameOfHost(obs.passed));
+                Y_LANG_PRINTLN( "[" << name << "].lexeme : " << nameOfUnit(obs.lexeme));
+                Y_LANG_PRINTLN( "[" << name << "].inside : " << nameOfHost(obs.inside));
 
+                
                 //--------------------------------------------------------------
                 //
                 // analyse result
@@ -107,16 +108,18 @@ namespace upsylon
                     next->stampTo(excp);
                     excp.cat("%s has extraneous ",**name);
                     next->writeOn(excp,self);
-                    if(obs.host)
+                    
+                    if(obs.passed)
                     {
                         excp.cat(" after ");
-                        if(obs.unit)
+                        if(obs.lexeme)
                         {
-                            obs.unit->writeOn(excp,self);
+                            obs.lexeme->writeOn(excp,self);
                             excp.cat(" of ");
                         }
-                        excp.cat(" <%s>", **(obs.host->name));
+                        excp.cat("<%s>", **(obs.passed->name) );
                     }
+                    
                     throw excp;
                 }
 
@@ -151,27 +154,9 @@ namespace upsylon
                 const Lexeme *last = lexer.last(); assert(last);
                 exception     excp;
                 last->stampTo(excp);
-
-                if(obs.host)
-                {
-                    if(obs.unit==last)
-                    {
-                        excp.cat("unfinished %s after ",**name);
-                        last->writeOn(excp,self);
-                        excp.cat(" of <%s>", **(obs.host->name) );
-                    }
-                    else
-                    {
-                        excp.cat(" %s syntax error at ", **name);
-                        last->writeOn(excp,self);
-                        excp.cat(" after <%s>", **(obs.host->name) );
-                    }
-                }
-                else
-                {
-                    excp.cat(" %s syntax error at ", **name);
-                    last->writeOn(excp,self);
-                }
+                excp.cat(" %s syntax error at ", **name);
+                last->writeOn(excp,self);
+                 
                 throw excp;
 
             }
