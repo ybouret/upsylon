@@ -53,6 +53,7 @@ namespace upsylon
                 Y_LANG_PRINTLN( "[" << name << "].passed : " << nameOfHost(obs.passed));
                 Y_LANG_PRINTLN( "[" << name << "].lexeme : " << nameOfUnit(obs.lexeme));
                 Y_LANG_PRINTLN( "[" << name << "].inside : " << nameOfHost(obs.inside));
+                Y_LANG_PRINTLN( "[" << name << "].tmplex : " << nameOfUnit(obs.tmplex));
 
                 
                 //--------------------------------------------------------------
@@ -147,14 +148,16 @@ namespace upsylon
                     }
                     assert(NULL!=lexer.last());
                 }
-
+                
                 //--------------------------------------------------------------
                 // format exception
                 //--------------------------------------------------------------
                 const Lexeme *last = lexer.last(); assert(last);
                 exception     excp;
                 last->stampTo(excp);
-                excp.cat(" %s syntax error at ", **name);
+                excp.cat(" %s syntax error", **name);
+                
+                
                 last->writeOn(excp,self);
                  
                 throw excp;
