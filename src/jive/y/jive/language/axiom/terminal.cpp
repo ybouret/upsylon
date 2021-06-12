@@ -53,7 +53,7 @@ namespace upsylon
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
                         Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
-                        obs.okterm = lx;
+                        Y_LANG_TRACELN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
                         return true;
                     }
 

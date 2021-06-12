@@ -87,7 +87,9 @@ namespace
 
 Y_UTEST(parser)
 {
-    Language::Axiom::Verbose = true;
+    //Language::Axiom::Verbose = true;
+    Language::Axiom::Tracing = true;
+    
     vfs &fs = local_fs::instance();
     fs.try_remove_file("tree.dot");
     fs.try_remove_file("tree.png");

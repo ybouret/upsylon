@@ -13,6 +13,7 @@ namespace upsylon
         namespace Language
         {
 
+
             typedef addresses<const Axiom> Axioms; //!< handle list of axioms
             
             //! echo typedef into class
@@ -27,6 +28,7 @@ namespace upsylon
             class Grammar
             {
             public:
+                static bool Tracing;              //!< to help/debug
                 Y_LANG_GRAMMAR_ECHO(Axiom);       //!< alias
                 Y_LANG_GRAMMAR_ECHO(Axioms);      //!< alias
                 Y_LANG_GRAMMAR_ECHO(Aggregate);   //!< alias

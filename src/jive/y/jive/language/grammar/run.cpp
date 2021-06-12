@@ -16,17 +16,7 @@ namespace upsylon
         namespace Language
         {
 
-
-            static inline const char *nameOfHost(const Axiom *ax) throw()
-            {
-                return ax ? **(ax->name) : "(nil)";
-            }
-
-            static inline const char *nameOfUnit(const Lexeme *lx) throw()
-            {
-                return lx ? **(lx->label) : "(nil)";
-            }
-
+            
 
             XNode * Grammar:: run(Source &source,
                                   Lexer  &lexer)
@@ -39,7 +29,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs  = { 0, 0, 0, 0, 0 };
+                Observer  obs  = { 0 };
 
                 //--------------------------------------------------------------
                 //
@@ -50,11 +40,7 @@ namespace upsylon
                 const bool res = root->accept(node,source,lexer,obs);
                 XTree      tree( node );
                 Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
-                Y_LANG_PRINTLN( "[" << name << "].passed : " << nameOfHost(obs.passed));
-                Y_LANG_PRINTLN( "[" << name << "].lexeme : " << nameOfUnit(obs.lexeme));
-                Y_LANG_PRINTLN( "[" << name << "].inside : " << nameOfHost(obs.inside));
-                Y_LANG_PRINTLN( "[" << name << "].okterm : " << nameOfUnit(obs.okterm));
-
+                
                 
                 //--------------------------------------------------------------
                 //
@@ -110,16 +96,6 @@ namespace upsylon
                     excp.cat("%s has extraneous ",**name);
                     next->writeOn(excp,self);
                     
-                    if(obs.passed)
-                    {
-                        excp.cat(" after ");
-                        if(obs.lexeme)
-                        {
-                            obs.lexeme->writeOn(excp,self);
-                            excp.cat(" of ");
-                        }
-                        excp.cat("<%s>", **(obs.passed->name) );
-                    }
                     
                     throw excp;
                 }

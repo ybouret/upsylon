@@ -59,8 +59,7 @@ namespace upsylon
                             {
                                 if(Grouping!=type)
                                 {
-                                    Y_LANG_PRINTLN( obs.indent() << "[<== into <" << name << ">]");
-                                    obs.inside = this;
+                                    Y_LANG_TRACELN( obs.indent() << "into <" << name << ">" );
                                 }
                                 found = true;
                             }
@@ -84,7 +83,6 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(Grouping!=type)
                     {
-                        obs.mark(this);
                     }
                     return true;
                 }

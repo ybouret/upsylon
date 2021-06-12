@@ -8,7 +8,8 @@ namespace upsylon
         namespace Language
         {
 
-            bool Axiom::Verbose = false;
+            bool Axiom:: Verbose = false;
+            bool Axiom:: Tracing = false;
 
             const char  Axiom:: Accepted[] = "accepted";
             const char  Axiom:: Rejected[] = "rejected";
@@ -33,13 +34,7 @@ namespace upsylon
                 return flag ? Accepted : Rejected;
             }
             
-            void Observer:: mark(const Aggregate *agg) throw()
-            {
-                assert(agg);
-                passed = agg;
-                lexeme = okterm;
-                okterm = NULL;
-            }
+            
 
         }
     }
