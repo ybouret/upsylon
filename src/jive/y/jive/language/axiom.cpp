@@ -37,7 +37,8 @@ namespace upsylon
             {
                 assert(agg);
                 passed = agg;
-                lexeme = tmplex;
+                lexeme = okterm;
+                okterm = NULL;
             }
 
         }

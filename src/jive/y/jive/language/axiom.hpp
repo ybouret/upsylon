@@ -64,7 +64,7 @@ namespace upsylon
                 unsigned         depth;   //!< current depth
                 const Aggregate *passed;  //!< last passed aggregate
                 const Lexeme    *lexeme;  //!< last accepted lexeme
-                const Lexeme    *tmplex;  //!< temporary lexeme
+                const Lexeme    *okterm;  //!< last ok terminal lexeme
                 const Aggregate *inside;  //!< last inside aggregate
                 
             };

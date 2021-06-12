@@ -53,7 +53,7 @@ namespace upsylon
                 Y_LANG_PRINTLN( "[" << name << "].passed : " << nameOfHost(obs.passed));
                 Y_LANG_PRINTLN( "[" << name << "].lexeme : " << nameOfUnit(obs.lexeme));
                 Y_LANG_PRINTLN( "[" << name << "].inside : " << nameOfHost(obs.inside));
-                Y_LANG_PRINTLN( "[" << name << "].tmplex : " << nameOfUnit(obs.tmplex));
+                Y_LANG_PRINTLN( "[" << name << "].okterm : " << nameOfUnit(obs.okterm));
 
                 
                 //--------------------------------------------------------------

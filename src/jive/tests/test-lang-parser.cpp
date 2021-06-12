@@ -98,9 +98,7 @@ Y_UTEST(parser)
 
     if(argc>1)
     {
-        //parser.reset();
-        Source source( Module::OpenFile(argv[1]));
-        XTree  tree( parser.parse(source) );
+        XTree  tree( parser.parseFile(argv[1]) );
         if( tree.is_valid() )
         {
             tree->graphViz("tree.dot");

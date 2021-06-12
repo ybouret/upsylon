@@ -123,6 +123,7 @@ namespace upsylon
                 {
                     reset();
                     Source source( Module::OpenFile(fileName) );
+                    ready(source,10);
                     return parse(source);
                 }
 
