@@ -61,7 +61,7 @@ namespace upsylon
                 else
                 {
                     Node::ReturnTo(lexer,branch.yield());
-                    //Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
+                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
                     return false;
                 }
             }

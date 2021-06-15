@@ -30,7 +30,7 @@ namespace upsylon
                 {
                     assert(NULL==node);
                     --obs.depth;
-                    //Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Rejected << "]");
+                    Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Rejected << "]");
                 }
 
                 return true;

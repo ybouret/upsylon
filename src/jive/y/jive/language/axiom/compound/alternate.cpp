@@ -30,7 +30,7 @@ namespace upsylon
                             if(node)
                             {
                                 Node::Grow(tree,node);
-                                Y_LANG_PRINTLN( obs.indent() << "alt<" << name << "> [" << Accepted << "<" << axiom.name << "> ]" );
+                                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Accepted << "<" << axiom.name << "> ]" );
                                 return true;
                             }
                             // else keep a chance to accept something...
@@ -44,6 +44,7 @@ namespace upsylon
                 }
                 if(accepted)
                     throw exception("Language found invalid alternate <%s>!", **name);
+                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Rejected << "]" );
                 return false;
             }
 

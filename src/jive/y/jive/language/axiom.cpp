@@ -9,8 +9,7 @@ namespace upsylon
         {
 
             bool Axiom:: Verbose = false;
-            bool Axiom:: Tracing = false;
-
+            
             const char  Axiom:: Accepted[] = "accepted";
             const char  Axiom:: Rejected[] = "rejected";
 
@@ -26,7 +25,7 @@ namespace upsylon
 
             ios::indent Observer::indent() const throw()
             {
-                return ios::indent(depth);
+                return ios::indent(depth,'.');
             }
 
             const char * Axiom:: Status(const bool flag) throw()
