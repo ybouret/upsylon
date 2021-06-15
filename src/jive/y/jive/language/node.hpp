@@ -82,7 +82,8 @@ namespace upsylon
                 static Node  *AST(Node *node) throw();
                 
                 //! look for last terminal
-                static const Lexeme *LastLexeme(const Node *node) throw();
+                static const Lexeme *LastLexeme(const Node *node, const Axiom * &from) throw();
+                
                 
                 //______________________________________________________________
                 //

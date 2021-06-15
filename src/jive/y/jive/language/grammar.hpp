@@ -212,7 +212,7 @@ namespace upsylon
                                     const char   *fn,
                                     const char    sep) const;
 
-                XNode *onAccept(XNode *node, Source &source, Lexer &lexer, const Observer &obs) const;
+                XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer, const Observer &obs) const;
 
             };

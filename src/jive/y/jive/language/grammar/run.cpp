@@ -49,7 +49,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if(res)
                 {
-                    return onAccept(tree.yield(),source,lexer,obs);
+                    return onAccept(tree.yield(),source,lexer);
                 }
                 else
                 {
@@ -61,8 +61,7 @@ namespace upsylon
 
             XNode *Grammar:: onAccept(XNode  *        node,
                                       Source         &source,
-                                      Lexer          &lexer,
-                                      const Observer &obs) const
+                                      Lexer          &lexer) const
             {
                 //--------------------------------------------------------------
                 //
@@ -91,17 +90,30 @@ namespace upsylon
                 const Lexeme *next = lexer.next(source);
                 if(next)
                 {
-                    exception excp;
+                    exception     excp;
                     next->stampTo(excp);
                     excp.cat("%s has extraneous ",**name);
                     next->writeOn(excp,self);
                     
-                    const Lexeme *last = Node::LastLexeme(node);
+                    const Axiom  *from = NULL;
+                    const Lexeme *last = Node::LastLexeme(node,from);
                     if(last)
                     {
                         excp.cat(" after ");
                         last->writeOn(excp,self);
+                        if(from)
+                        {
+                            excp.cat(" of <%s>", **(from->name) );
+                        }
                     }
+                    else
+                    {
+                        if(from)
+                        {
+                            excp.cat(" after <%s>", **(from->name) );
+                        }
+                    }
+                    
                     
                     throw excp;
                 }

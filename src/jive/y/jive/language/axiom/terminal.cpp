@@ -60,7 +60,8 @@ namespace upsylon
             }
 
             
-            const Lexeme * Node:: LastLexeme(const Node *node) throw()
+            const Lexeme * Node:: LastLexeme(const Node *   node,
+                                             const Axiom * &from) throw()
             {
                 assert(node);
                 switch(node->state)
@@ -70,7 +71,8 @@ namespace upsylon
                 }
                 
                 const List &self = node->leaves();
-                return self.size ? LastLexeme(self.tail) : NULL;
+                from             = & node->axiom;
+                return self.size ? LastLexeme(self.tail,from) : NULL;
             }
         }
 
