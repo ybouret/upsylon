@@ -57,7 +57,7 @@ namespace upsylon
                             }
                             if(!found)
                             {
-                                if(Grouping!=type)
+                                if(isApparent())
                                 {
                                     Y_LANG_TRACELN( obs.indent() << "into <" << name << ">" );
                                 }
@@ -81,7 +81,7 @@ namespace upsylon
                     const size_t accepted = leaves.size;
                     Node::Grow(tree,branch.yield());
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
-                    if(Grouping!=type)
+                    if(isApparent())
                     {
                         Y_LANG_TRACELN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     }
