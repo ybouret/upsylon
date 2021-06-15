@@ -40,7 +40,6 @@ namespace upsylon
                 //--------------------------------------------------------------
                 
                 {
-                    Observer::Increase   outer(obs);
                     bool                 found = false;
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {

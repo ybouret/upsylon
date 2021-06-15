@@ -19,7 +19,6 @@ namespace upsylon
                 size_t        number   =  1;
                 bool          accepted = false;
                 {
-                    Observer::Increase   outer(obs);
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
                         Node                *node  = NULL;
@@ -30,7 +29,7 @@ namespace upsylon
                             if(node)
                             {
                                 Node::Grow(tree,node);
-                                Y_LANG_PRINTLN( obs.indent(-1) << "<" << name << "> [" << Accepted << "<" << axiom.name << ">]" );
+                                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Accepted << "<" << axiom.name << ">]" );
                                 return true;
                             }
                             // else keep a chance to accept something...

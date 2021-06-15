@@ -4,8 +4,7 @@
 #define Y_JIVE_LANG_AXIOM_INCLUDED 1
 
 #include "y/jive/language/node.hpp"
-#include "y/ios/indent.hpp"
-#include "y/momentary/increase.hpp"
+#include "y/jive/language/observer.hpp"
 #include "y/core/rnode.hpp"
 
 namespace upsylon
@@ -19,49 +18,7 @@ namespace upsylon
 
             class Aggregate;
             class Terminal;
-            
-            //__________________________________________________________________
-            //
-            //! observing grammar run
-            //__________________________________________________________________
-            struct Observer
-            {
-                //______________________________________________________________
-                //
-                // types and definitions
-                //______________________________________________________________
 
-                //! base class to momentarily increase indentation
-                typedef momentary_increase_by<1,unsigned> IncreaseType;
-
-                //! local class to momentarily increase depth
-                class Increase : public IncreaseType
-                {
-                public:
-                    //! ++obs.depth
-                    inline  Increase(Observer &obs) throw() : IncreaseType(obs.depth) {}
-                    
-                    //! --obs.depth
-                    inline ~Increase() throw() {}
-
-                private:
-                    Y_DISABLE_COPY_AND_ASSIGN(Increase);
-                };
-
-                //______________________________________________________________
-                //
-                // methods
-                //______________________________________________________________
-                ios::indent indent(const int shift=0) const throw(); //!< to indent with depth
-                
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                unsigned         depth;   //!< current depth
-                
-                
-            };
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
 #define Y_LANG_AXIOM_DECL()      virtual bool accept(Y_LANG_AXIOM_ARGS) const          //!< declare accept()

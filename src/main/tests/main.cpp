@@ -34,6 +34,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(core_roll);
     Y_UTEST(core_nodes);
     Y_UTEST(core_rnode);
+    Y_UTEST(core_anode);
     Y_UTEST(core_momentary);
 
 

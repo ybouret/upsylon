@@ -33,7 +33,6 @@ namespace upsylon
                 Node::List &leaves = branch->leaves();
 
                 {
-                    Observer::Increase scoped(obs);
                     while(true)
                     {
                         Node *node = 0;

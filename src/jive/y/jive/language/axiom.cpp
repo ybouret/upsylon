@@ -23,10 +23,7 @@ namespace upsylon
             {
             }
 
-            ios::indent Observer::indent(const int shift) const throw()
-            {
-                return ios::indent(depth+shift,'.');
-            }
+        
 
             const char * Axiom:: Status(const bool flag) throw()
             {

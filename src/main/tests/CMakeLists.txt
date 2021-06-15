@@ -68,6 +68,7 @@ test-code.cpp test-bits.cpp
 test-core-pool.cpp  
 test-core-list.cpp test-core-clist.cpp test-core-stack.cpp
 test-core-roll.cpp
+test-core-addr-node.cpp
 test-progress.cpp
 test-functor.cpp test-tuple.cpp test-traits.cpp  test-isqrt.cpp test-zfi.cpp test-binary.cpp
 test-meta-loop.cpp
@@ -95,6 +96,7 @@ ADD_TEST(core:metaloop    test-main metaloop)
 ADD_TEST(core:nodes       test-main core_nodes)
 ADD_TEST(core:momentary   test-main core_momentary)
 ADD_TEST(core:rnode       test-main core_rnode)
+ADD_TEST(core:anode       test-main core_anode)
 
 SOURCE_GROUP(mem FILES test-alloc.cpp 
 test-object.cpp test-embed.cpp
