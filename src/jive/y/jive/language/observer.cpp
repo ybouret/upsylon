@@ -11,13 +11,13 @@ namespace upsylon
             {
                 return ios::indent(depth,'.');
             }
-
+            
             Observer:: Observer() throw() :
             AxiomPool(),
             depth(0)
             {
             }
-
+            
             Observer:: ~Observer() throw()
             {
             }
@@ -35,30 +35,71 @@ namespace upsylon
                 }
                 ++depth;
             }
-
+            
             void Observer::back() throw()
             {
                 assert(size>0);
                 apool.store( pop() );
                 --depth;
             }
-
-
+            
+            
             Observer:: Scope::  Scope(Observer &obs, const Axiom *axiom) :
-            _(obs)
+            observer(obs),
+            withCall(axiom!=NULL)
             {
-                _.call(axiom);
+                if(withCall)
+                {
+                    observer.call(axiom);
+                }
+                else
+                {
+                    ++observer.depth;
+                }
             }
-
-
+            
+            
+            
+            
+            
             Observer:: Scope::  ~Scope() throw()
             {
-                _.back();
+                if(withCall)
+                {
+                    observer.back();
+                }
+                else
+                {
+                    --observer.depth;
+                }
             }
-
+            
         }
-
+        
     }
+    
+}
 
+#include "y/jive/language/axiom.hpp"
+
+namespace upsylon
+{
+    namespace Jive
+    {
+        namespace Language
+        {
+            const char * Observer:: inside() const throw()
+            {
+                if(size)
+                {
+                    return **(**head).name;
+                }
+                else
+                {
+                    return core::ptr::nil;
+                }
+            }
+        }
+    }
 }
 

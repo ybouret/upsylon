@@ -49,7 +49,6 @@ namespace upsylon
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
-                        Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " " << typeText() << " <" <<  name << "> = '" << *lx << "']" );
                         return true;
                     }
 

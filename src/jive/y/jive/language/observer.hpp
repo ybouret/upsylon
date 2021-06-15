@@ -28,36 +28,41 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
+                
+                //! local scope
                 class Scope
                 {
                 public:
-                    Scope(Observer &obs, const Axiom *);
-                    ~Scope() throw();
+                    Scope(Observer &obs, const Axiom *); //!< forward
+                    ~Scope() throw();                    //!< reverse
 
                 private:
-                    Observer &_;
+                    Observer  &observer;
+                    const bool withCall;
                     Y_DISABLE_COPY_AND_ASSIGN(Scope);
                 };
-
+                
                 //______________________________________________________________
                 //
-                // methods
+                // C++
                 //______________________________________________________________
+                explicit Observer() throw(); //!< setup
+                virtual ~Observer() throw(); //!< cleanup
+                
+            
                 ios::indent indent() const throw(); //!< to indent with depth
-
+                const char *inside() const throw(); //!< current call/nil
+                void        call(const Axiom *);    //!< push new call
+                void        back() throw();         //!< pop last call
+                
+                
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 unsigned         depth;   //!< current depth
                 AxiomPool        apool;   //!< for memory
-
-                explicit Observer() throw();
-                virtual ~Observer() throw();
-
-                void    call(const Axiom *);
-                void    back() throw();
-
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Observer);
             };

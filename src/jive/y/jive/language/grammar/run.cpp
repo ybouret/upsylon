@@ -36,10 +36,10 @@ namespace upsylon
                 // main acceptance
                 //
                 //--------------------------------------------------------------
-                Y_LANG_PRINTLN( "[" << name << "] root Axiom : <" << root->name << ">");
+                if(Axiom::Verbose) std::cerr << "[" << name << "] root Axiom : <" << root->name << ">" << std::endl;
                 const bool res = root->accept(node,source,lexer,obs);
                 XTree      tree( node );
-                Y_LANG_PRINTLN( "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) );
+                if(Axiom::Verbose) std::cerr << "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) << std::endl;
                 
                 
                 //--------------------------------------------------------------

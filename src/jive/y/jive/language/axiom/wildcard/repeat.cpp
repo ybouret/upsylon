@@ -54,13 +54,11 @@ namespace upsylon
                 if(count>=atLeast)
                 {
                     Node::Grow(tree,branch.yield());
-                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Accepted << " count=" << count << "]");
                     return true;
                 }
                 else
                 {
                     Node::ReturnTo(lexer,branch.yield());
-                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
                     return false;
                 }
             }

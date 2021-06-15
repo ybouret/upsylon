@@ -1,4 +1,5 @@
 
+//! \file
 
 #ifndef Y_JIVE_LANG_COMPOUND_INCLUDED
 #define Y_JIVE_LANG_COMPOUND_INCLUDED 1
@@ -23,10 +24,9 @@ namespace upsylon
             class Compound : public Axiom, public Axiom::Manifest
             {
             public:
-                virtual   ~Compound() throw();        //!< cleanup
-                Compound & operator<<(const Axiom &); //!< append an axiom
-
-                string     enumerate(const char sep) const;
+                virtual   ~Compound() throw();              //!< cleanup
+                Compound & operator<<(const Axiom &);       //!< append an axiom
+                string     enumerate(const char sep) const; //!< enumerate manifest
 
             protected:
                 //! setup

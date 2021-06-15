@@ -28,7 +28,6 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Aggregate)
             {
-                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> = " << enumerate(' ') );
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
                 size_t       number = 1;
@@ -40,8 +39,9 @@ namespace upsylon
                 //--------------------------------------------------------------
                 
                 {
-                    bool                 found = false;
-                    for(const Reference *ref=head;ref;ref=ref->next,++number)
+                    const Observer::Scope scope(obs,isApparent() ? this : NULL);
+                    bool                  found = false;
+                    for(const Reference  *ref=head;ref;ref=ref->next,++number)
                     {
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
@@ -54,7 +54,6 @@ namespace upsylon
                             {
                                 if(isApparent())
                                 {
-                                    //Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [probe...]" );
                                 }
                                 found = true;
                             }
@@ -75,7 +74,6 @@ namespace upsylon
                 {
                     const size_t accepted = leaves.size;
                     Node::Grow(tree,branch.yield());
-                    Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     return true;
                 }
 
@@ -87,7 +85,6 @@ namespace upsylon
                 {
                 AGGREGATE_FAILURE:
                     Node::ReturnTo(lexer,branch.yield());
-                    Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Rejected << "]" );
                     return false;
                 }
             }

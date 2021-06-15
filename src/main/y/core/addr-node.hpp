@@ -22,9 +22,22 @@ namespace upsylon
 
             //! store the address
             inline explicit addr_node( type *args ) throw() : next(0), prev(0), addr( args ) {}
+            
             //! destructor
             inline virtual ~addr_node() throw() { assert(0==next); assert(0==prev); addr=0; }
-
+            
+            //! access
+            type & operator*() throw()
+            {
+                assert(addr); return *addr;
+            }
+            
+            //! access, const
+            const_type & operator*() const throw()
+            {
+                assert(addr); return *addr;
+            }
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(addr_node);

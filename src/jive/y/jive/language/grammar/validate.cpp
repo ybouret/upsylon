@@ -48,7 +48,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
             void Grammar:: validateWith(const Lexer *lexer) const
             {
                 const char  *id   = **name;
-                Y_LANG_PRINTLN("<" << id << ">");
+                if(Axiom::Verbose) std::cerr << "<" << id << ">" << std::endl;
                 const Axiom *root = getRoot();
                 if(!root)
                 {
@@ -126,7 +126,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     throw exception("%s grammar has no terminal!", **name);
                 }
                 
-                Y_LANG_PRINTLN("<" << id << "/>");
+                if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
 
             }
 
