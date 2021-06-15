@@ -15,26 +15,23 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Alternate)
             {
-                Y_LANG_PRINTLN( obs.indent() << "alt<" << name << ">");
-                size_t        number    = 1;
-                bool          accepted  = false;
-                const  Axiom *which     = NULL;
+                size_t        number   =  1;
+                bool          accepted = false;
                 {
                     Observer::Increase   outer(obs);
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
                         Node                *node  = NULL;
                         const Axiom         &axiom = **ref;
-                        Y_LANG_PRINTLN( obs.indent() << "|_alt<" << name << ">@" << number << "/" << size << " : <" << axiom.name << ">");
                         Observer::Increase   inner(obs);
                         if( axiom.accept(node,source,lexer,obs) )
                         {
                             accepted = true;
                             if(node)
                             {
-                                which = & axiom;
                                 Node::Grow(tree,node);
-                                goto ALTERNATE_SUCCESS;
+                                Y_LANG_PRINTLN( obs.indent() << "alt<" << name << "> [" << Accepted << "<" << axiom.name << "> ]" );
+                                return true;
                             }
                             // else keep a chance to accept something...
                         }
@@ -45,12 +42,9 @@ namespace upsylon
                         }
                     }
                 }
-                Y_LANG_PRINTLN( obs.indent() << "alt<" << name << "> [" << Status(accepted) << "]" );
-                return accepted;
-
-            ALTERNATE_SUCCESS:
-                Y_LANG_PRINTLN( obs.indent() << "alt<" << name << "> [" << Accepted << "<" << which->name << "> ]" );
-                return true;
+                if(accepted)
+                    throw exception("Language found invalid alternate <%s>!", **name);
+                return false;
             }
 
             

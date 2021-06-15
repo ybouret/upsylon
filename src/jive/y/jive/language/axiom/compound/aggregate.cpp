@@ -28,8 +28,6 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Aggregate)
             {
-                Y_LANG_PRINTLN( obs.indent() << "agg<" << name << ">");
-
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
                 size_t       number = 1;
@@ -46,7 +44,6 @@ namespace upsylon
                     bool                 found = false;
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
-                        Y_LANG_PRINTLN( obs.indent() << "|_agg<" << name << ">@" << number << "/" << size);
                         Observer::Increase   inner(obs);
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
@@ -83,7 +80,7 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(isApparent())
                     {
-                        Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
+                        //Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     }
                     return true;
                 }
@@ -95,7 +92,6 @@ namespace upsylon
                 //--------------------------------------------------------------
                 {
                 AGGREGATE_FAILURE:
-                    Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Rejected << " @" << number << "/" << size << "]" );
                     Node::ReturnTo(lexer,branch.yield());
                     return false;
                 }

@@ -15,9 +15,9 @@ namespace upsylon
             {
                 switch(t)
                 {
-                    case Standard: return "Standard";
-                    case Univocal: return "Univocal";
-                    case Division: return "Division";
+                    case Standard: return "standard";
+                    case Univocal: return "univocal";
+                    case Division: return "division";
                 }
                 return "???";
             }
@@ -34,25 +34,22 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Terminal)
             {
-                Y_LANG_PRINTLN( obs.indent() << typeText() << " <" << name << ">");
                 Lexeme *lx = lexer.get(source);
                 if(!lx)
                 {
-                    Y_LANG_PRINTLN(  obs.indent() << "[" << Rejected << " EOS]" );
                     return false;
                 }
                 else
                 {
                     if(lx->label != name)
                     {
-                        Y_LANG_PRINTLN(  obs.indent() << "[" << Rejected << " <" << lx->label << "> = '" << *lx << "']" );
                         lexer.unget(lx);
                         return false;
                     }
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
-                        Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
+                        Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " " << typeText() << " <" <<  name << "> = '" << *lx << "']" );
                         return true;
                     }
 

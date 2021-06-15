@@ -29,7 +29,6 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Repeat)
             {
-                Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast);
                 XTree       branch( Node::Acquire(*this) );
                 Node::List &leaves = branch->leaves();
 
@@ -62,7 +61,7 @@ namespace upsylon
                 else
                 {
                     Node::ReturnTo(lexer,branch.yield());
-                    Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
+                    //Y_LANG_PRINTLN( obs.indent() << "Repeat <" << axiom.name << "> >= " << atLeast << " [" << Rejected << " count=" << count << "]");
                     return false;
                 }
             }

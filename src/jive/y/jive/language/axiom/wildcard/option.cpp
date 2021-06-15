@@ -18,7 +18,6 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Option)
             {
-                Y_LANG_PRINTLN( obs.indent() << "Option<" << name << ">");
                 Node *node = NULL;
                 ++obs.depth;
                 if(axiom.accept(node, source, lexer, obs))
@@ -31,7 +30,7 @@ namespace upsylon
                 {
                     assert(NULL==node);
                     --obs.depth;
-                    Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Rejected << "]");
+                    //Y_LANG_PRINTLN( obs.indent() << "Option<" << name << "> [" << Rejected << "]");
                 }
 
                 return true;
