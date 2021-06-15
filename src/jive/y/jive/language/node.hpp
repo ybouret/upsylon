@@ -16,6 +16,7 @@ namespace upsylon
 
             class Axiom;
             class Grammar;
+            class Terminal;
             
             //__________________________________________________________________
             //
@@ -81,7 +82,7 @@ namespace upsylon
                 static Node  *AST(Node *node) throw();
                 
                 //! look for last terminal
-                const Axiom *Last(const Node *node) throw();
+                static const Lexeme *LastLexeme(const Node *node) throw();
                 
                 //______________________________________________________________
                 //

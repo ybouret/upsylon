@@ -59,7 +59,7 @@ namespace upsylon
                             {
                                 if(isApparent())
                                 {
-                                    Y_LANG_TRACELN( obs.indent() << "into <" << name << ">" );
+                                    Y_LANG_PRINTLN( obs.indent() << "into <" << name << ">" );
                                 }
                                 found = true;
                             }
@@ -83,7 +83,7 @@ namespace upsylon
                     Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     if(isApparent())
                     {
-                        Y_LANG_TRACELN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
+                        Y_LANG_PRINTLN( obs.indent() << "agg<" << name << "> [" << Accepted << " #" << accepted << "/" << size << "]" );
                     }
                     return true;
                 }

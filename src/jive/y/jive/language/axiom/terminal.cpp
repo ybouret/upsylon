@@ -53,13 +53,25 @@ namespace upsylon
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
                         Y_LANG_PRINTLN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
-                        Y_LANG_TRACELN( obs.indent() << "[" << Accepted << " <" << name << "> = '" << *lx << "']" );
                         return true;
                     }
 
                 }
             }
 
+            
+            const Lexeme * Node:: LastLexeme(const Node *node) throw()
+            {
+                assert(node);
+                switch(node->state)
+                {
+                    case IsTerminal: return node->lexeme();
+                    case IsInternal: break;
+                }
+                
+                const List &self = node->leaves();
+                return self.size ? LastLexeme(self.tail) : NULL;
+            }
         }
 
     }

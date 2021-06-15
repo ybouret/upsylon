@@ -159,18 +159,7 @@ namespace upsylon
 
             }
             
-            const Axiom * Node:: Last(const Node *node) throw()
-            {
-                assert(node);
-                switch(node->state)
-                {
-                    case IsTerminal: return &axiom;
-                    case IsInternal: break;
-                }
-                
-                const List &self = leaves();
-                return self.size ? Last(self.tail) : NULL;
-            }
+        
             
             
 

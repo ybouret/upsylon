@@ -79,7 +79,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if(NULL==node)
                 {
-                    throw exception("%s returned an empty AST!",**name);
+                    throw exception("%s returned an empty syntax tree!",**name);
                 }
 
                 //--------------------------------------------------------------
@@ -96,6 +96,12 @@ namespace upsylon
                     excp.cat("%s has extraneous ",**name);
                     next->writeOn(excp,self);
                     
+                    const Lexeme *last = Node::LastLexeme(node);
+                    if(last)
+                    {
+                        excp.cat(" after ");
+                        last->writeOn(excp,self);
+                    }
                     
                     throw excp;
                 }

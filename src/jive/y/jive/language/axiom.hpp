@@ -4,7 +4,6 @@
 #define Y_JIVE_LANG_AXIOM_INCLUDED 1
 
 #include "y/jive/language/node.hpp"
-
 #include "y/ios/indent.hpp"
 #include "y/momentary/increase.hpp"
 #include "y/core/rnode.hpp"
@@ -87,8 +86,7 @@ namespace upsylon
                 typedef ref_node<Axiom>              Reference; //!< alias
                 typedef core::list_of_cpp<Reference> Manifest;  //!< alias
 
-                static  bool                         Verbose;   //!< global language verbosity
-                static  bool                         Tracing;   //!< global language tracing
+                static  bool                         Verbose;     //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
                 static  const char                   Rejected[];  //!< "REJECTED"
                 static  const char                  *Status(const bool) throw(); //!< accepted|rejected
@@ -147,9 +145,7 @@ namespace upsylon
             //! message for verbosity
 #define Y_LANG_PRINTLN(MSG) do { if(Jive::Language::Axiom::Verbose) { std::cerr << MSG << std::endl; } } while(false)
 
-            //! message for tracings
-#define Y_LANG_TRACELN(MSG) do { if(Jive::Language::Axiom::Tracing) { std::cerr << MSG << std::endl; } } while(false)
-
+             
         }
     }
 }
