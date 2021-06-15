@@ -28,6 +28,7 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Aggregate)
             {
+                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> = " << enumerate(' ') );
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
                 size_t       number = 1;
@@ -39,6 +40,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 
                 {
+                    Observer::Increase   outer(obs);
                     bool                 found = false;
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
@@ -53,7 +55,7 @@ namespace upsylon
                             {
                                 if(isApparent())
                                 {
-                                    Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [probe...]" );
+                                    //Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [probe...]" );
                                 }
                                 found = true;
                             }

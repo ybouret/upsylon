@@ -26,6 +26,8 @@ namespace upsylon
                 virtual   ~Compound() throw();        //!< cleanup
                 Compound & operator<<(const Axiom &); //!< append an axiom
 
+                string     enumerate(const char sep) const;
+
             protected:
                 //! setup
                 template <typename ID> inline

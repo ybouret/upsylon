@@ -15,6 +15,7 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Alternate)
             {
+                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> = " << enumerate('|') );
                 size_t        number   =  1;
                 bool          accepted = false;
                 {
@@ -23,14 +24,13 @@ namespace upsylon
                     {
                         Node                *node  = NULL;
                         const Axiom         &axiom = **ref;
-                        Observer::Increase   inner(obs);
                         if( axiom.accept(node,source,lexer,obs) )
                         {
                             accepted = true;
                             if(node)
                             {
                                 Node::Grow(tree,node);
-                                Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Accepted << "<" << axiom.name << "> ]" );
+                                Y_LANG_PRINTLN( obs.indent(-1) << "<" << name << "> [" << Accepted << "<" << axiom.name << ">]" );
                                 return true;
                             }
                             // else keep a chance to accept something...
@@ -42,8 +42,9 @@ namespace upsylon
                         }
                     }
                 }
-                if(accepted)
-                    throw exception("Language found invalid alternate <%s>!", **name);
+                // at this point, no node...
+                if(accepted) throw exception("Language found invalid alternate <%s>!", **name);
+
                 Y_LANG_PRINTLN( obs.indent() << "<" << name << "> [" << Rejected << "]" );
                 return false;
             }

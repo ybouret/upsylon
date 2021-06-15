@@ -52,7 +52,7 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                ios::indent indent() const throw(); //!< to indent with depth
+                ios::indent indent(const int shift=0) const throw(); //!< to indent with depth
                 
                 //______________________________________________________________
                 //
