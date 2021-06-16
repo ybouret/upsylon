@@ -29,10 +29,11 @@ namespace upsylon
 
             Y_LANG_AXIOM_IMPL(Repeat)
             {
+                Y_LANG_PRINTLN(obs.indent() << "|_" << name << " (>=" << atLeast << ")");
                 XTree       branch( Node::Acquire(*this) );
                 Node::List &leaves = branch->leaves();
-
                 {
+                    const Observer::Scope keep(obs);
                     while(true)
                     {
                         Node *node = 0;
@@ -54,11 +55,13 @@ namespace upsylon
                 if(count>=atLeast)
                 {
                     Node::Grow(tree,branch.yield());
+                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " " << count << ">=" << atLeast << "]");
                     return true;
                 }
                 else
                 {
                     Node::ReturnTo(lexer,branch.yield());
+                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Rejected << " " << count << "<" << atLeast << "]");
                     return false;
                 }
             }

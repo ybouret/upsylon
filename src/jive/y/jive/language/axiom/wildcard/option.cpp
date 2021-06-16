@@ -6,37 +6,47 @@
 
 namespace upsylon
 {
-
+    
     namespace Jive
     {
-
+        
         namespace Language
         {
             Option:: ~Option() throw()
             {
             }
-
+            
             Y_LANG_AXIOM_IMPL(Option)
             {
-                Node *node = NULL;
-                ++obs.depth;
-                if(axiom.accept(node, source, lexer, obs))
+                Y_LANG_PRINTLN(obs.indent() << "|_" << name );
+                bool                  found = false;
                 {
-                    if(node) Node::Grow(tree,node);
-                    --obs.depth;
+                    const Observer::Scope keep(obs);
+                    Node                 *node = NULL;
+                    if(axiom.accept(node, source, lexer, obs))
+                    {
+                        if(node)
+                        {
+                            Node::Grow(tree,node);
+                        }
+                        found = true;
+                    }
+                    else
+                    {
+                        assert(NULL==node);
+                    }
                 }
-                else
-                {
-                    assert(NULL==node);
-                    --obs.depth;
-                }
+                
+                Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Status(found) << "]" );
 
+                
+                
                 return true;
             }
-
+            
         }
-
+        
     }
-
+    
 }
 
