@@ -33,9 +33,9 @@ namespace upsylon
                 class Scope
                 {
                 public:
-                    Scope(Observer &obs, const Axiom *); //!< forward
-                    Scope(Observer &obs) throw();        //!< forward
-                    ~Scope() throw();                    //!< reverse
+                    Scope(Observer &obs, const Axiom *); //!< forward, call if axiom!=NULL
+                    Scope(Observer &obs) throw();        //!< forward, no call
+                    ~Scope() throw();                    //!< reverse action(s)
 
                 private:
                     Observer  &observer;
@@ -53,8 +53,8 @@ namespace upsylon
             
                 ios::indent indent() const throw(); //!< to indent with depth
                 const char *inside() const throw(); //!< current call/nil
-                void        call(const Axiom *);    //!< push new call
-                void        back() throw();         //!< pop last call
+                void        call(const Axiom *);    //!< push new call, increase depth
+                void        back() throw();         //!< pop last call, decrease depth
                 
                 
                 //______________________________________________________________

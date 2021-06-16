@@ -12,7 +12,8 @@ Y_UTEST(core_anode)
 
     core::addr_list<int> alist;
     core::addr_pool<int> apool;
-    const size_t         count = 10 + alea.leq(100);
+    const size_t         count = 10 + alea.leq(10);
+
     for(size_t i=count;i>0;--i)
     {
         if( alea.choice() )
@@ -27,6 +28,18 @@ Y_UTEST(core_anode)
     }
     Y_CHECK(alist.size==count);
     Y_CHECK(apool.size==count);
+
+    {
+        core::addr_node<int> *p = alist.head;
+        core::addr_node<int> *q = apool.head;
+        for(size_t i=count;i>0;--i)
+        {
+            std::cerr << **p << "/" << **q << " ";
+            p=p->next;
+            q=q->next;
+        }
+        std::cerr << std::endl;
+    }
 
     while(alist.size)
     {
