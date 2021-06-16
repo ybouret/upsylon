@@ -49,6 +49,16 @@ namespace upsylon
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
+                        if(Axiom::Verbose)
+                        {
+                            std::cerr << obs.indent() << "|_" << name;
+                            switch (type) {
+                                case Standard: std::cerr << " '" << *lx << "'"; break;
+                                case Univocal: break;
+                                case Division: break;
+                            }
+                            std::cerr << " <- " << obs.inside() << std::endl;
+                        }
                         return true;
                     }
 
