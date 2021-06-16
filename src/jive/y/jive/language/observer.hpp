@@ -34,6 +34,7 @@ namespace upsylon
                 {
                 public:
                     Scope(Observer &obs, const Axiom *); //!< forward
+                    Scope(Observer &obs) throw();        //!< forward
                     ~Scope() throw();                    //!< reverse
 
                 private:

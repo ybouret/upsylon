@@ -58,6 +58,13 @@ namespace upsylon
                 }
             }
             
+            Observer:: Scope::  Scope(Observer &obs) throw() :
+            observer(obs),
+            withCall(false)
+            {
+                ++observer.depth;
+            }
+            
             
             
             
