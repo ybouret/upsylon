@@ -37,10 +37,12 @@ namespace upsylon
                 // main loop over different components
                 //
                 //--------------------------------------------------------------
-                
                 {
+                    if(isApparent())
+                    {
+                        Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate(' '));
+                    }
                     const Observer::Scope scope(obs,isApparent() ? this : NULL);
-                    bool                  found = false;
                     for(const Reference  *ref=head;ref;ref=ref->next,++number)
                     {
                         Node                *node = NULL;
@@ -49,13 +51,6 @@ namespace upsylon
                             if(node)
                             {
                                 leaves.push(node);
-                            }
-                            if(!found)
-                            {
-                                if(isApparent())
-                                {
-                                }
-                                found = true;
                             }
                         }
                         else
@@ -73,7 +68,12 @@ namespace upsylon
                 //--------------------------------------------------------------
                 {
                     const size_t accepted = leaves.size;
+                    if(accepted<=0) throw exception("Language found invalid aggregate <%s>!", **name);
                     Node::Grow(tree,branch.yield());
+                    if(isApparent())
+                    {
+                        Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " #" << accepted << "/" << size << "]");
+                    }
                     return true;
                 }
 
@@ -85,6 +85,10 @@ namespace upsylon
                 {
                 AGGREGATE_FAILURE:
                     Node::ReturnTo(lexer,branch.yield());
+                    if(isApparent())
+                    {
+                        Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Rejected << "]");
+                    }
                     return false;
                 }
             }

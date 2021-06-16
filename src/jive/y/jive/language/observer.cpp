@@ -9,7 +9,7 @@ namespace upsylon
         {
             ios::indent Observer::indent() const throw()
             {
-                return ios::indent(depth,'.');
+                return ios::indent(depth,' ');
             }
             
             Observer:: Observer() throw() :
