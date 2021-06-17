@@ -42,7 +42,7 @@ namespace upsylon
                     {
                         Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate(' '));
                     }
-                    const Observer::Scope scope(obs,isApparent() ? this : NULL);
+                    const Observer::Scope scope(obs, (isApparent() ? this : NULL) );
                     for(const Reference  *ref=head;ref;ref=ref->next,++number)
                     {
                         Node                *node = NULL;

@@ -2,7 +2,7 @@
 #ifndef Y_JIVE_LANG_WILDCARD_INCLUDED
 #define Y_JIVE_LANG_WILDCARD_INCLUDED 1
 
-#include "y/jive/language/axiom.hpp"
+#include "y/jive/language/axiom/internal.hpp"
 
 
 namespace upsylon
@@ -20,7 +20,7 @@ namespace upsylon
             //! Wildcard base class
             //
             //__________________________________________________________________
-            class Wildcard : public Axiom
+            class Wildcard : public Internal
             {
             public:
                 virtual ~Wildcard() throw(); //!< cleanup
@@ -30,7 +30,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Wildcard(const ID &i, const uint32_t t, const Axiom &a) :
-                Axiom(i,t),
+                Internal(i,t),
                 axiom(a)
                 {
                 }

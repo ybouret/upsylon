@@ -4,7 +4,7 @@
 #ifndef Y_JIVE_LANG_COMPOUND_INCLUDED
 #define Y_JIVE_LANG_COMPOUND_INCLUDED 1
 
-#include "y/jive/language/axiom.hpp"
+#include "y/jive/language/axiom/internal.hpp"
 
 
 namespace upsylon
@@ -21,7 +21,7 @@ namespace upsylon
             //! a list of other atoms
             //
             //__________________________________________________________________
-            class Compound : public Axiom, public Axiom::Manifest
+            class Compound : public Internal, public Axiom::Manifest
             {
             public:
                 virtual   ~Compound() throw();              //!< cleanup
@@ -32,7 +32,7 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Compound(const ID &i, const uint32_t t) :
-                Axiom(i,t),
+                Internal(i,t),
                 Axiom:: Manifest()
                 {
                 }

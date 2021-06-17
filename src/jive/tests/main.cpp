@@ -2,6 +2,8 @@
 
 Y_UTEST_INIT(16)
 {
+    Y_UTEST(types);
+
     Y_UTEST(scatter);
     Y_UTEST(scanner);
     Y_UTEST(lexer);
