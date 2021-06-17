@@ -29,11 +29,7 @@ namespace upsylon {
             class Unit : public Token, public Context, public inode<Unit>
             {
             public:
-                enum Usage
-                {
-                    Core,
-                    Done
-                };
+
 
 
                 //______________________________________________________________
@@ -44,6 +40,14 @@ namespace upsylon {
                 typedef Supply::auto_ptr       Pointer; //!< alias
                 typedef Supply::list_          List;    //!< alias
 
+                //! usage or this unit during parsing
+                enum Usage
+                {
+                    Core, //!< in an aggregate
+                    Done  //!< end of an aggregate
+                };
+
+
                 //______________________________________________________________
                 //
                 // methods
@@ -53,10 +57,10 @@ namespace upsylon {
                                       size_t        &);  //!< using supply
                 static void    Delete(Unit *) throw();   //!< using supply
                 static Supply &Instance();               //!< instance
-                exception     &labelTo(exception &e) const throw();                      //!< "<label>"
-                exception     &writeTo(exception &e, const bool withText) const throw(); //!< "<label> = '...'"
+                exception     &labelTo(exception &e)                              const throw();                      //!< "<label>"
+                exception     &writeTo(exception &e, const bool withText)         const throw(); //!< "<label> = '...'"
                 exception     &writeOn(exception &e, const Language::Grammar &)   const throw(); //!< using Terminal::Type
-                const char    *usageText() const throw();
+                const char    *usageText()                                        const throw(); //!< core|done
 
                 //______________________________________________________________
                 //

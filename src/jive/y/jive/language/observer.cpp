@@ -15,6 +15,7 @@ namespace upsylon
             Observer:: Observer(const Tag &g) throw() :
             AggPool(),
             depth(0),
+            apool( ),
             gname(g)
             {
             }
