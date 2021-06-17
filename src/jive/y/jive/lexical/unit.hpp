@@ -29,6 +29,13 @@ namespace upsylon {
             class Unit : public Token, public Context, public inode<Unit>
             {
             public:
+                enum Usage
+                {
+                    Core,
+                    Done
+                };
+
+
                 //______________________________________________________________
                 //
                 // types and definitions
@@ -46,9 +53,10 @@ namespace upsylon {
                                       size_t        &);  //!< using supply
                 static void    Delete(Unit *) throw();   //!< using supply
                 static Supply &Instance();               //!< instance
-                exception     &labelTo(exception &e) const throw(); //!< "<label>"
-                exception     &writeTo(exception &e,const bool withText) const throw(); //!< "<label> = '...'"
+                exception     &labelTo(exception &e) const throw();                      //!< "<label>"
+                exception     &writeTo(exception &e, const bool withText) const throw(); //!< "<label> = '...'"
                 exception     &writeOn(exception &e, const Language::Grammar &)   const throw(); //!< using Terminal::Type
+                const char    *usageText() const throw();
 
                 //______________________________________________________________
                 //
@@ -57,6 +65,7 @@ namespace upsylon {
                 const Tag                  label; //!< creating rule label
                 const size_t               stamp; //!< creation stamp
                 const Language::Aggregate *owner; //!< apparent aggregate owner
+                const Usage                usage; //!< usage to guess errors
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);
@@ -68,7 +77,7 @@ namespace upsylon {
         }
     }
 
-	Y_MAGAZINE_DECL(Jive::Lexical::Unit)
+    Y_MAGAZINE_DECL(Jive::Lexical::Unit)
 
 
 }

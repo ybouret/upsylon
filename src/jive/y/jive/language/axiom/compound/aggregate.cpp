@@ -30,7 +30,8 @@ namespace upsylon
             {
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
-                size_t       number = 1;
+                size_t       i = 1;
+                const size_t n = size;
 
                 //--------------------------------------------------------------
                 //
@@ -43,7 +44,7 @@ namespace upsylon
                         Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate(' '));
                     }
                     const Observer::Scope scope(obs, (isApparent() ? this : NULL) );
-                    for(const Reference  *ref=head;ref;ref=ref->next,++number)
+                    for(const Reference  *ref=head;ref;ref=ref->next,++i)
                     {
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
@@ -51,6 +52,16 @@ namespace upsylon
                             if(node)
                             {
                                 leaves.push(node);
+                                switch(node->state)
+                                {
+                                    case Node::IsInternal: break;
+                                    case Node::IsTerminal:
+                                        if(i>=n)
+                                        {
+                                            aliasing::_(node->lexeme()->usage) = Lexeme::Done;
+                                        }
+                                        break;
+                                }
                             }
                         }
                         else

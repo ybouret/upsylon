@@ -26,9 +26,21 @@ namespace upsylon
                         const size_t   s) throw() :
             Token(), Context(c), inode<Unit>(), label(t),
             stamp(s),
-            owner(NULL)
+            owner(NULL),
+            usage(Core)
             {
             }
+
+            const char  * Unit:: usageText() const throw()
+            {
+                switch(usage)
+                {
+                    case Core: return "core";
+                    case Done: return "done";
+                }
+                return "???";
+            }
+
 
             Unit * Unit::Create(const Context &c,
                                 const Tag     &t,

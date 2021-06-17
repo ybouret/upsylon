@@ -138,6 +138,7 @@ namespace upsylon
                     std::cerr << " @" << lx->tag << ':' << lx->line << ':' << lx->column << ": ";
                     std::cerr << lx->label << " = '" << *lx << "'";
                     std::cerr << " <- " << (lx->owner ? **(lx->owner->name) : core::ptr::nil);
+                    std::cerr << " usage: " << (lx->usageText());
                     std::cerr << std::endl;
                 }
 
