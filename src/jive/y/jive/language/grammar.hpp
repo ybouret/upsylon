@@ -43,8 +43,14 @@ namespace upsylon
                 //! setup
                 template <typename ID> inline
                 explicit Grammar(const ID &id) :
-                name( Tags::Make(id) ), axioms(), registry(), aligned(0)
-                {}
+                name( Tags::Make(id) ),
+                axioms(),
+                registry(),
+                aligned(0),
+                observer(name)
+                {
+                    setupObs();
+                }
 
                 //! cleanup
                 virtual ~Grammar() throw();
@@ -207,10 +213,13 @@ namespace upsylon
                 const size_t          aligned;   //!< max of axioms name length
 
             private:
+                Observer              observer;
+
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string makeAxiomsID(const Axioms &ax,
                                     const char   *fn,
                                     const char    sep) const;
+                void   setupObs();
 
                 XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer) const;

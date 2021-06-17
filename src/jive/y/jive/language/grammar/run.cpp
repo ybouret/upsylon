@@ -26,18 +26,18 @@ namespace upsylon
                 // initialize
                 //
                 //--------------------------------------------------------------
+                observer.free();
+                XNode       *node = NULL;
                 const Axiom *root = getRoot();
-                if(!root) throw exception("%s has no root Axiom",**name);
-                XNode    *node = NULL;
-                Observer  obs(name);
+                if(!root) throw exception("%s has no root axiom",**name);
 
                 //--------------------------------------------------------------
                 //
                 // main acceptance
                 //
                 //--------------------------------------------------------------
-                if(Axiom::Verbose) std::cerr << "[" << name << "] root Axiom : <" << root->name << ">" << std::endl;
-                const bool res = root->accept(node,source,lexer,obs);
+                if(Axiom::Verbose) std::cerr << "[" << name << "] root axiom : <" << root->name << ">" << std::endl;
+                const bool res = root->accept(node,source,lexer,observer);
                 XTree      tree( node );
                 if(Axiom::Verbose) std::cerr << "[" << name << "] " << (res? Axiom::Accepted : Axiom::Rejected) << std::endl;
                 
@@ -47,6 +47,7 @@ namespace upsylon
                 // analyse result
                 //
                 //--------------------------------------------------------------
+                observer.free();
                 if(res)
                 {
                     return onAccept(tree.yield(),source,lexer);
@@ -128,7 +129,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // initialize
                 //--------------------------------------------------------------
-                
+#if 0
                 std::cerr << "<Lexemes>" << std::endl;
                 for(const Lexeme *lx = lexer.next(source); lx; lx=lx->next )
                 {
@@ -140,25 +141,60 @@ namespace upsylon
                     std::cerr << std::endl;
                 }
                 std::cerr << "<Lexemes/>" << std::endl;
+#endif
 
-                //--------------------------------------------------------------
-                // test source
-                //--------------------------------------------------------------
-                const Lexeme *curr = lexer.next(source);
+                const Lexemes &lexemes = *lexer;
+                if(lexemes.size<=0)
                 {
-                    if(NULL==curr)
-                    {
-                        throw exception("%s does not accept an empty source",**name);
-                    }
+                    //----------------------------------------------------------
+                    // empty source
+                    //----------------------------------------------------------
+                    throw exception("%s does not accept empty %s",**name, **(source.context().tag) );
                 }
-                
-                //--------------------------------------------------------------
-                // format exception
-                //--------------------------------------------------------------
-                exception     excp;
+                else
+                {
+                    //----------------------------------------------------------
+                    // format exception
+                    //----------------------------------------------------------
+                    const Lexeme *curr = lexemes.head; assert(curr);
+                    for(;curr;curr=curr->next)
+                    {
+                        if(NULL==curr->owner) goto FORMAT_EXCEPTION;
+                    }
+                    throw exception("%s is corrupted, all terminals were accepted from %s",**name, **(source.context().tag));
 
-                 
-                throw excp;
+                FORMAT_EXCEPTION:
+                    assert(curr);
+                    assert(NULL==curr->owner);
+                    exception     excp;
+                    curr->stampTo(excp);
+                    curr->writeOn(excp,*this);
+                    const Lexeme *prev = curr->prev;
+                    if(prev)
+                    {
+                        const Aggregate *before = prev->owner; assert(before);
+                        const char      *prior  = **(before->name);
+                        switch(prev->usage)
+                        {
+                            case Lexeme::Core:
+                                excp.cat(" invalid syntax in  %s",prior);
+                                break;
+
+                            case Lexeme::Done:
+                                excp.cat(" invalid syntax after %s",prior);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        excp.cat(" is invalid standalone");
+                    }
+                    excp.cat(" for %s", **name);
+                    throw excp;
+                }
+
+
+
 
             }
 
