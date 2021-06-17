@@ -36,10 +36,10 @@ namespace upsylon
                     const Observer::Scope keep(obs);
                     while(true)
                     {
-                        Node *node = 0;
+                        Node *node = NULL;
                         if(axiom.accept(node,source,lexer,obs))
                         {
-                            if(!node) throw exception("%s found invalid repeating empty <%s> ", **(obs.gname), **(axiom.name) );
+                            if(!node) throw exception("%s found invalid repeating empty %s", **(obs.gname), **(axiom.name) );
                             leaves.push( node );
                         }
                         else
