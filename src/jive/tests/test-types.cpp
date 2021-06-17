@@ -10,6 +10,7 @@ Y_UTEST(types)
     std::cerr << "Lexical:" << std::endl;
     Y_UTEST_SIZEOF(Token);
     Y_UTEST_SIZEOF(Lexeme);
+    Y_UTEST_SIZEOF(Lexer);
 
     std::cerr << "Language:" << std::endl;
     Y_UTEST_SIZEOF(Language::Node);
@@ -27,6 +28,11 @@ Y_UTEST(types)
     std::cerr << "Parsing:" << std::endl;
     Y_UTEST_SIZEOF(Language::Observer);
     Y_UTEST_SIZEOF(Language::AggNode);
+    Y_UTEST_SIZEOF(Language::AggPool);
+
+    Y_UTEST_SIZEOF(Language::Grammar);
+    Y_UTEST_SIZEOF(Language::Parser);
+
 
 
 }

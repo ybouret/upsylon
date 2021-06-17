@@ -47,6 +47,7 @@ namespace upsylon
             void Observer:: free() throw()
             {
                 while(size) apool.store( pop() );
+                depth=0;
             }
             
             
