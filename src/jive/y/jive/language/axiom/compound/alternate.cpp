@@ -24,7 +24,7 @@ namespace upsylon
 
                 {
                     Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate('|'));
-                    const Observer::Scope scope(obs,this);
+                    const Observer::Scope scope(obs,NULL);
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
                         Node *node  = NULL;
@@ -57,7 +57,7 @@ namespace upsylon
                 
             ALTERNATE_SUCCESS:
                 assert(which);
-                Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " " << which->name << "] <-" << obs.inside() );
+                Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " " << which->name << "] <- " << obs.inside() );
                 return true;
             }
             

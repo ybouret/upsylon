@@ -68,7 +68,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 {
                     const size_t accepted = leaves.size;
-                    if(accepted<=0) throw exception("Language found invalid aggregate <%s>!", **name);
+                    if(accepted<=0) throw exception("%s found invalid aggregate <%s>!", *(obs.gname), **name);
                     Node::Grow(tree,branch.yield());
                     if(isApparent())
                     {

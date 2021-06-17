@@ -53,10 +53,9 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                const Tag     label; //!< creating rule label
-                const size_t  stamp; //!< creation stamp
-                
-                
+                const Tag               label; //!< creating rule label
+                const size_t            stamp; //!< creation stamp
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);
                 virtual ~Unit() throw();                                           //!< cleanup

@@ -12,9 +12,10 @@ namespace upsylon
                 return ios::indent(depth,' ');
             }
             
-            Observer:: Observer() throw() :
-            AxiomPool(),
-            depth(0)
+            Observer:: Observer(const string &g) throw() :
+            AggPool(),
+            depth(0),
+            gname(g)
             {
             }
             
@@ -22,16 +23,16 @@ namespace upsylon
             {
             }
             
-            void Observer:: call(const Axiom *axiom)
+            void Observer:: call(const Aggregate *a)
             {
-                assert(axiom);
+                assert(a);
                 if(apool.size>0)
                 {
-                    store( apool.pop(axiom) );
+                    store( apool.pop(a) );
                 }
                 else
                 {
-                    push(axiom);
+                    push(a);
                 }
                 ++depth;
             }
@@ -42,15 +43,20 @@ namespace upsylon
                 apool.store( pop() );
                 --depth;
             }
+
+            void Observer:: free() throw()
+            {
+                while(size) apool.store( pop() );
+            }
             
             
-            Observer:: Scope::  Scope(Observer &obs, const Axiom *axiom) :
+            Observer:: Scope::  Scope(Observer &obs, const Aggregate *a) :
             observer(obs),
-            withCall(axiom!=NULL)
+            withCall(a!=NULL)
             {
                 if(withCall)
                 {
-                    observer.call(axiom);
+                    observer.call(a);
                 }
                 else
                 {
@@ -87,7 +93,7 @@ namespace upsylon
     
 }
 
-#include "y/jive/language/axiom.hpp"
+#include "y/jive/language/axiom/compound/aggregate.hpp"
 
 namespace upsylon
 {

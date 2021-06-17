@@ -6,6 +6,7 @@
 
 #include "y/ios/indent.hpp"
 #include "y/core/addr-pool.hpp"
+#include "y/strfwd.hpp"
 
 namespace upsylon
 {
@@ -15,13 +16,12 @@ namespace upsylon
 
         namespace Language
         {
-
-            class                                Axiom;     //!< forward
-            typedef core::addr_node<const Axiom> AxiomNode; //!< alias
-            typedef core::addr_pool<const Axiom> AxiomPool; //!< alias
+            class                                    Aggregate;     //!< forward
+            typedef core::addr_node<const Aggregate> AggNode; //!< alias
+            typedef core::addr_pool<const Aggregate> AggPool; //!< alias
 
             //! observer of language parser
-            class Observer : public AxiomPool
+            class Observer : public AggPool
             {
             public:
                 //______________________________________________________________
@@ -33,9 +33,9 @@ namespace upsylon
                 class Scope
                 {
                 public:
-                    Scope(Observer &obs, const Axiom *); //!< forward, call if axiom!=NULL
-                    Scope(Observer &obs) throw();        //!< forward, no call
-                    ~Scope() throw();                    //!< reverse action(s)
+                    Scope(Observer &obs, const Aggregate *); //!< forward, call if axiom!=NULL
+                    Scope(Observer &obs) throw();            //!< forward, no call
+                    ~Scope() throw();                        //!< reverse action(s)
 
                 private:
                     Observer  &observer;
@@ -47,23 +47,29 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
-                explicit Observer() throw(); //!< setup
-                virtual ~Observer() throw(); //!< cleanup
+                explicit Observer(const string &) throw(); //!< setup
+                virtual ~Observer()               throw(); //!< cleanup
                 
-            
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
                 ios::indent indent() const throw(); //!< to indent with depth
-                const char *inside() const throw(); //!< current call/nil
-                void        call(const Axiom *);    //!< push new call, increase depth
-                void        back() throw();         //!< pop last call, decrease depth
-                
+                const char *inside() const throw(); //!< helpe: current call/nil
+
+                void        call(const Aggregate *); //!< push new call, increase depth
+                void        back() throw();          //!< pop last call, decrease depth
+                void        free() throw();          //!< all back
                 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 unsigned         depth;   //!< current depth
-                AxiomPool        apool;   //!< for memory
-                
+                AggPool          apool;   //!< for memory
+                const string    &gname;   //!< for error handling
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Observer);
             };

@@ -29,7 +29,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs;
+                Observer  obs(*name);
 
                 //--------------------------------------------------------------
                 //

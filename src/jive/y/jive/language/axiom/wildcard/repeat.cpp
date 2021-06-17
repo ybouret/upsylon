@@ -1,7 +1,6 @@
 
 
 #include "y/jive/language/axiom/wildcard/repeat.hpp"
-#include "y/momentary/increase.hpp"
 
 namespace upsylon
 {
@@ -27,6 +26,7 @@ namespace upsylon
                 return vformat(">=%lu",(unsigned long) n);
             }
 
+
             Y_LANG_AXIOM_IMPL(Repeat)
             {
                 Y_LANG_PRINTLN(obs.indent() << "|_" << name << " (>=" << atLeast << ")");
@@ -39,7 +39,7 @@ namespace upsylon
                         Node *node = 0;
                         if(axiom.accept(node,source,lexer,obs))
                         {
-                            if(!node) throw exception("Language found invalid repeating empty <%s> ", **(axiom.name) );
+                            if(!node) throw exception("%s found invalid repeating empty <%s> ", *(obs.gname), **(axiom.name) );
                             leaves.push( node );
                         }
                         else
@@ -55,13 +55,13 @@ namespace upsylon
                 if(count>=atLeast)
                 {
                     Node::Grow(tree,branch.yield());
-                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " " << count << ">=" << atLeast << "]");
+                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Accepted << " (" << count << ">=" << atLeast << ")]");
                     return true;
                 }
                 else
                 {
                     Node::ReturnTo(lexer,branch.yield());
-                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Rejected << " " << count << "<" << atLeast << "]");
+                    Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Rejected << " (" << count << "<" << atLeast << ")]");
                     return false;
                 }
             }

@@ -26,7 +26,7 @@ Y_UTEST(types)
 
     std::cerr << "Parsing:" << std::endl;
     Y_UTEST_SIZEOF(Language::Observer);
-    Y_UTEST_SIZEOF(Language::AxiomNode);
+    Y_UTEST_SIZEOF(Language::AggNode);
 
 
 }
