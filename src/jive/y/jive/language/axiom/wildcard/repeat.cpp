@@ -39,7 +39,7 @@ namespace upsylon
                         Node *node = 0;
                         if(axiom.accept(node,source,lexer,obs))
                         {
-                            if(!node) throw exception("%s found invalid repeating empty <%s> ", *(obs.gname), **(axiom.name) );
+                            if(!node) throw exception("%s found invalid repeating empty <%s> ", **(obs.gname), **(axiom.name) );
                             leaves.push( node );
                         }
                         else

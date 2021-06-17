@@ -6,7 +6,7 @@
 
 #include "y/ios/indent.hpp"
 #include "y/core/addr-pool.hpp"
-#include "y/strfwd.hpp"
+#include "y/jive/tags.hpp"
 
 namespace upsylon
 {
@@ -52,8 +52,8 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
-                explicit Observer(const string &) throw(); //!< setup with grammar name
-                virtual ~Observer()               throw(); //!< cleanup
+                explicit Observer(const Tag &) throw(); //!< setup with grammar name
+                virtual ~Observer()            throw(); //!< cleanup
                 
 
                 //______________________________________________________________
@@ -74,7 +74,7 @@ namespace upsylon
                 //______________________________________________________________
                 unsigned         depth;   //!< current depth
                 AggPool          apool;   //!< for memory
-                const string    &gname;   //!< grammar name for error handling
+                const Tag        gname;   //!< grammar name for error handling
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Observer);

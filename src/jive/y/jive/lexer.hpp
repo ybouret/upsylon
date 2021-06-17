@@ -138,15 +138,17 @@ namespace upsylon {
             void          reset()          throw();  //!< cleanup
             void          ready(Source &,size_t);    //!< try to grow IO cache
             const Lexeme *next(Source &);            //!< get/unget
-            const Lexeme *last() const throw();      //!< io.tail
+
+            const Lexemes & operator*() const throw(); //!< get cache for R/O ops
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lexer);
-            Scanner    *scan;
-            History     hist;   //
-            Lexemes     io;     // I/O
-            ScannerTree db;     // scanners
-            PluginTree  ex;     // extensions
+            Scanner      *scan;   //!< current scanner
+            History       hist;   //!< history
+            Lexemes       io;     //!< current cache
+            ScannerTree   db;     //!< scanners
+            PluginTree    ex;     //!< extensions
 
             void         initialize();
             Scanner &    newScanner(const Tag &t);

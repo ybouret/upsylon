@@ -12,7 +12,7 @@ namespace upsylon
                 return ios::indent(depth,' ');
             }
             
-            Observer:: Observer(const string &g) throw() :
+            Observer:: Observer(const Tag &g) throw() :
             AggPool(),
             depth(0),
             gname(g)

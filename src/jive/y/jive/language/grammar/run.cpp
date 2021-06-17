@@ -11,8 +11,8 @@ namespace upsylon
                 writeTo(e,G.isStandard(this));
                 return e;
             }
-
         }
+
         namespace Language
         {
 
@@ -29,7 +29,7 @@ namespace upsylon
                 const Axiom *root = getRoot();
                 if(!root) throw exception("%s has no root Axiom",**name);
                 XNode    *node = NULL;
-                Observer  obs(*name);
+                Observer  obs(name);
 
                 //--------------------------------------------------------------
                 //
@@ -128,10 +128,8 @@ namespace upsylon
                 //--------------------------------------------------------------
                 // initialize
                 //--------------------------------------------------------------
-                const Grammar &self = *this;
-
+                
                 std::cerr << "<Lexemes>" << std::endl;
-
                 for(const Lexeme *lx = lexer.next(source); lx; lx=lx->next )
                 {
 
@@ -141,32 +139,24 @@ namespace upsylon
                     std::cerr << " usage: " << (lx->usageText());
                     std::cerr << std::endl;
                 }
-
-
                 std::cerr << "<Lexemes/>" << std::endl;
 
                 //--------------------------------------------------------------
                 // test source
                 //--------------------------------------------------------------
+                const Lexeme *curr = lexer.next(source);
                 {
-                    const Lexeme *next = lexer.next(source);
-                    if(NULL==next)
+                    if(NULL==curr)
                     {
                         throw exception("%s does not accept an empty source",**name);
                     }
-                    assert(NULL!=lexer.last());
                 }
                 
                 //--------------------------------------------------------------
                 // format exception
                 //--------------------------------------------------------------
-                const Lexeme *last = lexer.last(); assert(last);
                 exception     excp;
-                last->stampTo(excp);
-                excp.cat(" %s syntax error", **name);
-                
-                
-                last->writeOn(excp,self);
+
                  
                 throw excp;
 

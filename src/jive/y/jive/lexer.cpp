@@ -135,11 +135,17 @@ namespace upsylon {
 
         }
 
-        const Lexeme * Lexer:: last() const throw()
+#if 0
+        const Lexeme * Lexer:: peek() const throw()
         {
             return io.tail;
         }
 
+        const Lexeme * Lexer:: last() const throw()
+        {
+            return io.tail;
+        }
+#endif
 
         void Lexer:: unget(Lexeme *lexeme) throw()
         {
@@ -242,7 +248,10 @@ namespace upsylon {
             throw exception("[%s] multiple dictionary '%s'", **label, id);
         }
 
-
+        const Lexemes & Lexer:: operator*() const throw()
+        {
+            return io;
+        }
     }
 
 }
