@@ -54,7 +54,7 @@ namespace upsylon
                 else
                 {
                     assert(NULL==node);
-                    return onReject(source,lexer,obs);
+                    return onReject(source,lexer);
                 }
 
             }
@@ -68,8 +68,8 @@ namespace upsylon
                 // initialize
                 //
                 //--------------------------------------------------------------
+                XTree          tree(node);
                 const Grammar &self = *this;
-                XTree tree(node);
 
                 //--------------------------------------------------------------
                 //
@@ -123,8 +123,7 @@ namespace upsylon
             }
 
             XNode * Grammar:: onReject(Source         &source,
-                                       Lexer          &lexer,
-                                       const Observer &obs) const
+                                       Lexer          &lexer) const
             {
                 //--------------------------------------------------------------
                 // initialize
