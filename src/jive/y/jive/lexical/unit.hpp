@@ -15,6 +15,7 @@ namespace upsylon {
         namespace Language
         {
             class Grammar;
+            class Aggregate;
         }
 
         namespace Lexical {
@@ -53,8 +54,9 @@ namespace upsylon {
                 //
                 // members
                 //______________________________________________________________
-                const Tag               label; //!< creating rule label
-                const size_t            stamp; //!< creation stamp
+                const Tag                  label; //!< creating rule label
+                const size_t               stamp; //!< creation stamp
+                const Language::Aggregate *owner; //!< apparent aggregate owner
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);

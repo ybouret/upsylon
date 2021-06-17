@@ -49,6 +49,7 @@ namespace upsylon
                     else
                     {
                         Node::Grow(tree, Node::Acquire(*this,lx) );
+                        lx->owner = obs.in();
                         if(Axiom::Verbose)
                         {
                             std::cerr << obs.indent() << "|_" << name;

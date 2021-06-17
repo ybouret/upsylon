@@ -22,7 +22,12 @@ namespace upsylon
             Observer:: ~Observer() throw()
             {
             }
-            
+
+            const Aggregate * Observer:: in() const throw()
+            {
+                return head ? head->addr : NULL;
+            }
+
             void Observer:: call(const Aggregate *a)
             {
                 assert(a);

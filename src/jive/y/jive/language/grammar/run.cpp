@@ -131,6 +131,20 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Grammar &self = *this;
 
+                std::cerr << "<Lexemes>" << std::endl;
+
+                for(const Lexeme *lx = lexer.next(source); lx; lx=lx->next )
+                {
+
+                    std::cerr << " @" << lx->tag << ':' << lx->line << ':' << lx->column << ": ";
+                    std::cerr << lx->label << " = '" << *lx << "'";
+                    std::cerr << " <- " << (lx->owner ? **(lx->owner->name) : core::ptr::nil);
+                    std::cerr << std::endl;
+                }
+
+
+                std::cerr << "<Lexemes/>" << std::endl;
+
                 //--------------------------------------------------------------
                 // test source
                 //--------------------------------------------------------------

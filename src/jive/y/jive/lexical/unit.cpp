@@ -25,7 +25,8 @@ namespace upsylon
                         const Tag     &t,
                         const size_t   s) throw() :
             Token(), Context(c), inode<Unit>(), label(t),
-            stamp(s)
+            stamp(s),
+            owner(NULL)
             {
             }
 
@@ -34,7 +35,7 @@ namespace upsylon
                                 size_t        &s)
             {
                 static Supply &mgr = Supply::instance();
-                Unit *ans = mgr.acquire<const Context &,const Tag &,size_t>(c,t,s);
+                Unit          *ans = mgr.acquire<const Context &,const Tag &,size_t>(c,t,s);
                 ++s;
                 return ans;
             }

@@ -20,7 +20,12 @@ namespace upsylon
             typedef core::addr_node<const Aggregate> AggNode; //!< alias
             typedef core::addr_pool<const Aggregate> AggPool; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
             //! observer of language parser
+            //
+            //__________________________________________________________________
             class Observer : public AggPool
             {
             public:
@@ -47,7 +52,7 @@ namespace upsylon
                 //
                 // C++
                 //______________________________________________________________
-                explicit Observer(const string &) throw(); //!< setup
+                explicit Observer(const string &) throw(); //!< setup with grammar name
                 virtual ~Observer()               throw(); //!< cleanup
                 
 
@@ -56,19 +61,20 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 ios::indent indent() const throw(); //!< to indent with depth
-                const char *inside() const throw(); //!< helpe: current call/nil
+                const char *inside() const throw(); //!< helper: current call/nil
 
-                void        call(const Aggregate *); //!< push new call, increase depth
-                void        back() throw();          //!< pop last call, decrease depth
-                void        free() throw();          //!< all back
-                
+                void             call(const Aggregate *); //!< push new call, increase depth
+                void             back() throw();          //!< pop last call, decrease depth
+                void             free() throw();          //!< all back
+                const Aggregate *in() const throw();      //!< current head address
+
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
                 unsigned         depth;   //!< current depth
                 AggPool          apool;   //!< for memory
-                const string    &gname;   //!< for error handling
+                const string    &gname;   //!< grammar name for error handling
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Observer);
