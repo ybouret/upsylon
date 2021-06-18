@@ -1,5 +1,6 @@
 
 #include "y/jive/dialect/parser.hpp"
+#include "y/jive/lexical/plugin/comments.hpp"
 
 namespace upsylon
 {
@@ -32,7 +33,7 @@ namespace upsylon
                 self << (var("module") << terminal("module_name", "\\." ID_EXPR ) << END);
                 
 
-
+                
 
 
 
@@ -41,6 +42,9 @@ namespace upsylon
                 // lexical rules
                 //
                 //--------------------------------------------------------------
+                call( plug<C_Comments>("Comments") );
+                call( plug<CppComments>("Comment") );
+
                 {
                     const char blank__[] = "[:blank:]";
                     drop(blank__,blank__);

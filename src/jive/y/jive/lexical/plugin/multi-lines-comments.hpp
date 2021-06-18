@@ -49,11 +49,12 @@ namespace upsylon
                 void         setup();
 
             };
-
-            //! alias
+            
+        }
+        //! alias
 #define Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS upsylon::Jive::Lexical::MultiLinesComments
 
-            //! create a single line comments class
+        //! create a single line comments class
 #define Y_JIVE_LEXICAL_ML_COMMENTS(NAME,ENTER,LEAVE) \
 class NAME : public Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS {\
 /**/public:\
@@ -65,9 +66,9 @@ class NAME : public Y_JIVE_LEXICAL_MULTI_LINES_COMMENTS {\
 /**/    Y_DISABLE_COPY_AND_ASSIGN(NAME);\
 }
 
-            //! implement C style comments
-            Y_JIVE_LEXICAL_ML_COMMENTS(C_Comments,"/\\*","\\*/");
-        }
+        //! implement C style comments
+        Y_JIVE_LEXICAL_ML_COMMENTS(C_Comments,"/\\*","\\*/");
+
     }
 }
 

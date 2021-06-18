@@ -42,7 +42,7 @@ namespace {
             //call( plug<LuaComments>("luaComments") );
 
             call( plug<Lexical::MultiLinesComments>("xmlComments","<--!","-->"));
-            call( plug<Lexical::C_Comments>("C_Comments") );
+            call( plug<C_Comments>("C_Comments") );
 
             call( plug<Lexical::jString>("jstring")   );
             call( plug<Lexical::rString>("rstring") );
