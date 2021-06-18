@@ -11,6 +11,8 @@ namespace upsylon
         {
 
 #define ID_HEAD "[_[:alnum:]]"
+#define ID_TAIL "[:word:]*"
+#define ID_EXPR ID_HEAD ID_TAIL
 
             Parser:: Parser() : Language::Parser("Dialect")
             {
@@ -21,8 +23,16 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Aggregate   &self = agg("dialect");
                 const Axiom &END  = division(';');
-                self << (var("module") << terminal("module_name", "\\." ID_HEAD ) << END);
+
+                //--------------------------------------------------------------
+                //
+                //  module name
+                //
+                //--------------------------------------------------------------
+                self << (var("module") << terminal("module_name", "\\." ID_EXPR ) << END);
                 
+
+
 
 
 
