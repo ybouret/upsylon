@@ -16,14 +16,17 @@ namespace upsylon
 
         namespace Language
         {
-            class                                    Aggregate;     //!< forward
-            typedef core::addr_node<const Aggregate> AggNode; //!< alias
-            typedef core::addr_pool<const Aggregate> AggPool; //!< alias
+            class                                    Aggregate; //!< forward
+            typedef core::addr_node<const Aggregate> AggNode;   //!< alias
+            typedef core::addr_pool<const Aggregate> AggPool;   //!< alias
 
             //__________________________________________________________________
             //
             //
             //! observer of language parser
+            /**
+             allows to set owner of each lexeme/terminal
+             */
             //
             //__________________________________________________________________
             class Observer : public AggPool
@@ -60,14 +63,14 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                ios::indent indent() const throw(); //!< to indent with depth
-                const char *inside() const throw(); //!< helper: current call/nil
-
+                ios::indent      indent() const throw();  //!< to indent with depth
+                const char      *inside() const throw();  //!< helper: current call/nil
                 void             call(const Aggregate *); //!< push new call, increase depth
                 void             back() throw();          //!< pop last call, decrease depth
                 void             free() throw();          //!< all back
                 const Aggregate *in() const throw();      //!< current head address
-
+                void             reserve(size_t);         //!< reserve nodes
+                
                 //______________________________________________________________
                 //
                 // members

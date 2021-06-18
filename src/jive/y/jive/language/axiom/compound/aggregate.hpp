@@ -59,9 +59,10 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 Y_LANG_AXIOM_DECL();
-                bool isGrouping() const throw(); //!< Grouping
-                bool isApparent() const throw(); //!< != Grouping
-                
+                bool             isGrouping() const throw(); //!< type == Grouping
+                bool             isApparent() const throw(); //!< type != Grouping
+                const Aggregate *asApparent() const throw(); //!< this if isApparent
+
                 //______________________________________________________________
                 //
                 // members

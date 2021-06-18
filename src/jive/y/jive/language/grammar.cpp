@@ -8,14 +8,7 @@ namespace upsylon
         namespace Language
         {
 
-            void   Grammar:: setupObs()
-            {
-                assert(0==observer.size);
-                while(observer.apool.size<16)
-                {
-                    observer.apool.push(NULL);
-                }
-            }
+            
 
             Grammar:: ~Grammar() throw()
             {

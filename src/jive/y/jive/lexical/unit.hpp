@@ -69,7 +69,7 @@ namespace upsylon {
                 const Tag                  label; //!< creating rule label
                 const size_t               stamp; //!< creation stamp
                 const Language::Aggregate *owner; //!< apparent aggregate owner
-                const Usage                usage; //!< usage to guess errors
+                Usage                      usage; //!< usage to guess errors
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Unit);

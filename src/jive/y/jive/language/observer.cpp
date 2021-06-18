@@ -29,6 +29,14 @@ namespace upsylon
                 return head ? head->addr : NULL;
             }
 
+            void Observer:: reserve(size_t n)
+            {
+                while(n-- > 0)
+                {
+                    apool.push(NULL);
+                }
+            }
+
             void Observer:: call(const Aggregate *a)
             {
                 assert(a);

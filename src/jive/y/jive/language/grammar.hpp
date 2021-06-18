@@ -49,7 +49,7 @@ namespace upsylon
                 aligned(0),
                 observer(name)
                 {
-                    setupObs();
+                    observer.reserve(16);
                 }
 
                 //! cleanup
@@ -219,7 +219,6 @@ namespace upsylon
                 string makeAxiomsID(const Axioms &ax,
                                     const char   *fn,
                                     const char    sep) const;
-                void   setupObs();
 
                 XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer) const;

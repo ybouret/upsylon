@@ -25,13 +25,24 @@ namespace upsylon
                 return Grouping != type;
             }
 
+            const Aggregate * Aggregate:: asApparent() const throw()
+            {
+                switch (type) {
+                    case Standard:
+                    case Variadic:
+                        return this;
+
+                    case Grouping:
+                        return NULL;
+                }
+                return NULL;
+            }
+
 
             Y_LANG_AXIOM_IMPL(Aggregate)
             {
                 XTree        branch( Node::Acquire(*this) );
                 Node::List  &leaves = branch->leaves();
-                size_t       i = 1;
-                const size_t n = size;
 
                 //--------------------------------------------------------------
                 //
@@ -43,8 +54,8 @@ namespace upsylon
                     {
                         Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate(' '));
                     }
-                    const Observer::Scope scope(obs, (isApparent() ? this : NULL) );
-                    for(const Reference  *ref=head;ref;ref=ref->next,++i)
+                    const Observer::Scope scope(obs,asApparent());
+                    for(const Reference  *ref=head;ref;ref=ref->next)
                     {
                         Node                *node = NULL;
                         if( (**ref).accept(node,source,lexer,obs) )
@@ -52,16 +63,6 @@ namespace upsylon
                             if(node)
                             {
                                 leaves.push(node);
-                                switch(node->state)
-                                {
-                                    case Node::IsInternal: break;
-                                    case Node::IsTerminal:
-                                        if(i>=n)
-                                        {
-                                            aliasing::_(node->lexeme()->usage) = Lexeme::Done;
-                                        }
-                                        break;
-                                }
                             }
                         }
                         else
@@ -79,7 +80,15 @@ namespace upsylon
                 //--------------------------------------------------------------
                 {
                     const size_t accepted = leaves.size;
-                    if(accepted<=0) throw exception("%s found invalid aggregate <%s>!", **(obs.gname), **name);
+                    if(accepted<=0) throw exception("%s found invalid aggregate %s!", **(obs.gname), **name);
+                    {
+                        Node *node = leaves.tail; assert(NULL!=node);
+                        switch(node->state)
+                        {
+                            case Node::IsInternal: break;
+                            case Node::IsTerminal: node->lexeme()->usage = Lexeme::Done;  break;
+                        }
+                    }
                     Node::Grow(tree,branch.yield());
                     if(isApparent())
                     {

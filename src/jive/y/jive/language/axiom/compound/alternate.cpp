@@ -16,15 +16,22 @@ namespace upsylon
             Y_LANG_AXIOM_IMPL(Alternate)
             {
                 //--------------------------------------------------------------
+                //
                 // initialize
+                //
                 //--------------------------------------------------------------
                 size_t        number   =  1;
                 bool          accepted = false;
                 const Axiom  *which    = NULL;
 
+                //--------------------------------------------------------------
+                //
+                // search
+                //
+                //--------------------------------------------------------------
                 {
                     Y_LANG_PRINTLN(obs.indent() << "|_" << name << " " << enumerate('|'));
-                    const Observer::Scope scope(obs,NULL);
+                    const Observer::Scope scope(obs);
                     for(const Reference *ref=head;ref;ref=ref->next,++number)
                     {
                         Node *node  = NULL;
@@ -35,10 +42,9 @@ namespace upsylon
                             if(node)
                             {
                                 Node::Grow(tree,node);
-                                goto ALTERNATE_SUCCESS;
-                                
+                                goto ALTERNATE_SUCCESS; // leave scope...
                             }
-                            // else keep a chance to accept something...
+                            // else keep a chance to accept something not empty
                         }
                         else
                         {
@@ -49,9 +55,11 @@ namespace upsylon
                 }
 
                 //--------------------------------------------------------------
+                //
                 // at this point, no valid node was created
+                //
                 //--------------------------------------------------------------
-                if(accepted) throw exception("Language found invalid alternate <%s>!", **name);
+                if(accepted) throw exception("%s found invalid alternate %s!", **(obs.gname), **name);
                 Y_LANG_PRINTLN(obs.indent() << "|_" << name << " [" << Rejected << "]" );
                 return false;
                 

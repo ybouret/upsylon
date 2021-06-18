@@ -1,4 +1,6 @@
 #include "y/jive/language/grammar.hpp"
+#include "y/ios/align.hpp"
+
 namespace upsylon
 {
     namespace Jive
@@ -130,17 +132,22 @@ namespace upsylon
                 // initialize
                 //--------------------------------------------------------------
 #if 0
-                std::cerr << "<Lexemes>" << std::endl;
-                for(const Lexeme *lx = lexer.next(source); lx; lx=lx->next )
+                if(Axiom::Verbose)
                 {
+                    std::cerr << "<Lexemes>" << std::endl;
+                    for(const Lexeme *lx = lexer.next(source); lx; lx=lx->next )
+                    {
 
-                    std::cerr << " @" << lx->tag << ':' << lx->line << ':' << lx->column << ": ";
-                    std::cerr << lx->label << " = '" << *lx << "'";
-                    std::cerr << " <- " << (lx->owner ? **(lx->owner->name) : core::ptr::nil);
-                    std::cerr << " usage: " << (lx->usageText());
-                    std::cerr << std::endl;
+                        std::cerr << " @" << lx->tag << ':' << lx->line << ':' << lx->column << ": ";
+                        std::cerr << ios::align(*(lx->label), ios::align::left, aligned);
+                        const char *id = (lx->owner ? **(lx->owner->name) : core::ptr::nil);
+                        std::cerr << " <- " << ios::align(id, ios::align::left, aligned);
+                        std::cerr << " usage: " << (lx->usageText());
+                        std::cerr << " = '" << *lx << "'";
+                        std::cerr << std::endl;
+                    }
+                    std::cerr << "<Lexemes/>" << std::endl;
                 }
-                std::cerr << "<Lexemes/>" << std::endl;
 #endif
 
                 const Lexemes &lexemes = *lexer;
@@ -154,7 +161,7 @@ namespace upsylon
                 else
                 {
                     //----------------------------------------------------------
-                    // format exception
+                    // find first non accepted lexeme
                     //----------------------------------------------------------
                     const Lexeme *curr = lexemes.head; assert(curr);
                     for(;curr;curr=curr->next)
