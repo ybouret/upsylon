@@ -1,6 +1,8 @@
 
 #include "y/jive/dialect/parser.hpp"
 #include "y/jive/lexical/plugin/comments.hpp"
+#include "y/jive/lexical/plugin/bstring.hpp"
+#include "y/jive/lexical/plugin/strings.hpp"
 
 namespace upsylon
 {
@@ -24,18 +26,60 @@ namespace upsylon
                 //--------------------------------------------------------------
                 Aggregate   &self = agg("dialect");
                 const Axiom &END  = division(';');
+                const Axiom &COL  = division(':');
+                const Axiom &ID   = terminal("ID", ID_EXPR);
+                const Axiom &BSTR = plugin<Lexical::bString>("bString");
+                const Axiom &JSTR = plugin<Lexical::jString>("jString");
+                const Axiom &RSTR = plugin<Lexical::rString>("rString");
+                const Axiom &ASTR = pick( Axioms(JSTR,RSTR) );
 
                 //--------------------------------------------------------------
                 //
                 //  module name
                 //
                 //--------------------------------------------------------------
-                self << (var("module") << terminal("module_name", "\\." ID_EXPR ) << END);
+                self << (grp("module_") << terminal("module", "\\." ID_EXPR ) << END);
                 
 
                 
+                //--------------------------------------------------------------
+                //
+                //  rule definition
+                //
+                //--------------------------------------------------------------
+                Aggregate &RULE = agg("rule");
+                {
+                    RULE << ID << COL;
 
+                    RULE << END;
+                }
 
+                //--------------------------------------------------------------
+                //
+                //  plugin definition
+                //
+                //--------------------------------------------------------------
+                Aggregate &PLUGIN = agg("plugin");
+                {
+                    PLUGIN << terminal( "plug", "@" ID_EXPR) << COL << BSTR << zeroOrMore(ASTR) << END;
+                }
+
+                //--------------------------------------------------------------
+                //
+                //  include defintion
+                //
+                //--------------------------------------------------------------
+                Aggregate &INCLUDE = agg("include");
+                {
+                    INCLUDE << division("#include") << pick( Axioms(JSTR,BSTR) );
+                }
+
+                //--------------------------------------------------------------
+                //
+                //  content of grammar
+                //
+                //--------------------------------------------------------------
+                self << zeroOrMore( pick( Axioms(RULE,PLUGIN,INCLUDE) ) );
 
                 //--------------------------------------------------------------
                 //
