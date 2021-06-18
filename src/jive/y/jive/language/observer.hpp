@@ -29,7 +29,7 @@ namespace upsylon
              */
             //
             //__________________________________________________________________
-            class Observer : public AggPool
+            class Observer :  public AggPool
             {
             public:
                 //______________________________________________________________
