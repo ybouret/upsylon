@@ -16,7 +16,7 @@ namespace
         {
             (void) emit("ID", "[:alpha:]+");
             (void) emit("INT", "[:digit:]+" );
-            drop_endl("[:endl:]", "[:endl:]");
+            silent_endl("[:endl:]", "[:endl:]");
             drop("[:blank:]", "[:blank:]");
         }
 

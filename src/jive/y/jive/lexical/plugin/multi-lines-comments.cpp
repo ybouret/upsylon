@@ -15,7 +15,7 @@ namespace upsylon
             void MultiLinesComments:: setup()
             {
                 drop("dot", ".");
-                drop_endl("endl","[:endl:]");
+                silent_endl("endl","[:endl:]");
             }
 
             void MultiLinesComments:: OnInit(const Token &)

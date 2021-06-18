@@ -21,6 +21,7 @@ namespace upsylon
 
             Axiom:: ~Axiom() throw()
             {
+                aliasing::_(uuid) = 0;
             }
 
         

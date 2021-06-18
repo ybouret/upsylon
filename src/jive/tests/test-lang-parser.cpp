@@ -67,7 +67,7 @@ namespace
             
             
             drop("[:blank:]", "[:blank:]" );
-            drop_endl("[:endl:]", "[:endl:]");
+            silent_endl("[:endl:]", "[:endl:]");
             
             validate();
         }

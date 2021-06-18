@@ -25,6 +25,8 @@ ADD_TEST(json3     test-jive parser ${HERE}/../../json/tests/sample3.js)
 ADD_TEST(json4     test-jive parser ${HERE}/../../json/tests/sample4.js)
 ADD_TEST(json5     test-jive parser ${HERE}/../../json/tests/db.js)
 
+ADD_TEST(dialect   test-jive dialect)
+
 ADD_CUSTOM_TARGET(utest-jive
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-jive)
