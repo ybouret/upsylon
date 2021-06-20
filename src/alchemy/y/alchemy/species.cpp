@@ -7,6 +7,11 @@ namespace upsylon
     namespace alchemy
     {
         
+        species:: ~species() throw()
+        {
+        }
+        
+    
     }
     
 }

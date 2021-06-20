@@ -19,8 +19,12 @@ namespace upsylon
         class species : public counted, public object
         {
         public:
+            
+            virtual ~species() throw();
+            
             const string name; //!< identifier
             const int    z;    //!< algebraic charge
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(species);
