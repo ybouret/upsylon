@@ -175,8 +175,14 @@ namespace upsylon
                 {
                     return regular<LABEL,REGEXP,OBJECT_POINTER,METHOD_POINTER,OnDiscard>(anyLabel,anyRegExp,hObject,hMethod);
                 }
-                
+
+
+
                 //! default emit
+                /**
+                 - the 'nothing' action is taken
+                 - unit is produced
+                 */
                 template <typename LABEL, typename REGEXP>
                 const Rule & emit(const LABEL  &label, const REGEXP &regexp)
                 {
@@ -184,6 +190,10 @@ namespace upsylon
                 }
                 
                 //! default drop
+                /**
+                 - the 'nothing' action is taken
+                 - unit is discarded and scanner goes on
+                 */
                 template <typename LABEL, typename REGEXP>
                 const Rule & drop(const LABEL  &label, const REGEXP &regexp)
                 {
@@ -191,15 +201,38 @@ namespace upsylon
                 }
 
 
+                //! default drop, helper
+                template <typename REGEXP>
+                const Rule & drop(const REGEXP &rx)
+                {
+                    return drop(rx,rx);
+                }
 
-                //! default endl
+
+                //! default silent endl
+                /**
+                 - the 'newLine' action is taken
+                 - the endl unit is discarded and scanner goes on
+                 */
                 template <typename LABEL, typename REGEXP>
                 const Rule &silent_endl(const LABEL &label, const REGEXP &regexp)
                 {
                     return discard(label,regexp,this,&Scanner::newLine);
                 }
 
+
+                //! default silent endl, helper
+                template <typename REGEXP>
+                const Rule &silent_endl(const REGEXP &rx)
+                {
+                    return silent_endl(rx,rx);
+                }
+
                 //! emit end-line marker, and call newLine
+                /**
+                 - the 'newLine' action is taken
+                 - the endl unit is produced
+                 */
                 template <typename LABEL, typename REGEXP>
                 const Rule &stated_endl(const LABEL &label, const REGEXP &regexp)
                 {

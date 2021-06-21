@@ -89,14 +89,9 @@ namespace upsylon
                 call( plug<C_Comments>("Comments") );
                 call( plug<CppComments>("Comment") );
 
-                {
-                    const char blank__[] = "[:blank:]";
-                    drop(blank__,blank__);
-                }
-                {
-                    const char endl__[] = "[:endl:]";
-                    silent_endl(endl__,endl__);
-                }
+                drop("[:blank:]");
+                silent_endl("[:endl:]");
+
 
                 graphViz("dialect.dot");
                 validate();
