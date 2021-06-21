@@ -14,21 +14,7 @@ namespace upsylon
 {
     namespace Jive
     {
-        //______________________________________________________________________
-        //
-        //! behaviours for endl processing
-        //______________________________________________________________________
-        enum OnEndl
-        {
-            Silent, //!< update line count, discard lexeme
-            Stated  //!< update line count, forward lexeme
-        };
 
-        typedef int2type<Silent>  silent_t; //!< alias
-        extern  const silent_t    silent;   //!< alias
-
-        typedef int2type<Stated>  stated_t; //!< alias
-        extern  const stated_t    stated;   //!< alias
         
         namespace Lexical
         {
@@ -73,7 +59,23 @@ namespace upsylon
                 
                 //! return text
                 static const char *AtEOSText(const AtEOS) throw();
-                
+
+                //______________________________________________________________
+                //
+                //! behaviours for endl processing
+                //______________________________________________________________
+                enum OnEndl
+                {
+                    Silent, //!< update line count, discard lexeme
+                    Stated  //!< update line count, forward lexeme
+                };
+
+                typedef int2type<Silent>  silent_t; //!< alias
+                static  const silent_t    silent;   //!< alias
+
+                typedef int2type<Stated>  stated_t; //!< alias
+                static  const stated_t    stated;   //!< alias
+
                 //--------------------------------------------------------------
                 //
                 // C++

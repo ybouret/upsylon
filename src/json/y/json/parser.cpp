@@ -75,7 +75,7 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             drop("[:blank:]");
-            endl("[:endl:]",Jive::silent);
+            endl("[:endl:]",silent);
 
 
 
