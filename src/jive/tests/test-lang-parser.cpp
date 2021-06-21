@@ -99,8 +99,7 @@ Y_UTEST(parser)
 
     const Language::Axiom    &root = *parser.getRoot();
     Language::TermLedger      first;
-    Language::Axiom::Registry db;
-    Language::Axiom::Expecting(first,root,db,0);
+    Language::Axiom::Expecting(first,root,0,true);
 
     std::cerr << "first.size=" << first.size() << std::endl;
     first.display(std::cerr) << std::endl;

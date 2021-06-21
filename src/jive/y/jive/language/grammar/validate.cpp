@@ -114,9 +114,17 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         orphans << ' ' << aname;
                     }
 
+                    TermLedger       ft;
+                    Axiom::Expecting(ft,*axiom);
+                    if(Axiom::Verbose)
+                    {
+                        std::cerr << " expect: " << ft.size();
+                    }
+
                     if(Axiom::Verbose) std::cerr << std::endl;
                 }
-                if(orphan)
+
+                if(orphan>0)
                 {
                     throw exception("%s grammar has orphan%s:%s", **name, textual::plural_s(orphan), *orphans);
                 }
@@ -125,7 +133,9 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 {
                     throw exception("%s grammar has no terminal!", **name);
                 }
-                
+
+
+
                 if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
 
             }

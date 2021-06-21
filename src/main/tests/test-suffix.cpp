@@ -475,7 +475,8 @@ namespace
     {
         std::cerr << std::endl;
         std::cerr << "-- suffix_storage<" << rtti::name_of<T>() << "> merging..." << std::endl;
-        suffix_storage<T,suffix_collection> A,B,C;
+        suffix_storage<T,suffix_collection> A,B;
+        suffix_storage<T,container>         C;
 
         list<string> keys;
         std::cerr << "[";

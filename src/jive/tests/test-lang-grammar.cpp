@@ -81,8 +81,7 @@ Y_UTEST(grammar)
 
     const Language::Axiom    &root = *grammar.getRoot();
     Language::TermLedger      first;
-    Language::Axiom::Registry db;
-    Language::Axiom::Expecting(first,root,db,0);
+    Language::Axiom::Expecting(first,root,0);
 
     if(argc>1)
     {

@@ -8,10 +8,21 @@ namespace upsylon
     {
         namespace Language
         {
-            void Axiom:: Expecting(TermLedger  &terms,
-                                   const Axiom &axiom,
-                                   Registry    &visited,
-                                   unsigned     depth)
+            void Axiom:: Expecting (TermLedger  &terms,
+                                    const Axiom &axiom,
+                                    unsigned     depth,
+                                    const bool   verbose)
+            {
+                Registry visited;
+                ExpectingCore(terms,axiom,visited,depth,verbose);
+            }
+
+
+            void Axiom:: ExpectingCore(TermLedger  &terms,
+                                       const Axiom &axiom,
+                                       Registry    &visited,
+                                       unsigned     depth,
+                                       const bool   verbose)
             {
                 const string &key = *axiom.name;
                 if( visited.insert(key,(Axiom *)&axiom) )
@@ -29,7 +40,7 @@ namespace upsylon
                             {
                                 if(!terms.insert(key,the_term))
                                     throw exception("unexpected insertion failure for <%s>",*key);
-                                Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting <" << key << ">");
+                                if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting <" << key << ">" << std::endl;
                             }
                             else
                             {
@@ -39,25 +50,25 @@ namespace upsylon
                         } break;
 
                         case Alternate::UUID: {
-                            Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting alternate <" << key << ">");
+                            if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting alternate <" << key << ">" << std::endl;
                             ++depth;
                             for(const Axiom::Reference *ref = axiom.as<Alternate>().head;ref;ref=ref->next)
                             {
-                                Expecting(terms,**ref,visited,depth);
+                                ExpectingCore(terms,**ref,visited,depth,verbose);
                             }
                         } break;
 
-                        case Option::UUID: Expecting(terms,axiom.as<Option>().axiom,visited,depth); break;
-                        case Repeat::UUID: Expecting(terms,axiom.as<Repeat>().axiom,visited,depth); break;
+                        case Option::UUID: ExpectingCore(terms,axiom.as<Option>().axiom,visited,++depth,verbose); break;
+
+                        case Repeat::UUID: ExpectingCore(terms,axiom.as<Repeat>().axiom,visited,++depth,verbose); break;
 
                         case Aggregate::UUID: {
-                            Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting aggregate <" << key << ">");
+                            if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting aggregate <" << key << ">" << std::endl;
                             ++depth;
                             TermLedger sub;
-                            Registry   subDB;
                             for(const Axiom::Reference *ref = axiom.as<Aggregate>().head;ref;ref=ref->next)
                             {
-                                Expecting(sub,**ref,subDB,depth);
+                                Expecting(sub,**ref,depth);
                                 if(sub.size()>0)
                                 {
                                     terms.merge(sub);

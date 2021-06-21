@@ -23,7 +23,7 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Language::Compound);
     Y_UTEST_SIZEOF(Language::Aggregate);
     Y_UTEST_SIZEOF(Language::Alternate);
-
+    Y_UTEST_SIZEOF(Language::TermLedger);
 
     std::cerr << "Parsing:" << std::endl;
     Y_UTEST_SIZEOF(Language::Observer);

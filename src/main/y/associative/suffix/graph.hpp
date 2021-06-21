@@ -13,7 +13,7 @@
 namespace upsylon
 {
 
- 
+
     //__________________________________________________________________________
     //
     //
@@ -314,25 +314,23 @@ catch(...) { dpool.store(node); throw; }
         //! merging
         //______________________________________________________________________
 
-        inline size_t merge(const suffix_graph &other)
+        template <typename OTHER_BASE_CLASS>
+        inline size_t merge(const suffix_graph<CODE,T,OTHER_BASE_CLASS> &other)
         {
-            size_t count = 0;
-            if(this != &other)
+            size_t       count = 0;
+            const size_t nmax = other.max_depth();
+            memory::cppblock<CODE> blk(nmax);
+            for(const data_node *node=other.head();node;node=node->next)
             {
-                const size_t           nmax = other.max_depth();
-                memory::cppblock<CODE> blk(nmax);
-                for(const data_node *node=other.dlist.head;node;node=node->next)
-                {
-                    const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                    if(insert_by(*blk,len,node->data)) ++count;
-                }
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
+                if(insert_by(*blk,len,node->data)) ++count;
             }
+
             return count;
         }
 
 
-    protected:
-        //! direct protected access to head for internal faster scan
+        //! direct access to head for internal faster scan
         inline const data_node *head() const throw() { return dlist.head; }
 
     private:

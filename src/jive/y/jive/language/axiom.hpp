@@ -73,10 +73,16 @@ namespace upsylon
                 }
 
                 //! build the expecting first term from axiom
-                static void Expecting(TermLedger    &first,
-                                      const Axiom   &axiom,
-                                      Registry      &db,
-                                      unsigned       depth);
+                static void ExpectingCore(TermLedger    &first,
+                                          const Axiom   &axiom,
+                                          Registry      &db,
+                                          unsigned       depth,
+                                          const bool     verbose);
+
+                static void Expecting(TermLedger  &first,
+                                      const Axiom &axiom,
+                                      unsigned     depth=0,
+                                      const bool   verbose=false);
 
                 //______________________________________________________________
                 //
