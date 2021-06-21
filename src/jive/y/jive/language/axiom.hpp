@@ -72,16 +72,17 @@ namespace upsylon
                     return *static_cast<T*>(self);
                 }
 
-                //! build the expecting first term from axiom
+                //! low-level build the expecting first term from axiom
                 static void ExpectingCore(TermLedger    &first,
                                           const Axiom   &axiom,
                                           Registry      &db,
                                           unsigned       depth,
                                           const bool     verbose);
 
+                //! high level build the expecting first term
                 static void Expecting(TermLedger  &first,
                                       const Axiom &axiom,
-                                      unsigned     depth=0,
+                                      unsigned     depth  =0,
                                       const bool   verbose=false);
 
                 //______________________________________________________________
