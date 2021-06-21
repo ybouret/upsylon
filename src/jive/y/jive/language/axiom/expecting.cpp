@@ -15,7 +15,10 @@ namespace upsylon
                 {
                     Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting for " << key);
                     ++depth;
+                    //__________________________________________________________
+                    //
                     // first time db
+                    //__________________________________________________________
                     switch(axiom.uuid)
                     {
                         case Terminal::UUID: {
@@ -44,7 +47,11 @@ namespace upsylon
                         case Repeat::UUID: Expecting(first,axiom.as<Repeat>().axiom,db,depth); break;
 
                         case Aggregate::UUID: {
-                            
+                            for(const Axiom::Reference *ref = axiom.as<Aggregate>().head;ref;ref=ref->next)
+                            {
+                                TermLedger sub;
+                                Expecting(sub,**ref,db,depth);
+                            }
                         } break;
 
                         default:
@@ -56,7 +63,10 @@ namespace upsylon
                 }
                 else
                 {
+                    //__________________________________________________________
+                    //
                     // already visited
+                    //__________________________________________________________
                 }
             }
         }
