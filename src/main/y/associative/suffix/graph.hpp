@@ -317,20 +317,45 @@ catch(...) { dpool.store(node); throw; }
         template <typename OTHER_BASE_CLASS>
         inline size_t merge(const suffix_graph<CODE,T,OTHER_BASE_CLASS> &other)
         {
-            size_t       count = 0;
-            const size_t nmax = other.max_depth();
+            size_t                 count = 0;
+            const size_t           nmax  = other.max_depth();
             memory::cppblock<CODE> blk(nmax);
             for(const data_node *node=other.head();node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
                 if(insert_by(*blk,len,node->data)) ++count;
             }
-
             return count;
         }
 
 
+        //______________________________________________________________________
+        //
+        //! collect all keys
+        /**
+         - KEY_TYPE must have a KEY_TYPE(size,as_capacity) constructor
+         - KEY_TYPE must have a << operator
+         - SEQ_TYPE must have a << operator
+         */
+        //______________________________________________________________________
+        template < typename KEY_TYPE, typename SEQ_TYPE>
+        inline void collect(SEQ_TYPE &keys) const
+        {
+            const size_t           nmax = max_depth();
+            memory::cppblock<CODE> blk(nmax);
+            for(const data_node *node=dlist.head;node;node=node->next)
+            {
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
+                KEY_TYPE     key(len,as_capacity);
+                for(size_t i=1;i<=len;++i) key << blk[i];
+                keys << key;
+            }
+        }
+
+        //______________________________________________________________________
+        //
         //! direct access to head for internal faster scan
+        //______________________________________________________________________
         inline const data_node *head() const throw() { return dlist.head; }
 
     private:

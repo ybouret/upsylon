@@ -507,16 +507,24 @@ namespace
             }
         }
         std::cerr << "]" << std::endl;
-        //std::cerr << "A.size=" << A.size() << std::endl;
-        //std::cerr << "B.size=" << B.size() << std::endl;
-        //std::cerr << "C.size=" << C.size() << std::endl;
+
+        list<string> akeys;
+        A.template collect<string,list<string> >(akeys);
+        std::cerr << "akeys=" << akeys << std::endl;
+
+        vector< vector<char> > vkeys;
+        A.template collect< vector<char>, vector< vector<char> > >(vkeys);
+        std::cerr << "vkeys=" << vkeys << std::endl;
+
 
         B.merge(C);
         Y_CHECK(A.size()==B.size());
         Y_CHECK(A.has_same_layout_than(B));
         Y_CHECK(B.merge(C)<=0);
         Y_CHECK(A.has_same_layout_than(B));
-        
+
+
+
     }
 
 }
