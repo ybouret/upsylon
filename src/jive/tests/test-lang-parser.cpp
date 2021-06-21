@@ -97,6 +97,14 @@ Y_UTEST(parser)
     parser.graphViz("parser.dot");
     Language::Analyzer analyze(parser.name);
 
+    const Language::Axiom    &root = *parser.getRoot();
+    Language::TermLedger      first;
+    Language::Axiom::Registry db;
+    Language::Axiom::Expecting(first,root,db,0);
+
+    std::cerr << "first.size=" << first.size() << std::endl;
+    first.display(std::cerr) << std::endl;
+
     if(argc>1)
     {
         XTree  tree( parser.parseFile(argv[1]) );

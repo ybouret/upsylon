@@ -34,7 +34,7 @@ namespace
             node_type *node = root->leaves.tail;
             if(alea.choice())
             {
-               node->addr = suffix::in_use();
+                node->addr = suffix::in_use();
             }
 
             for(size_t j=1+alea.leq(10);j>0;--j)
@@ -257,7 +257,7 @@ namespace
         std::cerr << "]" << std::endl;
 
     }
- 
+
     template <typename T> static inline
     void testGraphs()
     {
@@ -424,11 +424,58 @@ namespace
 
     
     template <typename T> static inline
-    void testStorage() 
+    void testStorage()
     {
         std::cerr << "-- suffix_storage<" << rtti::name_of<T>() << ">" << std::endl;
-        suffix_storage<T,suffix_collection> a1,a2;
-        suffix_storage<T,container>         b1,b2;
+        {
+            suffix_storage<T,suffix_collection> a1,a2;
+            suffix_storage<T,container>         b1,b2;
+
+            list<string> keys;
+            std::cerr << "[";
+            for(size_t iter=0;iter<64;++iter)
+            {
+                string key;
+                for(size_t i=1+alea.leq(4);i>0;--i)
+                {
+                    key << alea.range<char>('a','d');
+                }
+                const T tmp = support::get<T>();
+                if(a1.insert(key,tmp))
+                {
+                    Y_ASSERT(a2.insert(*key,tmp)); Y_ASSERT(a2.contains(key));
+                    Y_ASSERT(b1.insert(key,tmp));  Y_ASSERT(b1.contains(key));
+                    Y_ASSERT(b2.insert(*key,tmp)); Y_ASSERT(b2.contains(key));
+                    std::cerr << "+";
+                }
+                else
+                {
+                    std::cerr << "-";
+                }
+            }
+            std::cerr << "]" << std::endl;
+            Y_CHECK(a1.has_same_layout_than(a2));
+            Y_CHECK(b1.has_same_layout_than(b2));
+
+            a2.sort_with( comparison::increasing<T> );
+            a1.sort_with( comparison::decreasing<T> );
+            Y_CHECK(a1.has_same_layout_than(a2));
+
+            std::cerr << "a1=" << a1 << std::endl;
+            std::cerr << "a2=" << a2 << std::endl;
+
+            std::cerr << std::endl;
+        }
+
+
+    }
+
+    template <typename T> static inline
+    void testStorageMerge()
+    {
+        std::cerr << std::endl;
+        std::cerr << "-- suffix_storage<" << rtti::name_of<T>() << "> merging..." << std::endl;
+        suffix_storage<T,suffix_collection> A,B,C;
 
         list<string> keys;
         std::cerr << "[";
@@ -440,11 +487,17 @@ namespace
                 key << alea.range<char>('a','d');
             }
             const T tmp = support::get<T>();
-            if(a1.insert(key,tmp))
+            if(A.insert(key,tmp))
             {
-                Y_ASSERT(a2.insert(*key,tmp)); Y_ASSERT(a2.contains(key));
-                Y_ASSERT(b1.insert(key,tmp));  Y_ASSERT(b1.contains(key));
-                Y_ASSERT(b2.insert(*key,tmp)); Y_ASSERT(b2.contains(key));
+                Y_ASSERT(A.contains(key));
+                if(alea.choice())
+                {
+                    Y_ASSERT(B.insert(key,tmp));
+                }
+                else
+                {
+                    Y_ASSERT(C.insert(key,tmp));
+                }
                 std::cerr << "+";
             }
             else
@@ -453,18 +506,16 @@ namespace
             }
         }
         std::cerr << "]" << std::endl;
-        Y_CHECK(a1.has_same_layout_than(a2));
-        Y_CHECK(b1.has_same_layout_than(b2));
+        //std::cerr << "A.size=" << A.size() << std::endl;
+        //std::cerr << "B.size=" << B.size() << std::endl;
+        //std::cerr << "C.size=" << C.size() << std::endl;
 
-        a2.sort_with( comparison::increasing<T> );
-        a1.sort_with( comparison::decreasing<T> );
-        Y_CHECK(a1.has_same_layout_than(a2));
-
-        std::cerr << "a1=" << a1 << std::endl;
-        std::cerr << "a2=" << a2 << std::endl;
-
-        std::cerr << std::endl;
-
+        B.merge(C);
+        Y_CHECK(A.size()==B.size());
+        Y_CHECK(A.has_same_layout_than(B));
+        Y_CHECK(B.merge(C)<=0);
+        Y_CHECK(A.has_same_layout_than(B));
+        
     }
 
 }
@@ -583,6 +634,8 @@ Y_UTEST(suffix)
 
     testIterString();
     testIterAddr();
+
+    testStorageMerge<unsigned>();
 
     if(argc>1)
     {
