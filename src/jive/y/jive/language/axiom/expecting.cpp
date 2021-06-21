@@ -11,9 +11,9 @@ namespace upsylon
             void Axiom:: Expecting(TermLedger &first, const Axiom &axiom, Registry &db, unsigned depth)
             {
                 const string &key = *axiom.name;
+                Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting for " << key);
                 if( db.insert(key,(Axiom *)&axiom) )
                 {
-                    Y_LANG_PRINTLN( '|' << ios::indent(depth,'_') << "expecting for " << key);
                     ++depth;
                     //__________________________________________________________
                     //
@@ -47,10 +47,17 @@ namespace upsylon
                         case Repeat::UUID: Expecting(first,axiom.as<Repeat>().axiom,db,depth); break;
 
                         case Aggregate::UUID: {
+                            TermLedger sub;
+                            Registry   subDB;
                             for(const Axiom::Reference *ref = axiom.as<Aggregate>().head;ref;ref=ref->next)
                             {
-                                TermLedger sub;
-                                Expecting(sub,**ref,db,depth);
+                                Expecting(sub,**ref,subDB,depth);
+                                std::cerr << "sub.size=" << sub.size() << " for " << (**ref).name << std::endl;
+                                if(sub.size()>0)
+                                {
+                                    first.merge(sub);
+                                    return;
+                                }
                             }
                         } break;
 
