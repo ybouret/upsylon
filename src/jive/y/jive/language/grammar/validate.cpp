@@ -119,6 +119,9 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     if(Axiom::Verbose)
                     {
                         std::cerr << " expect: " << ft.size();
+                        list<string>                     names;
+                        ft.collect<string,list<string> >(names);
+                        for(size_t i=1;i<=names.size();++i) std::cerr << " <" << names[i] << ">";
                     }
 
                     if(Axiom::Verbose) std::cerr << std::endl;
