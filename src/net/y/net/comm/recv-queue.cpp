@@ -24,7 +24,8 @@ namespace upsylon
             if(bs>0)
             {
                 assert(bs<=data->size);
-                if(bs>pool.size) reserve(bs-pool.size); assert(pool.size>=bs);
+                if(bs>pool.size) reserve(bs-pool.size);
+                assert(pool.size>=bs);
 
                 uint8_t *bp = **data;
                 while(bs-- > 0 )
