@@ -31,7 +31,7 @@ namespace
             // lexical only
             plug<Lexical::SingleLineComments>("COMMENT","//");
             drop("blank","[:blank:]");
-            silent_endl("endl","[:endl:]");
+            endl("endl","[:endl:]",silent);
 
             graphViz("list-grammar.dot");
         }

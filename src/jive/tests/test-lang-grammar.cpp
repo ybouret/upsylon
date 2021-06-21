@@ -16,8 +16,8 @@ namespace
         {
             (void) emit("ID", "[:alpha:]+");
             (void) emit("INT", "[:digit:]+" );
-            silent_endl("[:endl:]", "[:endl:]");
-            drop("[:blank:]", "[:blank:]");
+            endl("[:endl:]",silent);
+            drop("[:blank:]");
         }
 
         virtual ~MyLexer() throw()

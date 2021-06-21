@@ -90,7 +90,7 @@ namespace upsylon
                 call( plug<CppComments>("Comment") );
 
                 drop("[:blank:]");
-                silent_endl("[:endl:]");
+                endl("[:endl:]",silent);
 
 
                 graphViz("dialect.dot");

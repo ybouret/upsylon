@@ -24,7 +24,7 @@ namespace {
             emit("DOT",    "[.]");
 
             drop("blanks","[:blank:]+");
-            silent_endl("endl",  "[:endl:]");
+            endl("endl",  "[:endl:]", silent);
 
             jump("comment", "#", this, & Scanner::nothing );
 

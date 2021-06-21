@@ -74,15 +74,10 @@ namespace upsylon
             // lexical
             //
             //------------------------------------------------------------------
-            {
-                const char __endl[] = "[:endl:]";
-                silent_endl(__endl,__endl);
-            }
+            drop("[:blank:]");
+            endl("[:endl:]",Jive::silent);
 
-            {
-                const char __blank[] = "[:blank:]";
-                drop(__blank,__blank);
-            }
+
 
             //graphViz("json-grammar.dot");
             validate();

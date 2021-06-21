@@ -14,6 +14,22 @@ namespace upsylon
 {
     namespace Jive
     {
+        //______________________________________________________________________
+        //
+        //! behaviours for endl processing
+        //______________________________________________________________________
+        enum OnEndl
+        {
+            Silent, //!< update line count, discard lexeme
+            Stated  //!< update line count, forward lexeme
+        };
+
+        typedef int2type<Silent>  silent_t; //!< alias
+        extern  const silent_t    silent;   //!< alias
+
+        typedef int2type<Stated>  stated_t; //!< alias
+        extern  const stated_t    stated;   //!< alias
+        
         namespace Lexical
         {
             
@@ -27,9 +43,9 @@ namespace upsylon
              triggered
              */
             //__________________________________________________________________
-            
             typedef const ControlEvent *Directive;
-            
+
+
             //__________________________________________________________________
             //
             //
@@ -209,36 +225,43 @@ namespace upsylon
                 }
 
 
-                //! default silent endl
+                //!  silent endl
                 /**
                  - the 'newLine' action is taken
                  - the endl unit is discarded and scanner goes on
                  */
                 template <typename LABEL, typename REGEXP>
-                const Rule &silent_endl(const LABEL &label, const REGEXP &regexp)
+                const Rule &endl(const LABEL &label, const REGEXP &regexp, const silent_t &)
                 {
                     return discard(label,regexp,this,&Scanner::newLine);
                 }
 
-
-                //! default silent endl, helper
+                //! silent endl helper
                 template <typename REGEXP>
-                const Rule &silent_endl(const REGEXP &rx)
+                const Rule &endl(const REGEXP &rx, const silent_t &_)
                 {
-                    return silent_endl(rx,rx);
+                    return endl(rx,rx,_);
                 }
 
-                //! emit end-line marker, and call newLine
+
+                //! emit endl marker, and call newLine
                 /**
                  - the 'newLine' action is taken
                  - the endl unit is produced
                  */
                 template <typename LABEL, typename REGEXP>
-                const Rule &stated_endl(const LABEL &label, const REGEXP &regexp)
+                const Rule &endl(const LABEL &label, const REGEXP &regexp, const stated_t &)
                 {
                     return forward(label,regexp,this,&Scanner::newLine);
                 }
 
+
+                //! stated endl helper
+                template <typename REGEXP>
+                const Rule &endl(const REGEXP &rx, const stated_t &_)
+                {
+                    return endl(rx,rx,_);
+                }
 
                 //------------------------------------------------------------------
                 //

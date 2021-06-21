@@ -20,7 +20,7 @@ namespace {
         {
             emit("ID",     RegExpFor::Identifier);
             drop("blanks","[:blank:]+");
-            silent_endl("endl",  "[:endl:]");
+            endl("endl",  "[:endl:]",silent);
             jump("com1", "%",  this, & MyLexer::EnterCom1);
             call("com2", "--", this, & Scanner::nothing);
 

@@ -6,6 +6,9 @@ namespace upsylon {
 
     namespace Jive {
 
+        const silent_t silent = {};
+        const stated_t stated = {};
+
         namespace Lexical {
 
             void Scanner:: nothing(const Token &) const throw()

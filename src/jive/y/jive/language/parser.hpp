@@ -96,14 +96,14 @@ namespace upsylon
                 template <typename ID, typename RX> inline
                 const Terminal & newline(const ID &id, const RX &rx)
                 {
-                    return term(id, Check(stated_endl(id,rx),SemanticTerminal) ) ;
+                    return term(id, Check(endl(id,rx,stated),SemanticTerminal) ) ;
                 }
 
                 //! standard/univocal end of line
                 template <typename ID, typename RX> inline
                 const Terminal & endline(const ID &id, const RX &rx)
                 {
-                    return term(id, Check(silent_endl(id,rx),SemanticTerminal) ) ;
+                    return term(id, Check(endl(id,rx,silent),SemanticTerminal) ) ;
                 }
 
                 //______________________________________________________________
