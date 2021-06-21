@@ -18,8 +18,8 @@ namespace upsylon
 
             class Aggregate;
             class Terminal;
-            typedef Terminal                  *TermHandle;
-            typedef suffix_storage<TermHandle> TermLedger;
+            typedef Terminal                  *TermHandle; //!< alias
+            typedef suffix_storage<TermHandle> TermLedger; //!< alias
 
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
@@ -72,6 +72,7 @@ namespace upsylon
                     return *static_cast<T*>(self);
                 }
 
+                //! build the expecting first term from axiom
                 static void Expecting(TermLedger    &first,
                                       const Axiom   &axiom,
                                       Registry      &db,

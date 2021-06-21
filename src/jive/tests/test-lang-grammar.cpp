@@ -78,7 +78,12 @@ Y_UTEST(grammar)
     grammar.validateWith(&lexer);
     
     grammar.graphViz("grammar.dot");
-    
+
+    const Language::Axiom    &root = *grammar.getRoot();
+    Language::TermLedger      first;
+    Language::Axiom::Registry db;
+    Language::Axiom::Expecting(first,root,db,0);
+
     if(argc>1)
     {
         Source source( Module::OpenFile(argv[1]));
