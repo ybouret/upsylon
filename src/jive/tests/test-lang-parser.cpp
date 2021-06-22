@@ -101,8 +101,9 @@ Y_UTEST(parser)
     Language::TermLedger      first;
     Language::Axiom::Expecting(first,root,0,true);
 
-    std::cerr << "first.size=" << first.size() << std::endl;
-    first.display(std::cerr) << std::endl;
+    //std::cerr << "first.size=" << first.size() << std::endl;
+    //first.display(std::cerr) << std::endl;
+    std::cerr << "root.first=" << first << std::endl;
 
     if(argc>1)
     {
