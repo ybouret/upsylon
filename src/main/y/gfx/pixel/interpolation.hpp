@@ -111,6 +111,7 @@ namespace upsylon
                 return blend<float,T>::mix(alpha,y[jm],y[jp]);
             }
 
+            
         };
 
     }

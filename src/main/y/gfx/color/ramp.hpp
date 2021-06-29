@@ -15,10 +15,10 @@ namespace upsylon
         class color_ramp
         {
         public:
+
+            static rgba build(const float u, const accessible<rgba>  &arr) throw();
+            static rgba build(const float u, const accessible<float> &pos, const accessible<rgba> &arr) throw();
             
-            static rgba build(const float u, const accessible<rgba> &arr) throw();
-
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(color_ramp);
         };
