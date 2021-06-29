@@ -6,7 +6,7 @@ namespace upsylon
     namespace graphic
     {
 
-        rgba color_ramp:: build(const float u, const accessible<rgba> &arr) throw()
+        rgba color_mix:: build(const float u, const repository_type &arr) throw()
         {
             switch(arr.size())
             {
@@ -18,7 +18,7 @@ namespace upsylon
             return interp::linear(u,arr);
         }
 
-        rgba color_ramp:: build(const float u, const accessible<float> &pos, const accessible<rgba> &arr) throw()
+        rgba color_mix:: build(const float u, const accessible<float> &pos, const repository_type &arr) throw()
         {
             assert(pos.size()==arr.size());
             const size_t num = arr.size();
@@ -33,6 +33,41 @@ namespace upsylon
             return interp::linear<rgba,const accessible<float>,const accessible<rgba> >(u,pos,arr,num,j);
         }
 
+        rgba color_mix:: get(const float u) const throw()
+        {
+            return build(u,repository());
+        }
+
+        unit_t color_mix:: depth() const throw()
+        {
+            return sizeof(float);
+        }
+
+
+
     }
+}
+
+
+namespace upsylon
+{
+    namespace graphic
+    {
+
+        color_ramp:: color_ramp() throw() : color_mix() {}
+
+        color_ramp:: ~color_ramp() throw()
+        {}
+
+        rgba color_ramp:: operator()(const void *addr) const throw()
+        {
+            assert(NULL!=addr);
+            return get( *(const float *)addr );
+        }
+
+
+
+    }
+
 }
 

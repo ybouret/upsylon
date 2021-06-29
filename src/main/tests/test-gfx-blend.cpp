@@ -128,6 +128,14 @@ Y_UTEST(gfx_blend)
             const rgba C = interp::linear(xx,colors);
             std::cerr << "x=" << std::setw(4) << xx << " => " << C << std::endl;
         }
+
+        colors << Y_GREEN;
+        for(float xx=0;xx<=1;xx+=0.2f)
+        {
+            const rgba C = interp::linear(xx,colors);
+            std::cerr << "x=" << std::setw(4) << xx << " => " << C << std::endl;
+        }
+
     }
 
 
