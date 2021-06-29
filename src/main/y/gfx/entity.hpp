@@ -29,7 +29,7 @@ namespace upsylon
             //! suppress memory
             static void  suppress(void *&,size_t &) throw();
 
-            //! allocate embeedded memory
+            //! allocate embedded memory
             static void *allocate(memory::embed emb[], const size_t num, size_t &);
 
             //! throw exception
