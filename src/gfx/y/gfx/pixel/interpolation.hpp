@@ -1,9 +1,7 @@
-
 //! \file
 
-
-#ifndef Y_GFX_INTERPOLATION_INCLUDED
-#define Y_GFX_INTERPOLATION_INCLUDED 1
+#ifndef Y_GFX_PIXEL_INTERPOLATION_INCLUDED
+#define Y_GFX_PIXEL_INTERPOLATION_INCLUDED 1
 
 #include "y/gfx/pixel/blend.hpp"
 #include "y/code/hunt.hpp"
