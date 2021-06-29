@@ -1,4 +1,5 @@
 #include "y/gfx/color/ramp.hpp"
+#include "y/gfx/pixel/interpolation.hpp"
 #include "y/type/utils.hpp"
 
 namespace upsylon
@@ -14,6 +15,7 @@ namespace upsylon
 
         }
 
+#if 0
         static inline uint8_t mix_bytes(const uint8_t b0, const float w0,
                                         const uint8_t b1, const float w1) throw()
         {
@@ -36,9 +38,35 @@ namespace upsylon
                 }
             }
         }
+#endif
+
+        rgba color_ramp:: closest(const float u, const rgba *rp, const size_t sz) const throw()
+        {
+            assert(u>=0.0f);
+            assert(u<=1.0f);
+            assert(NULL!=rp);
+            assert(sz>1);
+            const float  delta = float(sz-1);
+            const float  match = u * delta;
+            const size_t index = size_t( floorf(match) + 0.5f);
+            assert(index<sz);
+            return rp[index];
+        }
+
+        rgba color_ramp:: blended(const float u, const rgba *rp, const size_t sz) const throw()
+        {
+            assert(u>=0.0f);
+            assert(u<=1.0f);
+            assert(NULL!=rp);
+            assert(sz>1);
+            return rp[0];
+        }
+
 
         rgba color_ramp:: get(const float u) const throw()
         {
+            assert(u>=0.0f);
+            assert(u<=1.0f);
             const size_t sz = dimensions();
             const rgba  *rp = repository();
 
@@ -50,39 +78,13 @@ namespace upsylon
                     break;
             }
 
-            const float  smax = float(sz-1);
-            size_t       jlo  = 0;
-            size_t       jup  = 0;
-            const float  fpos = u * smax;         // map 0:1 to 0..smax
-            const float  ipos = floor(fpos+0.5f); // nearest integer
-            if(ipos<=fpos)
-            {
-                jlo = size_t(max_of(ipos,0.0f));
-                jup = jlo+1; assert(jup<=sz);
-            }
-            else
-            {
-                jup = size_t(min_of(ipos,smax)); assert(jup>0);
-                jlo = jup-1;
-            }
-
-            const float w0 = float(jup) - fpos;
-            const float w1 = fpos - float(jlo);
-            const rgba  C0 = rp[jlo];
-            const rgba  C1 = rp[jup];
-
-
-            const rgb res = rgb(mix_bytes(C0.r,w0,C1.r,w1),
-                                mix_bytes(C0.g,w0,C1.g,w1),
-                                mix_bytes(C0.b,w0,C1.b,w1));
-
-            //std::cerr << w0 << '*' << C0 << '+' << w1 << '*' << C1 << " => " << res << std::endl;
-            return res;
+            return closest(u,rp,sz);
         }
 
     }
 }
 
+#if 0
 namespace upsylon
 {
     namespace graphic
@@ -132,3 +134,4 @@ namespace upsylon
         }
     }
 }
+#endif

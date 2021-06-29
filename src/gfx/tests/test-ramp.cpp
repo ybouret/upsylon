@@ -13,8 +13,8 @@ using namespace graphic;
 Y_UTEST(ramp)
 {
 
+#if 0
     Y_USE_IMG();
-
     engine                  eng = new concurrent::simt();
     gradation               g(4);
 
@@ -23,6 +23,7 @@ Y_UTEST(ramp)
     g.push_back(Y_GREEN);
     g.push_back(Y_YELLOW);
     g.push_back(Y_RED);
+
 
     {
         pixmap<float> rmp(512,128);
@@ -65,6 +66,6 @@ Y_UTEST(ramp)
 
 
     }
-
+#endif
 }
 Y_UTEST_DONE()

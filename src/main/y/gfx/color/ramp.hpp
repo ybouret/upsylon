@@ -44,7 +44,10 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(color_ramp);
-
+            rgba closest(const float u, const rgba *, const size_t) const throw();
+            rgba blended(const float u, const rgba *, const size_t) const throw();
+            
+#if 0
         public:
 
             //__________________________________________________________________
@@ -77,6 +80,7 @@ namespace upsylon
                 const float       scal;
                 const color_ramp &ramp;
             };
+#endif
         };
 
 
