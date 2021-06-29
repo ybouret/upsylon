@@ -33,7 +33,7 @@ namespace upsylon
         //! search with hysteresis for x[j] <= xx <= x[j+1], x[1..n]
         /**
          \param xx the value to locate
-         \param x  array x[1..n], in increasing order
+         \param x  array x[1..n], in INCREASING order
          \param n  objects to match
          \param j  result of a previous search
          */

@@ -7,24 +7,13 @@ namespace upsylon
     namespace graphic
     {
 
-        tableau:: ~tableau() throw()
-        {
-        }
 
-        tableau:: tableau(const rgba * const rp, const size_t sz) throw() :
-        repository_(rp),
-        dimensions_(sz)
-        {
-
-        }
-
-        size_t       tableau:: dimensions() const throw() { return dimensions_; }
-        const rgba * tableau:: repository() const throw() { return repository_; }
         
     }
 
 }
 
+#if 0
 #include "y/gfx/color/named.hpp"
 
 namespace upsylon
@@ -43,3 +32,4 @@ namespace upsylon
     }
 
 }
+#endif

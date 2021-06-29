@@ -5,6 +5,8 @@
 #include "y/gfx/color/named.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/type/aliasing.hpp"
+#include "y/sequence/vector.hpp"
+#include <iomanip>
 
 using namespace upsylon;
 using namespace graphic;
@@ -85,12 +87,12 @@ Y_UTEST(gfx_blend)
 
     {
         ios::ocstream fp("interp.dat");
-        uint8_t arr[] = { 10,20,30,40,50,60,70,80 };
+        uint8_t               arr[] = { 10,20,30,40,50,60,70,80 };
         static const unsigned num = sizeof(arr)/sizeof(arr[0]);
         for(unsigned i=0;i<=100;++i)
         {
             const float x = i/100.0f;
-            fp("%g %u %u\n",x,interp::closest<uint8_t,num>(x,arr), interp::linear<uint8_t,num>(x,arr) );
+            fp("%g %u %u\n",x,interp::closest_<uint8_t,num>(x,arr), interp::linear_<uint8_t,num>(x,arr) );
         }
     }
 
@@ -113,6 +115,18 @@ Y_UTEST(gfx_blend)
                 const float xx = i/100.0f;
                 fp("%g %u\n", xx, interp::linear<uint8_t,const float * const,const uint8_t * const>(xx,  aliasing::prev(x), aliasing::prev(y), sizeof(x)/sizeof(x[0]), j) );
             }
+        }
+    }
+
+
+    {
+        vector<rgba> colors;
+        colors << Y_RED;
+        colors << Y_BLUE;
+        for(float xx=0;xx<=1;xx+=0.2f)
+        {
+            const rgba C = interp::linear(xx,colors);
+            std::cerr << "x=" << std::setw(4) << xx << " => " << C << std::endl;
         }
     }
 
