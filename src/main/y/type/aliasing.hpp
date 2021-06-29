@@ -108,9 +108,9 @@ namespace upsylon {
 
         //! get previous const object
         template <typename T> static inline
-        const T *prev( const T *obj ) throw()
+        const T *prev(const T *obj) throw()
         {
-            return static_cast<T*>( anonymous(obj,-static_cast<ptrdiff_t>(sizeof(T))) );
+            return static_cast<const T*>( anonymous(obj,-static_cast<ptrdiff_t>(sizeof(T))) );
         }
 
         //______________________________________________________________________

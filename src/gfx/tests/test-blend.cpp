@@ -4,6 +4,7 @@
 #include "y/type/utils.hpp"
 #include "y/gfx/color/named.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/type/aliasing.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -104,12 +105,13 @@ Y_UTEST(blend)
             }
         }
         {
+
             ios::ocstream fp("linear-int.dat");
             for(unsigned i=0;i<=100;++i)
             {
                 size_t      j  = 0;
                 const float xx = i/100.0f;
-                fp("%g %u\n", xx, interp::linear<uint8_t,const float * const,const uint8_t * const>(xx, x-1, y-1, sizeof(x)/sizeof(x[0]), j) );
+                fp("%g %u\n", xx, interp::linear<uint8_t,const float * const,const uint8_t * const>(xx,  aliasing::prev(x), aliasing::prev(y), sizeof(x)/sizeof(x[0]), j) );
             }
         }
     }
