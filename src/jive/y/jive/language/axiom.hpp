@@ -6,6 +6,7 @@
 #include "y/jive/language/node.hpp"
 #include "y/jive/language/observer.hpp"
 #include "y/core/rnode.hpp"
+#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -97,13 +98,18 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag      name; //!< label
-                const uint32_t uuid; //!< UUID
+                const Tag            name; //!< label
+                const uint32_t       uuid; //!< UUID
+                auto_ptr<TermLedger> priv; //!< ...
 
             protected:
                 //! setup
                 template <typename ID> inline
-                explicit Axiom(const ID &i, const uint32_t t) : name( Tags::Make(i) ), uuid( t ), self(NULL) {}
+                explicit Axiom(const ID &i, const uint32_t t) :
+                name( Tags::Make(i) ),
+                uuid( t ),
+                priv(NULL),
+                self(NULL) {}
 
                 //! signature, mandatory in derived constructors
                 template <typename T> inline
