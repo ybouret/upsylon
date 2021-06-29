@@ -54,11 +54,6 @@ SET(edges_srcs ${edges_decl} ${edges_code})
 SOURCE_GROUP( gfx/edges FILES ${edges_srcs} )
 INSTALL( FILES ${edges_decl} DESTINATION include/y/gfx/edges )
 
-FILE(GLOB pixel_decl y/gfx/pixel/*.hpp)
-FILE(GLOB pixel_code y/gfx/pixel/*.cpp)
-SET(pixel_srcs ${pixel_decl} ${pixel_code})
-SOURCE_GROUP( gfx/pixel FILES ${pixel_srcs} )
-INSTALL( FILES ${pixel_decl} DESTINATION include/y/gfx/pixel )
 
 
 ADD_LIBRARY(y-gfx STATIC 
@@ -68,7 +63,6 @@ ${image_srcs} ${image_format_srcs}
 ${ops_srcs}
 ${filters_srcs}
 ${edges_srcs}
-${pixel_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
