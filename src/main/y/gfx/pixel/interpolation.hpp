@@ -25,7 +25,18 @@ namespace upsylon
             {
                 assert(xx>=0.0f);
                 assert(xx<=1.0f);
+                assert(NULL!=arr);
                 return arr[ unsigned( floorf(xx*(N-1)+0.5f) ) ];
+            }
+
+            //! x[0..num-1] from 0<=xx<<1
+            template <typename T> static inline
+            T closest(const float xx, const T arr[], size_t num) throw()
+            {
+                assert(xx>=0.0f);
+                assert(xx<=1.0f);
+                assert(NULL!=arr);
+                return arr[ unsigned( floorf(--num*xx) + 0.5f) ];
             }
 
             //! x[0..N-1] from 0<=xx<=1 with alpha
@@ -39,6 +50,19 @@ namespace upsylon
                 const float    alpha = jp-xs;
                 return blend<float,T>::mix(alpha,arr[jm],arr[jp]);
             }
+
+            //! x[0..num-1] from 0<=xx<=1 with alpha
+            template <typename T> static inline
+            T linear(const float xx, const T arr[], size_t num) throw()
+            {
+                const float    xs    = xx * --num;
+                unsigned       jm    = unsigned( floorf(xs+0.5f) );
+                if(jm>=num)    jm    = --num;
+                const unsigned jp    = jm+1;
+                const float    alpha = jp-xs;
+                return blend<float,T>::mix(alpha,arr[jm],arr[jp]);
+            }
+
 
             //! linear interpolation xx in x[1..n] and y[1..n], with starting point j
             template <

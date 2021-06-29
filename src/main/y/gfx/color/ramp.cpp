@@ -15,52 +15,6 @@ namespace upsylon
 
         }
 
-#if 0
-        static inline uint8_t mix_bytes(const uint8_t b0, const float w0,
-                                        const uint8_t b1, const float w1) throw()
-        {
-            const float B0 = float(b0) * w0;
-            const float B1 = float(b1) * w1;
-            const float S  = B0+B1;
-            if(S<=0)
-            {
-                return 0;
-            }
-            else
-            {
-                if(S>=255.0f)
-                {
-                    return 255;
-                }
-                else
-                {
-                    return uint8_t( floorf(S+0.5f) );
-                }
-            }
-        }
-#endif
-
-        rgba color_ramp:: closest(const float u, const rgba *rp, const size_t sz) const throw()
-        {
-            assert(u>=0.0f);
-            assert(u<=1.0f);
-            assert(NULL!=rp);
-            assert(sz>1);
-            const float  delta = float(sz-1);
-            const float  match = u * delta;
-            const size_t index = size_t( floorf(match) + 0.5f);
-            assert(index<sz);
-            return rp[index];
-        }
-
-        rgba color_ramp:: blended(const float u, const rgba *rp, const size_t sz) const throw()
-        {
-            assert(u>=0.0f);
-            assert(u<=1.0f);
-            assert(NULL!=rp);
-            assert(sz>1);
-            return rp[0];
-        }
 
 
         rgba color_ramp:: get(const float u) const throw()
@@ -77,8 +31,19 @@ namespace upsylon
                 default:
                     break;
             }
-
-            return closest(u,rp,sz);
+            const float *sp = stop_point();
+            if(sp)
+            {
+                size_t j = 0;
+                return interp::linear<
+                rgba,
+                const float * const,
+                const rgba  * const>(u,--sp,--rp,sz,j);
+            }
+            else
+            {
+                return interp::linear(u,rp,sz);
+            }
         }
 
     }

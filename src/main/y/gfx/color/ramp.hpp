@@ -30,8 +30,9 @@ namespace upsylon
             //
             // virtual interface
             //__________________________________________________________________
-            virtual size_t      dimensions() const throw() = 0; //!< registered colors
-            virtual const rgba *repository() const throw() = 0; //!< first color address
+            virtual size_t       dimensions() const throw() = 0;  //!< registered colors
+            virtual const rgba  *repository() const throw() = 0;  //!< first color address
+            virtual const float *stop_point() const throw() = 0; //!< options positions
 
             //__________________________________________________________________
             //
@@ -44,8 +45,6 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(color_ramp);
-            rgba closest(const float u, const rgba *, const size_t) const throw();
-            rgba blended(const float u, const rgba *, const size_t) const throw();
             
 #if 0
         public:
