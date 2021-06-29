@@ -40,7 +40,7 @@ namespace {
 }
 
 
-Y_UTEST(blend)
+Y_UTEST(gfx_blend)
 {
     if(true)         display_table();
     std::cerr << "checking table" << std::endl;
