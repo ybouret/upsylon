@@ -191,26 +191,12 @@ namespace upsylon
             template <typename POOL>
             inline void shuffle_pool( POOL &p ) throw()
             {
-                POOL p1,p2;
+                POOL tmp;
                 while(p.size)
                 {
-                    if(choice())
-                    {
-                        p1.store(p.query());
-                    }
-                    else
-                    {
-                        p2.store(p.query());
-                    }
+                    if(choice()) tmp.store(p.query()); else tmp.stash(p.query());
                 }
-
-                while(p1.size&&p2.size)
-                {
-                    p.store(p1.query());
-                    p.store(p2.query());
-                }
-                while(p1.size) p.store(p1.query());
-                while(p2.size) p.store(p2.query());
+                tmp.swap_with(p);
             }
 
 

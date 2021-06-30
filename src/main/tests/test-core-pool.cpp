@@ -126,7 +126,7 @@ Y_UTEST(core_pool)
         dpool.release();
         for(size_t i=10;i>0;--i)
         {
-            dpool.store( new dummy() );
+            dpool.store( new dummy() )->data = i;
         }
         for(const dummy *d = dpool.head; d; d=d->next )
         {
@@ -174,7 +174,14 @@ Y_UTEST(core_pool)
         core::pool_of_cpp<titi> tpool;
         for(size_t i=100+alea.lt(1000);i>0;--i)
         {
-            tpool.store( new titi() );
+            if(alea.choice())
+            {
+                tpool.store( new titi() );
+            }
+            else
+            {
+                tpool.stash( new titi() );
+            }
         }
     }
 

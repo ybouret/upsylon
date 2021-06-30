@@ -28,7 +28,7 @@ assert((node)->next==NULL)
 
             NODE        *head;  //!< head of pool
 
-            //! push a valid node
+            //! push a valid node on top
             NODE *store( NODE *node ) throw()
             {
                 Y_CORE_CHECK_POOL_NODE(node);
@@ -36,6 +36,29 @@ assert((node)->next==NULL)
                 head       = node;
                 increase_size();
                 return node;
+            }
+
+            //! push at end
+            NODE *stash(NODE *node) throw()
+            {
+                if(size)
+                {
+                    Y_CORE_CHECK_POOL_NODE(node);
+                    NODE *curr = head; assert(NULL!=curr);
+                    while(curr->next)
+                    {
+                        curr = curr->next;
+                    }
+                    assert(NULL!=curr);
+                    assert(NULL==curr->next);
+                    curr->next = node;
+                    increase_size();
+                    return node;
+                }
+                else
+                {
+                    return store(node);
+                }
             }
 
             //! query if size>0
