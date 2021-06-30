@@ -29,17 +29,20 @@ namespace upsylon
                 {
                     //__________________________________________________________
                     //
-                    // first time db
+                    // first time visited: check
                     //__________________________________________________________
                     switch(axiom.uuid)
                     {
+                            //__________________________________________________
+                            //
+                            // a terminal expects itself
+                            //__________________________________________________
                         case Terminal::UUID: {
                             Terminal              * the_term = & aliasing::_(axiom).as<Terminal>();
                             const Terminal *const * inserted = terms.search(key);
                             if(!inserted)
                             {
-                                if(!terms.insert(key,the_term))
-                                    throw exception("unexpected insertion failure for <%s>",*key);
+                                if(!terms.insert(key,the_term)) throw exception("unexpected insertion failure for <%s>",*key);
                                 if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting <" << key << ">" << std::endl;
                             }
                             else
@@ -49,6 +52,10 @@ namespace upsylon
                             }
                         } break;
 
+                            //__________________________________________________
+                            //
+                            // an alternate expects its manifest
+                            //__________________________________________________
                         case Alternate::UUID: {
                             if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting alternate <" << key << ">" << std::endl;
                             ++depth;
@@ -58,10 +65,22 @@ namespace upsylon
                             }
                         } break;
 
+                            //__________________________________________________
+                            //
+                            // transitive Option
+                            //__________________________________________________
                         case Option::UUID: ExpectingCore(terms,axiom.as<Option>().axiom,visited,++depth,verbose); break;
 
+                            //__________________________________________________
+                            //
+                            // transivite Repeat
+                            //__________________________________________________
                         case Repeat::UUID: ExpectingCore(terms,axiom.as<Repeat>().axiom,visited,++depth,verbose); break;
 
+                            //__________________________________________________
+                            //
+                            // an Aggregate expects the first non-empty member
+                            //__________________________________________________
                         case Aggregate::UUID: {
                             if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting aggregate <" << key << ">" << std::endl;
                             ++depth;

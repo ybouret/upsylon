@@ -104,12 +104,12 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
                     if(db.search(aname))
                     {
-                        if(Axiom::Verbose) std::cerr << "linked";
+                        if(Axiom::Verbose) std::cerr << "[linked]";
                         ++linked;
                     }
                     else
                     {
-                        if(Axiom::Verbose) std::cerr << "orphan";
+                        if(Axiom::Verbose) std::cerr << "[orphan]";
                         ++orphan;
                         orphans << ' ' << aname;
                     }
@@ -118,10 +118,11 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     Axiom::Expecting(ft,*axiom);
                     if(Axiom::Verbose)
                     {
-                        std::cerr << " expect: " << ft.size();
+                        std::cerr << " ==> {";
                         list<string>                     names;
                         ft.collect<string,list<string> >(names);
                         for(size_t i=1;i<=names.size();++i) std::cerr << " <" << names[i] << ">";
+                        std::cerr << " }";
                     }
 
                     if(Axiom::Verbose) std::cerr << std::endl;

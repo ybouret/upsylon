@@ -73,14 +73,8 @@ namespace upsylon
                     return *static_cast<T*>(self);
                 }
 
-                //! low-level build the expecting first term from axiom
-                static void ExpectingCore(TermLedger    &first,
-                                          const Axiom   &axiom,
-                                          Registry      &db,
-                                          unsigned       depth,
-                                          const bool     verbose);
 
-                //! high level build the expecting first term
+                //! build the expecting first terminals
                 static void Expecting(TermLedger  &first,
                                       const Axiom &axiom,
                                       unsigned     depth  =0,
@@ -115,6 +109,12 @@ namespace upsylon
                 template <typename T> inline
                 void I_am() throw() { aliasing::_(self) = static_cast<T*>(this); }
 
+                //! low-level build the expecting first term from axiom
+                static void ExpectingCore(TermLedger    &first,
+                                          const Axiom   &axiom,
+                                          Registry      &db,
+                                          unsigned       depth,
+                                          const bool     verbose);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
