@@ -80,6 +80,7 @@ namespace upsylon
                 return blend<float,T>::mix(alpha,y[jm+1],y[jp+1]);
             }
 
+            //! linear blend from a sequence
             template <typename SEQUENCE> static inline
             typename SEQUENCE::type linear(const float xx, const SEQUENCE &seq) throw()
             {

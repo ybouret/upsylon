@@ -8,6 +8,14 @@ namespace upsylon
         namespace Language
         {
 
+            Axiom:: TermLedger:: TermLedger() : Object(), TermLedger_()
+            {
+            }
+            
+            Axiom:: TermLedger:: ~TermLedger() throw()
+            {
+            }
+
             bool Axiom:: Verbose = false;
             
             const char  Axiom:: Accepted[] = "accepted";

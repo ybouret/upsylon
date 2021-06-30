@@ -84,8 +84,8 @@ Y_UTEST(grammar)
     
     grammar.graphViz("grammar.dot");
 
-    const Language::Axiom    &root = *grammar.getRoot();
-    Language::TermLedger      first;
+    const Language::Axiom        &root = *grammar.getRoot();
+    Language::Axiom::TermLedger   first;
     Language::Axiom::Expecting(first,root,0);
 
     if(argc>1)

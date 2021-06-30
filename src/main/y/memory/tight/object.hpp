@@ -129,6 +129,7 @@ namespace upsylon {
                     return self;
                 }
 
+                //! check if is a tight allocated object
                 static inline bool is_tight(const void *block_addr, size_t &block_size) throw()
                 {
                     if(supply::exists())

@@ -19,24 +19,7 @@ namespace upsylon
             class   Compound;
             class   Terminal;
             class   Grammar;
-            typedef Terminal                  *TermHandle;  //!< alias
-            typedef suffix_storage<TermHandle> TermLedger_; //!< alias
 
-            class TermLedger : public Object, public TermLedger_
-            {
-            public:
-                explicit TermLedger() : Object(), TermLedger_()
-                {
-                }
-
-                virtual ~TermLedger() throw()
-                {
-                }
-                
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(TermLedger);
-            };
 
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
@@ -69,6 +52,20 @@ namespace upsylon
                 static  const char                   Rejected[];  //!< "REJECTED"
                 static  const char                  *Status(const bool) throw(); //!< accepted|rejected
 
+
+                typedef Terminal                  *TermHandle;  //!< alias
+                typedef suffix_storage<TermHandle> TermLedger_; //!< alias
+
+                //! internal terminal ledger for first terminal detection
+                class TermLedger : public Object, public TermLedger_
+                {
+                public:
+                    explicit TermLedger();          //!< setup
+                    virtual ~TermLedger() throw();  //!< cleanup
+
+                private:
+                    Y_DISABLE_COPY_AND_ASSIGN(TermLedger);
+                };
                 
                 //______________________________________________________________
                 //
@@ -142,7 +139,6 @@ namespace upsylon
                 friend class Grammar;
                 void         *self; //!< derived class pointer
                 mutable void *priv; //!< to hold first terminals
-
             };
 
             //! message for verbosity

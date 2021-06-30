@@ -54,9 +54,10 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     if(axiom->priv)
                     {
                         Y_LANG_PRINTLN("\t\t\\_[" << fourcc_(axiom->uuid) << "] " << axiom->name);
-                        delete static_cast<TermLedger *>(axiom->priv);
+                        delete static_cast<Axiom::TermLedger *>(axiom->priv);
                         axiom->priv = 0;
                     }
+                    aliasing::_(axiom->hosts).reverse();
                 }
                 Y_LANG_PRINTLN("\t<" << name << " cleaning/>");
 
@@ -158,7 +159,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         {
                             case Aggregate::UUID:
                             case Alternate::UUID: {
-                                TermLedger *ft = new TermLedger();
+                                Axiom::TermLedger *ft = new Axiom::TermLedger();
                                 axiom->priv    = ft;
                                 Axiom::Expecting(*ft,*axiom);
                                 if(Axiom::Verbose)
@@ -211,7 +212,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             {
                                 if(node->priv)
                                 {
-                                    const TermLedger &ft = *static_cast<const TermLedger *>(node->priv);
+                                    const Axiom::TermLedger &ft = *static_cast<const Axiom::TermLedger *>(node->priv);
                                     if(ft.search(key))
                                     {
                                         std::cerr << " @" << node->name;

@@ -49,25 +49,3 @@ namespace upsylon
 }
 
 
-namespace upsylon
-{
-    namespace graphic
-    {
-
-        color_ramp:: color_ramp() throw() : color_mix() {}
-
-        color_ramp:: ~color_ramp() throw()
-        {}
-
-        rgba color_ramp:: operator()(const void *addr) const throw()
-        {
-            assert(NULL!=addr);
-            return get( *(const float *)addr );
-        }
-
-
-
-    }
-
-}
-
