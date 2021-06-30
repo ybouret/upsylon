@@ -51,12 +51,12 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 Y_LANG_PRINTLN("\t<" << name << " cleaning>");
                 for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
                 {
-                   if(axiom->priv)
-                   {
-                       Y_LANG_PRINTLN("\t\t\\_[" << fourcc_(axiom->uuid) << "] " << axiom->name);
-                       delete static_cast<TermLedger *>(axiom->priv);
-                       axiom->priv = 0;
-                   }
+                    if(axiom->priv)
+                    {
+                        Y_LANG_PRINTLN("\t\t\\_[" << fourcc_(axiom->uuid) << "] " << axiom->name);
+                        delete static_cast<TermLedger *>(axiom->priv);
+                        axiom->priv = 0;
+                    }
                 }
                 Y_LANG_PRINTLN("\t<" << name << " cleaning/>");
 
@@ -94,10 +94,10 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     // study result
                     //
                     //----------------------------------------------------------
-                    size_t            linked = 0;
-                    size_t            orphan = 0;
-                    size_t            terms  = 0;
-                    string            orphans;
+                    size_t linked = 0;
+                    size_t orphan = 0;
+                    size_t terms  = 0;
+                    string orphans;
 
                     for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                     {
@@ -153,6 +153,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             orphans << ' ' << aname;
                         }
 
+                        // and local first-terms
                         switch(auuid)
                         {
                             case Aggregate::UUID:
@@ -193,22 +194,35 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     // build hosts
                     //
                     //----------------------------------------------------------
+                    Y_LANG_PRINTLN("\t<" << name << " hosts>");
+                    for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                     {
-                        for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
+                        if(Terminal::UUID==axiom->uuid)
                         {
-                            if(Terminal::UUID==axiom->uuid)
+                            const Terminal *guest = & axiom->as<Terminal>();
+                            const string   &key   = *(guest->name);
+                            std::cerr << "\t\t\\_for <" << key << ">" << std::endl;
+                            for(const Axiom *node=axioms.head;node;node=node->next)
                             {
-                                const Terminal *guest = & axiom->as<Terminal>();
-                                const string   &key   = *(guest->name);
-                                std::cerr << "finding hosts for <" << key << ">" << std::endl;
+                                if(axiom->priv)
+                                {
 
+                                }
                             }
+
+
                         }
                     }
+                    Y_LANG_PRINTLN("\t<" << name << " hosts/>");
 
+
+
+                    //----------------------------------------------------------
+                    //
+                    // done
+                    //
+                    //----------------------------------------------------------
                     cleanAxioms();
-
-
                     if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
                 }
                 catch(...)
