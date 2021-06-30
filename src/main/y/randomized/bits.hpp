@@ -187,6 +187,33 @@ namespace upsylon
                 l.swap_with(tmp);
             }
 
+            //! shuffle POOL type, not frequent
+            template <typename POOL>
+            inline void shuffle_pool( POOL &p ) throw()
+            {
+                POOL p1,p2;
+                while(p.size)
+                {
+                    if(choice())
+                    {
+                        p1.store(p.query());
+                    }
+                    else
+                    {
+                        p2.store(p.query());
+                    }
+                }
+
+                while(p1.size&&p2.size)
+                {
+                    p.store(p1.query());
+                    p.store(p2.query());
+                }
+                while(p1.size) p.store(p1.query());
+                while(p2.size) p.store(p2.query());
+            }
+
+
             static bits     & simple(); //!< global isaac<4> bits generator
             static bits     & crypto(); //!< global isaac<8> bits generator
             static lockable & access(); //!< to lock access to global generators

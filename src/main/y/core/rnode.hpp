@@ -6,22 +6,25 @@
 
 #include "y/object.hpp"
 #include "y/core/dnode.hpp"
+#include "y/core/snode.hpp"
 #include "y/type/aliasing.hpp"
 
 namespace upsylon {
 
 
     //! node to handle persistent reference
-    template <typename T>
-    class ref_node : public object, public dnode< ref_node<T> >
+    template <typename T,
+    template <typename> class NODE_TYPE >
+    class ref_node : public object, public NODE_TYPE< ref_node<T,NODE_TYPE> >
     {
     public:
-        Y_DECL_ARGS(T,type); //!< aliases
+        Y_DECL_ARGS(T,type);                                  //!< aliases
+        typedef NODE_TYPE< ref_node<T,NODE_TYPE> > node_type; //!< base class alias
 
         //! setup withj persistent args
         inline explicit  ref_node(const_type &args) throw() :
         object(),
-        dnode< ref_node<T> >(),
+        node_type(),
         data( aliasing::_(args) )
         {
         }
@@ -29,15 +32,9 @@ namespace upsylon {
         //! cleanup
         inline virtual ~ref_node() throw()
         {
-
+            
         }
-
-        //! access
-        inline type * operator->()             throw() { return &data; }
-
-        //! access
-        inline const_type * operator->() const throw() { return &data; }
-
+        
         //! access
         inline type & operator*()             throw() { return data; }
 

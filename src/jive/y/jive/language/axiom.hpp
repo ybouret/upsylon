@@ -43,8 +43,11 @@ namespace upsylon
                 typedef core::list_of_cpp<Axiom>     List;      //!< alias
                 typedef Axiom                       *Handle;    //!< alias
                 typedef suffix_storage<Handle>       Registry;  //!< alias
-                typedef ref_node<Axiom>              Reference; //!< alias
+                typedef ref_node<Axiom,dnode>        Reference; //!< alias
                 typedef core::list_of_cpp<Reference> Manifest;  //!< alias
+
+                typedef ref_node<const Aggregate,snode> Host;
+
 
                 static  bool                         Verbose;     //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
@@ -94,15 +97,15 @@ namespace upsylon
                 //______________________________________________________________
                 const Tag            name; //!< label
                 const uint32_t       uuid; //!< UUID
-                auto_ptr<TermLedger> priv; //!< ...
-
+                Host                *host; //!< first host
+                
             protected:
                 //! setup
                 template <typename ID> inline
                 explicit Axiom(const ID &i, const uint32_t t) :
                 name( Tags::Make(i) ),
                 uuid( t ),
-                priv(NULL),
+                host(NULL),
                 self(NULL) {}
 
                 //! signature, mandatory in derived constructors

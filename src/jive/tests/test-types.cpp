@@ -7,6 +7,7 @@ using namespace Jive;
 
 Y_UTEST(types)
 {
+    __sizeof::width = 32;
     std::cerr << "Lexical:" << std::endl;
     Y_UTEST_SIZEOF(Token);
     Y_UTEST_SIZEOF(Lexeme);
@@ -15,6 +16,8 @@ Y_UTEST(types)
     std::cerr << "Language:" << std::endl;
     Y_UTEST_SIZEOF(Language::Node);
     Y_UTEST_SIZEOF(Language::Axiom);
+    Y_UTEST_SIZEOF(Language::Axiom::Host);
+    
     Y_UTEST_SIZEOF(Language::Terminal);
     Y_UTEST_SIZEOF(Language::Internal);
     Y_UTEST_SIZEOF(Language::Wildcard);

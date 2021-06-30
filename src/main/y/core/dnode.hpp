@@ -14,8 +14,8 @@ namespace upsylon {
     {
     public:
         Y_DECL_ARGS_(T,type); //!< alias
-        mutable_type *next;  //!< mutable object for a list
-        mutable_type *prev;  //!< mutable object for a list
+        mutable_type *next;   //!< mutable object for a list
+        mutable_type *prev;   //!< mutable object for a list
         
         inline explicit dnode() throw() : next(0), prev(0) {}                        //!< initialize
         inline virtual ~dnode() throw() {assert(0==next); assert(0==prev);}          //!< destructor

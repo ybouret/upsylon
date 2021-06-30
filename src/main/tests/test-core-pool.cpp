@@ -123,6 +123,28 @@ Y_UTEST(core_pool)
 
 
     {
+        dpool.release();
+        for(size_t i=10;i>0;--i)
+        {
+            dpool.store( new dummy() );
+        }
+        for(const dummy *d = dpool.head; d; d=d->next )
+        {
+            std::cerr << " " << d->data;
+        }
+        std::cerr << std::endl;
+
+        alea.shuffle_pool(dpool);
+        for(const dummy *d = dpool.head; d; d=d->next )
+        {
+            std::cerr << " " << d->data;
+        }
+        std::cerr << std::endl;
+
+
+    }
+
+    {
         std::cerr << "-- fast dnode testing..." << std::endl;
         core::list_of_cpp<toto> tlist;
         core::pool_of_cpp<toto> tpool;
