@@ -30,7 +30,7 @@ namespace upsylon {
                 //! pattern and code holder
                 //
                 //______________________________________________________________
-                class Instruction : public Object, public inode<Instruction>
+                class Instruction : public Object, public dnode<Instruction>
                 {
                 public:
                     virtual ~Instruction() throw();                    //!< cleanup

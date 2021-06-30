@@ -5,7 +5,7 @@
 #define Y_CONCURRENT_NUCLEUS_CLUSTER_INCLUDED 1
 
 #include "y/object.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 #include "y/core/list.hpp"
 #include "y/strfwd.hpp"
 #include <iosfwd>
@@ -24,7 +24,7 @@ namespace upsylon
             //! a cluster is a set of cpus
             //
             //__________________________________________________________________
-            class cluster : public object, public inode<cluster>
+            class cluster : public object, public dnode<cluster>
             {
             public:
                 //______________________________________________________________

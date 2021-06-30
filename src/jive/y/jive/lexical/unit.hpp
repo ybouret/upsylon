@@ -26,7 +26,7 @@ namespace upsylon {
             //! a unit is produced by a lexical rule
             //
             //__________________________________________________________________
-            class Unit : public Token, public Context, public inode<Unit>
+            class Unit : public Token, public Context, public dnode<Unit>
             {
             public:
 

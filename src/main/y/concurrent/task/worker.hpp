@@ -7,7 +7,7 @@
 #include "y/concurrent/task/contract.hpp"
 #include "y/concurrent/thread.hpp"
 #include "y/concurrent/sync/condition.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon
 {
@@ -26,7 +26,7 @@ namespace upsylon
         public authority<pipeline>,
         public condition,
         public thread,
-        public inode<worker>
+        public dnode<worker>
         {
         public:
             //! alias

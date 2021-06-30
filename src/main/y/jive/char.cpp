@@ -22,7 +22,7 @@ namespace upsylon {
         }
 
         Char:: Char(const Char &other) throw() :
-        inode<Char>(),
+        dnode<Char>(),
         Context( static_cast<const Context&>(other) ),
         code(other.code)
         {

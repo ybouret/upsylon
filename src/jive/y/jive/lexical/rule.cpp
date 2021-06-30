@@ -17,7 +17,8 @@ namespace upsylon {
             Rule:: Rule(const Tag           &ruleLabel,
                         const Motif         &ruleMotif,
                         const Event::Handle &ruleEvent) :
-            Object(), inode<Rule>(),
+            Object(),
+            dnode<Rule>(),
             label( ruleLabel ),
             motif( ruleMotif ),
             event( ruleEvent )

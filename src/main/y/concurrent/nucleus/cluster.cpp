@@ -26,7 +26,7 @@ namespace upsylon
             cluster:: cluster(const size_t start_,
                               const size_t width_,
                               const size_t every_) throw() :
-            object(), inode<cluster>(),
+            object(), dnode<cluster>(),
             start(start_),
             width(width_),
             every(max_of<size_t>(every_,1)),

@@ -24,7 +24,7 @@ namespace upsylon
             //! flexible Node for Terminal/Internal
             //
             //__________________________________________________________________
-            class Node : public inode<Node>, public Vizible, public Serializable
+            class Node : public dnode<Node>, public Vizible, public Serializable
             {
             public:
                 //______________________________________________________________

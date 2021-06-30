@@ -3,7 +3,8 @@
 #include "y/ios/align.hpp"
 #include "y/code/textual.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/memory/allocator/pooled.hpp"
+//#include "y/memory/allocator/pooled.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
 {
@@ -46,7 +47,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
             }
             
-            typedef slots<TermLedger,memory::pooled> FirstTerms;
+            typedef slots<TermLedger,memory::dyadic> FirstTerms;
 
             void Grammar:: validateWith(const Lexer *lexer) const
             {

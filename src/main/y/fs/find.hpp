@@ -5,7 +5,7 @@
 
 #include "y/fs/vfs.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 #include "y/core/list.hpp"
 
 namespace upsylon {
@@ -22,7 +22,7 @@ namespace upsylon {
         //! look up directory: name+depth
         //
         //----------------------------------------------------------------------
-        class look_up : public object, public inode<look_up>
+        class look_up : public object, public dnode<look_up>
         {
         public:
             //__________________________________________________________________

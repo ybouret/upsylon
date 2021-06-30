@@ -5,7 +5,7 @@
 
 #include "y/jive/context.hpp"
 #include "y/memory/magazine.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon {
 
@@ -18,7 +18,7 @@ namespace upsylon {
         //! a fully qualified char
         //
         //______________________________________________________________________
-        class Char : public inode<Char>, public Context
+        class Char : public dnode<Char>, public Context
         {
         public:
             //__________________________________________________________________

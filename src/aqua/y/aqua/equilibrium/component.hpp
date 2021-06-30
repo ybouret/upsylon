@@ -7,7 +7,7 @@
 #include "y/aqua/species.hpp"
 #include "y/aqua/types.hpp"
 #include "y/core/list.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon {
 
@@ -20,7 +20,7 @@ namespace upsylon {
         //! a species with its coefficient
         //
         //______________________________________________________________________
-        class Component : public Object, public inode<Component>
+        class Component : public Object, public dnode<Component>
         {
         public:
             //__________________________________________________________________

@@ -21,7 +21,7 @@ namespace upsylon {
              */
             //------------------------------------------------------------------
 
-            class Rule : public Object, public inode<Rule>
+            class Rule : public Object, public dnode<Rule>
             {
             public:
 

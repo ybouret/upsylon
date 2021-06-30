@@ -2,12 +2,14 @@
 #include "y/utest/run.hpp"
 #include "y/object.hpp"
 #include "y/ptr/auto.hpp"
+#include "y/core/dnode.hpp"
+#include "y/core/snode.hpp"
 
 using namespace upsylon;
 
 namespace {
 
-    class dummy : public object{
+    class dummy : public object {
 
     public:
         dummy *next;
@@ -26,6 +28,37 @@ namespace {
     private:
         Y_DISABLE_COPY_AND_ASSIGN(dummy);
     };
+
+    class toto : public object, public dnode<toto>
+    {
+    public:
+        explicit toto() throw() : object(), dnode<toto> ()
+        {
+        }
+
+        virtual ~toto() throw()
+        {
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(toto);
+    };
+
+    class titi : public object, public snode<titi>
+    {
+    public:
+        explicit titi() throw() : object(), snode<titi> ()
+        {
+        }
+
+        virtual ~titi() throw()
+        {
+        }
+
+    private:
+        Y_DISABLE_COPY_AND_ASSIGN(titi);
+    };
+
 
 }
 
@@ -86,6 +119,41 @@ Y_UTEST(core_pool)
         dpool.store( dlist );
         std::cerr << "-- dpool: " << dpool.size << std::endl;
         std::cerr << "-- dlist: " << dlist.size << std::endl;
+    }
+
+
+    {
+        std::cerr << "-- fast dnode testing..." << std::endl;
+        core::list_of_cpp<toto> tlist;
+        core::pool_of_cpp<toto> tpool;
+
+        for(size_t i=100+alea.lt(1000);i>0;--i)
+        {
+            if( alea.choice() )
+            {
+                tlist.push_back( new toto() );
+            }
+            else
+            {
+                tlist.push_front( new toto() );
+            }
+        }
+
+        while( tlist.size )
+        {
+            toto *tmp = alea.choice() ? tlist.pop_back() : tlist.pop_front();
+            tpool.store(tmp);
+        }
+
+    }
+
+    {
+        std::cerr << "-- fast snode testing..." << std::endl;
+        core::pool_of_cpp<titi> tpool;
+        for(size_t i=100+alea.lt(1000);i>0;--i)
+        {
+            tpool.store( new titi() );
+        }
     }
 
 

@@ -7,7 +7,7 @@
 #include "y/counting/mloop.hpp"
 #include "y/type/block/zset.hpp"
 #include "y/sequence/slots.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 #include "y/type/aliasing.hpp"
 #include <iomanip>
 

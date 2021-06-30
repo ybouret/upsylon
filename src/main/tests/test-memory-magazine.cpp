@@ -1,7 +1,7 @@
 
 #include "y/memory/magazine.hpp"
 #include "y/utest/run.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 using namespace upsylon;
 
@@ -24,13 +24,13 @@ namespace {
     int simple::count = 0;
 
 
-    class dummy : public inode<dummy>
+    class dummy : public dnode<dummy>
     {
     public:
         int      a;
-        inline   dummy() throw() : inode<dummy>(), a(0) {}
+        inline   dummy() throw() : dnode<dummy>(), a(0) {}
         inline   dummy(int x)    : a(x) { if(0==x) throw exception("dummy(0)"); }
-        inline   dummy(const dummy &other) throw() : inode<dummy>(), a(other.a) {}
+        inline   dummy(const dummy &other) throw() : dnode<dummy>(), a(other.a) {}
         inline  virtual ~dummy() throw() {}
 
         typedef memory::magazine<dummy> repo;

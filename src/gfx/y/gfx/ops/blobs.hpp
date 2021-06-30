@@ -6,7 +6,7 @@
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/pixel.hpp"
 #include "y/core/knode.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon
 {
@@ -54,7 +54,7 @@ namespace upsylon
         //! a blob is a list of nodes, itself a node for blobs
         //
         //______________________________________________________________________
-        class blob : public knots, public inode<blob>
+        class blob : public knots, public dnode<blob>
         {
         public:
             

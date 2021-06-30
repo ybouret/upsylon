@@ -71,7 +71,7 @@ namespace upsylon
             }
 
             Node:: Node(const Axiom &a) throw() :
-            inode<Node>(),
+            dnode<Node>(),
             axiom(a),
             state(IsInternal),
             wksp()
@@ -81,7 +81,7 @@ namespace upsylon
             }
 
             Node:: Node(const Axiom &a, Lexeme *l) throw() :
-            inode<Node>(),
+            dnode<Node>(),
             axiom(a),
             state(IsTerminal),
             wksp()

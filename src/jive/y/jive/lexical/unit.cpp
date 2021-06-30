@@ -24,7 +24,10 @@ namespace upsylon
             Unit:: Unit(const Context &c,
                         const Tag     &t,
                         const size_t   s) throw() :
-            Token(), Context(c), inode<Unit>(), label(t),
+            Token(),
+            Context(c),
+            dnode<Unit>(),
+            label(t),
             stamp(s),
             owner(NULL),
             usage(Core)

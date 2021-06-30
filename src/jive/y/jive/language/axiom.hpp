@@ -33,7 +33,7 @@ namespace upsylon
             //! Axiom
             //
             //__________________________________________________________________
-            class Axiom : public CountedObject, public inode<Axiom>
+            class Axiom : public CountedObject, public dnode<Axiom>
             {
             public:
                 //______________________________________________________________

@@ -12,7 +12,7 @@ namespace upsylon {
 
         Component::Component(const Species &sp_, const int nu_) throw() :
         Object(),
-        inode<Component>(),
+        dnode<Component>(),
         sp(sp_),
         nu(nu_),
         p( abs_of(nu) ),

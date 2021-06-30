@@ -4,7 +4,7 @@
 
 #include "y/object.hpp"
 #include "y/core/list.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 #include <iosfwd>
 
 namespace upsylon
@@ -22,7 +22,7 @@ namespace upsylon
         //! a guest has a unique identifier
         //
         //----------------------------------------------------------------------
-        class guest : public object, public inode<guest>
+        class guest : public object, public dnode<guest>
         {
         public:
             explicit     guest(const size_t) throw(); //!< setup
@@ -41,7 +41,7 @@ namespace upsylon
         //! a group is a list of distinct guests
         //
         //----------------------------------------------------------------------
-        class group : public object, public guests, public inode<group>
+        class group : public object, public guests, public dnode<group>
         {
         public:
             explicit group() throw();                                  //!< setup
@@ -65,7 +65,7 @@ namespace upsylon
         //
         //----------------------------------------------------------------------
         //! description of a configuration
-        class frame : public groups, public inode<frame>
+        class frame : public groups, public dnode<frame>
         {
         public:
             typedef core::list_of_cpp<frame> list_type; //!< alias

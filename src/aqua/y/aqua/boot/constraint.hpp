@@ -6,7 +6,7 @@
 
 #include "y/aqua/species.hpp"
 #include "y/aqua/types.hpp"
-#include "y/core/inode.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon {
 
@@ -18,7 +18,7 @@ namespace upsylon {
         //! a linear constraint
         //
         //______________________________________________________________________
-        class Constraint : public inode<Constraint>
+        class Constraint : public dnode<Constraint>
         {
         public:
             //__________________________________________________________________
@@ -28,7 +28,7 @@ namespace upsylon {
             typedef core::list_of_cpp<Constraint> List; //!< alias
 
             //! an actor
-            class Actor : public inode<Actor>
+            class Actor : public dnode<Actor>
             {
             public:
                 typedef core::list_of_cpp<Actor> List; //!< alias

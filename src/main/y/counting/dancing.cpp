@@ -4,7 +4,7 @@
 
 namespace upsylon
 {
-    dancing:: guest::  guest(const size_t i) throw() :  object(), inode<guest>(), label(i) {}
+    dancing:: guest::  guest(const size_t i) throw() :  object(), dnode<guest>(), label(i) {}
     dancing:: guest:: ~guest()               throw() {}
 }
 
@@ -12,7 +12,7 @@ namespace upsylon
 
 namespace upsylon
 {
-    dancing:: group::  group() throw() : object(), guests(), inode<group>() {}
+    dancing:: group::  group() throw() : object(), guests(), dnode<group>() {}
     dancing:: group:: ~group() throw() {}
     
     bool dancing:: group:: has_guest_with_label( const size_t label ) const throw()
@@ -57,7 +57,7 @@ namespace upsylon
 namespace upsylon
 {
     dancing:: frame:: frame(const size_t wgs) throw() :
-    inode<frame>(),
+    dnode<frame>(),
     workgroup_size(wgs),
     workgroups(0),
     extraneous(0)
