@@ -6,7 +6,6 @@
 #include "y/jive/language/node.hpp"
 #include "y/jive/language/observer.hpp"
 #include "y/core/rnode.hpp"
-#include "y/ptr/auto.hpp"
 
 namespace upsylon
 {
@@ -19,9 +18,26 @@ namespace upsylon
 
             class Aggregate;
             class Terminal;
-            typedef Terminal                  *TermHandle; //!< alias
-            typedef suffix_storage<TermHandle> TermLedger; //!< alias
-            
+            class Grammar;
+            typedef Terminal                  *TermHandle;  //!< alias
+            typedef suffix_storage<TermHandle> TermLedger_; //!< alias
+
+            class TermLedger : public Object, public TermLedger_
+            {
+            public:
+                explicit TermLedger() : Object(), TermLedger_()
+                {
+                }
+
+                virtual ~TermLedger() throw()
+                {
+                }
+                
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(TermLedger);
+            };
+
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
 #define Y_LANG_AXIOM_DECL()      virtual bool accept(Y_LANG_AXIOM_ARGS) const          //!< declare accept()
@@ -96,7 +112,7 @@ namespace upsylon
                 const Tag            name; //!< label
                 const uint32_t       uuid; //!< UUID
                 Host                *host; //!< first host
-                
+
             protected:
                 //! setup
                 template <typename ID> inline
@@ -104,7 +120,8 @@ namespace upsylon
                 name( Tags::Make(i) ),
                 uuid( t ),
                 host(NULL),
-                self(NULL)
+                self(NULL),
+                priv(NULL)
                 {
                 }
 
@@ -121,7 +138,10 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
-                void    *self; //!< derived class pointer
+                friend class Grammar;
+                void         *self; //!< derived class pointer
+                mutable void *priv; //!< to hold first terminals
+
             };
 
             //! message for verbosity

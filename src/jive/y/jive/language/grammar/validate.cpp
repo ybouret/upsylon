@@ -3,8 +3,6 @@
 #include "y/ios/align.hpp"
 #include "y/code/textual.hpp"
 #include "y/sequence/slots.hpp"
-//#include "y/memory/allocator/pooled.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
 {
@@ -46,111 +44,178 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 }
 
             }
-            
-            typedef slots<TermLedger,memory::dyadic> FirstTerms;
 
+
+            void   Grammar:: cleanAxioms() const throw()
+            {
+                Y_LANG_PRINTLN("\t<" << name << " cleaning>");
+                for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
+                {
+                   if(axiom->priv)
+                   {
+                       Y_LANG_PRINTLN("\t\t\\_[" << fourcc_(axiom->uuid) << "] " << axiom->name);
+                       delete static_cast<TermLedger *>(axiom->priv);
+                       axiom->priv = 0;
+                   }
+                }
+                Y_LANG_PRINTLN("\t<" << name << " cleaning/>");
+
+            }
+
+
+            
             void Grammar:: validateWith(const Lexer *lexer) const
             {
-                const char  *id   = **name;
-                if(Axiom::Verbose) std::cerr << "<" << id << ">" << std::endl;
-                const Axiom *root = getRoot();
-                if(!root)
+                try
                 {
-                    throw exception("%s has not root Axiom",id);
-                }
-
-                // visit all axioms
-                Axiom::Registry db;
-                fillDB(db,root);
-
-                // study
-                size_t            linked = 0;
-                size_t            orphan = 0;
-                size_t            terms  = 0;
-                string            orphans;
-                //FirstTerms        firsts(axioms.size);
-                for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
-                {
-                    const string &aname = *(axiom->name);
-                    if(Axiom::Verbose)
+                    //----------------------------------------------------------
+                    //
+                    // initialize
+                    //
+                    //----------------------------------------------------------
+                    const char  *id   = **name;
+                    if(Axiom::Verbose) std::cerr << "<" << id << ">" << std::endl;
+                    const Axiom *root = getRoot();
+                    if(!root)
                     {
-                        std::cerr << "[" << fourcc_(axiom->uuid) << "] " << ios::align(aname, ios::align::left, aligned) << " : ";
+                        throw exception("%s has not root Axiom",id);
                     }
 
-                    switch(axiom->uuid)
+                    //----------------------------------------------------------
+                    //
+                    // visit all axioms
+                    //
+                    //----------------------------------------------------------
+                    Axiom::Registry db;
+                    fillDB(db,root);
+
+                    //----------------------------------------------------------
+                    //
+                    // study result
+                    //
+                    //----------------------------------------------------------
+                    size_t            linked = 0;
+                    size_t            orphan = 0;
+                    size_t            terms  = 0;
+                    string            orphans;
+
+                    for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                     {
-                        case Terminal::UUID:
-                            ++terms;
-                            if(lexer)
-                            {
-                                if(!lexer->queryRule(aname))
+                        const string  &aname = *(axiom->name);
+                        const uint32_t auuid = axiom->uuid;
+                        if(Axiom::Verbose)
+                        {
+                            std::cerr << "[" << fourcc_(auuid) << "] " << ios::align(aname, ios::align::left, aligned) << " : ";
+                        }
+
+                        switch(auuid)
+                        {
+                            case Terminal::UUID:
+                                ++terms;
+                                if(lexer)
                                 {
-                                    throw exception("%s is missing lexical <%s>",**name,*aname);
+                                    if(!lexer->queryRule(aname))
+                                    {
+                                        throw exception("%s is missing lexical <%s>",**name,*aname);
+                                    }
                                 }
-                            }
-                            break;
-                            
-                        case Alternate::UUID:
-                            if(axiom->as<Alternate>().size <= 0)
+                                break;
+
+                            case Alternate::UUID:
+                                if(axiom->as<Alternate>().size <= 0)
+                                {
+                                    throw exception("%s has empty alternate <%s>",**name,*aname);
+                                }
+                                break;
+
+                            case Aggregate::UUID: {
+                                const Aggregate &A = axiom->as<Aggregate>();
+                                if(A.size <= 0)
+                                {
+                                    throw exception("%s has empty aggregate <%s>",**name,*aname);
+                                }
+
+                            } break;
+
+                            default:
+                                break;
+                        }
+
+                        if(db.search(aname))
+                        {
+                            if(Axiom::Verbose) std::cerr << "[linked]";
+                            ++linked;
+                        }
+                        else
+                        {
+                            if(Axiom::Verbose) std::cerr << "[orphan]";
+                            ++orphan;
+                            orphans << ' ' << aname;
+                        }
+
+                        switch(auuid)
+                        {
+                            case Aggregate::UUID:
+                            case Alternate::UUID: {
+                                TermLedger *ft = new TermLedger();
+                                axiom->priv    = ft;
+                                Axiom::Expecting(*ft,*axiom);
+                                if(Axiom::Verbose)
+                                {
+                                    std::cerr << " ==> {";
+                                    list<string>                     names;
+                                    ft->collect<string,list<string> >(names);
+                                    for(size_t i=1;i<=names.size();++i) std::cerr << " <" << names[i] << ">";
+                                    std::cerr << " }";
+                                }
+                            } break;
+
+                            default:
+                                break;
+                        }
+
+
+                        if(Axiom::Verbose) std::cerr << std::endl;
+                    }
+
+                    if(orphan>0)
+                    {
+                        throw exception("%s grammar has orphan%s:%s", **name, textual::plural_s(orphan), *orphans);
+                    }
+
+                    if(terms<=0)
+                    {
+                        throw exception("%s grammar has no terminal!", **name);
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // build hosts
+                    //
+                    //----------------------------------------------------------
+                    {
+                        for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
+                        {
+                            if(Terminal::UUID==axiom->uuid)
                             {
-                                throw exception("%s has empty alternate <%s>",**name,*aname);
+                                const Terminal *guest = & axiom->as<Terminal>();
+                                const string   &key   = *(guest->name);
+                                std::cerr << "finding hosts for <" << key << ">" << std::endl;
+
                             }
-                            break;
-                            
-                        case Aggregate::UUID: {
-                            const Aggregate &A = axiom->as<Aggregate>();
-                            if(A.size <= 0)
-                            {
-                                throw exception("%s has empty aggregate <%s>",**name,*aname);
-                            }
-                            
-                        } break;
-                            
-                        default:
-                            break;
+                        }
                     }
 
-                    if(db.search(aname))
-                    {
-                        if(Axiom::Verbose) std::cerr << "[linked]";
-                        ++linked;
-                    }
-                    else
-                    {
-                        if(Axiom::Verbose) std::cerr << "[orphan]";
-                        ++orphan;
-                        orphans << ' ' << aname;
-                    }
+                    cleanAxioms();
 
-                    //TermLedger       &ft = firsts.build();
-                    TermLedger          ft;
-                    Axiom::Expecting(ft,*axiom);
-                    if(Axiom::Verbose)
-                    {
-                        std::cerr << " ==> {";
-                        list<string>                     names;
-                        ft.collect<string,list<string> >(names);
-                        for(size_t i=1;i<=names.size();++i) std::cerr << " <" << names[i] << ">";
-                        std::cerr << " }";
-                    }
 
-                    if(Axiom::Verbose) std::cerr << std::endl;
+                    if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
                 }
-
-                if(orphan>0)
+                catch(...)
                 {
-                    throw exception("%s grammar has orphan%s:%s", **name, textual::plural_s(orphan), *orphans);
+                    cleanAxioms();
+                    throw;
                 }
-                
-                if(terms<=0)
-                {
-                    throw exception("%s grammar has no terminal!", **name);
-                }
-
-
-
-                if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
-
             }
 
         }

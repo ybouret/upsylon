@@ -212,7 +212,7 @@ namespace upsylon
                 const size_t          aligned;   //!< max of axioms name length
 
             private:
-                Observer              observer;
+                Observer              observer;  //!< run-time observer
 
                 Y_DISABLE_COPY_AND_ASSIGN(Grammar);
                 string makeAxiomsID(const Axioms &ax,
@@ -221,7 +221,7 @@ namespace upsylon
 
                 XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer) const;
-
+                void   cleanAxioms() const throw();
             };
         }
     }
