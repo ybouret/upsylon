@@ -57,7 +57,7 @@ namespace
 Y_UTEST(grammar)
 {
     Language::Axiom::Verbose       = true;
-    concurrent::singleton::verbose = true;
+    //concurrent::singleton::verbose = true;
     
     vfs &fs = local_fs::instance();
 
@@ -69,14 +69,11 @@ Y_UTEST(grammar)
         Language::Grammar         G("G");
 
         const Language::Terminal &ID  = G.term("ID", Language::Terminal::Standard);
-        return 0;
-        
         const Language::Axiom    &INT = G.term("INT",Language::Terminal::Standard);
         Y_CHECK(G.query("ID"));
         Y_CHECK(G.query("INT"));
         G.setRoot(ID);  Y_CHECK(&ID==G.getRoot());
         G.setRoot(INT); Y_CHECK(&INT==G.getRoot());
-        std::cerr << "Cleaning " << G.name << std::endl;
     }
 
     MyLexer   lexer;

@@ -40,12 +40,12 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::list_of_cpp<Axiom>     List;      //!< alias
-                typedef Axiom                       *Handle;    //!< alias
-                typedef suffix_storage<Handle>       Registry;  //!< alias
-                typedef ref_node<Axiom,dnode>        Reference; //!< alias
-                typedef core::list_of_cpp<Reference> Manifest;  //!< alias
-
+                typedef core::list_of_cpp<Axiom>        List;      //!< alias
+                typedef Axiom                          *Handle;    //!< alias
+                typedef suffix_storage<Handle>          Registry;  //!< alias
+                typedef ref_node<Axiom,dnode>           Reference; //!< alias
+                typedef core::list_of_cpp<Reference>    Manifest;  //!< alias
+                typedef ref_node<const Aggregate,snode> Host;      //!< alias
                 
                 static  bool                         Verbose;     //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
@@ -95,8 +95,7 @@ namespace upsylon
                 //______________________________________________________________
                 const Tag            name; //!< label
                 const uint32_t       uuid; //!< UUID
-                //Host                *host; //!< first host
-                void *host;
+                Host                *host; //!< first host
                 
             protected:
                 //! setup
@@ -107,9 +106,6 @@ namespace upsylon
                 host(NULL),
                 self(NULL)
                 {
-                    //size_t      bs    = 0;
-                    //const  bool check = is_tight(this,bs);
-                    //std::cerr << "New Axiom <" << name << "> [" << fourcc_(uuid) << "] @" << this << "+" << bs << " check=" << check << std::endl;
                 }
 
                 //! signature, mandatory in derived constructors

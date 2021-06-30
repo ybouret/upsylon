@@ -12,7 +12,6 @@ namespace upsylon
 
             Grammar:: ~Grammar() throw()
             {
-                std::cerr << "Cleaning Grammar..." << std::endl;
             }
 
             void Grammar:: declare(Axiom *axiom)
