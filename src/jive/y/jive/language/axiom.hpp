@@ -33,7 +33,7 @@ namespace upsylon
             //! Axiom
             //
             //__________________________________________________________________
-            class Axiom : public CountedObject, public dnode<Axiom>
+            class Axiom : public Object, public dnode<Axiom>
             {
             public:
                 //______________________________________________________________
@@ -46,9 +46,7 @@ namespace upsylon
                 typedef ref_node<Axiom,dnode>        Reference; //!< alias
                 typedef core::list_of_cpp<Reference> Manifest;  //!< alias
 
-                typedef ref_node<const Aggregate,snode> Host;
-
-
+                
                 static  bool                         Verbose;     //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
                 static  const char                   Rejected[];  //!< "REJECTED"
@@ -97,7 +95,8 @@ namespace upsylon
                 //______________________________________________________________
                 const Tag            name; //!< label
                 const uint32_t       uuid; //!< UUID
-                Host                *host; //!< first host
+                //Host                *host; //!< first host
+                void *host;
                 
             protected:
                 //! setup
@@ -106,7 +105,12 @@ namespace upsylon
                 name( Tags::Make(i) ),
                 uuid( t ),
                 host(NULL),
-                self(NULL) {}
+                self(NULL)
+                {
+                    //size_t      bs    = 0;
+                    //const  bool check = is_tight(this,bs);
+                    //std::cerr << "New Axiom <" << name << "> [" << fourcc_(uuid) << "] @" << this << "+" << bs << " check=" << check << std::endl;
+                }
 
                 //! signature, mandatory in derived constructors
                 template <typename T> inline

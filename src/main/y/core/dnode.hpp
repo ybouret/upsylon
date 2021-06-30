@@ -13,12 +13,16 @@ namespace upsylon {
     class dnode
     {
     public:
+        // types and definitions
         Y_DECL_ARGS_(T,type); //!< alias
         mutable_type *next;   //!< mutable object for a list
         mutable_type *prev;   //!< mutable object for a list
-        
+
+        // C++
         inline explicit dnode() throw() : next(0), prev(0) {}                        //!< initialize
         inline virtual ~dnode() throw() {assert(0==next); assert(0==prev);}          //!< destructor
+
+        // methods
         inline bool     is_linked() const throw() { return (0!=next) || (0!=prev); } //!< linked to another
         inline bool     is_single() const throw() { return (0==next) && (0==prev); } //!< not in list
     private:

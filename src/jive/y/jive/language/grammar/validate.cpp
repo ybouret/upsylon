@@ -68,7 +68,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                 size_t            orphan = 0;
                 size_t            terms  = 0;
                 string            orphans;
-                FirstTerms        firsts(axioms.size);
+                //FirstTerms        firsts(axioms.size);
                 for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                 {
                     const string &aname = *(axiom->name);
@@ -122,7 +122,8 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         orphans << ' ' << aname;
                     }
 
-                    TermLedger       &ft = firsts.build();
+                    //TermLedger       &ft = firsts.build();
+                    TermLedger          ft;
                     Axiom::Expecting(ft,*axiom);
                     if(Axiom::Verbose)
                     {

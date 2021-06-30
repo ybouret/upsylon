@@ -22,12 +22,14 @@ namespace upsylon
             Axiom:: ~Axiom() throw()
             {
                 aliasing::_(uuid) = 0;
+#if 0
                 while(host)
                 {
                     Host *next = host->next;
                     delete host;
                     host = next;
                 }
+#endif
             }
 
         

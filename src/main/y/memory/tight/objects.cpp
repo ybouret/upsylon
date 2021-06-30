@@ -71,6 +71,12 @@ namespace upsylon {
                 Quarry.optimize();
             }
 
+            bool objects:: owns(const void *block_addr, size_t &block_size) const throw()
+            {
+                Y_LOCK(Access);
+                return Blocks.owns(block_addr,block_size);
+            }
+
 
             void objects:: release(void *addr, const size_t block_size) throw()
             {

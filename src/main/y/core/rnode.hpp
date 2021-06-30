@@ -30,10 +30,7 @@ namespace upsylon {
         }
 
         //! cleanup
-        inline virtual ~ref_node() throw()
-        {
-            
-        }
+        inline virtual ~ref_node() throw() {}
         
         //! access
         inline type & operator*()             throw() { return data; }

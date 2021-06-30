@@ -13,7 +13,9 @@ namespace upsylon {
     namespace memory {
 
         namespace tight {
-        
+
+
+
             //__________________________________________________________________
             //
             //
@@ -74,6 +76,9 @@ namespace upsylon {
                 //! locked optimization or Quarry
                 void  optimize() throw();
 
+                //! locked look up
+                bool owns(const void *block_addr, size_t &block_size) const throw();
+                
                 //______________________________________________________________
                 //
                 // members

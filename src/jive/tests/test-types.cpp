@@ -16,7 +16,7 @@ Y_UTEST(types)
     std::cerr << "Language:" << std::endl;
     Y_UTEST_SIZEOF(Language::Node);
     Y_UTEST_SIZEOF(Language::Axiom);
-    Y_UTEST_SIZEOF(Language::Axiom::Host);
+    //Y_UTEST_SIZEOF(Language::Axiom::Host);
     
     Y_UTEST_SIZEOF(Language::Terminal);
     Y_UTEST_SIZEOF(Language::Internal);

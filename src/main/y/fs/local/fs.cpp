@@ -58,7 +58,7 @@ namespace upsylon
     }
 
 
-    Y_SINGLETON_IMPL_WITH(object::life_time-1,local_fs);
+    Y_SINGLETON_IMPL_WITH(object::life_time-2,local_fs);
 
     local_fs:: local_fs() :
     impl( new ro_strings() )

@@ -129,6 +129,20 @@ namespace upsylon {
                     return self;
                 }
 
+                static inline bool is_tight(const void *block_addr, size_t &block_size) throw()
+                {
+                    if(supply::exists())
+                    {
+                        static supply &mgr = supply::location();
+                        return mgr.owns(block_addr,block_size);
+                    }
+                    else
+                    {
+                        block_size = 0;
+                        return false;
+                    }
+                }
+
                 //! acquire 1<<block_exp2
                 static inline void *dyadic_acquire(const size_t block_exp2)
                 {

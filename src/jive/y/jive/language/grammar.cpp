@@ -12,11 +12,13 @@ namespace upsylon
 
             Grammar:: ~Grammar() throw()
             {
+                std::cerr << "Cleaning Grammar..." << std::endl;
             }
 
             void Grammar:: declare(Axiom *axiom)
             {
                 assert(axiom);
+                assert(axiom->is_single());
                 Axiom::List &l = aliasing::_(axioms);
                 l.push_back(axiom);
                 try
@@ -36,6 +38,7 @@ namespace upsylon
                 {
                     aliasing::_(aligned) = sz;
                 }
+                assert(getRoot());
             }
 
             void Grammar:: setRoot(const Axiom &axiom)
