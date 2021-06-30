@@ -21,7 +21,7 @@ namespace upsylon
             class Terminal;
             typedef Terminal                  *TermHandle; //!< alias
             typedef suffix_storage<TermHandle> TermLedger; //!< alias
-
+            
 
 #define Y_LANG_AXIOM_ARGS   XNode * &tree, Source &source, Lexer &lexer, Observer &obs //!< arguments for accept()
 #define Y_LANG_AXIOM_DECL()      virtual bool accept(Y_LANG_AXIOM_ARGS) const          //!< declare accept()

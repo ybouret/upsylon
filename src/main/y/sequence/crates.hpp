@@ -22,7 +22,7 @@ namespace upsylon
         };
     }
 
-    //! sequence of fixed memory suze
+    //! sequence of fixed memory size
     template <typename T, typename ALLOCATOR = memory::global >
     class crates : public sequence<T>
     {

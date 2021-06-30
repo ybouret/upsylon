@@ -2,6 +2,8 @@
 #include "y/jive/language/grammar.hpp"
 #include "y/ios/align.hpp"
 #include "y/code/textual.hpp"
+#include "y/sequence/slots.hpp"
+#include "y/memory/allocator/pooled.hpp"
 
 namespace upsylon
 {
@@ -44,7 +46,8 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
             }
             
-            
+            typedef slots<TermLedger,memory::pooled> FirstTerms;
+
             void Grammar:: validateWith(const Lexer *lexer) const
             {
                 const char  *id   = **name;
@@ -55,18 +58,22 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     throw exception("%s has not root Axiom",id);
                 }
 
+                // visit all axioms
                 Axiom::Registry db;
                 fillDB(db,root);
-                size_t linked = 0;
-                size_t orphan = 0;
-                size_t terms  = 0;
-                string orphans;
+
+                // study
+                size_t            linked = 0;
+                size_t            orphan = 0;
+                size_t            terms  = 0;
+                string            orphans;
+                FirstTerms        firsts(axioms.size);
                 for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                 {
                     const string &aname = *(axiom->name);
                     if(Axiom::Verbose)
                     {
-                        std::cerr << ios::align(aname, ios::align::left, aligned) << " : ";
+                        std::cerr << "[" << fourcc_(axiom->uuid) << "] " << ios::align(aname, ios::align::left, aligned) << " : ";
                     }
 
                     switch(axiom->uuid)
@@ -75,7 +82,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             ++terms;
                             if(lexer)
                             {
-                                if(! lexer->queryRule(aname))
+                                if(!lexer->queryRule(aname))
                                 {
                                     throw exception("%s is missing lexical <%s>",**name,*aname);
                                 }
@@ -114,7 +121,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         orphans << ' ' << aname;
                     }
 
-                    TermLedger       ft;
+                    TermLedger       &ft = firsts.build();
                     Axiom::Expecting(ft,*axiom);
                     if(Axiom::Verbose)
                     {

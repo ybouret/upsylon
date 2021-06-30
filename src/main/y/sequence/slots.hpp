@@ -29,10 +29,7 @@ namespace upsylon {
         }
 
         //! release all
-        inline virtual ~slots() throw()
-        {
-            release();
-        }
+        inline virtual ~slots() throw() { release(); }
 
         //! copy
         inline slots( const slots &other) :
@@ -91,7 +88,7 @@ namespace upsylon {
 
 
         //! build emtpy object
-        inline void build(void) { assert(this->has_space()); new (addr+size_) T(); ++size_; }
+        inline type & build(void) { assert(this->has_space()); new (addr+size_) T(); ++size_; return back(); }
 
         //! build empty objects
         inline void vbuild(size_t n) { while(n-- > 0) build(); }
@@ -99,47 +96,47 @@ namespace upsylon {
 
         //! build with 1 arg
         template <typename U>
-        inline void build( typename type_traits<U>::parameter_type args )
+        inline type & build( typename type_traits<U>::parameter_type args )
         {
-            assert(this->has_space()); new (addr+size_) T(args); ++size_;
+            assert(this->has_space()); new (addr+size_) T(args); ++size_; return back();
         }
 
         //! build with 2 args
         template <typename U,typename V>
-        inline void build(typename type_traits<U>::parameter_type argU,
-                          typename type_traits<V>::parameter_type argV)
+        inline type& build(typename type_traits<U>::parameter_type argU,
+                           typename type_traits<V>::parameter_type argV)
         {
-            assert(this->has_space()); new (addr+size_) T(argU,argV); ++size_;
+            assert(this->has_space()); new (addr+size_) T(argU,argV); ++size_; return back();
         }
 
         //! build with 3 args
         template <typename U,typename V,typename W>
-        inline void build(typename type_traits<U>::parameter_type argU,
-                          typename type_traits<V>::parameter_type argV,
-                          typename type_traits<W>::parameter_type argW)
+        inline type & build(typename type_traits<U>::parameter_type argU,
+                            typename type_traits<V>::parameter_type argV,
+                            typename type_traits<W>::parameter_type argW)
         {
-            assert(this->has_space()); new (addr+size_) T(argU,argV,argW); ++size_;
+            assert(this->has_space()); new (addr+size_) T(argU,argV,argW); ++size_; return back();
         }
 
         //! build with 4 args
         template <typename U,typename V,typename W,typename X>
-        inline void build(typename type_traits<U>::parameter_type argU,
-                          typename type_traits<V>::parameter_type argV,
-                          typename type_traits<W>::parameter_type argW,
-                          typename type_traits<X>::parameter_type argX)
+        inline type & build(typename type_traits<U>::parameter_type argU,
+                            typename type_traits<V>::parameter_type argV,
+                            typename type_traits<W>::parameter_type argW,
+                            typename type_traits<X>::parameter_type argX)
         {
-            assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX); ++size_;
+            assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX); ++size_; return back();
         }
 
         //! build with 5 args
         template <typename U,typename V,typename W,typename X,typename Y>
-        inline void build(typename type_traits<U>::parameter_type argU,
-                          typename type_traits<V>::parameter_type argV,
-                          typename type_traits<W>::parameter_type argW,
-                          typename type_traits<X>::parameter_type argX,
-                          typename type_traits<Y>::parameter_type argY)
+        inline type & build(typename type_traits<U>::parameter_type argU,
+                            typename type_traits<V>::parameter_type argV,
+                            typename type_traits<W>::parameter_type argW,
+                            typename type_traits<X>::parameter_type argX,
+                            typename type_traits<Y>::parameter_type argY)
         {
-            assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX,argY); ++size_;
+            assert(this->has_space()); new (addr+size_) T(argU,argV,argW,argX,argY); ++size_; return back();
         }
 
         //! meta building, for smart pointers

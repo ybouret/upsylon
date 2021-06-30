@@ -160,8 +160,8 @@ namespace upsylon
         //______________________________________________________________________
 
         //! calling htree methods
-#define Y_SUFFIX_GRAPH_INSERT(CALL) \
-data_node *node = dpool.query(args); \
+#define Y_SUFFIX_GRAPH_INSERT(CALL)                              \
+data_node *node = dpool.query(args);                             \
 try { return htree.CALL ? on_success(node) : on_failure(node); } \
 catch(...) { dpool.store(node); throw; }
 
