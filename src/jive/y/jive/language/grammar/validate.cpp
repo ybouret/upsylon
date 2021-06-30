@@ -201,15 +201,41 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         {
                             const Terminal *guest = & axiom->as<Terminal>();
                             const string   &key   = *(guest->name);
-                            std::cerr << "\t\t\\_for <" << key << ">" << std::endl;
+
+                            if(Axiom::Verbose)
+                            {
+                                std::cerr << "\t\t\\_" << ios::align(key, ios::align::left, aligned);
+                            }
+
                             for(const Axiom *node=axioms.head;node;node=node->next)
                             {
-                                if(axiom->priv)
+                                if(node->priv)
                                 {
+                                    const TermLedger &ft = *static_cast<const TermLedger *>(node->priv);
+                                    if(ft.search(key))
+                                    {
+                                        std::cerr << " @" << node->name;
+                                        switch(node->uuid)
+                                        {
+                                            case Aggregate::UUID:
+                                                aliasing::_(axiom->hosts).store( new Axiom::Host( node->as<Aggregate>() ) );
+                                                break;
 
+                                            case Alternate::UUID:
+                                                aliasing::_(axiom->hosts).store( new Axiom::Host( node->as<Alternate>() ) );
+                                                break;
+
+                                            default:
+                                                throw exception("%s.%s should NOT have known terminals!!", **name, **(node->name) );
+                                        }
+                                    }
                                 }
                             }
 
+                            if(Axiom::Verbose)
+                            {
+                                std::cerr << std::endl;
+                            }
 
                         }
                     }

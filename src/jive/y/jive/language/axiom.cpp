@@ -22,15 +22,9 @@ namespace upsylon
             Axiom:: ~Axiom() throw()
             {
                 aliasing::_(uuid) = 0;
-                while(host)
-                {
-                    Host *next = host->next;
-                    delete host;
-                    host = next;
-                }
             }
 
-        
+            
 
             const char * Axiom:: Status(const bool flag) throw()
             {

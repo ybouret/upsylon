@@ -16,9 +16,9 @@ namespace upsylon
         namespace Language
         {
 
-            class Aggregate;
-            class Terminal;
-            class Grammar;
+            class   Compound;
+            class   Terminal;
+            class   Grammar;
             typedef Terminal                  *TermHandle;  //!< alias
             typedef suffix_storage<TermHandle> TermLedger_; //!< alias
 
@@ -61,8 +61,9 @@ namespace upsylon
                 typedef suffix_storage<Handle>          Registry;  //!< alias
                 typedef ref_node<Axiom,dnode>           Reference; //!< alias
                 typedef core::list_of_cpp<Reference>    Manifest;  //!< alias
-                typedef ref_node<const Aggregate,snode> Host;      //!< alias
-                
+                typedef ref_node<const Compound,snode>  Host;      //!< alias
+                typedef core::pool_of_cpp<Host>         Hosts;     //!< alias
+
                 static  bool                         Verbose;     //!< global language verbosity
                 static  const char                   Accepted[];  //!< "ACCEPTED"
                 static  const char                   Rejected[];  //!< "REJECTED"
@@ -109,9 +110,9 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Tag            name; //!< label
-                const uint32_t       uuid; //!< UUID
-                Host                *host; //!< first host
+                const Tag            name;  //!< label
+                const uint32_t       uuid;  //!< UUID
+                const Hosts          hosts; //!< hosts
 
             protected:
                 //! setup
@@ -119,7 +120,7 @@ namespace upsylon
                 explicit Axiom(const ID &i, const uint32_t t) :
                 name( Tags::Make(i) ),
                 uuid( t ),
-                host(NULL),
+                hosts(),
                 self(NULL),
                 priv(NULL)
                 {
