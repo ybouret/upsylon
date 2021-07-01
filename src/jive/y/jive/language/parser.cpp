@@ -32,7 +32,7 @@ namespace upsylon
             {
             }
 
-            void Parser:: validate() const
+            void Parser:: validate()
             {
                 validateWith(this);
             }

@@ -46,7 +46,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
             }
 
 
-            void   Grammar:: cleanAxioms() const throw()
+            void   Grammar:: cleanAxioms()  throw()
             {
                 Y_LANG_PRINTLN("\t<" << name << " cleanAxioms>");
                 for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
@@ -63,10 +63,10 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
             }
 
-            void   Grammar:: resetAxioms() const throw()
+            void   Grammar:: resetAxioms() throw()
             {
                 Y_LANG_PRINTLN("\t<" << name << " resetAxioms/>");
-                for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
+                for(Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
                 {
                     aliasing::_(axiom->hosts).release();
                 }
@@ -75,7 +75,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
 
             
-            void Grammar:: validateWith(const Lexer *lexer) const
+            void Grammar:: validateWith(const Lexer *lexer) 
             {
                 try
                 {
@@ -165,7 +165,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             orphans << ' ' << aname;
                         }
 
-                        // and local first-terms
+                        // and local first-terms for compounds
                         switch(auuid)
                         {
                             case Aggregate::UUID:

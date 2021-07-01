@@ -95,7 +95,7 @@ namespace upsylon
                 bool owns(const Axiom &axiom) const throw();
                 
                 //! try to validate
-                void validateWith(const Lexer *) const;
+                void validateWith(const Lexer *);
 
                 //______________________________________________________________
                 //
@@ -209,7 +209,7 @@ namespace upsylon
                 //
                 // reset hosts
                 //______________________________________________________________
-                void   resetAxioms() const throw();
+                void   resetAxioms() throw();
 
                 
                 //______________________________________________________________
@@ -232,7 +232,7 @@ namespace upsylon
 
                 XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer) const;
-                void   cleanAxioms() const throw();
+                void   cleanAxioms() throw();
             };
         }
     }

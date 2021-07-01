@@ -384,6 +384,7 @@ catch(...) { dpool.store(node); throw; }
                 return false;
             }
         }
+        
         static inline type *data_from(const tree_node *node) throw()
         {
             if(node&&node->addr)

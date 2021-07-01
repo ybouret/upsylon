@@ -112,7 +112,7 @@ namespace upsylon
                 //______________________________________________________________
 
                 //! validateWith(this)
-                void validate() const;
+                void validate();
 
                 //! parse function
                 Node *parse(Source &source);
