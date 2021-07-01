@@ -75,18 +75,19 @@ namespace upsylon
             {
                 if( proc(L.head,R.head,args) < 0 )
                 {
-                    target.stash( L.query() );
+                    target.store( L.query() );
                 }
                 else
                 {
-                    target.stash( R.query() );
+                    target.store( R.query() );
                 }
             }
 
             //! append remaining pools
             assert(0==L.size||0==R.size);
-            while( L.size > 0 ) target.stash( L.query() );
-            while( R.size > 0 ) target.stash( R.query() );
+            while( L.size > 0 ) target.store( L.query() );
+            while( R.size > 0 ) target.store( R.query() );
+            target.reverse();
         }
 
     };
