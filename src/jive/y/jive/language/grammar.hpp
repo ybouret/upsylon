@@ -194,12 +194,22 @@ namespace upsylon
 
                 //! accept the root Axiom
                 XNode *run(Source &source, Lexer &lexer);
-                
+
+                //______________________________________________________________
+                //
+                // graphViz
+                //______________________________________________________________
+
                 //! output graphViz
                 void   graphViz(const string &fileName) const;
                 
-                //! outpt graphViz, wrapper
+                //! output graphViz, wrapper
                 void   graphViz(const char   *fileName) const;
+                //______________________________________________________________
+                //
+                // reset hosts
+                //______________________________________________________________
+                void   resetAxioms() const throw();
 
                 
                 //______________________________________________________________
@@ -210,6 +220,7 @@ namespace upsylon
                 const Axiom::List     axioms;    //!< axioms
                 const Axiom::Registry registry;  //!< registry
                 const size_t          aligned;   //!< max of axioms name length
+
 
             private:
                 Observer              observer;  //!< run-time observer

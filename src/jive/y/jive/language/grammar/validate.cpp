@@ -48,7 +48,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
 
             void   Grammar:: cleanAxioms() const throw()
             {
-                Y_LANG_PRINTLN("\t<" << name << " cleaning>");
+                Y_LANG_PRINTLN("\t<" << name << " cleanAxioms>");
                 for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
                 {
                     if(axiom->priv)
@@ -59,9 +59,19 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     }
                     aliasing::_(axiom->hosts).reverse();
                 }
-                Y_LANG_PRINTLN("\t<" << name << " cleaning/>");
+                Y_LANG_PRINTLN("\t<" << name << " cleanAxioms/>");
 
             }
+
+            void   Grammar:: resetAxioms() const throw()
+            {
+                Y_LANG_PRINTLN("\t<" << name << " resetAxioms/>");
+                for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
+                {
+                    aliasing::_(axiom->hosts).release();
+                }
+            }
+
 
 
             
@@ -81,6 +91,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     {
                         throw exception("%s has not root Axiom",id);
                     }
+                    resetAxioms();
 
                     //----------------------------------------------------------
                     //
