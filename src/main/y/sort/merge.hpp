@@ -3,7 +3,7 @@
 #define Y_SORT_MERGE_INCLUDED 1
 
 #include "y/core/list.hpp"
-#include "y/comparison.hpp"
+#include "y/sort/nodes.hpp"
 
 namespace upsylon
 {
@@ -17,12 +17,12 @@ namespace upsylon
     class merging
     {
     public:
-        typedef core::list_of<NODE> sub_list; //!< internal sub list to hold nodes
-        typedef int (*compare_node_proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
+        typedef core::list_of<NODE>                sub_list;           //!< internal sub list to hold nodes
+        typedef typename compare_nodes<NODE>::proc compare_nodes_proc; //!< alias
 
         //! sort a given list with same members than sub_list
         template <typename LIST> static inline
-        void sort( LIST &source, compare_node_proc proc, void *args)
+        void sort( LIST &source, compare_nodes_proc proc, void *args)
         {
             assert(proc);
             switch(source.size)
@@ -50,21 +50,21 @@ namespace upsylon
         template <typename LIST> static inline
         void sort_by_increasing_address( LIST &source )
         {
-            sort<LIST>(source,compare_nodes_incr,NULL);
+            sort<LIST>(source,compare_nodes<NODE>::by_increasing_addr,NULL);
         }
 
         //! sorting nodes by increasing address
         template <typename LIST> static inline
         void sort_by_decreasing_address( LIST &source )
         {
-            sort<LIST>(source,compare_nodes_decr,NULL);
+            sort<LIST>(source,compare_nodes<NODE>::by_decreasing_addr,NULL);
         }
         
     private:
         //! merge two sorted list
         template <typename LIST>
         static inline
-        void fusion( LIST &target, sub_list &L, sub_list &R, compare_node_proc proc, void *args )
+        void fusion( LIST &target, sub_list &L, sub_list &R, compare_nodes_proc proc, void *args )
         {
             //! while we can compare two nodes
             assert(0==target.size);
@@ -85,16 +85,7 @@ namespace upsylon
             while( L.size > 0 ) target.push_back( L.pop_front() );
             while( R.size > 0 ) target.push_back( R.pop_front() );
         }
-        
-        static inline int compare_nodes_incr( const NODE *lhs, const NODE *rhs, void *) throw()
-        {
-            return  comparison::increasing_addresses(lhs,rhs);
-        }
 
-        static inline int compare_nodes_decr( const NODE *lhs, const NODE *rhs, void *) throw()
-        {
-            return  comparison::decreasing_addresses(lhs,rhs);
-        }
     };
 }
 
