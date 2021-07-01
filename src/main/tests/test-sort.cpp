@@ -3,7 +3,7 @@
 #include "y/utest/run.hpp"
 #include "support.hpp"
 #include "y/comparison.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/sort/heap.hpp"
 #include "y/sort/index.hpp"
 #include "y/sort/ysort.hpp"
@@ -63,7 +63,7 @@ namespace
                 std::cerr << node->data << " ";
             }
             std::cerr << std::endl;
-            merging<Node>::sort(L,compare_node<Node>,NULL);
+            merge_list_of<Node>::sort(L,compare_node<Node>,NULL);
             std::cerr << "L2=" ;
             for(const Node *node=L.head;node;node=node->next)
             {
@@ -72,7 +72,7 @@ namespace
             std::cerr << std::endl;
 
             std::cerr << "-- by increasing address #" << L.size << std::endl;
-            merging<Node>::sort_by_increasing_address(L);
+            merge_list_of<Node>:: by_increasing_address(L);
             {
                 Node *node=L.head;
                 while(NULL!=node && NULL!=node->next)
@@ -89,7 +89,7 @@ namespace
             }
 
             std::cerr << "-- by decreasing address #" << L.size << std::endl;
-            merging<Node>::sort_by_decreasing_address(L);
+            merge_list_of<Node>:: by_decreasing_address(L);
             {
                 Node *node=L.head;
                 while(NULL!=node && NULL!=node->next)

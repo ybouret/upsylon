@@ -5,7 +5,7 @@
 #include "y/container/sequence.hpp"
 #include "y/core/knode.hpp"
 #include "y/iterate/linked.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/type/collapse.hpp"
 #include "y/object.hpp"
 #include <iostream>
@@ -231,7 +231,7 @@ namespace upsylon {
         template <typename FUNC>
         void sort(FUNC &func)
         {
-            merging<node_type>::sort( nodes, compare_data<FUNC>, (void*) &func );
+            merge_list_of<node_type>::sort( nodes, compare_data<FUNC>, (void*) &func );
         }
 
         //! send low level control

@@ -1,6 +1,6 @@
 
 #include "y/string/defrag.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon
 {
@@ -88,7 +88,7 @@ namespace upsylon
 
     size_t string_defrag:: cycle() throw()
     {
-        merging<s_node>::sort(_list, __s_node_compare, NULL);
+        merge_list_of<s_node>::sort(_list, __s_node_compare, NULL);
         size_t sum = 0;
         size_t tmp = 0;
         while( (tmp=one_cycle()) > 0 )

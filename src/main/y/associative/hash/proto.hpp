@@ -138,7 +138,7 @@ namespace upsylon
         template <typename FUNC> inline
         void sort_data_with(FUNC &func)
         {
-            merging<NODE>::sort(table.nodes,compare_data<FUNC>,(void*)&func);
+            merge_list_of<NODE>::sort(table.nodes,compare_data<FUNC>,(void*)&func);
         }
 
         //! reverse order of values

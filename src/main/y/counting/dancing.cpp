@@ -128,7 +128,7 @@ namespace upsylon
     
 }
 
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/comparison.hpp"
 #include "y/ptr/auto.hpp"
 
@@ -220,7 +220,7 @@ namespace upsylon
             //
             // sort them by decreasing (valid) workgroups
             //__________________________________________________________________
-            merging<frame>::sort(configs, compare_cfg, NULL);
+            merge_list_of<frame>::sort(configs, compare_cfg, NULL);
         }
         
         aliasing::_(wg_max) = frames.head->workgroups;

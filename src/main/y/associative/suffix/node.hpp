@@ -8,7 +8,7 @@
 #include "y/ios/tools/vizible.hpp"
 #include "y/object.hpp"
 #include "y/exception.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/sequence/addressable.hpp"
 #include "y/ios/ostream.hpp"
 
@@ -94,7 +94,7 @@ namespace upsylon
         //______________________________________________________________________
 
         //! optimize to get a unique, fast tree
-        inline void  optimize()              throw() { merging<suffix_node>::sort(leaves,compare,NULL); }
+        inline void  optimize()              throw() { merge_list_of<suffix_node>::sort(leaves,compare,NULL); }
 
         //! return leaves to pool
         inline void  leaves_to(pool_t &pool) throw() { while(leaves.size) leaves.pop_back()->return_to(pool); }

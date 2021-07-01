@@ -82,7 +82,7 @@ namespace upsylon
 }
 
 
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon
 {
@@ -117,7 +117,7 @@ namespace upsylon
         
         void blobs:: sort_decreasing()
         {
-            merging<blob>::sort(*this, blob::decreasing_size,NULL);
+            merge_list_of<blob>::sort(*this, blob::decreasing_size,NULL);
             relabel();
         }
         

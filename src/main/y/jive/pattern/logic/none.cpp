@@ -122,7 +122,7 @@ namespace upsylon {
     }
 }
 #include "y/jive/pattern/basic/rework.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon {
 
@@ -155,7 +155,7 @@ namespace upsylon {
             }
 
             Rework::Compact(strongList);
-            merging<Pattern>::sort(strongList,byIncreasingEntropy,NULL);
+            merge_list_of<Pattern>::sort(strongList,byIncreasingEntropy,NULL);
             swap_with(strongList);
             merge_back(feebleList);
         }

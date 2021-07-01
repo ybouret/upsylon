@@ -6,7 +6,7 @@
 
 #include "y/core/list.hpp"
 #include "y/object.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon
 {
@@ -50,7 +50,7 @@ namespace upsylon
         inline void reorder() throw()
         {
             core::list_of<NODE> &self = *this;
-            merging<NODE>::sort_by_increasing_address(self);
+            merge_list_of<NODE>::sort_by_increasing_address(self);
         }
 
         //! query a zombie node

@@ -1,6 +1,6 @@
 //! \file
-#ifndef Y_SORT_MERGE_INCLUDED
-#define Y_SORT_MERGE_INCLUDED 1
+#ifndef Y_SORT_MERGE_LIST_INCLUDED
+#define Y_SORT_MERGE_LIST_INCLUDED 1
 
 #include "y/core/list.hpp"
 #include "y/sort/nodes.hpp"
@@ -14,7 +14,7 @@ namespace upsylon
     //
     //__________________________________________________________________________
     template <typename NODE>
-    class merging
+    class merge_list_of
     {
     public:
         typedef core::list_of<NODE>                sub_list;           //!< internal sub list to hold nodes
@@ -39,23 +39,23 @@ namespace upsylon
                     for( size_t i=mid;i>0;--i)             R.push_front( source.pop_back() );
                     assert(0==source.size);
 
-                    merging<NODE>::template sort<sub_list>(L,proc,args);
-                    merging<NODE>::template sort<sub_list>(R,proc,args);
-                    merging<NODE>::template fusion<LIST>(source,L,R,proc,args);
+                    merge_list_of<NODE>::template sort<sub_list>(L,proc,args);
+                    merge_list_of<NODE>::template sort<sub_list>(R,proc,args);
+                    merge_list_of<NODE>::template fusion<LIST>(source,L,R,proc,args);
                 }
             }
         }
 
         //! sorting nodes by increasing address
         template <typename LIST> static inline
-        void sort_by_increasing_address( LIST &source )
+        void by_increasing_address( LIST &source )
         {
             sort<LIST>(source,compare_nodes<NODE>::by_increasing_addr,NULL);
         }
 
         //! sorting nodes by increasing address
         template <typename LIST> static inline
-        void sort_by_decreasing_address( LIST &source )
+        void by_decreasing_address( LIST &source )
         {
             sort<LIST>(source,compare_nodes<NODE>::by_decreasing_addr,NULL);
         }

@@ -2,7 +2,7 @@
 #include "y/memory/allocator/global.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/code/human-readable.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/os/run-time-log.hpp"
 #include <cstring>
 
@@ -137,7 +137,7 @@ namespace upsylon {
                     while(chest.size) {
                         ingots.push_back(chest.query());
                     }
-                    merging<ingot>::sort_by_increasing_address(ingots);
+                    merge_list_of<ingot>::by_increasing_address(ingots);
 #if !defined(NDEBUG)
                     {
                         const ingot *node = ingots.head;

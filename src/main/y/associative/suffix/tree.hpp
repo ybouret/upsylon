@@ -53,7 +53,7 @@ namespace upsylon
         //______________________________________________________________________
         
         //! sort cache
-        inline void cache_sort() throw() { merging<tree_node>::sort_by_increasing_address(pool);   }
+        inline void cache_sort() throw() { merge_list_of<tree_node>::sort_by_increasing_address(pool);   }
         
         //!  load empty nodes
         inline void cache_load(size_t n) { while(n-- > 0 ) pool.push_back( new tree_node(0,0,0) ); }

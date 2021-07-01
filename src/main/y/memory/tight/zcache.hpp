@@ -6,7 +6,7 @@
 #include "y/memory/tight/quarry.hpp"
 #include "y/core/pool.hpp"
 #include "y/type/block/zset.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon {
 
@@ -162,13 +162,12 @@ namespace upsylon {
 
 
                 //! garbage collector: remove unused parts
-                void gc() throw()
+                inline void gc() throw()
                 {
                     //----------------------------------------------------------
                     // sort nodes, lowest memory first
                     //----------------------------------------------------------
-
-                    merging<NODE>::sort_by_increasing_address(nodes);
+                    merge_list_of<NODE>::by_increasing_address(nodes);
 
                     //----------------------------------------------------------
                     // explore all parts, using a local stack

@@ -1,6 +1,6 @@
 
 #include "y/associative/hash/slot.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon
 {
@@ -22,7 +22,7 @@ namespace upsylon
 
     void hash_slot:: reorder() throw()
     {
-        merging<hash_meta>::sort_by_increasing_address(*this);
+        merge_list_of<hash_meta>::by_increasing_address(*this);
     }
 
     void hash_slot:: push()

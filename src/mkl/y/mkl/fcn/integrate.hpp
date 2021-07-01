@@ -5,7 +5,7 @@
 #include "y/mkl/types.hpp"
 #include "y/core/pool.hpp"
 #include "y/ptr/auto.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include <cstdlib>
 
 namespace upsylon {
@@ -262,7 +262,7 @@ namespace upsylon {
                 //
                 // sort and sum
                 //______________________________________________________________
-                merging< range<T> >:: sort( done, range<T>::compare, NULL);
+                merge_list_of< range<T> >:: sort( done, range<T>::compare, NULL);
                 T sum = 0;
                 while(done.size>0)
                 {

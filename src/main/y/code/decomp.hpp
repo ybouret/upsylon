@@ -5,7 +5,7 @@
 
 #include "y/type/args.hpp"
 #include "y/object.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/comparison.hpp"
 
 namespace upsylon {

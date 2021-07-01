@@ -6,7 +6,7 @@
 
 #include "y/core/dnode.hpp"
 #include "y/core/list.hpp"
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 
 using namespace upsylon;
 
@@ -154,7 +154,7 @@ Y_UTEST(string)
                 delete s_list.pop_back();
             }
         }
-        merging<s_node>::sort(s_list, compare_strings_by_length, NULL);
+        merge_list_of<s_node>::sort(s_list, compare_strings_by_length, NULL);
         size_t j = 0;
         for(s_node *node = s_list.head; node; node=node->next )
         {

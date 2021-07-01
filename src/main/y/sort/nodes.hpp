@@ -8,19 +8,33 @@
 namespace upsylon
 {
 
+    //__________________________________________________________________________
+    //
+    //
     //! utilities to compare nodes
+    //
+    //__________________________________________________________________________
     template <typename NODE> struct compare_nodes
     {
+        //______________________________________________________________________
+        //
+        //! node comparison function
+        //______________________________________________________________________
+        typedef int (*proc)(const NODE *lhs, const NODE *rhs, void *args);
 
-        typedef int (*proc)(const NODE *lhs, const NODE *rhs, void *args); //!< node comparison function
-
+        //______________________________________________________________________
+        //
         //! compare by increasing addresses
+        //______________________________________________________________________
         static inline int by_increasing_addr(const NODE *lhs, const NODE *rhs, void *) throw()
         {
             return  comparison::increasing_addresses(lhs,rhs);
         }
 
+        //______________________________________________________________________
+        //
         //! compare by decreasing addresses
+        //______________________________________________________________________
         static inline int by_decreasing_addr(const NODE *lhs, const NODE *rhs, void *) throw()
         {
             return  comparison::decreasing_addresses(lhs,rhs);

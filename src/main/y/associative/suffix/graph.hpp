@@ -251,7 +251,7 @@ catch(...) { dpool.store(node); throw; }
         template <typename FUNC>
         void sort_with( FUNC &func )
         {
-            merging<data_node>::sort(dlist,compare_with<FUNC>,(void*)&func);
+            merge_list_of<data_node>::sort(dlist,compare_with<FUNC>,(void*)&func);
         }
 
         //______________________________________________________________________

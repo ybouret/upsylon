@@ -1,4 +1,4 @@
-#include "y/sort/merge.hpp"
+#include "y/sort/merge-list.hpp"
 #include "y/utest/run.hpp"
 #include "y/core/node.hpp"
 #include "y/utest/sizeof.hpp"
@@ -65,7 +65,7 @@ Y_UTEST(sort_merge)
             Y_ASSERT(check_sum(L));
 
             // sort to original
-            merging<iNode>::sort(L,compare_data,NULL);
+            merge_list_of<iNode>::sort(L,compare_data,NULL);
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_org(L));
 
@@ -75,7 +75,7 @@ Y_UTEST(sort_merge)
             Y_ASSERT(check_sum(L));
 
             // sort by increasing address
-            merging<iNode>::sort_by_increasing_address(L);
+            merge_list_of<iNode>:: by_increasing_address(L);
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_sum(L));
 
@@ -91,7 +91,7 @@ Y_UTEST(sort_merge)
 
 
             // sort to original for another cycle
-            merging<iNode>::sort(L,compare_data,NULL);
+            merge_list_of<iNode>::sort(L,compare_data,NULL);
             Y_ASSERT(n==L.size);
             Y_ASSERT(check_org(L));
 

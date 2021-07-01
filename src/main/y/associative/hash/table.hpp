@@ -360,7 +360,7 @@ namespace upsylon
         template <typename FUNC> inline
         void sort_keys(FUNC &compare)
         {
-            merging<NODE>::sort(nodes,compare_keys<FUNC>,(void *)&compare);
+            merge_list_of<NODE>::sort(nodes,compare_keys<FUNC>,(void *)&compare);
         }
         
         //______________________________________________________________________
