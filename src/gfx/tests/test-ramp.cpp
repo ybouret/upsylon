@@ -12,10 +12,53 @@ using namespace graphic;
 
 Y_UTEST(ramp)
 {
-
-#if 0
     Y_USE_IMG();
     engine                  eng = new concurrent::simt();
+
+    monochrome mr( Y_RED );
+    color_ramp mono = new color_ramp_of<monochrome>(mr);
+    color_ramp cth  = new color_ramp_of<cold_to_hot>();
+
+    gradation  *g   = new gradation();
+    color_ramp grd  = g;
+
+    g->push_back(Y_BLUE);
+    g->push_back(Y_CYAN);
+    g->push_back(Y_GREEN);
+    g->push_back(Y_YELLOW);
+    g->push_back(Y_RED);
+
+    if(argc>1)
+    {
+        const string filename = argv[1];
+        const pixmap<rgb> img = IMG.load<rgb>(filename);
+        IMG.save(img,"img.png");
+        broker            apply(eng,img);
+        pixmap<float>     pxm(img,apply,convert<float,rgb>::from);
+        IMG.save(pxm,"pxm.png");
+        IMG.save(pxm,"mono.png", NULL, mono);
+        IMG.save(pxm,"cth.png",  NULL, cth);
+        IMG.save(pxm,"grd.png",  NULL, grd);
+
+
+
+#if 0
+        {
+            monochrome             mh( Y_RED );
+            tableau_of<monochrome> mt(mh);
+            color_ramp::mapping    mm(mt);
+            IMG.save(pxm,"mono.png", NULL,mm);
+        }
+        {
+            tableau_of<cold_to_hot> mt;
+            color_ramp::mapping     mm(mt);
+            IMG.save(pxm,"cth.png", NULL,mm);
+        }
+#endif
+
+    }
+
+#if 0
     gradation               g(4);
 
     g.push_back(Y_BLUE);
@@ -26,7 +69,7 @@ Y_UTEST(ramp)
 
 
     {
-        pixmap<float> rmp(512,128);
+        pixmap<float>       rmp(512,128);
         color_ramp::mapping cnv(g,0,rmp.w-1);
         for(unit_t x=0;x<rmp.w;++x)
         {
