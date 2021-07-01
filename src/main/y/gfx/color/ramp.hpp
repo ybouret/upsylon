@@ -7,9 +7,8 @@
 #include "y/sequence/accessible.hpp"
 #include "y/sequence/array.hpp"
 #include "y/ptr/arc.hpp"
-#include "y/object.hpp"
 #include "y/ptr/counted.hpp"
-
+#include <cstring>
 
 
 namespace upsylon
@@ -20,7 +19,7 @@ namespace upsylon
 
         typedef accessible<rgba> color_repository;
 
-        class color_ramp_ : public object, public counted
+        class color_ramp_ : public virtual counted_object
         {
         public:
 
@@ -106,7 +105,7 @@ namespace upsylon
             virtual rgba   operator()(const void *) const throw();
         };
 
-        
+
 
 
     }
