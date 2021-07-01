@@ -38,7 +38,7 @@ namespace upsylon
 
 }
 
-Y_UTEST(sort_merge)
+Y_UTEST(sort_merge_list)
 {
 
     iList L;

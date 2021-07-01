@@ -79,7 +79,7 @@ namespace upsylon {
                     if(i*j==z) l.push_back( new pnode(i,j) );
                 }
             }
-            merging<pnode>::sort(l,pnode::compare,NULL);
+            merge_list_of<pnode>::sort(l,pnode::compare,NULL);
         }
 
         //______________________________________________________________________

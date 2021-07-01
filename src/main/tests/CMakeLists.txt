@@ -247,10 +247,12 @@ ADD_TEST(mk:xbra        test-main xbra)
 ADD_TEST(mk:sincos      test-main sincos)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
-test-sort-merge.cpp)
+test-sort-merge-list.cpp
+test-sort-merge-pool.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort perf)
-ADD_TEST(sort:merge       test-main sort_merge)
+ADD_TEST(sort:merge_list  test-main sort_merge_list)
+ADD_TEST(sort:merge_pool  test-main sort_merge_pool)
 ADD_TEST(sort:unique      test-main unique)
 ADD_TEST(sort:maintain    test-main maintain)
 ADD_TEST(sort:locate      test-main locate)

@@ -166,7 +166,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(fft1);
     Y_UTEST(network_sort);
     Y_UTEST(sort);
-    Y_UTEST(sort_merge);
+    Y_UTEST(sort_merge_list);
+    Y_UTEST(sort_merge_pool);
     Y_UTEST(unique);
     Y_UTEST(classes);
     Y_UTEST(maintain);
