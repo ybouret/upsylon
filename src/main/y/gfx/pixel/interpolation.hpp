@@ -71,11 +71,11 @@ namespace upsylon
             {
                 assert(xx>=0.0f);
                 assert(xx<=1.0f);
-                assert(n>1);
-                const float xs    = xx * --n;
-                size_t      jm    = size_t(floorf(xs+0.5f));
-                if(jm>=n)   jm    = --n;
-                size_t      jp    = jm+1;
+                assert(n>=2);
+                const float  xs    = xx * --n;
+                size_t       jm    = size_t(floorf(xs));
+                if(jm>=n)    jm    = --n;
+                const size_t jp    = jm+1;
                 const float alpha = float(jp)-xs;
                 return blend<float,T>::mix(alpha,y[jm+1],y[jp+1]);
             }

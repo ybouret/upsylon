@@ -55,7 +55,6 @@ Y_UTEST(ramp)
         IMG.save(pxm,"mono.png", NULL, mono);
         IMG.save(pxm,"cth.png",  NULL, cth);
         IMG.save(pxm,"grd.png",  NULL, grd);
-
     }
 
 #if 0
