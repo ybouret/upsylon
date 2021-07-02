@@ -29,6 +29,21 @@ Y_UTEST(ramp)
     g->push_back(Y_YELLOW);
     g->push_back(Y_RED);
 
+
+    {
+        pixmap<float>       rmp(512,128);
+        color_map           cnv(cth,0,rmp.w-1);
+        for(unit_t x=0;x<rmp.w;++x)
+        {
+            for(unit_t y=0;y<rmp.h;++y)
+            {
+                rmp[y][x] = float(x);
+            }
+        }
+        IMG.save(rmp,"col.png", NULL,cnv);
+
+    }
+
     if(argc>1)
     {
         const string filename = argv[1];
@@ -40,22 +55,6 @@ Y_UTEST(ramp)
         IMG.save(pxm,"mono.png", NULL, mono);
         IMG.save(pxm,"cth.png",  NULL, cth);
         IMG.save(pxm,"grd.png",  NULL, grd);
-
-
-
-#if 0
-        {
-            monochrome             mh( Y_RED );
-            tableau_of<monochrome> mt(mh);
-            color_ramp::mapping    mm(mt);
-            IMG.save(pxm,"mono.png", NULL,mm);
-        }
-        {
-            tableau_of<cold_to_hot> mt;
-            color_ramp::mapping     mm(mt);
-            IMG.save(pxm,"cth.png", NULL,mm);
-        }
-#endif
 
     }
 
@@ -69,19 +68,7 @@ Y_UTEST(ramp)
     g.push_back(Y_RED);
 
 
-    {
-        pixmap<float>       rmp(512,128);
-        color_ramp::mapping cnv(g,0,rmp.w-1);
-        for(unit_t x=0;x<rmp.w;++x)
-        {
-            for(unit_t y=0;y<rmp.h;++y)
-            {
-                rmp[y][x] = float(x);
-            }
-        }
-        IMG.save(rmp,"col.png", NULL,cnv);
 
-    }
 
     if(argc>1)
     {
