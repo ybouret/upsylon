@@ -95,6 +95,11 @@ namespace upsylon
                                       unsigned     depth  =0,
                                       const bool   verbose=false);
 
+                //! helper
+                template <typename DERIVED>
+                const DERIVED & to() const;
+
+
                 //______________________________________________________________
                 //
                 // interface
