@@ -42,9 +42,9 @@ namespace upsylon
                 typedef core::list_of_cpp<Axiom>        List;      //!< alias
                 typedef Axiom                          *Handle;    //!< alias
                 typedef suffix_storage<Handle>          Registry;  //!< alias
-                typedef ref_node<Axiom,dnode>           Reference; //!< alias
+                typedef ref_dnode<Axiom>                Reference; //!< alias
                 typedef core::list_of_cpp<Reference>    Manifest;  //!< alias
-                typedef ref_node<const Compound,snode>  Host;      //!< alias
+                typedef ref_dnode<const Compound>       Host;      //!< alias
                 typedef core::pool_of_cpp<Host>         Hosts;     //!< alias
 
                 static  bool                         Verbose;     //!< global language verbosity

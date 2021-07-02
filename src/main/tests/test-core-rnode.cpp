@@ -5,24 +5,24 @@ using namespace upsylon;
 
 Y_UTEST(core_rnode)
 {
-    core::list_of_cpp< ref_node<int,dnode> >       vri;
-    core::list_of_cpp< ref_node<const int,dnode> > cri;
+    core::list_of_cpp< ref_dnode<int> >       vri;
+    core::list_of_cpp< ref_dnode<const int> > cri;
 
     int arr[5] = { 0 };
     for(unsigned i=0;i<sizeof(arr)/sizeof(arr[0]);++i)
     {
         arr[i] = i;
-        vri.push_back( new ref_node<int,dnode>(arr[i]) );
-        cri.push_back( new ref_node<const int,dnode>(arr[i]));
+        vri.push_back( new ref_dnode<int>(arr[i]) );
+        cri.push_back( new ref_dnode<const int>(arr[i]));
     }
 
     alea.shuffle(vri);
     alea.shuffle(cri);
-    for(const ref_node<int,dnode> *node=vri.head;node;node=node->next)
+    for(const ref_dnode<int> *node=vri.head;node;node=node->next)
     {
         std::cerr << **node << std::endl;
     }
-    for(const ref_node<const int,dnode> *node=cri.head;node;node=node->next)
+    for(const ref_dnode<const int> *node=cri.head;node;node=node->next)
     {
         std::cerr << **node << std::endl;
     }
