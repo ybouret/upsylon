@@ -209,7 +209,7 @@ namespace upsylon
                 //
                 // reset hosts
                 //______________________________________________________________
-                void   resetAxioms() throw();
+                void   resetAxioms() throw(); //!< clean all hosts
 
                 
                 //______________________________________________________________

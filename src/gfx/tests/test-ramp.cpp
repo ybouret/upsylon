@@ -1,5 +1,6 @@
 #include "y/gfx/color/ramp/gradation.hpp"
-#include "y/gfx/color/ramp/tableau.hpp"
+#include "y/gfx/color/ramp/monochrome.hpp"
+#include "y/gfx/color/ramp/cold-to-hot.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
@@ -16,11 +17,11 @@ Y_UTEST(ramp)
     engine                  eng = new concurrent::simt();
 
     monochrome mr( Y_RED );
-    color_ramp mono = new color_ramp_of<monochrome>(mr);
-    color_ramp cth  = new color_ramp_of<cold_to_hot>();
+    color_ramp mono = new color_tableau<monochrome>(mr);
+    color_ramp cth  = new color_tableau<cold_to_hot>();
 
-    gradation  *g   = new gradation();
-    color_ramp grd  = g;
+    color_gradation  *g   = new color_gradation();
+    color_ramp        grd = g;
 
     g->push_back(Y_BLUE);
     g->push_back(Y_CYAN);

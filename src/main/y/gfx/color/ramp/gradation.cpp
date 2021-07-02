@@ -7,15 +7,15 @@ namespace upsylon
     namespace graphic
     {
 
-        gradation:: ~gradation() throw()
+        color_gradation:: ~color_gradation() throw()
         {
         }
 
-        gradation:: gradation() throw() : color_ramp_(), gradation_()
+        color_gradation:: color_gradation() throw() : color_ramp_(), color_gradation_()
         {
         }
 
-        const color_repository & gradation:: repository() const throw()
+        const color_repository & color_gradation:: repository() const throw()
         {
             return *this;
         }

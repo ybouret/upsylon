@@ -116,44 +116,4 @@ namespace upsylon
 
 
 
-namespace upsylon
-{
-    namespace graphic
-    {
-        fixed_color_ramp:: ~fixed_color_ramp() throw() {}
-
-        fixed_color_ramp:: fixed_color_ramp(const rgba *data, const size_t size) throw():
-        repo( (rgba *)data,size)
-        {}
-
-
-        const color_repository & fixed_color_ramp:: repository() const throw()
-        {
-            return repo;
-        }
-    }
-
-}
-
-#include "y/gfx/color/named.hpp"
-
-namespace upsylon
-{
-    namespace graphic
-    {
-
-        const rgba cold_to_hot:: data[] =
-        {
-            Y_BLUE,
-            Y_CYAN,
-            Y_GREEN,
-            Y_YELLOW,
-            Y_RED
-        };
-
-        const size_t cold_to_hot:: size = sizeof(data)/sizeof(data[0]);
-
-    }
-
-}
 

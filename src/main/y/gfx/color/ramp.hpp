@@ -17,93 +17,78 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! repository of colors
+        //
+        //______________________________________________________________________
         typedef accessible<rgba> color_repository;
 
+        //______________________________________________________________________
+        //
+        //
+        //! allocated color ramp interface
+        //
+        //______________________________________________________________________
         class color_ramp_ : public virtual counted_object
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~color_ramp_() throw(); //!< cleanup
 
-            virtual ~color_ramp_() throw();
-            virtual const color_repository & repository() const throw() = 0;
+            //__________________________________________________________________
+            //
+            // virtual interface
+            //__________________________________________________________________
+            virtual const color_repository & repository() const throw() = 0; //!< access colors
 
+            //__________________________________________________________________
+            //
+            // non-virtual interface
+            //__________________________________________________________________
+            //! interpolated color with 0<=u<=1
             rgba get(const float u) const throw();
 
         protected:
-            explicit color_ramp_() throw();
+            explicit color_ramp_() throw(); //!< setup
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(color_ramp_);
         };
 
-
-        class fixed_color_ramp : public color_ramp_
-        {
-        public:
-            explicit fixed_color_ramp(const rgba *data, const size_t size) throw();
-            virtual ~fixed_color_ramp() throw();
-            virtual const color_repository & repository() const throw();
-
-        private:
-            const lightweight_array<rgba> repo;
-            Y_DISABLE_COPY_AND_ASSIGN(fixed_color_ramp);
-        };
-
-        template <typename HOST>
-        class color_ramp_of : public fixed_color_ramp
-        {
-        public:
-            inline explicit color_ramp_of()              throw() : fixed_color_ramp( HOST::data, HOST::size ) {}
-            inline explicit color_ramp_of(const HOST &h) throw() : fixed_color_ramp( h.data, h.size) {}
-            inline virtual ~color_ramp_of()               throw() {}
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(color_ramp_of);
-        };
-
-        class monochrome
-        {
-        public:
-            static const size_t size = 2;
-            rgba                data[size];
-
-            monochrome(const rgba &C) throw() : data()
-            {
-                aliasing::_(data[0]) = rgba(0,0,0);
-                aliasing::_(data[1]) = C;
-            }
-
-            ~monochrome() throw()
-            {
-            }
-
-            monochrome(const monochrome &other) throw() : data()
-            {
-                memcpy( (void*) data, other.data, sizeof(data) );
-            }
-
-        private:
-            Y_DISABLE_ASSIGN(monochrome);
-        };
-
-        struct cold_to_hot
-        {
-            static const size_t size;
-            static const rgba   data[];
-        };
-
-
-        
+        //______________________________________________________________________
+        //
+        //
+        //! color ramp interface
+        //
+        //______________________________________________________________________
         class color_ramp : public arc_ptr<color_ramp_>, public type_to_rgba
         {
         public:
-            virtual ~color_ramp()    throw();
-            color_ramp(const color_ramp&)  throw();
-            color_ramp(color_ramp_*) throw();
-            color_ramp & operator=(const color_ramp &) throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~color_ramp()    throw();                    //!< leanup
+            color_ramp(const color_ramp&)  throw();              //!< no-throw copy
+            color_ramp(color_ramp_*) throw();                    //!< setup
+            color_ramp & operator=(const color_ramp &) throw();  //!< no-throw assign
 
-            virtual unit_t depth() const throw();
-            virtual rgba   operator()(const void *) const throw();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual unit_t depth() const throw();                   //!< sizeof(float)
+            virtual rgba   operator()(const void *) const throw();  //!< get(float)
         };
+
+     
+        
+
 
 
 
