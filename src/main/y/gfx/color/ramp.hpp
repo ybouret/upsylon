@@ -86,25 +86,39 @@ namespace upsylon
             virtual rgba   operator()(const void *) const throw();  //!< get(float)
         };
 
+        //______________________________________________________________________
+        //
+        //
+        //! create a color mapping vmin to vmax from a color ramp
+        //
+        //______________________________________________________________________
         class color_map : public type_to_rgba
         {
         public:
-            color_ramp ramp;
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! cleanup
             virtual ~color_map() throw();
-            explicit color_map(const color_ramp &,
+            
+            //! setup
+            explicit color_map(const color_ramp &ramp_,
                                const float       vmin_,
                                const float       vmax_) throw();
 
-            const float vmin;
-            const float vmax;
-            const float scal;
+            color_ramp  ramp; //!< internal ramp
+            const float vmin; //!< minimal value
+            const float vmax; //!< maximal value
+            const float scal; //!< scaling
 
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            float          v2u(const float v) const throw();        //!< value to unit
+            float          v2u(const float v) const throw();        //!< value to unit float
             virtual unit_t depth() const throw();                   //!< sizeof(float)
             virtual rgba   operator()(const void *) const throw();  //!< rescaled get
         };
