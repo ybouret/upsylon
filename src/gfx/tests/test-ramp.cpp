@@ -33,7 +33,7 @@ Y_UTEST(ramp)
 
     {
         pixmap<float>       rmp(512,128);
-        color_map           cnv(cth,0,rmp.w-1);
+        color_map           cnv(cth,0.0f,float(rmp.w-1));
         for(unit_t x=0;x<rmp.w;++x)
         {
             for(unit_t y=0;y<rmp.h;++y)
