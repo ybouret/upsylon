@@ -19,5 +19,6 @@ Y_UTEST_INIT(32)
     Y_UTEST(blur);
     Y_UTEST(patch);
     Y_UTEST(ramp);
+    Y_UTEST(mask);
 }
 Y_UTEST_EXEC()
