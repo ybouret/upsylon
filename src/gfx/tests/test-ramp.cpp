@@ -1,6 +1,7 @@
 #include "y/gfx/color/ramp/gradation.hpp"
 #include "y/gfx/color/ramp/monochrome.hpp"
 #include "y/gfx/color/ramp/cold-to-hot.hpp"
+#include "y/gfx/color/map.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
