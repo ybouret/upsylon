@@ -25,6 +25,11 @@ namespace upsylon
             return coord( swap_be_as(p.x), swap_be_as(p.y) );
         }
 
+        mask & mask:: operator<<(const coord p)
+        {
+            insert(p);
+            return *this;
+        }
 
 
     }

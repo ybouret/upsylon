@@ -25,6 +25,8 @@ namespace upsylon
 
             void insert(const coord p);
 
+            mask & operator<<(const coord);
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(mask);
         };

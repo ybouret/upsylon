@@ -162,7 +162,6 @@ Y_UTEST_INIT(256)
     Y_UTEST(suffix);
     Y_UTEST(hashed);
     Y_UTEST(suffix_address);
-    Y_UTEST(be_pod);
  
     Y_UTEST(fft1);
     Y_UTEST(network_sort);

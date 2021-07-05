@@ -19,6 +19,23 @@ Y_UTEST(mask)
         std::cerr << *it << std::endl;
     }
 
+    m.free();
+
+    for(unit_t i=-4;i<=4;++i)
+    {
+        for(unit_t j=-4;j<=4;++j)
+        {
+            m << coord(i,j);
+        }
+    }
+
+    for(mask::iterator it=m.begin();it!=m.end();++it)
+    {
+        std::cerr << *it << std::endl;
+    }
+    m.get_root().graphViz("mask4.dot");
+
+
 }
 Y_UTEST_DONE()
 
