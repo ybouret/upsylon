@@ -232,7 +232,6 @@ namespace upsylon
 
                 XNode *onAccept(XNode *node, Source &source, Lexer &lexer) const;
                 XNode *onReject(Source &source, Lexer &lexer) const;
-                void   cleanAxioms() throw();
             };
         }
     }

@@ -47,22 +47,29 @@ namespace upsylon
                 typedef ref_snode<const Compound>       Host;      //!< alias
                 typedef core::pool_of_cpp<Host>         Hosts;     //!< alias
 
-                static  bool                         Verbose;     //!< global language verbosity
-                static  const char                   Accepted[];  //!< "ACCEPTED"
-                static  const char                   Rejected[];  //!< "REJECTED"
+                static  bool                         Verbose;                    //!< global language verbosity
+                static  const char                   Accepted[];                 //!< "ACCEPTED"
+                static  const char                   Rejected[];                 //!< "REJECTED"
                 static  const char                  *Status(const bool) throw(); //!< accepted|rejected
 
 
                 typedef Terminal                  *TermHandle;  //!< alias
                 typedef suffix_storage<TermHandle> TermLedger_; //!< alias
 
+                //______________________________________________________________
+                //
                 //! internal terminal ledger for first terminal detection
+                //______________________________________________________________
                 class TermLedger : public Object, public TermLedger_
                 {
                 public:
-                    explicit TermLedger();          //!< setup
-                    virtual ~TermLedger() throw();  //!< cleanup
+                    typedef core::pool_of_cpp<TermLedger> Pool; //!< alias
 
+                    explicit TermLedger(const Compound &);      //!< setup
+                    virtual ~TermLedger() throw();              //!< cleanup
+
+                    TermLedger     *next; //!< for Pool
+                    const Compound &from; //!< owner
                 private:
                     Y_DISABLE_COPY_AND_ASSIGN(TermLedger);
                 };
@@ -123,8 +130,7 @@ namespace upsylon
                 name( Tags::Make(i) ),
                 uuid( t ),
                 hosts(),
-                self(NULL),
-                priv(NULL)
+                self(NULL)
                 {
                 }
 
@@ -143,7 +149,6 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Axiom);
                 friend class Grammar;
                 void         *self; //!< derived class pointer
-                mutable void *priv; //!< to hold first terminals
             };
 
             //! message for verbosity

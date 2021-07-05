@@ -84,7 +84,7 @@ namespace upsylon
                         case Aggregate::UUID: {
                             if(verbose) std::cerr << '|' << ios::indent(depth,'_') << "expecting aggregate <" << key << ">" << std::endl;
                             ++depth;
-                            TermLedger sub;
+                            TermLedger sub(axiom.to<Compound>());
                             for(const Axiom::Reference *ref = axiom.as<Aggregate>().head;ref;ref=ref->next)
                             {
                                 Expecting(sub,**ref,depth);

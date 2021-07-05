@@ -8,7 +8,10 @@ namespace upsylon
         namespace Language
         {
 
-            Axiom:: TermLedger:: TermLedger() : Object(), TermLedger_()
+            Axiom:: TermLedger:: TermLedger(const Compound &owner) :
+            Object(), TermLedger_(),
+            next(0),
+            from(owner)
             {
             }
             

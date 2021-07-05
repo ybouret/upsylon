@@ -46,22 +46,6 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
             }
 
 
-            void   Grammar:: cleanAxioms()  throw()
-            {
-                Y_LANG_PRINTLN("\t<" << name << " cleanAxioms>");
-                for(const Axiom *axiom = axioms.tail; axiom; axiom=axiom->prev)
-                {
-                    if(axiom->priv)
-                    {
-                        Y_LANG_PRINTLN("\t\t\\_[" << fourcc_(axiom->uuid) << "] " << axiom->name);
-                        delete static_cast<Axiom::TermLedger *>(axiom->priv);
-                        axiom->priv = 0;
-                    }
-                    aliasing::_(axiom->hosts).reverse();
-                }
-                Y_LANG_PRINTLN("\t<" << name << " cleanAxioms/>");
-
-            }
 
             void   Grammar:: resetAxioms() throw()
             {
@@ -77,6 +61,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
             
             void Grammar:: validateWith(const Lexer *lexer) 
             {
+                
                 try
                 {
                     //----------------------------------------------------------
@@ -106,11 +91,12 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     // study result
                     //
                     //----------------------------------------------------------
-                    size_t linked = 0;
-                    size_t orphan = 0;
-                    size_t terms  = 0;
-                    string orphans;
-
+                    Axiom::TermLedger::Pool firsts;
+                    size_t                  linked = 0;
+                    size_t                  orphan = 0;
+                    size_t                  terms  = 0;
+                    string                  orphans;
+                    
                     for(const Axiom *axiom = axioms.head; axiom; axiom=axiom->next)
                     {
                         const string  &aname = *(axiom->name);
@@ -170,8 +156,7 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         {
                             case Aggregate::UUID:
                             case Alternate::UUID: {
-                                Axiom::TermLedger *ft = new Axiom::TermLedger();
-                                axiom->priv    = ft;
+                                Axiom::TermLedger *ft = firsts.store( new Axiom::TermLedger( axiom->to<Compound>() ) );
                                 Axiom::Expecting(*ft,*axiom);
                                 if(Axiom::Verbose)
                                 {
@@ -219,30 +204,17 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                                 std::cerr << "\t\t\\_" << ios::align(key, ios::align::left, aligned);
                             }
 
-                            for(const Axiom *node=axioms.head;node;node=node->next)
+                            
+
+                            for(const Axiom::TermLedger *ft=firsts.head;ft;ft=ft->next)
                             {
-                                if(node->priv)
+                                if(ft->search(key))
                                 {
-                                    const Axiom::TermLedger &ft = *static_cast<const Axiom::TermLedger *>(node->priv);
-                                    if(ft.search(key))
-                                    {
-                                        std::cerr << " @" << node->name;
-                                        switch(node->uuid)
-                                        {
-                                            case Aggregate::UUID:
-                                                aliasing::_(axiom->hosts).store( new Axiom::Host( node->as<Aggregate>() ) );
-                                                break;
-
-                                            case Alternate::UUID:
-                                                aliasing::_(axiom->hosts).store( new Axiom::Host( node->as<Alternate>() ) );
-                                                break;
-
-                                            default:
-                                                throw exception("%s.%s should NOT have known terminals!!", **name, **(node->name) );
-                                        }
-                                    }
+                                    std::cerr << " @" << ft->from.name;
+                                    aliasing::_(axiom->hosts).store( new Axiom::Host( ft->from ) );
                                 }
                             }
+
 
                             if(Axiom::Verbose)
                             {
@@ -260,12 +232,10 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     // done
                     //
                     //----------------------------------------------------------
-                    cleanAxioms();
                     if(Axiom::Verbose) std::cerr << "<" << id << "/>" << std::endl;
                 }
                 catch(...)
                 {
-                    cleanAxioms();
                     throw;
                 }
             }
