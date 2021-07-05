@@ -34,8 +34,8 @@ Y_UTEST(mask)
         std::cerr << *it << std::endl;
     }
     m.get_root().graphViz("mask4.dot");
-
-
+    std::cerr << "size=" << m.size() << std::endl;
+    
 }
 Y_UTEST_DONE()
 
