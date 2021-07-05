@@ -1,4 +1,6 @@
 #include "y/gfx/draw/line.hpp"
+#include "y/gfx/draw/circle.hpp"
+
 #include "y/utest/run.hpp"
 
 #include "y/gfx/image/io.hpp"
@@ -34,6 +36,8 @@ Y_UTEST(draw)
     pixmap<rgba>    pxm4(w,h);
     pixmap<uint8_t> pxmm(w,h);
 
+    std::cerr << "hline" << std::endl;
+
     for(size_t i=2+alea.leq(30);i>0;--i)
     {
         const unit_t  x0 = xr();
@@ -65,6 +69,7 @@ Y_UTEST(draw)
         draw::hline(pxmf,x0,y0,x1,m);
     }
 
+    std::cerr << "vline" << std::endl;
 
     for(size_t i=2+alea.leq(30);i>0;--i)
     {
@@ -99,6 +104,7 @@ Y_UTEST(draw)
         draw::vline(pxmf,x0,y0,y1,m);
     }
 
+    std::cerr << "line" << std::endl;
 
     for(size_t i=2+alea.leq(30);i>0;--i)
     {
@@ -134,10 +140,84 @@ Y_UTEST(draw)
     }
 
 
+    std::cerr << "circle" << std::endl;
+
+    for(size_t i=2+alea.leq(30);i>0;--i)
+    {
+        const unit_t  x0 = xr();
+        const unit_t  y0 = yr();
+        const unit_t  r  = alea.range<unit_t>(0,256);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        draw::circle(pxmf,x0,y0,r,f);
+        draw::circle(pxm1,x0,y0,r,b);
+        draw::circle(pxm3,x0,y0,r,c);
+        draw::circle(pxm4,x0,y0,r,c);
+        draw::circle(pxmf,x0,y0,r,m);
+    }
+
+
+    for(size_t i=2+alea.leq(30);i>0;--i)
+    {
+        const unit_t  x0 = xr();
+        const unit_t  y0 = yr();
+        const unit_t  r  = alea.range<unit_t>(0,256);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        const uint8_t a  = ar();
+        draw::circle(pxmf,x0,y0,r,f,a);
+        draw::circle(pxm1,x0,y0,r,b,a);
+        draw::circle(pxm3,x0,y0,r,c,a);
+        draw::circle(pxm4,x0,y0,r,c,a);
+        draw::circle(pxmf,x0,y0,r,m);
+    }
+
+    std::cerr << "disk" << std::endl;
+
+    for(size_t i=2+alea.leq(8);i>0;--i)
+    {
+        const unit_t  x0 = xr();
+        const unit_t  y0 = yr();
+        const unit_t  r  = alea.range<unit_t>(0,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        draw::disk(pxmf,x0,y0,r,f);
+        draw::disk(pxm1,x0,y0,r,b);
+        draw::disk(pxm3,x0,y0,r,c);
+        draw::disk(pxm4,x0,y0,r,c);
+        draw::disk(pxmf,x0,y0,r,m);
+    }
+
+
+    for(size_t i=2+alea.leq(8);i>0;--i)
+    {
+        const unit_t  x0 = xr();
+        const unit_t  y0 = yr();
+        const unit_t  r  = alea.range<unit_t>(0,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        const uint8_t a  = ar();
+        draw::disk(pxmf,x0,y0,r,f,a);
+        draw::disk(pxm1,x0,y0,r,b,a);
+        draw::disk(pxm3,x0,y0,r,c,a);
+        draw::disk(pxm4,x0,y0,r,c,a);
+        draw::disk(pxmf,x0,y0,r,m);
+    }
+
+
+
+    std::cerr << "#mask=" << m.size() << std::endl;
+
     for(mask::iterator it=m.begin();it!=m.end();++it)
     {
         pxmm[*it] = 0xff;
     }
+
+
 
     std::cerr << "saving..." << std::endl;
 

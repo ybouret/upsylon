@@ -51,36 +51,10 @@ namespace  upsylon {
             }
 
 
-#define Y_GFX_DRAW_IMPL(NAME,ARGS,CALL) \
-/* put color  */         \
-/**/    template <typename T> \
-/**/    void NAME(ARGS,\
-/**/              typename type_traits<T>::parameter_type C)\
-/**/    {\
-/**/        const putpixel::copy<T> proc(C);\
-/**/        CALL;\
-/**/    } \
-/* blend color  */         \
-/**/    template <typename T> \
-/**/    void NAME(ARGS,\
-/**/              typename type_traits<T>::parameter_type C,\
-/**/              const uint8_t alpha)\
-/**/    {\
-/**/        const putpixel::blend<T> proc(C,alpha);\
-/**/        CALL;\
-/**/    }\
-/* feed mask  */              \
-/**/    template <typename T> \
-/**/    void NAME(ARGS,\
-/**/             mask &m)\
-/**/    {\
-/**/        putpixel::store proc(m);\
-/**/        CALL;\
-/**/    }
 
 
-#define Y_HLINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t x1
-#define Y_HLINE_CALL _hline(pxm,x0,y0,x1,proc)
+#define Y_HLINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t x1 //!< args for hline
+#define Y_HLINE_CALL _hline(pxm,x0,y0,x1,proc)                                         //!< call for hline
 
             Y_GFX_DRAW_IMPL(hline,Y_HLINE_ARGS,Y_HLINE_CALL)
 
@@ -125,8 +99,8 @@ namespace  upsylon {
             }
 
 
-#define Y_VLINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t y1
-#define Y_VLINE_CALL _vline(pxm,x0,y0,y1,proc)
+#define Y_VLINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t y1 //!< args for vline
+#define Y_VLINE_CALL _vline(pxm,x0,y0,y1,proc)                                         //!< call for vline
 
             Y_GFX_DRAW_IMPL(vline,Y_VLINE_ARGS,Y_VLINE_CALL)
 
@@ -184,8 +158,8 @@ namespace  upsylon {
                 }
             }
 
-#define Y_LINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t x1, const unit_t y1
-#define Y_LINE_CALL _Line(pxm,x0,y0,x1,y1,proc)
+#define Y_LINE_ARGS pixmap<T> &pxm, const unit_t x0, const unit_t y0, const unit_t x1, const unit_t y1 //!< args for line
+#define Y_LINE_CALL _Line(pxm,x0,y0,x1,y1,proc)                                                        //!< call for line
 
             Y_GFX_DRAW_IMPL(line,Y_LINE_ARGS,Y_LINE_CALL)
 

@@ -13,7 +13,12 @@ namespace  upsylon {
 
         namespace draw {
 
+            //__________________________________________________________________
+            //
+            //
             //! put pixel wrappers
+            //
+            //______________________________________________________________________
             struct putpixel
             {
                 //! will copy content
@@ -87,5 +92,39 @@ namespace  upsylon {
 
     }
 }
+
+//______________________________________________________________________________
+//
+//
+//! implement methods for setting color/blend/mask
+//
+//______________________________________________________________________________
+
+#define Y_GFX_DRAW_IMPL(NAME,ARGS,CALL) \
+/* put color  */         \
+/**/    template <typename T> \
+/**/    void NAME(ARGS,\
+/**/              typename type_traits<T>::parameter_type C)\
+/**/    {\
+/**/        const putpixel::copy<T> proc(C);\
+/**/        CALL;\
+/**/    } \
+/* blend color  */         \
+/**/    template <typename T> \
+/**/    void NAME(ARGS,\
+/**/              typename type_traits<T>::parameter_type C,\
+/**/              const uint8_t alpha)\
+/**/    {\
+/**/        const putpixel::blend<T> proc(C,alpha);\
+/**/        CALL;\
+/**/    }\
+/* feed mask  */              \
+/**/    template <typename T> \
+/**/    void NAME(ARGS,\
+/**/             mask &m)\
+/**/    {\
+/**/        putpixel::store proc(m);\
+/**/        CALL;\
+/**/    }
 
 #endif

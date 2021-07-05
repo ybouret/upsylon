@@ -79,6 +79,7 @@ namespace upsylon
     }
 }
 
+//! local bounds extractions
 #define Y_GFX_AREA_LIMITS(A) \
 const unit_t xmin = (A).lower.x; const unit_t xmax= (A).upper.x;\
 const unit_t ymin = (A).lower.y; const unit_t ymax= (A).upper.y

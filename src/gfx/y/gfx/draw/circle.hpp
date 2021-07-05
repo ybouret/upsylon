@@ -2,17 +2,18 @@
 #ifndef Y_GRAPHIC_DRAW_CIRCLE_INCLUDED
 #define Y_GRAPHIC_DRAW_CIRCLE_INCLUDED 1
 
-#include "y/graphic/draw/putpixel.hpp"
+#include "y/gfx/draw/putpixel.hpp"
+#include "y/gfx/pixmap.hpp"
 
 namespace upsylon {
 
-    namespace Graphic {
+    namespace graphic {
 
-        namespace Draw {
+        namespace draw {
 
             //! draw a circle on an image
             template <typename T,typename PROC>
-            inline void _Circle(Pixmap<T>    &img,
+            inline void _circle(pixmap<T>    &img,
                                 const unit_t  xm,
                                 const unit_t  ym,
                                 unit_t        r,
@@ -22,9 +23,9 @@ namespace upsylon {
                 if(r<=0)
                 {
                     assert(0==r);
-                    if(img->contains(xm,ym))
+                    if(img.owns(xm,ym))
                     {
-                        const Point p(xm,ym);
+                        const coord p(xm,ym);
                         proc(img[p],p);
                     }
                 }
@@ -32,17 +33,17 @@ namespace upsylon {
                 {
                     unit_t x = -r, y = 0, err = 2-2*r; /* bottom left to top right */
                     do {
-                        const Point v[4] =
+                        const coord v[4] =
                         {
-                            Point(xm-x,ym+y),  /*   I. Quadrant +x +y */
-                            Point(xm-y,ym-x),  /*  II. Quadrant -x +y */
-                            Point(xm+x,ym-y),  /* III. Quadrant -x -y */
-                            Point(xm+y,ym+x)   /*  IV. Quadrant +x -y */
+                            coord(xm-x,ym+y),  /*   I. Quadrant +x +y */
+                            coord(xm-y,ym-x),  /*  II. Quadrant -x +y */
+                            coord(xm+x,ym-y),  /* III. Quadrant -x -y */
+                            coord(xm+y,ym+x)   /*  IV. Quadrant +x -y */
                         };
                         for(size_t i=0;i<4;++i)
                         {
-                            const Point p = v[i];
-                            if(img->contains(p))
+                            const coord p = v[i];
+                            if(img.owns(p))
                             {
                                 proc(img[p],p);
                             }
@@ -59,64 +60,35 @@ namespace upsylon {
                     } while (x < 0);
                 }
             }
+            
+#define Y_CIRCLE_ARGS pixmap<T> &pxm, const unit_t  xm, const unit_t ym, const unit_t r //!< args for circle
+#define Y_CIRCLE_CALL _circle(pxm,xm,ym,r,proc)                                         //!< call for circle
 
-            //! draw a colored circle on an image
-            template <typename T>
-            inline void Circle(Pixmap<T>    &img,
-                               const unit_t  xm,
-                               const unit_t  ym,
-                               unit_t        r,
-                               typename Pixmap<T>::param_type color)
-            {
-                PutPixel::Copy<T> proc(color);
-                _Circle(img,xm,ym,r,proc);
-            }
+            Y_GFX_DRAW_IMPL(circle,Y_CIRCLE_ARGS,Y_CIRCLE_CALL)
 
+#undef Y_CIRCLE_CALL
+#undef Y_CIRCLE_ARGS
 
-            //! draw a colored circle on an image
-            template <typename T>
-            inline void Circle(Pixmap<T>    &img,
-                               const unit_t  xm,
-                               const unit_t  ym,
-                               unit_t        r,
-                               typename Pixmap<T>::param_type color,
-                               const uint8_t                  alpha)
-            {
-                PutPixel::Blend<T> proc(color,alpha);
-                _Circle(img,xm,ym,r,proc);
-            }
-
-            //! gather mask
-            template <typename T>
-            inline void Circle(Pixmap<T>    &img,
-                               const unit_t  xm,
-                               const unit_t  ym,
-                               unit_t        r,
-                               Mask         &mask)
-            {
-                PutPixel::Store proc(mask);
-                _Circle(img,xm,ym,r,proc);
-            }
 
             
         }
 
 
-        namespace Draw {
+        namespace draw {
 
             //! clipping horizontal segement
             template <typename T, typename PROC>
-            inline void __HSeg(Pixmap<T>    &img,
+            inline void __HSeg(pixmap<T>    &img,
                                const unit_t  y,
                                const unit_t  xlo,
                                const unit_t  xhi,
                                PROC         &proc) throw()
             {
                 assert(xlo<=xhi);
-                Point p(xlo,y);
+                coord p(xlo,y);
                 for(;p.x<=xhi;++p.x)
                 {
-                    if(img->contains(p))
+                    if(img.owns(p))
                     {
                         proc(img[p],p);
                     }
@@ -125,7 +97,7 @@ namespace upsylon {
 
             //! generic disk
             template <typename T, typename PROC>
-            inline void _Disk(Pixmap<T>    &img,
+            inline void _disk(pixmap<T>    &img,
                               const unit_t  xm,
                               const unit_t  ym,
                               unit_t        r,
@@ -134,9 +106,9 @@ namespace upsylon {
                 if(r<=0)
                 {
                     assert(0==r);
-                    if(img->contains(xm,ym))
+                    if(img.owns(xm,ym))
                     {
-                        const Point p(xm,ym);
+                        const coord p(xm,ym);
                         proc(img[p],p);
                     }
                 }
@@ -168,43 +140,15 @@ namespace upsylon {
                 }
             }
 
-            //! draw a colored disk on an image
-            template <typename T>
-            inline void Disk(Pixmap<T>    &img,
-                             const unit_t  xm,
-                             const unit_t  ym,
-                             unit_t        r,
-                             typename Pixmap<T>::param_type color)
-            {
-                PutPixel::Copy<T> proc(color);
-                _Disk(img,xm,ym,r,proc);
-            }
 
+#define Y_DISK_ARGS pixmap<T> &pxm, const unit_t  xm, const unit_t ym, const unit_t r //!< args for disk
+#define Y_DISK_CALL _disk(pxm,xm,ym,r,proc)                                           //!< call for disk
 
-            //! draw a colored/alpha disk on an image
-            template <typename T>
-            inline void Disk(Pixmap<T>    &img,
-                             const unit_t  xm,
-                             const unit_t  ym,
-                             unit_t        r,
-                             typename Pixmap<T>::param_type color,
-                             const uint8_t alpha)
-            {
-                PutPixel::Blend<T> proc(color,alpha);
-                _Disk(img,xm,ym,r,proc);
-            }
+            Y_GFX_DRAW_IMPL(disk,Y_DISK_ARGS,Y_DISK_CALL)
 
-            //! gather mask
-            template <typename T>
-            inline void Disk(Pixmap<T>    &img,
-                             const unit_t  xm,
-                             const unit_t  ym,
-                             unit_t        r,
-                             Mask         &mask)
-            {
-                PutPixel::Store proc(mask);
-                _Disk(img,xm,ym,r,proc);
-            }
+#undef Y_DISK_CALL
+#undef Y_DISK_ARGS
+
 
         }
 
