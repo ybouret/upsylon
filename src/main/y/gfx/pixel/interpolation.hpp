@@ -19,6 +19,7 @@ namespace upsylon
         //______________________________________________________________________
         struct interp
         {
+#if 1
             //! x[0..N-1] from 0<=xx<=1
             template <typename T, const unsigned N> static inline
             T closest_(const float xx, const T arr[]) throw()
@@ -62,7 +63,8 @@ namespace upsylon
                 const float    alpha = float(jp)-xs;
                 return blend<float,T>::mix(alpha,arr[jm],arr[jp]);
             }
-
+#endif
+            
             //! y[1..num] from 0<=xx<=1 with alpha
             template <
             typename T,
