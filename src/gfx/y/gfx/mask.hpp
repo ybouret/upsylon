@@ -20,15 +20,18 @@ namespace upsylon
         public:
             static coord coord_to_key(const coord &) throw();
 
-            explicit mask();
+            mask();
+            mask(const mask&);
             virtual ~mask() throw();
 
             void insert(const coord p);
 
-            mask & operator<<(const coord);
+            mask & operator += (const coord);
+            mask & operator += (const mask&);
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(mask);
+            Y_DISABLE_ASSIGN(mask);
+
         };
 
     }

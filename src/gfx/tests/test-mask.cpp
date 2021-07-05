@@ -25,7 +25,7 @@ Y_UTEST(mask)
     {
         for(unit_t j=-4;j<=4;++j)
         {
-            m << coord(i,j);
+            m += coord(i,j);
         }
     }
 

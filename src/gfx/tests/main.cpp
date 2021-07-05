@@ -20,5 +20,6 @@ Y_UTEST_INIT(32)
     Y_UTEST(patch);
     Y_UTEST(ramp);
     Y_UTEST(mask);
+    Y_UTEST(draw);
 }
 Y_UTEST_EXEC()

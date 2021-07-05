@@ -5,6 +5,8 @@
 #define Y_GFX_BLEND_INCLUDED 1
 
 #include "y/gfx/color/rgb.hpp"
+#include "y/gfx/color/convert.hpp"
+
 #include <cmath>
 
 namespace upsylon
@@ -84,6 +86,28 @@ namespace upsylon
             }
 
         };
+
+        //______________________________________________________________________
+        //
+        //! blending floats with  byte
+        //______________________________________________________________________
+        template <>
+        struct blend<uint8_t,float>
+        {
+            
+            //! alpha * fg + (1-alpha) * bg
+            static inline
+            float mix(const uint8_t alpha,
+                      const float   fg,
+                      const float   bg) throw()
+            {
+                const float wf = crux::convert::unit_float[alpha];
+                const float wb = crux::convert::unit_float[0xff-alpha];
+                return fg*wf + bg*wb;
+            }
+
+        };
+
 
 
         //______________________________________________________________________

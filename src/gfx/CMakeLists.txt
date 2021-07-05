@@ -55,6 +55,13 @@ SOURCE_GROUP( gfx/edges FILES ${edges_srcs} )
 INSTALL( FILES ${edges_decl} DESTINATION include/y/gfx/edges )
 
 
+FILE(GLOB draw_decl y/gfx/draw/*.hpp)
+FILE(GLOB draw_code y/gfx/draw/*.cpp)
+SET(draw_srcs ${draw_decl} ${draw_code})
+SOURCE_GROUP( gfx/draw FILES ${draw_srcs} )
+INSTALL( FILES ${draw_decl} DESTINATION include/y/gfx/draw )
+
+
 
 ADD_LIBRARY(y-gfx STATIC 
 ${main_srcs}
@@ -63,6 +70,7 @@ ${image_srcs} ${image_format_srcs}
 ${ops_srcs}
 ${filters_srcs}
 ${edges_srcs}
+${draw_srcs}
 )
 
 INSTALL( TARGETS y-gfx ARCHIVE DESTINATION lib )
