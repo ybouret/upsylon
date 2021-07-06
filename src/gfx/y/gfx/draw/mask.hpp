@@ -14,6 +14,28 @@ namespace  upsylon {
 
         namespace draw {
 
+            template <typename T, typename FUNC>
+            inline void _masking(pixmap<T>  &pxm,
+                                 const mask &msk,
+                                 FUNC       &fcn)
+            {
+                for(mask::const_iterator it=msk.begin();it!=msk.end();++it)
+                {
+                    const coord p = *it;
+                    fcn(pxm[p],p);
+                }
+            }
+
+
+
+#define Y_MASKING_ARGS pixmap<T> &pxm, const mask &msk //!< args for masking
+#define Y_MASKING_CALL _masking(pxm,msk,proc)          //!< call for hline
+
+            Y_GFX_DRAW_IMPL(masking,Y_MASKING_ARGS,Y_MASKING_CALL)
+
+#undef Y_MASKING_CALL
+#undef Y_MASKING_ARGS
+
         }
     }
 }

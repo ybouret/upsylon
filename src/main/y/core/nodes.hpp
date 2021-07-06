@@ -4,6 +4,7 @@
 #define Y_CORE_NODES_INCLUDED 1
 
 #include "y/type/args.hpp"
+#include "y/object.hpp"
 
 namespace upsylon {
 
@@ -16,7 +17,7 @@ namespace upsylon {
         //
         //______________________________________________________________________
         template <typename T>
-        class singly : public T
+        class singly : public virtual object, public T
         {
         public:
             Y_DECL_ARGS(T,type);                         //!< aliases
@@ -45,7 +46,7 @@ namespace upsylon {
         //
         //______________________________________________________________________
         template <typename T>
-        class doubly : public T
+        class doubly : public virtual object, public T
         {
         public:
             Y_DECL_ARGS(T,type);                                        //!< aliases

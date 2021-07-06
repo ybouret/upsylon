@@ -36,7 +36,7 @@ Y_UTEST(draw)
     pixmap<uint8_t> pxm1(w,h);
     pixmap<rgb>     pxm3(w,h);
     pixmap<rgba>    pxm4(w,h);
-    pixmap<uint8_t> pxmm(w,h);
+    pixmap<rgb>     pxmm(w,h);
 
     std::cerr << "hline" << std::endl;
 
@@ -250,11 +250,25 @@ Y_UTEST(draw)
 
     std::cerr << "#mask=" << m.size() << std::endl;
 
-    for(mask::iterator it=m.begin();it!=m.end();++it)
-    {
-        pxmm[*it] = 0xff;
-    }
+    std::cerr << "masking" << std::endl;
+    draw::masking(pxmm,m,Y_BLUE);
 
+    {
+        mask::block_list blist;
+        m.collect_keys(blist);
+        alea.shuffle(blist);
+        for(size_t i=blist.size/2;i>0;--i)
+        {
+            delete blist.pop_back();
+        }
+        while(blist.size)
+        {
+            Y_ASSERT(m.remove_at( *(blist.tail) ));
+            delete blist.pop_back();
+        }
+    }
+    
+    draw::masking(pxmm,m,Y_GREEN,100);
 
 
     std::cerr << "saving..." << std::endl;

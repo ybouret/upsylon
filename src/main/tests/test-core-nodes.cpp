@@ -8,7 +8,7 @@ using namespace upsylon;
 
 namespace {
 
-    class dummy : public object
+    class dummy : public virtual object
     {
     public:
         static int counter;

@@ -50,9 +50,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(cblock);
-
             void        *block_addr;
-            
         };
 
        
