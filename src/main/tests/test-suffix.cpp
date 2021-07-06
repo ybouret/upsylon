@@ -541,7 +541,7 @@ namespace
         db_type             db;
         vector<string>      keys;
 
-        for(int i=10+alea.leq(100);i>0;--i)
+        for(int i=10+int(alea.leq(100));i>0;--i)
         {
             const string tmp = support::get<string>();
             if( db.insert(tmp,i) )
