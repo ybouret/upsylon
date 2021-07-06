@@ -1,5 +1,5 @@
 #include "y/memory/cppblock.hpp"
-#include "y/memory/cppbuffer.hpp"
+#include "y/memory/buffer-of.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "support.hpp"
@@ -13,15 +13,28 @@ using namespace upsylon;
 namespace {
 
     template <typename T> static inline
-    void testBlock( memory::cppblock<T> &blk )
+    void testBlock( addressable<T> &blk )
     {
         for(size_t i=blk.size();i>0;--i)
         {
             blk[i] = support::get<T>();
         }
-        alea.shuffle(*blk,blk.size());
-        
+        if(blk.size()>0)
+        {
+            alea.shuffle(&blk[1],blk.size());
+        }
     }
+
+    template <typename ARR> static inline
+    bool checkSame(const ARR &lhs, const ARR &rhs)
+    {
+        Y_ASSERT(lhs.size()==rhs.size());
+        for(size_t i=lhs.size();i>0;--i)
+        {
+        }
+        return true;
+    }
+
 
     template <typename T> static inline
     void testBuff()
@@ -31,12 +44,27 @@ namespace {
         {
             memory::buffer_of<T,memory::global> gbuf(i);
             std::cerr << "\tquery global " << std::setw(5) << i << " => " << gbuf.allocated() << "/" << i *sizeof(T) << std::endl;
+            {
+                testBlock(gbuf);
+                const memory::buffer_of<T,memory::global> temp( gbuf );
+                checkSame(gbuf,temp);
+            }
 
             memory::buffer_of<T,memory::pooled> pbuf(i);
             std::cerr << "\tquery pooled " << std::setw(5) << i << " => " << pbuf.allocated() << "/" << i *sizeof(T) << std::endl;
+            {
+                testBlock(pbuf);
+                const memory::buffer_of<T,memory::pooled> temp( pbuf );
+                checkSame(pbuf,temp);
+            }
 
             memory::buffer_of<T,memory::dyadic> dbuf(i);
             std::cerr << "\tquery dyadic " << std::setw(5) << i << " => " << dbuf.allocated() << "/" << i *sizeof(T) << std::endl;
+            {
+                testBlock(dbuf);
+                const memory::buffer_of<T,memory::dyadic> temp( dbuf );
+                checkSame(dbuf,temp);
+            }
         }
         std::cerr << std::endl;
     }

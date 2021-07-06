@@ -254,7 +254,7 @@ Y_UTEST(draw)
     draw::masking(pxmm,m,Y_BLUE);
 
     {
-        mask::block_list blist;
+        mask::raw_keys blist;
         m.collect_keys(blist);
         alea.shuffle(blist);
         for(size_t i=blist.size/2;i>0;--i)

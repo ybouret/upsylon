@@ -6,8 +6,10 @@
 #include "y/associative/suffix/knot.hpp"
 #include "y/associative/suffix/tree.hpp"
 #include "y/associative/suffix/collection.hpp"
+#include "y/memory/allocator/pooled.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/memory/cppblock.hpp"
+#include "y/memory/buffer-of.hpp"
 #include "y/iterate/linked.hpp"
 #include "y/core/nodes.hpp"
 
@@ -41,14 +43,16 @@ namespace upsylon
         // types and definitions
         //______________________________________________________________________
         Y_DECL_ARGS(T,type);                              //!< aliases
-        typedef suffix_tree<CODE>             tree_type;  //!< alias
-        typedef suffix_node<CODE>             tree_node;  //!< alias
-        typedef suffix_knot<T>                data_node;  //!< alias
-        typedef typename data_node::list_type data_list;  //!< alias
-        typedef typename data_node::pool_type data_pool;  //!< alias
-        typedef memory::cppblock<CODE>        cpp_block;  //!< C++ block for local keys
-        typedef core::doubly<cpp_block>       block_node; //!< to store keys
-        typedef core::list_of_cpp<block_node> block_list; //!< to store keys
+        typedef suffix_tree<CODE>                  tree_type;  //!< alias
+        typedef suffix_node<CODE>                  tree_node;  //!< alias
+        typedef suffix_knot<T>                     data_node;  //!< alias
+        typedef typename data_node::list_type      data_list;  //!< alias
+        typedef typename data_node::pool_type      data_pool;  //!< alias
+        typedef memory::cppblock<CODE>             code_block;  //!< block for reusable local keys
+        typedef memory::pooled                     key_memory;
+        typedef memory::buffer_of<CODE,key_memory> key_path;  //!< exact key_path extraction
+        typedef core::doubly<key_path>             key_node;  //!< to store keys
+        typedef core::list_of_cpp<key_node>        raw_keys;  //!< to store keys
 
         //______________________________________________________________________
         //
@@ -67,12 +71,12 @@ namespace upsylon
         inline suffix_graph(const suffix_graph &other) : collection(), BASE_CLASS(), dlist(), htree(), dpool()
         {
             const size_t nmax = other.max_depth();
-            cpp_block    blk(nmax);
+            code_block   code(nmax);
 
             for(const data_node *node=other.dlist.head;node;node=node->next)
             {
-                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                this->insert_by(*blk,len,node->data);
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(code);
+                this->insert_by(*code,len,node->data);
             }
             assert(this->has_same_layout_than(other));
         }
@@ -293,13 +297,13 @@ catch(...) { dpool.store(node); throw; }
         inline std::ostream & display(std::ostream &os) const
         {
             const size_t dmax = max_depth();
-            cpp_block    mblk(dmax);
+            code_block   code(dmax);
             os << '{' << std::endl;
             for(const data_node *node=dlist.head;node;node=node->next)
             {
-                const size_t len = static_cast<const tree_node *>(node->hook)->encode(mblk);
+                const size_t len = static_cast<const tree_node *>(node->hook)->encode(code);
                 os << ' ';
-                for(size_t i=1;i<=len;++i)    os << mblk[i];
+                for(size_t i=1;i<=len;++i)    os << code[i];
                 for(size_t i=len;i<=dmax;++i) os << ' ';
                 os << ':' << ' ';
                 os << node->data;
@@ -323,7 +327,7 @@ catch(...) { dpool.store(node); throw; }
         inline size_t merge(const suffix_graph<CODE,T,OTHER_BASE_CLASS> &other)
         {
             size_t             num = 0;
-            cpp_block          blk(other.max_depth());
+            code_block         blk(other.max_depth());
             for(const data_node *node=other.head();node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
@@ -336,7 +340,7 @@ catch(...) { dpool.store(node); throw; }
         inline size_t exclude(const suffix_graph<CODE,T,OTHER_BASE_CLASS> &other)
         {
             size_t             num = 0;
-            cpp_block          blk(other.max_depth());
+            code_block         blk(other.max_depth());
             for(const data_node *node=other.head();node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
@@ -359,7 +363,7 @@ catch(...) { dpool.store(node); throw; }
         template < typename KEY_TYPE, typename SEQ_TYPE>
         inline void collect(SEQ_TYPE &keys) const
         {
-            cpp_block blk(max_depth());
+            code_block blk(max_depth());
             for(const data_node *node=dlist.head;node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
@@ -373,13 +377,18 @@ catch(...) { dpool.store(node); throw; }
         //
         //! collect all keys
         //______________________________________________________________________
-        void collect_keys(block_list &keys) const
+        void collect_keys(raw_keys &keys) const
         {
-            cpp_block     blk(max_depth());
+            code_block     code(max_depth());
             for(const data_node *node=dlist.head;node;node=node->next)
             {
-                const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                block_node  *tmp = keys.push_back( block_node::template from<size_t>(len) );
+                size_t    len = static_cast<const tree_node *>(node->hook)->encode(code);
+                key_path &key = *keys.push_back( key_node::template from<size_t>(len) );
+                while(len>0)
+                {
+                    key[len] = code[len];
+                    --len;
+                }
             }
         }
 
