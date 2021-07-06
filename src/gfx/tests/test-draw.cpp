@@ -25,6 +25,13 @@ static inline unit_t  xr() { return alea.range<unit_t>(xmin,xmax); }
 static inline unit_t  yr() { return alea.range<unit_t>(ymin,ymax); }
 static inline uint8_t ar() { return alea.full<uint8_t>();  }
 
+static inline bool is_too_far(const accessible<uint8_t> &, const coord &p) throw()
+{
+    const coord  delta = coord(w/2,h/2)-p;
+    const unit_t d2    = delta.norm2();
+    return d2>200*200;
+}
+
 
 Y_UTEST(draw)
 {
@@ -251,6 +258,8 @@ Y_UTEST(draw)
     std::cerr << "#mask=" << m.size() << std::endl;
 
     std::cerr << "masking" << std::endl;
+    m.remove_if(is_too_far);
+
     draw::masking(pxmm,m,Y_BLUE);
 
     {
@@ -267,7 +276,8 @@ Y_UTEST(draw)
             delete blist.pop_back();
         }
     }
-    
+
+
     draw::masking(pxmm,m,Y_GREEN,100);
 
 

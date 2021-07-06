@@ -76,7 +76,7 @@ namespace upsylon
             for(const data_node *node=other.dlist.head;node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(code);
-                this->insert_by(*code,len,node->data);
+                this->insert_by(*code,len,**node);
             }
             assert(this->has_same_layout_than(other));
         }
@@ -331,7 +331,7 @@ catch(...) { dpool.store(node); throw; }
             for(const data_node *node=other.head();node;node=node->next)
             {
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                if(insert_by(*blk,len,node->data)) ++num;
+                if(insert_by(*blk,len,**node)) ++num;
             }
             return num;
         }
@@ -350,7 +350,7 @@ catch(...) { dpool.store(node); throw; }
             {
                 const data_node *next = node->next;
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                if(remove_by(*blk,len,node->data)) ++num;
+                if(remove_by(*blk,len,**node)) ++num;
                 node=next;
             }
             return num;
@@ -384,7 +384,7 @@ catch(...) { dpool.store(node); throw; }
         //
         //! collect all keys
         //______________________________________________________________________
-        void collect_keys(raw_keys &keys) const
+        inline void collect_keys(raw_keys &keys) const
         {
             code_block     code(max_depth());
             for(const data_node *node=dlist.head;node;node=node->next)
@@ -397,6 +397,34 @@ catch(...) { dpool.store(node); throw; }
                     --len;
                 }
             }
+        }
+
+        //______________________________________________________________________
+        //
+        //! remove if is_bad(key,data)
+        //______________________________________________________________________
+        template <typename IS_BAD>
+        inline size_t remove_if(IS_BAD &is_bad)
+        {
+            size_t num = 0;
+
+            code_block         code(max_depth());
+            const data_node   *node = dlist.head;
+            while(node)
+            {
+                const data_node *next = node->next;
+                size_t           len = static_cast<const tree_node *>(node->hook)->encode(code);
+                key_path         key(len);
+                while(len>0) { key[len] = code[len]; --len; }
+                const_type     &data = **node;
+                if(is_bad(key,data))
+                {
+                    remove_at(key);
+                    ++num;
+                }
+                node=next;
+            }
+            return num;
         }
 
         //______________________________________________________________________
