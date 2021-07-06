@@ -1,5 +1,7 @@
 #include "y/gfx/draw/line.hpp"
 #include "y/gfx/draw/circle.hpp"
+#include "y/gfx/draw/fill.hpp"
+#include "y/gfx/draw/mask.hpp"
 
 #include "y/utest/run.hpp"
 
@@ -206,6 +208,42 @@ Y_UTEST(draw)
         draw::disk(pxm3,x0,y0,r,c,a);
         draw::disk(pxm4,x0,y0,r,c,a);
         draw::disk(pxmf,x0,y0,r,m);
+    }
+
+    std::cerr << "fill" << std::endl;
+
+    for(size_t i=2+alea.leq(4);i>0;--i)
+    {
+        const unit_t  x0 = alea.range<unit_t>(0,w);
+        const unit_t  y0 = alea.range<unit_t>(0,h);
+        const unit_t  x1 = x0 + alea.range<unit_t>(-100,100);
+        const unit_t  y1 = y0 + alea.range<unit_t>(-100,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        draw::fill(pxmf,x0,y0,x1,y1,f);
+        draw::fill(pxm1,x0,y0,x1,y1,b);
+        draw::fill(pxm3,x0,y0,x1,y1,c);
+        draw::fill(pxm4,x0,y0,x1,y1,c);
+        draw::fill(pxmf,x0,y0,x1,y1,m);
+    }
+
+
+    for(size_t i=2+alea.leq(4);i>0;--i)
+    {
+        const unit_t  x0 = alea.range<unit_t>(0,w);
+        const unit_t  y0 = alea.range<unit_t>(0,h);
+        const unit_t  x1 = x0 + alea.range<unit_t>(-100,100);
+        const unit_t  y1 = y0 + alea.range<unit_t>(-100,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        const uint8_t a  = ar();
+        draw::fill(pxmf,x0,y0,x1,y1,f,a);
+        draw::fill(pxm1,x0,y0,x1,y1,b,a);
+        draw::fill(pxm3,x0,y0,x1,y1,c,a);
+        draw::fill(pxm4,x0,y0,x1,y1,c,a);
+        draw::fill(pxmf,x0,y0,x1,y1,m);
     }
 
 

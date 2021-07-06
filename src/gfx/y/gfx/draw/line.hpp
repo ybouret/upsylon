@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_GRAPHIC_DRAW_LINE
