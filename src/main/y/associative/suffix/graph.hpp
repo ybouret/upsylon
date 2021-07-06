@@ -42,17 +42,17 @@ namespace upsylon
         //
         // types and definitions
         //______________________________________________________________________
-        Y_DECL_ARGS(T,type);                              //!< aliases
+        Y_DECL_ARGS(T,type);                                   //!< aliases
         typedef suffix_tree<CODE>                  tree_type;  //!< alias
         typedef suffix_node<CODE>                  tree_node;  //!< alias
         typedef suffix_knot<T>                     data_node;  //!< alias
         typedef typename data_node::list_type      data_list;  //!< alias
         typedef typename data_node::pool_type      data_pool;  //!< alias
-        typedef memory::cppblock<CODE>             code_block;  //!< block for reusable local keys
-        typedef memory::pooled                     key_memory;
-        typedef memory::buffer_of<CODE,key_memory> key_path;  //!< exact key_path extraction
-        typedef core::doubly<key_path>             key_node;  //!< to store keys
-        typedef core::list_of_cpp<key_node>        raw_keys;  //!< to store keys
+        typedef memory::cppblock<CODE>             code_block; //!< block for reusable local keys
+        typedef memory::pooled                     key_memory; //!< to extract keys
+        typedef memory::buffer_of<CODE,key_memory> key_path;   //!< exact key_path extraction
+        typedef core::doubly<key_path>             key_node;   //!< to store keys
+        typedef core::list_of_cpp<key_node>        raw_keys;   //!< to store keys
 
         //______________________________________________________________________
         //
@@ -336,15 +336,22 @@ catch(...) { dpool.store(node); throw; }
             return num;
         }
 
+        //______________________________________________________________________
+        //
+        //! excluding (logical NOT on KEYS), return the number of excluded data
+        //______________________________________________________________________
         template <typename OTHER_BASE_CLASS>
         inline size_t exclude(const suffix_graph<CODE,T,OTHER_BASE_CLASS> &other)
         {
             size_t             num = 0;
             code_block         blk(other.max_depth());
-            for(const data_node *node=other.head();node;node=node->next)
+            const data_node   *node = other.head();
+            while(node)
             {
+                const data_node *next = node->next;
                 const size_t len = static_cast<const tree_node *>(node->hook)->encode(blk);
-                if(insert_by(*blk,len,node->data)) ++num;
+                if(remove_by(*blk,len,node->data)) ++num;
+                node=next;
             }
             return num;
         }

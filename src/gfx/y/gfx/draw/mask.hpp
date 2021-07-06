@@ -14,6 +14,7 @@ namespace  upsylon {
 
         namespace draw {
 
+            //! apply function for every mask point
             template <typename T, typename FUNC>
             inline void _masking(pixmap<T>  &pxm,
                                  const mask &msk,
@@ -26,7 +27,7 @@ namespace  upsylon {
                 }
             }
 
-
+            
 
 #define Y_MASKING_ARGS pixmap<T> &pxm, const mask &msk //!< args for masking
 #define Y_MASKING_CALL _masking(pxm,msk,proc)          //!< call for hline
