@@ -1,5 +1,5 @@
 #include "y/memory/cppblock.hpp"
-#include "y/memory/cbuffer.hpp"
+#include "y/memory/cppbuffer.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 #include "support.hpp"
@@ -29,14 +29,14 @@ namespace {
         std::cerr << "cbuffer<" << rtti::name_of<T>() << ">" << std::endl;
         for(size_t i=0;i<=1000;i+=1+alea.leq(100))
         {
-            memory::cbuffer<T,memory::global> gbuf(i);
-            std::cerr << "\tquery global " << std::setw(5) << i << " => " << gbuf.allocated << "/" << i *sizeof(T) << std::endl;
+            memory::buffer_of<T,memory::global> gbuf(i);
+            std::cerr << "\tquery global " << std::setw(5) << i << " => " << gbuf.allocated() << "/" << i *sizeof(T) << std::endl;
 
-            memory::cbuffer<T,memory::pooled> pbuf(i);
-            std::cerr << "\tquery pooled " << std::setw(5) << i << " => " << pbuf.allocated << "/" << i *sizeof(T) << std::endl;
+            memory::buffer_of<T,memory::pooled> pbuf(i);
+            std::cerr << "\tquery pooled " << std::setw(5) << i << " => " << pbuf.allocated() << "/" << i *sizeof(T) << std::endl;
 
-            memory::cbuffer<T,memory::dyadic> dbuf(i);
-            std::cerr << "\tquery dyadic " << std::setw(5) << i << " => " << dbuf.allocated << "/" << i *sizeof(T) << std::endl;
+            memory::buffer_of<T,memory::dyadic> dbuf(i);
+            std::cerr << "\tquery dyadic " << std::setw(5) << i << " => " << dbuf.allocated() << "/" << i *sizeof(T) << std::endl;
         }
         std::cerr << std::endl;
     }
