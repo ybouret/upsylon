@@ -66,6 +66,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(fitting_conics);
     Y_UTEST(fitting_gaussians);
     Y_UTEST(fitting_load);
+    Y_UTEST(mwc);
+
 }
 Y_UTEST_EXEC()
 
