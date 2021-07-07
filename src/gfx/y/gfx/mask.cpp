@@ -40,6 +40,28 @@ namespace upsylon
             return *this;
         }
 
+        area mask:: aabb() const throw()
+        {
+            if(size()<=0)
+            {
+                return area(0,0);
+            }
+            else
+            {
+                const mask::data_node *node = head(); assert(node);
+                coord lower = **node;
+                coord upper = **node;
+                for(node=node->next;node;node=node->next)
+                {
+                    const coord tmp = **node;
+                    lower = coord::min_of(lower,tmp);
+                    upper = coord::max_of(upper,tmp);
+                }
+                upper-=lower;
+                return area(upper.x+1,upper.y+1,lower.x,lower.y);
+            }
+        }
+
     }
 
 }

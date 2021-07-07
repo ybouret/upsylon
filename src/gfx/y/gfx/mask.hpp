@@ -4,7 +4,7 @@
 #ifndef Y_GFX_MASK_INCLUDED
 #define Y_GFX_MASK_INCLUDED 1
 
-#include "y/gfx/types.hpp"
+#include "y/gfx/area.hpp"
 #include "y/associative/suffix/graph.hpp"
 
 namespace upsylon
@@ -39,6 +39,8 @@ namespace upsylon
 
             mask & operator += (const coord); //!< add one coord
             mask & operator += (const mask&); //!< merge other mask
+
+            area aabb() const throw();        //!< axis aligned bounding box
 
         private:
             Y_DISABLE_ASSIGN(mask);

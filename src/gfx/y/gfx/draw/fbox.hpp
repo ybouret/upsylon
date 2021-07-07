@@ -34,21 +34,27 @@ namespace upsylon {
                 else
                 {
                     assert(x0<x1);
-                    if(y0>=y1)
+                    switch(y1-y0)
                     {
-                        // height=1 => horizontal line
-                        if(clip::accept(x0,y0,x1,y1,pxm))
+                        case 0:
+                            if(clip::accept(x0,y0,x1,y1,pxm))
+                                __hline(pxm,x0,y0,x1-x0+1,putPixel);
+                            break;
+
+                        default:
                         {
-                            __hline(pxm,x0,y0,x1-x0+1,putPixel);
-                        }
-                    }
-                    else
-                    {
-                        assert(y0<y1);
-                        // full box
+                            const unit_t yini=y0+1;
+                            const unit_t yend=y1-1;
+                            _vline(pxm,x0,yini,yend,putPixel);
+                            _vline(pxm,x1,yini,yend,putPixel);
+                        } /* FALLTHRU */
+                        case 1:
+                            _hline(pxm, x0, y0, x1,putPixel);
+                            _hline(pxm, x0, y1, x1,putPixel);
+                            break;
                     }
                 }
-                
+
             }
 
 
@@ -58,10 +64,17 @@ namespace upsylon {
 
             Y_GFX_DRAW_IMPL(fbox,Y_FBOX_ARGS,Y_FBOX_CALL)
 
-#undef Y_FILL_CALL
+#undef Y_FBOX_CALL
 #undef Y_FBOX_ARGS
 
-            
+
+#define Y_FBOX_ARGS pixmap<T> &pxm, const area &a                             //!< args for fbox with area
+#define Y_FBOX_CALL _fbox(pxm,a.lower.x,a.lower.y,a.upper.x,a.upper.y,proc)   //!< call for fbox with area
+
+            Y_GFX_DRAW_IMPL(fbox,Y_FBOX_ARGS,Y_FBOX_CALL)
+
+#undef Y_FBOX_CALL
+#undef Y_FBOX_ARGS
             
         }
 

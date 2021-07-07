@@ -255,6 +255,43 @@ Y_UTEST(draw)
     }
 
 
+    std::cerr << "fbox" << std::endl;
+
+    for(size_t i=2+alea.leq(4);i>0;--i)
+    {
+        const unit_t  x0 = alea.range<unit_t>(0,w);
+        const unit_t  y0 = alea.range<unit_t>(0,h);
+        const unit_t  x1 = x0 + alea.range<unit_t>(-100,100);
+        const unit_t  y1 = y0 + alea.range<unit_t>(-100,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        draw::fbox(pxmf,x0,y0,x1,y1,f);
+        draw::fbox(pxm1,x0,y0,x1,y1,b);
+        draw::fbox(pxm3,x0,y0,x1,y1,c);
+        draw::fbox(pxm4,x0,y0,x1,y1,c);
+        draw::fbox(pxmf,x0,y0,x1,y1,m);
+    }
+
+
+    for(size_t i=2+alea.leq(4);i>0;--i)
+    {
+        const unit_t  x0 = alea.range<unit_t>(0,w);
+        const unit_t  y0 = alea.range<unit_t>(0,h);
+        const unit_t  x1 = x0 + alea.range<unit_t>(-100,100);
+        const unit_t  y1 = y0 + alea.range<unit_t>(-100,100);
+        const rgba    c  = named_color::rand(alea);
+        const uint8_t b  = convert<uint8_t,rgba>::from(c);
+        const float   f  = convert<float,uint8_t>::from(b);
+        const uint8_t a  = ar();
+        draw::fbox(pxmf,x0,y0,x1,y1,f,a);
+        draw::fbox(pxm1,x0,y0,x1,y1,b,a);
+        draw::fbox(pxm3,x0,y0,x1,y1,c,a);
+        draw::fbox(pxm4,x0,y0,x1,y1,c,a);
+        draw::fbox(pxmf,x0,y0,x1,y1,m);
+    }
+
+
 
     std::cerr << "#mask=" << m.size() << std::endl;
 
@@ -263,6 +300,7 @@ Y_UTEST(draw)
 
     draw::masking(pxmm,m,Y_BLUE);
 
+    const area A = m.aabb();
     {
         mask::raw_keys blist;
         m.collect_keys(blist);
@@ -281,7 +319,9 @@ Y_UTEST(draw)
 
     draw::masking(pxmm,m,Y_GREEN,100);
 
-
+    draw::fbox(pxmm,A,Y_WHITE);
+    std::cerr << "aabb: " << A << std::endl;
+    
     std::cerr << "saving..." << std::endl;
 
     IMG.save(pxmf,"drawf.png");
