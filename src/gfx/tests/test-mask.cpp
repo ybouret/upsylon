@@ -3,6 +3,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/heap.hpp"
+#include "y/os/progress.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -32,9 +33,19 @@ namespace
     {
         assert(px.size()==nl.size());
         ios::ocstream fp(filename);
+        const size_t   n = px.size();
+        vector<size_t> mx(n,as_capacity);
+        mx.push_back(nl[1]);
+        for(size_t i=2;i<=n;++i)
+        {
+            const size_t tmp = max_of( mx.back(), nl[i]);
+            mx.push_back(tmp);
+        }
+        assert(mx.size()==n);
+
         for(size_t i=1;i<=px.size();++i)
         {
-            fp("%u %u\n", unsigned( px[i] ), unsigned( nl[i] ) );
+            fp("%u %u %u\n", unsigned( px[i] ), unsigned( nl[i] ), unsigned( mx[i] ) );
         }
 
     }
@@ -87,22 +98,22 @@ Y_UTEST(mask)
     vector<size_t> h_px;
     vector<size_t> h_nl;
 
-
-
-    for(unit_t w=1;w<=32;++w)
+    const unit_t wmax = 64;
+    const unit_t hmax = 64;
+    const size_t nmax = wmax*hmax;
+    size_t       cntr = 0;
+    progress     bar;
+    for(unit_t w=1;w<=wmax;++w)
     {
-        for(unit_t h=1;h<=32;++h)
+        for(unit_t h=1;h<=hmax;++h)
         {
             const size_t px = h*w;
             mask m;
             fill_mask(m,w,h);
-            std::cerr << w << "x" << h << ":";
             m.free();
-            //m.stats(std::cerr);
+
             Y_ASSERT(px==m.capacity());
             const size_t leaves = m.get_tree().pool.size;
-            std::cerr << m.get_tree().pool.size;
-            std::cerr << std::endl;
             if(w>h)
             {
                 w_px << px;
@@ -123,6 +134,7 @@ Y_UTEST(mask)
                     h_nl << leaves;
                 }
             }
+            bar.print(std::cerr,++cntr,nmax,0.2);
         }
     }
 

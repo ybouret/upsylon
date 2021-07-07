@@ -13,12 +13,12 @@ namespace upsylon
 
     progress:: progress() :
     stopwatch(),
-    mark(0),
+    mark(ticks()),
     bips(0),
     last(0),
     percent(0),
     done(0),
-    left(0),
+    left(max_seconds),
     counter(0)
     {
     }
