@@ -2,6 +2,7 @@
 #include "y/gfx/draw/circle.hpp"
 #include "y/gfx/draw/fill.hpp"
 #include "y/gfx/draw/mask.hpp"
+#include "y/gfx/draw/fbox.hpp"
 
 #include "y/utest/run.hpp"
 
