@@ -103,9 +103,10 @@ namespace upsylon
         //! capacity
         inline virtual size_t capacity() const throw() { return dlist.size + dpool.size; }
         
-        //! preload cache
+        //! preload cache of data_node
         inline virtual void   reserve(const size_t n) { dpool.cache(n); }
-        
+
+
         //! remove objects, keep memory
         inline virtual void   free() throw()
         {
@@ -126,6 +127,11 @@ namespace upsylon
         //
         // lower level functions
         //______________________________________________________________________
+
+
+        //! preload cache of tree_nod
+        inline void           reserve_leaves(const size_t n) { htree.cache_load(n); }
+
 
         //! same layout indepently of data
         inline bool has_same_layout_than(const suffix_graph &rhs) const throw()
