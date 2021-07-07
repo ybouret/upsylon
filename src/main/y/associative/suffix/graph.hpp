@@ -121,11 +121,6 @@ namespace upsylon
             htree.ditch();
         }
 
-        //! total number of nodes
-        inline size_t nodes() const throw() { return htree.nodes(); }
-
-        //! nodes in tree
-        inline size_t load() const throw() { return htree.load; }
 
         //______________________________________________________________________
         //
@@ -290,6 +285,13 @@ catch(...) { dpool.store(node); throw; }
         //______________________________________________________________________
         const tree_node &get_root() const throw() { return *htree.root; }
 
+
+        //______________________________________________________________________
+        //
+        //! accessing tree
+        //______________________________________________________________________
+        const tree_type &get_tree() const throw() { return htree; }
+
         //______________________________________________________________________
         //
         //! printing
@@ -306,7 +308,7 @@ catch(...) { dpool.store(node); throw; }
                 for(size_t i=1;i<=len;++i)    os << code[i];
                 for(size_t i=len;i<=dmax;++i) os << ' ';
                 os << ':' << ' ';
-                os << node->data;
+                os << **node;
                 os << std::endl;
             }
             os << '}';
@@ -317,6 +319,17 @@ catch(...) { dpool.store(node); throw; }
         inline friend std::ostream & operator<<( std::ostream &os, const suffix_graph &g)
         {
             return g.display(os);
+        }
+
+        //! stats
+        inline void stats(std::ostream &os) const
+        {
+            os << "<suffix_graph>" << std::endl;
+            os << "\tdata size = " << dlist.size      << std::endl;
+            os << "\tdata pool = " << dpool.size      << std::endl;
+            os << "\ttree load = " << htree.load      << std::endl;
+            os << "\ttree pool = " << htree.pool.size << std::endl;
+            os << "<suffix_graph/>" << std::endl;
         }
 
         //______________________________________________________________________
