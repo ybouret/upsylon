@@ -8,12 +8,13 @@ using namespace upsylon;
 using namespace mkl;
 using namespace fitting;
 
-#define Kh_SCALING 1.0e-7
+#define SCALING 1.0e-7
 
 namespace {
 
     static const double H[] =
     {
+        0,
         5.01187E-08,
         1.41254E-07,
         3.0903E-07,
@@ -24,6 +25,7 @@ namespace {
 
     static const double Li[] =
     {
+        0,
         1.1,
         2.79,
         17.66,
@@ -47,9 +49,7 @@ namespace {
     
     const double Kh0 = 0.17;
     const double Kl0 = 36;
-    const double c0  = Kh0/Kl0;
-    //const double L00 = 5900;
-    const double L00 = 5000;
+    const double L00 = 5900;
 
     class mwc
     {
@@ -61,8 +61,10 @@ namespace {
         
         inline double compute(const double h, const accessible<double> &aorg, const variables &vars)
         {
-            const double Kh    = vars(aorg,"Kh") * Kh_SCALING;
-            const double c     = vars(aorg, "c");
+            const double Kh    = vars(aorg,"Kh") * SCALING;
+            // const double c     = vars(aorg, "c");
+            const double Kl    = vars(aorg,"Kl") * SCALING;
+            const double c     = Kh/Kl;
             const double L0    = vars(aorg, "L0");
             const double Vmax  = vars(aorg, "Vmax");
             
@@ -70,7 +72,7 @@ namespace {
             const double opa   = 1.0+alpha;
             const double opca  = 1.0+c*alpha;
             
-         
+
             const double num  = alpha * opa + L0 * c * alpha * opca;
             const double den  = L0 * square_of(opca) + square_of(opa);
             
@@ -86,10 +88,11 @@ namespace {
     typedef sequential_function<double,double> seq_type;
     typedef seq_type::function                 function;
     
-    static inline void save(const sample_type &s,
+    static inline void save(const sample_type        &s,
                             const accessible<double> &aorg,
                             const accessible<bool>   &used,
-                            const accessible<double> &aerr)
+                            const accessible<double> &aerr,
+                            function                 &F)
     {
         correlation<double>          corr;
 
@@ -97,16 +100,31 @@ namespace {
         //std::cerr << "R2:    " << s.compute_R2() << std::endl;
         display_sample::results(std::cerr,s,aorg,used,aerr);
         std::cerr << std::endl;
-        
-        ios::ocstream fp("mwc.dat");
-        const accessible<double> &X = s.abscissa;
-        const accessible<double> &Y = s.ordinate;
-        const accessible<double> &Z = s.adjusted;
-        
-        for(size_t i=1;i<=N;++i)
+
         {
-            fp("%g %g %g\n",X[i],Y[i],Z[i]);
+            ios::ocstream fp("mwc.dat");
+            const accessible<double> &X = s.abscissa;
+            const accessible<double> &Y = s.ordinate;
+            const accessible<double> &Z = s.adjusted;
+
+            for(size_t i=1;i<=N;++i)
+            {
+                fp("%.15g %.15g %.15g\n",X[i],Y[i],Z[i]);
+            }
         }
+
+        {
+            const double hmin = 0;
+            const double hmax = 1e-6;
+            const size_t nmax = 100;
+            ios::ocstream fp("mwc-func.dat");
+            for(size_t i=0;i<=nmax;++i)
+            {
+                const double h = hmin + (i * (hmax-hmin)) / nmax;
+                fp("%.15g %.15g\n",h,F(h,aorg,s.vars));
+            }
+        }
+
     }
 }
 
@@ -121,7 +139,8 @@ Y_UTEST(mwc)
     variables &vars = s.vars;
     
     vars << "Kh";
-    vars << "c";
+    // vars << "c";
+    vars << "Kl";
     vars << "L0";
     vars << "Vmax";
     
@@ -137,14 +156,15 @@ Y_UTEST(mwc)
     
     
     vars(aorg,"Kh")    = Kh0;
-    vars(aorg,"c")     = c0;
-    vars(aorg,"Vmax")  = 40;
+    // vars(aorg,"c")     = c0;
+    vars(aorg,"Kl")    = Kl0;
+    vars(aorg,"Vmax")  = 55;
     vars(aorg,"L0")    = L00;
 
     
     s.setup(aorg);
     s.D2(F,aorg);
-   
+
     least_squares<double,double> lsf;
     
     lsf.grad().h = 1e-6;
@@ -156,18 +176,28 @@ Y_UTEST(mwc)
 vars.only_on(used,ID);\
 if(lsf.fit(s,F, aorg, used, aerr))\
 {\
-save(s,aorg,used,aerr);\
+save(s,aorg,used,aerr,F);\
 }\
 else\
 {\
 throw exception("error @cycle %d",cycle);\
 }\
 } while(false)
- 
-    CYCLE("L0");
 
-    
-    
+    for(size_t i=0;i<10;++i)
+    {
+        CYCLE("L0");
+        CYCLE("L0:Vmax");
+        //CYCLE("Kh");
+        //CYCLE("Kh:Vmax");
+    }
+
+    //CYCLE("Kl");
+
+    vars.make_all(used,true);
+    lsf.errors(s,F,aorg,used,aerr);
+    display_sample::results(std::cerr,s,aorg,used,aerr);
+
 }
 Y_UTEST_DONE()
 
