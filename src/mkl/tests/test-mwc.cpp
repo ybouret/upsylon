@@ -61,10 +61,10 @@ namespace {
         
         inline double compute(const double h, const accessible<double> &aorg, const variables &vars)
         {
-            const double Kh = vars(aorg,"Kh") * Kh_SCALING;
-            const double c  = vars(aorg, "c");
-            const double L0 = vars(aorg, "L0");
-            const double Y  = vars(aorg, "Y");
+            const double Kh    = vars(aorg,"Kh") * Kh_SCALING;
+            const double c     = vars(aorg, "c");
+            const double L0    = vars(aorg, "L0");
+            const double Vmax  = vars(aorg, "Vmax");
             
             const double alpha = h/Kh;
             const double opa   = 1.0+alpha;
@@ -74,7 +74,7 @@ namespace {
             const double num  = alpha * opa + L0 * c * alpha * opca;
             const double den  = L0 * square_of(opca) + square_of(opa);
             
-            return Y*num/den;
+            return Vmax*num/den;
         }
         
     private:
@@ -123,7 +123,7 @@ Y_UTEST(mwc)
     vars << "Kh";
     vars << "c";
     vars << "L0";
-    vars << "Y";
+    vars << "Vmax";
     
     
     mwc        f;
@@ -136,10 +136,10 @@ Y_UTEST(mwc)
     
     
     
-    vars(aorg,"Kh") = Kh0;
-    vars(aorg,"c")  = c0;
-    vars(aorg,"Y")  = 50;
-    vars(aorg,"L0") = L00;
+    vars(aorg,"Kh")    = Kh0;
+    vars(aorg,"c")     = c0;
+    vars(aorg,"Vmax")  = 40;
+    vars(aorg,"L0")    = L00;
 
     
     s.setup(aorg);
@@ -165,7 +165,7 @@ throw exception("error @cycle %d",cycle);\
 } while(false)
  
     CYCLE("L0");
-    
+
     
     
 }
