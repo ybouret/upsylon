@@ -46,8 +46,8 @@ namespace {
     static const size_t N = sizeof(H)/sizeof(H[0]);
     
     const double Kh0 = 0.17;
-    const double K10 = 36;
-    const double c0  = Kh0/K10;
+    const double Kl0 = 36;
+    const double c0  = Kh0/Kl0;
     //const double L00 = 5900;
     const double L00 = 5000;
 
@@ -93,8 +93,8 @@ namespace {
     {
         correlation<double>          corr;
 
-        std::cerr << "corr2: " << s.compute_corr(corr) << std::endl;
-        std::cerr << "R2:    " << s.compute_R2() << std::endl;
+        //std::cerr << "corr2: " << s.compute_corr(corr) << std::endl;
+        //std::cerr << "R2:    " << s.compute_R2() << std::endl;
         display_sample::results(std::cerr,s,aorg,used,aerr);
         std::cerr << std::endl;
         
@@ -164,20 +164,8 @@ throw exception("error @cycle %d",cycle);\
 }\
 } while(false)
  
-    CYCLE("Kh");
-    CYCLE("L0");
-    CYCLE("L0:Kh");
-    CYCLE("L0:Kh:Y");
-
-    return 0;
-    
     CYCLE("L0");
     
-    CYCLE("Y:L0");
-    
-    CYCLE("Kh:Y:L0");
-    
-    //CYCLE("c");
     
     
 }
