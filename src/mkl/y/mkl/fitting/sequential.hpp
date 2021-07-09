@@ -26,9 +26,9 @@ namespace upsylon
             {
             public:
                 //! functor matching the sequential call
-                typedef ORDINATE                                                   function_return_type;
-                typedef TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&) function_params_type;
-                typedef functor<function_return_type,function_params_type>         regular_functor;
+                typedef ORDINATE                                                   function_return_type; //!< alias
+                typedef TL3(ABSCISSA,const accessible<ORDINATE>&,const variables&) function_params_type; //!< interface for function
+                typedef functor<function_return_type,function_params_type>         regular_functor;      //!< regular functor type
 
                 //______________________________________________________________
                 //

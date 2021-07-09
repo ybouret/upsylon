@@ -28,6 +28,10 @@ namespace upsylon {
         template <typename T> static inline
         const T &decr( const T &args ) { return --_(args); }
 
+        //! force 0 by assignation
+        template <typename T> static inline
+        const T &zero(const T &args) { _(args)=0; }
+
         //______________________________________________________________________
         //
         // out of reach functions

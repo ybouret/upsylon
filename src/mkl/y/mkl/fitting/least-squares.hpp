@@ -66,8 +66,8 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef ORDINATE                                   ordinate;
-                typedef ABSCISSA                                   abscissa;
+                typedef ORDINATE                                   ordinate;         //!< alias
+                typedef ABSCISSA                                   abscissa;         //!< alias
                 typedef kernel::lambdas<ORDINATE>                  lambdas_type;     //!< alias for precomputed lambda
                 typedef matrix<ORDINATE>                           matrix_type;      //!< alias for numerical matrices
                 typedef arrays<ORDINATE>                           arrays_type;      //!< alias
