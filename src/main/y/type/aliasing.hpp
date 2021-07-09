@@ -30,7 +30,7 @@ namespace upsylon {
 
         //! force 0 by assignation
         template <typename T> static inline
-        const T &zero(const T &args) { _(args)=0; }
+        const T &zero(const T &args) { return _(args)=0; }
 
         //______________________________________________________________________
         //
