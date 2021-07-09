@@ -24,7 +24,7 @@ namespace upsylon
 
             inline virtual ~cycles() throw() {}
 
-            explicit cycles(const sample_api_type &user_data,
+            explicit cycles(  sample_api_type     &user_data,
                             parameters            &user_aorg,
                             booleans              &user_used,
                             parameters            &user_aerr) throw() :
@@ -36,7 +36,7 @@ namespace upsylon
             {
             }
 
-            const sample_api_type &data;
+            sample_api_type       &data;
             parameters            &aorg;
             booleans              &used;
             parameters            &aerr;
@@ -53,9 +53,11 @@ namespace upsylon
                 // call fit
                 if( ls.fit(data,F,aorg,used,aerr) )
                 {
+
                 }
                 else
                 {
+                    
                 }
             }
 

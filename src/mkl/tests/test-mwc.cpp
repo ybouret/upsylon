@@ -198,6 +198,10 @@ throw exception("error @cycle %d",count);\
 
     cycles<gls_type> cycle(s,aorg,used,aerr);
 
+    gls_type ls;
+    cycle(ls,F,"L0");
+
+
 }
 Y_UTEST_DONE()
 
