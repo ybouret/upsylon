@@ -84,6 +84,7 @@ namespace {
     };
     
     typedef sample<double,double>              sample_type;
+    typedef sample_type::pointer               meta_sample;
     typedef samples<double,double>             samples_type;
     typedef sequential_function<double,double> seq_type;
     typedef seq_type::regular_functor          regular_functor;
@@ -131,15 +132,14 @@ namespace {
 
 Y_UTEST(mwc)
 {
-    
-    samples_type sdb("db");                  // hold sample
-    sample_type  &s = sdb.create("sample");  // the sample
-    s.add(H,Li,N);                           // with data
-    
+
+
+    meta_sample  m = sample_type::create("mwc", H, Li, N);
+    sample_type &s = *m;
+
     variables &vars = s.vars;
     
     vars << "Kh";
-    // vars << "c";
     vars << "Kl";
     vars << "L0";
     vars << "Vmax";
@@ -156,7 +156,6 @@ Y_UTEST(mwc)
     
     
     vars(aorg,"Kh")    = Kh0;
-    // vars(aorg,"c")     = c0;
     vars(aorg,"Kl")    = Kl0;
     vars(aorg,"Vmax")  = 55;
     vars(aorg,"L0")    = L00;
@@ -188,8 +187,6 @@ throw exception("error @cycle %d",cycle);\
     {
         CYCLE("L0");
         CYCLE("L0:Vmax");
-        //CYCLE("Kh");
-        //CYCLE("Kh:Vmax");
     }
 
     //CYCLE("Kl");
