@@ -57,7 +57,7 @@ namespace upsylon
                 }
                 else
                 {
-                    
+                    throw exception("%s: failed to fit with '%s'", *data.name, *id);
                 }
             }
 
