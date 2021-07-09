@@ -1,5 +1,6 @@
 #include "y/utest/run.hpp"
-#include "y/mkl/fitting/least-squares.hpp"
+#include "y/mkl/fitting/cycle.hpp"
+#include "y/mkl/fitting/gls.hpp"
 #include "y/mkl/fitting/sample/display.hpp"
 #include "y/mkl/fitting/sample.hpp"
 #include "y/mkl/fitting/samples.hpp"
@@ -169,9 +170,9 @@ Y_UTEST(mwc)
     lsf.grad().h = 1e-6;
     
 
-    int cycle=0;
+    int count=0;
 #define CYCLE(ID) do{\
-++cycle;\
+++count;\
 vars.only_on(used,ID);\
 if(lsf.fit(s,F, aorg, used, aerr))\
 {\
@@ -179,7 +180,7 @@ save(s,aorg,used,aerr,F);\
 }\
 else\
 {\
-throw exception("error @cycle %d",cycle);\
+throw exception("error @cycle %d",count);\
 }\
 } while(false)
 
@@ -194,6 +195,8 @@ throw exception("error @cycle %d",cycle);\
     vars.make_all(used,true);
     lsf.errors(s,F,aorg,used,aerr);
     display_sample::results(std::cerr,s,aorg,used,aerr);
+
+    cycles<gls_type> cycle(s,aorg,used,aerr);
 
 }
 Y_UTEST_DONE()
