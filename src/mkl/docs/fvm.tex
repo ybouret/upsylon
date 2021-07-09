@@ -7,11 +7,38 @@
 \usepackage{dejavu}
 
 \newcommand{\half}{{\sfrac{1}{2}}}
+\newcommand{\mat}[1]{\bm{#1}}
 
 \begin{document}
 
 \title{FVM}
 \maketitle
+
+Let us assume that we have a field of concentrations $\vec{C}$,
+and that we have its finite volume representations under the form:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{\underline{C}} & = & \mat{W} \left(\mat{P}\vec{C}\right) + \mat{F} \left(\mat{Q}\vec{C}\right)\\
+	\mat{P} & = & \text{projection of degrees of freedom}\\
+	\mat{Q} & = & \text{projection of fixed conditions}\\
+	\mat{W} & = & \text{active weight matrix}\\
+	\mat{F} & = & \text{fixed weight matrix}\\
+\end{array}
+\right.
+\end{equation}
+
+We define:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{\omega} & = & \mat{P}\vec{C}\\
+	\vec{\phi}   & = & \mat{Q}\vec{C}\\
+\end{array}
+\right.
+\end{equation}
+
+\end{document}
 
 \subsection{Change mapping under constraints}
 Let $\vec{C}$ be a initial set of concentrations on a domain $\mathcal{V}$.

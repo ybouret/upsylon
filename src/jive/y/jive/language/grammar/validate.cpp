@@ -210,6 +210,8 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             {
                                 if(ft->search(key))
                                 {
+                                    //if(Aggregate::UUID!=ft->from.uuid) continue;
+
                                     std::cerr << " @" << ft->from.name;
                                     aliasing::_(axiom->hosts).store( new Axiom::Host( ft->from ) );
                                 }
