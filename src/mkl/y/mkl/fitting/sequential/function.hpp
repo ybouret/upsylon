@@ -15,7 +15,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             //
-            //! sequential calls interface
+            //! sequential calls interface of a regular function
             //
             //__________________________________________________________________
             template <typename ABSCISSA, typename ORDINATE>
