@@ -63,9 +63,9 @@ Y_UTEST(fitting_diff)
     typedef samples<double,double> samples_type;
     typedef sequential_function<double,double> seq_type;
 
-    Diffusion          diff;
-    seq_type::function f(&diff,&Diffusion::compute);
-    seq_type           F(f);
+    Diffusion                 diff;
+    seq_type::regular_functor f(&diff,&Diffusion::compute);
+    seq_type                  F(f);
     sequential_gradient<double,double> G;
 
     G.F = &F;
@@ -106,10 +106,10 @@ Y_UTEST(fitting_diff)
     *sa << "t0" << "D1" << "D2";
 
     (*s1)( "t0", (*sa)("t0") );
-    (*s1)( "D", (*sa)("D1") );
+    (*s1)( "D",  (*sa)("D1") );
 
     (*s2)( "t0", (*sa)("t0") );
-    (*s2)( "D", (*sa)("D2") );
+    (*s2)( "D",  (*sa)("D2") );
 
     showSample(sa);
     showSample(s1);

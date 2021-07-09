@@ -37,7 +37,7 @@ namespace upsylon
                 typedef samples<double,double>               samples_type;    //!< alias
 
                 typedef sequential<double,double>            sequential_type; //!< alias
-                typedef sequential_type::function            function;        //!< alias
+                typedef sequential_type::regular_functor     regular_functor; //!< alias
                 typedef v_gradient<double,double>            v_gradient_type; //!< alias
 
                 typedef explode<double>                      explode_type;        //!< alias

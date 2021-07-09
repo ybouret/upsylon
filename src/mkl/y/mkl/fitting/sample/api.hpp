@@ -35,7 +35,7 @@ namespace upsylon
                 // types and definition
                 //______________________________________________________________
                 typedef sequential<ABSCISSA,ORDINATE>               sequential_type; //!< alias
-                typedef typename sequential_type::function          sequential_func; //!< alias
+                typedef typename sequential_type::regular_functor   regular_functor; //!< alias
                 typedef v_gradient<ABSCISSA,ORDINATE>               v_gradient_type; //!< alias
 
                 //______________________________________________________________
@@ -61,7 +61,7 @@ namespace upsylon
                 }
 
                 //! wrapper for regular function
-                inline ORDINATE D2(sequential_func &f, const accessible<ORDINATE> &a)
+                inline ORDINATE D2(regular_functor &f, const accessible<ORDINATE> &a)
                 {
                     sequential_function<ABSCISSA,ORDINATE> F(f);
                     return save_D2( D2_only(F,a) );
@@ -83,7 +83,7 @@ namespace upsylon
                 //!  D2 with curvature and gradient, wrapper
                 inline ORDINATE D2(matrix<ORDINATE>           &alpha,
                                    addressable<ORDINATE>      &beta,
-                                   sequential_func            &f,
+                                   regular_functor            &f,
                                    v_gradient_type            &G,
                                    const accessible<ORDINATE> &A,
                                    const accessible<bool>     &used)

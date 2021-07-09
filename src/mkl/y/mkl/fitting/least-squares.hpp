@@ -66,16 +66,16 @@ namespace upsylon
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef kernel::lambdas<ORDINATE>              lambdas_type;     //!< alias for precomputed lambda
-                typedef matrix<ORDINATE>                       matrix_type;      //!< alias for numerical matrices
-                typedef arrays<ORDINATE>                       arrays_type;      //!< alias
-                typedef typename arrays_type::array_type       vector_type;      //!< alias
-                typedef lightweight_array<bool>                flags_type;       //!< alias for booleans interface
-                typedef sample_api<ABSCISSA,ORDINATE>          sample_api_type;  //!< alias for any sample
-                typedef sequential<ABSCISSA,ORDINATE>          sequential_type;  //!< alias for the sequential interface
-                typedef v_gradient<ABSCISSA,ORDINATE>          v_gradient_type;  //!< alias for the v_gradient interface
-                typedef sequential_gradient<ABSCISSA,ORDINATE> sequential_grad;  //!< alias for the sequential gradient
-                typedef typename sequential_type::function     sequential_func;  //!< alias
+                typedef kernel::lambdas<ORDINATE>                  lambdas_type;     //!< alias for precomputed lambda
+                typedef matrix<ORDINATE>                           matrix_type;      //!< alias for numerical matrices
+                typedef arrays<ORDINATE>                           arrays_type;      //!< alias
+                typedef typename arrays_type::array_type           vector_type;      //!< alias
+                typedef lightweight_array<bool>                    flags_type;       //!< alias for booleans interface
+                typedef sample_api<ABSCISSA,ORDINATE>              sample_api_type;  //!< alias for any sample
+                typedef sequential<ABSCISSA,ORDINATE>              sequential_type;  //!< alias for the sequential interface
+                typedef v_gradient<ABSCISSA,ORDINATE>              v_gradient_type;  //!< alias for the v_gradient interface
+                typedef sequential_gradient<ABSCISSA,ORDINATE>     sequential_grad;  //!< alias for the sequential gradient
+                typedef typename sequential_type::regular_functor  regular_functor;  //!< alias
                 
                 //______________________________________________________________
                 //
@@ -163,7 +163,7 @@ namespace upsylon
                  creates a wrapper and use the internal numerical gradient
                  */
                 inline bool fit(sample_api_type        &s,
-                                sequential_func        &f,
+                                regular_functor        &f,
                                 addressable<ORDINATE>  &A,
                                 const accessible<bool> &U,
                                 addressable<ORDINATE>  &E)
@@ -192,7 +192,7 @@ namespace upsylon
 
                 //! fit with a regular function
                 inline void errors(sample_api_type        &s,
-                                   sequential_func        &f,
+                                   regular_functor        &f,
                                    addressable<ORDINATE>  &A,
                                    const accessible<bool> &U,
                                    addressable<ORDINATE>  &E)
@@ -200,9 +200,6 @@ namespace upsylon
                     sequential_function<ABSCISSA,ORDINATE> F(f);
                     errors(s,F,A,U,E);
                 }
-
-
-
 
 
             private:

@@ -23,10 +23,10 @@ namespace upsylon
             {
             public:
                 //! alias to a functor
-                typedef typename sequential<ABSCISSA,ORDINATE>::function function;
+                typedef typename sequential<ABSCISSA,ORDINATE>::regular_functor regular_functor;
 
                 //! setup
-                inline explicit sequential_function( function &host ) throw() : F(host) {}
+                inline explicit sequential_function( regular_functor &host ) throw() : F(host) {}
 
                 //! cleanup
                 inline virtual ~sequential_function() throw() {}
@@ -34,7 +34,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(sequential_function);
-                function &F;
+                regular_functor &F;
 
                 virtual ORDINATE onStart(const ABSCISSA x, const accessible<ORDINATE> &aorg, const variables &vars)
                 {

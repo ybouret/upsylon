@@ -27,8 +27,8 @@ namespace upsylon
             template <typename T>
             struct series
             {
-                typedef arr_ptr<sequence<T>,arc_ptr>                type;     //!< alias
-                typedef typename sequential_function<T,T>::function function; //!< alias
+                typedef arr_ptr<sequence<T>,arc_ptr>                       type;            //!< alias
+                typedef typename sequential_function<T,T>::regular_functor regular_functor; //!< alias
             };
 
             //__________________________________________________________________

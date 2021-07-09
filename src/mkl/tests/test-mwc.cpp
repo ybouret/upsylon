@@ -86,13 +86,13 @@ namespace {
     typedef sample<double,double>              sample_type;
     typedef samples<double,double>             samples_type;
     typedef sequential_function<double,double> seq_type;
-    typedef seq_type::function                 function;
+    typedef seq_type::regular_functor          regular_functor;
     
     static inline void save(const sample_type        &s,
                             const accessible<double> &aorg,
                             const accessible<bool>   &used,
                             const accessible<double> &aerr,
-                            function                 &F)
+                            regular_functor          &F)
     {
         correlation<double>          corr;
 
@@ -145,8 +145,8 @@ Y_UTEST(mwc)
     vars << "Vmax";
     
     
-    mwc        f;
-    function F(&f, &mwc::compute);
+    mwc             f;
+    regular_functor F(&f, &mwc::compute);
     
     const size_t   nvar = s.vars.size();
     vector<double> aorg(nvar,0);
