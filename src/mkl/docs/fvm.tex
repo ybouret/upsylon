@@ -101,6 +101,12 @@ We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
 
 \subsubsection{Linear}
 
+For a given surface $S$ for at each point $x_1,\ldots,x_N$:
+\begin{equation}
+	A_i = \dfrac{1}{V_i} \iiint C \partial V = \dfrac{1}{S(x_{i+1}-x_i)} \int_{x_i}^{x_{i_1}} C(x) S \partial x = \dfrac{1}{2}\left(C_{i}+C_{i+1}\right)
+\end{equation}
+
+
 \begin{equation}
 	\mat{F} = 
 	\begin{bmatrix}
@@ -123,6 +129,8 @@ We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
 	 0      & \ldots & \ldots & \ldots &  0 & \half \\                
 	\end{bmatrix} \in \mathcal{M}_{N-1,N-2}
 \end{equation}
+
+
 
 
 \subsubsection{Radial}
