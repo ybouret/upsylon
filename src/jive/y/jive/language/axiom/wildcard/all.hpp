@@ -1,3 +1,4 @@
+//! \file
 
 
 #ifndef Y_JIVE_LANG_ALL_WILDCARDS_INCLUDED
