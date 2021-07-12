@@ -156,13 +156,13 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                         {
                             case Aggregate::UUID:
                             case Alternate::UUID: {
-                                Axiom::TermLedger *ft = firsts.store( new Axiom::TermLedger( axiom->to<Compound>() ) );
-                                Axiom::Expecting(*ft,*axiom);
+                                Axiom::TermLedger &ft = *firsts.store( new Axiom::TermLedger( axiom->to<Compound>() ) );
+                                Axiom::Expecting(ft,*axiom);
                                 if(Axiom::Verbose)
                                 {
                                     std::cerr << " ==> {";
                                     list<string>                     names;
-                                    ft->collect<string,list<string> >(names);
+                                    ft.collect<string,list<string> >(names);
                                     for(size_t i=1;i<=names.size();++i) std::cerr << " <" << names[i] << ">";
                                     std::cerr << " }";
                                 }
@@ -196,33 +196,22 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                     {
                         if(Terminal::UUID==axiom->uuid)
                         {
-                            const Terminal *guest = & axiom->as<Terminal>();
-                            const string   &key   = *(guest->name);
+                            const Terminal &guest = axiom->as<Terminal>();
+                            const string   &key   = *guest.name;
 
-                            if(Axiom::Verbose)
-                            {
-                                std::cerr << "\t\t\\_" << ios::align(key, ios::align::left, aligned);
-                            }
-
-                            
+                            if(Axiom::Verbose) std::cerr << "\t\t\\_" << ios::align(key, ios::align::left, aligned);
 
                             for(const Axiom::TermLedger *ft=firsts.head;ft;ft=ft->next)
                             {
                                 if(ft->search(key))
                                 {
-                                    //if(Aggregate::UUID!=ft->from.uuid) continue;
-
-                                    std::cerr << " @" << ft->from.name;
+                                    if(Axiom::Verbose) std::cerr << " @" << ft->from.name;
                                     aliasing::_(axiom->hosts).store( new Axiom::Host( ft->from ) );
                                 }
                             }
 
 
-                            if(Axiom::Verbose)
-                            {
-                                std::cerr << std::endl;
-                            }
-
+                            if(Axiom::Verbose) std::cerr << std::endl;
                         }
                     }
                     Y_LANG_PRINTLN("\t<" << name << " hosts/>");
