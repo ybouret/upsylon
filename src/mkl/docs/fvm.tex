@@ -7,7 +7,8 @@
 \usepackage{dejavu}
 
 \newcommand{\half}{{\sfrac{1}{2}}}
-\newcommand{\mat}[1]{\bm{#1}}
+\newcommand{\mat}[1]{{\bm{#1}}}
+\newcommand{\trn}[1]{{{{#1}}^{\mathtt{T}}}}
 
 \begin{document}
 
@@ -15,11 +16,11 @@
 \maketitle
 
 Let us assume that we have a field of concentrations $\vec{C}$,
-and that we have its finite volume representations under the form:
+and that we have its finite volume representations $\vec{A}$ under the form:
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-	\vec{\underline{C}} & = & \mat{W} \left(\mat{P}\vec{C}\right) + \mat{F} \left(\mat{Q}\vec{C}\right)\\
+	\vec{A} & = & \mat{W} \left(\mat{P}\vec{C}\right) + \mat{F} \left(\mat{Q}\vec{C}\right)\\
 	\mat{P} & = & \text{projection of degrees of freedom}\\
 	\mat{Q} & = & \text{projection of fixed conditions}\\
 	\mat{W} & = & \text{active weight matrix}\\
@@ -34,6 +35,25 @@ We define:
 \begin{array}{rcl}
 	\vec{\omega} & = & \mat{P}\vec{C}\\
 	\vec{\phi}   & = & \mat{Q}\vec{C}\\
+\end{array}
+\right.
+\end{equation}
+
+Let us assume that we compute the approximation update $\delta\vec{A}^n$, and we get:
+\begin{equation}
+	\vec{A}^{n+1} = \vec{A}^n + \delta\vec{A}^n
+\end{equation}
+so that:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcl}
+	\vec{\omega}^{n+1} & = & \left(\trn{\mat{W}}\mat{W}\right)^{-1} \trn{\mat{W}} \left( \vec{A}^{n+1} -   \mat{F} \vec{\phi}^{n+1}\right)\\
+	\\
+	& = &  \left(\trn{\mat{W}}\mat{W}\right)^{-1} \trn{\mat{W}} 
+	\left[ \delta\vec{A}^{n} + \mat{W} \vec{\omega}^n + \mat{F} \left(\vec{\phi}^{n} - \vec{\phi}^{n+1}\right) \right]\\
+	\\
+	& = & \vec{\omega}^n + 
+	\left(\trn{\mat{W}}\mat{W}\right)^{-1} \trn{\mat{W}} \left[ \delta\vec{A}^{n} + \mat{F} \left(\vec{\phi}^{n} - \vec{\phi}^{n+1}\right) \right]\\
 \end{array}
 \right.
 \end{equation}
