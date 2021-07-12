@@ -27,6 +27,7 @@ add_test(patch   test-gfx patch)
 add_test(ramp    test-gfx ramp ${IMG})
 add_test(mask    test-gfx mask)
 add_test(draw    test-gfx draw)
+add_test(split   test-gfx split ${IMG})
 
 ADD_CUSTOM_TARGET(utest-gfx
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
