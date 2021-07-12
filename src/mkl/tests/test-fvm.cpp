@@ -56,9 +56,24 @@ namespace
         }
         std::cerr << "IW=" << IW << std::endl;
 
+#if 0
         matrix<apq> WtF(Wt.rows,F.cols);
         tao::mmul(WtF,Wt,F);
         std::cerr << "WtF=" << WtF << std::endl;
+#endif
+        matrix<apq> P(N-2,N);
+        matrix<apq> Q(2,N);
+        for(size_t i=1;i<=N-2;++i)
+        {
+            P[i][i+1] = 1;
+        }
+        std::cerr << "P=" << P << std::endl;
+
+
+        Q[1][1] = 1;
+        Q[2][N] = 1;
+        std::cerr << "Q=" << Q << std::endl;
+
 
 
         std::cerr << std::endl;
