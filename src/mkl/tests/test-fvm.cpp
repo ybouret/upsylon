@@ -13,18 +13,21 @@ namespace
         assert(N>2);
         const apq    h(1,2);
         matrix<apq>  W(N-1,N-2);
+        matrix<apq>  F(N-1,2);
         const size_t r = W.rows;
         for(size_t i=1;i<=r;++i)
         {
             if(i<=1)
             {
                 W[1][1] = h;
+                F[1][1] = h;
             }
             else
             {
                 if(i>=r)
                 {
                     W[r][r-1]= h;
+                    F[r][2]  = h;
                 }
                 else
                 {
@@ -39,20 +42,24 @@ namespace
         matrix<apq> Wt(W,matrix_transpose);
 
         std::cerr << "W =" << W  << std::endl;
+        std::cerr << "F =" << F  << std::endl;
 
-        matrix<apq> W2(N-2,N-2);
         matrix<apq> IW(N-2,N-2);
-        tao::mmul(W2, Wt, W);
-        std::cerr << "W2=" << W2 << std::endl;
         {
-            matrix<apq> W2LU(W2);
-            if(!LU::build(W2LU))
+            matrix<apq> W2(N-2,N-2);
+            tao::mmul(W2, Wt, W);
+            if(!LU::build(W2))
             {
                 throw exception("Singular W'*W");
             }
-            LU::inverse(W2LU,IW);
+            LU::inverse(W2,IW);
         }
         std::cerr << "IW=" << IW << std::endl;
+
+        matrix<apq> WtF(Wt.rows,F.cols);
+        tao::mmul(WtF,Wt,F);
+        std::cerr << "WtF=" << WtF << std::endl;
+
 
         std::cerr << std::endl;
 
