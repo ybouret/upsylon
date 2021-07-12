@@ -135,6 +135,32 @@ For a given surface $S$ for at each point $x_1,\ldots,x_N$:
 
 \subsubsection{Radial}
 
+For a given height $H$ for at each point $r_1,\ldots,r_N$:
+\begin{equation}
+\begin{array}{rcl}
+	A_i & = & \displaystyle\dfrac{1}{V_i} \iiint C \partial V \\
+	\\
+	& = & \displaystyle \dfrac{1}{\pi H \left( r_{i+1}^2 - r_{i}^2 \right)} \int_{r_i}^{r_{i+1}} C(r) 2\pi r H \partial r\\
+	\\
+	& = & \displaystyle \dfrac{2}{\left( r_{i+1}^2 - r_{i}^2 \right)} \int_{r_i}^{r_{i+1}}   r \left[ C_{i} + \dfrac{r-r_i}{r_{i+1}-r_i} \left(C_{i+1}-C_{i}\right) \right]  \partial r\\ \\
+	& = & \displaystyle \frac{1}{3} \left[ \left(1+\dfrac{r_i}{r_i+r_{i+1}}\right) C_i + \left(1+\dfrac{r_{i+1}}{r_i+r_{i+1}}\right) C_{i+1} \right]\\\
+\end{array}
+\end{equation} 
+
+\subsubsection{Spherical}
+
+For a given point $r_1,\ldots,r_N$:
+\begin{equation}
+\begin{array}{rcl}
+	A_i & = & \displaystyle\dfrac{1}{V_i} \iiint C \partial V \\
+	\\
+	& = & \displaystyle \dfrac{1}{\frac{4\pi}{3}  \left( r_{i+1}^3 - r_{i}^3 \right)} \int_{r_i}^{r_{i+1}} C(r) 4\pi r^2 \partial r\\
+	\\
+	& = & \displaystyle \dfrac{3}{\left( r_{i+1}^3 - r_{i}^3 \right)} \int_{r_i}^{r_{i+1}}   r^2 \left[ C_{i} + \dfrac{r-r_i}{r_{i+1}-r_i} \left(C_{i+1}-C_{i}\right) \right]  \partial r\\ \\
+	& = & %\displaystyle \frac{1}{3} \left[ \left(1+\dfrac{r_i}{r_i+r_{i+1}}\right) C_i + \left(1+\dfrac{r_{i+1}}{r_i+r_{i+1}}\right) C_{i+1} \right]\\\
+\end{array}
+\end{equation} 
+
 
 
 \end{document}
