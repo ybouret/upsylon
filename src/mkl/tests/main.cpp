@@ -68,6 +68,8 @@ Y_UTEST_INIT(64)
     Y_UTEST(fitting_load);
     Y_UTEST(mwc);
 
+    Y_UTEST(fvm);
+
 }
 Y_UTEST_EXEC()
 

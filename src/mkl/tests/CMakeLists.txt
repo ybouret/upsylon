@@ -108,6 +108,10 @@ ADD_TEST(fitting:gaussians test-mkl fitting_gaussians)
 ADD_TEST(fitting:wmc       test-mkl mwc)
 
 
+SOURCE_GROUP(fvm FILES
+test-fvm.cpp)
+ADD_TEST(fvm test-mkl fvm)
+
 ADD_CUSTOM_TARGET(utest-mkl
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
 DEPENDS test-mkl)

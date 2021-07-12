@@ -27,6 +27,7 @@ and that we have its finite volume representations $\vec{A}$ under the form:
 	\mat{F} & = & \text{fixed weight matrix}\\
 \end{array}
 \right.
+\;\;(\mat{P} \perp \mat{Q})
 \end{equation}
 
 We define:
@@ -57,6 +58,66 @@ so that:
 \end{array}
 \right.
 \end{equation}
+
+\centerline{Heat Equation With Fixed Boundaries}
+We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
+\begin{equation}
+	\vec{\phi}=
+	\begin{bmatrix}
+	C_1\\
+	C_N\\
+	\end{bmatrix}
+	= 
+	\underbrace{
+	\begin{bmatrix}
+	1 & 0 & \ldots & 0\\
+ 	0 & \ldots & 0 & 1\\
+	\end{bmatrix}}_{\mat{Q} \in \mathcal{M}_{2,N}}
+	\vec{C}
+\end{equation}
+
+
+\begin{equation}
+	\vec{\omega}=
+	\begin{bmatrix}
+	C_2\\
+	\ldots\\
+	C_{N-1}\\
+	\end{bmatrix}
+	= 
+	\underbrace{
+	\begin{bmatrix}
+	0 & 1 & 0 & \ldots & 0 \\
+	\vdots & \ddots & \ddots & \ddots & \vdots \\
+     0 & \ldots & 0 & 1 & 0\\
+ 	\end{bmatrix}}_{\mat{P} \in \mathcal{M}_{N-2,N}}
+	\vec{C}
+\end{equation}
+
+\begin{equation}
+	\mat{F} = 
+	\begin{bmatrix}
+	\half & 0\\
+	0     & 0\\
+	\vdots & \vdots\\
+	0      & 0\\
+	0      & \half\\
+	\end{bmatrix} \in \mathcal{M}_{N-1,2}
+\end{equation}
+
+
+\begin{equation}
+	\mat{W} = 
+	\begin{bmatrix}
+	\half & 0     & \ldots &\ldots & \ldots & 0 \\
+	 0    & \half & \half & 0     & \ldots & 0 \\
+	 \vdots & \ddots & \ddots & \ddots & \vdots & \vdots \\
+	 0      & \ldots & 0& \half& \half  &  0     \\ 
+	 0      & \ldots & \ldots & \ldots &  0 & \half \\                
+	\end{bmatrix} \in \mathcal{M}_{N-1,N-2}
+\end{equation}
+
+
 
 \end{document}
 
