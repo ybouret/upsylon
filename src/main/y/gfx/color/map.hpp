@@ -48,6 +48,9 @@ namespace upsylon
             float          v2u(const float v) const throw();        //!< value to unit float
             virtual unit_t depth() const throw();                   //!< sizeof(float)
             virtual rgba   operator()(const void *) const throw();  //!< rescaled get
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(color_map);
         };
 
 

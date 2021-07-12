@@ -76,6 +76,7 @@ namespace upsylon
             color_ramp(const color_ramp&)  throw();              //!< no-throw copy
             color_ramp(color_ramp_*) throw();                    //!< setup
             color_ramp & operator=(const color_ramp &) throw();  //!< no-throw assign
+            color_ramp & operator=(color_ramp_ *) throw();       //!< no-throw assign
 
             //__________________________________________________________________
             //

@@ -63,6 +63,11 @@ namespace upsylon
             return *this;
         }
 
+        color_ramp & color_ramp:: operator=(color_ramp_ *r) throw()
+        {
+            const color_ramp temp(r);
+            return (*this = temp);
+        }
 
 
         unit_t color_ramp:: depth() const throw()
