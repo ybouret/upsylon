@@ -15,6 +15,10 @@
 \title{FVM}
 \maketitle
 
+\section{Notations}
+
+\subsection{Generic}
+
 Let us assume that we have a field of concentrations $\vec{C}$,
 and that we have its finite volume representations $\vec{A}$ under the form:
 \begin{equation}
@@ -59,7 +63,8 @@ so that:
 \right.
 \end{equation}
 
-\centerline{Heat Equation With Fixed Boundaries}
+\subsection{1D Heat Equation With Fixed Boundaries}
+\subsubsection{Projections}
 We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
 \begin{equation}
 	\vec{\phi}=
@@ -94,6 +99,8 @@ We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
 	\vec{C}
 \end{equation}
 
+\subsubsection{Linear}
+
 \begin{equation}
 	\mat{F} = 
 	\begin{bmatrix}
@@ -116,6 +123,9 @@ We have $C_1,\ldots,C_N$ and $A_1,\ldots,A_{N-1}$, $C_1$ and $C_N$ are fixed:
 	 0      & \ldots & \ldots & \ldots &  0 & \half \\                
 	\end{bmatrix} \in \mathcal{M}_{N-1,N-2}
 \end{equation}
+
+
+\subsubsection{Radial}
 
 
 
