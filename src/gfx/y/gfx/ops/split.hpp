@@ -10,6 +10,12 @@ namespace upsylon
     namespace graphic
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! split source into individual component
+        //
+        //______________________________________________________________________
         template <
         typename T,
         typename PIXEL> inline
