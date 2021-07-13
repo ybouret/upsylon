@@ -82,17 +82,18 @@ namespace upsylon
                 assert(args);
                 return static_cast<profile *>(args)->accept(b);
             }
-          
-            void profile:: track(blobs           &userBlobs,
-                                 pixmap<uint8_t> &userEdges,
-                                 pixmap<size_t>  &userMasks,
-                                 shared_knots    &knotCache)
+
+            size_t profile:: track(blobs           &userBlobs,
+                                   pixmap<uint8_t> &userEdges,
+                                   pixmap<size_t>  &userMasks,
+                                   shared_knots    &knotCache)
             {
                 momentary_link<blobs>            linkBlobs(userBlobs,&Blobs);
                 momentary_link<pixmap<uint8_t> > linkEdges(userEdges,&Edges);
                 momentary_link<pixmap<size_t>  > linkMasks(userMasks,&Masks);
                 
                 userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
+                return userBlobs.size;
             }
             
             

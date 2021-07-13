@@ -38,7 +38,7 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                //! tighten edges values to STRING/FEEBLE 
+                //! tighten edges values to STRONG/FEEBLE 
                 /**
                  \return the number of active edges
                  */
@@ -48,10 +48,10 @@ namespace upsylon
                                       const uint8_t    strong_limit);
                 
                 //! track edges
-                void track(blobs           &userBlobs,
-                           pixmap<uint8_t> &userEdges,
-                           pixmap<size_t>  &userMasks,
-                           shared_knots    &knotCache);
+                size_t track(blobs           &userBlobs,
+                             pixmap<uint8_t> &userEdges,
+                             pixmap<size_t>  &userMasks,
+                             shared_knots    &knotCache);
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(profile);

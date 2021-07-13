@@ -19,8 +19,12 @@ Y_UTEST(detect)
     engine               parEng = new concurrent::simt();
     engine               seqEng = new concurrent::solo();
     filters_db          &fdb    = filters_db::instance();
-    const shared_filters delta  = fdb["Sobel7"];
+    const shared_filters delta  = fdb["Scharr5"];
     color_ramp           cth    = new color_tableau<cold_to_hot>();
+    size_to_rgba         sz2c;
+
+    blobs                Blobs;
+    shared_knots         Knots = new knots();
 
     if(argc>1)
     {
@@ -31,14 +35,25 @@ Y_UTEST(detect)
 
         IMG.save(source,"source.png");
         std::cerr << "sequential/no-blur" << std::endl;
-        E.build(source,seq,convert<float,rgba>::from,delta, NULL);
+        const size_t nseq_full = E.prepare(source,seq,convert<float,rgba>::from,delta, NULL);
+        const size_t eseq_full = E.extract(Blobs,Knots);
+        std::cerr << "nseq_full=" << nseq_full << "=>" << eseq_full << std::endl;
         IMG.save(E.grad,"gseq-full.png",NULL,cth);
         IMG.save(E.kmax,"kseq-full.png");
+        IMG.save(E,"eseq-full.png",NULL,sz2c);
+
 
         std::cerr << "parallel/no-blur" << std::endl;
-        E.build(source,par,convert<float,rgba>::from,delta, NULL);
+        const size_t npar_full = E.prepare(source,par,convert<float,rgba>::from,delta, NULL);
+        const size_t epar_full = E.extract(Blobs,Knots);
+        std::cerr << "npar_full=" << npar_full << "=>" << epar_full << std::endl;
         IMG.save(E.grad,"gpar-full.png",NULL,cth);
         IMG.save(E.kmax,"kpar-full.png");
+        IMG.save(E,"epar-full.png",NULL,sz2c);
+
+        Y_CHECK(npar_full==nseq_full);
+        Y_CHECK(epar_full==eseq_full);
+
 
     }
 

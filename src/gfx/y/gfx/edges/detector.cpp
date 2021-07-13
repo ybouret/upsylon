@@ -14,6 +14,7 @@ namespace upsylon
             }
 
             detector:: detector(const unit_t W, const unit_t H) :
+            pixmap<size_t>(W,H),
             grad(W,H),
             gmax(0),
             kmax(W,H),
@@ -24,10 +25,10 @@ namespace upsylon
             }
 
 
-            void detector:: build(const pixmap<float>  &field,
-                                  broker               &apply,
-                                  const shared_filters &delta,
-                                  const blur           *cloud)
+            size_t detector:: prepare(const pixmap<float>  &field,
+                                      broker               &apply,
+                                      const shared_filters &delta,
+                                      const blur           *cloud)
             {
                 //--------------------------------------------------------------
                 //
@@ -58,8 +59,13 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const uint8_t strong = kmax.threshold();
                 const uint8_t feeble = strong/2;
-                prof.tighten(kmax,apply,feeble,strong);
-                
+                return prof.tighten(kmax,apply,feeble,strong);
+            }
+
+            size_t detector:: extract(blobs        &userBlobs,
+                                      shared_knots &knotCache)
+            {
+                return prof.track(userBlobs,kmax,*this,knotCache);
             }
 
         }
