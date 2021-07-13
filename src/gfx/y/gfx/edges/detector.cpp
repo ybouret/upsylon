@@ -59,13 +59,16 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const uint8_t strong = kmax.threshold();
                 const uint8_t feeble = strong/2;
+                std::cerr << "feeble=" << int(feeble) << ", strong=" << int(strong) << std::endl;
                 return prof.tighten(kmax,apply,feeble,strong);
             }
 
             size_t detector:: extract(blobs        &userBlobs,
                                       shared_knots &knotCache)
             {
-                return prof.track(userBlobs,kmax,*this,knotCache);
+                const size_t res = prof.track(userBlobs,kmax,*this,knotCache);
+                userBlobs.sort(*this);
+                return res;
             }
 
         }

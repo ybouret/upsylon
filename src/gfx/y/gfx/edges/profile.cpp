@@ -77,7 +77,7 @@ namespace upsylon
                 return apply.caches.sum<size_t>();
             }
             
-            bool profile:: call_accept(blob &b, void *args) throw()
+            bool profile:: call_accept(const blob &b, void *args) throw()
             {
                 assert(args);
                 return static_cast<profile *>(args)->accept(b);
@@ -97,7 +97,7 @@ namespace upsylon
             }
             
             
-            bool profile:: accept(blob &b) throw()
+            bool profile:: accept(const blob &b) throw()
             {
                 pixmap<uint8_t> &E = *Edges;
                 for(const knot  *node=b.head;node;node=node->next)

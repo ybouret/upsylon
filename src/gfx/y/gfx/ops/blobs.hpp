@@ -59,7 +59,7 @@ namespace upsylon
         public:
             
             //! prototype to validate a newlyformed blob
-            typedef bool (*proc)(blob &, void *);
+            typedef bool (*proc)(const blob &, void *);
             
             explicit blob(const size_t, const shared_knots &) throw(); //!< setup
             virtual ~blob() throw();                                   //!< cleanup
@@ -116,16 +116,17 @@ namespace upsylon
             explicit blobs() throw(); //!< setup empty
             virtual ~blobs() throw(); //!< cleanup
             
-            void     sort_decreasing();                      //!< sort blobs bigs first
-            void     rewrite(pixmap<size_t> &masks) throw(); //!< rewrite labels
-            
-            
+            void     sort(pixmap<size_t> &masks);                                  //!< sort by decreasing order, relabel and rewrite
+            void     remove_if(blob::proc, void *, pixmap<size_t> &)      throw(); //!< remove if
+            void     remove_below(const size_t cutSize, pixmap<size_t> &) throw(); //!< remove if blob.size <= cutSize
+
+
             //! generic build algorithm
             template <typename T> inline
             void build(pixmap<size_t>  &masks,
                        const pixmap<T> &field,
                        shared_knots    &cache,
-                       const size_t     n,
+                       const size_t     connectivity,
                        blob::proc       proc = NULL,
                        void            *args = NULL)
             {
@@ -135,7 +136,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 assert(masks.has_same_metrics_than(field));
-                assert(n==4||n==8);
+                assert(connectivity==4||connectivity==8);
                 masks.ldz();
                 release();
                 
@@ -176,7 +177,7 @@ namespace upsylon
                                 // register front node, take its coordinates
                                 //----------------------------------------------
                                 const coord  curr = **(b->push_back( stack.pop_front() ));
-                                for(size_t i=0;i<n;++i)
+                                for(size_t i=0;i<connectivity;++i)
                                 {
                                     //------------------------------------------
                                     // check if can be added
@@ -221,7 +222,8 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blobs);
             static knot *fetch_knot(shared_knots &cache);
-            void relabel() throw();
+            void         relabel() throw();
+            void         rewrite(pixmap<size_t> &) const throw();
         };
         
  

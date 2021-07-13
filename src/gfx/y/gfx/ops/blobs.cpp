@@ -53,12 +53,12 @@ namespace upsylon
         }
         
         blob * blob:: change_label(const size_t    value,
-                                 pixmap<size_t> &masks) throw()
+                                   pixmap<size_t> &masks) throw()
         {
             aliasing::_(label) = value;
             dispatch(value,masks);
             return this;
-         }
+        }
         
         blob  * blob:: remove_from(pixmap<size_t> &masks) throw()
         {
@@ -115,21 +115,57 @@ namespace upsylon
         }
 
         
-        void blobs:: sort_decreasing()
+        void blobs:: sort(pixmap<size_t> &masks)
         {
             merge_list_of<blob>::sort(*this, blob::decreasing_size,NULL);
             relabel();
+            rewrite(masks);
         }
-        
-        void blobs:: rewrite(pixmap<size_t> &masks) throw()
+
+        void blobs:: rewrite(pixmap<size_t> &masks) const throw()
         {
             for(const blob *b=head;b;b=b->next)
             {
                 b->dispatch(b->label,masks);
             }
         }
-        
 
+
+        void  blobs:: remove_if( blob::proc proc, void *args, pixmap<size_t> &masks) throw()
+        {
+            assert(proc);
+            {
+                blobs_ tmp;
+                while(size)
+                {
+                    blob *b = pop_back();
+                    if(proc(*b,args))
+                    {
+                        b->remove_from(masks);
+                        delete b;
+                    }
+                    else
+                    {
+                        tmp.push_front(b);
+                    }
+                }
+                swap_with(tmp);
+            }
+            relabel();
+            rewrite(masks);
+        }
+
+        static inline bool smaller_than(const blob &b, void *args) throw()
+        {
+            assert(args);
+            return b.size <= *(size_t *)args;
+        }
+
+        void  blobs:: remove_below(const size_t cutSize, pixmap<size_t> &masks) throw()
+        {
+            remove_if(smaller_than, (void*)&cutSize, masks);
+        }
+        
 
     }
     

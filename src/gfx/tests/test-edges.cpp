@@ -127,8 +127,7 @@ Y_UTEST(edges)
         pixmap<size_t> masks(img.w,img.h);
         prof.track(B,Kseq,masks,cache);
         
-        B.sort_decreasing();
-        B.rewrite(masks);
+        B.sort(masks);
         
         IMG.save(Kseq, "edges.png");
         IMG.save(masks,"blobs.png",NULL,conv);

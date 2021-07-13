@@ -16,21 +16,32 @@ namespace upsylon
         namespace edges
         {
 
+            //__________________________________________________________________
+            //
+            //! gaussian blur for detector: float
+            //__________________________________________________________________
             typedef gaussian_blur<float> blur;
 
+            //__________________________________________________________________
+            //
+            //
+            //! embedded edges detector
+            //
+            //__________________________________________________________________
             class detector : public pixmap<size_t>
             {
             public:
-                explicit detector(const unit_t W, const unit_t H);
-                virtual ~detector() throw();
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit detector(const unit_t W, const unit_t H); //!< setup
+                virtual ~detector() throw();                       //!< cleanup
 
-                gradient       grad;
-                float          gmax;
-                keep_max       kmax;
-                profile        prof;
-                pixmap<float>  temp;
-
-
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
                 //! prepare from pimap<float>
                 size_t prepare(const pixmap<float>  &field,
@@ -51,10 +62,20 @@ namespace upsylon
                     return prepare(target,apply,delta,cloud);
                 }
 
+                //! extract blobs (with shared knots)
                 size_t extract(blobs        &userBlobs,
                                shared_knots &knotCache);
 
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                gradient       grad; //!< gradient
+                float          gmax; //!< max of gradient (info)
+                keep_max       kmax; //!< keep maxima only
+                profile        prof; //!< strong/feeble classification
+                pixmap<float>  temp; //!< auxiliary for blur or not
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(detector);

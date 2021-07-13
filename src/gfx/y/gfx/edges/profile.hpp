@@ -47,7 +47,7 @@ namespace upsylon
                                       const uint8_t    feeble_limit,
                                       const uint8_t    strong_limit);
                 
-                //! track edges
+                //! track edges with a least one STRONG component
                 size_t track(blobs           &userBlobs,
                              pixmap<uint8_t> &userEdges,
                              pixmap<size_t>  &userMasks,
@@ -59,8 +59,8 @@ namespace upsylon
                 pixmap<uint8_t> *Edges;
                 pixmap<size_t>  *Masks;
                 
-                bool        accept(blob &b)            throw();
-                static bool call_accept(blob &,void *) throw();
+                bool        accept(const blob &b)            throw();
+                static bool call_accept(const blob &,void *) throw();
                 
             };
 

@@ -62,7 +62,7 @@ namespace upsylon
                                 const float Gp = grad[y+d.y][x+d.x];
                                 if(G0<Gm||G0<Gp)
                                 {
-                                    bmax_y(x) = 0;
+                                    bmax_y(x)  = 0;
                                     probe_y(x) = vtx(0,0);
                                 }
                                 else
