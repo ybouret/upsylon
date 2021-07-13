@@ -62,7 +62,7 @@ namespace upsylon
                     return prepare(target,apply,delta,cloud);
                 }
 
-                //! extract blobs (with shared knots)
+                //! extract blobs (with shared knots for memory)
                 size_t extract(blobs        &userBlobs,
                                shared_knots &knotCache);
 

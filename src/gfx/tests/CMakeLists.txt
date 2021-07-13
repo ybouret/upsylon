@@ -29,6 +29,10 @@ add_test(mask    test-gfx mask)
 add_test(draw    test-gfx draw)
 add_test(split   test-gfx split ${IMG})
 add_test(detect  test-gfx detect ${IMG})
+add_test(detectB test-gfx detect ${IMG} 2.1)
+add_test(locator test-gfx locator ${IMG})
+add_test(locatorB test-gfx locator ${IMG} 2.1)
+
 
 
 ADD_CUSTOM_TARGET(utest-gfx
