@@ -180,7 +180,7 @@ namespace upsylon
                 return sum_of(**this,items);
             }
             
-            //! sorted sum
+            //! sorted sum using user's memory
             inline const_type sum(mutable_type *tmp) const throw()
             {
                 assert(tmp);

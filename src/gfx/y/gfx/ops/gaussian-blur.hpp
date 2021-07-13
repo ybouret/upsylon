@@ -39,7 +39,7 @@ namespace upsylon
                 static inline uint8_t from(const float x) throw() { return uint8_t( floorf(x+0.5f) ); }
             };
 
-            //! convert [0..255]->uint8_t
+            //! convert [0..255.0]->uint8_t
             template <>
             struct to_closest<uint8_t,double>
             {
@@ -124,28 +124,28 @@ namespace upsylon
 
             //! self type cover
             inline
-            void cover(pixmap<T> &target, broker &apply, const pixmap<T> &source)
+            void cover(pixmap<T> &target, broker &apply, const pixmap<T> &source) const throw()
             {
                 compute<T,T,1>(target,apply,source);
             }
 
             //! rgb cover
             inline
-            void cover(pixmap<rgb> &target, broker &apply, const pixmap<rgb> &source)
+            void cover(pixmap<rgb> &target, broker &apply, const pixmap<rgb> &source) const throw()
             {
                 compute<rgb,uint8_t,3>(target,apply,source);
             }
 
             //! rgb(a) cover
             inline
-            void cover(pixmap<rgba> &target, broker &apply, const pixmap<rgba> &source)
+            void cover(pixmap<rgba> &target, broker &apply, const pixmap<rgba> &source) const throw()
             {
                 compute<rgba,uint8_t,3>(target,apply,source);
             }
 
             //! uint8_t cover
             inline
-            void cover(pixmap<uint8_t> &target, broker &apply, const pixmap<uint8_t> &source)
+            void cover(pixmap<uint8_t> &target, broker &apply, const pixmap<uint8_t> &source) const throw()
             {
                 compute<uint8_t,uint8_t,1>(target,apply,source);
             }

@@ -22,5 +22,6 @@ Y_UTEST_INIT(32)
     Y_UTEST(mask);
     Y_UTEST(draw);
     Y_UTEST(split);
+    Y_UTEST(detect);
 }
 Y_UTEST_EXEC()

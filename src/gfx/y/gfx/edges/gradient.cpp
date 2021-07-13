@@ -80,7 +80,7 @@ namespace upsylon
                                 const float g2 = gx*gx + gy*gy;
                                 if(g2>0.0f)
                                 {
-                                    const float gg = sqrtf(g2);
+                                    const float gg   = sqrtf(g2);
                                     if(gg>lmax) lmax = gg;
                                     (gx/=gg)  += 0.5f;
                                     (gy/=gg)  += 0.5f;

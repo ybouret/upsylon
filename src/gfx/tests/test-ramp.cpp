@@ -57,46 +57,6 @@ Y_UTEST(ramp)
         IMG.save(pxm,"cth.png",  NULL, cth);
         IMG.save(pxm,"grd.png",  NULL, grd);
     }
-
-#if 0
-    gradation               g(4);
-
-    g.push_back(Y_BLUE);
-    g.push_back(Y_CYAN);
-    g.push_back(Y_GREEN);
-    g.push_back(Y_YELLOW);
-    g.push_back(Y_RED);
-
-
-
-
-    if(argc>1)
-    {
-        color_ramp::mapping     conv(g);
-        const string filename = argv[1];
-        const pixmap<rgb> img = IMG.load<rgb>(filename);
-        IMG.save(img,"img.png");
-        broker            apply(eng,img);
-        pixmap<float>     pxm(img,apply,convert<float,rgb>::from);
-        IMG.save(pxm,"pxm.png");
-        IMG.save(pxm,"rmp.png", NULL,conv);
-
-        {
-            monochrome             mh( Y_RED );
-            tableau_of<monochrome> mt(mh);
-            color_ramp::mapping    mm(mt);
-            IMG.save(pxm,"mono.png", NULL,mm);
-        }
-        {
-            tableau_of<cold_to_hot> mt;
-            color_ramp::mapping     mm(mt);
-            IMG.save(pxm,"cth.png", NULL,mm);
-        }
-
-
-
-
-    }
-#endif
+    
 }
 Y_UTEST_DONE()

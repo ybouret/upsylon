@@ -116,7 +116,7 @@ namespace upsylon
             explicit blobs() throw(); //!< setup empty
             virtual ~blobs() throw(); //!< cleanup
             
-            void     sort_decreasing(); //!< sort blobs bigs first
+            void     sort_decreasing();                      //!< sort blobs bigs first
             void     rewrite(pixmap<size_t> &masks) throw(); //!< rewrite labels
             
             
