@@ -1,5 +1,6 @@
 
 #include "y/gfx/edges/keep-max.hpp"
+#include "y/gfx/ops/3x3.hpp"
 
 namespace upsylon
 {
@@ -11,13 +12,22 @@ namespace upsylon
 
             keep_max:: keep_max(const unit_t W, const unit_t H) :
             histogram(),
-            pixmap<uint8_t>(W,H)
+            pixmap<uint8_t>(W,H),
+            aux(W,H)
             {
             }
 
             keep_max:: ~keep_max() throw()
             {
             }
+
+            void keep_max:: close(broker &apply) throw()
+            {
+                _3x3::dilate(aux,*this,apply,identity<uint8_t>);
+                _3x3::erode(*this,aux,apply,identity<uint8_t>);
+            }
+
+
 
             local_caches &keep_max:: setup_with(broker &apply)
             {

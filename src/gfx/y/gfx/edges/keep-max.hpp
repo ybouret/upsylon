@@ -24,12 +24,21 @@ namespace upsylon
             class keep_max : public histogram, public pixmap<uint8_t>
             {
             public:
-                
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
                 //! setup
                 explicit keep_max(const unit_t W, const unit_t H);
                 
                 //! cleanup
                 virtual ~keep_max() throw();
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
                 //! apply algorithm
                 /**
@@ -41,7 +50,15 @@ namespace upsylon
 
                 //! rebuild histogram
                 void update(broker &apply);
-                
+
+                //! close current field
+                void close(broker &apply) throw();
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                pixmap<uint8_t> aux; //!< auxiliary field
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(keep_max);

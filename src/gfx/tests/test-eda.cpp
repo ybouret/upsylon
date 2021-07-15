@@ -14,6 +14,7 @@
 #include "y/gfx/color/ramp/cold-to-hot.hpp"
 #include "y/gfx/color/chart.hpp"
 #include "y/gfx/ops/gaussian-blur.hpp"
+#include "y/gfx/ops/3x3.hpp"
 
 using namespace upsylon;
 using namespace graphic;
@@ -37,6 +38,8 @@ Y_UTEST(eda)
     shared_knots         cache = new knots();
     size_to_rgba         sz2c;
 
+    std::cerr << "engine: " << eng->category() << " : " << eng->size() << std::endl;
+
     if(argc>1)
     {
         // get image
@@ -53,7 +56,7 @@ Y_UTEST(eda)
             gaussian_blur<float> fuzz(7,7,sigma);
             pixmap<float>        src(pxm.w,pxm.h);
             fuzz.cover(src,app,pxm);
-            pxm.assign(src,app,convert<float,float>::from);
+            pxm.assign(src,app,identity<float>);
         }
 
         IMG.save(pxm,"src.png",0,ramp);
@@ -72,10 +75,15 @@ Y_UTEST(eda)
 
         {
             pixmap<uint8_t> kbis(kmax,app,on_off);
-            IMG.save(kmax,"kbis.png");
-
+            IMG.save(kbis,"kbis.png");
         }
 
+        {
+            const pixmap<uint8_t> ktmp(kmax,app,identity<uint8_t>);
+            kmax.close(app);
+            IMG.save(kmax,"kmcl.png");
+            kmax.assign(ktmp,app,identity<uint8_t>);
+        }
 
         {
             const histogram old_kmax(kmax);
@@ -83,7 +91,7 @@ Y_UTEST(eda)
             Y_CHECK(old_kmax==kmax);
         }
 
-        // get historgram threshild
+        // get histogram threshold
         const uint8_t  strong = kmax.threshold();
         const uint8_t  feeble = strong>>1;
 
@@ -91,8 +99,9 @@ Y_UTEST(eda)
         edges::profile prof;
         prof.tighten(kmax,app,feeble,strong);
         std::cerr << "feeble=" << int(feeble) << " -> strong=" << int(strong) << std::endl;
-        IMG.save(kmax,"prof.png",0,chart);
+        IMG.save(kmax,"prof.png");
 
+        
         blobs          B;
         pixmap<size_t> M(img.w,img.h);
         (void) prof.track(B,kmax,M,cache);

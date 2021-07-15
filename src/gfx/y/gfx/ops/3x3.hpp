@@ -52,17 +52,17 @@ namespace upsylon
                         
                         for(size_t j=t.size();j>0;--j)
                         {
-                            const segment &s    = t[j];
-                            const unit_t   y    = s.y;
-                            const unit_t   xmin = s.xmin;
+                            const segment   &s     = t[j];
+                            const unit_t     y     = s.y;
+                            const unit_t     xmin  = s.xmin;
+                            const pixrow<U> &src_y = source(y);
                             for(unit_t x=s.xmax;x>=xmin;--x)
                             {
                                 const coord p(x,y);
                                 assert(source.owns(p));
-                                const U tmp = source[p];
                                 U arr[9] =
                                 {
-                                    source(y)(x),
+                                    src_y(x),
                                     source[p+area::delta[0]],
                                     source[p+area::delta[1]],
                                     source[p+area::delta[2]],
@@ -77,13 +77,14 @@ namespace upsylon
                                 target(y)(x) = conv(u);
                             }
                         }
-                        
                     }
                 };
                 
                 ops todo = { target, source, op, conv };
                 apply( ops::run, &todo );
             }
+            
+
             
             //! average of 3x3 blocks
             template <typename T, typename U, typename CONV> static inline
