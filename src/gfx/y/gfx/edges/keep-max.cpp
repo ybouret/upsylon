@@ -92,7 +92,10 @@ namespace upsylon
                                 {
                                     const uint8_t b0 = crux::convert::to_byte(G0);
                                     bmax_y(x) = b0;
-                                    ++hist[b0];
+                                    if(b0>0)
+                                    {
+                                        ++hist[b0];
+                                    }
                                 }
                             }
                         }
@@ -138,7 +141,11 @@ namespace upsylon
                             const row           &data_y  = data(y);
                             for(unit_t x=s.xmax;x>=xmin;--x)
                             {
-                                ++hist[ data_y(x) ];
+                                const uint8_t b = data_y(x);
+                                if(b>0)
+                                {
+                                    ++hist[b];
+                                }
                             }
                         }
                     }

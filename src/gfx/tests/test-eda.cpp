@@ -51,14 +51,17 @@ Y_UTEST(eda)
         IMG.save(kmax,"kmax.png",0,chart);
         kmax.save("hist.dat");
 
-
-        //TODO: hist
+        {
+            const histogram old_kmax(kmax);
+            kmax.update(app);
+            Y_CHECK(old_kmax==kmax);
+        }
 
         const uint8_t  strong = kmax.threshold();
         const uint8_t  feeble = strong>>1;
         edges::profile prof;
         prof.tighten(kmax,app,feeble,strong);
-
+        std::cerr << "feeble=" << int(feeble) << " -> strong=" << int(strong) << std::endl;
         IMG.save(kmax,"prof.png",0,chart);
 
         
