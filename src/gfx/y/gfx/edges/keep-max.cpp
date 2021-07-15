@@ -19,17 +19,41 @@ namespace upsylon
             {
             }
 
-            void keep_max:: operator()(broker &apply, gradient &G)
+            local_caches &keep_max:: setup_with(broker &apply)
             {
-                // prepare memory
                 local_caches &caches = apply.caches;
-                caches.make<size_t>( bins );
-                reset();
+                caches.make<size_t>( bins ); // local histogram
+                reset();                     // zero global histogram
+                return caches;
+            }
 
+            void keep_max:: merge_with(const local_caches &caches) throw()
+            {
+                for(size_t i=0;i<caches.size();++i)
+                {
+                    add( &(caches[i]->as<size_t>()) );
+                }
+
+            }
+
+            void keep_max:: operator()(broker &apply, const gradient &G)
+            {
+                //--------------------------------------------------------------
+                //
+                // prepare memory
+                //
+                //--------------------------------------------------------------
+                local_caches &caches = setup_with(apply);
+
+                //--------------------------------------------------------------
+                //
+                // loop
+                //
+                //--------------------------------------------------------------
                 struct ops
                 {
-                    keep_max &kmax;
-                    gradient &grad;
+                    keep_max       &kmax;
+                    const gradient &grad;
 
                     static inline
                     void run(const tile &t, void *args, lockable &)
@@ -42,8 +66,8 @@ namespace upsylon
                         ops               &self  = *static_cast<ops *>(args);
                         keep_max          &kmax  = self.kmax;
                         pixmap<uint8_t>   &bmax  = kmax;
-                        gradient          &grad  = self.grad;
-                        pixmap<vtx>       &probe = grad.probe;
+                        const gradient    &grad  = self.grad;
+                        const pixmap<vtx> &probe = grad.probe;
 
                         for(size_t j=t.size();j>0;--j)
                         {
@@ -52,7 +76,7 @@ namespace upsylon
                             const unit_t         xmin    = s.xmin;
                             pixrow<uint8_t>     &bmax_y  = bmax(y);
                             const pixrow<float> &grad_y  = grad(y);
-                            pixrow<vtx>         &probe_y = probe(y);
+                            const pixrow<vtx>   &probe_y = probe(y);
 
                             for(unit_t x=s.xmax;x>=xmin;--x)
                             {
@@ -63,7 +87,6 @@ namespace upsylon
                                 if(G0<Gm||G0<Gp)
                                 {
                                     bmax_y(x)  = 0;
-                                    probe_y(x) = vtx(0,0);
                                 }
                                 else
                                 {
@@ -80,13 +103,51 @@ namespace upsylon
 
                 ops todo = { *this, G };
                 apply( ops::run, &todo );
+                merge_with(caches);
 
-                // merge memory
-                for(size_t i=0;i<caches.size();++i)
+            }
+
+            void keep_max:: update(broker &apply)
+            {
+                local_caches &caches = setup_with(apply);
+
+                //--------------------------------------------------------------
+                //
+                // loop
+                //
+                //--------------------------------------------------------------
+                struct ops
                 {
-                    add( &(caches[i]->as<size_t>()) );
-                }
+                    const keep_max &kmax;
+                    static inline
+                    void run(const tile &t, void *args, lockable &)
+                    {
+                        assert( t.cache->is<size_t>() );
+                        assert( t.cache->tell() >= bins);
+                        assert( args );
+                        size_t                *hist  = & (t.cache->as<size_t>());
+                        ops                   &self  = *static_cast<ops *>(args);
+                        const pixmap<uint8_t> &data  = self.kmax;
 
+
+                        for(size_t j=t.size();j>0;--j)
+                        {
+                            const segment       &s       = t[j];
+                            const unit_t         y       = s.y;
+                            const unit_t         xmin    = s.xmin;
+                            const row           &data_y  = data(y);
+                            for(unit_t x=s.xmax;x>=xmin;--x)
+                            {
+                                ++hist[ data_y(x) ];
+                            }
+                        }
+                    }
+
+                };
+
+                ops todo = { *this };
+                apply( ops::run, &todo );
+                merge_with(caches);
             }
 
 

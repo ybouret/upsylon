@@ -37,10 +37,16 @@ namespace upsylon
                  - convert it to byte
                  - produce the histogram of local extrema
                  */
-                void operator()(broker &apply, gradient &G);
+                void operator()(broker &apply, const gradient &G);
+
+                //! rebuild histogram
+                void update(broker &apply);
+                
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(keep_max);
+                local_caches &setup_with(broker &apply);
+                void          merge_with(const local_caches &) throw();
             };
         }
     }
