@@ -18,7 +18,7 @@
 
 Let us consider a species within a chemical potential:
 \begin{equation}
-	\mu_i(\vec{r}) = \mu_i^0(T) + RT \ln C_i(\vec{r}) +  z_i \mathcal{F} V(\vec{r})
+	\mu_i(\vec{r}) = \mu_i^0(T) + RT \ln C_i(\vec{r}) +  z_i \mathcal{F} V(\vec{r}) + M_i g z
 \end{equation}
 
 \begin{equation}
@@ -31,7 +31,7 @@ Let us consider a species within a chemical potential:
 
 The isothermal molar force field is:
 \begin{equation}
-	\vec{F}_i(\vec{r}) = -\grad \mu_{i} = -\frac{RT}{C_i} \grad C_i + z_i \mathcal{F} \vec{E}
+	\vec{F}_i(\vec{r}) = -\grad \mu_{i} = -\frac{RT}{C_i} \grad C_i + z_i \mathcal{F} \vec{E} - M_i g \vec{u}_z
 \end{equation}
 One particle with mass $m_i$ and a friction coefficient $\eta_i$ moves with:
 \begin{equation}
@@ -39,15 +39,15 @@ One particle with mass $m_i$ and a friction coefficient $\eta_i$ moves with:
 \end{equation}
 The relaxed velocity is:
 \begin{equation}
-	\vec{v}_i = \dfrac{1}{\eta_i\mathcal{N}_A} \vec{F}_i = -\dfrac{kT}{\eta_i C_i} \grad C_i + \frac{z_i e}{\eta_i} \vec{E}
+	\vec{v}_i = \dfrac{1}{\eta_i\mathcal{N}_A} \vec{F}_i = -\dfrac{kT}{\eta_i C_i} \grad C_i + \frac{z_i e}{\eta_i} \vec{E} - \dfrac{m_ig}{\eta_i} \vec{u}_z
 \end{equation}
 The flux is:
 \begin{equation}
-	\vec{J}_i = C_i \vec{v}_i = -\dfrac{kT}{\eta_i} \grad C_i + \dfrac{z_i e}{\eta_i} C_i \vec{E}.
+	\vec{J}_i = C_i \vec{v}_i = -\dfrac{kT}{\eta_i} \grad C_i + \dfrac{z_i e}{\eta_i} C_i \vec{E} - \dfrac{m_ig}{\eta_i} C_i \vec{u}_z.
 \end{equation}
 The electric flux is:
 \begin{equation}
-	\vec{J}^{el}_i = z_i e \vec{J_i} = -\dfrac{ez_ikT}{\eta_i} \grad C_i + \dfrac{z_i^2 e^2}{\eta_i} C_i \vec{E}.
+	\vec{J}^{el}_i = z_i e \vec{J_i} = -\dfrac{ez_ikT}{\eta_i} \grad C_i + \dfrac{z_i^2 e^2}{\eta_i} C_i \vec{E}- \dfrac{m_iz_ige}{\eta_i} C_i \vec{u}_z.
 \end{equation}
 We use
 \begin{equation}
@@ -57,9 +57,9 @@ We use
 \begin{equation}
 \left\lbrace
 \begin{array}{rcl}
-\vec{J}_i & = &  -D_i \grad C_i + C_i \dfrac{z_i D_i}{\Psi_0}  \vec{E} \;\; (\Psi_0=\dfrac{kT}{e}\simeq 25.7 mV)\\
+\vec{J}_i & = &  -D_i \grad C_i + C_i \dfrac{z_i D_i}{\Psi_0}  \vec{E} \;\; (\Psi_0=\dfrac{kT}{e}\simeq 25.7 mV) - C_i \dfrac{m_ig D_i}{kT} \vec{u}_z\\
 \\
-\vec{J}^{el}_i & = & - z_i D_i e  \grad C_i + C_i \dfrac{z_i^2 D_i e}{\Psi_0}  \vec{E} \\
+\vec{J}^{el}_i & = & - z_i D_i e  \grad C_i + C_i \dfrac{z_i^2 D_i e}{\Psi_0}  \vec{E} - C_i \dfrac{m_ig D_i z_i  }{\Psi_0} \vec{u}_z \\
 \end{array}
 \right.
 \end{equation}
