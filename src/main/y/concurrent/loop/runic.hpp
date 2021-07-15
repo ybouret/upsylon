@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_CONCURRENT_LOOP_RUNIC_INCLUDED

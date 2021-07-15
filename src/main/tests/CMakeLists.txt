@@ -156,6 +156,7 @@ test-thr-loop.cpp
 test-thr-runic.cpp
 test-thr-pi-simt.cpp
 test-thr-pipeline.cpp
+test-thr-loop-env.cpp
 )
 ADD_TEST(thr:context    test-main thr_context)
 ADD_TEST(thr:topology   test-main thr_topology)

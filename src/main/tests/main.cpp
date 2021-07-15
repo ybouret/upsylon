@@ -130,6 +130,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(thr_runic);
     Y_UTEST(thr_pi_simt);
     Y_UTEST(thr_pipeline);
+    Y_UTEST(thr_loop_env);
     
     Y_UTEST(complex);
     Y_UTEST(xbra_gen);

@@ -24,5 +24,6 @@ Y_UTEST_INIT(32)
     Y_UTEST(split);
     Y_UTEST(detect);
     Y_UTEST(locator);
+    Y_UTEST(eda);
 }
 Y_UTEST_EXEC()
