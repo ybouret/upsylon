@@ -27,6 +27,12 @@ namespace upsylon
                 _3x3::erode(*this,aux,apply,identity<uint8_t>);
             }
 
+            void keep_max:: open(broker &apply) throw()
+            {
+                _3x3::erode(aux,*this,apply,identity<uint8_t>);
+                _3x3::dilate(*this,aux,apply,identity<uint8_t>);
+            }
+
 
 
             local_caches &keep_max:: setup_with(broker &apply)

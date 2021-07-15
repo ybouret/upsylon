@@ -54,6 +54,9 @@ namespace upsylon
                 //! close current field
                 void close(broker &apply) throw();
 
+                //! open current field
+                void open(broker &apply) throw();
+
                 //______________________________________________________________
                 //
                 // members

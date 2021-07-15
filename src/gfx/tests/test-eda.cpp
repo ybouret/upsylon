@@ -78,12 +78,6 @@ Y_UTEST(eda)
             IMG.save(kbis,"kbis.png");
         }
 
-        {
-            const pixmap<uint8_t> ktmp(kmax,app,identity<uint8_t>);
-            kmax.close(app);
-            IMG.save(kmax,"kmcl.png");
-            kmax.assign(ktmp,app,identity<uint8_t>);
-        }
 
         {
             const histogram old_kmax(kmax);
@@ -107,8 +101,15 @@ Y_UTEST(eda)
         (void) prof.track(B,kmax,M,cache);
         B.sort(M);
         IMG.save(M,"edges.png",0,sz2c);
+        IMG.save(kmax,"ekmax.png");
 
-        
+        {
+            kmax.close(app);
+            IMG.save(kmax,"ckmax.png");
+
+        }
+
+
     }
 }
 Y_UTEST_DONE()
