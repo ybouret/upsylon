@@ -32,7 +32,7 @@ add_test(detect  test-gfx detect ${IMG})
 add_test(detectB test-gfx detect ${IMG} 2.1)
 add_test(locator test-gfx locator ${IMG})
 add_test(locatorB test-gfx locator ${IMG} 2.1)
-
+add_test(eda      test-gfx eda ${IMG} 2.1)
 
 
 ADD_CUSTOM_TARGET(utest-gfx
