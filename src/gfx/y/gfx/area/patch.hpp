@@ -188,8 +188,10 @@ namespace upsylon
                 crux::patch::sort_data(tmp,items,sizeof(T),cmp);
                 return sum_of(tmp,items);
             }
-            
+
+            //------------------------------------------------------------------
             //! load  per-channel accumulation
+            //------------------------------------------------------------------
             template <
             typename       PIXEL,
             typename       U,
@@ -206,14 +208,15 @@ namespace upsylon
                 const unit_t xmax   = upper.x;
                 const unit_t xmin   = lower.x;
                 const unit_t ymin   = lower.y;
-                for(unit_t y=upper.y;y>=ymin;--y)
+                const unit_t Xmax   = xmax+pos.x;
+                for(unit_t y=upper.y,Y=y+pos.y;y>=ymin;--y,--Y)
                 {
-                    const pixrow<PIXEL> &src = pxm[pos.y+y];
+                    const pixrow<PIXEL> &src = pxm[Y];
                     const patch_row<T>  &cof = (*this)[y];
                     
-                    for(unit_t x=xmax;x>=xmin;--x)
+                    for(unit_t x=xmax,X=Xmax;x>=xmin;--x,--X)
                     {
-                        const U    *u = (const U *) &src[pos.x+x];
+                        const U    *u = (const U *) &src[X];
                         const_type  t = cof[x];
                         
                         for(size_t ch=0;ch<NCH;++ch)
@@ -232,7 +235,8 @@ namespace upsylon
             void        *wksp;
             size_t       wlen;
             const size_t room;
-            
+
+            //! allocate memory, setup rows
             inline void initialize()
             {
                 if(items<=0) crux::patch::throw_empty_patch();
@@ -254,7 +258,8 @@ namespace upsylon
                     new (rows+y) row(data,*this);
                 }
             }
-            
+
+            //! local sum
             static inline const_type sum_of(const_type *arr, size_t num)  throw()
             {
                 assert(NULL!=arr);
@@ -263,7 +268,8 @@ namespace upsylon
                     res += *(arr++);
                 return res;
             }
-            
+
+            //! specialized comparison
             static inline int cmp(const void *lhs, const void *rhs) throw()
             {
                 assert(lhs);

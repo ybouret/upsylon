@@ -43,8 +43,7 @@ namespace
         assert(count==idx);
 
         stk.save_tiff(filename,0,count);
-        std::cerr << std::endl;
-
+        
     }
     
 }

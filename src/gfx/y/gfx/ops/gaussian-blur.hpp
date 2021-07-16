@@ -154,13 +154,12 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gaussian_blur);
 
+            //! compute the normalized weights on the patch
             inline void setup(param_type sigma_x, mutable_type sigma_y)
             {
                 static const_type one(1);
                 assert(sigma_x>0);
                 if(sigma_y<=0) sigma_y = sigma_x;
-                //std::cerr << "sx: " << sigma_x << ", sy:" << sigma_y << std::endl;
-
                 const_type dx2 = twice( square_of(sigma_x) );
                 const_type dy2 = twice( square_of(sigma_y) );
                 for(unit_t y=this->lower.y;y<=this->upper.y;++y)
@@ -174,9 +173,8 @@ namespace upsylon
                     }
                 }
                 pblock<mutable_type> tmp(this->items);
-                aliasing::_(weight) = this->sum(&tmp[0]);
-                aliasing::_(factor) = one/weight;
-                //std::cerr << "weight=" << weight << std::endl;
+                aliasing::_(weight) = this->sum(&tmp[0]); //!< sorted sum
+                aliasing::_(factor) = one/weight;         //!< positive
             }
 
 
