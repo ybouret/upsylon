@@ -120,7 +120,6 @@ namespace upsylon
             void     remove_if(blob::proc, void *, pixmap<size_t> &)      throw(); //!< remove if
             void     remove_below(const size_t cutSize, pixmap<size_t> &) throw(); //!< remove if blob.size <= cutSize
 
-
             //! generic build algorithm
             template <typename T> inline
             void build(pixmap<size_t>  &masks,
