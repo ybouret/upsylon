@@ -44,7 +44,7 @@ namespace upsylon
             struct to_closest<uint8_t,double>
             {
                 //! prototype
-                static inline uint8_t from(const float x) throw() { return uint8_t( floor(x+0.5) ); }
+                static inline uint8_t from(const double x) throw() { return uint8_t( floor(x+0.5) ); }
             };
 
 
