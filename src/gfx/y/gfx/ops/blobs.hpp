@@ -117,8 +117,8 @@ namespace upsylon
             virtual ~blobs() throw(); //!< cleanup
             
             void     sort(pixmap<size_t> &masks);                                  //!< sort by decreasing order, relabel and rewrite
-            void     remove_if(blob::proc, void *, pixmap<size_t> &)      throw(); //!< remove if
-            void     remove_below(const size_t cutSize, pixmap<size_t> &) throw(); //!< remove if blob.size <= cutSize
+            void     remove_if(blob::proc, void *, pixmap<size_t> &)      throw(); //!< remove if, relabel and rewrite
+            void     remove_below(const size_t cutSize, pixmap<size_t> &) throw(); //!< remove if blob.size <= cutSize, rlabel and rewrite
 
             //! generic build algorithm
             template <typename T> inline
