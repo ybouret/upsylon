@@ -38,6 +38,14 @@ namespace upsylon
             template <typename T> static inline
             bool is_not_zero(const T &value) throw() { return !is_zero(value); }
 
+            template <typename T> static
+            T zero() throw();
+
+            template <typename T> static
+            T opaque() throw();
+
+            
+
             //! average of 9 items
             template <typename T> static T average9(T *arr) throw();
 

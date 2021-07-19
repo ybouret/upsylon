@@ -36,6 +36,29 @@ namespace upsylon
 {
     namespace graphic
     {
+        template <> float pixel:: zero<float>()   throw() { return 0.0f; }
+        template <> float pixel:: opaque<float>() throw() { return 1.0f; }
+
+        template <> uint8_t pixel:: zero<uint8_t>()   throw() { return 0x00; }
+        template <> uint8_t pixel:: opaque<uint8_t>() throw() { return 0xff; }
+
+        template <> double pixel:: zero<double>()   throw() { return 0.0; }
+        template <> double pixel:: opaque<double>() throw() { return 1.0; }
+
+        template <> rgb    pixel:: zero<rgb>()   throw() { return rgb(0,0,0); }
+        template <> rgb    pixel:: opaque<rgb>() throw() { return rgb(0xff,0xff,0xff); }
+
+        template <> rgba    pixel:: zero<rgba>()   throw() { return rgba(0,0,0,0xff); }
+        template <> rgba    pixel:: opaque<rgba>() throw() { return rgba(0xff,0xff,0xff,0xff); }
+
+    }
+
+}
+
+namespace upsylon
+{
+    namespace graphic
+    {
 
         template <> float pixel:: sub<float>(const float &lhs, const float &rhs) throw()
         {

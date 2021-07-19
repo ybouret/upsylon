@@ -7,6 +7,7 @@
 
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/color/convert.hpp"
+#include "y/gfx/pixel.hpp"
 
 namespace upsylon
 {
@@ -25,11 +26,12 @@ namespace upsylon
 
             const float vmin;
             const float vmax;
+            const float scal;
 
             template <typename T> inline
             void scan(const pixmap<T> &source, broker &apply)
             {
-                apply.caches.make<float>(2);
+                apply.caches.make<float>(4);
                 apply(kernel_scan<T>,(void*)&source);
                 load(apply);
             }
@@ -37,12 +39,69 @@ namespace upsylon
             void format(broker &) const;
 
             template <typename T> inline
-            void enhance(pixmap<T> &target, broker &apply) const
+            void enhance(pixmap<T> &target, const pixmap<T> &source, broker &apply) const
             {
-                if(vmax>vmin)
+                if(scal>0.0f)
                 {
-                    format(apply);
-                    apply(kernel_norm<T>,(void*)&target);
+                    struct ops
+                    {
+                        pixmap<T>       &target;
+                        const pixmap<T> &source;
+                        const intensity &data;
+
+                        static inline
+                        void run(const tile &t, void *args, lockable &) throw()
+                        {
+                            ops             &self   = *static_cast<ops*>(args);
+                            pixmap<T>       &target = self.target;
+                            const pixmap<T> &source = self.source;
+                            const intensity &data   = self.data;
+                            const float      vmin   = data.vmin;
+                            const float      vmax   = data.vmax;
+                            const float      scal   = data.scal;
+
+                            for(size_t j=t.size();j>0;--j)
+                            {
+                                const segment   &s     = t[j];
+                                const unit_t     y     = s.y;
+                                const pixrow<T> &src_y = source(y);
+                                pixrow<T>       &tgt_y = target(y);
+                                const unit_t     xmin = s.xmin;
+
+                                for(unit_t x=s.xmax;x>=xmin;--x)
+                                {
+                                    const T    &src  = src_y(x);
+                                    T          &tgt  = tgt_y(x);
+                                    const float vcur = convert<float,T>::from( src ); // current intensity
+                                    if(vcur<=vmin)
+                                    {
+                                        tgt = pixel::zero<T>();
+                                    }
+                                    else
+                                    {
+                                        if(vcur>=vmax)
+                                        {
+                                            tgt = pixel::opaque<T>();
+                                        }
+                                        else
+                                        {
+                                            (void)scal;
+                                            tgt = src;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    };
+
+                    ops todo = { target, source, *this };
+                    apply(ops::run,&todo);
+
+                }
+                else
+                {
+                    target.ldz();
                 }
             }
 
@@ -78,33 +137,34 @@ namespace upsylon
             template <typename T> static inline
             void kernel_norm(const tile &t, void *args, lockable &) throw()
             {
-                const pixmap<T> &pxm  = *static_cast< const pixmap<T> *>(args);
+                pixmap<T>       &pxm  = *static_cast<pixmap<T> *>(args);
                 const float      vmin = t.cache->get<float>(1);
                 const float      vmax = t.cache->get<float>(2);
+                const float      scal = t.cache->get<float>(3);
 
                 for(size_t j=t.size();j>0;--j)
                 {
                     const segment   &s    = t[j];
-                    const pixrow<T> &r    = pxm(s.y);
+                    pixrow<T>       &r    = pxm(s.y);
                     const unit_t     xmin = s.xmin;
 
                     for(unit_t x=s.xmax;x>=xmin;--x)
                     {
                         T          &src  = r(x);
-                        const float vtmp = convert<float,T>::from( src );
-                        if(vtmp<=vmin)
+                        const float vcur = convert<float,T>::from( src ); // current intensity
+                        if(vcur<=vmin)
                         {
-
+                            src = pixel::zero<T>();
                         }
                         else
                         {
-                            if(vtmp>=vmax)
+                            if(vcur>=vmax)
                             {
-                                
+                                src = pixel::opaque<T>();
                             }
                             else
                             {
-
+                                (void)scal;
                             }
                         }
                     }

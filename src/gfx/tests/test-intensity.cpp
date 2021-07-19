@@ -26,6 +26,14 @@ Y_UTEST(intensity)
         Iseq.scan(img,seq);std::cerr << "seq: vmin=" << Iseq.vmin << " | vmax=" << Iseq.vmax << std::endl;
         Ipar.scan(img,par);std::cerr << "par: vmin=" << Ipar.vmin << " | vmax=" << Ipar.vmax << std::endl;
 
+        pixmap<rgb> pxm(img.w,img.h);
+        Iseq.enhance(pxm,img,seq);
+        IMG.save(pxm,"enh-seq.png");
+
+        Ipar.enhance(pxm,img,par);
+        IMG.save(pxm,"enh-par.png");
+
+
         
 
     }
