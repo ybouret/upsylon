@@ -43,6 +43,7 @@ namespace {
 #include "y/gfx/pixel.hpp"
 #include "y/gfx/ops/gaussian-blur.hpp"
 #include "y/gfx/filters/db.hpp"
+#include "y/gfx/color/named.hpp"
 
 Y_UTEST(edges)
 {
@@ -121,26 +122,23 @@ Y_UTEST(edges)
         shared_knots cache = new knots();
         cache->ensure(npar);
         
-        size_to_rgba   conv;
+        size_to_rgba   conv = Y_RED_INDEX;
         edges::profile prof;
 
-#if 0
-        blobs          B;
-        pixmap<size_t> masks(img.w,img.h);
-        prof.track(B,Kseq,masks,cache);
+        blobs B(img.w,img.h,cache);
+        prof.track(B,Kseq);
         
-        B.sort(masks);
+        B.sort();
         
         IMG.save(Kseq, "edges.png");
-        IMG.save(masks,"blobs.png",NULL,conv);
+        IMG.save(B.bmask,"blobs.png",NULL,conv);
 
-        std::cerr << "#blobs: " << B.size << std::endl;
-        for(const blob *b=B.head;b;b=b->next)
+        std::cerr << "#blobs: " << B.blist.size << std::endl;
+        for(const blob *b=B.blist.head;b;b=b->next)
         {
            // std::cerr << "-> " << b->size << std::endl;
         }
-#endif
-        
+
         
 
     }

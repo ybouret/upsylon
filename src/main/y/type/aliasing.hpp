@@ -32,6 +32,8 @@ namespace upsylon {
         template <typename T> static inline
         const T &zero(const T &args) { return _(args)=0; }
 
+
+
         //______________________________________________________________________
         //
         // out of reach functions
@@ -48,7 +50,11 @@ namespace upsylon {
         //! unreachable const address conversion with shift in bytes
         static const void * anonymous(const void *, const ptrdiff_t shift) throw();
 
-        
+
+        //! any to mutable address
+        template <typename T> static inline
+        void *any(const T &args) throw() { return (void *)anonymous(&args); }
+
         //! U* -> T*
         template <typename T,typename U> static inline
         T *as(U *addr) throw()

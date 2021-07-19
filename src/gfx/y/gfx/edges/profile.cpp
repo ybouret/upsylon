@@ -12,9 +12,9 @@ namespace upsylon
         {
             
             profile::  profile() throw() :
-            //Blobs(0),
-            Edges(0),
-            Masks(0) {}
+            Blobs(0),
+            Edges(0)
+            {}
 
             profile:: ~profile() throw() {}
 
@@ -87,21 +87,16 @@ namespace upsylon
                 return static_cast<profile *>(args)->accept(b);
             }
 
-#if 0
             size_t profile:: track(blobs           &userBlobs,
-                                   pixmap<uint8_t> &userEdges,
-                                   pixmap<size_t>  &userMasks,
-                                   shared_knots    &knotCache)
+                                   pixmap<uint8_t> &userEdges)
             {
                 momentary_link<blobs>            linkBlobs(userBlobs,&Blobs);
                 momentary_link<pixmap<uint8_t> > linkEdges(userEdges,&Edges);
-                momentary_link<pixmap<size_t>  > linkMasks(userMasks,&Masks);
                 
-                userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
-                return userBlobs.size;
+                userBlobs.build(userEdges,8,call_accept,this);
+                return userBlobs.blist.size;
             }
-#endif
-            
+
             bool profile:: accept(const blob &b) throw()
             {
                 pixmap<uint8_t> &E = *Edges;

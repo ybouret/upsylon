@@ -32,7 +32,7 @@ namespace upsylon
         {
             assert(addr);
             const size_t value = *static_cast<const size_t *>(addr);
-            return named_color::get(value+shift);
+            return named_color::get(value,shift);
         }
 
     }

@@ -95,20 +95,17 @@ Y_UTEST(eda)
         std::cerr << "feeble=" << int(feeble) << " -> strong=" << int(strong) << std::endl;
         IMG.save(kmax,"prof.png");
 
-#if 0
-        blobs          B;
-        pixmap<size_t> M(img.w,img.h);
-        (void) prof.track(B,kmax,M,cache);
-        B.sort(M);
-        IMG.save(M,"edges.png",0,sz2c);
+        // find blobs
+        blobs          B(img.w,img.h,cache);
+        (void) prof.track(B,kmax);
+        B.sort();
+        IMG.save(B.bmask,"edges.png",0,sz2c);
         IMG.save(kmax,"ekmax.png");
 
         {
             kmax.close(app);
             IMG.save(kmax,"ckmax.png");
-
         }
-#endif
 
 
     }

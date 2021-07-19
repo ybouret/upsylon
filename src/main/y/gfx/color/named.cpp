@@ -19,7 +19,7 @@ namespace upsylon
             return table[ ran.range<size_t>(1,named_color_span) ];
         }
 
-        rgba named_color:: get(const size_t tag) throw()
+        rgba named_color:: get(const size_t tag, const size_t off) throw()
         {
             if(tag<=0)
             {
@@ -27,7 +27,7 @@ namespace upsylon
             }
             else
             {
-                return table[ 1 + hashing::hash64::keyIBJ(tag)%named_color_span ];
+                return table[ 1 + (off+hashing::hash64::keyIBJ(tag))%named_color_span ];
             }
         }
 

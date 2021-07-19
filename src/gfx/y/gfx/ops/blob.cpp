@@ -79,7 +79,7 @@ namespace upsylon
         bool blob:: is_smaller_than(const blob &b, void *args) throw()
         {
             assert(NULL!=args);
-            return b.size <= *(const size_t *)args;
+            return b.size <= *static_cast<const size_t *>(args);
         }
 
     }
