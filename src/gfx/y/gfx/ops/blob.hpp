@@ -115,9 +115,11 @@ namespace upsylon
             //! compare blobs by increasing size
             static int increasing_size(const blob *, const blob *, void*) throw();
 
-            //! comapre blobs by decreasing size
-            static int decreasing_size(const blob *, const blob *, void*) throw();
+            //! compare blobs by decreasing size
+            static int  decreasing_size(const blob *, const blob *, void*) throw();
 
+            //! true if size <= *(size_t *)args
+            static bool is_smaller_than(const blob &, void *args) throw();
 
             //__________________________________________________________________
             //

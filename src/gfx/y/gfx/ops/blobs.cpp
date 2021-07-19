@@ -40,6 +40,7 @@ namespace upsylon
             {
                 aliasing::_(b->label) = ++label;
             }
+            rewrite();
         }
 
         void blobs:: clear() throw()
@@ -57,6 +58,12 @@ namespace upsylon
         blob * blobs:: produce(size_t &label)
         {
             return aliasing::_(blist).push_back( new blob(++label,cache) );
+        }
+
+        void blobs::sort()
+        {
+            merge_list_of<blob>::sort(aliasing::_(blist), blob::decreasing_size,NULL);
+            relabel();
         }
 
 

@@ -35,11 +35,12 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             void     clear() throw(); //!< clear all
+            void     sort();          //!< decreasing/relabel
 
             //! generic build algorithm
             template <typename T> inline
             void build(const pixmap<T> &field,
-                       const size_t     connectivity,
+                       const size_t     conn = 8,
                        blob::proc       proc = NULL,
                        void            *args = NULL)
             {
@@ -49,7 +50,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 assert(bmask.has_same_metrics_than(field));
-                assert(connectivity==4||connectivity==8);
+                assert(conn==4||conn==8);
                 clear();
 
                 size_t       label = 0;       // initial label
@@ -87,7 +88,7 @@ namespace upsylon
                                 // register front node, take its coordinates
                                 //----------------------------------------------
                                 const coord  curr = **(b->push_back( stack.pop_front() ));
-                                for(size_t i=0;i<connectivity;++i)
+                                for(size_t i=0;i<conn;++i)
                                 {
                                     //------------------------------------------
                                     // check if can be added
@@ -125,6 +126,13 @@ namespace upsylon
                     }
 
                 }
+            }
+
+            template <typename T> inline
+            void build_default(const pixmap<T> &field,
+                               const size_t     cutSize)
+            {
+                build<T>(field,8, blob::is_smaller_than, (void*)&cutSize);
             }
 
             //__________________________________________________________________
