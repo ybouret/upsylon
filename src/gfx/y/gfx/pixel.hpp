@@ -30,6 +30,10 @@ namespace upsylon
             //! check if zero
             template <typename T> static bool is_zero(const T&) throw();
 
+            //! sub
+            template <typename T> static T    sub(const T &lhs, const T &rhs) throw();
+            
+
             //! check if not zero
             template <typename T> static inline
             bool is_not_zero(const T &value) throw() { return !is_zero(value); }

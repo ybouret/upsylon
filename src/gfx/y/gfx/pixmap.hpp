@@ -157,8 +157,8 @@ namespace upsylon
                         {
                             const segment   &s = t[j];
                             const unit_t     y = s.y;
-                            const pixrow<U> &src = self.source[y];
-                            pixrow<T>       &tgt = self.target[y];
+                            const pixrow<U> &src = self.source(y);
+                            pixrow<T>       &tgt = self.target(y);
                             const unit_t     x0 = s.xmin;
                             for(unit_t x=s.xmax;x>=x0;--x)
                             {
@@ -171,6 +171,46 @@ namespace upsylon
                 ops todo = { source, *this, conv };
                 apply(ops::run,&todo);
             }
+
+            //! assign with operation
+            template <typename U, typename V, typename FUNC>
+            inline void assign(const pixmap<U> &lhs, const pixmap<V> &rhs, broker &apply, FUNC &conv) throw()
+            {
+                assert(lhs.has_same_metrics_than(*this));
+                assert(rhs.has_same_metrics_than(*this));
+
+                struct ops {
+                    const pixmap<U> &lhs;
+                    const pixmap<V> &rhs;
+                    pixmap<T>       &target;
+                    FUNC            &conv;
+                    static inline void run(const tile &t,
+                                           void       *args,
+                                           lockable   &) throw()
+                    {
+                        ops  &self = *static_cast<ops *>(args);
+                        FUNC &conv = self.conv;
+                        for(size_t j=t.size();j>0;--j)
+                        {
+                            const segment   &s = t[j];
+                            const unit_t     y = s.y;
+                            const pixrow<U> &lhs = self.lhs(y);
+                            const pixrow<V> &rhs = self.rhs(y);
+                            pixrow<T>       &tgt = self.target(y);
+                            const unit_t     x0 = s.xmin;
+                            for(unit_t x=s.xmax;x>=x0;--x)
+                            {
+                                tgt(x) = conv(lhs(x),rhs(x));
+                            }
+                        }
+                    }
+                };
+
+                ops todo = { lhs, rhs, *this, conv };
+                apply(ops::run,&todo);
+            }
+
+
 
             //! assign same type
             inline void assign(const pixmap<T> &source, broker &apply ) throw()

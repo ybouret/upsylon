@@ -10,7 +10,6 @@ Y_UTEST(image)
 {
     image::io    &img = Y_IMAGE();
     
-    
 
     if(argc>1)
     {
@@ -38,6 +37,8 @@ Y_UTEST(image)
             Y_CHECK(!img.handles(_));
         }
     }
+
+    
 
 }
 Y_UTEST_DONE()

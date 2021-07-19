@@ -1,5 +1,6 @@
 #include "y/gfx/ops/gaussian-blur.hpp"
 #include "y/gfx/stack.hpp"
+#include "y/gfx/pixel.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/gfx/image/io.hpp"
@@ -88,6 +89,11 @@ Y_UTEST(blur)
             std::cerr << "blur RGB par..." << std::endl;
             b.cover(pxm,par,img);
             IMG.save(pxm,"blur3-par.png");
+
+            pixmap<rgb> sub(img.w,img.h);
+            sub.assign(img,pxm,seq,pixel::sub<rgb>);
+            IMG.save(sub,"sub3-seq.png");
+
         }
         
         {
@@ -117,6 +123,7 @@ Y_UTEST(blur)
         do_blur<rgb>(img,par,"3.tif");
         do_blur<float>(img,par,"f.tif");
         do_blur<uint8_t>(img,par,"1.tif");
+
 
     }
     

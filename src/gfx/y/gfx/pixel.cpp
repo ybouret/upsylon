@@ -28,6 +28,59 @@ namespace upsylon
         }
 
 
+    }
+
+}
+
+namespace upsylon
+{
+    namespace graphic
+    {
+
+        template <> float pixel:: sub<float>(const float &lhs, const float &rhs) throw()
+        {
+            return fabsf(lhs-rhs);
+        }
+
+        template <> double pixel:: sub<double>(const double &lhs, const double &rhs) throw()
+        {
+            return fabs(lhs-rhs);
+        }
+
+        template <> uint8_t pixel:: sub<uint8_t>(const uint8_t &lhs, const uint8_t &rhs) throw()
+        {
+            return uint8_t( abs(int(lhs) - int(rhs)) );
+        }
+
+        static inline uint8_t ave_of(const float I, const uint8_t x, const uint8_t y) throw()
+        {
+            const unsigned X = x;
+            const unsigned Y = y;
+            const float    A  = ( (X+Y)>> 1 );
+            return floorf( A * I + 0.5f );
+        }
+
+
+        template <> rgb pixel:: sub<rgb>(const rgb &lhs, const rgb &rhs) throw()
+        {
+            const float L = convert<float,rgb>::from(lhs);
+            const float R = convert<float,rgb>::from(rhs);
+            const float I = fabs(L-R);
+            return rgb(ave_of(I,lhs.r,rhs.r),
+                       ave_of(I,lhs.g,rhs.g),
+                       ave_of(I,lhs.b,rhs.b));
+        }
+
+    }
+
+}
+
+
+namespace upsylon
+{
+    namespace graphic
+    {
+
         template <> float pixel:: average9<float>(float *arr) throw()
         {
             sorting::on(arr,comparison::increasing<float>);
