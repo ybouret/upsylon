@@ -46,16 +46,18 @@ namespace upsylon
                                       broker          &apply,
                                       const uint8_t    feeble_limit,
                                       const uint8_t    strong_limit);
-                
+
+#if 0
                 //! track edges with a least one STRONG component
                 size_t track(blobs           &userBlobs,
                              pixmap<uint8_t> &userEdges,
                              pixmap<size_t>  &userMasks,
                              shared_knots    &knotCache);
+#endif
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(profile);
-                blobs           *Blobs;
+                //blobs           *Blobs;
                 pixmap<uint8_t> *Edges;
                 pixmap<size_t>  *Masks;
                 

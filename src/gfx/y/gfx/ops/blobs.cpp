@@ -6,16 +6,63 @@ namespace upsylon
     
     namespace graphic
     {
+
         blobs:: ~blobs() throw()
         {
         }
         
         
-        blobs:: blobs() throw()
+        blobs:: blobs(const unit_t W, const unit_t H, const shared_knots &K):
+        blist(),
+        bmask(W,H),
+        cache(K)
         {
+
         }
-        
-        
+
+        knot * blobs:: fetch_knot()
+        {
+            return cache->size ? cache->pop_front() : knot::create_alive();
+        }
+
+        void  blobs:: rewrite() throw()
+        {
+            for(const blob *b=blist.head;b;b=b->next)
+            {
+                b->dispatch(b->label,aliasing::_(bmask));
+            }
+        }
+
+        void blobs:: relabel() throw()
+        {
+            size_t label = 0;
+            for(blob *b=aliasing::_(blist).head;b;b=b->next)
+            {
+                aliasing::_(b->label) = ++label;
+            }
+        }
+
+        void blobs:: clear() throw()
+        {
+            aliasing::_(blist).release();
+            aliasing::_(bmask).ldz();
+        }
+
+        void  blobs:: expunge(blob *b) throw()
+        {
+            assert(b!=NULL);
+            delete aliasing::_(blist).unlink( b->remove_from( aliasing::_(bmask) ) );
+        }
+
+        blob * blobs:: produce(size_t &label)
+        {
+            return aliasing::_(blist).push_back( new blob(++label,cache) );
+        }
+
+
+
+#if 0
+
         
         knot * blobs:: fetch_knot(shared_knots &cache)
         {
@@ -83,7 +130,8 @@ namespace upsylon
             remove_if(smaller_than, (void*)&cutSize, masks);
         }
         
-
+#endif
+        
     }
     
 }

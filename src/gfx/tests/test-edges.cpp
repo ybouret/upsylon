@@ -123,6 +123,8 @@ Y_UTEST(edges)
         
         size_to_rgba   conv;
         edges::profile prof;
+
+#if 0
         blobs          B;
         pixmap<size_t> masks(img.w,img.h);
         prof.track(B,Kseq,masks,cache);
@@ -137,7 +139,7 @@ Y_UTEST(edges)
         {
            // std::cerr << "-> " << b->size << std::endl;
         }
-
+#endif
         
         
 

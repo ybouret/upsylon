@@ -17,14 +17,16 @@ namespace upsylon
         class size_to_rgba : public type_to_rgba
         {
         public:
-            virtual ~size_to_rgba() throw(); //!< cleanup
-            explicit size_to_rgba();         //!< setup
-            
+            virtual ~size_to_rgba() throw();            //!< cleanup
+            size_to_rgba(const size_t=0);               //!< setup with index of color '1'
+            size_to_rgba(const size_to_rgba &) throw(); //!< copy
+
             virtual rgba   operator()(const void *) const throw(); //!< color from size_t
             virtual unit_t depth()                  const throw(); //!< sizeof(size_t)
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(size_to_rgba);
+            Y_DISABLE_ASSIGN(size_to_rgba);
+            const size_t shift;
         };
     }
 

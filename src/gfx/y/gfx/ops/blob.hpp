@@ -31,8 +31,17 @@ namespace upsylon
         class knots : public entity, public knots_
         {
         public:
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~knots() throw();        //!< cleanup
             explicit knots() throw();        //!< setup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             void     reserve(size_t n);      //!< push_back n nodes
             void     ensure(const size_t n); //!< ensure n nodes
 
@@ -51,28 +60,47 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
+        //! map of blobs
+        //
+        //______________________________________________________________________
+        typedef pixmap<size_t> blob_map;
+
+
+        //______________________________________________________________________
+        //
+        //
         //! a blob is a list of nodes, itself a node for blobs
         //
         //______________________________________________________________________
         class blob : public knots, public dnode<blob>
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
 
             //! prototype to validate a newlyformed blob
             typedef bool (*proc)(const blob &, void *);
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit blob(const size_t, const shared_knots &) throw(); //!< setup
             virtual ~blob() throw();                                   //!< cleanup
 
-            const size_t label; //!< identifier
-            shared_knots cache; //!< pool to return knots to
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
             //! change label, propagating
-            blob  *change_label(const size_t    value,
-                                pixmap<size_t> &masks) throw();
+            blob  *change_label(const size_t value, blob_map &bmask) throw();
 
             //! change label to 0, dispatch
-            blob  *remove_from(pixmap<size_t> &masks) throw();
+            blob  *remove_from(blob_map &bmask) throw();
 
             //! set value on knots
             template <typename T> inline
@@ -90,6 +118,13 @@ namespace upsylon
             //! comapre blobs by decreasing size
             static int decreasing_size(const blob *, const blob *, void*) throw();
 
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t label; //!< identifier
+            shared_knots cache; //!< pool to return knots to
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(blob);

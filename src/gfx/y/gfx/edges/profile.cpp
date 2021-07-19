@@ -11,7 +11,11 @@ namespace upsylon
         namespace edges
         {
             
-            profile::  profile() throw() : Blobs(0), Edges(0), Masks(0) {}
+            profile::  profile() throw() :
+            //Blobs(0),
+            Edges(0),
+            Masks(0) {}
+
             profile:: ~profile() throw() {}
 
             size_t profile:: tighten(pixmap<uint8_t> &edges,
@@ -83,6 +87,7 @@ namespace upsylon
                 return static_cast<profile *>(args)->accept(b);
             }
 
+#if 0
             size_t profile:: track(blobs           &userBlobs,
                                    pixmap<uint8_t> &userEdges,
                                    pixmap<size_t>  &userMasks,
@@ -95,7 +100,7 @@ namespace upsylon
                 userBlobs.build(userMasks,userEdges,knotCache,8,call_accept,this);
                 return userBlobs.size;
             }
-            
+#endif
             
             bool profile:: accept(const blob &b) throw()
             {

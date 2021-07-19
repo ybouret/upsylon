@@ -95,7 +95,7 @@ Y_UTEST(eda)
         std::cerr << "feeble=" << int(feeble) << " -> strong=" << int(strong) << std::endl;
         IMG.save(kmax,"prof.png");
 
-        
+#if 0
         blobs          B;
         pixmap<size_t> M(img.w,img.h);
         (void) prof.track(B,kmax,M,cache);
@@ -108,6 +108,7 @@ Y_UTEST(eda)
             IMG.save(kmax,"ckmax.png");
 
         }
+#endif
 
 
     }

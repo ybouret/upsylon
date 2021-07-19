@@ -53,16 +53,16 @@ namespace upsylon
         }
 
         blob * blob:: change_label(const size_t    value,
-                                   pixmap<size_t> &masks) throw()
+                                   blob_map       &bmask) throw()
         {
             aliasing::_(label) = value;
-            dispatch(value,masks);
+            dispatch(value,bmask);
             return this;
         }
 
-        blob  * blob:: remove_from(pixmap<size_t> &masks) throw()
+        blob  * blob:: remove_from(blob_map &bmask) throw()
         {
-            return change_label(0,masks);
+            return change_label(0,bmask);
         }
 
         int blob:: increasing_size(const blob *lhs, const blob *rhs, void*) throw()

@@ -12,6 +12,7 @@
 
 #include "y/gfx/image/io.hpp"
 #include "y/gfx/color/size-to-rgba.hpp"
+#include "y/gfx/color/named.hpp"
 
 
 using namespace upsylon;
@@ -50,22 +51,17 @@ Y_UTEST(blobs)
             IMG.save(fg,"fg.png");
         }
 
-        pixmap<size_t> masks(img.w,img.h);
         shared_knots   cache = new knots();
-        size_to_rgba   conv;
+        size_to_rgba   conv  = Y_RED_INDEX;
 
-        blobs b;
+        blobs b(img.w,img.h,cache);
+        b.build(fg,4);
+        IMG.save(b.bmask,"blobs4.png",NULL,conv);
+        std::cerr << "#blobs4: " << b.blist.size << std::endl;
         
-        b.build(masks,fg,cache,4);
-        IMG.save(masks,"blobs4.png",NULL,conv);
-        std::cerr << "#blobs4: " << b.size << std::endl;
-        
-        b.build(masks,fg,cache,8);
-        IMG.save(masks,"blobs8.png",NULL,conv);
-        
-        std::cerr << "#blobs8: " << b.size << std::endl;
-
-
+        b.build(fg,8);
+        IMG.save(b.bmask,"blobs8.png",NULL,conv);
+        std::cerr << "#blobs8: " << b.blist.size << std::endl;
 
     }
     
