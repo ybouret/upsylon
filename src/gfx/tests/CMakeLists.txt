@@ -29,6 +29,7 @@ add_test(mask    test-gfx mask)
 add_test(draw    test-gfx draw)
 add_test(split   test-gfx split ${IMG})
 add_test(eda      test-gfx eda ${IMG} 2.1)
+add_test(intensity test-gfx intensity ${IMG})
 
 
 ADD_CUSTOM_TARGET(utest-gfx
