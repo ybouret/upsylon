@@ -21,13 +21,14 @@ namespace upsylon
         class intensity
         {
         public:
-            intensity() throw();
-            virtual ~intensity() throw();
+            intensity() throw();          //!< setup
+            virtual ~intensity() throw(); //!< cleanup
 
-            const float vmin;
-            const float vmax;
-            const float scal;
+            const float vmin; //!< minimal intensity
+            const float vmax; //!< maximal intensity
+            const float scal; //!< scaling
 
+            //! compute vmin/vmax/scal
             template <typename T> inline
             void scan(const pixmap<T> &source, broker &apply)
             {
@@ -36,10 +37,11 @@ namespace upsylon
                 load(apply);
             }
 
-            void format(broker &) const;
-
+            //! direct enhancement
             template <typename T> inline
-            void enhance(pixmap<T> &target, const pixmap<T> &source, broker &apply) const
+            void enhance(pixmap<T>       &target,
+                         const pixmap<T> &source,
+                         broker          &apply) const
             {
                 if(scal>0.0f)
                 {
@@ -75,18 +77,18 @@ namespace upsylon
                                     const float vcur = convert<float,T>::from( src ); // current intensity
                                     if(vcur<=vmin)
                                     {
-                                        tgt = pixel::zero<T>();
+                                        tgt = 0;
                                     }
                                     else
                                     {
                                         if(vcur>=vmax)
                                         {
-                                            tgt = pixel::opaque<T>();
+                                            tgt = 1;
                                         }
                                         else
                                         {
-                                            (void)scal;
-                                            tgt = src;
+                                            const float vnew = clamp<float>(0.0f,scal*(vcur-vmin),1.0f);
+                                            tgt = vnew;
                                         }
                                     }
                                 }

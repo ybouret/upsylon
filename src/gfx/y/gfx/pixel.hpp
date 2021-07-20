@@ -38,9 +38,11 @@ namespace upsylon
             template <typename T> static inline
             bool is_not_zero(const T &value) throw() { return !is_zero(value); }
 
+            //! return a zeroed pixel
             template <typename T> static
             T zero() throw();
 
+            //! return an opaque pixel
             template <typename T> static
             T opaque() throw();
 

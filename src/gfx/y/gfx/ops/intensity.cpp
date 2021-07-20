@@ -28,6 +28,7 @@ namespace upsylon
             }
         }
 
+#if 0
         void intensity:: format(broker &apply) const
         {
             apply.caches.make<float>(4);
@@ -38,7 +39,8 @@ namespace upsylon
                 apply.caches[i]->get<float>(3) = scal;
             }
         }
-
+#endif
+        
     }
 
 }
