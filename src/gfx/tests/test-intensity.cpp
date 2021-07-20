@@ -38,7 +38,11 @@ Y_UTEST(intensity)
         Ipar.enhance(pxm,flt,par);
         IMG.save(pxm,"enh-par.png");
 
-        
+        pixmap<rgb> sat(img,par,pixel::saturated<rgb>);
+        IMG.save(sat,"sat.png");
+
+
+
 
     }
 

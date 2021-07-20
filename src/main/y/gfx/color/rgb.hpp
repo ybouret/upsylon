@@ -3,7 +3,7 @@
 #ifndef Y_COLOR_RGB_INCLUDED
 #define Y_COLOR_RGB_INCLUDED 1
 
-#include "y/os/platform.hpp"
+#include "y/sort/network/sort3.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -76,6 +76,43 @@ namespace upsylon
                 }
 
 
+                //! computed a saturated rgb
+                inline rgb saturated() const throw()
+                {
+                    int indx[3] = {0,1,2};
+                    int chan[3] = {r,g,b};
+                    network_sort<3>::co(chan,indx,compare_decreasing_chan);
+                    assert(chan[0]>=chan[1]);
+                    assert(chan[1]>=chan[2]);
+
+                    const unsigned m = chan[0];
+                    if(m>0)
+                    {
+                        chan[0]   = 0xff;
+                        (chan[1] *= 0xff) /= m;
+                        (chan[2] *= 0xff) /= m;
+                        network_sort<3>::co(indx,chan,compare_increasing_indx);
+                        return rgb(static_cast<uint8_t>(chan[0]),
+                                   static_cast<uint8_t>(chan[1]),
+                                   static_cast<uint8_t>(chan[2]));
+                    }
+                    else
+                    {
+                        return rgb(0,0,0);
+                    }
+                }
+
+                //! to sort channels
+                static inline int compare_decreasing_chan(const int &lhs, const int &rhs) throw()
+                {
+                    return rhs-lhs;
+                }
+
+                //! to sort indices
+                static inline int compare_increasing_indx(const int &lhs, const int &rhs) throw()
+                {
+                    return lhs-rhs;
+                }
             };
 
             //! RGBA

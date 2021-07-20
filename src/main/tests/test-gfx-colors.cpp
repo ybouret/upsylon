@@ -56,6 +56,14 @@ Y_UTEST(gfx_colors)
         CheckAll<YUV>(yuv);
     }
 
+    {
+        for(size_t i=0;i<8;++i)
+        {
+            const rgb C( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
+
+            C.saturated();
+        }
+    }
 
 
 }

@@ -59,6 +59,38 @@ namespace upsylon
 {
     namespace graphic
     {
+        template <> float   pixel:: saturated<float>(const  float  &f)   throw() { return f<=0.0f ? 0.0f : 1.0f; }
+        template <> double  pixel:: saturated<double>(const double &f)   throw() { return f<=0.0 ? 0.0 : 1.0; }
+        template <> uint8_t pixel:: saturated<uint8_t>(const uint8_t &u) throw()
+        {
+            switch(u)
+            {
+                case 0:  return 0;
+                default: return 0xff;
+            }
+            return 0xff;
+        }
+
+        template <> rgb    pixel:: saturated(const rgb &c)   throw()
+        {
+            return c.saturated();
+        }
+
+        template <> rgba    pixel:: saturated(const rgba &c)   throw()
+        {
+            const rgb C = c;
+            const rgb S = C.saturated();
+            return rgba(S.r,S.g,S.b,c.a);
+        }
+
+    }
+}
+
+
+namespace upsylon
+{
+    namespace graphic
+    {
 
         template <> float pixel:: sub<float>(const float &lhs, const float &rhs) throw()
         {

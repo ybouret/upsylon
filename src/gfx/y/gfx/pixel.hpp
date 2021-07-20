@@ -46,6 +46,10 @@ namespace upsylon
             template <typename T> static
             T opaque() throw();
 
+
+            //! return a saturated pixel
+            template <typename T> static
+            T saturated(const T &) throw();
             
 
             //! average of 9 items
