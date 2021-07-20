@@ -4,6 +4,7 @@
 #define Y_COLOR_RGB_INCLUDED 1
 
 #include "y/sort/network/sort3.hpp"
+#include "y/comparison.hpp"
 #include <iostream>
 
 namespace upsylon
@@ -75,6 +76,17 @@ namespace upsylon
                     return (lhs.r!=rhs.r) || (lhs.g!=rhs.g) || (lhs.b!=rhs.b);
                 }
 
+                //! lexicographic comparison
+                static inline int compare(const rgb &lhs, const rgb &rhs) throw()
+                {
+                    return comparison::increasing_lexicographic<T>(&lhs.r, &rhs.r,3);
+                }
+                
+                //! less operator
+                friend inline bool operator<(const rgb &lhs, const rgb &rhs) throw()
+                {
+                    return compare(lhs,rhs) < 0;
+                }
 
                 //! computed a saturated rgb
                 inline rgb saturated() const throw()
