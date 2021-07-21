@@ -3,7 +3,6 @@
 #include "y/utest/run.hpp"
 #include "y/type/rtti.hpp"
 #include "y/ios/align.hpp"
-#include "y/sequence/vector.hpp"
 #include "y/ordered/sorted-vector.hpp"
 #include "y/type/utils.hpp"
 
@@ -29,18 +28,7 @@ namespace
         Check<T,YUV>(value);
         std::cerr << std::endl;
     }
-    
-#if 0
-    static inline
-    void add_to( vector<rgb> &v, const rgb &c)
-    {
-        for(size_t i=v.size();i>0;--i)
-        {
-            if(c==v[i]) return;
-        }
-        v.push_back(c);
-    }
-#endif
+
     
 }
 
@@ -72,6 +60,8 @@ Y_UTEST(gfx_colors)
         CheckAll<YUV>(yuv);
     }
 
+
+    std::cerr << "Testing saturated colors" << std::endl;
     {
         for(size_t i=0;i<8;++i)
         {
@@ -82,7 +72,7 @@ Y_UTEST(gfx_colors)
         typedef sorted_vector<rgb>         sorted_rgb;
         typedef ordered_single<sorted_rgb> single_rgb;
         
-       single_rgb S1(256*256*256,as_capacity);
+        single_rgb S1(256*256*256,as_capacity);
         
         size_t count1 = 0;
         size_t count2 = 0;
@@ -115,12 +105,46 @@ Y_UTEST(gfx_colors)
             count4 += (i*(i+1));
         }
         count4 >>= 1;
-        std::cerr << "count4=" << count3 << std::endl;
+        std::cerr << "count4=" << count4 << std::endl;
         Y_CHECK(count1==count4);
+        const size_t count5 = ( 256*257*258 )/6;
+        std::cerr << "count5=" << count5 << std::endl;
+        Y_CHECK(count1==count5);
+
         std::cerr << "#sat1=" << S1.size() << std::endl;
-        
-        
-        
+#if 0
+        {
+            for(size_t i=1;i<=S1.size();++i)
+            {
+                std::cerr << " " << S1[i];
+                if(0==(i%8)) std::cerr << std::endl;
+            }
+            std::cerr << std::endl;
+        }
+        for(size_t i=S1.size();i>0;--i)
+        {
+            const rgb &lhs = S1[i];
+            for(size_t j=i-1;j>0;--j)
+            {
+                const rgb &rhs = S1[j];
+                Y_ASSERT(rhs!=lhs);
+            }
+        }
+#endif
+
+        size_t ns1 = 1;
+        size_t ns2 = 1;
+        for(int j=255;j>=0;--j)
+        {
+            for(int k=j;k>=0;--k)
+            {
+                ++ns1;
+            }
+            ns2 += (j+1);
+        }
+        std::cerr << "ns1=" << ns1 << std::endl;
+        std::cerr << "ns2=" << ns2 << std::endl;
+
     }
 
 

@@ -272,6 +272,8 @@ Y_UTEST_INIT(256)
     Y_UTEST(gfx_conv);
     Y_UTEST(gfx_pixels);
     Y_UTEST(gfx_blend);
+    Y_UTEST(gfx_sat);
+    
 }
 Y_UTEST_EXEC()
 

@@ -430,12 +430,14 @@ test-gfx-hist.cpp
 test-gfx-conv.cpp
 test-gfx-pixels.cpp
 test-gfx-blend.cpp
+test-gfx-sat.cpp
 )
 ADD_TEST(gfx:colors test-main gfx_colors)
 ADD_TEST(gfx:hist   test-main gfx_hist)
 ADD_TEST(gfx:conv   test-main gfx_conv)
 ADD_TEST(gfx:pixels test-main gfx_pixels)
 ADD_TEST(gfx:blend  test-main gfx_blend)
+ADD_TEST(gfx:sat    test-main gfx_sat)
 
 
 
