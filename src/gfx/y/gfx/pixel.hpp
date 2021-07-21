@@ -46,11 +46,14 @@ namespace upsylon
             template <typename T> static
             T opaque() throw();
 
-
             //! return a saturated pixel
             template <typename T> static
             T saturated(const T &) throw();
-            
+
+            //! scaling of pixels
+            template <typename T> static
+            T mul_by(const float, const T &) throw();
+
 
             //! average of 9 items
             template <typename T> static T average9(T *arr) throw();

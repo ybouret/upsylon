@@ -155,7 +155,8 @@ namespace upsylon
                 }
 
                 //! opaque RGB
-                inline rgba( const rgb<T> &C ) throw() : r(C.r), g(C.g), b(C.b), a(Opaque) {}
+                inline rgba( const rgb<T> &C, T A=Opaque) throw() : r(C.r), g(C.g), b(C.b), a(A) {}
+
 
                 //! 0..3 access
                 inline T & operator[](const size_t i) throw()

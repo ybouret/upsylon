@@ -87,10 +87,12 @@ Y_UTEST(gfx_colors)
                 for(int k=j;k>=0;--k)
                 {
                     ++count1;
-                    const rgb s = rgb(uint8_t(i),
+                    const rgb c = rgb(uint8_t(i),
                                       uint8_t(j),
-                                      uint8_t(k) ).saturated();
+                                      uint8_t(k) );
+                    const rgb s = c.saturated();
                     S1.insert(s);
+                    Y_ASSERT( (convert<float,rgb>::from(s) >= convert<float,rgb>::from(c) ) );
                 }
             }
         }

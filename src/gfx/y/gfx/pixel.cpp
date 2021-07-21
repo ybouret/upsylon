@@ -60,7 +60,9 @@ namespace upsylon
     namespace graphic
     {
         template <> float   pixel:: saturated<float>(const  float  &f)   throw() { return f<=0.0f ? 0.0f : 1.0f; }
+
         template <> double  pixel:: saturated<double>(const double &f)   throw() { return f<=0.0 ? 0.0 : 1.0; }
+
         template <> uint8_t pixel:: saturated<uint8_t>(const uint8_t &u) throw()
         {
             switch(u)
@@ -80,11 +82,59 @@ namespace upsylon
         {
             const rgb C = c;
             const rgb S = C.saturated();
-            return rgba(S.r,S.g,S.b,c.a);
+            return rgba(S,c.a);
         }
 
     }
 }
+
+namespace upsylon
+{
+    namespace graphic
+    {
+        template <> float pixel:: mul_by<float>(const float f, const float &src) throw()
+        {
+            return f*src;
+        }
+
+        template <> double pixel:: mul_by<double>(const float f, const double &src) throw()
+        {
+            return f*src;
+        }
+
+        static inline uint8_t u8_mul_by(const float f, const uint8_t u) throw()
+        {
+            return uint8_t( floorf( (f*u) + 0.5f ) );
+        }
+
+        template <> uint8_t pixel:: mul_by<uint8_t>(const float f, const uint8_t &src) throw()
+        {
+            assert(f>=0.0f);
+            assert(f<=1.0f);
+            return u8_mul_by(f,src);
+        }
+
+        template <> rgb pixel:: mul_by<rgb>(const float f, const rgb &src) throw()
+        {
+            assert(f>=0.0f);
+            assert(f<=1.0f);
+            return rgb( u8_mul_by(f,src.r), u8_mul_by(f,src.g), u8_mul_by(f,src.b) );
+        }
+
+        template <> rgba pixel:: mul_by<rgba>(const float f, const rgba &src) throw()
+        {
+            assert(f>=0.0f);
+            assert(f<=1.0f);
+            const rgb c = src;
+            const rgb m = mul_by(f,c);
+            return rgba(m,src.a);
+        }
+
+    }
+
+}
+
+
 
 
 namespace upsylon

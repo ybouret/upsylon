@@ -33,14 +33,18 @@ Y_UTEST(intensity)
 
         pixmap<float> pxm(img.w,img.h);
         Iseq.enhance(pxm,flt,seq);
-        IMG.save(pxm,"enh-seq.png");
+        IMG.save(pxm,"enhf-seq.png");
 
         Ipar.enhance(pxm,flt,par);
-        IMG.save(pxm,"enh-par.png");
+        IMG.save(pxm,"enhf-par.png");
 
         pixmap<rgb> sat(img,par,pixel::saturated<rgb>);
         IMG.save(sat,"sat.png");
 
+        pixmap<rgb> tgt(img.w,img.h);
+        Iseq.scan(img,seq);
+        Iseq.enhance(tgt,img,seq);
+        IMG.save(tgt,"enh3-seq.png");
 
 
 

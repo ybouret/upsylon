@@ -61,6 +61,7 @@ namespace upsylon
                             const float      vmin   = data.vmin;
                             const float      vmax   = data.vmax;
                             const float      scal   = data.scal;
+                            const T          zpix   = pixel::zero<T>();
 
                             for(size_t j=t.size();j>0;--j)
                             {
@@ -77,18 +78,20 @@ namespace upsylon
                                     const float vcur = convert<float,T>::from( src ); // current intensity
                                     if(vcur<=vmin)
                                     {
-                                        tgt = 0;
+                                        tgt = zpix;
                                     }
                                     else
                                     {
+                                        const T pmax = pixel::saturated(src);
+                                        assert(( convert<float,T>::from(pmax) >= vcur) );
                                         if(vcur>=vmax)
                                         {
-                                            tgt = 1;
+                                            tgt = pmax;
                                         }
                                         else
                                         {
                                             const float vnew = clamp<float>(0.0f,scal*(vcur-vmin),1.0f);
-                                            tgt = vnew;
+                                            tgt = pixel::mul_by(vnew,pmax);
                                         }
                                     }
                                 }
@@ -136,43 +139,7 @@ namespace upsylon
 
             void load(const broker &apply) throw();
 
-            template <typename T> static inline
-            void kernel_norm(const tile &t, void *args, lockable &) throw()
-            {
-                pixmap<T>       &pxm  = *static_cast<pixmap<T> *>(args);
-                const float      vmin = t.cache->get<float>(1);
-                const float      vmax = t.cache->get<float>(2);
-                const float      scal = t.cache->get<float>(3);
-
-                for(size_t j=t.size();j>0;--j)
-                {
-                    const segment   &s    = t[j];
-                    pixrow<T>       &r    = pxm(s.y);
-                    const unit_t     xmin = s.xmin;
-
-                    for(unit_t x=s.xmax;x>=xmin;--x)
-                    {
-                        T          &src  = r(x);
-                        const float vcur = convert<float,T>::from( src ); // current intensity
-                        if(vcur<=vmin)
-                        {
-                            src = pixel::zero<T>();
-                        }
-                        else
-                        {
-                            if(vcur>=vmax)
-                            {
-                                src = pixel::opaque<T>();
-                            }
-                            else
-                            {
-                                (void)scal;
-                            }
-                        }
-                    }
-                }
-            }
-
+            
         };
 
     }
