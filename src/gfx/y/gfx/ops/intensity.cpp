@@ -4,7 +4,8 @@ namespace upsylon
 {
     namespace graphic
     {
-        intensity:: intensity() throw(): vmin(0), vmax(0), scal(0)
+        intensity:: intensity() throw():
+        vmin(0), vmax(0), scal(0), gamm(1.0)
         {
 
         }

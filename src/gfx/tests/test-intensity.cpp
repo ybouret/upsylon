@@ -43,7 +43,7 @@ Y_UTEST(intensity)
 
         pixmap<rgb> tgt(img.w,img.h);
         Iseq.scan(img,seq);
-        Iseq.enhance(tgt,img,seq);
+        Iseq.enhance(tgt,img,seq,0.7f);
         IMG.save(tgt,"enh3-seq.png");
 
 

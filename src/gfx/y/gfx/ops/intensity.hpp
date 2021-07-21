@@ -8,6 +8,7 @@
 #include "y/gfx/pixmap.hpp"
 #include "y/gfx/color/convert.hpp"
 #include "y/gfx/pixel.hpp"
+#include "y/momentary/value.hpp"
 
 namespace upsylon
 {
@@ -41,8 +42,10 @@ namespace upsylon
             template <typename T> inline
             void enhance(pixmap<T>       &target,
                          const pixmap<T> &source,
-                         broker          &apply) const
+                         broker          &apply,
+                         const float      vgamm = 1.0f) const
             {
+                const momentary_value<float> keep_gamm(gamm,vgamm);
                 if(scal>0.0f)
                 {
                     struct ops
@@ -61,6 +64,7 @@ namespace upsylon
                             const float      vmin   = data.vmin;
                             const float      vmax   = data.vmax;
                             const float      scal   = data.scal;
+                            const float      gamm   = data.gamm;
                             const T          zpix   = pixel::zero<T>();
 
                             for(size_t j=t.size();j>0;--j)
@@ -69,7 +73,7 @@ namespace upsylon
                                 const unit_t     y     = s.y;
                                 const pixrow<T> &src_y = source(y);
                                 pixrow<T>       &tgt_y = target(y);
-                                const unit_t     xmin = s.xmin;
+                                const unit_t     xmin  = s.xmin;
 
                                 for(unit_t x=s.xmax;x>=xmin;--x)
                                 {
@@ -83,15 +87,15 @@ namespace upsylon
                                     else
                                     {
                                         const T pmax = pixel::saturated(src);
-                                        assert(( convert<float,T>::from(pmax) >= vcur) );
+                                        assert( ( convert<float,T>::from(pmax) >= vcur) );
                                         if(vcur>=vmax)
                                         {
                                             tgt = pmax;
                                         }
                                         else
                                         {
-                                            const float vnew = clamp<float>(0.0f,scal*(vcur-vmin),1.0f);
-                                            tgt = pixel::mul_by(vnew,pmax);
+                                            const float fac = powf(clamp<float>(0.0f,scal*(vcur-vmin),1.0f),gamm);
+                                            tgt = pixel::mul_by(fac,pmax);
                                         }
                                     }
                                 }
@@ -112,6 +116,8 @@ namespace upsylon
 
 
         private:
+            mutable float gamm;
+            
             template <typename T> static inline
             void kernel_scan(const tile &t, void *args, lockable &) throw()
             {
