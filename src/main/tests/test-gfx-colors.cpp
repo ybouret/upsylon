@@ -114,6 +114,12 @@ Y_UTEST(gfx_colors)
         Y_CHECK(count1==count5);
 
         std::cerr << "#sat1=" << S1.size() << std::endl;
+        for(size_t i=1;i<=16;++i)
+        {
+            std::cerr << "S[" << std::setw(2) << i <<  "] = " << S1[i] << std::endl;
+        }
+
+
 #if 0
         {
             for(size_t i=1;i<=S1.size();++i)
@@ -146,6 +152,8 @@ Y_UTEST(gfx_colors)
         }
         std::cerr << "ns1=" << ns1 << std::endl;
         std::cerr << "ns2=" << ns2 << std::endl;
+        const size_t ns3 =  (256*257)/2+1;
+        std::cerr << "ns3=" << ns3 << std::endl;
 
     }
 
