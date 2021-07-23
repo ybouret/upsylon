@@ -199,13 +199,13 @@ case CLASS::UUID: fillDB(db, &(axiom->as<CLASS>().axiom) ); break
                             const Terminal &guest = axiom->as<Terminal>();
                             const string   &key   = *guest.name;
 
-                            if(Axiom::Verbose) std::cerr << "\t\t\\_" << ios::align(key, ios::align::left, aligned);
+                            if(Axiom::Verbose) std::cerr << "\t\\_" << ios::align(key, ios::align::left, aligned);
 
                             for(const Axiom::TermLedger *ft=firsts.head;ft;ft=ft->next)
                             {
                                 if(ft->search(key))
                                 {
-                                    if(Axiom::Verbose) std::cerr << " @" << ft->from.name;
+                                    if(Axiom::Verbose) std::cerr << " @" << ft->from.name << "[" << fourcc_(ft->from.uuid) << "]";
                                     aliasing::_(axiom->hosts).store( new Axiom::Host( ft->from ) );
                                 }
                             }
