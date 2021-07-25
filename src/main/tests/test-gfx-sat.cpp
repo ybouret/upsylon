@@ -1,74 +1,42 @@
 #include "y/utest/run.hpp"
 #include "y/gfx/color/rgb.hpp"
-#include "y/gfx/color/bred.hpp"
 
-#include "y/associative/hash/set.hpp"
-#include "y/ordered/sorted-vector.hpp"
-#include "y/ptr/intr.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/type/utils.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace graphic;
 
 namespace
 {
-#if 0
-    static const size_t                num_sat = (256*257)>>1;
-    typedef sorted_vector<rgb>         sorted_rgb;
-    typedef ordered_unique<sorted_rgb> unique_rgb;
-
-    class rgb_hasher
-    {
-    public:
-        inline  rgb_hasher() throw() {}
-        inline ~rgb_hasher() throw() {}
-
-        size_t operator()(const rgb &c) const throw()
-        {
-            union
-            {
-                size_t  key;
-                uint8_t arr[sizeof(size_t)];
-            } alias = { 0 };
-            alias.arr[0] = c.r;
-            alias.arr[1] = c.g;
-            alias.arr[2] = c.b;
-            return alias.key;
-        }
-    };
-
-    class entry : public object, public counted
-    {
-    public:
-        typedef intr_ptr<rgb,entry> ptr;
-        const rgb  c;
-        unique_rgb data;
-
-        inline explicit entry(const rgb &_) throw() : object(), c(_), data()
-        {
-        }
-
-        inline virtual ~entry() throw() {}
-
-        const rgb & key() const throw()
-        {
-            return c;
-        }
-
-    };
-
-    typedef hash_set<rgb,entry::ptr,rgb_hasher> rgb_db;
-#endif
-
+    typedef vector<rgb> rgbs;
 }
-
-#include "y/type/utils.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/ios/ocstream.hpp"
-#include <cstring>
 
 Y_UTEST(gfx_sat)
 {
-
+    
+    rgbs db[256];
+    int  ntot = 0;
+    for(int i=255;i>=0;--i)
+    {
+        for(int j=i;j>=0;--j)
+        {
+            for(int k=j;k>=0;--k)
+            {
+                const rgb sat(i,j,k);
+                
+                
+                ++ntot;
+            }
+        }
+    }
+    
+    std::cerr << "ntot=" << ntot << std::endl;
+    
+    
+    
+#if 0
     size_t          off[256] = { 0 };
     size_t          num[256] = { 0 };
     vector<uint8_t> data(2048,as_capacity);
@@ -134,7 +102,8 @@ Y_UTEST(gfx_sat)
         }
         std::cerr << std::endl;
     }
-
+#endif
+    
 
 
 #if 0
