@@ -1,13 +1,27 @@
 #include "y/counting/symm-indx.hpp"
+#include "y/yap.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/timings.hpp"
+#include "y/mkl/types.hpp"
 #include <cstdio>
 using namespace upsylon;
 
 
+namespace
+{
+    template <typename T>
+    static inline void doSQRT()
+    {
+        for(T n=0;n<=25;++n)
+        {
+            const T s = mkl::sqrt_of(n);
+            std::cerr << "sqrt(" << n << ")=" << s << std::endl;
+        }
+    }
+}
+
 Y_UTEST(isqrt)
 {
-    
     
     std::cerr << "-- Testing SymmIndx" << std::endl;
     for(size_t n=1;n<=100;++n)
@@ -32,21 +46,12 @@ Y_UTEST(isqrt)
         Y_ASSERT(s*s<=i);
     }
 
-#if 0
-    std::cerr << "-- Testing Speed: Raw..." << std::endl;
-    double speed_raw = 0;
-    Y_TIMINGS(speed_raw,1.0,
-              for(size_t i=0;i<65536;++i) { (void)isqrt::_(i); }
-              );
-    std::cerr << "\t" << speed_raw << std::endl;
-    
-    std::cerr << "-- Testing Speed: Opt..." << std::endl;
-    double speed_opt = 0;
-    Y_TIMINGS(speed_opt,1.0,
-              for(size_t i=0;i<65536;++i) { (void)isqrt::of(i); }
-              );
-    std::cerr << "\t" << speed_opt << std::endl;
-#endif
+    doSQRT<size_t>();
+    doSQRT<apn>();
+    doSQRT<apz>();
+    doSQRT<float>();
+    doSQRT<double>();
+
     
 }
 Y_UTEST_DONE()

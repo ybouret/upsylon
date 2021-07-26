@@ -33,21 +33,12 @@ namespace upsylon {
             }
         }
 
-#if 0
-        //! use internal table then raw method
-        template <typename T> static inline
-        T of(const T n) throw()
-        {
-            static const T nmax(sizeof(table));
-            return (n<nmax) ? table[n] : _(n);
-        }
-
-        //! 64k precomputed square roots
-        static const uint8_t table[65536];
-#endif
-
     };
 
+    namespace mkl
+    {
+        size_t sqrt_of(const size_t) throw();
+    }
 
 
 

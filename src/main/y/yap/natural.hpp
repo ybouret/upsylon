@@ -20,7 +20,7 @@ namespace upsylon {
         // declarations
         //______________________________________________________________________
         //#define Y_YAP_FORCE16
-        class library;                                            //!< forward declaration
+        class library;                                           //!< forward declaration
         typedef memory::tight::twain_allocator memory_allocator; //!< alias
 
 

@@ -2,12 +2,13 @@
 
 namespace upsylon {
 
-#if 0
-    const uint8_t isqrt::table[65536] =
+    namespace mkl
     {
-#include "isqrt.inc"
-    };
-#endif
+        size_t sqrt_of(const size_t n) throw()
+        {
+            return isqrt::of<size_t>(n);
+        }
+    }
     
 }
 
