@@ -7,7 +7,7 @@ using namespace upsylon;
 
 Y_UTEST(symm_indx)
 {
-    for(size_t n=1;n<=15;++n)
+    for(size_t n=1;n<=32;++n)
     {
         std::cerr << "n=" << n << std::endl;
         const size_t kmax = (n*(n+1))/2;
@@ -24,6 +24,15 @@ Y_UTEST(symm_indx)
             Y_ASSERT(i*(i-1)/2+j==k);
         }
     }
+
+    for(size_t k=1;k<=16;++k)
+    {
+        size_t i,j;
+        symm_indx(i,j,k);
+        //std::cerr << std::setw(3) <<  k << " => " << std::setw(3) << i <<"," << std::setw(3) << j << std::endl;
+    }
+
+
 }
 Y_UTEST_DONE()
 

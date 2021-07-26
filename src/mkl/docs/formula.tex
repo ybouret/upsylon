@@ -32,13 +32,30 @@ For a given $k\in \left[ 1;\dfrac{n(n+1)}{2}\right]$, we look for
 \begin{equation}
 	1\leq j \leq i \leq n, \;\; k = \frac{i(i-1)}{2}+j
 \end{equation}
-For $j=0$, we get the previous sum:
+For $j=1$, we get $k$ matching $i$:
 \begin{equation}
-	k-1=\dfrac{i(i-1)}{2} \Rightarrow i^2-i - 2(k-1) = 0
+	k=\dfrac{i(i-1)}{2}+1 \Rightarrow i^2-i - 2(k-1) = 0
 \end{equation}
 \begin{equation}
-	i = \dfrac{1+\sqrt{1+8(k-1)}}{2}, j = k-\frac{i(i-1)}{2}
+\left\lbrace
+	\begin{array}{rcl}
+	i &=& \dfrac{1+\sqrt{1+8(k-1)}}{2}\\
+	\\
+	j &=& k-\dfrac{i(i-1)}{2}\\
+	\end{array}
+\right.
 \end{equation}
+If $k=k_m+1$, $i=i_m+1$, $j=j_m+1$,
+\begin{equation}
+	\left\lbrace
+	\begin{array}{rcl}
+	i_m &=& \dfrac{\sqrt{1+8k_m}-1}{2}\\
+	\\
+	j_m &=& k_m -\dfrac{i_m(i_m+1)}{2}\\
+	\end{array}
+\right.
+\end{equation}
+
 
 
 \end{document}

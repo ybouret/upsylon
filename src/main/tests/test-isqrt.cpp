@@ -51,7 +51,6 @@ Y_UTEST(isqrt)
     doSQRT<apz>();
     doSQRT<float>();
     doSQRT<double>();
-
     
 }
 Y_UTEST_DONE()
