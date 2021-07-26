@@ -118,28 +118,7 @@ Y_UTEST(gfx_colors)
         {
             std::cerr << "S[" << std::setw(2) << i <<  "] = " << S1[i] << std::endl;
         }
-
-
-#if 0
-        {
-            for(size_t i=1;i<=S1.size();++i)
-            {
-                std::cerr << " " << S1[i];
-                if(0==(i%8)) std::cerr << std::endl;
-            }
-            std::cerr << std::endl;
-        }
-        for(size_t i=S1.size();i>0;--i)
-        {
-            const rgb &lhs = S1[i];
-            for(size_t j=i-1;j>0;--j)
-            {
-                const rgb &rhs = S1[j];
-                Y_ASSERT(rhs!=lhs);
-            }
-        }
-#endif
-
+        
         size_t ns1 = 1;
         size_t ns2 = 1;
         for(int j=255;j>=0;--j)
