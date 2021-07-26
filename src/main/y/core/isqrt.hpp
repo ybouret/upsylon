@@ -37,6 +37,7 @@ namespace upsylon {
 
     namespace mkl
     {
+        //! dedicated sqrt for mkl functions
         size_t sqrt_of(const size_t) throw();
     }
 
