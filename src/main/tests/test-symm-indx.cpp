@@ -7,31 +7,23 @@ using namespace upsylon;
 
 Y_UTEST(symm_indx)
 {
-    for(size_t n=1;n<=32;++n)
+    for(size_t n=1;n<=10;++n)
     {
-        std::cerr << "n=" << n << std::endl;
-        const size_t kmax = (n*(n+1))/2;
+        const size_t kmax = ( n*(n+1) )/2;
         for(size_t k=1;k<=kmax;++k)
         {
-            std::cerr << "\t@" << std::setw(3) << k;
-            const size_t delta=8*(k-1)+1;
-            const size_t i    =(1+isqrt::of(delta))/2;
-            std::cerr << " | i=" << std::setw(3) << i;
-            const size_t j    =k-(i*(i-1))/2;
-            std::cerr << " | j=" << std::setw(3) << j;
-            std::cerr << std::endl;
-            Y_ASSERT(j<=i);
+            size_t i,j;
+            symm_indx::get(i,j,k);
+            Y_ASSERT(1<=i); Y_ASSERT(i<=n);
+            Y_ASSERT(1<=j); Y_ASSERT(j<=i);
             Y_ASSERT(i*(i-1)/2+j==k);
+
+            size_t im,jm;
+            symm_indx::getC(im,jm,k-1);
+            Y_ASSERT(i-1==im);
+            Y_ASSERT(j-1==jm);
         }
     }
-
-    for(size_t k=1;k<=16;++k)
-    {
-        size_t i,j;
-        symm_indx(i,j,k);
-        //std::cerr << std::setw(3) <<  k << " => " << std::setw(3) << i <<"," << std::setw(3) << j << std::endl;
-    }
-
 
 }
 Y_UTEST_DONE()

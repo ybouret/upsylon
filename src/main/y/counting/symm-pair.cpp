@@ -73,7 +73,7 @@ namespace upsylon {
     
     void symm_pair:: update() throw()
     {
-        symm_indx(aliasing::_(upper),aliasing::_(lower),index);
+        symm_indx::get(aliasing::_(upper),aliasing::_(lower),index);
     }
 
     
