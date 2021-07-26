@@ -18,7 +18,7 @@ namespace upsylon {
     {
         //! 1 <= k <= n(n+1)/2, return 1<=j<=i<=n indices
         template <typename T> static inline
-        void get(T &i, T &j, const T k) throw()
+        void get_v1(T &i, T &j, const T k) throw()
         {
             assert(k>0);
             const T s_arg = ((k-1)<<3)+1;
@@ -33,18 +33,31 @@ namespace upsylon {
         void get_v2(T &i, T &j, const T k) throw()
         {
             assert(k>0);
-            size_t i_tmp = 1;
+            T i_tmp = 1;
             {
-                size_t sum=1;
+                T sum=1;
                 while(sum<k)
-                {
                     sum += ++i_tmp;
-                }
             }
-            i=i_tmp;
             j=k-( (i_tmp*(i_tmp-1))>>1 );
-
+            i=i_tmp;
         }
+
+        //! 1 <= k <= n(n+1)/2, return 1<=j<=i<=n indices
+        template <typename T> static inline
+        void get_v3(T &i, T &j, const T k) throw()
+        {
+            assert(k>0);
+            T i_tmp = 1;
+            {
+                T sum=1;
+                while(sum<k)
+                    sum += ++i_tmp;
+            }
+            j=k-( (i_tmp*(i_tmp-1))>>1 );
+            i=i_tmp;
+        }
+
 
         //! 0 < k << n(n+1)/2, return 0<=j<=i<n indices
         template <typename T> static inline
