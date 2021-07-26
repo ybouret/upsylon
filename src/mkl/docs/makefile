@@ -14,3 +14,4 @@ clean:
 	rm -f zircon.pdf
 	rm -f diffusion.pdf
 	rm -f fvm.pdf
+	rm -f formula.pdf
