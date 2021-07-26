@@ -7,6 +7,7 @@ using namespace upsylon;
 
 Y_UTEST(isqrt)
 {
+    
 
 #if 0
     std::cerr << "Output Table..." << std::endl;

@@ -339,6 +339,7 @@ test-phrases.cpp
 test-part.cpp
 test-counting.cpp
 test-symm-pair.cpp
+test-symm-indx.cpp
 test-counting-perf.cpp
 test-drawers.cpp
 )
@@ -355,6 +356,7 @@ ADD_TEST(counting:parts    test-main parts)
 ADD_TEST(counting:bell     test-main bell)
 ADD_TEST(counting:check    test-main counting)
 ADD_TEST(counting:symm     test-main symm_pair)
+ADD_TEST(counting:indx     test-main symm_indx)
 ADD_TEST(counting:meta     test-main metaloop)
 ADD_TEST(counting:perf     test-main counting_perf)
 ADD_TEST(counting:drawers  test-main drawers)

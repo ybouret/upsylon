@@ -9,6 +9,7 @@
 
 \begin{document}
 
+\section{sum of integers}
 \begin{equation}
 	\sum_{i=1}^n i = \dfrac{n(n+1)}{2}
 \end{equation}
@@ -17,6 +18,27 @@
 	\sum_{i=1}^n i^2 = \dfrac{n(n+1)(2n+1)}{6}
 \end{equation}
 
+\begin{equation}
+	\sum_{i=1}^n i^3 = \left(\dfrac{n(n+1)}{2}\right)^2
+\end{equation}
+
+\section{symmetric indices}
+
+Let's assume:
+\begin{equation}
+	1\leq j \leq i \leq n \Rightarrow \dfrac{n(n+1)}{2} \text{ items }.
+\end{equation}
+For a given $k\in \left[ 1;\dfrac{n(n+1)}{2}\right]$, we look for
+\begin{equation}
+	1\leq j \leq i \leq n, \;\; k = \frac{i(i-1)}{2}+j
+\end{equation}
+For $j=0$, we get the previous sum:
+\begin{equation}
+	k-1=\dfrac{i(i-1)}{2} \Rightarrow i^2-i - 2(k-1) = 0
+\end{equation}
+\begin{equation}
+	i = \dfrac{1+\sqrt{1+8(k-1)}}{2}, j = k-\frac{i(i-1)}{2}
+\end{equation}
 
 
 \end{document}
