@@ -12,7 +12,7 @@ namespace upsylon {
     {
         //! integer square root, raw method
         template <typename T> static inline
-        T _(const T n) throw()
+        T of(const T n) throw()
         {
             if(n<=1)
             {
@@ -20,7 +20,6 @@ namespace upsylon {
             }
             else
             {
-                //T x0 = n;
                 T x1 = (n>>1);
                 while(true)
                 {
@@ -34,6 +33,7 @@ namespace upsylon {
             }
         }
 
+#if 0
         //! use internal table then raw method
         template <typename T> static inline
         T of(const T n) throw()
@@ -44,6 +44,7 @@ namespace upsylon {
 
         //! 64k precomputed square roots
         static const uint8_t table[65536];
+#endif
 
     };
 
