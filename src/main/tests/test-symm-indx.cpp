@@ -11,8 +11,10 @@ namespace  {
 
     static inline void doCheck()
     {
-        for(size_t n=1;n<=100;++n)
+        std::cerr << "Checking : [";
+        for(size_t n=1;n<=200;++n)
         {
+            (std::cerr << ".").flush();
             const size_t kmax = ( n*(n+1) )/2;
             for(size_t k=1;k<=kmax;++k)
             {
@@ -27,83 +29,65 @@ namespace  {
                 Y_ASSERT(i2==i);
                 Y_ASSERT(j2==j);
 
+                size_t i3,j3;
+                symm_indx::get_v3(i3,j3,k);
+                Y_ASSERT(i3==i);
+                Y_ASSERT(j3==j);
+
+
                 size_t im,jm;
                 symm_indx::getC(im,jm,k-1);
                 Y_ASSERT(i-1==im);
                 Y_ASSERT(j-1==jm);
             }
         }
+        std::cerr << "]" << std::endl;
     }
 
-    static inline size_t f(const size_t x)
-    {
-        return x*(x-1);
-    }
-
-    size_t find(const size_t y)
-    {
-        size_t lo = 1;
-        size_t hi = y;
-        while(hi-lo>1)
-        {
-            const size_t mid = (lo+hi)/2;
-            const size_t val = f(mid);
-            if(val>y)
-            {
-                hi = mid;
-            }
-            else
-            {
-                if(val<y)
-                {
-                    lo = mid;
-                }
-                else
-                {
-                    return mid;
-                }
-            }
-        }
-        return lo;
-    }
 
 }
+
+#include "y/ios/ocstream.hpp"
 
 Y_UTEST(symm_indx)
 {
     doCheck();
+    
 
-
-#if 0
-    const double D    = 2.0;
+    double       D    = 1.0;
     size_t       KMAX = 10000;
     if(argc>1)
     {
         KMAX = string_convert::to<size_t>(argv[1],"KMAX");
     }
+    if(argc>2)
+    {
+        D = string_convert::to<double>(argv[2],"D");
+    }
     volatile     size_t I=0,J=0;
 
-
-    double speed1 = 0;
-#define CODE1 for(size_t k=1;k<=KMAX;++k) symm_indx::get<volatile size_t>(  I,  J,k)
-    Y_TIMINGS(speed1,D,CODE1);
-    std::cerr << "speed1=" << human_readable(speed1) << std::endl;
-
-    double speed2 = 0;
-#define CODE2 for(size_t k=1;k<=KMAX;++k) symm_indx::get_v2<volatile size_t>(  I,  J,k)
-    Y_TIMINGS(speed2,D,CODE2);
-    std::cerr << "speed2=" << human_readable(speed2)  << std::endl;
-#endif
-
-    for(size_t k=1;k<=20;++k)
+    ios::ocstream::overwrite("symm_indx.dat");
+    for(size_t kmax=2;kmax<=KMAX;kmax*=2)
     {
-        size_t i,j;
-        symm_indx::get_v1(i,j,k);
+        std::cerr << "kmax=" << kmax << std::endl;
+        double speed1 = 0;
+#define CODE1 for(size_t k=1;k<=kmax;++k) symm_indx::get_v1<volatile size_t>(  I,  J,k)
+        Y_TIMINGS(speed1,D,CODE1);
+        std::cerr << "speed1=" << human_readable(speed1) << std::endl;
 
-        const size_t ib = find(2*(k-1));
-        std::cerr << "k=" << k << "->" << i << " -> " << ib << std::endl;
+        double speed2 = 0;
+#define CODE2 for(size_t k=1;k<=kmax;++k) symm_indx::get_v2<volatile size_t>(  I,  J,k)
+        Y_TIMINGS(speed2,D,CODE2);
+        std::cerr << "speed2=" << human_readable(speed2)  << std::endl;
+
+        double speed3 = 0;
+#define CODE3 for(size_t k=1;k<=kmax;++k) symm_indx::get_v3<volatile size_t>(  I,  J,k)
+        Y_TIMINGS(speed3,D,CODE3);
+        std::cerr << "speed3=" << human_readable(speed3)  << std::endl;
+
+        ios::ocstream::echo("symm_indx.dat","%g %g %g %g\n", log10( double(kmax) ), log10(speed1), log10(speed2), log10(speed3) );
     }
-
+    std::cerr << "plot 'symm_indx.dat' u 1:2 w lp title \"isqrt\", '' u 1:3 w lp title \"linear\", '' u 1:4 w lp title \"bis\"" << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -48,14 +48,37 @@ namespace upsylon {
         void get_v3(T &i, T &j, const T k) throw()
         {
             assert(k>0);
-            T i_tmp = 1;
+            const T y   = (k-1)<<1;
+            T       ilo = 1;
+            if(y>0)
             {
-                T sum=1;
-                while(sum<k)
-                    sum += ++i_tmp;
+                T ihi = y;
+                ++ihi; assert( ihi*(ihi-1)>y );
+                while(ihi-ilo>1)
+                {
+                    const T mid = (ihi+ilo)>>1;
+                    const T val = mid*(mid-1);
+                    if(val<y)
+                    {
+                        ilo = mid;
+                    }
+                    else
+                    {
+                        if(y<val)
+                        {
+                            ihi = mid;
+                        }
+                        else
+                        {
+                            ilo=mid;
+                            break;
+                        }
+                    }
+                }
+
             }
-            j=k-( (i_tmp*(i_tmp-1))>>1 );
-            i=i_tmp;
+            j = k - ((ilo*(ilo-1))>>1);
+            i = ilo;
         }
 
 
