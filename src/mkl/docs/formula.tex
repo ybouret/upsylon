@@ -34,8 +34,9 @@ For a given $k\in \left[ 1;\dfrac{n(n+1)}{2}\right]$, we look for
 \end{equation}
 For $j=1$, we get $k$ matching $i$:
 \begin{equation}
-	k=\dfrac{i(i-1)}{2}+1 \Rightarrow i^2-i - 2(k-1) = 0
+	k_i=\dfrac{i(i-1)}{2}+1, k_i\leq k \; \; \Rightarrow i^2-i - 2(k_i-1) = 0
 \end{equation}
+
 \begin{equation}
 \left\lbrace
 	\begin{array}{rcl}
@@ -56,6 +57,13 @@ If $k=k_m+1$, $i=i_m+1$, $j=j_m+1$,
 \right.
 \end{equation}
 
-
-
+Let us assume that:
+\begin{equation}
+	k = \dfrac{i(i-1)}{2} + \left[ (1-\alpha) + \alpha i \right], \;\alpha\in\left[0,\dfrac{1}{i-1},\dfrac{2}{i-1},\ldots,\dfrac{i-2}{i-1},1\right]
+\end{equation}
+We need to solve:
+\begin{equation}
+	i^2 - i(1-2\alpha) - 2\left[ k - (1-\alpha) \right] = 0	
+\end{equation}
+ 	
 \end{document}
