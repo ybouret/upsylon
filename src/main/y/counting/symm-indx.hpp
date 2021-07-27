@@ -91,7 +91,7 @@ namespace upsylon {
             }
         }
 
-
+        //! precomputed 64k table of C indices
         static const uint8_t pair[32768][2];
     };
 
