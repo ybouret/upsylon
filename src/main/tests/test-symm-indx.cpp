@@ -131,6 +131,44 @@ Y_UTEST(symm_indx)
     doCheckTab<uint32_t>();
     doCheckTab<uint64_t>();
 
+
+
+
+
+}
+Y_UTEST_DONE()
+
+Y_UTEST(symm_perf)
+{
+    {
+        size_t kmax     = 65536;
+        double duration = 1;
+
+        ios::ocstream::overwrite("symm-perf.dat");
+        volatile size_t I=0,J=0;
+        for(size_t k=1;k<=kmax;k *= 2)
+        {
+            std::cerr << "@" << k << std::endl;
+
+            double speed1 = 0;
+            Y_TIMINGS(speed1,duration,symm_indx::get_v1<volatile size_t>(I,J,k));
+            std::cerr << "\tspeed1: " << human_readable(speed1) << std::endl;
+
+            double speed2 = 0;
+            Y_TIMINGS(speed2,duration,symm_indx::get_v2<volatile size_t>(I,J,k));
+            std::cerr << "\tspeed2: " << human_readable(speed2) << std::endl;
+
+
+            double speed3 = 0;
+            Y_TIMINGS(speed3,duration,symm_indx::get_v3<volatile size_t>(I,J,k));
+            std::cerr << "\tspeed3: " << human_readable(speed3) << std::endl;
+
+            ios::ocstream::echo("symm-perf.dat","%g %g %g %g\n", log2( double(k) ), log10(speed1), log10(speed2), log10(speed3) );
+        }
+
+
+
+    }
 }
 Y_UTEST_DONE()
 

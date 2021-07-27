@@ -58,7 +58,7 @@ namespace upsylon {
             }
             else
             {
-                return get_v1(i,j,k);
+                return get_v1<T>(i,j,k);
             }
         }
 

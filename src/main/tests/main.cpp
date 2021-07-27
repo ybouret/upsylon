@@ -81,6 +81,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(counting);
     Y_UTEST(symm_pair);
     Y_UTEST(symm_indx);
+    Y_UTEST(symm_perf);
     Y_UTEST(dancing);
     Y_UTEST(scrabble);
     Y_UTEST(phrases);
