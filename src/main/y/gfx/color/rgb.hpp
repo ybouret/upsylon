@@ -15,6 +15,8 @@ namespace upsylon
         namespace crux
         {
 
+            extern const uint8_t saturated_table[257*256/2];
+            
             template <typename T> class rgba; //!< forward declaration
 
             //! RGB type
@@ -100,9 +102,10 @@ namespace upsylon
                     const unsigned m = chan[0];
                     if(m>0)
                     {
-                        chan[0]   = 0xff;
-                        (chan[1] *= 0xff) /= m;
-                        (chan[2] *= 0xff) /= m;
+                        const uint8_t *sat = &saturated_table[ (m*(m+1))>>1 ];
+                        chan[0]            = 0xff;
+                        chan[1]            = sat[chan[1]];
+                        chan[2]            = sat[chan[2]];
                         network_sort<3>::co(indx,chan,compare_increasing_indx);
                         return rgb(static_cast<uint8_t>(chan[0]),
                                    static_cast<uint8_t>(chan[1]),

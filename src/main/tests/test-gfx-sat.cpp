@@ -8,38 +8,41 @@
 using namespace upsylon;
 using namespace graphic;
 
-namespace
-{
-
-}
-
-
 
 Y_UTEST(gfx_sat)
 {
-    const size_t total = 255*256/2;
-    size_t       count = 0;
-    uint8_t      sat[total];
-    for(unsigned i=0;i<255;++i)
+    if(false)
     {
-        for(unsigned j=0;j<=i;++j)
+        ios::ocstream fp("saturated.inc");
+        const unsigned total = 257*256/2;
+        unsigned       count = 0;
+
+        fp("const uint8_t saturated_table[%u] = {\n",total);
+        for(unsigned i=0;i<256;++i)
         {
-            sat[count] = 0;
-            if(i>0)
+            for(unsigned j=0;j<=i;++j)
             {
-                sat[count] = static_cast<uint8_t>(j*255/i);
+                uint8_t sat = 0;
+                if(i>0)
+                {
+                    sat = static_cast<uint8_t>((j*255)/i);
+                }
+                fp(" %3u",unsigned(sat));
+                const unsigned sub = i*(i+1)/2+j;
+                Y_ASSERT(sub==count);
+                ++count;
+                if(count<total)
+                {
+                    fp << ',';
+                }
             }
-            const size_t sub = i*(i+1)/2+j;
-            Y_ASSERT(sub==count);
-            ++count;
-
+            fp << '\n';
         }
+        std::cerr << "count=" << count << std::endl;
+        Y_CHECK(total==count);
+        fp << "};\n";
     }
-    std::cerr << "count=" << count << std::endl;
-    Y_CHECK(total==count);
-
-
 
 }
 Y_UTEST_DONE()
- 
+
