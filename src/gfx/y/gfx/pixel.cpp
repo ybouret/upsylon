@@ -136,6 +136,7 @@ namespace upsylon
 
 
 
+#include <cstdlib>
 
 namespace upsylon
 {
