@@ -10,32 +10,35 @@ using namespace graphic;
 
 namespace
 {
+
 }
+
+
 
 Y_UTEST(gfx_sat)
 {
-
-    const size_t total = 256*257/2;
+    const size_t total = 255*256/2;
     size_t       count = 0;
-    for(int i=0;i<=255;++i)
+    uint8_t      sat[total];
+    for(unsigned i=0;i<255;++i)
     {
-        for(int j=0;j<=i;++j)
+        for(unsigned j=0;j<=i;++j)
         {
-            int ans = 0;
+            sat[count] = 0;
             if(i>0)
             {
-                ans = (j*255)/i;
-                Y_ASSERT(ans<=255);
+                sat[count] = static_cast<uint8_t>(j*255/i);
             }
+            const size_t sub = i*(i+1)/2+j;
+            Y_ASSERT(sub==count);
             ++count;
-            fprintf(stderr," %3d",ans);
-            if(count<total) fputc(',',stderr);
-        }
-        fputc('\n',stderr);
-    }
 
-    std::cerr << "count="<< count << std::endl;
+        }
+    }
+    std::cerr << "count=" << count << std::endl;
     Y_CHECK(total==count);
+
+
 
 }
 Y_UTEST_DONE()
