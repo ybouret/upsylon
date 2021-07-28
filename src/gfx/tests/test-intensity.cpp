@@ -20,9 +20,9 @@ static inline rgb rgb2sat(const rgb &c)
 
 Y_UTEST(intensity)
 {
-    image::io &IMG   = Y_IMAGE();
-    engine seqEngine = new concurrent::solo();
-    engine parEngine = new concurrent::simt();
+    image::io &IMG       = Y_IMAGE();
+    engine     seqEngine = new concurrent::solo();
+    engine     parEngine = new concurrent::simt();
 
 
     if(argc>1)
