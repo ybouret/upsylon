@@ -59,8 +59,8 @@ namespace upsylon
                     default:
                         break;
                 }
-                const int FG = int ( unsigned(fg) << 8 );
-                const int BG = int(alpha) * shift[ int(fg) - int(bg) ];
+                const int BG = int ( unsigned(bg) << 8 );
+                const int FG = int(alpha) * shift[ int(fg) - int(bg) ];
                 return uint8_t(unsigned(FG+BG)>>8);
             }
         };

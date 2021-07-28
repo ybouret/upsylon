@@ -5,17 +5,18 @@
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
 #include "y/gfx/color/convert.hpp"
+#include "y/gfx/pixel/blend.hpp"
 
 using namespace upsylon;
 using namespace graphic;
 
+
+
 static inline rgb rgb2sat(const rgb &c)
 {
-    YUV yuv = convert<YUV,rgb>::from(c);
-    yuv.y   = 0.9f;
-    //yuv.u   = 0;
-    //yuv.v   = 0;
-    return convert<rgb,YUV>::from(yuv);
+    const rgb white(255,255,255);
+    uint8_t  alpha = 10;
+    return blend<uint8_t,rgb>::mix(alpha,white,c);
 }
 
 Y_UTEST(intensity)
@@ -55,7 +56,7 @@ Y_UTEST(intensity)
 
         {
             pixmap<rgb> sat(img,par,rgb2sat);
-            IMG.save(sat,"yuv.png");
+            IMG.save(sat,"blend.png");
         }
 
 
