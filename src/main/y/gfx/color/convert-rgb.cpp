@@ -32,8 +32,8 @@ namespace upsylon
             const float g = crux::convert::unit_float[c.g];
             const float b = crux::convert::unit_float[c.b];
             return YUV( 0.299f*r+0.587f*g+0.114f*b,
-                       -0.147f*r-0.289f*g+0.436f*b,
-                       0.615f*r-0.515f*g-0.100f*b);
+                       -0.14713f*r-0.28886f*g+0.436f*b,
+                       0.615f*r-0.51498f*g-0.10001f*b);
         }
 
 

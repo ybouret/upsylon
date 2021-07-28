@@ -20,9 +20,9 @@ namespace upsylon
 
         template <>     rgbF convert<rgbF,YUV>:: from(const YUV &z) throw()
         {
-            const float r =  z.y + 1.140f * z.v;
-            const float g =  z.y - 0.394f * z.u - 0.581f * z.v;
-            const float b =  z.y + 2.028f * z.u;
+            const float r =  z.y + 1.139830f * z.v;
+            const float g =  z.y - 0.39464f * z.u - 0.58060f * z.v;
+            const float b =  z.y + 2.03211f * z.u;
             return rgbF(r,g,b);
         }
 

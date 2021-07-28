@@ -4,9 +4,19 @@
 #include "y/gfx/image/io.hpp"
 #include "y/concurrent/loop/simt.hpp"
 #include "y/concurrent/loop/solo.hpp"
+#include "y/gfx/color/convert.hpp"
 
 using namespace upsylon;
 using namespace graphic;
+
+static inline rgb rgb2sat(const rgb &c)
+{
+    YUV yuv = convert<YUV,rgb>::from(c);
+    yuv.y   = 0.9f;
+    //yuv.u   = 0;
+    //yuv.v   = 0;
+    return convert<rgb,YUV>::from(yuv);
+}
 
 Y_UTEST(intensity)
 {
@@ -38,8 +48,16 @@ Y_UTEST(intensity)
         Ipar.enhance(pxm,flt,par);
         IMG.save(pxm,"enhf-par.png");
 
-        pixmap<rgb> sat(img,par,pixel::saturated<rgb>);
-        IMG.save(sat,"sat.png");
+        {
+            pixmap<rgb> sat(img,par,pixel::saturated<rgb>);
+            IMG.save(sat,"sat.png");
+        }
+
+        {
+            pixmap<rgb> sat(img,par,rgb2sat);
+            IMG.save(sat,"yuv.png");
+        }
+
 
         pixmap<rgb> tgt(img.w,img.h);
         Iseq.scan(img,seq);
