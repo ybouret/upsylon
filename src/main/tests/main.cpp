@@ -167,6 +167,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(suffix_address);
  
     Y_UTEST(fft1);
+
     Y_UTEST(network_sort);
     Y_UTEST(sort);
     Y_UTEST(sort_merge_list);
@@ -175,6 +176,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(classes);
     Y_UTEST(maintain);
     Y_UTEST(groups);
+    Y_UTEST(index);
     
 
     Y_UTEST(query);

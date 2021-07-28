@@ -249,7 +249,8 @@ ADD_TEST(mk:sincos      test-main sincos)
 
 SOURCE_GROUP(sort FILES test-sort.cpp test-unique.cpp test-maintain.cpp test-locate.cpp test-classes.cpp test-network-sort.cpp test-blk.cpp test-groups.cpp
 test-sort-merge-list.cpp
-test-sort-merge-pool.cpp)
+test-sort-merge-pool.cpp
+test-index.cpp)
 ADD_TEST(sort:network     test-main network_sort)
 ADD_TEST(sort:sort        test-main sort perf)
 ADD_TEST(sort:merge_list  test-main sort_merge_list)
@@ -260,6 +261,7 @@ ADD_TEST(sort:locate      test-main locate)
 ADD_TEST(sort:classes     test-main classes)
 ADD_TEST(sort:groups      test-main groups)
 ADD_TEST(sort:blk         test-main blk)
+ADD_TEST(sort:index       test-main index)
 
 
 SOURCE_GROUP(information FILES  
