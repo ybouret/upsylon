@@ -14,9 +14,7 @@ using namespace graphic;
 
 static inline rgb rgb2sat(const rgb &c)
 {
-    const rgb white(255,255,255);
-    uint8_t  alpha = 10;
-    return blend<uint8_t,rgb>::mix(alpha,white,c);
+    return blend<uint8_t,rgb>::lighten(10,c);
 }
 
 Y_UTEST(intensity)

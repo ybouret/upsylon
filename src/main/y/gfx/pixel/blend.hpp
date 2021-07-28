@@ -33,6 +33,19 @@ namespace upsylon
             {
                 return bg + alpha*(fg-bg);
             }
+
+            //! floating point formula
+            static inline float lighten(const float alpha, const float bg) throw()
+            {
+                return bg + alpha*(1.0f-bg);
+            }
+
+            //! floating point formula
+            static inline float darken(const float alpha, const float bg) throw()
+            {
+                return bg + alpha*(0.0f-bg);
+            }
+
         };
 
         //______________________________________________________________________
@@ -62,6 +75,20 @@ namespace upsylon
                 const int BG = int ( unsigned(bg) << 8 );
                 const int FG = int(alpha) * shift[ int(fg) - int(bg) ];
                 return uint8_t(unsigned(FG+BG)>>8);
+            }
+
+            //! ligthen in 0-255
+            static inline
+            uint8_t lighten(const uint8_t alpha, const uint8_t bg) throw()
+            {
+                return mix(alpha,0xff,bg);
+            }
+
+            //! ligthen in 0-255
+            static inline
+            uint8_t darken(const uint8_t alpha, const uint8_t bg) throw()
+            {
+                return mix(alpha,0x00,bg);
             }
         };
 
@@ -126,6 +153,24 @@ namespace upsylon
                 return rgb(_::mix(alpha,fg.r,bg.r),
                            _::mix(alpha,fg.g,bg.g),
                            _::mix(alpha,fg.b,bg.b));
+            }
+
+            //! lighten (r,g,b)
+            static inline
+            rgb lighten(const uint8_t alpha, const rgb bg) throw()
+            {
+                return rgb(_::lighten(alpha,bg.r),
+                           _::lighten(alpha,bg.g),
+                           _::lighten(alpha,bg.b));
+            }
+
+            //! lighten (r,g,b)
+            static inline
+            rgb darken(const uint8_t alpha, const rgb bg) throw()
+            {
+                return rgb(_::darken(alpha,bg.r),
+                           _::darken(alpha,bg.g),
+                           _::darken(alpha,bg.b));
             }
 
         };
