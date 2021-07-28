@@ -112,7 +112,7 @@ namespace upsylon
                         tgt[ indx[2] ]     = sat[ chan[indx[2]] ];
                     }
                     return c;
-                    
+
                 }
 
                 //! to sort channels
@@ -120,12 +120,7 @@ namespace upsylon
                 {
                     return int(rhs)-int(lhs);
                 }
-
-                //! to sort indices
-                static inline int compare_increasing_indx(const int &lhs, const int &rhs) throw()
-                {
-                    return lhs-rhs;
-                }
+                
             };
 
             //! RGBA

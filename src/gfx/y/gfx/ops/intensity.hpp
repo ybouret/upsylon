@@ -94,7 +94,8 @@ namespace upsylon
                                         }
                                         else
                                         {
-                                            const float fac = powf(clamp<float>(0.0f,scal*(vcur-vmin),1.0f),gamm);
+                                            //const float fac = powf(clamp<float>(0.0f,scal*(vcur-vmin),1.0f),gamm);
+                                            const float fac = clamp<float>(0.0f,scal*(vcur-vmin),1.0f);
                                             tgt = pixel::mul_by(fac,pmax);
                                         }
                                     }
