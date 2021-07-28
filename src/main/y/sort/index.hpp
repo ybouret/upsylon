@@ -17,7 +17,7 @@ namespace upsylon
     {
         //! make index, C++ style
         template <typename T,typename FUNC> static inline
-        void make(addressable<size_t> &idx, FUNC &compare,  const accessible<T> &ra) throw()
+        void make(addressable<size_t> &idx, FUNC &compare, const accessible<T> &ra) throw()
         {
 
             // initialize indices
@@ -71,20 +71,7 @@ namespace upsylon
                 target[i] = source[indices[i]];
             }
         }
-
-        //! with the help of local memory
-        template <typename T> static inline
-        void rank( addressable<T> &arr, const accessible<size_t> &idx )
-        {
-            assert(arr.size()==idx.size());
-            const size_t num = arr.size();
-            vector<T>    tmp(num);
-            rank(tmp,arr,idx);
-            for(size_t i=num;i>0;--i)
-            {
-                bswap(tmp[i],arr[i]);
-            }
-        }
+        
 
 
 
