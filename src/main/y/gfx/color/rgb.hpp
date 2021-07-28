@@ -4,7 +4,9 @@
 #define Y_COLOR_RGB_INCLUDED 1
 
 #include "y/sort/network/sort3.hpp"
+#include "y/sort/network/index.hpp"
 #include "y/comparison.hpp"
+
 #include <iostream>
 
 namespace upsylon
@@ -15,6 +17,7 @@ namespace upsylon
         namespace crux
         {
 
+            //! pre-computed saturation values for [i][j<=i]
             extern const uint8_t saturated_table[257*256/2];
             
             template <typename T> class rgba; //!< forward declaration
@@ -93,34 +96,29 @@ namespace upsylon
                 //! computed a saturated rgb
                 inline rgb saturated() const throw()
                 {
-                    int indx[3] = {0,1,2};
-                    int chan[3] = {r,g,b};
-                    network_sort<3>::co(chan,indx,compare_decreasing_chan);
-                    assert(chan[0]>=chan[1]);
-                    assert(chan[1]>=chan[2]);
-
-                    const unsigned m = chan[0];
+                    const uint8_t *chan    = &r;
+                    size_t         indx[3] = {0,0,0};
+                    newtork_index<3>::make(indx,chan,decreasing_chan);
+                    assert( chan[ indx[0] ] >= chan[ indx[1] ]);
+                    assert( chan[ indx[1] ] >= chan[ indx[2] ]);
+                    const unsigned m = chan[ indx[0] ];
+                    rgb            c(0,0,0);
                     if(m>0)
                     {
                         const uint8_t *sat = &saturated_table[ (m*(m+1))>>1 ];
-                        chan[0]            = 0xff;
-                        chan[1]            = sat[chan[1]];
-                        chan[2]            = sat[chan[2]];
-                        network_sort<3>::co(indx,chan,compare_increasing_indx);
-                        return rgb(static_cast<uint8_t>(chan[0]),
-                                   static_cast<uint8_t>(chan[1]),
-                                   static_cast<uint8_t>(chan[2]));
+                        uint8_t       *tgt = &c.r;
+                        tgt[ indx[0] ]     = 0xff;
+                        tgt[ indx[1] ]     = sat[ chan[indx[1]] ];
+                        tgt[ indx[2] ]     = sat[ chan[indx[2]] ];
                     }
-                    else
-                    {
-                        return rgb(0,0,0);
-                    }
+                    return c;
+                    
                 }
 
                 //! to sort channels
-                static inline int compare_decreasing_chan(const int &lhs, const int &rhs) throw()
+                static inline int decreasing_chan(const uint8_t &lhs, const uint8_t &rhs) throw()
                 {
-                    return rhs-lhs;
+                    return int(rhs)-int(lhs);
                 }
 
                 //! to sort indices

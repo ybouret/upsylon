@@ -1,4 +1,6 @@
 #include "y/sort/index.hpp"
+#include "y/sort/network/index.hpp"
+
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/sort/network/all.hpp"
@@ -10,29 +12,7 @@ using namespace upsylon;
 
 namespace
 {
-    template <const size_t N>
-    struct newtork_index
-    {
-        typedef network_sort<N> nw;
-        static  const size_t    nt = sizeof(nw::I)/sizeof(nw::I[0]);
-
-        template <typename T, typename COMPARE> static inline
-        void make( size_t *indx, const T *data, COMPARE &compare)
-        {
-            for(size_t k=0;k<N;++k) indx[k] = k;
-
-            for(size_t k=0;k<nt;++k)
-            {
-                size_t &i = indx[nw::I[k]];
-                size_t &j = indx[nw::J[k]];
-                if( compare(data[j],data[i]) < 0 )
-                {
-                    bswap(i,j);
-                }
-            }
-        }
-
-    };
+   
 
 
     template <typename T,const size_t N> static inline
