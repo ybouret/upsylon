@@ -51,7 +51,7 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const string name; //!< identifier
-            const int    z;    //!< algebraic charge
+            const long   z;    //!< algebraic charge
 
         private:
             Y_DISABLE_ASSIGN(species);

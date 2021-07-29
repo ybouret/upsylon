@@ -21,8 +21,9 @@ namespace upsylon
         Y_DECL_ARGS(T,type); //!< aliases
 
 
-        inline explicit authority(type &persistent) throw() : host(persistent) {} //!< setup
-        inline virtual ~authority()                 throw() {}                    //!< cleanup
+        inline explicit authority(type &persistent) throw() : host(persistent) {}       //!< setup
+        inline virtual ~authority()                 throw() {}                          //!< cleanup
+        inline          authority(const authority &other) throw() : host(other.host) {} //!< copy
 
         inline type       & operator*()       throw()  { return  host; } //!< access
         inline const_type & operator*() const throw()  { return  host; } //!< access
@@ -30,7 +31,7 @@ namespace upsylon
 
     private:
         type &host;
-        Y_DISABLE_COPY_AND_ASSIGN(authority);
+        Y_DISABLE_ASSIGN(authority);
     };
 }
 
