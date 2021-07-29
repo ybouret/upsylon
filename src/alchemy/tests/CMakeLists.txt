@@ -14,6 +14,7 @@ ADD_TEST(actor   test-alchemy actor)
 ADD_TEST(types   test-alchemy types)
 ADD_TEST(actors  test-alchemy actors)
 ADD_TEST(eq      test-alchemy eq)
+ADD_TEST(eqs     test-alchemy eqs)
 
 
 

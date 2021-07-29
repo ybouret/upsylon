@@ -19,21 +19,38 @@ namespace upsylon
         class equilibrium : public object, public counted
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef intr_ptr<string,equilibrium> pointer;
             
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             virtual ~equilibrium() throw();
             virtual  double K(double) const = 0;
             
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void operator()(const long nu, const species &sp);
+            
+            const string & key() const throw();
+            std::ostream & display(std::ostream  &,
+                                   const library &,
+                                   const double  t,
+                                   const size_t  eqw=0) const;
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const string name; //!< identifier
             const actors reac; //!< reactants
             const actors prod; //!< products
-           
-            
-            void operator()(const species &sp, const long nu);
-            
-            std::ostream & display(std::ostream  &,
-                                   const library &,
-                                   const double = 0) const;
             
         protected:
             template <typename ID> inline

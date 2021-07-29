@@ -15,13 +15,13 @@ Y_UTEST(eq)
 
     equilibrium::pointer water = new constant_equilibrium("water",1e-14);
     
-    (*water)(h,1);
-    (*water)(w,1);
+    (*water)(1,h);
+    (*water)(1,w);
     water->display(std::cerr,lib,0.0) << std::endl;
     
     equilibrium::pointer toto = new constant_equilibrium("toto",1e-1);
-    (*toto)(h,2);
-    (*toto)(w,-1);
+    (*toto)(2,h);
+    (*toto)(-1,w);
     toto->display(std::cerr,lib,0.0) << std::endl;
 
     

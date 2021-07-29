@@ -14,7 +14,7 @@ namespace upsylon
         
         
         
-        void equilibrium:: operator()(const species &sp, const long nu)
+        void equilibrium:: operator()(const long nu, const species &sp)
         {
             if(nu<0)
             {
@@ -44,7 +44,11 @@ namespace upsylon
             }
         }
         
-        
+        const string & equilibrium:: key() const throw()
+        {
+            return name;
+        }
+
     }
 }
 
@@ -70,9 +74,11 @@ namespace upsylon
         
         std::ostream & equilibrium:: display(std::ostream  &os,
                                              const library &lib,
-                                             const double   t) const
+                                             const double   t,
+                                             const size_t   eqw) const
         {
-            os << '<' << name << '>' << ' ';
+            os << '<' << name << '>';
+            for(size_t i=name.size();i<=eqw;++i) os << ' ';
             reac.display(os,lib);
             os << " <=> ";
             prod.display(os,lib);
