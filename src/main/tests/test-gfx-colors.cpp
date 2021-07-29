@@ -1,5 +1,6 @@
 
 #include "y/gfx/color/convert.hpp"
+#include "y/gfx/color/rgb-sat.hpp"
 #include "y/utest/run.hpp"
 #include "y/type/rtti.hpp"
 #include "y/ios/align.hpp"
@@ -65,8 +66,9 @@ Y_UTEST(gfx_colors)
     {
         for(size_t i=0;i<8;++i)
         {
-            const rgb C( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
-            C.saturated();
+            const rgb Original( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
+            const rgb Saturated  = saturated::of(Original);
+            Y_ASSERT( ( convert<float,rgb>::from(Saturated) >= convert<float,rgb>::from(Original) ) );
         }
         
         typedef sorted_vector<rgb>         sorted_rgb;
@@ -90,7 +92,7 @@ Y_UTEST(gfx_colors)
                     const rgb c = rgb(uint8_t(i),
                                       uint8_t(j),
                                       uint8_t(k) );
-                    const rgb s = c.saturated();
+                    const rgb s = saturated::of(c);
                     S1.insert(s);
                     Y_ASSERT( (convert<float,rgb>::from(s) >= convert<float,rgb>::from(c) ) );
                 }

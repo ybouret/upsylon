@@ -12,7 +12,6 @@ namespace upsylon {
             template <> const float   rgba<float>  ::Opaque = 1.0f;
             template <> const double  rgba<double> ::Opaque = 1.0;
 
-#include "saturated.inc"
             
         }
     }
