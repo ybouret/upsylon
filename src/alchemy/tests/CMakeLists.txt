@@ -12,6 +12,7 @@ ADD_TEST(species test-alchemy species)
 ADD_TEST(library test-alchemy library)
 ADD_TEST(actor   test-alchemy actor)
 ADD_TEST(types   test-alchemy types)
+ADD_TEST(actors  test-alchemy actors)
 
 
 

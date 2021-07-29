@@ -12,6 +12,8 @@ namespace upsylon
     namespace alchemy
     {
 
+        class library;
+
         //______________________________________________________________________
         //
         //
@@ -29,12 +31,21 @@ namespace upsylon
             virtual ~actor()    throw();                             //!< cleanup
             actor(const actor&) throw();                             //!< copy
 
+
+            const string & key() const throw();  //!< species key
+
+            //! display with width for coefficient
+            std::ostream & display(std::ostream  &os,
+                                   const library &lib,
+                                   const size_t   c_width = 1) const;
+
+
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const unsigned nu; //!< coefficient
-
+            const unsigned long nu; //!< coefficient
+            
         private:
             Y_DISABLE_ASSIGN(actor);
         };

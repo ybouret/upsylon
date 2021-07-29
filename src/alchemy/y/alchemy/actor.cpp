@@ -19,7 +19,40 @@ namespace upsylon
         {
         }
 
-    }
+        const string & actor:: key() const throw() { return (**this).name; }
 
+
+
+
+
+
+    }
+}
+
+#include "y/alchemy/library.hpp"
+#include <iomanip>
+
+namespace upsylon
+{
+    namespace alchemy
+    {
+        std::ostream & actor:: display(std::ostream  &os,
+                                       const library &lib,
+                                       const size_t   c_width) const
+        {
+
+            if(nu>1)
+            {
+                os << std::setw(c_width) << nu << '*';
+            }
+            else
+            {
+                os << std::setw(c_width+1) << ' ';
+            }
+            lib.prefix(os,**this);
+            return os;
+        }
+
+    }
 }
 

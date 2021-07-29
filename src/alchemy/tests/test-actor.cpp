@@ -16,7 +16,9 @@ Y_UTEST(actor)
 
     actor _h(h,1);
     actor _w(w,1);
-    
+
+    _h.display(std::cerr,lib) << std::endl;
+    _w.display(std::cerr,lib) << std::endl;
 
 }
 Y_UTEST_DONE()
