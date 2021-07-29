@@ -5,6 +5,7 @@
 #define Y_ALCHEMY_SPECIES_INCLUDED 1
 
 #include "y/string.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
@@ -19,15 +20,41 @@ namespace upsylon
         class species : public counted, public object
         {
         public:
-            
-            virtual ~species() throw();
-            
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef intr_ptr<string,species> pointer; //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! flexible constructor
+            template <typename ID> inline
+            explicit species(const ID &the_name, const int the_z) :
+            name(the_name), z(the_z) {}
+
+            species(const species &);   //!< copy
+            virtual ~species() throw(); //!< cleanup
+
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            const string & key() const throw(); //!< for library
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const string name; //!< identifier
             const int    z;    //!< algebraic charge
-            
-            
+
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(species);
+            Y_DISABLE_ASSIGN(species);
         };
         
     }

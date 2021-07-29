@@ -11,7 +11,18 @@ namespace upsylon
         {
         }
         
-    
+        species:: species(const species &other) :
+        name(other.name),
+        z(other.z)
+        {
+        }
+
+        const string & species:: key() const throw()
+        {
+            return name;
+        }
+
+
     }
     
 }
