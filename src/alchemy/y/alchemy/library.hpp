@@ -61,6 +61,8 @@ namespace upsylon
             //! check that species is owned
             bool owns(const species &) const throw();
 
+            //! compile
+            size_t compile();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);

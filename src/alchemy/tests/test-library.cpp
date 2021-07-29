@@ -27,6 +27,12 @@ Y_UTEST(library)
     Y_CHECK(  lib.owns(h)    );
     Y_CHECK(  lib.owns(w)    );
 
+    std::cerr << "compile=" << lib.compile() << std::endl;
+    for( library::const_iterator it= (*lib).begin(); it!=(*lib).end(); ++it)
+    {
+        const species &sp = **it;
+        lib.prefix(std::cerr,sp) << "@" << sp.indx << std::endl;
+    }
 
 }
 Y_UTEST_DONE()

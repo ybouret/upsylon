@@ -34,7 +34,7 @@ namespace upsylon
             //! flexible constructor
             template <typename ID> inline
             explicit species(const ID &the_name, const int the_z) :
-            name(the_name), z(the_z) {}
+            name(the_name), z(the_z), indx(0) {}
 
             species(const species &);   //!< copy
             virtual ~species() throw(); //!< cleanup
@@ -51,7 +51,8 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const string name; //!< identifier
-            const long   z;    //!< algebraic charge
+            const int    z;    //!< algebraic charge
+            const size_t indx; //!< index in library
 
         private:
             Y_DISABLE_ASSIGN(species);
