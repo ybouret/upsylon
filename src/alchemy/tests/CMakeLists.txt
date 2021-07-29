@@ -10,6 +10,7 @@ SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 ENABLE_TESTING()
 ADD_TEST(species test-alchemy species)
 ADD_TEST(library test-alchemy library)
+ADD_TEST(library test-alchemy actor)
 
 
 
