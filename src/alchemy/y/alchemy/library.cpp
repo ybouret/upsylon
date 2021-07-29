@@ -40,6 +40,19 @@ namespace upsylon
             return *s;
         }
 
+        bool library:: owns(const species &s) const throw()
+        {
+            const species::pointer *pps = db.search(s.key());
+            if(!pps)
+            {
+                return false;
+            }
+            else
+            {
+                return &s == &(**pps);
+            }
+        }
+
     }
 }
 

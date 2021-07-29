@@ -12,6 +12,7 @@ namespace upsylon
         }
         
         species:: species(const species &other) :
+        object(), counted(),
         name(other.name),
         z(other.z)
         {

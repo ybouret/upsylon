@@ -17,7 +17,7 @@ namespace upsylon
         //! one species with minimal info
         //
         //______________________________________________________________________
-        class species : public counted, public object
+        class species :  public object, public counted
         {
         public:
             //__________________________________________________________________
@@ -39,7 +39,7 @@ namespace upsylon
             species(const species &);   //!< copy
             virtual ~species() throw(); //!< cleanup
 
-
+            
             //__________________________________________________________________
             //
             // methods

@@ -57,7 +57,10 @@ namespace upsylon
                 os << ios::align(sp.name,j,max_name);
                 return os;
             }
-            
+
+            //! check that species is owned
+            bool owns(const species &) const throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);

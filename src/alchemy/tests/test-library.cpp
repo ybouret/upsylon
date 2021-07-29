@@ -13,12 +13,20 @@ Y_UTEST(library)
     const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;
     const species &w = lib("HO-",1); std::cerr << "add " << w.name << std::endl;
 
+    const species  nope("nope",0);
+    const species  mock("H+",1);
 
     for( library::const_iterator it= (*lib).begin(); it!=(*lib).end(); ++it)
     {
         const species &sp = **it;
         lib.prefix(std::cerr,sp) << ": z=" << sp.z << std::endl;
     }
+
+    Y_CHECK( !lib.owns(nope) );
+    Y_CHECK( !lib.owns(mock) );
+    Y_CHECK(  lib.owns(h)    );
+    Y_CHECK(  lib.owns(w)    );
+
 
 }
 Y_UTEST_DONE()
