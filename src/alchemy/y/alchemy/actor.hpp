@@ -36,8 +36,7 @@ namespace upsylon
 
             //! display with width for coefficient
             std::ostream & display(std::ostream  &os,
-                                   const library &lib,
-                                   const size_t   c_width = 1) const;
+                                   const library &lib) const;
 
 
             //__________________________________________________________________

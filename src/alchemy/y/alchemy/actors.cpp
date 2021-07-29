@@ -3,9 +3,6 @@
 #include "y/alchemy/actors.hpp"
 #include "y/exception.hpp"
 
-#include "y/type/aliasing.hpp"
-#include "y/type/utils.hpp"
-
 namespace upsylon
 {
     namespace alchemy
@@ -13,7 +10,7 @@ namespace upsylon
 
         const char actors:: clid[] = "alchemy::actors";
 
-        actors:: actors() : actors_(), cw(0)
+        actors:: actors() : actors_()
         {
         }
 
@@ -26,21 +23,20 @@ namespace upsylon
             if(nu<=0) throw exception("%s(nul coefficient for '%s')", clid, *sp.name);
             const actor a(sp,nu);
             if( !insert(a) ) throw exception("%s(multiple '%s')", clid, *sp.name);
-
-            const string tmp = vformat("%lu",nu);
-            aliasing::_(cw) = max_of(cw,tmp.size());
+            
         }
 
-        std::ostream & actors:: display(std::ostream &os, const library &lib) const
+        std::ostream & actors:: display(std::ostream  &os,
+                                        const library &lib) const
         {
             if(size()>=1)
             {
                 const_iterator it = begin();
-                (*it).display(os,lib,cw);
+                (*it).display(os,lib);
                 while( ++it != end() )
                 {
                     os << '+';
-                    (*it).display(os,lib,cw);
+                    (*it).display(os,lib);
                 }
             }
             return os;

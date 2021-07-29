@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_ALCHEMY_ACTORS_INCLUDED
@@ -50,11 +48,9 @@ namespace upsylon
             void operator()(const species &sp, const unsigned long nu);
 
             //! display with lib prefix()
-            std::ostream & display(std::ostream &os, const library &lib) const;
-
-            //! maximal coefficient weight
-            const size_t cw; //!< coefficients width
-
+            std::ostream & display(std::ostream  &os,
+                                   const library &lib) const;
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);

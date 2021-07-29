@@ -1,5 +1,5 @@
 #include "y/alchemy/library.hpp"
-#include "y/alchemy/actor.hpp"
+#include "y/alchemy/equilibrium.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -13,6 +13,9 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(species::pointer);
     Y_UTEST_SIZEOF(library);
     Y_UTEST_SIZEOF(actor);
+    Y_UTEST_SIZEOF(actors);
+    Y_UTEST_SIZEOF(equilibrium);
+
 }
 Y_UTEST_DONE()
 

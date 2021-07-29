@@ -37,17 +37,12 @@ namespace upsylon
     namespace alchemy
     {
         std::ostream & actor:: display(std::ostream  &os,
-                                       const library &lib,
-                                       const size_t   c_width) const
+                                       const library &lib) const
         {
 
             if(nu>1)
             {
-                os << std::setw(c_width) << nu << '*';
-            }
-            else
-            {
-                os << std::setw(c_width+1) << ' ';
+                os << nu << ' ';
             }
             lib.prefix(os,**this);
             return os;
