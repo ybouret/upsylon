@@ -23,6 +23,5 @@ Y_UTEST_INIT(32)
     Y_UTEST(draw);
     Y_UTEST(split);
     Y_UTEST(eda);
-    Y_UTEST(intensity);
 }
 Y_UTEST_EXEC()
