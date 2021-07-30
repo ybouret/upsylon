@@ -25,7 +25,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef hash_set<string,actor> db;
+            typedef hash_set<string,actor> db; //!< alias
             
             //__________________________________________________________________
             //
