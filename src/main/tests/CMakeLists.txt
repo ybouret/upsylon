@@ -166,13 +166,21 @@ ADD_TEST(thr:runic      test-main thr_runic)
 ADD_TEST(thr:pi_simt    test-main thr_pi_simt)
 ADD_TEST(thr:pipeline   test-main thr_pipeline)
 
-SOURCE_GROUP(str FILES test-string.cpp test-string-convert.cpp test-tokenizer.cpp test-string-defrag.cpp test-esma.cpp test-string-time.cpp) 
+SOURCE_GROUP(str FILES
+test-string.cpp
+test-string-convert.cpp 
+test-tokenizer.cpp
+test-string-defrag.cpp
+test-esma.cpp
+test-string-time.cpp
+test-decimal-chars.cpp) 
 ADD_TEST(str:string      test-main string)
 ADD_TEST(str:strconv     test-main string_convert s 123456 s 0xff i -23 i 908 s 0x34)
 ADD_TEST(str:tokenizer   test-main tokenizer)
 ADD_TEST(str:defrag      test-main string_defrag)
 ADD_TEST(str:esma        test-main esma foo ${HERE}/words.db)
 ADD_TEST(str:time        test-main string_time)
+ADD_TEST(str:decimals    test-main decimal_chars)
 
 
 SOURCE_GROUP(ios FILES test-ostreams.cpp test-istreams.cpp
