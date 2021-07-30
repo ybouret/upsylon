@@ -11,20 +11,21 @@ namespace upsylon
 {
     namespace alchemy
     {
+        
         //______________________________________________________________________
         //
         //
         //! base class for equilibrium
         //
         //______________________________________________________________________
-        class equilibrium : public object, public counted
+        class equilibrium : public object, public counted, public compilable
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,equilibrium> pointer; //!< alias
+            typedef intr_ptr<string,equilibrium>       pointer; //!< alias
             
             //__________________________________________________________________
             //
@@ -56,7 +57,27 @@ namespace upsylon
                          const double         K0,
                          addressable<double> &Ctry) const throw();
 
-
+            //! display compact format
+            template <typename OSTREAM> inline
+            OSTREAM &display_code(OSTREAM &os, const size_t name_width=0) const
+            {
+                os << '<' << name << '>';
+                for(size_t i=name.size();i<name_width;++i) os << ' ';
+                os << ' ';
+                reac.display_code(os);
+                prod.display_code(os << "->" );
+                os << vformat(" (%.15g)", K(0));
+                return os;
+            }
+           
+            //! fill coefficients row
+            void fill( addressable<long> &Nu ) const throw();
+            
+            //! limiting reactant
+            size_t forward(double &xi, const accessible<double> &C) const throw();
+            
+            
+            
             //__________________________________________________________________
             //
             // members
@@ -75,6 +96,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(equilibrium);
+            virtual void on_compile();
         };
         
         //______________________________________________________________________

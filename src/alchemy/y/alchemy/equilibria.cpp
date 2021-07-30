@@ -47,6 +47,14 @@ namespace upsylon
             return &db;
         }
 
+        void equilibria:: on_compile()
+        {
+            if(compiled) throw exception("equilibria are already compiled");
+            for(db_type::iterator it=db.begin();it!=db.end();++it)
+            {
+                (**it).compile();
+            }
+        }
         
     }
 }

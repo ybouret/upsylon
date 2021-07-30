@@ -52,7 +52,7 @@ namespace upsylon
         {
             return name;
         }
-
+        
         string equilibrium:: format(const size_t name_width,
                                     const size_t spec_width,
                                     const size_t reac_width,
@@ -71,80 +71,153 @@ namespace upsylon
             }
             return ans;
         }
-
-
-
+        
+        void equilibrium:: on_compile()
+        {
+            if(compiled) throw exception("<%s> is already compiled", *name);
+            assert(!reac.compiled);
+            assert(!prod.compiled);
+            aliasing::_(reac).compile();
+            aliasing::_(prod).compile();
+        }
+        
+        void equilibrium:: fill( addressable<long> &Nu ) const throw()
+        {
+            assert(compiled);
+            mkl::tao::ld(Nu,0);
+            for(size_t i=reac->size();i>0;--i)
+            {
+                Nu[ reac.indx[i] ] = -static_cast<long>( reac.coef[i] );
+            }
+            
+            for(size_t i=prod->size();i>0;--i)
+            {
+                Nu[ prod.indx[i] ] = static_cast<long>( prod.coef[i] );
+            }
+        }
+        
+        size_t equilibrium:: forward(double &xi, const accessible<double> &C) const throw()
+        {
+            assert(compiled);
+            double        xm   = 0;
+            size_t        im   = 0;
+            const size_t *indx = reac.indx;
+            const size_t *coef = reac.coef;
+            {
+                size_t        i = 0;
+                // find first
+                for(i=reac->size();i>0;--i)
+                {
+                    const double c = C[ indx[i] ]; assert(c>=0);
+                    if(c>0)
+                    {
+                        xm = c/coef[i];
+                        im = i;
+                        --i;
+                        break;
+                    }
+                }
+                
+                // find optimal
+                for(;i>0;--i)
+                {
+                    const double c = C[ indx[i] ]; assert(c>=0);
+                    if(c>0)
+                    {
+                        const double xt = c/coef[i];
+                        if(xt<xm)
+                        {
+                            xm = xt;
+                            im = i;
+                        }
+                    }
+                }
+            }
+            xi  =  xm;
+            return im;
+        }
+        
+        
+        
+        
         double equilibrium:: compute(const double             K0,
                                      const accessible<double> &C) const throw()
         {
+            assert(compiled);
             double lhs = K0;
             {
-                size_t n = reac->size();
-                for(actors::const_iterator it=reac->begin();n>0;++it,--n)
+                size_t        n    = reac->size();
+                const size_t *indx = reac.indx;
+                const size_t *coef = reac.coef;
+                while(n>0)
                 {
-                    const actor &a = *it;     assert(a.nu>0);
-                    const size_t i = a->indx; assert(i>=1); assert(i<=C.size());
-                    const double c = C[i];    assert(c>=0);
-                    lhs *= ipower<double>(c,a.nu);
+                    lhs *= ipower<double>( C[indx[n]], coef[n] );
+                    --n;
                 }
             }
-
+            
             double rhs = 1;
             {
-                size_t n = prod->size();
-                for(actors::const_iterator it=prod->begin();n>0;++it,--n)
+                size_t        n    = prod->size();
+                const size_t *indx = prod.indx;
+                const size_t *coef = prod.coef;
+                while(n>0)
                 {
-                    const actor &a = *it;     assert(a.nu>0);
-                    const size_t i = a->indx; assert(i>=1); assert(i<=C.size());
-                    const double c = C[i];    assert(c>=0);
-                    rhs *= ipower<double>(c,a.nu);
+                    rhs *= ipower<double>( C[indx[n]], coef[n] );
+                    --n;
                 }
+                
             }
             
             return lhs-rhs;
         }
-
-
+        
+        
         struct eqwrapper
         {
             const equilibrium   &eq;
             const double         K0;
             const accessible<double> &Cini;
             addressable<double> &Ctry;
-
+            
             double operator()(const double xi) const throw()
             {
                 mkl::tao::set(Ctry,Cini);
-
+                
                 double lhs = K0;
                 {
-                    size_t n = eq.reac->size();
-                    for(actors::const_iterator it=eq.reac->begin();n>0;++it,--n)
+                    size_t        n    = eq.reac->size();
+                    const size_t *indx = eq.reac.indx;
+                    const size_t *coef = eq.reac.coef;
+                    while(n>0)
                     {
-                        const actor &a = *it;
-                        const size_t i = a->indx;
-                        const double c = (Ctry[i] -= a.nu * xi);
-                        lhs *= ipower<double>(c,a.nu);
+                        const size_t nu = coef[n];
+                        const double c  = (Ctry[ indx[n] ] -= nu * xi);
+                        lhs *= ipower<double>(c,nu);
+                        --n;
                     }
+                    
                 }
-
+                
                 double rhs = 1;
                 {
-                    size_t n = eq.prod->size();
-                    for(actors::const_iterator it= eq.prod->begin();n>0;++it,--n)
+                    size_t        n    = eq.prod->size();
+                    const size_t *indx = eq.prod.indx;
+                    const size_t *coef = eq.prod.coef;
+                    while(n>0)
                     {
-                        const actor &a = *it;
-                        const size_t i = a->indx;
-                        const double c = (Ctry[i] += a.nu * xi);
-                        rhs *= ipower<double>(c,a.nu);
+                        const size_t nu = coef[n];
+                        const double c  = (Ctry[ indx[n] ] += nu * xi);
+                        rhs *= ipower<double>(c,nu);
+                        --n;
                     }
                 }
-
-                return eq.compute(K0,Ctry);
+                
+                return lhs-rhs;
             }
-
+            
         };
-
+        
         void   equilibrium:: solve(addressable<double> &Cini,
                                    const double         K0,
                                    addressable<double> &Ctry) const throw()
@@ -152,7 +225,7 @@ namespace upsylon
             eqwrapper eqn = { *this, K0, Cini, Ctry };
             
         }
-
+        
     }
 }
 

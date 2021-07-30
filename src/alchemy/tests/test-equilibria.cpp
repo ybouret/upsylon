@@ -21,10 +21,16 @@ Y_UTEST(eqs)
     eqs.display(std::cerr,lib.max_name);
 
     lib.compile();
+    eqs.compile();
     std::cerr << lib << std::endl;
+    eqs.display_code(std::cerr);
+    
+    
     vector<double> C(lib->size(),0);
     lib.display(std::cerr,C) << std::endl;
-
+    
+    
+    
     std::cerr << water.name << " -> " << water.compute(water.K(0),C) << std::endl;
 
 

@@ -5,6 +5,7 @@
 
 #include "y/alchemy/actor.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/code/compilable.hpp"
 
 namespace upsylon
 {
@@ -22,24 +23,23 @@ namespace upsylon
         //! collection of actors
         //
         //______________________________________________________________________
-        class actors
+        class actors : public compilable
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            static const char clid[];                       //!< identifier
-            typedef hash_set<string,actor>  db_type;        //!< alias
-            typedef db_type::const_iterator const_iterator; //!< alias
-
+            static const char                          clid[]; //!< identifier
+            typedef hash_set<string,actor>             db_type;        //!< alias
+            typedef db_type::const_iterator            const_iterator; //!< alias
+            
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             explicit actors();          //!< setup empty
             virtual ~actors() throw();  //!< cleanup
-
 
 
             //__________________________________________________________________
@@ -67,17 +67,35 @@ namespace upsylon
                 }
                 return os;
             }
-
+            
+            //! display compact format
+            template <typename OSTREAM> inline
+            OSTREAM & display_code(OSTREAM &os) const
+            {
+                const size_t n = db.size();
+                os << '[';
+                for(size_t i=1;i<=n;++i)
+                {
+                    os << ' ' << '(' << coef[i] << '*' << '@' << indx[i] << ')';
+                }
+                os << ' ' << ']';
+                return os;
+            }
+            
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
+            const size_t * const indx; //!< compiled index of active species
+            const size_t * const coef; //!< compiled coefficients of active species
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);
+            virtual void on_compile();
             db_type      db;
+            size_t       wlen;
         public:
-            const size_t cwidth; //!< max coefficients decimal chars
-
+            const size_t       cwidth; //!< max coefficients decimal chars
         };
 
     }

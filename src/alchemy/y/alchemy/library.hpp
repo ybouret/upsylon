@@ -7,6 +7,7 @@
 #include "y/associative/hash/set.hpp"
 #include "y/ios/scribe.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/code/compilable.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -20,7 +21,7 @@ namespace upsylon
         //! library of species
         //
         //______________________________________________________________________
-        class library
+        class library : public compilable
         {
         public:
             //__________________________________________________________________
@@ -91,18 +92,16 @@ namespace upsylon
             //! check that species is owned
             bool owns(const species &) const throw();
 
-            //! compile
-            size_t compile();
-
+           
         private:
             Y_DISABLE_COPY_AND_ASSIGN(library);
             db_type      db;
 
             const species &use(species *);
             void           check(const char *fn) const;
-
+            virtual void   on_compile();
+            
         public:
-            const bool   compiled; //!< status flag
             const size_t max_name; //!< max name length
         };
 

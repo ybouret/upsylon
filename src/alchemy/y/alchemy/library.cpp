@@ -14,8 +14,8 @@ namespace upsylon
         }
 
         library:: library() :
+        compilable(),
         db(),
-        compiled(false),
         max_name(0)
         {
         }
@@ -67,17 +67,14 @@ namespace upsylon
             }
         }
 
-        size_t library:: compile()
+        void library:: on_compile()
         {
-            aliasing::_(compiled) = false;
             const size_t       n  = db.size();
             db_type::iterator  it = db.begin();
             for(size_t i=1;i<=n;++i,++it)
             {
                 aliasing::_((**it).indx) = i;
             }
-            aliasing::_(compiled) = true;
-            return n;
         }
 
     }

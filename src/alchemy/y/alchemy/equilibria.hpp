@@ -20,7 +20,7 @@ namespace upsylon
         //! database of equilibria
         //
         //______________________________________________________________________
-        class equilibria
+        class equilibria : public compilable
         {
         public:
             //__________________________________________________________________
@@ -83,7 +83,7 @@ namespace upsylon
                     os << "| (";
                     os << kval[i];
                     for(size_t j=kval[i].size();j<max_kval;++j) os << ' ';
-                    os << ")" << std::endl;
+                    os << ")" << '\n';
                 }
 
                 return os;
@@ -92,11 +92,25 @@ namespace upsylon
             const db_type & operator*()  const throw(); //!< content
             const db_type * operator->() const throw(); //!< content
             
+            //! display compact format
+            template <typename OSTREAM> inline
+            OSTREAM & display_code(OSTREAM &os) const
+            {
+                for(const_iterator it=db.begin();it!=db.end();++it)
+                {
+                    const equilibrium &eq = **it;
+                    eq.display_code(os,max_name) << '\n';
+                }
+                return os;
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(equilibria);
-            void    look_up(size_t &rlen, size_t &plen) const throw();
+            void         look_up(size_t &rlen, size_t &plen) const throw();
+            virtual void on_compile();
+            
             db_type db;
-
+            
         public:
             const size_t max_name; //!< max equilibrium name length
 

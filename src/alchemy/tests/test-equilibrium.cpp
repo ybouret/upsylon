@@ -2,16 +2,19 @@
 #include "y/alchemy/equilibrium.hpp"
 #include "y/alchemy/library.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace alchemy;
+
+
 
 Y_UTEST(eq)
 {
     
     library        lib;
-    const species &h = lib("H+",1);
-    const species &w = lib("HO-",1);
+    const species &h  = lib("H+",1);
+    const species &w  = lib("HO-",-1);
     const species &ah = lib("AH",0);
     const species &am = lib("Am",-1);
 
@@ -35,6 +38,17 @@ Y_UTEST(eq)
     (*weak)(-1,ah);
     std::cerr << weak->format(10,lib.max_name) << " (" << weak->K(0) << ")" << std::endl;
 
+    lib.compile();
+    std::cerr << lib << std::endl;
+    water->compile();
+    water->display_code(std::cerr) << std::endl;
+    weak->compile();
+    weak->display_code(std::cerr) << std::endl;
+    
+    
+    vector<long> Nu(lib->size(),0);
+    water->fill(Nu); std::cerr << "Nu_" << water->name << " : " << Nu << std::endl;
+    weak->fill(Nu); std::cerr << "Nu_" << weak->name << " : " << Nu << std::endl;
 
     
 }

@@ -23,8 +23,9 @@ Y_UTEST(library)
     Y_CHECK( !lib.owns(mock) );
     Y_CHECK(  lib.owns(h)    );
     Y_CHECK(  lib.owns(w)    );
-
-    std::cerr << "compile=" << lib.compile() << std::endl;
+    lib.compile();
+    
+    std::cerr << "compile=" << lib->size()<< std::endl;
     std::cerr << lib << std::endl;
 
     vector<double> C(lib->size(),1.1);
