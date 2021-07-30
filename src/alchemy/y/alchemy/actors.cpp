@@ -14,11 +14,11 @@ namespace upsylon
         const char actors:: clid[] = "alchemy::actors";
         
         actors:: actors() :
+        size(0),
         indx(0),
         coef(0),
         db(),
-        wlen(0),
-        cwidth(0)
+        wlen(0)
         {
         }
         
@@ -29,17 +29,17 @@ namespace upsylon
                 static memory::allocator &mgr = memory::dyadic::location();
                 mgr.release( *(void **)&(++aliasing::_(indx)), wlen);
                 aliasing::_(coef) = 0;
+                aliasing::_(size) = 0;
             }
         }
         
         
         void actors:: operator()(const species &sp, const unsigned long nu)
         {
-            if(compiled) throw exception("%s already compiled!", clid);
+            assert(!compiled);
             if(nu<=0)    throw exception("%s(nul coefficient for '%s')", clid, *sp.name);
             const actor a(sp,nu);
             if( !db.insert(a) ) throw exception("%s(multiple '%s')", clid, *sp.name);
-            aliasing::_(cwidth) = max_of(cwidth,decimal_chars_for(nu));
         }
         
         bool actors:: search(const string &id) const throw()
@@ -47,15 +47,12 @@ namespace upsylon
             return NULL != db.search(id);
         }
         
-        const actors::db_type & actors::operator*()  const throw()
+        const actor::db & actors::bulk()  const throw()
         {
             return db;
         }
         
-        const actors::db_type * actors::operator->()  const throw()
-        {
-            return &db;
-        }
+        
         
         void actors:: on_compile()
         {
@@ -65,7 +62,7 @@ namespace upsylon
             const size_t n = db.size();
             size_t       w = 0;
             
-            for(db_type::iterator it=db.begin();it!=db.end();++it)
+            for(type::iterator it=db.begin();it!=db.end();++it)
             {
                 const species &sp = **it;
                 if(sp.indx<=0) throw exception("%s: index of '%s' is 0",clid, *sp.name);
@@ -78,7 +75,7 @@ namespace upsylon
                 aliasing::_(coef) = indx + n;
                 {
                     size_t i=1;
-                    for(db_type::iterator it=db.begin();i<=n;++it,++i)
+                    for(type::iterator it=db.begin();i<=n;++it,++i)
                     {
                         const actor &a = *it;
                         aliasing::_(indx[i]) = a->indx;
@@ -87,11 +84,12 @@ namespace upsylon
                     }
                 }
                 
-                for(db_type::iterator it=db.begin(); it!=db.end(); ++it)
+                for(type::iterator it=db.begin(); it!=db.end(); ++it)
                 {
                     aliasing::_( (*it).cw ) = w;
                 }
                 
+                aliasing::_(size) = n;
                 
             }
         }

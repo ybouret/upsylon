@@ -78,12 +78,12 @@ namespace upsylon
         {
             assert(compiled);
             mkl::tao::ld(Nu,0);
-            for(size_t i=reac->size();i>0;--i)
+            for(size_t i=reac.size;i>0;--i)
             {
                 Nu[ reac.indx[i] ] = -static_cast<long>( reac.coef[i] );
             }
             
-            for(size_t i=prod->size();i>0;--i)
+            for(size_t i=prod.size;i>0;--i)
             {
                 Nu[ prod.indx[i] ] = static_cast<long>( prod.coef[i] );
             }
@@ -139,7 +139,7 @@ namespace upsylon
             assert(compiled);
             double lhs = K0;
             {
-                size_t        n    = reac->size();
+                size_t        n    = reac.size;
                 const size_t *indx = reac.indx;
                 const size_t *coef = reac.coef;
                 while(n>0)
@@ -151,7 +151,7 @@ namespace upsylon
             
             double rhs = 1;
             {
-                size_t        n    = prod->size();
+                size_t        n    = prod.size;
                 const size_t *indx = prod.indx;
                 const size_t *coef = prod.coef;
                 while(n>0)

@@ -13,7 +13,7 @@ namespace upsylon
             
         }
         
-        equilibria:: equilibria() : db(), max_name(0)
+        equilibria:: equilibria() : db(), tdisp(0)
         {
         }
         
@@ -22,38 +22,35 @@ namespace upsylon
             assert(eq);
             const equilibrium::pointer p(eq);
             if(!db.insert(p)) throw exception("multipliple equilibrium '%s'", *(eq->name) );
-            aliasing::_(max_name) = max_of(max_name,eq->name.size());
             return *eq;
         }
         
-        void  equilibria:: look_up(size_t &rlen, size_t &plen) const throw()
-        {
-            rlen = plen = 0;
-            for(const_iterator it=db.begin();it!=db.end();++it)
-            {
-                const equilibrium &eq = **it;
-                rlen = max_of(rlen,eq.reac.cwidth);
-                plen = max_of(plen,eq.prod.cwidth);
-            }
-        }
+        
 
-        const equilibria::db_type & equilibria:: operator*()  const throw()
+        const equilibrium::db  & equilibria:: bulk()  const throw()
         {
             return db;
         }
 
-        const equilibria::db_type * equilibria:: operator->()  const throw()
-        {
-            return &db;
-        }
+        
 
         void equilibria:: on_compile()
         {
-            if(compiled) throw exception("equilibria are already compiled");
-            for(db_type::iterator it=db.begin();it!=db.end();++it)
+            assert(!compiled);
+            size_t w = 0;
+            for(type::iterator it=db.begin();it!=db.end();++it)
             {
-                (**it).compile();
+                equilibrium &eq = **it;
+                eq.compile();
+                w = max_of(w,eq.name.size());
             }
+            
+            for(type::iterator it=db.begin();it!=db.end();++it)
+            {
+                equilibrium &eq = **it;
+                aliasing::_(eq.width) = w;
+            }
+            
         }
         
     }

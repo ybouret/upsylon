@@ -6,16 +6,12 @@
 #include "y/alchemy/actor.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/code/compilable.hpp"
+#include "y/type/gateway.hpp"
 
 namespace upsylon
 {
     namespace alchemy
     {
-        //______________________________________________________________________
-        //
-        //! base class for actors
-        //______________________________________________________________________
-        typedef hash_set<string,actor> actors_;
         
         //______________________________________________________________________
         //
@@ -23,16 +19,15 @@ namespace upsylon
         //! collection of actors
         //
         //______________________________________________________________________
-        class actors : public compilable
+        class actors : public compilable, public gateway<const actor::db>
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            static const char                          clid[]; //!< identifier
-            typedef hash_set<string,actor>             db_type;        //!< alias
-            typedef db_type::const_iterator            const_iterator; //!< alias
+            static const char            clid[]; //!< identifier
+            typedef type::const_iterator const_iterator; //!< alias
             
             //__________________________________________________________________
             //
@@ -48,8 +43,6 @@ namespace upsylon
             //__________________________________________________________________
             void           operator()(const species &, const unsigned long); //!< register a new actor
             bool           search(const string &) const throw();             //!< look for existing
-            const db_type &operator*()  const throw();                       //!< content
-            const db_type *operator->() const throw();                       //!< content
             
             //! display with widths for names and coefficients
             template <typename OSTREAM> inline
@@ -85,16 +78,18 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
+            const size_t         size; //!< compiled size
             const size_t * const indx; //!< compiled index of active species
             const size_t * const coef; //!< compiled coefficients of active species
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);
             virtual void on_compile();
-            db_type      db;
+            virtual const_type & bulk() const throw();
+            
+            actor::db    db;
             size_t       wlen;
-        public:
-            const size_t       cwidth; //!< max coefficients decimal chars
+            
         };
         
     }

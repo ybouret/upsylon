@@ -26,6 +26,7 @@ namespace upsylon
             // types and definitions
             //__________________________________________________________________
             typedef intr_ptr<string,equilibrium>       pointer; //!< alias
+            typedef hash_set<string,pointer>           db;      //!< alias
             
             //__________________________________________________________________
             //
@@ -54,6 +55,7 @@ namespace upsylon
                          const double         K0,
                          addressable<double> &Ctry) const throw();
            
+            //! display at this tdisp
             template <typename OSTREAM> inline
             friend OSTREAM &operator<<(OSTREAM &os, const equilibrium &eq)
             {
