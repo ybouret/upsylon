@@ -25,17 +25,28 @@ namespace upsylon
             aliasing::_(max_name) = max_of(max_name,eq->name.size());
             return *eq;
         }
-
-#if 0
-        std::ostream & equilibria:: display(std::ostream &os, const library &lib, const double t) const
+        
+        void  equilibria:: look_up(size_t &rlen, size_t &plen) const throw()
         {
-            for(db_type::const_iterator it=db.begin();it!=db.end();++it)
+            rlen = plen = 0;
+            for(const_iterator it=db.begin();it!=db.end();++it)
             {
-                (**it).display(os,lib,t,max_name) << std::endl;
+                const equilibrium &eq = **it;
+                rlen = max_of(rlen,eq.reac.cwidth);
+                plen = max_of(plen,eq.prod.cwidth);
             }
-            return os;
         }
-#endif
+
+        const equilibria::db_type & equilibria:: operator*()  const throw()
+        {
+            return db;
+        }
+
+        const equilibria::db_type * equilibria:: operator->()  const throw()
+        {
+            return &db;
+        }
+
         
     }
 }

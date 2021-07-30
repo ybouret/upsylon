@@ -20,19 +20,19 @@ namespace upsylon
         {
             if(nu<0)
             {
-                if(prod.search(sp.name))
+                if( prod.search(sp.name) )
                 {
                     throw exception("%s: '%s' is registered as a product!", *name, *sp.name);
                 }
                 // append to reactants
-                const unsigned long mnu =static_cast<unsigned long>(-nu);
+                const unsigned long mnu = static_cast<unsigned long>(-nu);
                 aliasing::_(reac)(sp,mnu);
             }
             else
             {
                 if(nu>0)
                 {
-                    if(reac.search(sp.name))
+                    if( reac.search(sp.name) )
                     {
                         throw exception("%s: '%s' is registered as a reactant!", *name, *sp.name);
                     }
@@ -53,18 +53,19 @@ namespace upsylon
 
         string equilibrium:: format(const size_t name_width,
                                     const size_t spec_width,
-                                    const size_t coef_width) const
+                                    const size_t reac_width,
+                                    const size_t prod_width) const
         {
             string ans;
             {
                 ios::osstream fp(ans);
                 fp << '<' << name << '>';
                 for(size_t i=name.size();i<name_width;++i) fp << ' ';
-                fp << ' ';
+                fp << '|';
                 
-                reac.display(fp,spec_width,coef_width);
+                reac.display(fp,spec_width,reac_width<=0 ? reac.cwidth : reac_width);
                 fp << " <=> ";
-                prod.display(fp,spec_width,coef_width);
+                prod.display(fp,spec_width,prod_width<=0 ? prod.cwidth : prod_width);
             }
             return ans;
         }

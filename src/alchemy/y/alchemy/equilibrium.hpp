@@ -39,9 +39,11 @@ namespace upsylon
             void operator()(const long nu, const species &sp); //!< register
             const string & key() const throw();                //!< for hash_set
 
+            //! create a formatted output, w/0 constant
             string format(const size_t name_width=0,
                           const size_t spec_width=0,
-                          const size_t coef_width=0) const;
+                          const size_t reac_width=0,
+                          const size_t prod_width=0) const;
 
             
 

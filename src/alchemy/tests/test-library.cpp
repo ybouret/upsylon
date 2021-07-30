@@ -16,11 +16,7 @@ Y_UTEST(library)
     const species  nope("nope",0);
     const species  mock("H+",1);
 
-    for( library::const_iterator it= (*lib).begin(); it!=(*lib).end(); ++it)
-    {
-        const species &sp = **it;
-        lib.prefix(std::cerr,sp) << ": z=" << sp.z << std::endl;
-    }
+    std::cerr << lib << std::endl;
 
     Y_CHECK( !lib.owns(nope) );
     Y_CHECK( !lib.owns(mock) );
@@ -28,11 +24,8 @@ Y_UTEST(library)
     Y_CHECK(  lib.owns(w)    );
 
     std::cerr << "compile=" << lib.compile() << std::endl;
-    for( library::const_iterator it= (*lib).begin(); it!=(*lib).end(); ++it)
-    {
-        const species &sp = **it;
-        lib.prefix(std::cerr,sp) << "@" << sp.indx << std::endl;
-    }
+    std::cerr << lib << std::endl;
+
 
 }
 Y_UTEST_DONE()

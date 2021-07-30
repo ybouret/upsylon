@@ -22,40 +22,44 @@ namespace upsylon
         //! collection of actors
         //
         //______________________________________________________________________
-        class actors : public actors_
+        class actors
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            static const char clid[]; //!< identifier
+            static const char clid[];                       //!< identifier
+            typedef hash_set<string,actor>  db_type;        //!< alias
+            typedef db_type::const_iterator const_iterator; //!< alias
 
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit actors();
-            virtual ~actors() throw();
+            explicit actors();          //!< setup empty
+            virtual ~actors() throw();  //!< cleanup
+
 
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-
-            //! register a new actor
-            void operator()(const species &sp, const unsigned long nu);
+            void           operator()(const species &, const unsigned long); //!< register a new actor
+            bool           search(const string &) const throw();             //!< look for existing
+            const db_type &operator*()  const throw();                       //!< content
+            const db_type *operator->() const throw();                       //!< content
 
             //! display with widths for names and coefficients
             template <typename OSTREAM> inline
             OSTREAM &  display(OSTREAM &os, const size_t name_width=0, const size_t coef_width=0) const
             {
-                if(size()>=1)
+                if(db.size()>=1)
                 {
-                    const_iterator it = begin();
+                    const_iterator it = db.begin();
                     (*it).display(os,name_width,coef_width);
-                    while( ++it != end() )
+                    while( ++it != db.end() )
                     {
                         os << '+';
                         (*it).display(os,name_width,coef_width);
@@ -68,10 +72,12 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const size_t max_coef;
-
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);
+            db_type      db;
+        public:
+            const size_t cwidth; //!< max coefficients decimal chars
+
         };
 
     }

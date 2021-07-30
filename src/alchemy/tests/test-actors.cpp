@@ -19,7 +19,9 @@ Y_UTEST(actors)
     A(w,1);
 
     A.display(std::cerr,lib.max_name) << std::endl;
-    
+
+    std::cerr << A->size() << std::endl;
+
 }
 Y_UTEST_DONE()
 

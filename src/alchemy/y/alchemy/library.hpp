@@ -5,7 +5,7 @@
 
 #include "y/alchemy/species.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/ios/align.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -52,11 +52,20 @@ namespace upsylon
 
             //! prefix aligned name
             template <typename OSTREAM> inline
-            OSTREAM & prefix(OSTREAM &os, const species &sp, const ios::align::justify j = ios::align::left) const
+            friend OSTREAM & operator<<(OSTREAM       &os,
+                                        const library &lib)
             {
-                os << ios::align(sp.name,j,max_name);
+                os << '{' << std::endl;
+                for(const_iterator it=lib.db.begin();it!=lib.db.end();++it)
+                {
+                    const species &sp = **it;
+                    sp.display(os << ' ',lib.max_name) << " : " << std::setw(3) << sp.z << " @" << sp.indx << std::endl;
+                }
+                os << '}';
                 return os;
             }
+
+            
 
             //! check that species is owned
             bool owns(const species &) const throw();
