@@ -176,9 +176,34 @@ namespace upsylon
         
         void   equilibrium:: solve(addressable<double> &Cini,
                                    const double         K0,
-                                   addressable<double> &Ctry) const throw()
+                                   addressable<double> &Ctry) const  
         {
-            eqwrapper eqn = { *this, K0, Cini, Ctry };
+            //eqwrapper eqn = { *this, K0, Cini, Ctry };
+            
+            static const int invalid = 0x00;
+            static const int fwd_lim = 0x01;
+            static const int rev_lim = 0x02;
+            
+            const extents xtn   = find_extents(Cini);
+            int           flags = xtn.forward.index ? fwd_lim : invalid;
+            if(xtn.reverse.index) flags |= rev_lim;
+            
+            switch(flags)
+            {
+                case invalid:
+                    throw exception("<%s> is invalid", *name);
+                    
+                case fwd_lim: std::cerr << "forward limited @" << xtn.forward.index << std::endl;
+                    break;
+                    
+                case rev_lim: std::cerr << "reverse limited @" << xtn.reverse.index << std::endl;
+                    break;
+                    
+                case fwd_lim|rev_lim:
+                    std::cerr << "forward limited @" << xtn.forward.index << std::endl;
+                    std::cerr << "reverse limited @" << xtn.reverse.index << std::endl;
+                    break;
+            }
             
         }
         

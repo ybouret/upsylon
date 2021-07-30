@@ -27,7 +27,7 @@ Y_UTEST(eqs)
     std::cerr << eqs << std::endl;
 
     
-    vector<double> C(lib->size(),0);
+    vector<double> C(lib->size(),0), Ctry(C);
     for(size_t i=C.size();i>0;--i)
     {
         C[i] = alea.to<double>();
@@ -39,6 +39,9 @@ Y_UTEST(eqs)
 
     std::cerr << weak.name << " extents : " << weak.find_extents(C) << std::endl;
     std::cerr << weak.name << " -> " << weak.compute(weak.K(0),C) << std::endl;
+
+    water.solve(C,water.K(0),Ctry);
+    weak.solve(C,weak.K(0),Ctry);
 
 }
 Y_UTEST_DONE()

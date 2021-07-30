@@ -53,7 +53,7 @@ namespace upsylon
             //! solve independently
             void   solve(addressable<double> &Cini,
                          const double         K0,
-                         addressable<double> &Ctry) const throw();
+                         addressable<double> &Ctry) const;
            
             //! display at this tdisp
             template <typename OSTREAM> inline
