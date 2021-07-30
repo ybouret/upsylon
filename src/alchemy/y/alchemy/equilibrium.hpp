@@ -23,27 +23,29 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,equilibrium> pointer;
+            typedef intr_ptr<string,equilibrium> pointer; //!< alias
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~equilibrium() throw();
-            virtual  double K(double) const = 0;
+            virtual ~equilibrium() throw();        //!< cleanup
+            virtual  double K(double) const = 0;   //!< constant at given time
             
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void operator()(const long nu, const species &sp);
+            void operator()(const long nu, const species &sp); //!< register
+            const string & key() const throw();                //!< for hash_set
+
+            string format(const size_t name_width=0,
+                          const size_t spec_width=0,
+                          const size_t coef_width=0) const;
+
             
-            const string & key() const throw();
-            std::ostream & display(std::ostream  &,
-                                   const library &,
-                                   const double  t,
-                                   const size_t  eqw=0) const;
-            
+
+
             //__________________________________________________________________
             //
             // members
@@ -53,6 +55,7 @@ namespace upsylon
             const actors prod; //!< products
             
         protected:
+            //! initialize
             template <typename ID> inline
             explicit equilibrium(const ID &id) :
             name(id), reac(), prod()
@@ -72,14 +75,22 @@ namespace upsylon
         class constant_equilibrium : public equilibrium
         {
         public:
-            virtual ~constant_equilibrium() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~constant_equilibrium() throw(); //!< cleanup
+
+            //! initialize
             template <typename ID> inline
             explicit constant_equilibrium(const ID &id, const double k) :
-            equilibrium(id), Kvalue(k)
-            {
-            }
-            
-            virtual double K(double) const;
+            equilibrium(id), Kvalue(k) {}
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual double K(double) const; //!< return constant value
             
         private:
             const double Kvalue;

@@ -26,21 +26,7 @@ namespace upsylon
             
         }
 
-        std::ostream & actors:: display(std::ostream  &os,
-                                        const library &lib) const
-        {
-            if(size()>=1)
-            {
-                const_iterator it = begin();
-                (*it).display(os,lib);
-                while( ++it != end() )
-                {
-                    os << '+';
-                    (*it).display(os,lib);
-                }
-            }
-            return os;
-        }
+     
 
     }
 

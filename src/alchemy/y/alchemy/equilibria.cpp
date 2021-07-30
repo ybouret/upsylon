@@ -25,7 +25,8 @@ namespace upsylon
             aliasing::_(max_name) = max_of(max_name,eq->name.size());
             return *eq;
         }
-        
+
+#if 0
         std::ostream & equilibria:: display(std::ostream &os, const library &lib, const double t) const
         {
             for(db_type::const_iterator it=db.begin();it!=db.end();++it)
@@ -34,7 +35,8 @@ namespace upsylon
             }
             return os;
         }
-
+#endif
+        
     }
 }
 

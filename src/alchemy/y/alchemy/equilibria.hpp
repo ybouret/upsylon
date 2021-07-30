@@ -11,7 +11,12 @@ namespace upsylon
     namespace alchemy
     {
         
-        
+        //______________________________________________________________________
+        //
+        //
+        //! database of equilibria
+        //
+        //______________________________________________________________________
         class equilibria
         {
         public:
@@ -19,14 +24,14 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef  hash_set<string,equilibrium::pointer> db_type;
+            typedef  hash_set<string,equilibrium::pointer> db_type; //!< alias
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit equilibria();
-            virtual ~equilibria() throw();
+            explicit equilibria();         //!< setup, empty
+            virtual ~equilibria() throw(); //!< cleanup
             
             //__________________________________________________________________
             //
@@ -43,14 +48,13 @@ namespace upsylon
                 return (*this)( new constant_equilibrium(id,K) );
             }
             
-            std::ostream & display(std::ostream &, const library &, const double t) const;
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(equilibria);
             db_type      db;
             
         public:
-            const size_t max_name; //!< max equilibrium name lentgth
+            const size_t max_name; //!< max equilibrium name length
         };
         
     }

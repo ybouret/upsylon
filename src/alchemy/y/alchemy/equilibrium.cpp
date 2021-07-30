@@ -4,6 +4,8 @@
 #include "y/type/aliasing.hpp"
 #include "y/type/utils.hpp"
 
+#include "y/ios/osstream.hpp"
+
 namespace upsylon
 {
     namespace alchemy
@@ -49,6 +51,24 @@ namespace upsylon
             return name;
         }
 
+        string equilibrium:: format(const size_t name_width,
+                                    const size_t spec_width,
+                                    const size_t coef_width) const
+        {
+            string ans;
+            {
+                ios::osstream fp(ans);
+                fp << '<' << name << '>';
+                for(size_t i=name.size();i<name_width;++i) fp << ' ';
+                fp << ' ';
+                
+                reac.display(fp,spec_width,coef_width);
+                fp << " <=> ";
+                prod.display(fp,spec_width,coef_width);
+            }
+            return ans;
+        }
+
     }
 }
 
@@ -67,6 +87,8 @@ namespace upsylon
     }
 }
 
+
+#if 0
 namespace upsylon
 {
     namespace alchemy
@@ -91,3 +113,4 @@ namespace upsylon
     
 }
 
+#endif

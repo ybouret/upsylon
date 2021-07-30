@@ -47,10 +47,22 @@ namespace upsylon
             //! register a new actor
             void operator()(const species &sp, const unsigned long nu);
 
-            //! display with lib prefix()
-            std::ostream & display(std::ostream  &os,
-                                   const library &lib) const;
-            
+            //! display with widths for names and coefficients
+            template <typename OSTREAM> inline
+            OSTREAM &  display(OSTREAM &os, const size_t name_width=0, const size_t coef_width=0) const
+            {
+                if(size()>=1)
+                {
+                    const_iterator it = begin();
+                    (*it).display(os,name_width,coef_width);
+                    while( ++it != end() )
+                    {
+                        os << '+';
+                        (*it).display(os,name_width,coef_width);
+                    }
+                }
+                return os;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);

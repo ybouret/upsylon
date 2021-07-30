@@ -6,6 +6,7 @@
 
 #include "y/string.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/ios/align.hpp"
 
 namespace upsylon
 {
@@ -46,6 +47,22 @@ namespace upsylon
             //__________________________________________________________________
             const string & key() const throw(); //!< for library
 
+            //! display as species with width for name
+            template <typename OSTREAM> inline
+            OSTREAM & display(OSTREAM &os, const size_t w=0) const
+            {
+                return os << ios::align(name,ios::align::left,w);
+            }
+
+            //! display as concentration
+            template <typename OSTREAM> inline
+            OSTREAM & display_concentration(OSTREAM &os, const size_t w=0) const
+            {
+                os << '[' << name << ']';
+                for(size_t i=name.size();i<w;++i) os << ' ';
+                return os;
+            }
+            
             //__________________________________________________________________
             //
             // members
@@ -53,6 +70,7 @@ namespace upsylon
             const string name; //!< identifier
             const long   z;    //!< algebraic charge
             const size_t indx; //!< index in library
+
 
         private:
             Y_DISABLE_ASSIGN(species);

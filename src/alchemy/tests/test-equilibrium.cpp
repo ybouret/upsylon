@@ -17,12 +17,13 @@ Y_UTEST(eq)
     
     (*water)(1,h);
     (*water)(1,w);
-    water->display(std::cerr,lib,0.0) << std::endl;
+    std::cerr << water->format(10,lib.max_name,0) << " (" << water->K(0) << ")" << std::endl;
+    //water->display(std::cerr,lib,0.0) << std::endl;
     
     equilibrium::pointer toto = new constant_equilibrium("toto",1e-1);
     (*toto)(2,h);
     (*toto)(-1,w);
-    toto->display(std::cerr,lib,0.0) << std::endl;
+    std::cerr << toto->format(10,lib.max_name,0) << " (" << toto->K(0) << ")" << std::endl;
 
     
 }

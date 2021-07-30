@@ -12,12 +12,10 @@ namespace upsylon
     namespace alchemy
     {
 
-        class library;
-
         //______________________________________________________________________
         //
         //
-        //! actor for equilibrium
+        //! actor for equilibrium: species and coefficient
         //
         //______________________________________________________________________
         class actor : public authority<const species>
@@ -34,17 +32,29 @@ namespace upsylon
 
             const string & key() const throw();  //!< species key
 
-            //! display with width for coefficient
-            std::ostream & display(std::ostream  &os,
-                                   const library &lib) const;
-
+            //! display with widths for names and coefficients
+            template <typename OSTREAM> inline
+            OSTREAM & display(OSTREAM &os, const size_t name_width=0, const size_t coef_width=0) const
+            {
+                size_t imin = 0;
+                if(nu>1)
+                {
+                    const string coef = vformat("%lu",nu);
+                    os << coef;
+                    imin = coef.size();
+                }
+                for(size_t i=imin;i<coef_width;++i) os << ' ';
+                os << ' ';
+                return (**this).display(os,name_width);
+            }
+            
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const unsigned long nu; //!< coefficient
-            
+
         private:
             Y_DISABLE_ASSIGN(actor);
         };

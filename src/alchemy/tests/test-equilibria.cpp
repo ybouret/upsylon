@@ -18,7 +18,7 @@ Y_UTEST(eqs)
     equilibrium &water = eqs("water", 1e-14);  water(1,h); water(1,w);
     equilibrium &toto  = eqs("toto", 1e-4); toto(2,h); toto(-1,w);
     
-    eqs.display(std::cerr,lib,0.0);
+    //eqs.display(std::cerr,lib,0.0);
     
 }
 Y_UTEST_DONE()
