@@ -4,24 +4,25 @@
 #define Y_ALCHEMY_LIBRARY_INCLUDED 1
 
 #include "y/alchemy/species.hpp"
-#include "y/associative/hash/set.hpp"
 #include "y/ios/scribe.hpp"
 #include "y/sequence/accessible.hpp"
 #include "y/code/compilable.hpp"
+#include "y/type/gateway.hpp"
 #include <iomanip>
 
 namespace upsylon
 {
     namespace alchemy
     {
-
+        
+        
         //______________________________________________________________________
         //
         //
         //! library of species
         //
         //______________________________________________________________________
-        class library : public compilable
+        class library : public compilable, public gateway<const species::db>
         {
         public:
             //__________________________________________________________________
@@ -30,8 +31,8 @@ namespace upsylon
             //__________________________________________________________________
             typedef hash_set<string,species::pointer> db_type;        //!< alias
             typedef typename db_type::const_iterator  const_iterator; //!< alias
-            static const char                         clid[];         //!< class id
-            static const char                         display_fn[];   //!< "display";
+            static const char                         clid[];         //!< "alchemy library"
+                                                                      
             //__________________________________________________________________
             //
             // C++
@@ -43,10 +44,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-
-            const db_type & operator*()  const throw(); //!< access
-            const db_type * operator->() const throw(); //!< access
-
+            
             //! register a new species
             template <typename ID>
             const species & operator()(const ID &name, const int z)
@@ -63,7 +61,7 @@ namespace upsylon
                 for(const_iterator it=lib.db.begin();it!=lib.db.end();++it)
                 {
                     const species &sp = **it;
-                    sp.display(os << ' ',lib.max_name) << " : " << std::setw(3) << sp.z << " @" << sp.indx <<'\n';
+                    os << sp << vformat(" : %3ld @%u\n", sp.z, unsigned(sp.indx));
                 }
                 os << '}';
                 return os;
@@ -74,14 +72,14 @@ namespace upsylon
             template <typename OSTREAM,typename T> inline
             OSTREAM & display(OSTREAM &os, const accessible<T> &arr) const
             {
+                assert(compiled);
                 const ios::scribe &_ = ios::scribe::query<T>();
-                check(display_fn);
                 assert(arr.size()>=db.size());
                 os << '{' << '\n';
                 for(const_iterator it=db.begin();it!=db.end();++it)
                 {
                     const species &sp = **it;
-                    sp.display_concentration(os << ' ',max_name) << " = ";
+                    os << ' ' << sp << " = ";
                     _.print(os,arr[sp.indx]) << '\n';
                 }
                 os << '}';
@@ -98,11 +96,8 @@ namespace upsylon
             db_type      db;
 
             const species &use(species *);
-            void           check(const char *fn) const;
             virtual void   on_compile();
-            
-        public:
-            const size_t max_name; //!< max name length
+            virtual const species::db & bulk() const throw();
         };
 
 

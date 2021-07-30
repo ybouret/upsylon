@@ -54,12 +54,9 @@ namespace upsylon
 
             //! output formatted
             template <typename OSTREAM> inline
-            OSTREAM & display(OSTREAM &os,const size_t spec_width=0, const double t=0.0) const
+            OSTREAM & display(OSTREAM &os,const double t=0.0) const
             {
                 const size_t neqs = db.size();
-                size_t       rlen = 0;
-                size_t       plen = 0;
-                look_up(rlen,plen);
                 vector<string,memory::pooled> info(neqs,as_capacity);
                 vector<string,memory::pooled> kval(neqs,as_capacity);
                 size_t max_info = 0;
@@ -68,7 +65,7 @@ namespace upsylon
                 for(const_iterator it=db.begin();it!=db.end();++it)
                 {
                     const equilibrium &eq = **it;
-                    const string fmt = eq.format(max_name,spec_width,rlen,plen);
+                    const string fmt = eq.format();
                     const string val = vformat("%.15g",eq.K(t));
                     info.push_back_(fmt);
                     kval.push_back_(val);
@@ -99,7 +96,7 @@ namespace upsylon
                 for(const_iterator it=db.begin();it!=db.end();++it)
                 {
                     const equilibrium &eq = **it;
-                    eq.display_code(os,max_name) << '\n';
+                    eq.display_code(os) << '\n';
                 }
                 return os;
             }

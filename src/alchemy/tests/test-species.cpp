@@ -9,9 +9,7 @@ Y_UTEST(species)
     species                h("H+",1);
     const string           OH = "HO-";
     const species::pointer pw = new species(OH,-1);
-    const species          w(*pw);
-    Y_CHECK(w.name==pw->name);
-    std::cerr << h.name << ", " << pw->name << ", " << w.name << std::endl;
+    std::cerr << h << ", " << pw << std::endl;
 }
 Y_UTEST_DONE()
 

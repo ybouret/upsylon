@@ -19,10 +19,12 @@ namespace upsylon
     public:
         Y_DECL_ARGS(T,type); //!< aliases
 
-        inline virtual     ~gateway()         throw() {}                         //!< cleanup
-        inline type       & operator*()       throw() { return (type&)bulk(); }  //!< r/w
-        inline const_type & operator*() const throw() { return        bulk(); }  //!< r/o
-
+        inline virtual     ~gateway()         throw()  {}                         //!< cleanup
+        inline type       & operator*()       throw()  { return (type&)bulk();  }  //!< r/w
+        inline const_type & operator*() const throw()  { return        bulk();  }  //!< r/o
+        inline type       * operator->()       throw() { return &(type&)bulk(); }  //!< r/w
+        inline const_type * operator->() const throw() { return &       bulk(); }  //!< r/o
+        
     protected:
         inline explicit     gateway() throw() {}  //!< setup
 

@@ -14,12 +14,18 @@ Y_UTEST(actor)
     const species &h = lib("H+",1);
     const species &w = lib("HO-",1);  
 
-    actor _h(h,1);
+    actor _h(h,2);
     actor _w(w,1);
 
-    _h.display(std::cerr,lib.max_name) << std::endl;
-    _w.display(std::cerr,lib.max_name) << std::endl;
-
+    std::cerr << "before LIB compile" << std::endl;
+    std::cerr << _h << " something" << std::endl;
+    std::cerr << _w << " something" << std::endl;
+    
+    lib.compile();
+    std::cerr << "After LIB compile" << std::endl;
+    std::cerr << _h << " something" << std::endl;
+    std::cerr << _w << " something" << std::endl;
+    
 }
 Y_UTEST_DONE()
 

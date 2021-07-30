@@ -25,7 +25,6 @@ Y_UTEST(library)
     Y_CHECK(  lib.owns(w)    );
     lib.compile();
     
-    std::cerr << "compile=" << lib->size()<< std::endl;
     std::cerr << lib << std::endl;
 
     vector<double> C(lib->size(),1.1);

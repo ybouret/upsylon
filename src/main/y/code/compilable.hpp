@@ -23,8 +23,7 @@ namespace upsylon
 
     protected:
         explicit   compilable() throw();   //!< setup
-        void       restart()    throw();   //!< compiled=false
-
+        
     private:
         Y_DISABLE_COPY_AND_ASSIGN(compilable);
         virtual void on_compile() = 0;

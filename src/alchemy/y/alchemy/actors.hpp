@@ -16,7 +16,7 @@ namespace upsylon
         //! base class for actors
         //______________________________________________________________________
         typedef hash_set<string,actor> actors_;
-
+        
         //______________________________________________________________________
         //
         //
@@ -40,8 +40,8 @@ namespace upsylon
             //__________________________________________________________________
             explicit actors();          //!< setup empty
             virtual ~actors() throw();  //!< cleanup
-
-
+            
+            
             //__________________________________________________________________
             //
             // methods
@@ -50,19 +50,18 @@ namespace upsylon
             bool           search(const string &) const throw();             //!< look for existing
             const db_type &operator*()  const throw();                       //!< content
             const db_type *operator->() const throw();                       //!< content
-
+            
             //! display with widths for names and coefficients
             template <typename OSTREAM> inline
-            OSTREAM &  display(OSTREAM &os, const size_t name_width=0, const size_t coef_width=0) const
+            friend OSTREAM &  operator<<(OSTREAM &os, const actors &A)
             {
-                if(db.size()>=1)
+                if(A.db.size()>=1)
                 {
-                    const_iterator it = db.begin();
-                    (*it).display(os,name_width,coef_width);
-                    while( ++it != db.end() )
+                    const_iterator it = A.db.begin();
+                    os << *it;
+                    while( ++it != A.db.end() )
                     {
-                        os << '+';
-                        (*it).display(os,name_width,coef_width);
+                        os << " + " << *it;
                     }
                 }
                 return os;
@@ -97,9 +96,9 @@ namespace upsylon
         public:
             const size_t       cwidth; //!< max coefficients decimal chars
         };
-
+        
     }
-
+    
 }
 
 #endif

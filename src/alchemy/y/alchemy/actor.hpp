@@ -28,33 +28,39 @@ namespace upsylon
             explicit actor(const species &, const unsigned) throw(); //!< setup
             virtual ~actor()    throw();                             //!< cleanup
             actor(const actor&) throw();                             //!< copy
-
-
+            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             const string & key() const throw();  //!< species key
-
-            //! display with widths for names and coefficients
+            
+            //! display
             template <typename OSTREAM> inline
-            OSTREAM & display(OSTREAM &os, const size_t name_width=0, const size_t coef_width=0) const
+            friend OSTREAM & operator<<(OSTREAM &os, const actor &a)
             {
-                size_t imin = 0;
-                if(nu>1)
+                if(a.nu>1)
                 {
-                    const string coef = vformat("%lu",nu);
+                    const string coef = vformat("%lu",a.nu);
+                    for(size_t i=coef.size();i<a.cw;++i) os << ' ';
                     os << coef;
-                    imin = coef.size();
                 }
-                for(size_t i=imin;i<coef_width;++i) os << ' ';
+                else
+                {
+                    for(size_t i=0;i<a.cw;++i) os << ' ';
+                }
                 os << ' ';
-                return (**this).display(os,name_width);
+                return os << *a;
             }
             
-
+            
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const unsigned long nu; //!< coefficient
-
+            const size_t        cw; //!< coefficient width
+            
         private:
             Y_DISABLE_ASSIGN(actor);
         };

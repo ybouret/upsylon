@@ -10,13 +10,10 @@ namespace upsylon
     compilable:: ~compilable() throw()
     {}
     
-    void compilable:: restart() throw()
-    {
-        aliasing::_(compiled) = false;
-    }
     
     void compilable:: compile()
     {
+        assert(!compiled);
         on_compile();
         aliasing::_(compiled) = true;
     }

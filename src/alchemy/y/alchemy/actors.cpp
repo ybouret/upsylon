@@ -10,9 +10,9 @@ namespace upsylon
 {
     namespace alchemy
     {
-
+        
         const char actors:: clid[] = "alchemy::actors";
-
+        
         actors:: actors() :
         indx(0),
         coef(0),
@@ -46,22 +46,25 @@ namespace upsylon
         {
             return NULL != db.search(id);
         }
-
+        
         const actors::db_type & actors::operator*()  const throw()
         {
             return db;
         }
-
+        
         const actors::db_type * actors::operator->()  const throw()
         {
             return &db;
         }
-
+        
         void actors:: on_compile()
         {
+            assert(!compiled);
             static memory::allocator &mgr = memory::dyadic::instance();
-            if(compiled) throw exception("%s cannot be compiled twice",clid);
+            
             const size_t n = db.size();
+            size_t       w = 0;
+            
             for(db_type::iterator it=db.begin();it!=db.end();++it)
             {
                 const species &sp = **it;
@@ -73,17 +76,27 @@ namespace upsylon
                 wlen = n * sizeof(size_t);
                 aliasing::_(indx) = static_cast<size_t*>( mgr.acquire(wlen) )-1;
                 aliasing::_(coef) = indx + n;
-                size_t i=1;
-                for(db_type::iterator it=db.begin();i<=n;++it,++i)
                 {
-                    const actor &a = *it;
-                    aliasing::_(indx[i]) = a->indx;
-                    aliasing::_(coef[i]) = a.nu;
+                    size_t i=1;
+                    for(db_type::iterator it=db.begin();i<=n;++it,++i)
+                    {
+                        const actor &a = *it;
+                        aliasing::_(indx[i]) = a->indx;
+                        aliasing::_(coef[i]) = a.nu;
+                        w = max_of(w, decimal_chars_for(a.nu) );
+                    }
                 }
+                
+                for(db_type::iterator it=db.begin(); it!=db.end(); ++it)
+                {
+                    aliasing::_( (*it).cw ) = w;
+                }
+                
+                
             }
         }
-
+        
     }
-
+    
 }
 

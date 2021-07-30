@@ -42,10 +42,7 @@ namespace upsylon
             const string & key() const throw();                //!< for hash_set
 
             //! create a formatted output, w/0 constant
-            string format(const size_t name_width=0,
-                          const size_t spec_width=0,
-                          const size_t reac_width=0,
-                          const size_t prod_width=0) const;
+            string format() const;
 
             
             //! compute K0*reac-prod
@@ -56,13 +53,21 @@ namespace upsylon
             void   solve(addressable<double> &Cini,
                          const double         K0,
                          addressable<double> &Ctry) const throw();
-
-            //! display compact format
+           
             template <typename OSTREAM> inline
-            OSTREAM &display_code(OSTREAM &os, const size_t name_width=0) const
+            friend OSTREAM &operator<<(OSTREAM &os, const equilibrium &eq)
+            {
+                const string fmt = eq.format();
+                os << fmt << vformat("| (%.15g)", eq.K(eq.tdisp) );
+                return os;
+            }
+            
+            //! display compact format
+            template <typename OSTREAM>
+            OSTREAM &display_code(OSTREAM &os) const
             {
                 os << '<' << name << '>';
-                for(size_t i=name.size();i<name_width;++i) os << ' ';
+                for(size_t i=name.size();i<width;++i) os << ' ';
                 os << ' ';
                 reac.display_code(os);
                 prod.display_code(os << "->" );
@@ -73,24 +78,23 @@ namespace upsylon
             //! fill coefficients row
             void fill( addressable<long> &Nu ) const throw();
             
-            //! limiting reactant
-            size_t forward(double &xi, const accessible<double> &C) const throw();
-            
             
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const string name; //!< identifier
-            const actors reac; //!< reactants
-            const actors prod; //!< products
+            const string   name;  //!< identifier
+            const actors   reac;  //!< reactants
+            const actors   prod;  //!< products
+            const size_t   width; //!< for name
+            mutable double tdisp; //!< display time
             
         protected:
             //! initialize
             template <typename ID> inline
             explicit equilibrium(const ID &id) :
-            name(id), reac(), prod()
+            name(id), reac(), prod(), width(0), tdisp(0)
             {
             }
             

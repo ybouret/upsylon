@@ -7,7 +7,8 @@ namespace upsylon
     {
         actor:: actor(const species &_sp, const unsigned _nu) throw() :
         authority<const species>(_sp),
-        nu(_nu)
+        nu(_nu),
+        cw(0)
         {
         }
 
@@ -15,7 +16,8 @@ namespace upsylon
 
         actor:: actor(const actor &other) throw() :
         authority<const species>(other),
-        nu(other.nu)
+        nu(other.nu),
+        cw(other.cw)
         {
         }
 

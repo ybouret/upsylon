@@ -53,28 +53,21 @@ namespace upsylon
             return name;
         }
         
-        string equilibrium:: format(const size_t name_width,
-                                    const size_t spec_width,
-                                    const size_t reac_width,
-                                    const size_t prod_width) const
+        string equilibrium:: format() const
         {
             string ans;
             {
                 ios::osstream fp(ans);
                 fp << '<' << name << '>';
-                for(size_t i=name.size();i<name_width;++i) fp << ' ';
-                fp << '|';
-                
-                reac.display(fp,spec_width,reac_width<=0 ? reac.cwidth : reac_width);
-                fp << " <=> ";
-                prod.display(fp,spec_width,prod_width<=0 ? prod.cwidth : prod_width);
+                for(size_t i=name.size();i<width;++i) fp << ' ';
+                fp << '|' << reac <<   " <=> " << prod;
             }
             return ans;
         }
         
         void equilibrium:: on_compile()
         {
-            if(compiled) throw exception("<%s> is already compiled", *name);
+            assert(!compiled);
             assert(!reac.compiled);
             assert(!prod.compiled);
             aliasing::_(reac).compile();
@@ -96,6 +89,7 @@ namespace upsylon
             }
         }
         
+#if 0
         size_t equilibrium:: forward(double &xi, const accessible<double> &C) const throw()
         {
             assert(compiled);
@@ -136,8 +130,7 @@ namespace upsylon
             xi  =  xm;
             return im;
         }
-        
-        
+#endif
         
         
         double equilibrium:: compute(const double             K0,
