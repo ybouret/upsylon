@@ -5,7 +5,7 @@
 
 #include "y/alchemy/actors.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/sequence/accessible.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -50,6 +50,11 @@ namespace upsylon
             //! compute K0*reac-prod
             double compute(const double             K0,
                            const accessible<double> &C) const throw();
+
+            //! solve independently
+            void   solve(addressable<double> &Cini,
+                         const double         K0,
+                         addressable<double> &Ctry) const throw();
 
 
             //__________________________________________________________________

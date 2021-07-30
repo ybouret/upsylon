@@ -6,6 +6,7 @@
 #include "y/ios/osstream.hpp"
 
 #include "y/core/ipower.hpp"
+#include "y/mkl/tao.hpp"
 
 namespace upsylon
 {
@@ -103,6 +104,54 @@ namespace upsylon
             return lhs-rhs;
         }
 
+
+        struct eqwrapper
+        {
+            const equilibrium   &eq;
+            const double         K0;
+            const accessible<double> &Cini;
+            addressable<double> &Ctry;
+
+            double operator()(const double xi) const throw()
+            {
+                mkl::tao::set(Ctry,Cini);
+
+                double lhs = K0;
+                {
+                    size_t n = eq.reac->size();
+                    for(actors::const_iterator it=eq.reac->begin();n>0;++it,--n)
+                    {
+                        const actor &a = *it;
+                        const size_t i = a->indx;
+                        const double c = (Ctry[i] -= a.nu * xi);
+                        lhs *= ipower<double>(c,a.nu);
+                    }
+                }
+
+                double rhs = 1;
+                {
+                    size_t n = eq.prod->size();
+                    for(actors::const_iterator it= eq.prod->begin();n>0;++it,--n)
+                    {
+                        const actor &a = *it;
+                        const size_t i = a->indx;
+                        const double c = (Ctry[i] += a.nu * xi);
+                        rhs *= ipower<double>(c,a.nu);
+                    }
+                }
+
+                return eq.compute(K0,Ctry);
+            }
+
+        };
+
+        void   equilibrium:: solve(addressable<double> &Cini,
+                                   const double         K0,
+                                   addressable<double> &Ctry) const throw()
+        {
+            eqwrapper eqn = { *this, K0, Cini, Ctry };
+            
+        }
 
     }
 }
