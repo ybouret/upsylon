@@ -64,6 +64,12 @@ namespace upsylon
                 return os;
             }
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const size_t max_coef;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(actors);
         };
