@@ -19,6 +19,15 @@ Y_UTEST(eqs)
     equilibrium &toto  = eqs("toto", 1e-4); toto(2,h); toto(-1,w);
     
     eqs.display(std::cerr,lib.max_name);
-    
+
+    lib.compile();
+    std::cerr << lib << std::endl;
+    vector<double> C(lib->size(),0);
+    lib.display(std::cerr,C) << std::endl;
+
+    std::cerr << water.name << " -> " << water.compute(water.K(0),C) << std::endl;
+
+
+
 }
 Y_UTEST_DONE()

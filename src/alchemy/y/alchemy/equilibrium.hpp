@@ -5,6 +5,7 @@
 
 #include "y/alchemy/actors.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/sequence/accessible.hpp"
 
 namespace upsylon
 {
@@ -46,6 +47,9 @@ namespace upsylon
                           const size_t prod_width=0) const;
 
             
+            //! compute K0*reac-prod
+            double compute(const double             K0,
+                           const accessible<double> &C) const throw();
 
 
             //__________________________________________________________________

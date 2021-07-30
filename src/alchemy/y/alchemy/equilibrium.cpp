@@ -3,8 +3,9 @@
 
 #include "y/type/aliasing.hpp"
 #include "y/type/utils.hpp"
-
 #include "y/ios/osstream.hpp"
+
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {
@@ -70,6 +71,39 @@ namespace upsylon
             return ans;
         }
 
+
+
+        double equilibrium:: compute(const double             K0,
+                                     const accessible<double> &C) const throw()
+        {
+            double lhs = K0;
+            {
+                size_t n = reac->size();
+                for(actors::const_iterator it=reac->begin();n>0;++it,--n)
+                {
+                    const actor &a = *it;     assert(a.nu>0);
+                    const size_t i = a->indx; assert(i>=1); assert(i<=C.size());
+                    const double c = C[i];    assert(c>=0);
+                    lhs *= ipower<double>(c,a.nu);
+                }
+            }
+
+            double rhs = 1;
+            {
+                size_t n = prod->size();
+                for(actors::const_iterator it=prod->begin();n>0;++it,--n)
+                {
+                    const actor &a = *it;     assert(a.nu>0);
+                    const size_t i = a->indx; assert(i>=1); assert(i<=C.size());
+                    const double c = C[i];    assert(c>=0);
+                    rhs *= ipower<double>(c,a.nu);
+                }
+            }
+            
+            return lhs-rhs;
+        }
+
+
     }
 }
 
@@ -88,30 +122,3 @@ namespace upsylon
     }
 }
 
-
-#if 0
-namespace upsylon
-{
-    namespace alchemy
-    {
-        
-        std::ostream & equilibrium:: display(std::ostream  &os,
-                                             const library &lib,
-                                             const double   t,
-                                             const size_t   eqw) const
-        {
-            os << '<' << name << '>';
-            for(size_t i=name.size();i<=eqw;++i) os << ' ';
-            reac.display(os,lib);
-            os << " <=> ";
-            prod.display(os,lib);
-            os << "    (" << K(t) << ")";
-            return os;
-        }
-        
-        
-    }
-    
-}
-
-#endif

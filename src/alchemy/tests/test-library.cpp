@@ -1,6 +1,7 @@
 
 #include "y/alchemy/library.hpp"
 #include "y/utest/run.hpp"
+#include "y/sequence/vector.hpp"
 
 using namespace upsylon;
 using namespace alchemy;
@@ -26,6 +27,8 @@ Y_UTEST(library)
     std::cerr << "compile=" << lib.compile() << std::endl;
     std::cerr << lib << std::endl;
 
+    vector<double> C(lib->size(),1.1);
+    lib.display(std::cerr,C) << std::endl;
 
 }
 Y_UTEST_DONE()

@@ -28,6 +28,8 @@ namespace upsylon
         inline type       & operator*()       throw()  { return  host; } //!< access
         inline const_type & operator*() const throw()  { return  host; } //!< access
         
+        inline type       * operator->()       throw()  { return  &host; } //!< access
+        inline const_type * operator->() const throw()  { return  &host; } //!< access
 
     private:
         type &host;

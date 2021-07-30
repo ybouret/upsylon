@@ -25,7 +25,14 @@ namespace upsylon
             return db;
         }
 
-        const char library::clid[] = "alchemy::library";
+        const library::db_type * library:: operator->() const throw()
+        {
+            return &db;
+        }
+
+
+        const char library::clid[]       = "alchemy::library";
+        const char library::display_fn[] = "display";
 
         const species & library:: use(species *s)
         {
@@ -38,6 +45,13 @@ namespace upsylon
             aliasing::_(compiled) = false;
             aliasing::_(max_name) = max_of(max_name,s->name.size());
             return *s;
+        }
+
+        void library::check(const char *fn) const
+        {
+            assert(fn);
+            if(!compiled)
+                throw exception("%s:%s: not compiled!",clid,fn);
         }
 
         bool library:: owns(const species &s) const throw()

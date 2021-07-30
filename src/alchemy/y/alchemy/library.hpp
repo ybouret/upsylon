@@ -5,6 +5,8 @@
 
 #include "y/alchemy/species.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/ios/scribe.hpp"
+#include "y/sequence/accessible.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -28,7 +30,7 @@ namespace upsylon
             typedef hash_set<string,species::pointer> db_type;        //!< alias
             typedef typename db_type::const_iterator  const_iterator; //!< alias
             static const char                         clid[];         //!< class id
-
+            static const char                         display_fn[];   //!< "display";
             //__________________________________________________________________
             //
             // C++
@@ -41,7 +43,8 @@ namespace upsylon
             // methods
             //__________________________________________________________________
 
-            const db_type & operator*() const throw(); //!< access
+            const db_type & operator*()  const throw(); //!< access
+            const db_type * operator->() const throw(); //!< access
 
             //! register a new species
             template <typename ID>
@@ -55,17 +58,35 @@ namespace upsylon
             friend OSTREAM & operator<<(OSTREAM       &os,
                                         const library &lib)
             {
-                os << '{' << std::endl;
+                os << '{' << '\n';
                 for(const_iterator it=lib.db.begin();it!=lib.db.end();++it)
                 {
                     const species &sp = **it;
-                    sp.display(os << ' ',lib.max_name) << " : " << std::setw(3) << sp.z << " @" << sp.indx << std::endl;
+                    sp.display(os << ' ',lib.max_name) << " : " << std::setw(3) << sp.z << " @" << sp.indx <<'\n';
                 }
                 os << '}';
                 return os;
             }
 
-            
+
+            //! display associated array
+            template <typename OSTREAM,typename T> inline
+            OSTREAM & display(OSTREAM &os, const accessible<T> &arr) const
+            {
+                const ios::scribe &_ = ios::scribe::query<T>();
+                check(display_fn);
+                assert(arr.size()>=db.size());
+                os << '{' << '\n';
+                for(const_iterator it=db.begin();it!=db.end();++it)
+                {
+                    const species &sp = **it;
+                    sp.display_concentration(os << ' ',max_name) << " = ";
+                    _.print(os,arr[sp.indx]) << '\n';
+                }
+                os << '}';
+                return os;
+            }
+
 
             //! check that species is owned
             bool owns(const species &) const throw();
@@ -78,6 +99,7 @@ namespace upsylon
             db_type      db;
 
             const species &use(species *);
+            void           check(const char *fn) const;
 
         public:
             const bool   compiled; //!< status flag
