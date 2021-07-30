@@ -70,7 +70,7 @@ namespace upsylon
             
             if(n>0)
             {
-                wlen = n * sizeof(size_t);
+                wlen = 2*n * sizeof(size_t);
                 aliasing::_(indx) = static_cast<size_t*>( mgr.acquire(wlen) )-1;
                 aliasing::_(coef) = indx + n;
                 {
@@ -92,6 +92,38 @@ namespace upsylon
                 aliasing::_(size) = n;
                 
             }
+        }
+        
+        
+        extent actors:: find_extent(const accessible<double> &C) const throw()
+        {
+            assert(compiled);
+            double        xm   = 0;
+            size_t        im   = 0;
+            size_t        ii  = size;
+            if(ii)
+            {
+                const size_t *idx = indx;
+                const size_t *cof = coef;
+                
+                // initialize
+                im = idx[ii];       assert(im>0); assert(im<=C.size());
+                xm = C[im]/cof[ii];
+                
+                // scan
+                for(--ii;ii>0;--ii)
+                {
+                    const size_t it = idx[ii]; assert(it>0); assert(it<=C.size());
+                    const double xt = C[ it ]/cof[ii];
+                    if(xt<xm)
+                    {
+                        xm = xt;
+                        im = it;
+                    }
+                }
+            }
+            
+            return extent(im,xm);
         }
         
     }

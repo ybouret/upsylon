@@ -4,6 +4,8 @@
 #define Y_ALCHEMY_ACTORS_INCLUDED 1
 
 #include "y/alchemy/actor.hpp"
+#include "y/alchemy/extent.hpp"
+#include "y/sequence/accessible.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/code/compilable.hpp"
 #include "y/type/gateway.hpp"
@@ -73,6 +75,9 @@ namespace upsylon
                 os << ' ' << ']';
                 return os;
             }
+            
+            //! find maximal extent
+            extent find_extent(const accessible<double> &C) const throw();
             
             //__________________________________________________________________
             //

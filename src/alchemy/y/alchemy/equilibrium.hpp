@@ -78,8 +78,10 @@ namespace upsylon
             }
            
             //! fill coefficients row
-            void fill( addressable<long> &Nu ) const throw();
+            void    fill( addressable<long> &Nu ) const throw();
             
+            //! find extents
+            extents find_extents(const accessible<double> &C) const throw();
             
             
             //__________________________________________________________________

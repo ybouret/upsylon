@@ -89,48 +89,11 @@ namespace upsylon
             }
         }
         
-#if 0
-        size_t equilibrium:: forward(double &xi, const accessible<double> &C) const throw()
+        extents equilibrium:: find_extents(const accessible<double> &C) const throw()
         {
             assert(compiled);
-            double        xm   = 0;
-            size_t        im   = 0;
-            const size_t *indx = reac.indx;
-            const size_t *coef = reac.coef;
-            {
-                size_t        i = 0;
-                // find first
-                for(i=reac->size();i>0;--i)
-                {
-                    const double c = C[ indx[i] ]; assert(c>=0);
-                    if(c>0)
-                    {
-                        xm = c/coef[i];
-                        im = i;
-                        --i;
-                        break;
-                    }
-                }
-                
-                // find optimal
-                for(;i>0;--i)
-                {
-                    const double c = C[ indx[i] ]; assert(c>=0);
-                    if(c>0)
-                    {
-                        const double xt = c/coef[i];
-                        if(xt<xm)
-                        {
-                            xm = xt;
-                            im = i;
-                        }
-                    }
-                }
-            }
-            xi  =  xm;
-            return im;
+            return extents(reac.find_extent(C),prod.find_extent(C));
         }
-#endif
         
         
         double equilibrium:: compute(const double             K0,
