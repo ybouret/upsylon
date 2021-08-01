@@ -8,6 +8,7 @@ TARGET_LINK_Y(test-alchemy alchemy mkl lua++ jive)
 
 SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 ENABLE_TESTING()
+ADD_TEST(parser  test-alchemy parser)
 ADD_TEST(species test-alchemy species)
 ADD_TEST(library test-alchemy library)
 ADD_TEST(actor   test-alchemy actor)
