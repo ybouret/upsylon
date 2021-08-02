@@ -22,6 +22,12 @@ Y_UTEST(library)
     vector<double> C(lib->size(),1.1);
     lib.display(std::cerr,C) << std::endl;
 
+    for(const Species::Node *node = lib->head();node;node=node->next)
+    {
+        std::cerr << **node << std::endl;
+    }
+    
+
 #if 0
     library        lib;
     const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;

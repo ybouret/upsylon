@@ -165,7 +165,10 @@ namespace upsylon
         {
             return table.nodes.fetch(pos)->data;
         }
-        
+
+        //! for specific iteration
+        inline const node_type *head() const throw() { return table.nodes.head; }
+
     protected:
         //! setup
         inline explicit hash_proto(const size_t factor) :

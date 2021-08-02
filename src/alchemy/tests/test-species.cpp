@@ -10,6 +10,8 @@ Y_UTEST(species)
     Species h("H+",1,++indx);
     Species w("HO-",-1,++indx);
     std::cerr << h << ", " << w << std::endl;
+    
+
 }
 Y_UTEST_DONE()
 

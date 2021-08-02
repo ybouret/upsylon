@@ -20,7 +20,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef typename Species::Set::const_iterator const_iterator;
+            typedef Species::Set::const_iterator const_iterator;
             static const char CLID[];
             
             //__________________________________________________________________
