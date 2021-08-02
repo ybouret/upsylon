@@ -9,9 +9,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        
+
+#if 0
         //______________________________________________________________________
         //
         //
@@ -137,7 +138,8 @@ namespace upsylon
             const double Kvalue;
             Y_DISABLE_COPY_AND_ASSIGN(constant_equilibrium);
         };
-        
+#endif
+
     }
     
 }

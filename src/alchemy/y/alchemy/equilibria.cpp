@@ -6,8 +6,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
+
+#if 0
         equilibria:: ~equilibria() throw()
         {
             
@@ -52,6 +54,7 @@ namespace upsylon
             }
             
         }
+#endif
         
     }
 }

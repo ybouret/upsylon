@@ -3,8 +3,9 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
+#if 0
         actor:: actor(const species &_sp, const unsigned _nu) throw() :
         authority<const species>(_sp),
         nu(_nu),
@@ -23,7 +24,8 @@ namespace upsylon
 
         const string & actor:: key() const throw() { return (**this).name; }
         
-
+#endif
+        
     }
 }
 

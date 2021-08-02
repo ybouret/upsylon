@@ -1,19 +1,17 @@
-
-
 #include "y/alchemy/species.hpp"
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
         
-        species:: ~species() throw()
+        Species:: ~Species() throw()
         {
         }
         
         
 
-        const string & species:: key() const throw()
+        const string & Species:: key() const throw()
         {
             return name;
         }

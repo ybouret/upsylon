@@ -5,11 +5,11 @@
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
-using namespace alchemy;
+using namespace Alchemy;
 
 Y_UTEST(actors)
 {
-
+#if 0
     library        lib;
     const species &h = lib("H+",1);
     const species &w = lib("HO-",-1);
@@ -33,7 +33,7 @@ Y_UTEST(actors)
     B.compile();
     std::cerr << A << "|" <<std::endl;
     std::cerr << B << "|" <<std::endl;
-    
+#endif
 }
 Y_UTEST_DONE()
 

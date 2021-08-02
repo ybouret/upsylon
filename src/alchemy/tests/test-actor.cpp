@@ -4,12 +4,13 @@
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
-using namespace alchemy;
+using namespace Alchemy;
 
 
 Y_UTEST(actor)
 {
 
+#if 0
     library        lib;
     const species &h = lib("H+",1);
     const species &w = lib("HO-",1);  
@@ -25,6 +26,7 @@ Y_UTEST(actor)
     std::cerr << "After LIB compile" << std::endl;
     std::cerr << _h << " something" << std::endl;
     std::cerr << _w << " something" << std::endl;
+#endif
     
 }
 Y_UTEST_DONE()

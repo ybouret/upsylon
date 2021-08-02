@@ -12,9 +12,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        
+
+#if 0
         //______________________________________________________________________
         //
         //
@@ -96,6 +97,7 @@ namespace upsylon
             size_t       wlen;
             
         };
+#endif
         
     }
     

@@ -3,26 +3,26 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
 
-        extent:: ~extent() throw()
+        Extent:: ~Extent() throw()
         {
         }
         
-        extent::extent(const extent &_) throw() :
+        Extent::Extent(const Extent &_) throw() :
         index(_.index),
         value(_.value)
         {
         }
         
-        extent:: extent(const size_t i, const double v) throw() :
+        Extent:: Extent(const size_t i, const double v) throw() :
         index(i),
         value(v)
         {
         }
         
-        std::ostream & operator<<(std::ostream &os, const extent &xi)
+        std::ostream & operator<<(std::ostream &os, const Extent &xi)
         {
             os << "{" << xi.value << " @" << xi.index << "}";
             return os;
@@ -34,25 +34,25 @@ namespace upsylon
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        extents:: extents(const extents &_) throw() :
+        Extents:: Extents(const Extents &_) throw() :
         forward(_.forward),
         reverse(_.reverse)
         {
         }
         
-        extents:: ~extents() throw()
+        Extents:: ~Extents() throw()
         {
         }
         
-        extents:: extents(const extent fwd, const extent rev) throw() :
+        Extents:: Extents(const Extent fwd, const Extent rev) throw() :
         forward(fwd),
         reverse(rev)
         {
         }
        
-        std::ostream & operator<<(std::ostream &os, const extents &x)
+        std::ostream & operator<<(std::ostream &os, const Extents &x)
         {
             os << "[fwd=" << x.forward << " | rev=" << x.reverse << "]";
             return os;

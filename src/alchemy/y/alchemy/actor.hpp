@@ -9,9 +9,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
 
+#if 0
         //______________________________________________________________________
         //
         //
@@ -70,7 +71,8 @@ namespace upsylon
         private:
             Y_DISABLE_ASSIGN(actor);
         };
-
+#endif
+        
     }
 }
 

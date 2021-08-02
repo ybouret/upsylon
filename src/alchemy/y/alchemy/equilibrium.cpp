@@ -12,6 +12,7 @@ namespace upsylon
 {
     namespace alchemy
     {
+#if 0
         equilibrium:: ~equilibrium() throw()
         {
         }
@@ -206,14 +207,17 @@ namespace upsylon
             }
             
         }
-        
+
+#endif
+
     }
 }
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
+#if 0
         constant_equilibrium:: ~constant_equilibrium() throw()
         {
         }
@@ -222,6 +226,7 @@ namespace upsylon
         {
             return Kvalue;
         }
+#endif
     }
 }
 

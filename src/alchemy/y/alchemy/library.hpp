@@ -12,10 +12,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
         
-        
+#if 0
         //______________________________________________________________________
         //
         //
@@ -100,7 +100,7 @@ namespace upsylon
             virtual void   on_compile();
             virtual const species::db & bulk() const throw();
         };
-
+#endif
 
     }
 

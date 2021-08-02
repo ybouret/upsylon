@@ -4,12 +4,13 @@
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
-using namespace alchemy;
+using namespace Alchemy;
 
 
 Y_UTEST(library)
 {
 
+#if 0
     library        lib;
     const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;
     const species &w = lib("HO-",1); std::cerr << "add " << w.name << std::endl;
@@ -29,7 +30,8 @@ Y_UTEST(library)
 
     vector<double> C(lib->size(),1.1);
     lib.display(std::cerr,C) << std::endl;
-
+#endif
+    
 }
 Y_UTEST_DONE()
 

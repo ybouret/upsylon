@@ -8,9 +8,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        
+
+#if 0
         const char actors:: clid[] = "alchemy::actors";
         
         actors:: actors() :
@@ -125,6 +126,7 @@ namespace upsylon
             
             return extent(im,xm);
         }
+#endif
         
     }
     

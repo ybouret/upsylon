@@ -6,9 +6,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        
+
+#if 0
         library:: ~library() throw()
         {
         }
@@ -81,7 +82,8 @@ namespace upsylon
             }
             
         }
-        
+#endif
+
     }
 }
 

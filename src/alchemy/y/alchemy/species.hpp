@@ -10,7 +10,7 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
         //______________________________________________________________________
         //
@@ -18,15 +18,15 @@ namespace upsylon
         //! one species with minimal info
         //
         //______________________________________________________________________
-        class species :  public object, public counted
+        class Species :  public object, public counted
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,species>          pointer; //!< alias
-            typedef hash_set<string,species::pointer> db;      //!< alias
+            typedef intr_ptr<string,Species>          Pointer; //!< alias
+            typedef hash_set<string,Species::Pointer> Set;      //!< alias
             
             //__________________________________________________________________
             //
@@ -35,9 +35,16 @@ namespace upsylon
 
             //! flexible constructor
             template <typename ID> inline
-            explicit species(const ID &the_name, const int the_z) :
-            name(the_name), z(the_z), indx(0), width(0) {}
-            virtual ~species() throw(); //!< cleanup
+            explicit Species(const ID    &_name,
+                             const long   _z,
+                             const size_t _indx) :
+            name(_name),
+            z(_z),
+            indx(_indx)
+            {
+                assert(_indx>0);
+            }
+            virtual ~Species() throw(); //!< cleanup
 
             
             //__________________________________________________________________
@@ -49,10 +56,9 @@ namespace upsylon
             
             //! display as species with width for name
             template <typename OSTREAM> inline
-            friend OSTREAM & operator<<(OSTREAM &os, const species &sp)
+            friend OSTREAM & operator<<(OSTREAM &os, const Species &sp)
             {
                 os << '[' << sp.name << ']';
-                for(size_t i=sp.name.size();i<sp.width;++i) os << ' ';
                 return os;
             }
             
@@ -63,10 +69,9 @@ namespace upsylon
             const string name;  //!< identifier
             const long   z;     //!< algebraic charge
             const size_t indx;  //!< index in library
-            const size_t width; //!< output width, set during library compile
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(species);
+            Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
         
     }

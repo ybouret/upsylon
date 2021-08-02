@@ -5,13 +5,13 @@
 #include "y/sequence/vector.hpp"
 
 using namespace upsylon;
-using namespace alchemy;
+using namespace Alchemy;
 
 
 
 Y_UTEST(eq)
 {
-    
+#if 0
     library        lib;
     const species &h  = lib("H+",1);
     const species &w  = lib("HO-",-1);
@@ -59,7 +59,7 @@ Y_UTEST(eq)
     vector<long> Nu(lib->size(),0);
     water->fill(Nu); std::cerr << "Nu_" << water->name << " : " << Nu << std::endl;
     weak->fill(Nu); std::cerr << "Nu_" << weak->name << " : " << Nu << std::endl;
-
+#endif
     
 }
 Y_UTEST_DONE()

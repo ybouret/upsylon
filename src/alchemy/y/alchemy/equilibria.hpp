@@ -11,9 +11,10 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
-        
+
+#if 0
         //______________________________________________________________________
         //
         //
@@ -116,6 +117,7 @@ namespace upsylon
                 return os;
             }
         };
+#endif
         
     }
 }

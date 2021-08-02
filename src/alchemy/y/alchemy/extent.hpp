@@ -9,7 +9,7 @@
 
 namespace upsylon
 {
-    namespace alchemy
+    namespace Alchemy
     {
         //______________________________________________________________________
         //
@@ -17,21 +17,21 @@ namespace upsylon
         //! extent of a side of a reaction
         //
         //______________________________________________________________________
-        class extent
+        class Extent
         {
         public:
             const size_t index; //!< of the species, 0 if no limit
             const double value; //!< the value
             
-            extent(const size_t i, const double v) throw(); //!< init
-            extent(const extent &) throw();                 //!< copy
-            ~extent() throw();                              //!< quit
+            Extent(const size_t i, const double v) throw(); //!< init
+            Extent(const Extent &) throw();                 //!< copy
+            ~Extent() throw();                              //!< quit
             
             //! display
-            friend std::ostream & operator<<(std::ostream &, const extent &);
+            friend std::ostream & operator<<(std::ostream &, const Extent &);
             
         private:
-            Y_DISABLE_ASSIGN(extent);
+            Y_DISABLE_ASSIGN(Extent);
         };
         
         //______________________________________________________________________
@@ -40,22 +40,22 @@ namespace upsylon
         //! couple of extents
         //
         //______________________________________________________________________
-        class extents
+        class Extents
         {
         public:
-            const extent forward; //!< limit by reactants
-            const extent reverse; //!< limit by products
+            const Extent forward; //!< limit by reactants
+            const Extent reverse; //!< limit by products
             
-            extents(const extent fwd, const extent rev) throw(); //!< init
-            extents(const extents &) throw();                    //!< copy
-            ~extents() throw();                                  //!< quit
+            Extents(const Extent fwd, const Extent rev) throw(); //!< init
+            Extents(const Extents &) throw();                    //!< copy
+            ~Extents() throw();                                  //!< quit
             
             //! display
-            friend std::ostream & operator<<(std::ostream &, const extents &);
+            friend std::ostream & operator<<(std::ostream &, const Extents &);
 
             
         private:
-            Y_DISABLE_ASSIGN(extents);
+            Y_DISABLE_ASSIGN(Extents);
         };
         
     }
