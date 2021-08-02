@@ -46,8 +46,12 @@ namespace upsylon
                 return use( new Species(name,z,sdb.size()+1) );
             }
 
-            //! check ownership
-            bool owns(const Species &) const throw();
+
+            bool  owns(const Species &) const throw();        //!< check ownership
+            const Species & operator[](const string &) const; //!< look up by name
+            const Species & operator[](const char *  ) const; //!< look up by name
+
+
 
             //! prefix aligned name
             template <typename OSTREAM> inline

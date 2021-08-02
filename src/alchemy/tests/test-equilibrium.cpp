@@ -4,6 +4,7 @@
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
 #include "y/counting/comb.hpp"
+#include "y/yap.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -105,7 +106,10 @@ Y_UTEST(eq)
 
     vector<long> Nu(lib->size(),0xff);
     water->fill(Nu); std::cerr << "Nu_" << water->name << " : " << Nu << std::endl;
+    Nu.make(lib->size(),0);
     weak->fill(Nu);  std::cerr << "Nu_" << weak->name  << " : " << Nu << std::endl;
+    
+
 
     vector<double> C(lib->size(),0);
     std::cerr << water->name << " : " << water->compute(water->K(0),C) << std::endl;

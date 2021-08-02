@@ -65,13 +65,35 @@ namespace upsylon
             Extent findExtent(const accessible<double> &C) const throw();
 
             //! topology with sign
-            void fill(addressable<long> &Nu, long s) const throw();
+            template <typename T>
+            void fill(addressable<T> &Nu, long s) const
+            {
+                if(s>=0)
+                {
+                    // products
+                    for(const_iterator it=adb.begin();it!=adb.end();++it)
+                    {
+                        const Actor &a = *it;
+                        Nu[a->indx] = static_cast<long>( a.nu );
+                    }
+                }
+                else
+                {
+                    // reactants
+                    for(const_iterator it=adb.begin();it!=adb.end();++it)
+                    {
+                        const Actor &a = *it;
+                        Nu[a->indx] = -static_cast<long>( a.nu );
+                    }
+                }
+
+            }
 
             //! mass action law
-            double massAction(const double multiplier, const accessible<double> &C) const throw();
+            double massAction(double target, const accessible<double> &C) const throw();
 
-            //! mass action after extent
-            double massAction(const double multiplier, const accessible<double> &C, const double xi) const throw();
+            //! mass action after extent (careful with the sign of xi)
+            double massAction(double target, const accessible<double> &C, const double xi) const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

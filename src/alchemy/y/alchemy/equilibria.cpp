@@ -9,52 +9,31 @@ namespace upsylon
     namespace Alchemy
     {
 
-#if 0
-        equilibria:: ~equilibria() throw()
+        Equilibria::const_type & Equilibria:: bulk() const throw()
+        {
+            return edb;
+        }
+
+        Equilibria:: ~Equilibria() throw()
         {
             
         }
         
-        equilibria:: equilibria() : db(), tdisp(0)
+        Equilibria:: Equilibria() : edb(), enw(), tdisp(0)
         {
         }
-        
-        equilibrium & equilibria:: operator()(equilibrium *eq)
+
+        const char Equilibria::CLID[] = "Equilibria";
+
+        Equilibrium & Equilibria:: operator()(Equilibrium *eq)
         {
             assert(eq);
-            const equilibrium::pointer p(eq);
-            if(!db.insert(p)) throw exception("multipliple equilibrium '%s'", *(eq->name) );
+            const Equilibrium::Pointer p(eq);
+            if(!edb.insert(p)) throw exception("%s: multipliple equilibrium '%s'", CLID, *(eq->name) );
+            aliasing::_(enw) = max_of(enw,eq->name.size());
             return *eq;
         }
         
-        
-
-        const equilibrium::db  & equilibria:: bulk()  const throw()
-        {
-            return db;
-        }
-
-        
-
-        void equilibria:: on_compile()
-        {
-            assert(!compiled);
-            size_t w = 0;
-            for(type::iterator it=db.begin();it!=db.end();++it)
-            {
-                equilibrium &eq = **it;
-                eq.compile();
-                w = max_of(w,eq.name.size());
-            }
-            
-            for(type::iterator it=db.begin();it!=db.end();++it)
-            {
-                equilibrium &eq = **it;
-                aliasing::_(eq.width) = w;
-            }
-            
-        }
-#endif
         
     }
 }

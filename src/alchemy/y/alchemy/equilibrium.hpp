@@ -9,6 +9,8 @@
 
 namespace upsylon
 {
+
+
     namespace Alchemy
     {
 
@@ -58,9 +60,15 @@ namespace upsylon
             
 
            
-            //! fill coefficients row
-            void    fill(addressable<long> &Nu) const throw();
-            
+            //! fill coefficients row of signed integer type
+            template <typename T> inline
+            void fill(addressable<T> &Nu) const throw()
+            {
+                reac.fill(Nu,-1);
+                prod.fill(Nu, 1);
+            }
+
+
             //! find extents
             Extents findExtents(const accessible<double> &C) const throw();
 

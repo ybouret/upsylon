@@ -35,39 +35,21 @@ namespace upsylon
         }
         
         
-        void Actors:: fill(addressable<long> &Nu, long s) const throw()
-        {
-            if(s>=0)
-            {
-                // product
-                for(const_iterator it=adb.begin();it!=adb.end();++it)
-                {
-                    const Actor &a = *it;
-                    Nu[a->indx] = static_cast<long>( a.nu );
-                }
-            }
-            else
-            {
-                // reactant
-                for(const_iterator it=adb.begin();it!=adb.end();++it)
-                {
-                    const Actor &a = *it;
-                    Nu[a->indx] = -static_cast<long>( a.nu );
-                }
-            }
-        }
+    
 
         
         
         Extent Actors:: findExtent(const accessible<double> &C) const throw()
         {
-            //std::cerr << "Find Extent with C=" << C << std::endl;
             double             xm   = 0;
             size_t             im   = 0;
             const Actor::Node *node = adb.head();
             if(node)
             {
+                //______________________________________________________________
+                //
                 // initialize
+                //______________________________________________________________
                 {
                     const Actor &a = **node;
                     im = a->indx;
@@ -75,7 +57,10 @@ namespace upsylon
                     if(xm<=0) goto FOUND;
                 }
 
-                // loop
+                //______________________________________________________________
+                //
+                // loop on remaining actors
+                //______________________________________________________________
                 for(node=node->next;node;node=node->next)
                 {
                     const Actor &a    = **node;
@@ -92,30 +77,27 @@ namespace upsylon
             }
             
         FOUND:
-            //std::cerr << "|_xm=" << xm << " @" << im << std::endl;
             return Extent(im,xm);
         }
 
-        double Actors:: massAction(const double multiplier, const accessible<double> &C) const throw()
+        double Actors:: massAction(double target, const accessible<double> &C) const throw()
         {
-            double result = multiplier;
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
-                result *= (**node).activity(C);
+                target *= (**node).activity(C);
             }
-            return result;
+            return target;
         }
 
-        double Actors:: massAction(const double              multiplier,
+        double Actors:: massAction(double                    target,
                                    const accessible<double> &C,
                                    const double              xi) const throw()
         {
-            double result = multiplier;
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
-                result *= (**node).activity(C,xi);
+                target *= (**node).activity(C,xi);
             }
-            return result;
+            return target;
         }
 
 

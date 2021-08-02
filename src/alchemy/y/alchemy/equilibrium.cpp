@@ -54,12 +54,7 @@ namespace upsylon
         }
         
 
-        void Equilibrium:: fill( addressable<long> &Nu ) const throw()
-        {
-            mkl::tao::ld(Nu,0);
-            reac.fill(Nu,-1);
-            prod.fill(Nu, 1);
-        }
+        
         
         Extents Equilibrium:: findExtents(const accessible<double> &C) const throw()
         {
