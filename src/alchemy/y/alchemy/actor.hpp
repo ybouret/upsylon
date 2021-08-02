@@ -12,29 +12,28 @@ namespace upsylon
     namespace Alchemy
     {
 
-#if 0
         //______________________________________________________________________
         //
         //
         //! actor for equilibrium: species and coefficient
         //
         //______________________________________________________________________
-        class actor : public authority<const species>
+        class Actor : public authority<const Species>
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef hash_set<string,actor> db; //!< alias
+            typedef hash_set<string,Actor> Set; //!< alias
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit actor(const species &, const unsigned) throw(); //!< setup
-            virtual ~actor()    throw();                             //!< cleanup
-            actor(const actor&) throw();                             //!< copy
+            explicit Actor(const Species &, const unsigned long) throw(); //!< setup
+            virtual ~Actor()    throw();                                  //!< cleanup
+            Actor(const Actor&) throw();                                  //!< copy
             
             //__________________________________________________________________
             //
@@ -44,19 +43,13 @@ namespace upsylon
             
             //! display
             template <typename OSTREAM> inline
-            friend OSTREAM & operator<<(OSTREAM &os, const actor &a)
+            friend OSTREAM & operator<<(OSTREAM &os, const Actor &a)
             {
                 if(a.nu>1)
                 {
                     const string coef = vformat("%lu",a.nu);
-                    for(size_t i=coef.size();i<a.cw;++i) os << ' ';
-                    os << coef;
+                    os << coef << ' ';
                 }
-                else
-                {
-                    for(size_t i=0;i<a.cw;++i) os << ' ';
-                }
-                os << ' ';
                 return os << *a;
             }
             
@@ -66,13 +59,11 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const unsigned long nu; //!< coefficient
-            const size_t        cw; //!< coefficient width
-            
+
         private:
-            Y_DISABLE_ASSIGN(actor);
+            Y_DISABLE_ASSIGN(Actor);
         };
-#endif
-        
+
     }
 }
 

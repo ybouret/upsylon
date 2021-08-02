@@ -5,27 +5,23 @@ namespace upsylon
 {
     namespace Alchemy
     {
-#if 0
-        actor:: actor(const species &_sp, const unsigned _nu) throw() :
-        authority<const species>(_sp),
-        nu(_nu),
-        cw(0)
+        Actor:: Actor(const Species &_sp, const unsigned long _nu) throw() :
+        authority<const Species>(_sp),
+        nu(_nu)
         {
         }
 
-        actor:: ~actor() throw() {}
+        Actor:: ~Actor() throw() {}
 
-        actor:: actor(const actor &other) throw() :
-        authority<const species>(other),
-        nu(other.nu),
-        cw(other.cw)
-        {
+        Actor:: Actor(const Actor &other) throw() :
+        authority<const Species>(other),
+        nu(other.nu)
+         {
         }
 
-        const string & actor:: key() const throw() { return (**this).name; }
+        const string & Actor:: key() const throw() { return (**this).name; }
         
-#endif
-        
+
     }
 }
 
