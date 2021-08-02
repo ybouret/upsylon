@@ -29,6 +29,11 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Actors);
     std::cerr << std::endl;
 
+    std::cerr << "Equilibrium:" << std::endl;
+    Y_UTEST_SIZEOF(Equilibrium);
+    Y_UTEST_SIZEOF(Equilibrium::Set);
+    std::cerr << std::endl;
+
 }
 Y_UTEST_DONE()
 
