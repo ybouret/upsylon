@@ -42,7 +42,7 @@ namespace upsylon
             z(_z),
             indx(_indx)
             {
-                assert(_indx>0);
+                checkIndex();
             }
             virtual ~Species() throw(); //!< cleanup
 
@@ -72,6 +72,7 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
+            void checkIndex() const;
         };
         
     }
