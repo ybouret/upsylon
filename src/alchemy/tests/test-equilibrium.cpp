@@ -60,6 +60,7 @@ namespace
             combination    comb(C.size(),nz);
             for(comb.boot();comb.good();comb.next())
             {
+                std::cerr << (counting &)comb << std::endl;
                 for(size_t loop=0;loop<8;++loop)
                 {
                     drawC(C);

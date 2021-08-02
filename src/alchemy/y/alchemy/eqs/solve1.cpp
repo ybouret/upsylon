@@ -35,17 +35,17 @@ namespace upsylon
             static const unsigned HasMirrorLimits = HasForwardLimit | HasReverseLimit;
 
             const Extents extents = findExtents(C);
-            unsigned      flag    = (extents.forward.index > 0) ? HasForwardLimit : 0;
-            flag                 |= (extents.reverse.index > 0) ? HasReverseLimit : 0;
+            unsigned      exflags  = (extents.forward.index > 0) ? HasForwardLimit : 0;
+            exflags               |= (extents.reverse.index > 0) ? HasReverseLimit : 0;
 
+            std::cerr << "[ex: " << extents << "]";
 
-            const callEq F = { *this, C, K0 };
-
+            const callEq    F  = { *this, C, K0 };
             triplet<double> xi = { 0,0,0 };
             triplet<double> eq = { 0,0,0 };
 
 
-            switch(flag)
+            switch(exflags)
             {
 
                 case HasForwardLimit:
@@ -65,10 +65,10 @@ namespace upsylon
                     break;
 
                 case HasMirrorLimits:
-                    //std::cerr << name << " has mirror limits | -" << extents.reverse.value << " -> " << extents.forward.value << std::endl;
+                    std::cerr << " " << name << " has both limits | -" << extents.reverse.value << " -> " << extents.forward.value;
                     eq.a = F(xi.a = -extents.reverse.value);
                     eq.c = F(xi.c =  extents.forward.value);
-                    //std::cerr << "xi=" << xi << ", eq=" << eq << std::endl;
+                    std::cerr << " xi=" << xi << ", eq=" << eq;
                     break;
 
                 default: throw exception("%s corrupted extent", *name);
