@@ -6,7 +6,6 @@
 #include "y/alchemy/species.hpp"
 #include "y/ios/scribe.hpp"
 #include "y/sequence/accessible.hpp"
-#include "y/code/compilable.hpp"
 #include "y/type/gateway.hpp"
 #include <iomanip>
 
@@ -14,7 +13,44 @@ namespace upsylon
 {
     namespace Alchemy
     {
-        
+
+        class Library : public gateway<const Species::Set>
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef typename Species::Set::const_iterator const_iterator;
+            static const char CLID[];
+            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Library();
+            virtual ~Library() throw();
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            //! register a new species
+            template <typename ID>
+            const Species & operator()(const ID &name, const long z)
+            {
+                return use( new Species(name,z,sdb.size()+1) );
+            }
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Library);
+            virtual const_type &bulk() const throw(); //!< sdb
+            const Species &     use(Species *);       //!< insert new species
+            Species::Set        sdb;                  //!< species database
+            const size_t        snw;                  //!< species name width
+        };
+
 #if 0
         //______________________________________________________________________
         //

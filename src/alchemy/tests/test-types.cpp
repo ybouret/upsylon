@@ -11,6 +11,10 @@ using namespace Alchemy;
 Y_UTEST(types)
 {
     Y_UTEST_SIZEOF(Species);
+    Y_UTEST_SIZEOF(Species::Pointer);
+    Y_UTEST_SIZEOF(Species::Set);
+
+    Y_UTEST_SIZEOF(Library);
 
 }
 Y_UTEST_DONE()

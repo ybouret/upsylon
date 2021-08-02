@@ -9,22 +9,38 @@ namespace upsylon
     namespace Alchemy
     {
 
+        Library:: ~Library() throw()
+        {
+        }
+
+        Library:: Library() :
+        gateway<const Species::Set>(),
+        sdb(),
+        snw(0)
+        {
+        }
+
+
+        Library::const_type &Library:: bulk() const throw()
+        {
+            return sdb;
+        }
+
+        const char Library::CLID[] = "Library";
+        
+        const Species & Library:: use(Species *s)
+        {
+            assert(s);
+            const Species::Pointer sp(s);
+            if(!sdb.insert(sp)) throw exception("%s: multiple '%s'", CLID, *(s->name));
+            aliasing::_(snw) = max_of(snw,s->name.size());
+            return *s;
+        }
+
+
 #if 0
-        library:: ~library() throw()
-        {
-        }
-        
-        library:: library() :
-        compilable(),
-        db()
-        {
-        }
-        
-        const species::db & library:: bulk() const throw()
-        {
-            return db;
-        }
-        
+
+
         
         
         

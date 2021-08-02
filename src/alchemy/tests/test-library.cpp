@@ -10,6 +10,14 @@ using namespace Alchemy;
 Y_UTEST(library)
 {
 
+    Library lib;
+
+    const Species &h = lib("H+",1);  std::cerr << "add " << h << std::endl;
+    const Species &w = lib("HO-",1); std::cerr << "add " << w << std::endl;
+
+    std::cerr << "#lib=" << lib->size() << std::endl;
+
+
 #if 0
     library        lib;
     const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;
