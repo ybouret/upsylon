@@ -34,7 +34,7 @@ namespace upsylon
 
         double Actor:: activity(const accessible<double> &C) const throw()
         {
-            return ipower<unsigned long>(C[(**this).indx],nu);
+            return ipower<double>(C[(**this).indx],nu);
         }
 
         double Actor:: activity(const accessible<double> &C, const double xi) const throw()

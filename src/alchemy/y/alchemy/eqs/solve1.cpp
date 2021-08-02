@@ -29,6 +29,7 @@ namespace upsylon
                                    addressable<double> &C) const
         {
 
+
             static const unsigned HasForwardLimit = 0x01;
             static const unsigned HasReverseLimit = 0x02;
             static const unsigned HasMirrorLimits = HasForwardLimit | HasReverseLimit;
@@ -36,6 +37,7 @@ namespace upsylon
             const Extents extents = findExtents(C);
             unsigned      flag    = extents.forward.index > 0 ? HasForwardLimit : 0;
             flag                 |= extents.reverse.index > 0 ? HasReverseLimit : 0;
+            std::cerr << "C: " << C << std::endl;
             std::cerr << "extents: " << extents << std::endl;
 
             const callEq F = { *this, C, K0 };
@@ -57,7 +59,7 @@ namespace upsylon
 
                 case HasReverseLimit:
                     std::cerr << name << " has reverse limit | " << extents.reverse.value << std::endl;
-
+                    
                     break;
 
                 case HasMirrorLimits:

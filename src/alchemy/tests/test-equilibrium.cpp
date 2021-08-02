@@ -42,6 +42,8 @@ Y_UTEST(eq)
     const double xi = 1e-7;
     std::cerr << water->name << " +xi=" << xi << " : " << water->compute(water->K(0),C,xi) << std::endl;
 
+    C[1] = 1e-5;
+    C[2] = 1e-6;
     water->solve(water->K(0),C);
     
 

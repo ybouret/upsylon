@@ -61,6 +61,7 @@ namespace upsylon
         
         Extent Actors:: findExtent(const accessible<double> &C) const throw()
         {
+            //std::cerr << "Find Extent with C=" << C << std::endl;
             double             xm   = 0;
             size_t             im   = 0;
             const Actor::Node *node = adb.head();
@@ -91,6 +92,7 @@ namespace upsylon
             }
             
         FOUND:
+            //std::cerr << "|_xm=" << xm << " @" << im << std::endl;
             return Extent(im,xm);
         }
 
