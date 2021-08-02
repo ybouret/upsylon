@@ -34,11 +34,9 @@ namespace upsylon
             static const unsigned HasReverseLimit = 0x02;
             static const unsigned HasMirrorLimits = HasForwardLimit | HasReverseLimit;
 
-            const Extents extents = findExtents(C);
+            const Extents extents  = findExtents(C);
             unsigned      exflags  = (extents.forward.index > 0) ? HasForwardLimit : 0;
             exflags               |= (extents.reverse.index > 0) ? HasReverseLimit : 0;
-
-            std::cerr << "[ex: " << extents << "]";
 
             const callEq    F  = { *this, C, K0 };
             triplet<double> xi = { 0,0,0 };
@@ -49,30 +47,32 @@ namespace upsylon
             {
 
                 case HasForwardLimit:
-                    std::cerr << name << " has forward limit | " << extents.forward.value << std::endl;
-                    throw exception("not implemented");
+                    eq.c = F(xi.c=extents.forward.value);
+                    xi.a = -1;
+                    while( (eq.a = F(xi.a)) * eq.c > 0 )
+                    {
+                        xi.a *= 2.0;
+                    }
                     break;
 
                 case HasReverseLimit:
-                    //std::cerr << name << " has reverse limit | " << extents.reverse.value << std::endl;
                     eq.a = F(xi.a = -extents.reverse.value);
                     xi.c = 1;
                     while( (eq.c = F(xi.c)) * eq.a > 0 )
                     {
                         xi.c *= 2.0;
                     }
-                    //std::cerr << "xi=" << xi << ", eq=" << eq << std::endl;
                     break;
 
                 case HasMirrorLimits:
-                    std::cerr << " " << name << " has both limits | -" << extents.reverse.value << " -> " << extents.forward.value;
                     eq.a = F(xi.a = -extents.reverse.value);
                     eq.c = F(xi.c =  extents.forward.value);
-                    std::cerr << " xi=" << xi << ", eq=" << eq;
                     break;
 
-                default: throw exception("%s corrupted extent", *name);
+                default:
+                    throw exception("%s corrupted extent", *name);
             }
+
 
             zrid<double> zsolve;
             if(!zsolve.run(F,xi,eq))
@@ -80,7 +80,6 @@ namespace upsylon
                 return false;
             }
 
-            //std::cerr << "xi=" << xi.b << std::endl;
             const double Xi = xi.b;
 
             for(const Actor::Node *a=reac->head();a;a=a->next)

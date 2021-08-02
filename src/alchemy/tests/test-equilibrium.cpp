@@ -39,6 +39,8 @@ namespace
         }
     }
 
+    static const size_t loop_max = 8;
+
     static inline
     void solveC(const Equilibrium   &eq,
                 addressable<double> &C,
@@ -47,7 +49,7 @@ namespace
         std::cerr << "Solving " << eq << std::endl;
         if(nz<=0)
         {
-            for(size_t loop=0;loop<8;++loop)
+            for(size_t loop=0;loop<loop_max;++loop)
             {
                 drawC(C);
                 trySolve(eq,C);
@@ -61,7 +63,7 @@ namespace
             for(comb.boot();comb.good();comb.next())
             {
                 std::cerr << (counting &)comb << std::endl;
-                for(size_t loop=0;loop<8;++loop)
+                for(size_t loop=0;loop<loop_max;++loop)
                 {
                     drawC(C);
                     for(size_t i=comb.size();i>0;--i)
@@ -116,8 +118,7 @@ Y_UTEST(eq)
     C[2] = 1e-6;
     water->solve(water->K(0),C);
 
-    //return 0;
-    
+
     std::cerr << std::endl;
     std::cerr << "Solving1..." << std::endl;
     for(size_t nz=0;nz<=C.size();++nz)
@@ -130,6 +131,17 @@ Y_UTEST(eq)
     for(size_t nz=0;nz<=C.size();++nz)
     {
         solveC(*weak,C,nz);
+    }
+    std::cerr << std::endl;
+
+    Equilibrium::Pointer rwater = new ConstEquilibrium("rwater",1e14);
+
+    (*rwater)(-1,h);
+    (*rwater)(-1,w);
+    std::cerr << rwater << std::endl;
+    for(size_t nz=0;nz<=C.size();++nz)
+    {
+        solveC(*rwater,C,nz);
     }
 
 

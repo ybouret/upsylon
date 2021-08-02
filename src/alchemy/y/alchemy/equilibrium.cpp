@@ -74,7 +74,7 @@ namespace upsylon
 
         double  Equilibrium:: compute(const double K0, const accessible<double> &C, const double xi) const throw()
         {
-            return reac.massAction(K0,C,xi) - prod.massAction(1,C,xi);
+            return reac.massAction(K0,C,-xi) - prod.massAction(1,C,xi);
         }
 
 
