@@ -68,8 +68,8 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const unsigned long nu; //!< coefficient
-
+            const unsigned long nu;  //!< coefficient
+            const unsigned long nu1; //!< nu-1
         private:
             Y_DISABLE_ASSIGN(Actor);
         };

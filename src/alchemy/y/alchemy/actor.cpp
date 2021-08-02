@@ -10,7 +10,8 @@ namespace upsylon
     {
         Actor:: Actor(const Species &_sp, const unsigned long _nu) throw() :
         authority<const Species>(_sp),
-        nu(_nu)
+        nu(_nu),
+        nu1(nu-1)
         {
         }
 
@@ -18,8 +19,9 @@ namespace upsylon
 
         Actor:: Actor(const Actor &other) throw() :
         authority<const Species>(other),
-        nu(other.nu)
-         {
+        nu(other.nu),
+        nu1(other.nu1)
+        {
         }
 
         const string & Actor:: key() const throw() { return (**this).name; }

@@ -10,8 +10,15 @@ SOURCE_GROUP( alchemy FILES ${main_srcs} )
 INSTALL( FILES ${main_decl} DESTINATION include/y/alchemy )
 
 
+FILE(GLOB eqs_decl y/alchemy/eqs/*.hpp)
+FILE(GLOB eqs_code y/alchemy/eqs/*.cpp)
+SET(eqs_srcs ${eqs_decl} ${eqs_code})
+SOURCE_GROUP( alchemy/eqs FILES ${eqs_srcs} )
+INSTALL( FILES ${eqs_decl} DESTINATION include/y/alchemy/eqs ) 
+ 
 ADD_LIBRARY(y-alchemy STATIC 
 ${main_srcs}
+${eqs_srcs}
 )
 INSTALL( TARGETS y-alchemy ARCHIVE DESTINATION lib )
 

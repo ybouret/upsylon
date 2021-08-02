@@ -79,39 +79,6 @@ namespace upsylon
 
 
 
-        void   Equilibrium:: solve(const double         K0,
-                                   addressable<double> &C) const
-        {
-            const Extents extents = findExtents(C);
-            std::cerr << "extents: " << extents << std::endl;
-            static const unsigned HasForwardLimit = 0x01;
-            static const unsigned HasReverseLimit = 0x02;
-            static const unsigned HasMirrorLimits =HasForwardLimit | HasReverseLimit;
-
-            unsigned flag = extents.forward.index > 0 ? HasForwardLimit : 0;
-            flag         |= extents.reverse.index > 0 ? HasReverseLimit : 0;
-
-            switch(flag)
-            {
-                case 0: std::cerr << name << " has no limit!" << std::endl;
-                    break;
-
-                case HasForwardLimit:
-                    std::cerr << name << " has forward limit | " << extents.forward.value << std::endl;
-                    break;
-
-                case HasReverseLimit:
-                    std::cerr << name << " has reverse limit | -" << extents.reverse.value << std::endl;
-                    break;
-
-                case HasMirrorLimits:
-                    std::cerr << name << " has mirror limits | -" << extents.reverse.value << " -> " << extents.forward.value << std::endl;
-                    break;
-            }
-
-
-        }
-
 
     }
 }
