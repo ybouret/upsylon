@@ -7,7 +7,6 @@
 #include "y/alchemy/extent.hpp"
 #include "y/sequence/accessible.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/code/compilable.hpp"
 #include "y/type/gateway.hpp"
 
 namespace upsylon
@@ -15,90 +14,62 @@ namespace upsylon
     namespace Alchemy
     {
 
-#if 0
         //______________________________________________________________________
         //
         //
         //! collection of actors
         //
         //______________________________________________________________________
-        class actors : public compilable, public gateway<const actor::db>
+        class Actors : public gateway<const Actor::Set>
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            static const char            clid[]; //!< identifier
+            static const char            CLID[];         //!< identifier
             typedef type::const_iterator const_iterator; //!< alias
-            
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit actors();          //!< setup empty
-            virtual ~actors() throw();  //!< cleanup
+            explicit Actors();          //!< setup empty
+            virtual ~Actors() throw();  //!< cleanup
             
             
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void           operator()(const species &, const unsigned long); //!< register a new actor
-            bool           search(const string &) const throw();             //!< look for existing
-            
+            void           operator()(const Species &, const unsigned long); //!< register a new actor
+
             //! display with widths for names and coefficients
             template <typename OSTREAM> inline
-            friend OSTREAM &  operator<<(OSTREAM &os, const actors &A)
+            friend OSTREAM &  operator<<(OSTREAM &os, const Actors &A)
             {
-                if(A.db.size()>=1)
+                if(A.adb.size()>=1)
                 {
-                    const_iterator it = A.db.begin();
+                    const_iterator it = A.adb.begin();
                     os << *it;
-                    while( ++it != A.db.end() )
+                    while( ++it != A.adb.end() )
                     {
                         os << " + " << *it;
                     }
                 }
                 return os;
             }
-            
-            //! display compact format
-            template <typename OSTREAM> inline
-            OSTREAM & display_code(OSTREAM &os) const
-            {
-                const size_t n = db.size();
-                os << '[';
-                for(size_t i=1;i<=n;++i)
-                {
-                    os << ' ' << '(' << coef[i] << '*' << '@' << indx[i] << ')';
-                }
-                os << ' ' << ']';
-                return os;
-            }
-            
+
             //! find maximal extent
-            extent find_extent(const accessible<double> &C) const throw();
-            
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            const size_t         size; //!< compiled size
-            const size_t * const indx; //!< compiled index of active species
-            const size_t * const coef; //!< compiled coefficients of active species
+            Extent findExtent(const accessible<double> &C) const throw();
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(actors);
-            virtual void on_compile();
+            Y_DISABLE_COPY_AND_ASSIGN(Actors);
             virtual const_type & bulk() const throw();
-            
-            actor::db    db;
-            size_t       wlen;
-            
+
+            Actor::Set adb; //!< actors data base
         };
-#endif
-        
+
     }
     
 }

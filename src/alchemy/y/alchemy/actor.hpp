@@ -25,8 +25,9 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef hash_set<string,Actor> Set; //!< alias
-            
+            typedef hash_set<string,Actor> Set;  //!< alias
+            typedef Set::node_type         Node; //!< alias
+
             //__________________________________________________________________
             //
             // C++
@@ -52,7 +53,9 @@ namespace upsylon
                 }
                 return os << *a;
             }
-            
+
+            //! return max extent for a given concentration
+            double maxExtent(const double C) const throw();
             
             //__________________________________________________________________
             //

@@ -1,5 +1,6 @@
 
 #include "y/alchemy/actor.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -21,6 +22,10 @@ namespace upsylon
 
         const string & Actor:: key() const throw() { return (**this).name; }
         
+        double Actor:: maxExtent(const double C) const throw()
+        {
+            return max_of<double>(C/nu,0);
+        }
 
     }
 }
