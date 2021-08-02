@@ -24,7 +24,9 @@ namespace upsylon
         
         double Actor:: maxExtent(const double C) const throw()
         {
-            return max_of<double>(C/nu,0);
+            const double ans = max_of<double>(C/nu,0);
+            //std::cerr << "(" << **this << "=" << C << ")/" << nu << " => " << ans <<  " @" << (**this).indx << std::endl;
+            return ans;
         }
 
     }

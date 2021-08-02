@@ -40,32 +40,36 @@ namespace upsylon
         
         Extent Actors:: findExtent(const accessible<double> &C) const throw()
         {
-            double        xm   = 0;
-            size_t        im   = 0;
-#if 0
-            size_t        ii  = size;
-            if(ii)
+            double             xm   = 0;
+            size_t             im   = 0;
+            const Actor::Node *node = adb.head();
+            if(node)
             {
-                const size_t *idx = indx;
-                const size_t *cof = coef;
-                
                 // initialize
-                im = idx[ii];       assert(im>0); assert(im<=C.size());
-                xm = C[im]/cof[ii];
-                
-                // scan
-                for(--ii;ii>0;--ii)
                 {
-                    const size_t it = idx[ii]; assert(it>0); assert(it<=C.size());
-                    const double xt = C[ it ]/cof[ii];
-                    if(xt<xm)
+                    const Actor &a = **node;
+                    im = a->indx;
+                    xm = a.maxExtent(C[im]);
+                    if(xm<=0) goto FOUND;
+                }
+
+                // loop
+                for(node=node->next;node;node=node->next)
+                {
+                    const Actor &a    = **node;
+                    const size_t itmp = a->indx;
+                    const double xtmp = a.maxExtent(C[itmp]);
+                    if(xtmp<xm)
                     {
-                        xm = xt;
-                        im = it;
+                        xm = xtmp;
+                        im = itmp;
+                        if(xm<=0) goto FOUND;
                     }
                 }
+
             }
-#endif
+            
+        FOUND:
             return Extent(im,xm);
         }
 
