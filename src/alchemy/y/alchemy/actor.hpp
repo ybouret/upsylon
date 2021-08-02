@@ -61,6 +61,9 @@ namespace upsylon
             //! return activity
             double activity(const accessible<double> &C) const throw();
 
+            //! return derivative of activity
+            double jacobian(const accessible<double> &C) const throw();
+
             //! return activity with trial xi
             double activity(const accessible<double> &C, const double xi) const throw();
 
@@ -70,6 +73,7 @@ namespace upsylon
             //__________________________________________________________________
             const unsigned long nu;  //!< coefficient
             const unsigned long nu1; //!< nu-1
+            
         private:
             Y_DISABLE_ASSIGN(Actor);
         };

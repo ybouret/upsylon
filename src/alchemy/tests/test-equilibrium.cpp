@@ -5,6 +5,7 @@
 #include "y/sequence/vector.hpp"
 #include "y/counting/comb.hpp"
 #include "y/yap.hpp"
+#include "y/mkl/tao.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -147,8 +148,21 @@ Y_UTEST(eq)
     {
         solveC(*rwater,C,nz);
     }
+    std::cerr << std::endl;
 
+    drawC(C);
+    std::cerr << "C=" << C << std::endl;
+    vector<double> phi(lib->size(),0);
+    mkl::tao::ld(phi,0);
+    water->compute(phi,water->K(0),C);
+    std::cerr << "phi=" << phi << std::endl;
+    std::cerr << std::endl;
 
+    std::cerr << "C=" << C << std::endl;
+    mkl::tao::ld(phi,0);
+    weak->compute(phi,weak->K(0),C);
+    std::cerr << "phi=" << phi << std::endl;
+    
 }
 Y_UTEST_DONE()
 

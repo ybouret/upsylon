@@ -4,6 +4,8 @@
 #include "y/alchemy/library.hpp"
 #include "y/utest/run.hpp"
 #include "y/yap.hpp"
+#include "y/sequence/vector.hpp"
+#include "support.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -37,6 +39,30 @@ Y_UTEST(eqs)
     matrix<apq> Nu_q(eqs->size(), lib->size());
     eqs.fill(Nu_q);
     std::cerr << "Nu=" << Nu_q << std::endl;
-    
+
+
+    vector<double> K(eqs->size(),0);
+
+    eqs.compute(K,0.0);
+    std::cerr << "K  =" << K << std::endl;
+
+    vector<double> Gam(eqs->size(),0);
+    matrix<double> Phi(eqs->size(),lib->size());
+    vector<double> C(lib->size(),0);
+
+    support::fill1D(C);
+
+    std::cerr << "C  =" << C   << std::endl;
+    eqs.compute(K,Gam,Phi,C,0.0);
+    std::cerr << "K  =" << K   << std::endl;
+    std::cerr << "Gam=" << Gam << std::endl;
+    std::cerr << "Phi=" << Phi << std::endl;
+
+    eqs.upgrade(K,Gam,Phi,C);
+    std::cerr << "Gam=" << Gam << std::endl;
+    std::cerr << "Phi=" << Phi << std::endl;
+
+
+
 }
 Y_UTEST_DONE()

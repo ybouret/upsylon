@@ -18,7 +18,7 @@ namespace upsylon
         //! database of equilibria
         //
         //______________________________________________________________________
-        class Equilibria :  public gateway<const Equilibrium::Set>
+        class Equilibria : public gateway<const Equilibrium::Set>
         {
         public:
             //__________________________________________________________________
@@ -27,6 +27,7 @@ namespace upsylon
             //__________________________________________________________________
             typedef type::const_iterator const_iterator; //!< alias
             static  const char           CLID[];         //!< Equilibria
+            
 
             //__________________________________________________________________
             //
@@ -53,7 +54,7 @@ namespace upsylon
             }
 
 
-            //! display at tdisp
+            //! display at tdisp (initially set to 0.0)
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Equilibria &eqs)
             {
@@ -70,6 +71,7 @@ namespace upsylon
                 return os;
             }
 
+            //! fill topology matrix (eqs x components)
             template <typename T> inline
             void fill(matrix<T> &Nu) const
             {
@@ -81,13 +83,29 @@ namespace upsylon
                 }
             }
 
+            //! compute K only
+            void compute(addressable<double> &K, const double t) const throw();
+
+            //! compute K, then Gam and Phi for C at t
+            void compute(addressable<double>      &K,
+                         addressable<double>      &Gam,
+                         matrix<double>           &Phi,
+                         const accessible<double> &C,
+                         const double              t) const throw();
+
+            //! upgrade Gam and Phi for C with pre-computed K
+            void upgrade(const accessible<double> &K,
+                         addressable<double>      &Gam,
+                         matrix<double>           &Phi,
+                         const accessible<double> &C) const throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type & bulk() const throw();
 
-            Equilibrium::Set edb; //!< database
-            const size_t     enw; //!< equilibrium name width
+            Equilibrium::Set    edb; //!< database
+            const size_t        enw; //!< equilibrium name width
             
         public:
             mutable double   tdisp; //!< to display status at specific time

@@ -5,7 +5,6 @@
 
 #include "y/alchemy/actors.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -27,9 +26,9 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,Equilibrium>       Pointer; //!< alias
-            typedef hash_set<string,Pointer>           Set;     //!< alias
-            typedef Set::node_type                     Node;    //!< alias
+            typedef intr_ptr<string,Equilibrium>       Pointer;   //!< alias
+            typedef hash_set<string,Pointer>           Set;       //!< alias
+            typedef Set::node_type                     Node;      //!< alias
 
             //__________________________________________________________________
             //
@@ -69,6 +68,7 @@ namespace upsylon
             }
 
 
+            
             //! find extents
             Extents findExtents(const accessible<double> &C) const throw();
 
@@ -80,7 +80,11 @@ namespace upsylon
 
             //! solve unique equilibrium
             bool   solve(const double K0, addressable<double> &C) const;
-            
+
+
+            //! compute jacobian row and return K0*reac-prod
+            double compute(addressable<double> &phi, const double K0, const accessible<double> &C) const throw();
+
             //__________________________________________________________________
             //
             // members
@@ -92,10 +96,8 @@ namespace upsylon
         protected:
             //! initialize
             template <typename ID> inline
-            explicit Equilibrium(const ID &id) :
-            name(id), reac(), prod()
-            {
-            }
+            explicit Equilibrium(const ID &id) : name(id), reac(), prod() {}
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);

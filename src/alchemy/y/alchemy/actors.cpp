@@ -101,6 +101,26 @@ namespace upsylon
         }
 
 
+        double Actors:: jacobian(double                    target,
+                                 addressable<double>      &phi,
+                                 const double              jscale,
+                                 const accessible<double> &C) const throw()
+        {
+
+            for(const Actor::Node *node = adb.head();node;node=node->next)
+            {
+                const Actor &a = (**node);
+                target        *= a.activity(C);
+
+                double jac     = jscale * a.jacobian(C);
+                for(const Actor::Node *sub=node->prev;sub;sub=sub->prev) jac *= (**sub).activity(C);
+                for(const Actor::Node *sub=node->next;sub;sub=sub->next) jac *= (**sub).activity(C);
+                phi[a->indx]   = jac;
+                
+            }
+            return target;
+        }
+
     }
     
 }

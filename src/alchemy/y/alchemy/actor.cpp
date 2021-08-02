@@ -37,6 +37,12 @@ namespace upsylon
             return ipower<double>(C[(**this).indx],nu);
         }
 
+        double Actor:: jacobian(const accessible<double> &C) const throw()
+        {
+            return nu * ipower<double>(C[(**this).indx],nu1);
+        }
+
+
         double Actor:: activity(const accessible<double> &C, const double xi) const throw()
         {
             double              c = C[(**this).indx];

@@ -89,6 +89,15 @@ namespace upsylon
 
             }
 
+            //! compute jacobian with precomputed K
+            /**
+             'target' and 'jscale' depends on reactant/product
+             */
+            double jacobian(double                    target,
+                            addressable<double>      &phi,
+                            const double              jscale,
+                            const accessible<double> &C) const throw();
+
             //! mass action law
             double massAction(double target, const accessible<double> &C) const throw();
 

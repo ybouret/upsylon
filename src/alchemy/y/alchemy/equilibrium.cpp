@@ -72,7 +72,10 @@ namespace upsylon
             return reac.massAction(K0,C,-xi) - prod.massAction(1,C,xi);
         }
 
-
+        double Equilibrium:: compute(addressable<double> &phi, const double K0, const accessible<double> &C) const throw()
+        {
+            return reac.jacobian(K0,phi,K0,C) - prod.jacobian(1,phi,-1,C);
+        }
 
 
     }

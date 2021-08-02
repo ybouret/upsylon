@@ -1,5 +1,5 @@
 #include "y/alchemy/library.hpp"
-#include "y/alchemy/equilibrium.hpp"
+#include "y/alchemy/equilibria.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -31,7 +31,12 @@ Y_UTEST(types)
 
     std::cerr << "Equilibrium:" << std::endl;
     Y_UTEST_SIZEOF(Equilibrium);
+    Y_UTEST_SIZEOF(Equilibrium::Pointer);
     Y_UTEST_SIZEOF(Equilibrium::Set);
+    std::cerr << std::endl;
+
+    std::cerr << "Equilibria:" << std::endl;
+    Y_UTEST_SIZEOF(Equilibria);
     std::cerr << std::endl;
 
 }
