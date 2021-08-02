@@ -15,3 +15,4 @@ clean:
 	rm -f diffusion.pdf
 	rm -f fvm.pdf
 	rm -f formula.pdf
+	rm -f alchemy.pdf

@@ -1,0 +1,71 @@
+\documentclass[aps,onecolumn,11pt]{revtex4}
+\usepackage{graphicx}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{bm}
+\usepackage{xfrac}
+\usepackage{chemarr}
+
+\usepackage{bookman}
+
+
+\begin{document}
+\maketitle{Alchemy}
+
+\section{Notations}
+
+Let's define a set of $M$ species $A_1,\ldots,A_M$ with a set of $N$ equilibria:
+\begin{equation}
+	\forall i\in[1:N], \sum_{j=1}^M \nu_{ij}^r A_j \xrightleftharpoons[k^d_i]{k^f_i} \sum_{j=1}^{M} \nu_{ij}^p A_j, 
+	\;\; K_i(t) = \dfrac{\prod_{i=j}^M [A_j]^{\nu^p_{ij}}}{\prod_{i=j}^M [A_j]^{\nu^r_{ij}}} = \dfrac{k^f_i}{k^d_i}
+\end{equation}
+
+We define:
+\begin{equation}
+	\Gamma_i(t) = K_i(t) \prod_{j=1}^M [A_j]^{\nu^r_{ij}} - \prod_{j=1}^M [A_j]^{\nu^p_{ij}}
+\end{equation}
+
+\begin{itemize}
+\item Each equilibrium can be individually solved
+\item A full equilibrium is defined by:
+\begin{equation}
+	\vec{\Gamma}(\vec{A}) = \vec{0}
+\end{equation}
+
+\item A legal transformation is defined by the topology matrix $\bm{\nu} \in \mathcal{M}_{N,M}$ 
+and the vector of individual extents $\vec{\xi} \in \mathbb{R}^N$:
+\begin{equation}
+	\vec{A} + \bm{\nu}^t \vec{\xi}  \geq \vec{0}
+\end{equation}
+
+\item
+We may also compute the jacobian of $\vec{\Gamma}$:
+\begin{equation}
+	\vec{\Gamma}(\vec{A}+\delta\vec{A}) = \vec{\Gamma}(\vec{A}) + \bm{\Phi} \delta\vec{A}, \;\; \bm{\Phi} \in \mathcal{M}_{N,M}
+\end{equation}
+
+\item
+\begin{equation}
+	\dfrac{\partial \Gamma_i}{\partial [A_j]} 
+	= K_i \delta_{\nu^r_{ij} } \nu^r_{ij} [A_j]^{\nu^r_{ij}-1} \prod_{k\not=j}^M [A_k]^{\nu^r_{ik}}
+	- \delta_{\nu^p_{ij} } \nu^p_{ij} [A_j]^{\nu^p_{ij}-1} \prod_{k\not=j}^M [A_k]^{\nu^p_{ik}}
+\end{equation}
+
+\end{itemize}
+
+
+\section{Newton$^+$'s Algorithm}
+
+Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:
+\begin{equation}
+	\vec{\Gamma}(\vec{A}_n+\delta\vec{A}_n) = \vec{0}
+\end{equation}
+	
+\begin{equation}
+	\delta\vec{A}_n = \bm{\nu}^t \vec{\xi}_n
+\end{equation}
+Leading to
+\begin{equation}
+	\vec{\Gamma}_n + (\bm{\Phi}_n \bm{\nu}^t ) \vec{\xi}_n \simeq \vec{0}
+\end{equation}
+
+\end{document}
