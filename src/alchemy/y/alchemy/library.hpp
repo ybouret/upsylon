@@ -54,7 +54,7 @@ namespace upsylon
                 for(const_iterator it=lib.sdb.begin();it!=lib.sdb.end();++it)
                 {
                     const Species &sp = **it;
-                    os << sp;
+                    os << ' ' << sp;
                     for(size_t i=sp.name.size();i<lib.snw;++i) os << ' ';
                     os << vformat(" : %3ld @%u\n", sp.z, unsigned(sp.indx));
                 }
