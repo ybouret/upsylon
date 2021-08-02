@@ -19,6 +19,9 @@ Y_UTEST(library)
     Y_CHECK(lib.owns(w));
     std::cerr << lib << std::endl;
 
+    vector<double> C(lib->size(),1.1);
+    lib.display(std::cerr,C) << std::endl;
+
 #if 0
     library        lib;
     const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;
@@ -37,8 +40,7 @@ Y_UTEST(library)
     
     std::cerr << lib << std::endl;
 
-    vector<double> C(lib->size(),1.1);
-    lib.display(std::cerr,C) << std::endl;
+
 #endif
     
 }
