@@ -25,7 +25,7 @@ namespace upsylon
             };
         }
 
-        void   Equilibrium:: solve(const double         K0,
+        bool   Equilibrium:: solve(const double         K0,
                                    addressable<double> &C) const
         {
 
@@ -35,45 +35,40 @@ namespace upsylon
             static const unsigned HasMirrorLimits = HasForwardLimit | HasReverseLimit;
 
             const Extents extents = findExtents(C);
-            unsigned      flag    = extents.forward.index > 0 ? HasForwardLimit : 0;
-            flag                 |= extents.reverse.index > 0 ? HasReverseLimit : 0;
-            std::cerr << "C: " << C << std::endl;
-            std::cerr << "extents: " << extents << std::endl;
+            unsigned      flag    = (extents.forward.index > 0) ? HasForwardLimit : 0;
+            flag                 |= (extents.reverse.index > 0) ? HasReverseLimit : 0;
+
 
             const callEq F = { *this, C, K0 };
 
-            triplet<double> xi = { -1, 0, 1 };
-            triplet<double> eq = { 0, compute(K0,C), 0 };
+            triplet<double> xi = { 0,0,0 };
+            triplet<double> eq = { 0,0,0 };
 
-            std::cerr << "xi=" << xi << std::endl;
-            std::cerr << "eq=" << eq << " / " << F(0) << std::endl ;
 
             switch(flag)
             {
-                case 0: std::cerr << name << " has no limit!" << std::endl;
-                    break;
 
                 case HasForwardLimit:
                     std::cerr << name << " has forward limit | " << extents.forward.value << std::endl;
+                    throw exception("not implemented");
                     break;
 
                 case HasReverseLimit:
-                    std::cerr << name << " has reverse limit | " << extents.reverse.value << std::endl;
-                    xi.a = -extents.reverse.value;
-                    eq.a = F(xi.a);
+                    //std::cerr << name << " has reverse limit | " << extents.reverse.value << std::endl;
+                    eq.a = F(xi.a = -extents.reverse.value);
                     xi.c = 1;
-
                     while( (eq.c = F(xi.c)) * eq.a > 0 )
                     {
                         xi.c *= 2.0;
                     }
-                    std::cerr << "xi=" << xi << std::endl;
-                    std::cerr << "eq=" << eq << std::endl;
-
+                    //std::cerr << "xi=" << xi << ", eq=" << eq << std::endl;
                     break;
 
                 case HasMirrorLimits:
-                    std::cerr << name << " has mirror limits | -" << extents.reverse.value << " -> " << extents.forward.value << std::endl;
+                    //std::cerr << name << " has mirror limits | -" << extents.reverse.value << " -> " << extents.forward.value << std::endl;
+                    eq.a = F(xi.a = -extents.reverse.value);
+                    eq.c = F(xi.c =  extents.forward.value);
+                    //std::cerr << "xi=" << xi << ", eq=" << eq << std::endl;
                     break;
 
                 default: throw exception("%s corrupted extent", *name);
@@ -82,10 +77,10 @@ namespace upsylon
             zrid<double> zsolve;
             if(!zsolve.run(F,xi,eq))
             {
-                throw exception("%s has no zero point!",*name);
+                return false;
             }
 
-            std::cerr << "xi=" << xi.b << std::endl;
+            //std::cerr << "xi=" << xi.b << std::endl;
             const double Xi = xi.b;
 
             for(const Actor::Node *a=reac->head();a;a=a->next)
@@ -102,8 +97,7 @@ namespace upsylon
                 c = max_of<double>(0.0,c+p.nu*Xi);
             }
 
-            std::cerr << "C=" << C << " / " << compute(K0,C) << std::endl;
-
+            return true;
         }
 
     }

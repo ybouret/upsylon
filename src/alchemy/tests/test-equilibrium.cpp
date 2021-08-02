@@ -3,9 +3,78 @@
 #include "y/alchemy/library.hpp"
 #include "y/utest/run.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/counting/comb.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
+
+
+namespace
+{
+    static inline
+    void drawC(addressable<double> &C)
+    {
+        for(size_t i=C.size();i>0;--i)
+        {
+            const double v = alea.to<double>();
+            const double p = alea.range<double>(-14,0);
+            C[i] = v * pow(10.0,p);
+        }
+    }
+
+
+    static inline void trySolve(const Equilibrium   &eq,
+                                addressable<double> &C)
+    {
+        const double K0 = eq.K(0);
+
+        std::cerr << "  C0=" << C << "..";
+        if(eq.solve(K0,C))
+        {
+            std::cerr << C << std::endl;
+        }
+        else
+        {
+            std::cerr << "blocked" << std::endl;
+        }
+    }
+
+    static inline
+    void solveC(const Equilibrium   &eq,
+                addressable<double> &C,
+                const size_t         nz)
+    {
+        std::cerr << "Solving " << eq << std::endl;
+        if(nz<=0)
+        {
+            for(size_t loop=0;loop<8;++loop)
+            {
+                drawC(C);
+                trySolve(eq,C);
+            }
+        }
+        else
+        {
+
+            assert(nz<=C.size());
+            combination    comb(C.size(),nz);
+            for(comb.boot();comb.good();comb.next())
+            {
+                for(size_t loop=0;loop<8;++loop)
+                {
+                    drawC(C);
+                    for(size_t i=comb.size();i>0;--i)
+                    {
+                        C[ comb[i] ] = 0;
+                    }
+                    trySolve(eq,C);
+                }
+            }
+        }
+
+    }
+
+}
 
 
 
@@ -45,7 +114,22 @@ Y_UTEST(eq)
     C[1] = 1e-5;
     C[2] = 1e-6;
     water->solve(water->K(0),C);
+
+    //return 0;
     
+    std::cerr << std::endl;
+    std::cerr << "Solving1..." << std::endl;
+    for(size_t nz=0;nz<=C.size();++nz)
+    {
+        solveC(*water,C,nz);
+    }
+    std::cerr << std::endl;
+
+
+    for(size_t nz=0;nz<=C.size();++nz)
+    {
+        solveC(*weak,C,nz);
+    }
 
 
 }

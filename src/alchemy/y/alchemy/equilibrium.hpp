@@ -71,7 +71,7 @@ namespace upsylon
             double  compute(const double K0, const accessible<double> &C, const double xi) const throw();
 
             //! solve unique equilibrium
-            void   solve(const double K0, addressable<double> &C) const;
+            bool   solve(const double K0, addressable<double> &C) const;
             
             //__________________________________________________________________
             //

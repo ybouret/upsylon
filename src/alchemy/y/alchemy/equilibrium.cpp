@@ -63,7 +63,6 @@ namespace upsylon
         
         Extents Equilibrium:: findExtents(const accessible<double> &C) const throw()
         {
-            //std::cerr << "//Extents C=" << C << std::endl;
             return Extents(reac.findExtent(C),prod.findExtent(C));
         }
 
