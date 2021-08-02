@@ -25,7 +25,8 @@ We define:
 \end{equation}
 
 \begin{itemize}
-\item Each equilibrium can be individually solved
+\item Each equilibrium can be individually solved by its specific extent.
+
 \item A full equilibrium is defined by:
 \begin{equation}
 	\vec{\Gamma}(\vec{A}) = \vec{0}
@@ -67,5 +68,20 @@ Leading to
 \begin{equation}
 	\vec{\Gamma}_n + (\bm{\Phi}_n \bm{\nu}^t ) \vec{\xi}_n \simeq \vec{0}
 \end{equation}
+
+We want to minimize:
+\begin{equation}
+	F(\vec{A}) = \dfrac{1}{2} \vec{\Gamma}^t \bm{W} \vec{\Gamma}
+\end{equation}
+
+\begin{equation}
+\begin{array}{rcl}
+	F(\vec{A}_n + \delta\vec{A}_n) & \simeq & \dfrac{1}{2} (\vec{\Gamma}_n + \bm{\Phi} \delta\vec{A}_n)^t \bm{W} (\vec{\Gamma}_n + \bm{\Phi} \delta\vec{A}_n)\\
+	\\
+	& \simeq & \dfrac{1}{2}  \vec{\Gamma}_n^t \bm{W} \vec{\Gamma}_n + \vec{\Gamma}_n^t \bm{W} \bm{\Phi} \delta\vec{A}_n \\
+	\\
+	& \simeq & \dfrac{1}{2}  \vec{\Gamma}_n^t \bm{W} \vec{\Gamma}_n + \vec{\Gamma}_n^t \bm{W} \bm{\Phi} \bm{\nu}^t \vec{\xi}_n\\
+\end{array}
+ \end{equation}
 
 \end{document}
