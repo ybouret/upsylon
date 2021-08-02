@@ -27,27 +27,6 @@ Y_UTEST(library)
         std::cerr << **node << std::endl;
     }
     
-
-#if 0
-    library        lib;
-    const species &h = lib("H+",1);  std::cerr << "add " << h.name << std::endl;
-    const species &w = lib("HO-",1); std::cerr << "add " << w.name << std::endl;
-
-    const species  nope("nope",0);
-    const species  mock("H+",1);
-
-    std::cerr << lib << std::endl;
-
-    Y_CHECK( !lib.owns(nope) );
-    Y_CHECK( !lib.owns(mock) );
-    Y_CHECK(  lib.owns(h)    );
-    Y_CHECK(  lib.owns(w)    );
-    lib.compile();
-    
-    std::cerr << lib << std::endl;
-
-
-#endif
     
 }
 Y_UTEST_DONE()

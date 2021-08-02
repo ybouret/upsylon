@@ -12,7 +12,12 @@ namespace upsylon
 {
     namespace Alchemy
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! library of species
+        //
+        //______________________________________________________________________
         class Library : public gateway<const Species::Set>
         {
         public:
@@ -20,8 +25,8 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef Species::Set::const_iterator const_iterator;
-            static const char CLID[];
+            typedef Species::Set::const_iterator const_iterator; //!< alias
+            static const char                    CLID[];         //!< "Library"
             
             //__________________________________________________________________
             //

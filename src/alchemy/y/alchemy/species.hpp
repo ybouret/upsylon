@@ -26,8 +26,8 @@ namespace upsylon
             // types and definitions
             //__________________________________________________________________
             typedef intr_ptr<string,Species>          Pointer; //!< alias
-            typedef hash_set<string,Species::Pointer> Set;      //!< alias
-            typedef Set::node_type                    Node;
+            typedef hash_set<string,Species::Pointer> Set;     //!< alias
+            typedef Set::node_type                    Node;    //!< alias
 
             //__________________________________________________________________
             //

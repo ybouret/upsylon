@@ -9,14 +9,15 @@ namespace upsylon
 {
     namespace alchemy
     {
-        typedef Jive::Language::Parser parser_;
-        
-        class parser : public parser_
+        typedef Jive::Language::Parser jParser; //!< alias
+
+        //! parser
+        class Parser : public jParser
         {
         public:
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(parser);
+            Y_DISABLE_COPY_AND_ASSIGN(Parser);
         };
         
     }
