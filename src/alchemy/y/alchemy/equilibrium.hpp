@@ -12,100 +12,85 @@ namespace upsylon
     namespace Alchemy
     {
 
-#if 0
         //______________________________________________________________________
         //
         //
         //! base class for equilibrium
         //
         //______________________________________________________________________
-        class equilibrium : public object, public counted, public compilable
+        class Equilibrium : public object, public counted
         {
         public:
             //__________________________________________________________________
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,equilibrium>       pointer; //!< alias
-            typedef hash_set<string,pointer>           db;      //!< alias
-            
+            typedef intr_ptr<string,Equilibrium>       Pointer; //!< alias
+            typedef hash_set<string,Pointer>           Set;     //!< alias
+            typedef Set::node_type                     Node;    //!< alias
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~equilibrium() throw();        //!< cleanup
+            virtual ~Equilibrium() throw();        //!< cleanup
             virtual  double K(double) const = 0;   //!< constant at given time
             
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void operator()(const long nu, const species &sp); //!< register
+            void operator()(const long nu, const Species &sp); //!< register
             const string & key() const throw();                //!< for hash_set
 
-            //! create a formatted output, w/0 constant
-            string format() const;
 
-            
-            //! compute K0*reac-prod
-            double compute(const double             K0,
-                           const accessible<double> &C) const throw();
 
-            //! solve independently
-            void   solve(addressable<double> &Cini,
-                         const double         K0,
-                         addressable<double> &Ctry) const;
            
             //! display at this tdisp
             template <typename OSTREAM> inline
-            friend OSTREAM &operator<<(OSTREAM &os, const equilibrium &eq)
+            friend OSTREAM &operator<<(OSTREAM &os, const Equilibrium &eq)
             {
-                const string fmt = eq.format();
-                os << fmt << vformat("| (%.15g)", eq.K(eq.tdisp) );
+                os << '<' << eq.name << '>' << ' ';
+                os << eq.reac << " <=> " << eq.prod;
+                os << vformat(" (%.15g)", eq.K(0));
                 return os;
             }
             
-            //! display compact format
-            template <typename OSTREAM>
-            OSTREAM &display_code(OSTREAM &os) const
-            {
-                os << '<' << name << '>';
-                for(size_t i=name.size();i<width;++i) os << ' ';
-                os << ' ';
-                reac.display_code(os);
-                prod.display_code(os << "->" );
-                os << vformat(" (%.15g)", K(0));
-                return os;
-            }
+
            
             //! fill coefficients row
-            void    fill( addressable<long> &Nu ) const throw();
+            void    fill(addressable<long> &Nu) const throw();
             
             //! find extents
-            extents find_extents(const accessible<double> &C) const throw();
-            
+            Extents findExtents(const accessible<double> &C) const throw();
+
+            //! compute K0*reac - prod
+            double  compute(const double K0, const accessible<double> &C) const throw();
+
+            //! compute with extent
+            double  compute(const double K0, const accessible<double> &C, const double xi) const throw();
+
+            //! solve unique equilibrium
+            void   solve(const double K0, addressable<double> &C) const;
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const string   name;  //!< identifier
-            const actors   reac;  //!< reactants
-            const actors   prod;  //!< products
-            const size_t   width; //!< for name
-            mutable double tdisp; //!< display time
-            
+            const Actors   reac;  //!< reactants
+            const Actors   prod;  //!< products
+
         protected:
             //! initialize
             template <typename ID> inline
-            explicit equilibrium(const ID &id) :
-            name(id), reac(), prod(), width(0), tdisp(0)
+            explicit Equilibrium(const ID &id) :
+            name(id), reac(), prod()
             {
             }
             
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(equilibrium);
-            virtual void on_compile();
+            Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
         };
         
         //______________________________________________________________________
@@ -114,19 +99,19 @@ namespace upsylon
         //! a truly constant equilibrium
         //
         //______________________________________________________________________
-        class constant_equilibrium : public equilibrium
+        class ConstEquilibrium : public Equilibrium
         {
         public:
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            virtual ~constant_equilibrium() throw(); //!< cleanup
+            virtual ~ConstEquilibrium() throw(); //!< cleanup
 
             //! initialize
             template <typename ID> inline
-            explicit constant_equilibrium(const ID &id, const double k) :
-            equilibrium(id), Kvalue(k) {}
+            explicit ConstEquilibrium(const ID &id, const double k) :
+            Equilibrium(id), Kvalue(k) {}
 
             //__________________________________________________________________
             //
@@ -136,9 +121,8 @@ namespace upsylon
             
         private:
             const double Kvalue;
-            Y_DISABLE_COPY_AND_ASSIGN(constant_equilibrium);
+            Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
         };
-#endif
 
     }
     

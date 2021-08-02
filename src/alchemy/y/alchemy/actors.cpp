@@ -35,6 +35,27 @@ namespace upsylon
         }
         
         
+        void Actors:: fill(addressable<long> &Nu, long s) const throw()
+        {
+            if(s>=0)
+            {
+                // product
+                for(const_iterator it=adb.begin();it!=adb.end();++it)
+                {
+                    const Actor &a = *it;
+                    Nu[a->indx] = static_cast<long>( a.nu );
+                }
+            }
+            else
+            {
+                // reactant
+                for(const_iterator it=adb.begin();it!=adb.end();++it)
+                {
+                    const Actor &a = *it;
+                    Nu[a->indx] = -static_cast<long>( a.nu );
+                }
+            }
+        }
 
         
         
@@ -72,6 +93,29 @@ namespace upsylon
         FOUND:
             return Extent(im,xm);
         }
+
+        double Actors:: massAction(const double multiplier, const accessible<double> &C) const throw()
+        {
+            double result = multiplier;
+            for(const Actor::Node *node = adb.head();node;node=node->next)
+            {
+                result *= (**node).activity(C);
+            }
+            return result;
+        }
+
+        double Actors:: massAction(const double              multiplier,
+                                   const accessible<double> &C,
+                                   const double              xi) const throw()
+        {
+            double result = multiplier;
+            for(const Actor::Node *node = adb.head();node;node=node->next)
+            {
+                result *= (**node).activity(C,xi);
+            }
+            return result;
+        }
+
 
     }
     

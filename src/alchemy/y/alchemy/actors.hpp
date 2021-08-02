@@ -5,7 +5,8 @@
 
 #include "y/alchemy/actor.hpp"
 #include "y/alchemy/extent.hpp"
-#include "y/sequence/accessible.hpp"
+
+#include "y/sequence/addressable.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/type/gateway.hpp"
 
@@ -62,7 +63,16 @@ namespace upsylon
 
             //! find maximal extent
             Extent findExtent(const accessible<double> &C) const throw();
-            
+
+            //! topology with sign
+            void fill(addressable<long> &Nu, long s) const throw();
+
+            //! mass action law
+            double massAction(const double multiplier, const accessible<double> &C) const throw();
+
+            //! mass action after extent
+            double massAction(const double multiplier, const accessible<double> &C, const double xi) const throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             virtual const_type & bulk() const throw();

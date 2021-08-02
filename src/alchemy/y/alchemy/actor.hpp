@@ -6,6 +6,7 @@
 
 #include "y/alchemy/species.hpp"
 #include "y/type/authority.hpp"
+#include "y/sequence/accessible.hpp"
 
 namespace upsylon
 {
@@ -56,7 +57,13 @@ namespace upsylon
 
             //! return max extent for a given concentration
             double maxExtent(const double C) const throw();
-            
+
+            //! return activity
+            double activity(const accessible<double> &C) const throw();
+
+            //! return activity with trial xi
+            double activity(const accessible<double> &C, const double xi) const throw();
+
             //__________________________________________________________________
             //
             // members

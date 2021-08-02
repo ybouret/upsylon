@@ -1,6 +1,8 @@
 
 #include "y/alchemy/actor.hpp"
 #include "y/type/utils.hpp"
+#include "y/core/ipower.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -25,9 +27,22 @@ namespace upsylon
         double Actor:: maxExtent(const double C) const throw()
         {
             const double ans = max_of<double>(C/nu,0);
-            //std::cerr << "(" << **this << "=" << C << ")/" << nu << " => " << ans <<  " @" << (**this).indx << std::endl;
             return ans;
         }
+
+        double Actor:: activity(const accessible<double> &C) const throw()
+        {
+            return ipower<unsigned long>(C[(**this).indx],nu);
+        }
+
+        double Actor:: activity(const accessible<double> &C, const double xi) const throw()
+        {
+            double              c = C[(**this).indx];
+            const unsigned long n = nu;
+            c += (n*xi);
+            return  ipower<double>( max_of<double>(c,0), n);
+        }
+
 
     }
 }

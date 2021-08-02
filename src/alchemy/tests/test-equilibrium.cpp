@@ -11,56 +11,41 @@ using namespace Alchemy;
 
 Y_UTEST(eq)
 {
-#if 0
-    library        lib;
-    const species &h  = lib("H+",1);
-    const species &w  = lib("HO-",-1);
-    const species &ah = lib("AH",0);
-    const species &am = lib("Am",-1);
-    
-    equilibrium::pointer water = new constant_equilibrium("water",1e-14);
-    
+    Library       lib;
+    const Species &h  = lib("H+",1);
+    const Species &w  = lib("HO-",-1);
+    const Species &ah = lib("AH",0);
+    const Species &am = lib("Am",-1);
+
+    std::cerr << "lib=" << lib << std::endl;
+
+    Equilibrium::Pointer water = new ConstEquilibrium("water",1e-14);
+
     (*water)(1,h);
     (*water)(1,w);
-    
-    equilibrium::pointer toto = new constant_equilibrium("toto",1e-1);
-    (*toto)(2,h);
-    (*toto)(-1,w);
-    
+    std::cerr << water << std::endl;
 
-    equilibrium::pointer weak = new constant_equilibrium("weak",1e-4);
+    Equilibrium::Pointer weak = new ConstEquilibrium("weak",1e-4);
     (*weak)(1,h);
     (*weak)(1,am);
     (*weak)(-1,ah);
-    
-    std::cerr << water << std::endl;
-    std::cerr << toto  << std::endl;
-    std::cerr << weak  << std::endl;
+    std::cerr << weak << std::endl;
 
-    
-    lib.compile();
-    std::cerr << water << std::endl;
-    std::cerr << toto  << std::endl;
-    std::cerr << weak  << std::endl;
-    
-    water->compile();
-    toto->compile();
-    weak->compile();
-    std::cerr << water << std::endl;
-    std::cerr << toto  << std::endl;
-    std::cerr << weak  << std::endl;
-    
-    
-    water->display_code(std::cerr) << std::endl;
-    toto->display_code(std::cerr)  << std::endl;
-    weak->display_code(std::cerr)  << std::endl;
-    
-    
-    vector<long> Nu(lib->size(),0);
+    vector<long> Nu(lib->size(),0xff);
     water->fill(Nu); std::cerr << "Nu_" << water->name << " : " << Nu << std::endl;
-    weak->fill(Nu); std::cerr << "Nu_" << weak->name << " : " << Nu << std::endl;
-#endif
+    weak->fill(Nu);  std::cerr << "Nu_" << weak->name  << " : " << Nu << std::endl;
+
+    vector<double> C(lib->size(),0);
+    std::cerr << water->name << " : " << water->compute(water->K(0),C) << std::endl;
+    std::cerr << weak->name  << " : " << weak->compute(weak->K(0),C)   << std::endl;
+
+    const double xi = 1e-7;
+    std::cerr << water->name << " +xi=" << xi << " : " << water->compute(water->K(0),C,xi) << std::endl;
+
+    water->solve(water->K(0),C);
     
+
+
 }
 Y_UTEST_DONE()
 
