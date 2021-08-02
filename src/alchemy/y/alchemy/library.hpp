@@ -42,6 +42,25 @@ namespace upsylon
                 return use( new Species(name,z,sdb.size()+1) );
             }
 
+            //! check ownership
+            bool owns(const Species &) const throw();
+
+            //! prefix aligned name
+            template <typename OSTREAM> inline
+            friend OSTREAM & operator<<(OSTREAM       &os,
+                                        const Library &lib)
+            {
+                os << '{' << '\n';
+                for(const_iterator it=lib.sdb.begin();it!=lib.sdb.end();++it)
+                {
+                    const Species &sp = **it;
+                    os << sp;
+                    for(size_t i=sp.name.size();i<lib.snw;++i) os << ' ';
+                    os << vformat(" : %3ld @%u\n", sp.z, unsigned(sp.indx));
+                }
+                os << '}';
+                return os;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
@@ -88,20 +107,7 @@ namespace upsylon
                 return use( new species(name,z) );
             }
 
-            //! prefix aligned name
-            template <typename OSTREAM> inline
-            friend OSTREAM & operator<<(OSTREAM       &os,
-                                        const library &lib)
-            {
-                os << '{' << '\n';
-                for(const_iterator it=lib.db.begin();it!=lib.db.end();++it)
-                {
-                    const species &sp = **it;
-                    os << sp << vformat(" : %3ld @%u\n", sp.z, unsigned(sp.indx));
-                }
-                os << '}';
-                return os;
-            }
+
 
 
             //! display associated array
