@@ -28,7 +28,7 @@ add_test(ramp    test-gfx ramp ${IMG})
 add_test(mask    test-gfx mask)
 add_test(draw    test-gfx draw)
 add_test(split   test-gfx split ${IMG})
-add_test(eda      test-gfx eda ${IMG} 2.1)
+add_test(eda     test-gfx eda ${IMG} 2.1)
 
 
 ADD_CUSTOM_TARGET(utest-gfx

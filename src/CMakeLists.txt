@@ -43,7 +43,6 @@ ADD_SUBDIRECTORY(jive)
 ADD_SUBDIRECTORY(json)
 ADD_SUBDIRECTORY(spade)
 ADD_SUBDIRECTORY(mpi++)
-#ADD_SUBDIRECTORY(aqua)
 ADD_SUBDIRECTORY(alchemy)
 ADD_SUBDIRECTORY(gfx)
 ADD_SUBDIRECTORY(net)
@@ -153,7 +152,7 @@ MESSAGE(STATUS "")
 ########################################################################
 
 ADD_CUSTOM_TARGET(core
-DEPENDS test-main test-jive test-mkl test-aqua test-chem test-net test-spade test-gfx
+DEPENDS test-main test-mkl test-jive test-json test-spade test-alchemy test-gfx test-net
 COMMENT "Built Core Libraries"
 )
 

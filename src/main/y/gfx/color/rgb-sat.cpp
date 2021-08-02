@@ -24,9 +24,10 @@ namespace upsylon
 
         rgb saturated::of(const rgb &src) throw()
         {
-            const uint8_t *chan    = &src.r;
-            size_t         indx[3] = {0,0,0};
-            newtork_index<3>::make(indx,chan,decreasing_chan);
+            const uint8_t   *chan    = &src.r;
+            volatile size_t  indx[3] = {0,0,0};
+            newtork_index<3>::make( (size_t*)indx,chan,decreasing_chan);
+            //std::cerr << "[indx: " << indx[0] << "," << indx[1] << "," << indx[2] << "]#" << newtork_index<3>::nops;
             assert( chan[ indx[0] ] >= chan[ indx[1] ]);
             assert( chan[ indx[1] ] >= chan[ indx[2] ]);
             const unsigned m = chan[ indx[0] ];

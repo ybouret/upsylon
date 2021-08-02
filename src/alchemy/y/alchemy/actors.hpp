@@ -18,7 +18,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! collection of actors
+        //! collection of actors with same role
         //
         //______________________________________________________________________
         class Actors : public gateway<const Actor::Set>

@@ -45,7 +45,9 @@ namespace upsylon
             {
                 checkIndex();
             }
-            virtual ~Species() throw(); //!< cleanup
+
+            //! cleanup
+            virtual ~Species() throw();
 
             
             //__________________________________________________________________
@@ -55,7 +57,7 @@ namespace upsylon
             const string & key() const throw(); //!< for library
 
             
-            //! display as species with width for name
+            //! display as concentration
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Species &sp)
             {

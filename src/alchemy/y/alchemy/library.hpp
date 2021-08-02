@@ -47,13 +47,13 @@ namespace upsylon
             }
 
 
-            bool  owns(const Species &) const throw();        //!< check ownership
-            const Species & operator[](const string &) const; //!< look up by name
-            const Species & operator[](const char *  ) const; //!< look up by name
+            bool            owns(const Species &) const throw(); //!< check ownership
+            const Species & operator[](const string &)    const; //!< look up by name
+            const Species & operator[](const char *  )    const; //!< look up by name
 
 
 
-            //! prefix aligned name
+            //! output info
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM       &os,
                                         const Library &lib)

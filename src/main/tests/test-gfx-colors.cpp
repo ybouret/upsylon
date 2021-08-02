@@ -67,9 +67,12 @@ Y_UTEST(gfx_colors)
         for(size_t i=0;i<8;++i)
         {
             const rgb Original( alea.full<uint8_t>(), alea.full<uint8_t>(), alea.full<uint8_t>() );
+            std::cerr << Original;
             const rgb Saturated  = saturated::of(Original);
+            std::cerr << " => " << Saturated << std::endl;
             Y_ASSERT( ( convert<float,rgb>::from(Saturated) >= convert<float,rgb>::from(Original) ) );
         }
+
         
         typedef sorted_vector<rgb>         sorted_rgb;
         typedef ordered_single<sorted_rgb> single_rgb;
