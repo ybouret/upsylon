@@ -32,6 +32,7 @@ namespace upsylon
             typedef matrix<double>                Matrix;       //!< alias
             typedef matrix<long>                  iMatrix;      //!< alias
             typedef accessible<double>            Accessible;   //!< alias
+            typedef addressable<double>           Addressable;  //!< alias
 
             //__________________________________________________________________
             //
@@ -51,7 +52,17 @@ namespace upsylon
             //__________________________________________________________________
 
             //! compute initial state, return regularity
-            bool initialize(const Accessible &C, const double t) throw();
+            bool isRegular(const Accessible &C, const double t) throw();
+
+            //! compute regularity for pre-computed K
+            bool isRegular(const Accessible &C)                 throw();
+
+            //! display state, used for debug
+            void display_state() const;
+
+
+            //! solve
+            bool solve(Addressable &C, const double t) throw();
 
             //__________________________________________________________________
             //
@@ -66,12 +77,16 @@ namespace upsylon
             const iMatrix     Nu;  //!< [NxM] topology matrix
             const iMatrix     NuT; //!< [MxN] transposed Nu
             const Matrix      Phi; //!< [NxM] jacobian
-            const Matrix      W;   //!< [NxN] inv(PhiNuT)
+            const Matrix      J;   //!< [NxN] PhiNuT
+            const Matrix      W;   //!< [NxN] LU::build(J)
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             const Freezer lfrz;
             const Freezer efrz;
+
+            bool  checkRegular() const throw();
+
         };
 
     }

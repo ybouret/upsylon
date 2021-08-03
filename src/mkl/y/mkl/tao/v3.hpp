@@ -61,9 +61,30 @@ void mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B)
         {
             M_i[j] = dot<T>:: of(A_i,B[j]);
         }
-
     }
+}
 
+//! M = A*B'
+template <typename T,typename U,typename V> static inline
+void mmul_rtrn( matrix<T> &M, const matrix<U> &A, const matrix<V> &B, matrix<T> &N)
+{
+    assert(M.rows==A.rows);
+    assert(M.cols==B.rows);
+    assert(A.cols==B.cols);
+    assert(N.rows==M.rows);
+    assert(N.cols==M.cols);
+
+    const size_t nc = M.cols;
+    for(size_t i=M.rows;i>0;--i)
+    {
+        array<T>       &M_i = M[i];
+        array<T>       &N_i = N[i];
+        const array<U> &A_i = A[i];
+        for(size_t j=nc;j>0;--j)
+        {
+            N_i[j] = (M_i[j] = dot<T>:: of(A_i,B[j]));
+        }
+    }
 }
 
 //! M = A*A'

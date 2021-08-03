@@ -87,6 +87,17 @@ namespace upsylon
             //! compute K only
             void compute(addressable<double> &K, const double t) const throw();
 
+            //! compute K and Gam for C at t
+            void compute(addressable<double>      &K,
+                         addressable<double>      &Gam,
+                         const accessible<double> &C,
+                         const double              t) const throw();
+
+            //! upgrade Gam for C with pre-computed K
+            void upgrade(const accessible<double> &K,
+                         addressable<double>      &Gam,
+                         const accessible<double> &C) const throw();
+
             //! compute K, then Gam and Phi for C at t
             void compute(addressable<double>      &K,
                          addressable<double>      &Gam,

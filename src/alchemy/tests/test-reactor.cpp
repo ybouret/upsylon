@@ -43,10 +43,20 @@ Y_UTEST(reactor)
     std::cerr << "NuT = " << cs.NuT << std::endl;
 
     vector<double> C(cs.M,0);
-    drawC(C);
+    //drawC(C);
     lib.display(std::cerr << "C=",C) << std::endl;
-    cs.initialize(C,0.0);
-    
+    if(cs.isRegular(C,0.0))
+    {
+        std::cerr << "regular system" << std::endl;
+    }
+    else
+    {
+        std::cerr << "singular system" << std::endl;
+    }
+    cs.display_state();
+    std::cerr << "using upgrade..." << std::endl;
+    cs.isRegular(C);
+    cs.display_state();
 
 }
 Y_UTEST_DONE()

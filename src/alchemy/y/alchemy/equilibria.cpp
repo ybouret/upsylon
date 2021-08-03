@@ -47,6 +47,35 @@ namespace upsylon
 
         void Equilibria:: compute(addressable<double>      &K,
                                   addressable<double>      &Gam,
+                                  const accessible<double> &C,
+                                  const double              t) const throw()
+        {
+            size_t i=0;
+            for(const Equilibrium::Node *node=edb.head();node;node=node->next)
+            {
+                ++i;
+                const Equilibrium &eq = ***node;
+                const double       K0 = (K[i] = eq.K(t));
+                Gam[i] = eq.compute(K0,C);
+            }
+        }
+
+        void Equilibria:: upgrade(const accessible<double> &K,
+                                  addressable<double>      &Gam,
+                                  const accessible<double> &C) const throw()
+        {
+            size_t i=0;
+            for(const Equilibrium::Node *node=edb.head();node;node=node->next)
+            {
+                ++i;
+                const Equilibrium &eq = ***node;
+                Gam[i] = eq.compute(K[i],C);
+            }
+        }
+
+
+        void Equilibria:: compute(addressable<double>      &K,
+                                  addressable<double>      &Gam,
                                   matrix<double>           &Phi,
                                   const accessible<double> &C,
                                   const double              t) const throw()

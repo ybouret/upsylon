@@ -22,6 +22,7 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         Phi(Nu.rows,Nu.cols),
+        J(N,N),
         W(N,N),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
@@ -41,17 +42,32 @@ namespace upsylon
         {
         }
 
-        bool Reactor:: initialize(const Accessible &C, const double t) throw()
+        bool  Reactor:: checkRegular() const throw()
         {
-            eqs.compute(aliasing::_(K),aliasing::_(Gam),aliasing::_(Phi),C,t);
-            std::cerr << "K=" << K << std::endl;
-            std::cerr << "Gam=" << Gam << std::endl;
-            std::cerr << "Phi=" << Phi << std::endl;
-            tao::mmul_rtrn(aliasing::_(W),Phi,Nu);
-            std::cerr << "PhiNuT=" << W << std::endl;
+            tao::mmul_rtrn(aliasing::_(W),Phi,Nu,aliasing::_(J));
             return LU::build(aliasing::_(W));
         }
 
+
+        bool Reactor:: isRegular(const Accessible &C, const double t) throw()
+        {
+            eqs.compute(aliasing::_(K),aliasing::_(Gam),aliasing::_(Phi),C,t);
+            return checkRegular();
+        }
+
+        bool Reactor:: isRegular(const Accessible &C) throw()
+        {
+            eqs.upgrade(K,aliasing::_(Gam),aliasing::_(Phi),C);
+            return checkRegular();
+        }
+
+        void Reactor:: display_state() const
+        {
+            std::cerr << "K   = " << K   << std::endl;
+            std::cerr << "Gam = " << Gam << std::endl;
+            std::cerr << "Phi = " << K   << std::endl;
+            std::cerr << "J   = " << J   << std::endl;
+        }
 
     }
 
