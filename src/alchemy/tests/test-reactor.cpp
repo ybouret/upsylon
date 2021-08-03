@@ -30,7 +30,9 @@ Y_UTEST(reactor)
     const Species &w  = lib("HO-",1);
     const Species &ah = lib("AH",0);
     const Species &am = lib("Am",-1);
-
+    (void) lib("Na+",1);
+    (void) lib("Cl-",-1);
+    
     Equilibrium &water = eqs("water", 1e-14);  water(1,h); water(1,w);
     Equilibrium &weak  = eqs("weak", 1e-4);    weak(1,h); weak(1,am); weak(-1,ah);
 

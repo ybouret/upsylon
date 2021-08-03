@@ -111,7 +111,8 @@ namespace upsylon
                          matrix<double>           &Phi,
                          const accessible<double> &C) const throw();
 
-
+            //! guess all active species
+            void guess(addressable<bool> &active) const throw();
             
 
         private:

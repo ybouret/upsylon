@@ -112,7 +112,15 @@ namespace upsylon
                 Gam[i] = eq.compute(Phi[i],K[i],C);
             }
         }
-        
+
+        void Equilibria:: guess(addressable<bool> &active) const throw()
+        {
+            for(const Equilibrium::Node *node=edb.head();node;node=node->next)
+            {
+                (**node)->guess(active);
+            }
+        }
+
         
     }
 }

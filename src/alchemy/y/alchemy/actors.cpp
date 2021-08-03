@@ -121,6 +121,15 @@ namespace upsylon
             return target;
         }
 
+        void Actors:: guess(addressable<bool> &active) const throw()
+        {
+            for(const Actor::Node *node = adb.head();node;node=node->next)
+            {
+                active[ (**node)->indx ] = true;
+            }
+        }
+
+
     }
     
 }

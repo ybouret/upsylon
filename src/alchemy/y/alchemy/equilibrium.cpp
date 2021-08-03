@@ -77,7 +77,11 @@ namespace upsylon
             return reac.jacobian(K0,phi,K0,C) - prod.jacobian(1,phi,-1,C);
         }
 
-
+        void Equilibrium:: guess(addressable<bool> &active) const throw()
+        {
+            reac.guess(active);
+            prod.guess(active);
+        }
     }
 }
 

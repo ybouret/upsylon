@@ -57,9 +57,9 @@ namespace upsylon
 
             for(size_t j=M;j>0;--j)
             {
-                const double C_old =  C[j];
-                const double C_del = dC[j];
+                if(!active[j]) continue;
                 
+
             }
 
 

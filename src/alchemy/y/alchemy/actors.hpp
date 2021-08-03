@@ -89,6 +89,9 @@ namespace upsylon
 
             }
 
+            //! guess who is active
+            void guess(addressable<bool> &active) const throw();
+
             //! compute jacobian with precomputed K
             /**
              'target' and 'jscale' depends on reactant/product

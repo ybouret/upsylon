@@ -70,20 +70,22 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Library    &lib;   //!< support library
-            const Equilibria &eqs;   //!< support equlibria
-            const size_t      N;     //!< number of equilibria
-            const size_t      M;     //!< number of components
-            const Vector      K;     //!< [N]   constants
-            const Vector      Gam;   //!< [N]   indicators
-            const Vector      xi;    //!< [N]   extents
-            const Vector      dC;    //!< [M]   delta C
-            const iMatrix     Nu;    //!< [NxM] topology matrix
-            const iMatrix     NuT;   //!< [MxN] transposed Nu
-            const Matrix      Phi;   //!< [NxM] jacobian
-            const Matrix      J;     //!< [NxN] PhiNuT
-            const Matrix      W;     //!< [NxN] LU::build(J)
-            const Flags       swept; //!< [N] for sweep
+            const Library    &lib;    //!< support library
+            const Equilibria &eqs;    //!< support equlibria
+            const size_t      N;      //!< number of equilibria
+            const size_t      M;      //!< number of components
+            const size_t      dof;    //!< number of active species
+            const Flags       active; //!< [M]   active flags
+            const Vector      K;      //!< [N]   constants
+            const Vector      Gam;    //!< [N]   indicators
+            const Vector      xi;     //!< [N]   extents
+            const Vector      dC;     //!< [M]   delta C
+            const iMatrix     Nu;     //!< [NxM] topology matrix
+            const iMatrix     NuT;    //!< [MxN] transposed Nu
+            const Matrix      Phi;    //!< [NxM] jacobian
+            const Matrix      J;      //!< [NxN] PhiNuT
+            const Matrix      W;      //!< [NxN] LU::build(J)
+            const Flags       swept;  //!< [N] for sweep
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);

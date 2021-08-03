@@ -85,6 +85,9 @@ namespace upsylon
             //! compute jacobian row and return K0*reac-prod
             double compute(addressable<double> &phi, const double K0, const accessible<double> &C) const throw();
 
+            //! guess who is active among reac and prod
+            void guess(addressable<bool> &active) const throw();
+
             //__________________________________________________________________
             //
             // members
