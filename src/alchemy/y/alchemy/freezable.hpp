@@ -18,12 +18,11 @@ namespace upsylon
         class Freezable
         {
         public:
-            explicit Freezable() throw();
-            virtual ~Freezable() throw();
-
-            void       freeze(const char *when=0);
-            void       permit() throw();
-            const bool freezed;
+            explicit   Freezable() throw();        //!< setup freezed=false
+            virtual   ~Freezable() throw();        //!< cleanup
+            void       freeze(const char *when=0); //!< freeze
+            void       permit() throw();           //!< permit anew
+            const bool freezed;                    //!< flag
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Freezable);
@@ -39,7 +38,7 @@ namespace upsylon
         {
         public:
             explicit Freezer(Freezable &, const char *msg=0); //!< setup/freeze
-            virtual ~Freezer() throw();    //!< cleanup/permit
+            virtual ~Freezer() throw();                       //!< cleanup/permit
 
         private:
             Freezable &host;

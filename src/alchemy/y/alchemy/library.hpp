@@ -53,6 +53,7 @@ namespace upsylon
             const Species & operator[](const string &)    const; //!< look up by name
             const Species & operator[](const char *  )    const; //!< look up by name
 
+
             //__________________________________________________________________
             //
             // display methods
