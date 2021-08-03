@@ -58,6 +58,14 @@ Y_UTEST(reactor)
     cs.isRegular(C);
     cs.display_state();
 
+    cs.solve(C,0.0);
+
+    drawC(C);
+    cs.solve(C,0.0);
+
+
+
+
 }
 Y_UTEST_DONE()
 

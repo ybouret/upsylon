@@ -19,11 +19,14 @@ namespace upsylon
         M(lib->size()),
         K(N,0),
         Gam(N,0),
+        xi(N,0),
+        dC(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
+        swept(N,false),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {

@@ -112,6 +112,8 @@ namespace upsylon
                          const accessible<double> &C) const throw();
 
 
+            
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type & bulk() const throw();
