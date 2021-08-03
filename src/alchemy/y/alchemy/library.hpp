@@ -4,9 +4,10 @@
 #define Y_ALCHEMY_LIBRARY_INCLUDED 1
 
 #include "y/alchemy/species.hpp"
+#include "y/alchemy/freezable.hpp"
+#include "y/type/gateway.hpp"
 #include "y/ios/scribe.hpp"
 #include "y/sequence/accessible.hpp"
-#include "y/type/gateway.hpp"
 
 namespace upsylon
 {
@@ -18,7 +19,7 @@ namespace upsylon
         //! library of species
         //
         //______________________________________________________________________
-        class Library : public gateway<const Species::Set>
+        class Library : public gateway<const Species::Set>, public Freezable
         {
         public:
             //__________________________________________________________________

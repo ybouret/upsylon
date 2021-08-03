@@ -12,11 +12,17 @@ namespace upsylon
     namespace Alchemy
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! chemical reactor
+        //
+        //______________________________________________________________________
         class Reactor
         {
         public:
-            explicit Reactor(const Library    &,
-                             const Equilibria &);
+            explicit Reactor(Library    &,
+                             Equilibria &);
 
             virtual ~Reactor() throw();
 
