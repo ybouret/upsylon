@@ -16,7 +16,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! actor for equilibrium: species and coefficient
+        //! actor for equilibrium: species and POSITIVE coefficient
         //
         //______________________________________________________________________
         class Actor : public authority<const Species>
@@ -59,12 +59,21 @@ namespace upsylon
             double maxExtent(const double C) const throw();
 
             //! return activity
+            /**
+             C[indx]^nu
+             */
             double activity(const accessible<double> &C) const throw();
 
             //! return derivative of activity
+            /**
+             nu*C[indx]^nu1
+             */
             double jacobian(const accessible<double> &C) const throw();
 
             //! return activity with trial xi
+            /**
+             activity(C[indx]+nu*xi), careful with sign of xi
+             */
             double activity(const accessible<double> &C, const double xi) const throw();
 
             //__________________________________________________________________

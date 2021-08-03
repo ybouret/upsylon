@@ -37,8 +37,9 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            // methods
+            // methods for species
             //__________________________________________________________________
+
             //! register a new species
             template <typename ID>
             const Species & operator()(const ID &name, const long z)
@@ -51,7 +52,10 @@ namespace upsylon
             const Species & operator[](const string &)    const; //!< look up by name
             const Species & operator[](const char *  )    const; //!< look up by name
 
-
+            //__________________________________________________________________
+            //
+            // display methods
+            //__________________________________________________________________
 
             //! output info
             template <typename OSTREAM> inline

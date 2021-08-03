@@ -34,7 +34,7 @@ namespace upsylon
             // C++
             //__________________________________________________________________
 
-            //! flexible constructor
+            //! constructor
             template <typename ID> inline
             explicit Species(const ID    &_name,
                              const long   _z,
@@ -61,8 +61,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Species &sp)
             {
-                os << '[' << sp.name << ']';
-                return os;
+                return (os << '[' << sp.name << ']');
             }
             
             //__________________________________________________________________
