@@ -5,6 +5,7 @@
 #define Y_ALCHEMY_EQUILIBRIA_INCLUDED 1
 
 #include "y/alchemy/equilibrium.hpp"
+#include "y/alchemy/freezable.hpp"
 #include "y/container/matrix.hpp"
 
 namespace upsylon
@@ -18,7 +19,7 @@ namespace upsylon
         //! database of equilibria
         //
         //______________________________________________________________________
-        class Equilibria : public gateway<const Equilibrium::Set>
+        class Equilibria : public gateway<const Equilibrium::Set>, public Freezable
         {
         public:
             //__________________________________________________________________
