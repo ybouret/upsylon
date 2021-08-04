@@ -35,7 +35,19 @@ namespace upsylon
         bool Reactor:: balance(Addressable &C) throw()
         {
             
-            return invalid(C) > 0;
+            if(invalid(C)>0)
+            {
+                for(size_t i=1;i<=N;++i)
+                {
+                    const accessible<long> &nu = Nu[i];
+                    std::cerr << "nu[" << i << "]=" << nu << std::endl;
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
             
         }
 
