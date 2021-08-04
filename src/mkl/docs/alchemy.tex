@@ -53,6 +53,26 @@ We may also compute the jacobian of $\vec{\Gamma}$:
 
 \end{itemize}
 
+\section{Relaxation}
+
+\subsection{For one Reaction}
+\begin{equation}
+\begin{array}{rcl}
+\dot{\xi}_i & = &  \displaystyle k^f_i \left[ \prod_{j=1}^M [A_j]^{\nu^r_{ij}}  \right] - k^d_i \left[ \prod_{i=j}^M [A_j]^{\nu^r_{ij}} \right] \\
+\\
+ & = &  \displaystyle k^f_i \left[ \prod_{j=1}^M ([A_j]_0 - \nu^r_{ij} \xi_i )^{\nu^r_{ij}}  \right] 
+ -   k^d_i \left[ \prod_{j=1}^M ([A_j]_0 + \nu^p_{ij} \xi_i )^{\nu^p_{ij}}  \right] \\
+ \\
+ & \simeq & \displaystyle
+- \underbrace{\left(
+  k^f_i \left[ \sum_j \left( {\nu^r_{ij}}^2 [A_j]_0^{\nu^r_{ij}-1} \prod_{k\not=j} [A_k]_0^{\nu^r_{ik}}\right) \right]
+ +k^d_i \left[ \sum_j \left( {\nu^p_{ij}}^2 [A_j]_0^{\nu^d_{ij}-1} \prod_{k\not=j} [A_k]_0^{\nu^p_{ik}}\right) \right]
+  \right)}_{\dfrac{1}{\tau_i}} \xi_i
+ \\
+\end{array}
+\end{equation}
+
+\subsection{Generic}
 
 \section{Newton$^+$'s Algorithm}
 
