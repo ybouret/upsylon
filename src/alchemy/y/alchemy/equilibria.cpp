@@ -34,7 +34,7 @@ namespace upsylon
             return *eq;
         }
 
-        void Equilibria:: compute(addressable<double> &K, const double t) const throw()
+        void Equilibria:: compute(Addressable &K, const double t) const throw()
         {
             assert(K.size()>=edb.size());
             size_t i=0;
@@ -45,10 +45,10 @@ namespace upsylon
 
         }
 
-        void Equilibria:: compute(addressable<double>      &K,
-                                  addressable<double>      &Gam,
-                                  const accessible<double> &C,
-                                  const double              t) const throw()
+        void Equilibria:: compute(Addressable      &K,
+                                  Addressable      &Gam,
+                                  const Accessible &C,
+                                  const double      t) const throw()
         {
             size_t i=0;
             for(const Equilibrium::Node *node=edb.head();node;node=node->next)
@@ -60,9 +60,9 @@ namespace upsylon
             }
         }
 
-        void Equilibria:: upgrade(const accessible<double> &K,
-                                  addressable<double>      &Gam,
-                                  const accessible<double> &C) const throw()
+        void Equilibria::upgrade(const Accessible &K,
+                                 Addressable      &Gam,
+                                 const Accessible &C) const throw()
         {
             size_t i=0;
             for(const Equilibrium::Node *node=edb.head();node;node=node->next)
@@ -74,11 +74,11 @@ namespace upsylon
         }
 
 
-        void Equilibria:: compute(addressable<double>      &K,
-                                  addressable<double>      &Gam,
-                                  matrix<double>           &Phi,
-                                  const accessible<double> &C,
-                                  const double              t) const throw()
+        void Equilibria:: compute(Addressable      &K,
+                                  Addressable      &Gam,
+                                  Matrix           &Phi,
+                                  const Accessible &C,
+                                  const double      t) const throw()
         {
             assert(K.size()  >=edb.size());
             assert(Gam.size()>=edb.size());
@@ -95,10 +95,10 @@ namespace upsylon
             
         }
 
-        void Equilibria:: upgrade(const accessible<double> &K,
-                                  addressable<double>      &Gam,
-                                  matrix<double>           &Phi,
-                                  const accessible<double> &C) const throw()
+        void Equilibria:: upgrade(const Accessible &K,
+                                  Addressable      &Gam,
+                                  Matrix           &Phi,
+                                  const Accessible &C) const throw()
         {
             assert(K.size()  >=edb.size());
             assert(Gam.size()>=edb.size());

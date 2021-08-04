@@ -31,11 +31,7 @@ namespace upsylon
             typedef memory::dyadic                Allocator;    //!< alias
             typedef vector<double,Allocator>      Vector;       //!< alias
             typedef vector<bool,Allocator>        Flags;        //!< alias
-            typedef matrix<double>                Matrix;       //!< alias
-            typedef matrix<long>                  iMatrix;      //!< alias
-            typedef accessible<double>            Accessible;   //!< alias
-            typedef addressable<double>           Addressable;  //!< alias
-
+            
             //__________________________________________________________________
             //
             // C++
@@ -72,6 +68,11 @@ namespace upsylon
             //! solve without computation of K
             bool   solve(Addressable &C) throw();
 
+            //! balancing algorithm
+            bool   balance(Addressable &C) throw();
+
+            //! count and fill invalid
+            size_t invalid(const Accessible &C) throw();
 
             //__________________________________________________________________
             //
@@ -93,7 +94,8 @@ namespace upsylon
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
             const Flags       moved;  //!< [N] for sweep
-            
+            const Flags       isBad;  //!< [M] for balance
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             const Freezer lfrz;

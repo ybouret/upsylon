@@ -14,6 +14,7 @@ namespace upsylon
 {
     namespace Alchemy
     {
+        typedef addressable<double> Addressable;  //!< alias
 
         //______________________________________________________________________
         //
@@ -62,7 +63,7 @@ namespace upsylon
             }
 
             //! find maximal extent
-            Extent findExtent(const accessible<double> &C) const throw();
+            Extent findExtent(const Accessible &C) const throw();
 
             //! topology with sign
             template <typename T>
@@ -96,16 +97,16 @@ namespace upsylon
             /**
              'target' and 'jscale' depends on reactant/product
              */
-            double jacobian(double                    target,
-                            addressable<double>      &phi,
-                            const double              jscale,
-                            const accessible<double> &C) const throw();
+            double jacobian(double            target,
+                            Addressable      &phi,
+                            const double      jscale,
+                            const Accessible &C) const throw();
 
             //! mass action law
-            double massAction(double target, const accessible<double> &C) const throw();
+            double massAction(double target, const Accessible &C) const throw();
 
             //! mass action after extent (careful with the sign of xi)
-            double massAction(double target, const accessible<double> &C, const double xi) const throw();
+            double massAction(double target, const Accessible &C, const double xi) const throw();
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

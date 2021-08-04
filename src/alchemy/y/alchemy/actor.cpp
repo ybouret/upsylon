@@ -32,18 +32,18 @@ namespace upsylon
             return ans;
         }
 
-        double Actor:: activity(const accessible<double> &C) const throw()
+        double Actor:: activity(const Accessible &C) const throw()
         {
             return ipower<double>(C[(**this).indx],nu);
         }
 
-        double Actor:: jacobian(const accessible<double> &C) const throw()
+        double Actor:: jacobian(const Accessible &C) const throw()
         {
             return nu * ipower<double>(C[(**this).indx],nu1);
         }
 
 
-        double Actor:: activity(const accessible<double> &C, const double xi) const throw()
+        double Actor:: activity(const Accessible &C, const double xi) const throw()
         {
             double              c = C[(**this).indx];
             const unsigned long n = nu;

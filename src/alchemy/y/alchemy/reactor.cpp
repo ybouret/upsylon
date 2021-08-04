@@ -29,6 +29,7 @@ namespace upsylon
         J(N,N),
         W(N,N),
         moved(N,false),
+        isBad(M,true),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {

@@ -39,7 +39,7 @@ namespace upsylon
 
         
         
-        Extent Actors:: findExtent(const accessible<double> &C) const throw()
+        Extent Actors:: findExtent(const Accessible &C) const throw()
         {
             double             xm   = 0;
             size_t             im   = 0;
@@ -80,7 +80,7 @@ namespace upsylon
             return Extent(im,xm);
         }
 
-        double Actors:: massAction(double target, const accessible<double> &C) const throw()
+        double Actors:: massAction(double target, const Accessible &C) const throw()
         {
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
@@ -89,9 +89,9 @@ namespace upsylon
             return target;
         }
 
-        double Actors:: massAction(double                    target,
-                                   const accessible<double> &C,
-                                   const double              xi) const throw()
+        double Actors:: massAction(double            target,
+                                   const Accessible &C,
+                                   const double      xi) const throw()
         {
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
@@ -101,10 +101,10 @@ namespace upsylon
         }
 
 
-        double Actors:: jacobian(double                    target,
-                                 addressable<double>      &phi,
-                                 const double              jscale,
-                                 const accessible<double> &C) const throw()
+        double Actors:: jacobian(double            target,
+                                 Addressable      &phi,
+                                 const double      jscale,
+                                 const Accessible &C) const throw()
         {
 
             for(const Actor::Node *node = adb.head();node;node=node->next)
@@ -125,6 +125,7 @@ namespace upsylon
         {
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
+                assert( (**node)->active );
                 active[ (**node)->indx ] = true;
             }
         }

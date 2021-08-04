@@ -12,6 +12,7 @@ namespace upsylon
 {
     namespace Alchemy
     {
+        typedef accessible<double> Accessible;   //!< alias
 
         //______________________________________________________________________
         //
@@ -62,19 +63,19 @@ namespace upsylon
             /**
              C[indx]^nu
              */
-            double activity(const accessible<double> &C) const throw();
+            double activity(const Accessible &C) const throw();
 
             //! return derivative of activity
             /**
              nu*C[indx]^nu1
              */
-            double jacobian(const accessible<double> &C) const throw();
+            double jacobian(const Accessible &C) const throw();
 
             //! return activity with trial xi
             /**
              activity(C[indx]+nu*xi), careful with sign of xi
              */
-            double activity(const accessible<double> &C, const double xi) const throw();
+            double activity(const Accessible &C, const double xi) const throw();
 
             //__________________________________________________________________
             //

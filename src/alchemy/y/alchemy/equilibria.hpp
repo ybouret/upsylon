@@ -13,6 +13,9 @@ namespace upsylon
     namespace Alchemy
     {
 
+        typedef matrix<double> Matrix;
+        typedef matrix<long>   iMatrix;
+
         //______________________________________________________________________
         //
         //
@@ -85,36 +88,36 @@ namespace upsylon
             }
 
             //! compute K only
-            void compute(addressable<double> &K, const double t) const throw();
+            void compute(Addressable &K, const double t) const throw();
 
             //! compute K and Gam for C at t
-            void compute(addressable<double>      &K,
-                         addressable<double>      &Gam,
-                         const accessible<double> &C,
-                         const double              t) const throw();
+            void compute(Addressable      &K,
+                         Addressable      &Gam,
+                         const Accessible &C,
+                         const double      t) const throw();
 
             //! upgrade Gam for C with pre-computed K
-            void upgrade(const accessible<double> &K,
-                         addressable<double>      &Gam,
-                         const accessible<double> &C) const throw();
+            void upgrade(const Accessible &K,
+                         Addressable      &Gam,
+                         const Accessible &C) const throw();
 
             //! compute K, then Gam and Phi for C at t
-            void compute(addressable<double>      &K,
-                         addressable<double>      &Gam,
-                         matrix<double>           &Phi,
-                         const accessible<double> &C,
-                         const double              t) const throw();
+            void compute(Addressable      &K,
+                         Addressable      &Gam,
+                         Matrix           &Phi,
+                         const Accessible &C,
+                         const double      t) const throw();
 
             //! upgrade Gam and Phi for C with pre-computed K
-            void upgrade(const accessible<double> &K,
-                         addressable<double>      &Gam,
-                         matrix<double>           &Phi,
-                         const accessible<double> &C) const throw();
+            void upgrade(const Accessible &K,
+                         Addressable      &Gam,
+                         Matrix           &Phi,
+                         const Accessible &C) const throw();
 
             //! guess all active species
             void guess(addressable<bool> &active) const throw();
-            
 
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type & bulk() const throw();

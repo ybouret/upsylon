@@ -70,20 +70,20 @@ namespace upsylon
 
             
             //! find extents
-            Extents findExtents(const accessible<double> &C) const throw();
+            Extents findExtents(const Accessible &C) const throw();
 
             //! compute K0*reac - prod
-            double  compute(const double K0, const accessible<double> &C) const throw();
+            double  compute(const double K0, const Accessible &C) const throw();
 
             //! compute with extent
-            double  compute(const double K0, const accessible<double> &C, const double xi) const throw();
+            double  compute(const double K0, const Accessible &C, const double xi) const throw();
 
             //! solve unique equilibrium
-            bool   solve(const double K0, addressable<double> &C) const;
+            bool   solve(const double K0, Addressable  &C) const;
 
 
             //! compute jacobian row and return K0*reac-prod
-            double compute(addressable<double> &phi, const double K0, const accessible<double> &C) const throw();
+            double compute(Addressable &phi, const double K0, const Accessible &C) const throw();
 
             //! guess who is active among reac and prod
             void guess(addressable<bool> &active) const throw();
