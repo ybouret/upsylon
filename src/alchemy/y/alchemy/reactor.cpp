@@ -28,7 +28,7 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        swept(N,false),
+        moved(N,false),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
@@ -51,7 +51,7 @@ namespace upsylon
         {
         }
 
-        bool  Reactor:: checkRegular() const throw()
+        bool  Reactor:: differentiable() const throw()
         {
             tao::mmul_rtrn(aliasing::_(W),Phi,Nu,aliasing::_(J));
             return LU::build(aliasing::_(W));
@@ -61,13 +61,13 @@ namespace upsylon
         bool Reactor:: isRegular(const Accessible &C, const double t) throw()
         {
             eqs.compute(aliasing::_(K),aliasing::_(Gam),aliasing::_(Phi),C,t);
-            return checkRegular();
+            return differentiable();
         }
 
         bool Reactor:: isRegular(const Accessible &C) throw()
         {
             eqs.upgrade(K,aliasing::_(Gam),aliasing::_(Phi),C);
-            return checkRegular();
+            return differentiable();
         }
 
         void Reactor:: display_state() const
@@ -77,6 +77,12 @@ namespace upsylon
             std::cerr << "Phi = " << K   << std::endl;
             std::cerr << "J   = " << J   << std::endl;
         }
+
+        bool Reactor:: isValid(const Accessible &C) const
+        {
+            
+        }
+
 
     }
 

@@ -1,5 +1,4 @@
-#include "y/alchemy/library.hpp"
-#include "y/alchemy/equilibria.hpp"
+#include "y/alchemy/reactor.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -38,6 +37,11 @@ Y_UTEST(types)
     std::cerr << "Equilibria:" << std::endl;
     Y_UTEST_SIZEOF(Equilibria);
     std::cerr << std::endl;
+
+    std::cerr << "Reactor:" << std::endl;
+    Y_UTEST_SIZEOF(Reactor);
+    std::cerr << std::endl;
+
 
 }
 Y_UTEST_DONE()

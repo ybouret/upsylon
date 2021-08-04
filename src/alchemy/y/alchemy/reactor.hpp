@@ -53,6 +53,9 @@ namespace upsylon
             // methods
             //__________________________________________________________________
 
+            //! verbose checking, for debug
+            bool isValid(const Accessible &C) const;
+
             //! compute initial state, return regularity
             bool isRegular(const Accessible &C, const double t) throw();
 
@@ -63,8 +66,12 @@ namespace upsylon
             void display_state() const;
 
 
-            //! solve
+            //! solve with computation of K
             bool   solve(Addressable &C, const double t) throw();
+
+            //! solve without computation of K
+            bool   solve(Addressable &C) throw();
+
 
             //__________________________________________________________________
             //
@@ -85,15 +92,19 @@ namespace upsylon
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            const Flags       swept;  //!< [N] for sweep
+            const Flags       moved;  //!< [N] for sweep
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             const Freezer lfrz;
             const Freezer efrz;
 
-            bool  checkRegular() const  throw(); //!< compute J and W
-            bool  sweep(Addressable &C) throw(); //!< try to solve a not swept equilibrium
+            bool  differentiable()                     const  throw(); //!< compute J and W
+            bool  movedSingle(Addressable &C)                 throw(); //!< try to move a not moved equilibrium
+            bool  regularized(Addressable &C)                 throw(); //!< sweeping algo with movedSingle
+            bool  findRegular(Addressable &C, const double t) throw(); //!< try to regularize with new K
+            bool  findRegular(Addressable &C)                 throw(); //!< try to regularize
+            bool  equilibrate(Addressable &C)                 throw(); //!< Newton+ algo from a regularized concentration
 
         };
 

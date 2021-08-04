@@ -63,7 +63,7 @@ Y_UTEST(reactor)
     cs.solve(C,0.0);
 
     drawC(C);
-    cs.solve(C,0.0);
+    cs.solve(C);
 
 
 
