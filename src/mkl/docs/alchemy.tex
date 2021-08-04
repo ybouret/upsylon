@@ -88,6 +88,17 @@ We may also compute the jacobian of $\vec{\Gamma}$:
 \end{equation}
 Time constants are inverse of the eigenvalues of the matrix.
 
+\section{Balancing}
+
+We want
+\begin{equation}
+	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
+\end{equation}
+meaning
+\begin{equation}
+	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
+\end{equation}
+
 \section{Newton$^+$'s Algorithm}
 
 Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:
