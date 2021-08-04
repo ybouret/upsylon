@@ -66,13 +66,27 @@ We may also compute the jacobian of $\vec{\Gamma}$:
  & \simeq & \displaystyle
 - \underbrace{\left(
   k^f_i \left[ \sum_j \left( {\nu^r_{ij}}^2 [A_j]_0^{\nu^r_{ij}-1} \prod_{k\not=j} [A_k]_0^{\nu^r_{ik}}\right) \right]
- +k^d_i \left[ \sum_j \left( {\nu^p_{ij}}^2 [A_j]_0^{\nu^d_{ij}-1} \prod_{k\not=j} [A_k]_0^{\nu^p_{ik}}\right) \right]
+ +k^d_i \left[ \sum_j \left( {\nu^p_{ij}}^2 [A_j]_0^{\nu^p_{ij}-1} \prod_{k\not=j} [A_k]_0^{\nu^p_{ik}}\right) \right]
   \right)}_{\dfrac{1}{\tau_i}} \xi_i
  \\
 \end{array}
 \end{equation}
 
 \subsection{Generic}
+
+\begin{equation}
+	\dot{\vec{\xi}} = 
+	\underbrace{
+	\begin{bmatrix}
+	k^d_1 &  &\\
+	      & \ddots & \\
+	      & & k^d_N\\ 
+	\end{bmatrix}
+	}_{\bm{\Omega}}
+	\vec{\Gamma}(\vec{A}_0 + \bm{\nu}^t \vec{\xi})
+	\simeq \bm{\Omega} \bm{\Phi}_0 \bm{\nu}^t \vec{\xi}
+\end{equation}
+
 
 \section{Newton$^+$'s Algorithm}
 
