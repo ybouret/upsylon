@@ -137,6 +137,7 @@ namespace upsylon
 
             void     remove_if(blob::proc, void *)      throw(); //!< remove according to proc
             void     remove_below(const size_t cutSize) throw(); //!< remove if blob size<=cutSize
+            void     remove_last()                      throw(); //!< remove tail
 
             //__________________________________________________________________
             //

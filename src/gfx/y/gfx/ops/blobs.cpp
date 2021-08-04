@@ -66,7 +66,12 @@ namespace upsylon
             relabel();
         }
 
-
+        void blobs:: remove_last() throw()
+        {
+            assert(blist.size>0);
+            blist.tail->remove_from( aliasing::_(bmask) );
+            delete aliasing::_(blist).pop_back();
+        }
 
         void  blobs:: remove_if( blob::proc proc, void *args) throw()
         {
