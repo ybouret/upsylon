@@ -80,7 +80,19 @@ namespace upsylon
 
         bool Reactor:: isValid(const Accessible &C) const
         {
-            
+            bool ans = true;
+            for(Library::const_iterator it=lib->begin();it!=lib->end();++it)
+            {
+                const Species &sp = **it;
+                if(!active[sp.indx]) continue;;
+                if(C[sp.indx]<0)
+                {
+                    ans = false;
+                    std::cerr << sp << "=" << C[sp.indx] << "<0 !" << std::endl;
+                }
+
+            }
+            return ans;
         }
 
 

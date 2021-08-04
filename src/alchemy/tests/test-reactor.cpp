@@ -57,14 +57,21 @@ Y_UTEST(reactor)
     }
     cs.display_state();
     std::cerr << "using upgrade..." << std::endl;
-    cs.isRegular(C);
-    cs.display_state();
 
-    cs.solve(C,0.0);
+    if(cs.solve(C,0.0))
+    {
 
+    }
+
+    std::cerr << std::endl;
+
+    std::cerr << "From alea" << std::endl;
     drawC(C);
-    cs.solve(C);
+    if( cs.solve(C) )
+    {
 
+    }
+    
 
 
 

@@ -56,10 +56,10 @@ namespace upsylon
             //! verbose checking, for debug
             bool isValid(const Accessible &C) const;
 
-            //! compute initial state, return regularity
+            //! compute initial state, return regularity from J
             bool isRegular(const Accessible &C, const double t) throw();
 
-            //! compute regularity for pre-computed K
+            //! compute regularity for pre-computed K, return regularity from J
             bool isRegular(const Accessible &C)                 throw();
 
             //! display state, used for debug
@@ -100,8 +100,10 @@ namespace upsylon
             const Freezer efrz;
 
             bool  differentiable()                     const  throw(); //!< compute J and W
+
             bool  movedSingle(Addressable &C)                 throw(); //!< try to move a not moved equilibrium
             bool  regularized(Addressable &C)                 throw(); //!< sweeping algo with movedSingle
+
             bool  findRegular(Addressable &C, const double t) throw(); //!< try to regularize with new K
             bool  findRegular(Addressable &C)                 throw(); //!< try to regularize
             bool  equilibrate(Addressable &C)                 throw(); //!< Newton+ algo from a regularized concentration

@@ -40,26 +40,12 @@ namespace upsylon
 
         bool  Reactor:: findRegular(Addressable &C, const double t) throw()
         {
-            if(!isRegular(C,t))
-            {
-                return regularized(C);
-            }
-            else
-            {
-                return true;
-            }
+            return isRegular(C,t) ? true : regularized(C);
         }
 
         bool  Reactor:: findRegular(Addressable &C) throw()
         {
-            if(!isRegular(C))
-            {
-                return regularized(C);
-            }
-            else
-            {
-                return true;
-            }
+            return isRegular(C) ? true : regularized(C);
         }
         
 
@@ -67,7 +53,10 @@ namespace upsylon
         {
             lib.display(std::cerr,C) << std::endl;
 
+            //__________________________________________________________________
+            //
             // compute full Newton's step
+            //__________________________________________________________________
             tao::neg(aliasing::_(xi),Gam);
             LU::solve(W,aliasing::_(xi));
             std::cerr << "xi=" << xi << std::endl;
@@ -85,27 +74,14 @@ namespace upsylon
 
         bool Reactor:: solve(Addressable &C, const double t) throw()
         {
-
-            if(findRegular(C,t))
-            {
-                return equilibrate(C);
-            }
-            else
-            {
-                return false;
-            }
+            assert(isValid(C));
+            return findRegular(C,t) ? equilibrate(C) : false;
         }
 
         bool   Reactor:: solve(Addressable &C) throw()
         {
-            if(findRegular(C))
-            {
-                return equilibrate(C);
-            }
-            else
-            {
-                return false;
-            }
+            assert(isValid(C));
+            return findRegular(C) ? equilibrate(C) : false;
         }
 
 
