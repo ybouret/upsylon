@@ -56,6 +56,8 @@ Y_UTEST(reactor)
         std::cerr << "singular system" << std::endl;
     }
     cs.display_state();
+
+
     std::cerr << "using upgrade..." << std::endl;
 
     if(cs.solve(C,0.0))
@@ -67,6 +69,15 @@ Y_UTEST(reactor)
 
     std::cerr << "From alea" << std::endl;
     drawC(C);
+    if(cs.isRegular(C))
+    {
+        std::cerr << "regular system" << std::endl;
+    }
+    else
+    {
+        std::cerr << "singular system" << std::endl;
+    }
+
     if( cs.solve(C) )
     {
 

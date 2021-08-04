@@ -52,7 +52,8 @@ namespace upsylon
         bool  Reactor:: equilibrate(Addressable &C) throw()
         {
             lib.display(std::cerr,C) << std::endl;
-
+            display_state();
+            
             //__________________________________________________________________
             //
             // compute full Newton's step
