@@ -35,8 +35,11 @@ Y_UTEST(balance)
 
     vector<double> C(cs.M+2,0);
     lib.draw(alea,C);
-    lib.display(std::cerr,C) << std::endl;
 
+    lib(C,"H+") *= -1;
+
+    lib.display(std::cerr,C) << std::endl;
+    cs.balance(C);
     
 
 

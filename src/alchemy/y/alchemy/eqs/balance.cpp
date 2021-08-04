@@ -27,6 +27,7 @@ namespace upsylon
                 }
 
             }
+            std::cerr << "bad = " << isBad << " // #" << nbad << std::endl;
             return nbad;
         }
 
