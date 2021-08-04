@@ -59,16 +59,11 @@ namespace upsylon
             // compute full Newton's step
             //__________________________________________________________________
             tao::neg(aliasing::_(xi),Gam);
-            LU::solve(W,aliasing::_(xi));
-            std::cerr << "xi=" << xi << std::endl;
-            tao::mul( aliasing::_(dC),NuT,xi);
-            std::cerr << "dC=" << dC << std::endl;
+            LU::solve(W,aliasing::_(xi));               std::cerr << "xi=" << xi << std::endl;
+            tao::mul_add( aliasing::_(Ctry),C,NuT,xi);  std::cerr << "Ctry=" << Ctry << std::endl;
+            
+            
 
-            for(size_t j=M;j>0;--j)
-            {
-                if(!active[j]) continue;
-
-            }
 
             return true;
         }

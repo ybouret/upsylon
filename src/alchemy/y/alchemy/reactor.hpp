@@ -88,6 +88,7 @@ namespace upsylon
             const Vector      Gam;    //!< [N]   indicators
             const Vector      xi;     //!< [N]   extents
             const Vector      dC;     //!< [M]   delta C
+            const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
             const Matrix      Phi;    //!< [NxM] jacobian

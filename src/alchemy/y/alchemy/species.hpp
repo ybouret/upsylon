@@ -7,11 +7,21 @@
 #include "y/string.hpp"
 #include "y/ptr/intr.hpp"
 #include "y/associative/hash/set.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
+    namespace randomized
+    {
+        class bits; //!< forward declaration
+    }
+
+
     namespace Alchemy
     {
+
+        typedef addressable<double> Addressable;
+
         //______________________________________________________________________
         //
         //
@@ -28,7 +38,10 @@ namespace upsylon
             typedef intr_ptr<string,Species>          Pointer; //!< alias
             typedef hash_set<string,Species::Pointer> Set;     //!< alias
             typedef Set::node_type                    Node;    //!< alias
-
+            static  const int                         min_exp10 = -14;
+            static  const int                         max_exp10 = 0;
+            static  double                            Concentration(randomized::bits&) throw();
+            
             //__________________________________________________________________
             //
             // C++

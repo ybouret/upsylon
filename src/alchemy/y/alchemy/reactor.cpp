@@ -23,6 +23,7 @@ namespace upsylon
         Gam(N,0),
         xi(N,0),
         dC(M,0),
+        Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         Phi(Nu.rows,Nu.cols),

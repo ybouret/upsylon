@@ -5,20 +5,6 @@
 using namespace upsylon;
 using namespace Alchemy;
 
-namespace
-{
-
-    static inline
-    void drawC(addressable<double> &C)
-    {
-        for(size_t i=C.size();i>0;--i)
-        {
-            const double v = alea.to<double>();
-            const double p = alea.range<double>(-14,0);
-            C[i] = v * pow(10.0,p);
-        }
-    }
-}
 
 Y_UTEST(reactor)
 {
@@ -45,7 +31,6 @@ Y_UTEST(reactor)
     std::cerr << "NuT = " << cs.NuT << std::endl;
 
     vector<double> C(cs.M,0);
-    //drawC(C);
     lib.display(std::cerr << "C=",C) << std::endl;
     if(cs.isRegular(C,0.0))
     {
@@ -68,7 +53,7 @@ Y_UTEST(reactor)
     std::cerr << std::endl;
 
     std::cerr << "From alea" << std::endl;
-    drawC(C);
+    lib.draw(alea,C);
     if(cs.isRegular(C))
     {
         std::cerr << "regular system" << std::endl;

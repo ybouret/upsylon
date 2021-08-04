@@ -14,8 +14,7 @@ namespace upsylon
 {
     namespace Alchemy
     {
-        typedef addressable<double> Addressable;  //!< alias
-
+        
         //______________________________________________________________________
         //
         //

@@ -93,6 +93,16 @@ namespace upsylon
                 return static_cast<T>(r);
             }
 
+            //! random value within [a:b]
+            template <typename T> inline
+            T within(const T a, const T b) throw()
+            {
+                const double alpha = to<double>();
+                const double beta  = 1.0 - alpha;
+                const double value = alpha*double(a)+beta*double(b);
+                return static_cast<T>(value);
+            }
+
             //! random value by rejection
             template <typename T> inline
             T narrow(const T a, const T b) throw()

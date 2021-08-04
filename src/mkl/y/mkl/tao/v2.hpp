@@ -131,15 +131,16 @@ struct diag
 
 //! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
 template <typename TARGET, typename T, typename LHS> static inline
-void mul(TARGET &target, const matrix<T> &M, LHS &rhs)
+void mul(TARGET &target, const matrix<T> &M, LHS &lhs)
 {
     assert(target.size()<=M.rows);
-    assert(M.cols <= rhs.size());
+    assert(M.cols <= lhs.size());
     for(size_t j=target.size();j>0;--j)
     {
-        target[j] = dot<typename TARGET::mutable_type>::of(M[j],rhs);
+        target[j] = dot<typename TARGET::mutable_type>::of(M[j],lhs);
     }
 }
+
 
 //! target = -M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
 template <typename TARGET, typename T, typename LHS> static inline
@@ -166,17 +167,32 @@ void mul_sub(TARGET &target, const matrix<T> &M, LHS &rhs)
     }
 }
 
-//! target += M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+//! target += M * rhs, based on target.size() <= M.rows, M.cols <= lhs.size()
 template <typename TARGET, typename T, typename LHS> static inline
-void mul_add(TARGET &target, const matrix<T> &M, LHS &rhs)
+void mul_add(TARGET &target, const matrix<T> &M, LHS &lhs)
 {
     assert(target.size()<=M.rows);
-    assert(M.cols <= rhs.size());
+    assert(M.cols <= lhs.size());
     for(size_t j=target.size();j>0;--j)
     {
-        target[j] += dot<typename TARGET::mutable_type>::of(M[j],rhs);
+        target[j] += dot<typename TARGET::mutable_type>::of(M[j],lhs);
     }
 }
+
+
+//! target = source + M * rhs, based on target.size() <= M.rows, M.cols <= lhs.size()
+template <typename TARGET, typename SOURCE, typename T, typename LHS> static inline
+void mul_add(TARGET &target, SOURCE &source, const matrix<T> &M, LHS &lhs)
+{
+    assert(target.size()<=M.rows);
+    assert(target.size()<=source.size());
+    assert(M.cols <= lhs.size());
+    for(size_t j=target.size();j>0;--j)
+    {
+        target[j] = Y_TAO_CAST(TARGET,SOURCE,source[j]) + dot<typename TARGET::mutable_type>::of(M[j],lhs);
+    }
+}
+
 
 
 //! [SLOW] target = M' * rhs, based on target.size() <= M.cols, M.rows <= rhs.size()

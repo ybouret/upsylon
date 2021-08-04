@@ -29,6 +29,7 @@ namespace upsylon
         {
             assert(eq);
             const Equilibrium::Pointer p(eq);
+            if(freezed)        throw exception("%s: freezed while adding '%s'",CLID,*(eq->name));
             if(!edb.insert(p)) throw exception("%s: multipliple equilibrium '%s'", CLID, *(eq->name) );
             aliasing::_(enw) = max_of(enw,eq->name.size());
             return *eq;

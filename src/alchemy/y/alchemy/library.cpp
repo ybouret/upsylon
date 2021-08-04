@@ -63,6 +63,14 @@ namespace upsylon
             const string _(id); return (*this)[_];
         }
 
+        void Library::draw(randomized::bits &ran, Addressable &C) const throw()
+        {
+            for(size_t j=sdb.size();j>0;--j)
+            {
+                C[j] = Species::Concentration(ran);
+            }
+        }
+
     }
 }
 

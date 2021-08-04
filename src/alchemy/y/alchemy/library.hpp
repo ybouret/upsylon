@@ -53,6 +53,27 @@ namespace upsylon
             const Species & operator[](const string &)    const; //!< look up by name
             const Species & operator[](const char *  )    const; //!< look up by name
 
+            template <typename ID> inline
+            size_t operator()(const ID &id) const
+            {
+                return (*this)[id].indx;
+            }
+
+            template <typename ARR, typename ID> inline
+            typename ARR::type &operator()(ARR &arr, const ID &id) const
+            {
+                const Library &self = *this;
+                return arr[ self(id) ];
+            }
+
+            template <typename ARR, typename ID> inline
+            typename ARR::const_type operator()(const ARR &arr, const ID &id) const
+            {
+                const Library &self = *this;
+                return arr[ self(id) ];
+            }
+
+            void draw(randomized::bits &, Addressable &C) const throw();
 
             //__________________________________________________________________
             //
