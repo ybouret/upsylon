@@ -5,6 +5,7 @@
 #define Y_GFX_OPS_BLOB_INCLUDED 1
 
 #include "y/gfx/pixmap.hpp"
+#include "y/gfx/draw/putpixel.hpp"
 #include "y/core/knode.hpp"
 #include "y/core/dnode.hpp"
 
@@ -120,6 +121,24 @@ namespace upsylon
 
             //! true if size <= *(size_t *)args
             static bool is_smaller_than(const blob &, void *args) throw();
+
+            //! axis aligned bounding box
+            area aabb() const throw();
+
+            //! watermark with a given color,alpha
+            template <typename T> inline
+            void watermark(pixmap<T>    &target,
+                           const T       color,
+                           const uint8_t alpha = 0xff) const throw()
+            {
+                draw::putpixel::blend<T> proc(color,alpha);
+                for(const knot *node=head;node;node=node->next)
+                {
+                    const coord p = **node;
+                    proc(target[p],p);
+                }
+            }
+
 
             //__________________________________________________________________
             //

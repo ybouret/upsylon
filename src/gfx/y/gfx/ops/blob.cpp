@@ -82,6 +82,26 @@ namespace upsylon
             return b.size <= *static_cast<const size_t *>(args);
         }
 
+        area blob:: aabb() const throw()
+        {
+            if(size)
+            {
+                const knot *node = head;
+                coord cmin = **node, cmax=cmin;
+                for(node=node->next;node;node=node->next)
+                {
+                    const coord ctmp = **node;
+                    cmin = coord::min_of(cmin,ctmp);
+                    cmax = coord::max_of(cmax,ctmp);
+                }
+                return area(1+cmax.x-cmin.x,1+cmax.y-cmin.y,cmin.x,cmin.y);
+            }
+            else
+            {
+                return area(0,0,0,0);
+            }
+        }
+
     }
 
 }

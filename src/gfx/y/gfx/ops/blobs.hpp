@@ -5,7 +5,7 @@
 
 #include "y/gfx/ops/blob.hpp"
 #include "y/gfx/pixel.hpp"
-
+#include "y/gfx/color/size-to-rgba.hpp"
 
 namespace upsylon
 {
@@ -138,6 +138,20 @@ namespace upsylon
             void     remove_if(blob::proc, void *)      throw(); //!< remove according to proc
             void     remove_below(const size_t cutSize) throw(); //!< remove if blob size<=cutSize
             void     remove_last()                      throw(); //!< remove tail
+
+            //! watermark all blobs
+            template <typename T> inline
+            void watermark(pixmap<T>          &target,
+                           const size_to_rgba &colors,
+                           const uint8_t       alpha=0xff) const throw()
+            {
+                for(const blob *b=blist.head;b;b=b->next)
+                {
+                    const rgb C = colors( &(b->label) );
+                    const T   c = convert<T,rgb>::from(C);
+                    b->watermark(target,c,alpha);
+                }
+            }
 
             //__________________________________________________________________
             //

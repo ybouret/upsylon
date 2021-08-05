@@ -43,7 +43,7 @@ Y_UTEST(eda)
     if(argc>1)
     {
         // get image
-        const pixmap<rgb>   img = IMG.load<rgb>(argv[1]);
+        pixmap<rgb>         img = IMG.load<rgb>(argv[1]);
         broker              app(eng,img);
 
         // convert
@@ -107,6 +107,8 @@ Y_UTEST(eda)
             IMG.save(kmax,"ckmax.png");
         }
 
+        B.watermark(img, sz2c, 200);
+        IMG.save(img,"wm-edges.png");
 
     }
 }
