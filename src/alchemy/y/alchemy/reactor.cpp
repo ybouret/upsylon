@@ -2,6 +2,7 @@
 #include "y/alchemy/reactor.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/mkl/kernel/adjoint.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -11,6 +12,12 @@ namespace upsylon
     namespace Alchemy
     {
         const char Reactor:: CLID[] = "Reactor";
+
+
+        static inline long d2l(const double x) throw()
+        {
+            return static_cast<long>( floor(x+0.5) );
+        }
 
         Reactor:: Reactor(Library    &_lib,
                           Equilibria &_eqs) :
@@ -27,6 +34,7 @@ namespace upsylon
         Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        Psi(M,M),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
@@ -48,6 +56,25 @@ namespace upsylon
                 if(active[i]) aliasing::incr(dof);
             }
             std::cerr << "active=" << active << " // #" << dof << "/" << M << std::endl;
+
+            {
+                matrix<long> aNu3(N,M);
+                {
+                    matrix<long> aNu2(N,N);
+                    {
+                        Matrix adj(N,N);
+                        {
+                            Matrix Nu2(N,N);
+                            tao::gram(Nu2,Nu);
+                            adjoint(adj,Nu2);
+                        }
+                        aNu2.assign(adj,d2l);
+                    }
+                    tao::mmul(aNu3,aNu2,Nu);
+                }
+                tao::mmul( aliasing::_(Psi),NuT,aNu3);
+            }
+            std::cerr << "Psi=" << Psi << std::endl;
         }
 
         Reactor:: ~Reactor() throw()

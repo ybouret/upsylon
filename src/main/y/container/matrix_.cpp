@@ -8,15 +8,21 @@
 #include "y/type/standard.hpp"
 
 #include "y/memory/allocator/global.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 #include <cerrno>
 
 namespace upsylon
 {
+
+    typedef   memory::dyadic matrix_allocator;
+
     void matrix_:: __free() throw()
     {
-        memory::global::location().release(workspace,aliasing::_(allocated));
+        static memory::allocator &mgr = matrix_allocator::location();
+        mgr.release(workspace,aliasing::_(allocated));
     }
+
 
     matrix_:: ~matrix_() throw()
     {
@@ -29,6 +35,12 @@ namespace upsylon
         _bzset(total_items);
     }
 
+
+    static inline void * matrix_memory( const size_t &allocated )
+    {
+        static memory::allocator &mgr = matrix_allocator::instance();
+        return mgr.acquire( aliasing::_(allocated) );
+    }
 
     matrix_:: matrix_(const size_t nr, const size_t nc,const size_t item_size) :
     rows(nr),
@@ -43,7 +55,7 @@ namespace upsylon
     allocated(   _indx.next_offset() ),
     r_indices(),
     c_indices(),
-    workspace( memory::global::instance().acquire( aliasing::_(allocated) ) )
+    workspace( matrix_memory(allocated) )
     {
         assert(item_size>0);
         // sanity check

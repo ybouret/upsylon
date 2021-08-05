@@ -13,8 +13,8 @@ namespace  {
     void do_test()
     {
         std::cerr << "sizeof(matrix<" << typeid(T).name() << ">)=" << sizeof(matrix<T>) << std::endl;
-        { matrix<T> m0;
-
+        {
+            matrix<T> m0;
             std::cerr << "0 allocated=" << m0.allocated << std::endl;
         }
 
@@ -80,17 +80,37 @@ namespace  {
         }
     }
 }
+
+template <typename T>
+static inline
+void do_test_mem()
+{
+    std::cerr <<std::dec;
+    std::cerr << "matrix<" << typeid(T).name() << ">" << std::endl;
+    for(size_t r=1;r<=10;++r)
+    {
+        for(size_t c=1;c<=10;++c)
+        {
+            matrix<T> m(r,c);
+            std::cerr << " (" << r<<"x" << c << "):" << m.allocated;
+        }
+        std::cerr << std::endl;
+    }
+}
+
+
 Y_UTEST(matrix)
 {
-    std::cerr << std::dec;
     do_test<float>();
     do_test<double>();
     do_test<int>();
     do_test<string>();
-    std::cerr << std::hex;
     do_test<apn>();
     do_test<apz>();
     do_test<apq>();
+
+    do_test_mem<float>();
+
 }
 Y_UTEST_DONE()
 

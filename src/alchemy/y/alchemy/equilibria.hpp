@@ -13,8 +13,8 @@ namespace upsylon
     namespace Alchemy
     {
 
-        typedef matrix<double> Matrix;
-        typedef matrix<long>   iMatrix;
+        typedef matrix<double> Matrix;  //!< alias
+        typedef matrix<long>   iMatrix; //!< alias
 
         //______________________________________________________________________
         //

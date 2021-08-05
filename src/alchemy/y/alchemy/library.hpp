@@ -56,12 +56,14 @@ namespace upsylon
             const Species & operator[](const string &)    const; //!< look up by name
             const Species & operator[](const char *  )    const; //!< look up by name
 
+            //! get index of a named species
             template <typename ID> inline
             size_t operator()(const ID &id) const
             {
                 return (*this)[id].indx;
             }
 
+            //! access array content by name
             template <typename ARR, typename ID> inline
             typename ARR::type &operator()(ARR &arr, const ID &id) const
             {
@@ -69,6 +71,7 @@ namespace upsylon
                 return arr[ self(id) ];
             }
 
+            //! access array content by name, const
             template <typename ARR, typename ID> inline
             typename ARR::const_type operator()(const ARR &arr, const ID &id) const
             {
@@ -76,6 +79,7 @@ namespace upsylon
                 return arr[ self(id) ];
             }
 
+            //! draw a random positive concentration
             void draw(randomized::bits &, Addressable &C) const throw();
 
             //__________________________________________________________________

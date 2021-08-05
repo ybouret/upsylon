@@ -20,7 +20,7 @@ namespace upsylon
     namespace Alchemy
     {
 
-        typedef addressable<double> Addressable;
+        typedef addressable<double> Addressable; //!< aliasing
 
         //______________________________________________________________________
         //
@@ -38,9 +38,9 @@ namespace upsylon
             typedef intr_ptr<string,Species>          Pointer; //!< alias
             typedef hash_set<string,Species::Pointer> Set;     //!< alias
             typedef Set::node_type                    Node;    //!< alias
-            static  const int                         min_exp10 = -14;
-            static  const int                         max_exp10 = 0;
-            static  double                            Concentration(randomized::bits&) throw();
+            static  const int                         min_exp10 = -14; //!< for random concentration
+            static  const int                         max_exp10 = 0;   //!< for random concentration
+            static  double Concentration(randomized::bits&) throw();   //!< get a random concentration
             
             //__________________________________________________________________
             //

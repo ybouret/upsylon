@@ -233,6 +233,22 @@ namespace upsylon
             }
         }
 
+        //! manual assignment
+        template <typename U, typename FUNC>
+        inline void assign(const matrix<U> &other, FUNC &func)
+        {
+            assert( same_size_than(other) );
+            for(size_t i=rows;i>0;--i)
+            {
+                addressable<type>      &target = (*this)[i];
+                const accessible<U>    &source = other[i];
+                for(size_t j=cols;j>0;--j)
+                {
+                    target[j] =  func(source[j]);
+                }
+            }
+        }
+
         //! manual assignment of transpose matrix
         template <typename U>
         inline void assign_transpose( const matrix<U> &other )
