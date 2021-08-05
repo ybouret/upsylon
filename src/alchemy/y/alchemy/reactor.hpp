@@ -60,8 +60,8 @@ namespace upsylon
             const Equilibria &eqs;    //!< support equlibria
             const size_t      N;      //!< number of equilibria
             const size_t      M;      //!< number of components
-            const size_t      dof;    //!< number of active species
             const Flags       active; //!< [M]   active flags
+            const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
             const Vector      xi;     //!< [N]   extents

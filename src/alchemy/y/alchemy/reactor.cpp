@@ -13,15 +13,17 @@ namespace upsylon
     {
         const char Reactor:: CLID[] = "Reactor";
 
+
         
+
         Reactor:: Reactor(Library    &_lib,
                           Equilibria &_eqs) :
         lib(_lib),
         eqs(_eqs),
         N(eqs->size()),
         M(lib->size()),
-        dof(0),
         active(M,false),
+        NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
         xi(N,0),
@@ -44,12 +46,7 @@ namespace upsylon
             //__________________________________________________________________
             eqs.fill( aliasing::_(Nu) );
             aliasing::_(NuT).assign_transpose(Nu);
-            eqs.guess( aliasing::_(active) );
-            for(size_t i=M;i>0;--i)
-            {
-                if(active[i]) aliasing::incr(dof);
-            }
-            std::cerr << "active=" << active << " // #" << dof << "/" << M << std::endl;
+            std::cerr << "active=" << active << " // #" << NA << "/" << M << std::endl;
 
 
         }

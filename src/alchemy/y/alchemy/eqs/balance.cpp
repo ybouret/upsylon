@@ -10,6 +10,7 @@ namespace upsylon
 
         bool Reactor:: balance(Addressable &C) throw()
         {
+            vector<size_t> ibad;
 
             size_t nbad = 0;
             for(size_t j=M;j>0;--j)
@@ -21,10 +22,14 @@ namespace upsylon
                 {
                     d = -c;
                     ++nbad;
+                    ibad.push_back(j);
                 }
             }
             std::cerr << "nbad=" << nbad << std::endl;
             std::cerr << "cbad=" << dC   << std::endl;
+            std::cerr << "ibad=" << ibad << std::endl;
+
+
 
             return false;
         }

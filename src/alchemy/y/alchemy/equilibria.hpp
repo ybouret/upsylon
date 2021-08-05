@@ -115,7 +115,7 @@ namespace upsylon
                          const Accessible &C) const throw();
 
             //! guess all active species
-            void guess(addressable<bool> &active) const throw();
+            size_t guess(addressable<bool> &active) const throw();
 
             
         private:

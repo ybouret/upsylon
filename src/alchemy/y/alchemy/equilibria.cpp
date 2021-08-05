@@ -114,12 +114,21 @@ namespace upsylon
             }
         }
 
-        void Equilibria:: guess(addressable<bool> &active) const throw()
+        size_t Equilibria:: guess(addressable<bool> &active) const throw()
         {
+            size_t na = active.size();
+            for(size_t i=na;i>0;--i) active[i] = false;
+
             for(const Equilibrium::Node *node=edb.head();node;node=node->next)
             {
                 (**node)->guess(active);
             }
+            size_t ans = 0;
+            for(size_t i=na;i>0;--i)
+            {
+                if(active[i]) ++ans;
+            }
+            return ans;
         }
 
         
