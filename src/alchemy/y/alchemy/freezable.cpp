@@ -9,7 +9,7 @@ namespace upsylon
     namespace Alchemy
     {
 
-        Freezable:: Freezable() throw() : freezed(false)
+        Freezable:: Freezable() throw() : frozen(false)
         {
         }
 
@@ -19,13 +19,13 @@ namespace upsylon
 
         void Freezable:: permit() throw()
         {
-            aliasing::_(freezed) = false;
+            aliasing::_(frozen) = false;
         }
 
         void Freezable:: freeze(const char *msg)
         {
             static const char aux[] = "already freezed!";
-            if(freezed)
+            if(frozen)
             {
                 if(msg)
                 {
@@ -36,7 +36,7 @@ namespace upsylon
                     throw exception("%s",aux);
                 }
             }
-            aliasing::_(freezed) = true;
+            aliasing::_(frozen) = true;
         }
 
 

@@ -32,7 +32,7 @@ namespace upsylon
         {
             assert(s);
             const Species::Pointer sp(s);
-            if(freezed)         throw exception("%s is freezed whilst adding '%s'",CLID,*(s->name));
+            if(frozen)          throw exception("%s is frozen whilst adding '%s'",CLID,*(s->name));
             if(!sdb.insert(sp)) throw exception("%s: multiple '%s'", CLID, *(s->name));
             aliasing::_(snw) = max_of(snw,s->name.size());
             return *s;

@@ -22,7 +22,7 @@ namespace upsylon
             virtual   ~Freezable() throw();        //!< cleanup
             void       freeze(const char *when=0); //!< freeze
             void       permit() throw();           //!< permit anew
-            const bool freezed;                    //!< flag
+            const bool frozen;                     //!< flag
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Freezable);
