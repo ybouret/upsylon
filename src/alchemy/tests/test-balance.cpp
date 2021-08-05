@@ -39,7 +39,6 @@ Y_UTEST(balance)
     lib(C,"H+") *= -1;
 
     lib.display(std::cerr,C) << std::endl;
-    cs.balance(C);
     
 
 

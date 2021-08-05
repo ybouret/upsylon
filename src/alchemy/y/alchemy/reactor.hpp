@@ -48,31 +48,8 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-
-            //! verbose checking, for debug
-            bool isValid(const Accessible &C) const;
-
-            //! compute initial state, return regularity from J
-            bool isRegular(const Accessible &C, const double t) throw();
-
-            //! compute regularity for pre-computed K, return regularity from J
-            bool isRegular(const Accessible &C)                 throw();
-
-            //! display state, used for debug
-            void display_state() const;
-
-
-            //! solve with computation of K
-            bool   solve(Addressable &C, const double t) throw();
-
-            //! solve without computation of K
-            bool   solve(Addressable &C) throw();
-
-            //! balancing algorithm
-            bool   balance(Addressable &C) throw();
-
-            //! count and fill invalid
-            size_t invalid(const Accessible &C) throw();
+            void displayState()               const; //!< info to debug
+            bool isValid(const Accessible &C) const; //!< check active are >0, display error
 
             //__________________________________________________________________
             //
@@ -102,14 +79,7 @@ namespace upsylon
             const Freezer lfrz;
             const Freezer efrz;
 
-            bool  differentiable()                     const  throw(); //!< compute J and W
-
-            bool  movedSingle(Addressable &C)                 throw(); //!< try to move a not moved equilibrium
-            bool  regularized(Addressable &C)                 throw(); //!< sweeping algo with movedSingle
-
-            bool  findRegular(Addressable &C, const double t) throw(); //!< try to regularize with new K
-            bool  findRegular(Addressable &C)                 throw(); //!< try to regularize
-            bool  equilibrate(Addressable &C)                 throw(); //!< Newton+ algo from a regularized concentration
+            
 
         };
 

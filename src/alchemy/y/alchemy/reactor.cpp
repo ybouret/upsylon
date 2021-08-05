@@ -2,6 +2,7 @@
 #include "y/alchemy/reactor.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/exception.hpp"
 
 namespace upsylon
 {
@@ -35,6 +36,8 @@ namespace upsylon
         efrz(_eqs,Equilibria::CLID)
         {
 
+            if(N>M) throw exception("%s detected too many equations!",CLID);
+
             //__________________________________________________________________
             //
             // initialize
@@ -53,26 +56,8 @@ namespace upsylon
         {
         }
 
-        bool  Reactor:: differentiable() const throw()
-        {
-            tao::mmul_rtrn(aliasing::_(W),Phi,Nu,aliasing::_(J));
-            return LU::build(aliasing::_(W));
-        }
 
-
-        bool Reactor:: isRegular(const Accessible &C, const double t) throw()
-        {
-            eqs.compute(aliasing::_(K),aliasing::_(Gam),aliasing::_(Phi),C,t);
-            return differentiable();
-        }
-
-        bool Reactor:: isRegular(const Accessible &C) throw()
-        {
-            eqs.upgrade(K,aliasing::_(Gam),aliasing::_(Phi),C);
-            return differentiable();
-        }
-
-        void Reactor:: display_state() const
+        void Reactor:: displayState() const
         {
             std::cerr << "K   = " << K   << std::endl;
             std::cerr << "Gam = " << Gam << std::endl;

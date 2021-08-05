@@ -71,6 +71,20 @@ namespace upsylon
             }
         }
 
+        bool Library:: has(const string &id) const throw()
+        {
+            return NULL != sdb.search(id);
+        }
+
+
+        bool Library:: has(const char *id) const
+        {
+            const string _(id);
+            return NULL != sdb.search(_);
+        }
+
+
+
     }
 }
 

@@ -29,6 +29,7 @@ namespace upsylon
             typedef Species::Set::const_iterator const_iterator; //!< alias
             static const char                    CLID[];         //!< "Library"
             
+
             //__________________________________________________________________
             //
             // C++
@@ -48,6 +49,8 @@ namespace upsylon
                 return use( new Species(name,z,sdb.size()+1) );
             }
 
+            bool has(const string &) const throw(); //!< check species
+            bool has(const char   *) const;         //!< check species
 
             bool            owns(const Species &) const throw(); //!< check ownership
             const Species & operator[](const string &)    const; //!< look up by name
@@ -113,6 +116,12 @@ namespace upsylon
                 os << '}';
                 return os;
             }
+
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

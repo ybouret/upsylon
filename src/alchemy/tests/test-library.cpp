@@ -26,7 +26,17 @@ Y_UTEST(library)
     {
         std::cerr << **node << std::endl;
     }
-    
+
+    struct SpeciesInfo { const char *handle; const char *symbol; };
+    const SpeciesInfo repo[] =
+    {
+        { "proton", "H+" },
+        { "hydroxy", "HO-" },
+        { "chlorine", "Cl-" },
+        { "sodium",   "Na+" },
+        { "potassium", "K+" }
+    };
+    std::cerr << "#repo=" << sizeof(repo)/sizeof(repo[0]) << std::endl;
     
 }
 Y_UTEST_DONE()

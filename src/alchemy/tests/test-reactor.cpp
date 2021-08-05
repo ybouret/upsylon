@@ -32,41 +32,7 @@ Y_UTEST(reactor)
 
     vector<double> C(cs.M,0);
     lib.display(std::cerr << "C=",C) << std::endl;
-    if(cs.isRegular(C,0.0))
-    {
-        std::cerr << "regular system" << std::endl;
-    }
-    else
-    {
-        std::cerr << "singular system" << std::endl;
-    }
-    cs.display_state();
-
-
-    std::cerr << "using upgrade..." << std::endl;
-
-    if(cs.solve(C,0.0))
-    {
-
-    }
-
-    std::cerr << std::endl;
-
-    std::cerr << "From alea" << std::endl;
-    lib.draw(alea,C);
-    if(cs.isRegular(C))
-    {
-        std::cerr << "regular system" << std::endl;
-    }
-    else
-    {
-        std::cerr << "singular system" << std::endl;
-    }
-
-    if( cs.solve(C) )
-    {
-
-    }
+    
     
 
 

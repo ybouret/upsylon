@@ -15,6 +15,8 @@ namespace upsylon
         class Parser : public jParser
         {
         public:
+            explicit Parser();
+            virtual ~Parser() throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Parser);
