@@ -8,29 +8,20 @@ namespace upsylon
     namespace Alchemy
     {
 
+
         bool Reactor:: balance(Addressable &C) throw()
         {
-            vector<size_t> ibad;
-
             size_t nbad = 0;
             for(size_t j=M;j>0;--j)
             {
-                const double c = C[j];
-                double      &d = aliasing::_(dC[j]);
-                d=0;
-                if(active[j] && c<0)
+                aliasing::_(Ctry[j]) = 0;
+                if(active[j]&&C[j]<0)
                 {
-                    d = -c;
+                    aliasing::_(Ctry[j]) = -C[j];
                     ++nbad;
-                    ibad.push_back(j);
                 }
             }
-            std::cerr << "nbad=" << nbad << std::endl;
-            std::cerr << "cbad=" << dC   << std::endl;
-            std::cerr << "ibad=" << ibad << std::endl;
-
-
-
+            std::cerr << "Cbad=" << Ctry << std::endl;
             return false;
         }
 

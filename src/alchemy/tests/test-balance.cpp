@@ -19,11 +19,19 @@ Y_UTEST(balance)
     const Species &w  = lib("HO-",1);
     const Species &ah = lib("AH",0);
     const Species &am = lib("Am",-1);
+
     (void) lib("Na+",1);
     (void) lib("Cl-",-1);
 
-    Equilibrium &water = eqs("water", 1e-14);  water(1,h); water(1,w);
-    Equilibrium &weak  = eqs("weak", 1e-4);    weak(1,h); weak(1,am); weak(-1,ah);
+    Equilibrium &water    = eqs("water",  1e-14); water(1,h); water(1,w);
+    Equilibrium &acetic   = eqs("acetic", 1e-4);  acetic(1,h); acetic(1,am); acetic(-1,ah);
+
+    if(false)
+    {
+        const Species &nh4 = lib("NH4+",1);
+        const Species &nh3 = lib("NH3",0);
+        Equilibrium &ammonia  = eqs("ammonia", 1e-9); ammonia(1,h); ammonia(1,nh3); ammonia(-1,nh4);
+    }
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
@@ -33,13 +41,25 @@ Y_UTEST(balance)
 
     std::cerr << "Nu=" << cs.Nu << std::endl;
 
-    vector<double> C(cs.M+2,0);
+    vector<double> C(cs.M,0);
     lib.draw(alea,C);
-
-    lib(C,"H+") *= -1;
-
-    lib.display(std::cerr,C) << std::endl;
-    
+    for(size_t j=cs.M;j>0;--j)
+    {
+        if(cs.active[j])
+        {
+            if(alea.choice()) C[j] = -C[j];
+        }
+        else
+        {
+            C[j] = 0;
+        }
+    }
+    lib.display(std::cerr << "C=",C) << std::endl;
+    std::cerr << "C=" << C << std::endl;
+    std::cerr << "Nu  = " << cs.Nu  << std::endl;
+    std::cerr << "NuT = " << cs.NuT << std::endl;
+    //cs.NuT.maxima(std::cerr << "NuT:" ) << std::endl;
+    cs.balance(C);
 
 
 }

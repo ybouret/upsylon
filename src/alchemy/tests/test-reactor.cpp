@@ -47,8 +47,7 @@ Y_UTEST(reactor)
     std::cerr << "Nu  = " << cs.Nu  << std::endl;
     std::cerr << "NuT = " << cs.NuT << std::endl;
 
-    cs.balance(C);
-
+    
 
 }
 Y_UTEST_DONE()
