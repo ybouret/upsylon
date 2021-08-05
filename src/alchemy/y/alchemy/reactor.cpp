@@ -30,13 +30,11 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        moved(N,false),
-        isBad(M,true),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
 
-            if(N>M) throw exception("%s detected too many equations!",CLID);
+            if(N>M) throw exception("%s detected too many equilibria!",CLID);
 
             //__________________________________________________________________
             //

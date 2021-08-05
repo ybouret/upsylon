@@ -49,7 +49,9 @@ namespace upsylon
             // methods
             //__________________________________________________________________
             void displayState()               const; //!< info to debug
-            bool isValid(const Accessible &C) const; //!< check active are >0, display error
+            bool isValid(const Accessible &C) const; //!< check active C are >0, display error
+
+            bool balance(Addressable &C) throw();
 
             //__________________________________________________________________
             //
@@ -71,8 +73,7 @@ namespace upsylon
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            const Flags       moved;  //!< [N] for sweep
-            const Flags       isBad;  //!< [M] for balance
+            
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);

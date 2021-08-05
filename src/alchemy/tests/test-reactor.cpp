@@ -27,14 +27,27 @@ Y_UTEST(reactor)
 
     Reactor cs(lib,eqs);
 
+
+
+    vector<double> C(cs.M,0);
+    lib.draw(alea,C);
+    for(size_t j=cs.M;j>0;--j)
+    {
+        if(cs.active[j])
+        {
+            if(alea.choice()) C[j] = -C[j];
+        }
+        else
+        {
+            C[j] = 0;
+        }
+    }
+    lib.display(std::cerr << "C=",C) << std::endl;
+    std::cerr << "C=" << C << std::endl;
     std::cerr << "Nu  = " << cs.Nu  << std::endl;
     std::cerr << "NuT = " << cs.NuT << std::endl;
 
-    vector<double> C(cs.M,0);
-    lib.display(std::cerr << "C=",C) << std::endl;
-    
-    
-
+    cs.balance(C);
 
 
 }
