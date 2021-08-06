@@ -228,7 +228,7 @@ namespace upsylon
                 const accessible<U>    &source = other[i];
                 for(size_t j=cols;j>0;--j)
                 {
-                    target[j] =  source[j];
+                    target[j] = source[j];
                 }
             }
         }
@@ -251,7 +251,7 @@ namespace upsylon
 
         //! manual assignment of transpose matrix
         template <typename U>
-        inline void assign_transpose( const matrix<U> &other )
+        inline void assign_transpose(const matrix<U> &other)
         {
             assert( rows==other.cols );
             assert( cols==other.rows );
@@ -265,7 +265,21 @@ namespace upsylon
             }
         }
 
-
+        //! manual assignment of transpose matrix
+        template <typename U, typename FUNC>
+        inline void assign_transpose(const matrix<U> &other, const FUNC &func)
+        {
+            assert( rows==other.cols );
+            assert( cols==other.rows );
+            for(size_t i=rows;i>0;--i)
+            {
+                addressable<type> &target = (*this)[i];
+                for(size_t j=cols;j>0;--j)
+                {
+                    target[j] = func(other[j][i]);
+                }
+            }
+        }
         
         //! assignment
         inline matrix & operator=(const matrix &other)

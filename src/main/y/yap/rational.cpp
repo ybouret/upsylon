@@ -43,6 +43,11 @@ namespace upsylon {
             }
             return num;
         }
+
+        bool rational:: is_integer() const throw()
+        {
+            return den.is(1);
+        }
         
 
         const number::itype rational::i_one;

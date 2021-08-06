@@ -26,7 +26,7 @@ Y_UTEST(balance)
     Equilibrium &water    = eqs("water",  1e-14); water(1,h); water(1,w);
     Equilibrium &acetic   = eqs("acetic", 1e-4);  acetic(1,h); acetic(1,am); acetic(-1,ah);
 
-    if(false)
+    if(true)
     {
         const Species &nh4 = lib("NH4+",1);
         const Species &nh3 = lib("NH3",0);

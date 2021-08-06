@@ -1,4 +1,4 @@
-
+#include "y/yap.hpp"
 #include "y/alchemy/reactor.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
@@ -48,6 +48,15 @@ namespace upsylon
             aliasing::_(NuT).assign_transpose(Nu);
             std::cerr << "active=" << active << " // #" << NA << "/" << M << std::endl;
 
+            matrix<apq> Nu2(N,N);
+            tao::gram(Nu2,Nu);
+            std::cerr << "Nu2  = " << Nu2 << std::endl;
+            matrix<apq> aNu2(N,N);
+            adjoint(aNu2,Nu2);
+            std::cerr << "aNu2 = " << aNu2 << std::endl;
+            const apq dNu2 = __determinant(Nu2);
+            std::cerr << "dNu2 = " << dNu2 << std::endl;
+            if(dNu2<=0) throw exception("%s has redundant equilibria!",CLID);
 
         }
 
