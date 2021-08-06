@@ -5,6 +5,9 @@ namespace upsylon
     namespace mkl
     {
 
+        const char apk:: det_fcn[] = "apk::determinant";
+        const char apk:: adj_fcn[] = "apk::adjoint";
+
         namespace
         {
             class apn_ref : public object

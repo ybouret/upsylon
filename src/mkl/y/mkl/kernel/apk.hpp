@@ -20,6 +20,9 @@ namespace upsylon
         //______________________________________________________________________
         struct apk
         {
+            static const char det_fcn[]; //!< "apk::determinant"
+            static const char adj_fcn[]; //!< "apk::adjoint"
+
             //! integer type determinant
             /**
              - assuming that T is an integer type
@@ -34,7 +37,7 @@ namespace upsylon
                 matrix<apq>    b(n,n);
                 b.assign(a);
                 const apq d = __determinant(b);
-                return d.to_integer();
+                return d.to_integer(det_fcn);
             }
 
             //! compute adjoint for integer types
@@ -43,7 +46,8 @@ namespace upsylon
              minors of rationals.
              */
             template <typename T> static inline
-            void adjoint( matrix<apz> &target, const matrix<T> &source )
+            void adjoint(matrix<apz>     &target,
+                         const matrix<T> &source )
             {
                 assert(target.rows==source.rows);
                 assert(target.cols==source.cols);
@@ -63,7 +67,7 @@ namespace upsylon
                         for(size_t r=n;r>0;--r)
                         {
                             M.minor_of(source,r,c);
-                            const apz d = __determinant(M).to_integer();
+                            const apz d = __determinant(M).to_integer(adj_fcn);
                             tc[r] = ( (r+c) & 1) ? -d:d;
                         }
                     }
@@ -105,7 +109,7 @@ namespace upsylon
             template <typename T> static inline
             void convert(matrix<T>          &target,
                          const matrix<apz>  &source,
-                         const char *when=0)
+                         const char         *when=0)
             {
                 assert( target.same_size_than(source) );
                 T         *tgt = *target;

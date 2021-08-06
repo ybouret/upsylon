@@ -3,7 +3,8 @@
 #include "y/yap/library.hpp"
 #include "y/type/aliasing.hpp"
 #include "y/os/error.hpp"
-#include "y/exception.hpp"
+#include "y/exceptions.hpp"
+#include <cerrno>
 #include <iostream>
 
 namespace upsylon {
@@ -35,11 +36,15 @@ namespace upsylon {
             return 0.0;
         }
 
-        apz rational:: to_integer() const
+        apz rational:: to_integer(const char *when) const
         {
             if(!den.is(1))
             {
-                throw exception("rational is not an integer");
+                libc::exception excp(EDOM,"rational is not an integer");
+                if(when)
+                {
+                    excp.cat(" in %s",when);
+                }
             }
             return num;
         }
