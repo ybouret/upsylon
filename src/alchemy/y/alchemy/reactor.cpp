@@ -29,6 +29,7 @@ namespace upsylon
         xi(N,0),
         aux1(N,0),
         aux2(N,0),
+        Caux(M,0),
         dC(M,0),
         Ctry(M,0),
         Nu(N,N>0?M:0),
@@ -114,6 +115,37 @@ namespace upsylon
         {
             tao::sub(aliasing::_(Caux),C0,C);
             project(delta,Caux);
+        }
+
+        void Reactor:: complete()
+        {
+            iMatrix F(M,M);
+            Flags   used(M,false);
+
+            std::cerr << "1:" << N << " => Nu" << std::endl;
+            for(size_t i=N;i>0;--i)
+            {
+                tao::set(F[i],Nu[i]);
+                used[i] = true;
+            }
+
+            size_t count = N;
+
+            {
+                for(const Species::Node *sp = lib->head();sp;sp=sp->next)
+                {
+                    const Species &s = ***sp;
+                    if(s.active) continue;
+                    const size_t j = s.indx;
+                    F[j][j] = 1;
+                    used[j] = true;
+                    ++count;
+                }
+            }
+
+            std::cerr << "F       = " << F       << std::endl;
+            std::cerr << "used    = " << used    << std::endl;
+            std::cerr << "missing = " << M-count << std::endl;
         }
 
     }

@@ -1,5 +1,6 @@
 #include "y/alchemy/reactor.hpp"
 #include "y/mkl/tao.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -11,17 +12,27 @@ namespace upsylon
 
         bool Reactor:: balance(Addressable &C) throw()
         {
-            size_t nbad = 0;
+            std::cerr << "C=" << C << std::endl;
+
             for(size_t j=M;j>0;--j)
             {
-                aliasing::_(Ctry[j]) = 0;
-                if(active[j]&&C[j]<0)
+                if(active[j])
                 {
-                    aliasing::_(Ctry[j]) = -C[j];
-                    ++nbad;
+                    aliasing::_(Ctry)[j] = max_of(C[j],0.0);
+                }
+                else
+                {
+                    aliasing::_(Ctry)[j] = C[j];
                 }
             }
-            std::cerr << "Cbad=" << Ctry << std::endl;
+            std::cerr << "Ctry=" << Ctry << std::endl;
+
+            Vector grad(M,0);
+            project(grad,Ctry,C);
+            tao::neg(grad);
+            std::cerr << "grad=" << grad << std::endl;
+
+
             return false;
         }
 

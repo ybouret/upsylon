@@ -53,6 +53,7 @@ namespace upsylon
             bool balance(Addressable &C)    throw(); //!< balance current concentration
             void project(Addressable &delta, const Accessible &C)  throw();
             void project(Addressable &delta, const Accessible &C, const Accessible &C0) throw();
+            void complete();
 
             //__________________________________________________________________
             //

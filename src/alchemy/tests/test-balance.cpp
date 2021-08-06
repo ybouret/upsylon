@@ -28,18 +28,20 @@ Y_UTEST(balance)
 
     if(false)
     {
-        const Species &nh4 = lib("NH4+",1);
-        const Species &nh3 = lib("NH3",0);
-        Equilibrium &ammonia  = eqs("ammonia", 1e-9); ammonia(1,h); ammonia(1,nh3); ammonia(-1,nh4);
+        const Species &nh4     = lib("NH4+",1);
+        const Species &nh3     = lib("NH3",0);
+        Equilibrium   &ammonia = eqs("ammonia", 1e-9); ammonia(1,h); ammonia(1,nh3); ammonia(-1,nh4);
     }
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
 
     Reactor cs(lib,eqs);
-
-
     std::cerr << "Nu=" << cs.Nu << std::endl;
+
+    cs.complete();
+    
+    return 0;
 
     Vector C(cs.M,0);
     lib.draw(alea,C);
@@ -47,25 +49,20 @@ Y_UTEST(balance)
     {
         if(cs.active[j])
         {
-            if(alea.choice()) C[j] = -C[j];
+
         }
-        else
-        {
-            C[j] = 0;
-        }
+        else C[j]=0;
     }
+
+    lib(C,"H+") *= -1;
+
     lib.display(std::cerr << "C=",C) << std::endl;
-    std::cerr << "C=" << C << std::endl;
+    std::cerr << "C   = " << C << std::endl;
     std::cerr << "Nu  = " << cs.Nu  << std::endl;
     std::cerr << "NuT = " << cs.NuT << std::endl;
-    //cs.NuT.maxima(std::cerr << "NuT:" ) << std::endl;
     cs.balance(C);
 
-    Vector A(cs.M,0);
-    Vector delta(cs.M,0);
-
-    cs.project(delta,C);
-    std::cerr << "delta=" << C << std::endl;
+    
 
 }
 Y_UTEST_DONE()
