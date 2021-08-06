@@ -61,6 +61,15 @@ namespace upsylon
             std::cerr << "dNu2=" << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
+            iMatrix dXi(M,M);
+            {
+                iMatrix Nu3(N,M);
+                tao::mmul(Nu3,aNu2,Nu);
+                std::cerr << "Nu3=" << Nu3 << std::endl;
+                tao::mmul(dXi,NuT,Nu3);
+            }
+            std::cerr << "Xi=" << dXi << "/" << dNu2 << std::endl;
+
         }
 
         Reactor:: ~Reactor() throw()
@@ -99,6 +108,12 @@ namespace upsylon
             tao::mul(aliasing::_(aux2),aNu2,aux1);
             tao::mul(delta,NuT,aux2);
             tao::divset(delta,dNu2);
+        }
+
+        void Reactor:: project(Addressable &delta, const Accessible &C, const Accessible &C0) throw()
+        {
+            tao::sub(aliasing::_(Caux),C0,C);
+            project(delta,Caux);
         }
 
     }

@@ -52,6 +52,7 @@ namespace upsylon
             bool isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool balance(Addressable &C)    throw(); //!< balance current concentration
             void project(Addressable &delta, const Accessible &C)  throw();
+            void project(Addressable &delta, const Accessible &C, const Accessible &C0) throw();
 
             //__________________________________________________________________
             //
@@ -68,6 +69,7 @@ namespace upsylon
             const Vector      xi;     //!< [N]   extents
             const Vector      aux1;   //!< [N]
             const Vector      aux2;   //!< [N]
+            const Vector      Caux;   //!< [M]   auxiliary C
             const Vector      dC;     //!< [M]   delta C
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix

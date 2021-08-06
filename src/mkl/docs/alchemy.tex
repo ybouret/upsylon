@@ -105,9 +105,22 @@ We are looking for $\vec{A}\geq\vec{0}$ such that:
 \begin{equation}
 	\vec{A} + \bm{\nu}^t \vec{\xi} = \vec{A}_0
 \end{equation}
-For a given $\vec{A}_n$, we get:
+For a given $\vec{A}$, we get:
 \begin{equation}
 	\delta{\vec{A}} = \underbrace{\bm{\nu}^t\left(\bm{\nu}\bm{\nu}^t\right)^{-1} \bm{\nu}}_{\bm{\Xi}} \left[\vec{A}_0 - \vec{A}\right]
+\end{equation}
+
+We want to minimize:
+\begin{equation}
+	f(\vec{A}) = \dfrac{1}{2} {\delta\vec{A}}^2 = \dfrac{1}{2}\left[\vec{A}_0 - \vec{A}\right]^t \bm{\Xi}^t \bm{\Xi} \left[\vec{A}_0 - \vec{A}\right]
+\end{equation}
+and we check that:
+\begin{equation}
+	\bm{\Xi}^t \bm{\Xi} = \bm{\Xi}
+\end{equation}
+so that
+\begin{equation}
+	\vec{\nabla} f = - \bm{\Xi} \left[\vec{A}_0 - \vec{A}\right] = -\delta\vec{A}
 \end{equation}
 
 \section{Newton$^+$'s Algorithm}
