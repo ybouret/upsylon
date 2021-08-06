@@ -90,13 +90,24 @@ Time constants are inverse of the eigenvalues of the matrix.
 
 \section{Balancing}
 
-We want
+%We want
+%\begin{equation}
+%	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
+%\end{equation}
+%meaning
+%\begin{equation}
+%	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
+%\end{equation}
+
+Let's assume that we got $\vec{A}_0$ a concentration with and excessive dissociation.
+We are looking for $\vec{A}\geq\vec{0}$ such that:
+
 \begin{equation}
-	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
+	\vec{A} + \bm{\nu}^t \vec{\xi} = \vec{A}_0
 \end{equation}
-meaning
+For a given $\vec{A}_n$, we get:
 \begin{equation}
-	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
+	\delta{\vec{A}} = \underbrace{\bm{\nu}^t\left(\bm{\nu}\bm{\nu}^t\right)^{-1} \bm{\nu}}_{\bm{\Xi}} \left[\vec{A}_0 - \vec{A}\right]
 \end{equation}
 
 \section{Newton$^+$'s Algorithm}

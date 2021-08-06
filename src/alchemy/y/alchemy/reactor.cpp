@@ -27,10 +27,14 @@ namespace upsylon
         K(N,0),
         Gam(N,0),
         xi(N,0),
+        aux1(N,0),
+        aux2(N,0),
         dC(M,0),
         Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        aNu2(N,N),
+        dNu2(0),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
@@ -39,6 +43,7 @@ namespace upsylon
         {
 
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
+            std::cerr << "active=" << active << " // #" << NA << "/" << M << std::endl;
 
             //__________________________________________________________________
             //
@@ -46,20 +51,15 @@ namespace upsylon
             //__________________________________________________________________
             eqs.fill( aliasing::_(Nu) );
             aliasing::_(NuT).assign_transpose(Nu);
-            std::cerr << "active=" << active << " // #" << NA << "/" << M << std::endl;
-
-            iMatrix Nu2(N,N);
-            tao::gram(Nu2,Nu);
-            matrix<apz> aNu2(N,N);
-            apk::adjoint(aNu2,Nu2);
-            std::cerr << "Nu2  = " <<  Nu2 << std::endl;
-            std::cerr << "aNu2 = " << aNu2 << std::endl;
-            const apz dNu2 = apk::determinant(Nu2);
-            std::cerr << "dNu2 = " << dNu2 << std::endl;
-
-            if(dNu2==0) throw exception("%s has redundant equilibria!",CLID);
-
-
+            {
+                matrix<apz> aNu2_(N,N);
+                const apz   dNu2_ = apk::adjoint_gram(aNu2_,Nu);
+                apk::convert(aliasing::_(aNu2),aNu2_);
+                aliasing::_(dNu2) = dNu2_.cast_to<long>("determinant(Nu2)");
+            }
+            std::cerr << "aNu2=" << aNu2 << std::endl;
+            std::cerr << "dNu2=" << dNu2 << std::endl;
+            if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
         }
 
@@ -93,6 +93,13 @@ namespace upsylon
             return ans;
         }
 
+        void Reactor:: project(Addressable &delta, const Accessible &C) throw()
+        {
+            tao::mul(aliasing::_(aux1),Nu,C);
+            tao::mul(aliasing::_(aux2),aNu2,aux1);
+            tao::mul(delta,NuT,aux2);
+            tao::divset(delta,dNu2);
+        }
 
     }
 

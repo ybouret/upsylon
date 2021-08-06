@@ -13,7 +13,9 @@ namespace upsylon
 {
     namespace Alchemy
     {
-        
+        typedef memory::dyadic                Allocator;    //!< alias
+        typedef vector<double,Allocator>      Vector;       //!< alias
+
         //______________________________________________________________________
         //
         //
@@ -27,9 +29,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            static  const char                    CLID[];       //!< Reactor
-            typedef memory::dyadic                Allocator;    //!< alias
-            typedef vector<double,Allocator>      Vector;       //!< alias
+            static  const char                    CLID[];       //!< "Reactor"
             typedef vector<bool,Allocator>        Flags;        //!< alias
             
             //__________________________________________________________________
@@ -51,6 +51,7 @@ namespace upsylon
             void displayState()               const; //!< info to debug
             bool isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool balance(Addressable &C)    throw(); //!< balance current concentration
+            void project(Addressable &delta, const Accessible &C)  throw();
 
             //__________________________________________________________________
             //
@@ -65,10 +66,14 @@ namespace upsylon
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
             const Vector      xi;     //!< [N]   extents
+            const Vector      aux1;   //!< [N]
+            const Vector      aux2;   //!< [N]
             const Vector      dC;     //!< [M]   delta C
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
+            const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
+            const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)

@@ -26,7 +26,7 @@ Y_UTEST(balance)
     Equilibrium &water    = eqs("water",  1e-14); water(1,h); water(1,w);
     Equilibrium &acetic   = eqs("acetic", 1e-4);  acetic(1,h); acetic(1,am); acetic(-1,ah);
 
-    if(true)
+    if(false)
     {
         const Species &nh4 = lib("NH4+",1);
         const Species &nh3 = lib("NH3",0);
@@ -41,7 +41,7 @@ Y_UTEST(balance)
 
     std::cerr << "Nu=" << cs.Nu << std::endl;
 
-    vector<double> C(cs.M,0);
+    Vector C(cs.M,0);
     lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)
     {
@@ -61,6 +61,11 @@ Y_UTEST(balance)
     //cs.NuT.maxima(std::cerr << "NuT:" ) << std::endl;
     cs.balance(C);
 
+    Vector A(cs.M,0);
+    Vector delta(cs.M,0);
+
+    cs.project(delta,C);
+    std::cerr << "delta=" << C << std::endl;
 
 }
 Y_UTEST_DONE()
