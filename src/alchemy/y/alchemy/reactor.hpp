@@ -75,6 +75,7 @@ namespace upsylon
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
+            const Flags       Nu1;    //!< [N]   single component in NuT
             const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian

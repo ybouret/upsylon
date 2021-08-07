@@ -90,39 +90,37 @@ Time constants are inverse of the eigenvalues of the matrix.
 
 \section{Balancing}
 
-%We want
-%\begin{equation}
-%	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
-%\end{equation}
-%meaning
-%\begin{equation}
-%	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
-%\end{equation}
-
-Let's assume that we got $\vec{A}_0$ a concentration with and excessive dissociation.
-We are looking for $\vec{A}\geq\vec{0}$ such that:
-
+We want
 \begin{equation}
-	\vec{A} + \bm{\nu}^t \vec{\xi} = \vec{A}_0
+	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
 \end{equation}
-For a given $\vec{A}$, we get:
+meaning
 \begin{equation}
-	\delta{\vec{A}} = \underbrace{\bm{\nu}^t\left(\bm{\nu}\bm{\nu}^t\right)^{-1} \bm{\nu}}_{\bm{\Xi}} \left[\vec{A}_0 - \vec{A}\right]
+	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
 \end{equation}
 
-We want to minimize:
+We define a scalar balance indicator function $\psi(x)$ which is minimised when $x\geq0$.
+We define a scalar balance indicator field $\Psi(\vec{A})$ 
+which is minimised when all $\psi([A_j])$ are minimised.
+Then starting from $\vec{A}_n$:
 \begin{equation}
-	f(\vec{A}) = \dfrac{1}{2} {\delta\vec{A}}^2 = \dfrac{1}{2}\left[\vec{A}_0 - \vec{A}\right]^t \bm{\Xi}^t \bm{\Xi} \left[\vec{A}_0 - \vec{A}\right]
-\end{equation}
-and we check that:
-\begin{equation}
-	\bm{\Xi}^t \bm{\Xi} = \bm{\Xi}
-\end{equation}
-so that
-\begin{equation}
-	\vec{\nabla} f = - \bm{\Xi} \left[\vec{A}_0 - \vec{A}\right] = -\delta\vec{A}
+	\Psi(\vec{A}_n + \delta\vec{A}_n) \simeq \Psi(\vec{A}_n) + \partial_{\vec{A}} \Psi \cdot \delta\vec{A}_n
 \end{equation}
 
+\begin{equation}
+	\Psi(\vec{A}_n + \bm{\nu}^t \vec{\xi}_n) \simeq \Psi(\vec{A}_n) + (\bm{\nu} \partial_{\vec{A}} \Psi) \cdot  \vec{\xi}_n
+\end{equation}
+
+\begin{equation}
+	\psi( f(x) ) = \max(-f(x),0), \;\; \psi'( f(x) ) =
+	\left\lbrace
+	\begin{array}{rcl}
+		x\leq0 & \to & -f'(x)\\
+		x>0    & \to & 0\\
+	\end{array}
+	\right.
+\end{equation}
+ 
 \section{Newton$^+$'s Algorithm}
 
 Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:

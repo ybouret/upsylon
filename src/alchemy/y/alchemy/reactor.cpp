@@ -34,6 +34,7 @@ namespace upsylon
         Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        Nu1(NuT.rows,false),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
@@ -62,6 +63,19 @@ namespace upsylon
             std::cerr << "dNu2=" << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
+            for(size_t j=Nu1.size();j>0;--j)
+            {
+                const accessible<long> &NuTj = NuT[j];
+                size_t                  neqz = 0;
+                for(size_t i=N;i>0;--i)
+                {
+                    if(NuTj[i]!=0) ++neqz;
+                }
+                if(1==neqz) aliasing::_(Nu1[j]) = true;
+            }
+            std::cerr << "Nu1=" << Nu1 << std::endl;
+            
+#if 0
             iMatrix dXi(M,M);
             {
                 iMatrix Nu3(N,M);
@@ -85,7 +99,7 @@ namespace upsylon
                 }
             }
             std::cerr << "Om=" << dOm << "/" << dNu2 << std::endl;
-
+#endif
         }
 
         Reactor:: ~Reactor() throw()
