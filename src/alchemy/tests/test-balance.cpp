@@ -39,7 +39,6 @@ Y_UTEST(balance)
     Reactor cs(lib,eqs);
     std::cerr << "Nu=" << cs.Nu << std::endl;
 
-    cs.complete();
     
     return 0;
 

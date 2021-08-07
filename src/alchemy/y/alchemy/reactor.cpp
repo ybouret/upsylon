@@ -70,6 +70,21 @@ namespace upsylon
                 tao::mmul(dXi,NuT,Nu3);
             }
             std::cerr << "Xi=" << dXi << "/" << dNu2 << std::endl;
+            
+            iMatrix dOm(M,M);
+            for(size_t i=M;i>0;--i)
+            {
+                for(size_t j=M;j>i;--j)
+                {
+                    dOm[i][j] = -dXi[i][j];
+                }
+                dOm[i][i] = dNu2 - dXi[i][i];
+                for(size_t j=i-1;j>0;--j)
+                {
+                    dOm[i][j] = -dXi[i][j];
+                }
+            }
+            std::cerr << "Om=" << dOm << "/" << dNu2 << std::endl;
 
         }
 
