@@ -37,7 +37,6 @@ Y_UTEST(balance)
     std::cerr << eqs << std::endl;
 
     Reactor cs(lib,eqs);
-    std::cerr << "Nu=" << cs.Nu << std::endl;
     
     
     return 0;
@@ -57,8 +56,7 @@ Y_UTEST(balance)
 
     lib.display(std::cerr << "C=",C) << std::endl;
     std::cerr << "C   = " << C << std::endl;
-    std::cerr << "Nu  = " << cs.Nu  << std::endl;
-    std::cerr << "NuT = " << cs.NuT << std::endl;
+    
     cs.balance(C);
 
     

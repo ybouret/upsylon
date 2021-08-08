@@ -15,7 +15,9 @@ namespace upsylon
     {
         typedef memory::dyadic                Allocator;    //!< alias
         typedef vector<double,Allocator>      Vector;       //!< alias
-
+        typedef vector<long,Allocator>        iVector;      //!< alias
+        typedef vector<size_t,Allocator>      uVector;      //!< alias
+        
         //______________________________________________________________________
         //
         //
@@ -51,10 +53,7 @@ namespace upsylon
             void displayState()               const; //!< info to debug
             bool isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool balance(Addressable &C)    throw(); //!< balance current concentration
-            void project(Addressable &delta, const Accessible &C)  throw();
-            void project(Addressable &delta, const Accessible &C, const Accessible &C0) throw();
-            void complete();
-
+            
             //__________________________________________________________________
             //
             // members
@@ -68,14 +67,12 @@ namespace upsylon
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
             const Vector      xi;     //!< [N]   extents
-            const Vector      aux1;   //!< [N]
-            const Vector      aux2;   //!< [N]
-            const Vector      Caux;   //!< [M]   auxiliary C
             const Vector      dC;     //!< [M]   delta C
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
-            const Flags       Nu1;    //!< [N]   single component in NuT
+            const uVector     nnu;    //!< [M]   components in NuT[1..M]
+            const uVector     nu1;    //!< [0..M] indices where nnu==1
             const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian
