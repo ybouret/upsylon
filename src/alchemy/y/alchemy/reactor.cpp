@@ -60,7 +60,6 @@ namespace upsylon
                 apk::convert(aliasing::_(aNu2),aNu2_);
                 aliasing::_(dNu2) = dNu2_.cast_to<long>("determinant(Nu2)");
             }
-            //std::cerr << "aNu2=" << aNu2 << std::endl;
             std::cerr << " dNu2 = " << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
@@ -78,7 +77,6 @@ namespace upsylon
                     aliasing::_(nu1).push_back_(j);
                 }
             }
-            //aliasing::_(nu1).reverse();
             std::cerr << " nnu  = " << nnu << std::endl;
             std::cerr << " nu1  = " << nu1 << std::endl;
 
