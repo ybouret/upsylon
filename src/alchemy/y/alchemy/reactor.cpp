@@ -54,6 +54,10 @@ namespace upsylon
             std::cerr << " Nu   = " << Nu  << std::endl;
             std::cerr << " NuT  = " << NuT << std::endl;
 
+            //__________________________________________________________________
+            //
+            // checking consistency
+            //__________________________________________________________________
             {
                 matrix<apz> aNu2_(N,N);
                 const apz   dNu2_ = apk::adjoint_gram(aNu2_,Nu);
@@ -63,19 +67,30 @@ namespace upsylon
             std::cerr << " dNu2 = " << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
-            for(size_t j=nnu.size();j>0;--j)
+            for(size_t row=nnu.size();row>0;--row)
             {
-                const accessible<long> &NuTj = NuT[j];
-                size_t                  neqz = 0;
+                const accessible<long> &vec = NuT[row];
+                size_t                  col = 0;
+                long                    nut = 0;
+                size_t                  nok = 0;
                 for(size_t i=N;i>0;--i)
                 {
-                    if(NuTj[i]!=0) ++neqz;
+                    const long n = vec[i];
+                    if(0!=n)
+                    {
+                        nut = n;
+                        col = i;
+                        ++nok;
+                    }
                 }
-                aliasing::_(nnu[j]) = neqz;
-                if(1==neqz)
+                if(1==nok)
                 {
-                    aliasing::_(nu1).push_back_(j);
+                    assert(0!=nut);
+                    assert(NuT[row][col]==nut);
+                    const Single sngl(row,col,nut);
+                    aliasing::_(nu1).push_back_(sngl);
                 }
+                
             }
             std::cerr << " nnu  = " << nnu << std::endl;
             std::cerr << " nu1  = " << nu1 << std::endl;
