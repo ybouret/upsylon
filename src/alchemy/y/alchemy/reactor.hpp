@@ -7,7 +7,6 @@
 #include "y/alchemy/library.hpp"
 #include "y/alchemy/equilibria.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/container/tuple.hpp"
 
 namespace upsylon
 {
@@ -17,35 +16,104 @@ namespace upsylon
         
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<size_t,Allocator>       uVector;      //!< alias
+        class                                  Reactor;      //!< forward
 
-
-        struct Balancing
+        //______________________________________________________________________
+        //
+        //
+        //! primary condition
+        //
+        //______________________________________________________________________
+        class Condition
         {
-            //! type of balancing condition
+        public:
+            //__________________________________________________________________
+            //
+            // types and definition
+            //__________________________________________________________________
+
+            //! limiting condition
             enum Type
             {
-                None, //!< inactive
-                Free, //!< algebraic relation
-                LEQT, //!< xi[indx] * coef <= -[Aj]
-                GEQT  //!< xi[indx] * coef >=  [Aj]
+                LEQ, //!< xi[eq] * nu <=   A[sp]
+                GEQ  //!< xi[eq] * nu >=  -A[sp]
             };
 
-            Y_TRIPLE_DECL(STANDARD,
-                          Info,
-                          const Type,   type,
-                          const size_t, indx,
-                          const size_t, coef);
-            
-            Y_TRIPLE_END();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            Condition(const size_t,
+                      const size_t,
+                      const long,
+                      const Reactor &) throw();   //!< setup
+            ~Condition() throw();                 //!< cleanup
+            Condition(const Condition &) throw(); //!< copy
 
+            const Type     id; //!< type of condition
+            const size_t   eq; //!< equilibrium index
+            const size_t   sp; //!< species     index
+            const size_t   nu; //!< positive coefficient
+            const Reactor &cs; //!< reactor
+
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
+
+            //! default output
+            template <typename OSTREAM> inline friend
+            OSTREAM &operator<<(OSTREAM &os, const Condition c)
+            {
+                os << '\n' << '{';
+                c.dspEq(os);
+                switch(c.id)
+                {
+                    case LEQ: os << "<=  "; break;
+                    case GEQ: os << ">= -"; break;
+                }
+                os << '[' << c.spID() << ']';
+                for(size_t i=c.spNS();i>0;--i) os << ' ';
+
+                os << '}';
+                return os;
+            }
+
+            //! specific output
+            template <typename OSTREAM> inline
+            OSTREAM & show(OSTREAM &os, const Accessible &C) const
+            {
+                dspEq(os);
+                switch(id)
+                {
+                    case LEQ: os << vformat("<= %.15g", C[sp]); break;
+                    case GEQ: os << vformat(">= %.15g",-C[sp]); break;
+                }
+                return os;
+            }
+
+
+        private:
+            Y_DISABLE_ASSIGN(Type);
+            const string & eqID() const throw();
+            const string & spID() const throw();
+            size_t         eqNS() const throw();
+            size_t         spNS() const throw();
+
+            template <typename OSTREAM> inline
+            void padEq(OSTREAM &os) const { for(size_t i=eqNS();i>0;--i) os << ' '; }
+
+            template <typename OSTREAM> inline
+            void dspNu(OSTREAM &os) const { if(nu<1) os << vformat("%lu ", (unsigned long)nu ); }
+
+            template <typename OSTREAM> inline
+            void dspEq(OSTREAM &os) const { dspNu(os); os << "xi_" << eqID(); padEq(os); }
         };
 
+        typedef vector<Condition,Allocator> Conditions; //!< alias
 
-
-        typedef vector<Balancing::Info,Allocator> Conditions;
-
-
-        
         //______________________________________________________________________
         //
         //
@@ -81,7 +149,48 @@ namespace upsylon
             void displayState()               const; //!< info to debug
             bool isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool balance(Addressable &C)    throw(); //!< balance current concentration
-            
+
+            //! output condition for one species
+            template <typename OSTREAM> inline
+            OSTREAM & showCondition(OSTREAM &os, const Species &sp, const Accessible &C) const
+            {
+                const size_t j = sp.indx;
+                lib.print(os,sp);
+                if(sp.active)
+                {
+                    os << " : ";
+                    bool first = true;
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        const long nu = NuT[j][i];
+                        if(nu==0) continue;
+
+                        if(nu<0)
+                        {
+                            if(nu < -1) os << nu; else os << '-';
+                        }
+                        else
+                        {
+                            assert(nu>0);
+                            if(!first) os << '+';
+                            if(nu>1)
+                            {
+                                os << nu;
+                            }
+                        }
+                        first = false;
+                        os << "xi_" << eqs(i).name;
+                    }
+                    os << " >= " << -C[j];
+                }
+                else
+                {
+                    os << " = " << C[j];
+                }
+                return os << '\n';
+            }
+
+
             //__________________________________________________________________
             //
             // members

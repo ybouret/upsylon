@@ -167,6 +167,7 @@ namespace upsylon
             virtual const_type &bulk() const throw(); //!< sdb
             const Species &     use(Species *);       //!< insert new species
             Species::Set        sdb;                  //!< species database
+        public:
             const size_t        snw;                  //!< species name width
         };
 

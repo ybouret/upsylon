@@ -125,10 +125,10 @@ namespace upsylon
             virtual const_type & bulk() const throw();
 
             Equilibrium::Set    edb; //!< database
-            const size_t        enw; //!< equilibrium name width
             
         public:
-            mutable double   tdisp; //!< to display status at specific time
+            const size_t        enw; //!< equilibrium name width
+            mutable double      tdisp; //!< to display status at specific time
 
         };
 

@@ -11,6 +11,70 @@ namespace upsylon
 
     namespace Alchemy
     {
+
+        Condition:: Condition(const size_t eq_,
+                              const size_t sp_,
+                              const long   nu_,
+                              const Reactor &cs_) throw() :
+        id(nu_>0?GEQ:LEQ),
+        eq(eq_),
+        sp(sp_),
+        nu(0),
+        cs(cs_)
+        {
+            assert(nu_!=0);
+            assert(eq>0); assert(eq<=cs.eqs->size());
+            assert(sp>0); assert(eq<=cs.lib->size());
+
+            switch(id)
+            {
+                case GEQ: aliasing::_(nu) = static_cast<size_t>( nu_); break;
+                case LEQ: aliasing::_(nu) = static_cast<size_t>(-nu_); break;
+            }
+            
+        }
+
+        Condition:: ~Condition() throw()
+        {
+
+        }
+
+        Condition:: Condition(const Condition &_) throw() :
+        id(_.id),
+        eq(_.eq),
+        sp(_.sp),
+        nu(_.nu),
+        cs(_.cs)
+        {
+        }
+
+        const string & Condition:: eqID() const throw()
+        {
+            return cs.eqs(eq).name;
+        }
+
+        size_t Condition:: eqNS() const throw()
+        {
+            const size_t l = eqID().size();
+            const size_t m = cs.eqs.enw;
+            return l<m ? m-l : 0;
+        }
+
+        size_t Condition:: spNS() const throw()
+        {
+            const size_t l = spID().size();
+            const size_t m = cs.lib.snw;
+            return l<m ? m-l : 0;
+        }
+
+
+
+        const string & Condition:: spID() const throw()
+        {
+            return cs.lib->fetch(sp-1)->name;
+        }
+
+
         const char Reactor:: CLID[] = "Reactor";
 
 
@@ -70,55 +134,34 @@ namespace upsylon
             //
             // building balance info
             //__________________________________________________________________
-            for(size_t row=NuT.rows;row>0;--row)
+            for(size_t sp=NuT.rows;sp>0;--sp)
             {
-                const accessible<long> &v    = NuT[row]; assert(N==v.size());
-                size_t                  nok  = 0;
-                size_t                  col  = 0;
-                long                    nut  = 0;
+                const accessible<long> &v   = NuT[sp];
+                size_t                  nok = 0;
+                size_t                  eq  = 0;
+                long                    nu  = 0;
+
+                // loop to count active equilibria changing species
                 for(size_t i=N;i>0;--i)
                 {
                     const long cof = v[i];
                     if(0!=cof)
                     {
-                        nut = cof;
-                        col = i;
+                        nu = cof;
+                        eq = i;
                         ++nok;
                     }
                 }
-                switch(nok)
+
+                if(1==nok)
                 {
-                    case 0: assert(!active[row]); {
-                        const Balancing::Info info(Balancing::None,0,0);
-                        aliasing::_(Cond).push_back_(info);
-                    } break;
-
-                    case 1: assert(active[row]); {
-                        assert(0!=nut);
-                        if(nut>0)
-                        {
-                            const Balancing::Info info(Balancing::GEQT,col,static_cast<size_t>(nut));
-                            aliasing::_(Cond).push_back_(info);
-                        }
-                        else
-                        {
-                            const Balancing::Info info(Balancing::LEQT,col,static_cast<size_t>(-nut));
-                            aliasing::_(Cond).push_back_(info);
-                        }
-
-                    } break;
-
-                    default: assert(active[row]); {
-                        assert(nok>=2);
-                        const Balancing::Info info(Balancing::Free,0,0);
-                        aliasing::_(Cond).push_back_(info);
-                    }
+                    assert(nu!=0);
+                    const Condition cond(eq,sp,nu,*this);
+                    aliasing::_(Cond).push_back_(cond);
                 }
             }
-            aliasing::_(Cond).reverse();
-
-            std::cerr << " Cond  = " << Cond << std::endl;
             
+            std::cerr << " Cond  : " << Cond << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }
