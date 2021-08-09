@@ -31,8 +31,7 @@ namespace upsylon
         Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
-        nnu(NuT.rows,0),
-        nu1(NuT.rows,as_capacity),
+        Cond(NuT.rows,as_capacity),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
@@ -43,7 +42,7 @@ namespace upsylon
         {
             std::cerr << "<Setup " << CLID << ">" << std::endl;
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
-            std::cerr << "active=" << active << " // #" << NA << "/" << M << std::endl;
+            std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
             //__________________________________________________________________
             //
@@ -51,8 +50,8 @@ namespace upsylon
             //__________________________________________________________________
             eqs.fill( aliasing::_(Nu) );
             aliasing::_(NuT).assign_transpose(Nu);
-            std::cerr << " Nu   = " << Nu  << std::endl;
-            std::cerr << " NuT  = " << NuT << std::endl;
+            std::cerr << " Nu    = " << Nu  << std::endl;
+            std::cerr << " NuT   = " << NuT << std::endl;
 
             //__________________________________________________________________
             //
@@ -64,37 +63,62 @@ namespace upsylon
                 apk::convert(aliasing::_(aNu2),aNu2_);
                 aliasing::_(dNu2) = dNu2_.cast_to<long>("determinant(Nu2)");
             }
-            std::cerr << " dNu2 = " << dNu2 << std::endl;
+            std::cerr << " dNu2  = " << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
-            for(size_t row=nnu.size();row>0;--row)
+            //__________________________________________________________________
+            //
+            // building balance info
+            //__________________________________________________________________
+            for(size_t row=NuT.rows;row>0;--row)
             {
-                const accessible<long> &vec = NuT[row];
-                size_t                  col = 0;
-                long                    nut = 0;
-                size_t                  nok = 0;
+                const accessible<long> &v    = NuT[row]; assert(N==v.size());
+                size_t                  nok  = 0;
+                size_t                  col  = 0;
+                long                    nut  = 0;
                 for(size_t i=N;i>0;--i)
                 {
-                    const long n = vec[i];
-                    if(0!=n)
+                    const long cof = v[i];
+                    if(0!=cof)
                     {
-                        nut = n;
+                        nut = cof;
                         col = i;
                         ++nok;
                     }
                 }
-                if(1==nok)
+                switch(nok)
                 {
-                    assert(0!=nut);
-                    assert(NuT[row][col]==nut);
-                    const Single sngl(row,col,nut);
-                    aliasing::_(nu1).push_back_(sngl);
-                }
-                
-            }
-            std::cerr << " nnu  = " << nnu << std::endl;
-            std::cerr << " nu1  = " << nu1 << std::endl;
+                    case 0: assert(!active[row]); {
+                        const Balancing::Info info(Balancing::None,0,0);
+                        aliasing::_(Cond).push_back_(info);
+                    } break;
 
+                    case 1: assert(active[row]); {
+                        assert(0!=nut);
+                        if(nut>0)
+                        {
+                            const Balancing::Info info(Balancing::GEQT,col,static_cast<size_t>(nut));
+                            aliasing::_(Cond).push_back_(info);
+                        }
+                        else
+                        {
+                            const Balancing::Info info(Balancing::LEQT,col,static_cast<size_t>(-nut));
+                            aliasing::_(Cond).push_back_(info);
+                        }
+
+                    } break;
+
+                    default: assert(active[row]); {
+                        assert(nok>=2);
+                        const Balancing::Info info(Balancing::Free,0,0);
+                        aliasing::_(Cond).push_back_(info);
+                    }
+                }
+            }
+            aliasing::_(Cond).reverse();
+
+            std::cerr << " Cond  = " << Cond << std::endl;
+            
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }

@@ -7,31 +7,44 @@
 #include "y/alchemy/library.hpp"
 #include "y/alchemy/equilibria.hpp"
 #include "y/sequence/vector.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 #include "y/container/tuple.hpp"
 
 namespace upsylon
 {
     namespace Alchemy
     {
-        //! localizing single constraints
-        /**
-         - row: row of NuT
-         - col: col of NuT
-         - nut: single value (!=0)
-         */
-        Y_TRIPLE_DECL(STANDARD,
-                    Single,
-                    const size_t,row,
-                    const size_t,col,
-                    const long  ,nut);
-        Y_TRIPLE_END(); //!< end of Single
+
         
-        typedef memory::dyadic                 Allocator;    //!< alias
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<size_t,Allocator>       uVector;      //!< alias
-        typedef vector<Single,Allocator>       Singles;      //!< alias
-        
+
+
+        struct Balancing
+        {
+            //! type of balancing condition
+            enum Type
+            {
+                None, //!< inactive
+                Free, //!< algebraic relation
+                LEQT, //!< xi[indx] * coef <= -[Aj]
+                GEQT  //!< xi[indx] * coef >=  [Aj]
+            };
+
+            Y_TRIPLE_DECL(STANDARD,
+                          Info,
+                          const Type,   type,
+                          const size_t, indx,
+                          const size_t, coef);
+            
+            Y_TRIPLE_END();
+
+        };
+
+
+
+        typedef vector<Balancing::Info,Allocator> Conditions;
+
+
         
         //______________________________________________________________________
         //
@@ -86,8 +99,7 @@ namespace upsylon
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
-            const uVector     nnu;    //!< [M]   components in NuT[1..M]
-            const Singles     nu1;    //!< [0..M] components with nnu[index]==1
+            const Conditions  Cond;   //!< ...
             const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian

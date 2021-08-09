@@ -7,12 +7,16 @@
 #include "y/alchemy/freezable.hpp"
 #include "y/type/gateway.hpp"
 #include "y/ios/scribe.hpp"
-#include "y/sequence/accessible.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
 {
     namespace Alchemy
     {
+        typedef memory::dyadic                 Allocator;    //!< alias
+        typedef vector<string,Allocator>       Strings;      //!< alias
+
         //______________________________________________________________________
         //
         //
@@ -87,6 +91,14 @@ namespace upsylon
             // display methods
             //__________________________________________________________________
 
+            //! display left aligned species
+            template <typename OSTREAM> inline
+            OSTREAM & print(OSTREAM &os, const Species &sp) const
+            {
+                os << sp; for(size_t i=sp.name.size();i<snw;++i) os << ' ';
+                return os;
+            }
+
             //! output info
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM       &os,
@@ -96,26 +108,49 @@ namespace upsylon
                 for(const_iterator it=lib.sdb.begin();it!=lib.sdb.end();++it)
                 {
                     const Species &sp = **it;
-                    lib.pad(os << ' ',sp);
+                    lib.print(os << ' ',sp);
                     os << vformat(" : %3ld @%u\n", sp.z, unsigned(sp.indx));
                 }
                 os << '}';
                 return os;
             }
 
+            //! format strings in order of species
+            template <typename T> inline
+            size_t format(Strings &str, const accessible<T> &arr) const
+            {
+                const ios::scribe &_   = ios::scribe::query<T>();
+                size_t             ans = 0;
+
+                str.free();
+                for(const_iterator it=sdb.begin();it!=sdb.end();++it)
+                {
+                    const Species &sp  = **it;
+                    const string   s   = _.write( &arr[sp.indx] );
+                    const size_t   l   = s.size();
+                    if(l>ans)      ans = l;
+                    str.push_back(s);
+                }
+                return ans;
+            }
 
             //! display associated array
             template <typename OSTREAM,typename T> inline
             OSTREAM & display(OSTREAM &os, const accessible<T> &arr) const
             {
-                const ios::scribe &_ = ios::scribe::query<T>();
                 assert(arr.size()>=sdb.size());
+                Strings      str(sdb.size(),as_capacity);
+                const size_t smx = format(str,arr);
                 os << '{' << '\n';
-                for(const_iterator it=sdb.begin();it!=sdb.end();++it)
+                size_t             j=1;
+                for(const_iterator it=sdb.begin();it!=sdb.end();++it,++j)
                 {
                     const Species &sp = **it;
-                    pad(os << ' ',sp) << " = ";
-                    _.print(os,arr[sp.indx]) << '\n';
+                    const string  &sv = str[j];
+                    print(os << ' ',sp) << " = ";
+                    for(size_t i=sv.size();i<smx;++i) os << ' ';
+                    os << sv;
+                    os << '\n';
                 }
                 os << '}';
                 return os;
@@ -129,12 +164,6 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
-            template <typename OSTREAM> inline
-            OSTREAM & pad(OSTREAM &os, const Species &sp) const
-            {
-                os << sp; for(size_t i=sp.name.size();i<snw;++i) os << ' ';
-                return os;
-            }
             virtual const_type &bulk() const throw(); //!< sdb
             const Species &     use(Species *);       //!< insert new species
             Species::Set        sdb;                  //!< species database

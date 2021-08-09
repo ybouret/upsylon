@@ -37,11 +37,8 @@ Y_UTEST(balance)
     std::cerr << eqs << std::endl;
 
     Reactor cs(lib,eqs);
-    
-    
-    return 0;
 
-    Vector C(cs.M,0);
+    Vector  C(cs.M,0);
     lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)
     {
@@ -53,14 +50,10 @@ Y_UTEST(balance)
     }
 
     lib(C,"H+") *= -1;
-
     lib.display(std::cerr << "C=",C) << std::endl;
-    std::cerr << "C   = " << C << std::endl;
-    
+
     cs.balance(C);
-
     
-
 }
 Y_UTEST_DONE()
 
