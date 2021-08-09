@@ -202,7 +202,7 @@ namespace upsylon
              */
             double  Psi(Addressable &C) throw();
 
-            //! Psi at Ctry
+            //! Psi at Ctry, using dC
             double  PsiTry(const Accessible &C, const double u) throw();
 
             //__________________________________________________________________
