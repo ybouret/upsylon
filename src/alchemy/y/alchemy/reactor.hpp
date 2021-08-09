@@ -16,6 +16,7 @@ namespace upsylon
         
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<size_t,Allocator>       uVector;      //!< alias
+        typedef vector<bool,Allocator>         Flags;        //!<  alias
         class                                  Reactor;      //!< forward
 
         //______________________________________________________________________
@@ -61,6 +62,8 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+
+            void operator()(Addressable &xi, const Accessible &C) const throw();
 
 
             //! default output
@@ -110,6 +113,7 @@ namespace upsylon
 
             template <typename OSTREAM> inline
             void dspEq(OSTREAM &os) const { dspNu(os); os << "xi_" << eqID(); padEq(os); }
+            
         };
 
         typedef vector<Condition,Allocator> Conditions; //!< alias
@@ -128,8 +132,7 @@ namespace upsylon
             // types and definitions
             //__________________________________________________________________
             static  const char                    CLID[];       //!< "Reactor"
-            typedef vector<bool,Allocator>        Flags;        //!< alias
-            
+
             //__________________________________________________________________
             //
             // C++
@@ -205,22 +208,36 @@ namespace upsylon
             const Vector      Gam;    //!< [N]   indicators
             const Vector      xi;     //!< [N]   extents
             const Vector      dC;     //!< [M]   delta C
+            const Vector      Cbad;   //!< [M]   C minus
             const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
+            const Vector      NuS;    //!< [M]   scaling for Psi
             const Conditions  Cond;   //!< ...
             const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            
+            const double      Cmin;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            const Freezer lfrz;
-            const Freezer efrz;
-            
+            Vector          Csqr;     //!< [0..M]   C square
+            const   Freezer lfrz;
+            const   Freezer efrz;
+
+            //! use Cbad as workspace
+            /**
+             compute Cbad, xi,
+             restrict xi, compute dC,
+             return Psi
+             */
+            double  Psi(Addressable &C)             throw();
+
+            //! restrain current xi from C values
+            void    RestrainXi(const Accessible &C) throw();
+
             
 
         };

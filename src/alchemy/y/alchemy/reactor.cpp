@@ -3,6 +3,7 @@
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/mkl/timings.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -74,6 +75,21 @@ namespace upsylon
             return cs.lib->fetch(sp-1)->name;
         }
 
+        void Condition:: operator()(Addressable &xi, const Accessible &C) const throw()
+        {
+            double      &x = xi[eq];
+            const double c = C[sp];
+            switch(id)
+            {
+                case GEQ:
+                    break;
+
+                case LEQ:
+                    break;
+            }
+        }
+
+
 
         const char Reactor:: CLID[] = "Reactor";
 
@@ -92,19 +108,23 @@ namespace upsylon
         Gam(N,0),
         xi(N,0),
         dC(M,0),
+        Cbad(M,0),
         Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        NuS(M,1),
         Cond(NuT.rows,as_capacity),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
+        Cmin( timings::round_floor( sqrt(numeric<double>::minimum)/sqrt(2.0) ) ),
+        Csqr(M,as_capacity),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
-            std::cerr << "<Setup " << CLID << ">" << std::endl;
+            std::cerr << "<Setup " << CLID << " @Cmin=" << Cmin << ">" << std::endl;
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
@@ -140,6 +160,7 @@ namespace upsylon
                 size_t                  nok = 0;
                 size_t                  eq  = 0;
                 long                    nu  = 0;
+                double                  sum = 0;
 
                 // loop to count active equilibria changing species
                 for(size_t i=N;i>0;--i)
@@ -147,20 +168,25 @@ namespace upsylon
                     const long cof = v[i];
                     if(0!=cof)
                     {
-                        nu = cof;
-                        eq = i;
+                        nu   = cof;
+                        eq   = i;
+                        sum += abs_of(nu);
                         ++nok;
                     }
                 }
 
-                if(1==nok)
+                if(nok>0)
                 {
-                    assert(nu!=0);
-                    const Condition cond(eq,sp,nu,*this);
-                    aliasing::_(Cond).push_back_(cond);
+                    aliasing::_(NuS[sp]) = sum;
+                    if(1==nok)
+                    {
+                        assert(nu!=0);
+                        const Condition cond(eq,sp,nu,*this);
+                        aliasing::_(Cond).push_back_(cond);
+                    }
                 }
             }
-            
+            std::cerr << " NuS   = " << NuS  << std::endl;
             std::cerr << " Cond  : " << Cond << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 

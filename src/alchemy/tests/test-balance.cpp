@@ -53,7 +53,14 @@ Y_UTEST(balance)
     lib.display(std::cerr << "C=",C) << std::endl;
 
     cs.balance(C);
+
+    return 0;
     
+    std::cerr << "min_10_exp=" << mkl::numeric<double>::min_10_exp << std::endl;
+    std::cerr << "min_10_exp/2=" << mkl::numeric<double>::min_10_exp/2 << std::endl;
+    std::cerr << "minimum=" << mkl::numeric<double>::minimum<< std::endl;
+    std::cerr << "sqrt(minimum)=" << sqrt(mkl::numeric<double>::minimum) << std::endl;
+
 }
 Y_UTEST_DONE()
 
