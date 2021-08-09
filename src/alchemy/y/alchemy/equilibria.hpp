@@ -57,6 +57,8 @@ namespace upsylon
                 return (*this)( new ConstEquilibrium(id,K) );
             }
 
+            //! slow access by index
+            const Equilibrium & operator()(const size_t indx) const throw();
 
             //! display at tdisp (initially set to 0.0)
             template <typename OSTREAM> inline

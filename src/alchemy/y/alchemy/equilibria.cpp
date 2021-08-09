@@ -35,6 +35,13 @@ namespace upsylon
             return *eq;
         }
 
+
+        const Equilibrium & Equilibria:: operator()(const size_t indx) const throw()
+        {
+            assert(indx>=1);assert(indx<=edb.size());
+            return *edb.fetch(indx-1);
+        }
+
         void Equilibria:: compute(Addressable &K, const double t) const throw()
         {
             assert(K.size()>=edb.size());
