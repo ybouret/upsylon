@@ -79,14 +79,18 @@ namespace upsylon
         {
             double      &x = xi[eq];
             const double c = C[sp];
+            dspEq(std::cerr); std::cerr <<  " = " << x << " => ";
             switch(id)
             {
                 case GEQ:
+                    x = max_of(x,-c/nu);
                     break;
 
                 case LEQ:
+                    x = min_of(x,c/nu);
                     break;
             }
+            std::cerr << x << std::endl;
         }
 
 
@@ -106,7 +110,8 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
-        xi(N,0),
+        xi0(N,0),
+        xi1(N,0),
         dC(M,0),
         Cbad(M,0),
         Ctry(M,0),
@@ -119,12 +124,12 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        Cmin( timings::round_floor( sqrt(numeric<double>::minimum)/sqrt(2.0) ) ),
+        C2min( timings::round_floor(  numeric<double>::minimum*2 ) ),
         Csqr(M,as_capacity),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
-            std::cerr << "<Setup " << CLID << " @Cmin=" << Cmin << ">" << std::endl;
+            std::cerr << "<Setup " << CLID << " @C2min=" << C2min << ">" << std::endl;
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
@@ -175,8 +180,10 @@ namespace upsylon
                     }
                 }
 
+                // check active species
                 if(nok>0)
                 {
+                    assert( active[sp] );
                     aliasing::_(NuS[sp]) = sum;
                     if(1==nok)
                     {
@@ -184,6 +191,10 @@ namespace upsylon
                         const Condition cond(eq,sp,nu,*this);
                         aliasing::_(Cond).push_back_(cond);
                     }
+                }
+                else
+                {
+                    assert( !active[sp] );
                 }
             }
             std::cerr << " NuS   = " << NuS  << std::endl;

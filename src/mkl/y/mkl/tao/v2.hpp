@@ -130,14 +130,26 @@ struct diag
 
 
 //! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
-template <typename TARGET, typename T, typename LHS> static inline
-void mul(TARGET &target, const matrix<T> &M, LHS &lhs)
+template <typename TARGET, typename T, typename RHS> static inline
+void mul(TARGET &target, const matrix<T> &M, RHS &rhs)
 {
     assert(target.size()<=M.rows);
-    assert(M.cols <= lhs.size());
+    assert(M.cols <= rhs.size());
     for(size_t j=target.size();j>0;--j)
     {
-        target[j] = dot<typename TARGET::mutable_type>::of(M[j],lhs);
+        target[j] = dot<typename TARGET::mutable_type>::of(M[j],rhs);
+    }
+}
+
+//! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+template <typename TARGET, typename T, typename RHS> static inline
+void mul(TARGET &target, const matrix<T> &M, RHS &rhs, TARGET &secondary)
+{
+    assert(target.size()<=M.rows);
+    assert(M.cols <= rhs.size());
+    for(size_t j=target.size();j>0;--j)
+    {
+        secondary[j] = (target[j] = dot<typename TARGET::mutable_type>::of(M[j],rhs));
     }
 }
 

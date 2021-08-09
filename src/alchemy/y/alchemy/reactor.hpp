@@ -131,7 +131,7 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            static  const char                    CLID[];       //!< "Reactor"
+            static  const char                     CLID[];       //!< "Reactor"
 
             //__________________________________________________________________
             //
@@ -193,6 +193,16 @@ namespace upsylon
                 return os << '\n';
             }
 
+            //! use Cbad as workspace
+            /**
+             compute Cbad, xi,
+             restrict xi, compute dC,
+             return Psi
+             */
+            double  Psi(Addressable &C) throw();
+
+            //! Psi at Ctry
+            double  PsiTry(const Accessible &C, const double u) throw();
 
             //__________________________________________________________________
             //
@@ -206,7 +216,8 @@ namespace upsylon
             const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
-            const Vector      xi;     //!< [N]   extents
+            const Vector      xi0;    //!< [N]   extents
+            const Vector      xi1;    //!< [N]   extents
             const Vector      dC;     //!< [M]   delta C
             const Vector      Cbad;   //!< [M]   C minus
             const Vector      Ctry;   //!< [M]   trial C
@@ -219,7 +230,7 @@ namespace upsylon
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            const double      Cmin;
+            const double      C2min;  //!< 2*minimum
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
@@ -227,13 +238,7 @@ namespace upsylon
             const   Freezer lfrz;
             const   Freezer efrz;
 
-            //! use Cbad as workspace
-            /**
-             compute Cbad, xi,
-             restrict xi, compute dC,
-             return Psi
-             */
-            double  Psi(Addressable &C)             throw();
+
 
             //! restrain current xi from C values
             void    RestrainXi(const Accessible &C) throw();

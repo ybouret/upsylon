@@ -49,6 +49,7 @@ Y_UTEST(balance)
         else C[j]=0;
     }
 
+    //lib(C,"H+") = - alea.to<double>();
     lib(C,"H+") *= -1;
     lib.display(std::cerr << "C=",C) << std::endl;
 
