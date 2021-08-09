@@ -63,6 +63,7 @@ namespace upsylon
             // methods
             //__________________________________________________________________
 
+            //! regulate extent according to concentration
             void operator()(Addressable &xi, const Accessible &C) const throw();
 
 

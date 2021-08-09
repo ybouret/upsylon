@@ -142,6 +142,9 @@ void mul(TARGET &target, const matrix<T> &M, RHS &rhs)
 }
 
 //! target = M * rhs, based on target.size() <= M.rows, M.cols <= rhs.size()
+/**
+ make a copy in secondary
+ */
 template <typename TARGET, typename T, typename RHS> static inline
 void mul(TARGET &target, const matrix<T> &M, RHS &rhs, TARGET &secondary)
 {
