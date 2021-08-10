@@ -20,7 +20,7 @@ namespace upsylon
             //! get maximum
             template <typename T>
             static inline
-            T get_max(const pixmap<T> &pxm, broker &apply )
+            T get_max(const pixmap<T> &pxm, broker &apply)
             {
                 assert( pxm.has_same_metrics_than(apply) );
 
@@ -32,7 +32,7 @@ namespace upsylon
             //! get minimum
             template <typename T>
             static inline
-            T get_min(const pixmap<T> &pxm, broker &apply )
+            T get_min(const pixmap<T> &pxm, broker &apply)
             {
                 assert( pxm.has_same_metrics_than(apply) );
  
