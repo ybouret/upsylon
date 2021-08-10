@@ -60,6 +60,15 @@ namespace upsylon
             //! slow access by index
             const Equilibrium & operator()(const size_t indx) const throw();
 
+            //! print aligned eq name
+            template <typename OSTREAM> inline
+            OSTREAM & print(OSTREAM &os, const Equilibrium &eq) const
+            {
+                os << '<' << eq.name << '>';
+                for(size_t i=eq.name.size();i<enw;++i) os << ' ';
+                return os;
+            }
+
             //! display at tdisp (initially set to 0.0)
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Equilibria &eqs)
@@ -67,9 +76,7 @@ namespace upsylon
                 for(const_iterator it=eqs->begin();it!=eqs->end();++it)
                 {
                     const Equilibrium &eq = **it;
-                    os << '<' << eq.name << '>';
-                    for(size_t i=eq.name.size();i<eqs.enw;++i) os << ' ';
-                    os << ' ';
+                    eqs.print(os,eq) << ' ';
                     os << eq.reac << " <=> " << eq.prod;
                     os << vformat( " (%.15g) ", eq.K(eqs.tdisp) );
                     os << '\n';

@@ -23,10 +23,11 @@ namespace upsylon
 
         void Reactor:: topology(const Accessible &C) throw()
         {
-            memset( (void*)*limits,0,limits.length());
+            XiLimits &_ = aliasing::_(limits); assert(N==limits.size());
+            for(size_t i=N;i>0;--i) _[i].reset();
             for(size_t i=cond.size();i>0;--i)
             {
-                cond[i](aliasing::_(limits),C);
+                cond[i](_,C);
             }
         }
         
@@ -113,6 +114,10 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
                 topology(C);
+                for(size_t i=1;i<=N;++i)
+                {
+                    
+                }
                 std::cerr << "topology=" << limits << std::endl;
 
 

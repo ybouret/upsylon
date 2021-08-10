@@ -17,12 +17,18 @@ namespace upsylon
         class Reactor;      //!< forward
         
         Y_PAIR_DECL(STANDARD,Limit,bool,on,double,xi);
-        inline Limit() throw() : on(false), xi(0) {}
+        inline      Limit() throw() : on(false), xi(0) {}
+        inline void reset() throw() { on=false; xi=0; }
         Y_PAIR_END();
 
 
         Y_PAIR_DECL(STANDARD,Limits,Limit,lower,Limit,upper);
-        inline Limits() throw() : lower(), upper() {}
+        inline      Limits() throw() : lower(), upper() {}
+        inline void reset() throw() { lower.reset(); upper.reset(); }
+        inline bool blocked() const throw()
+        {
+            return lower.on && upper.on && (upper.xi <= lower.xi);
+        }
         Y_PAIR_END();
 
         typedef vector<Limits,Allocator> XiLimits;
@@ -117,9 +123,8 @@ namespace upsylon
 
             template <typename OSTREAM> inline
             OSTREAM & dspEq(OSTREAM &os) const {
-                const string &eid = eqs(eq).name;
-                dspNu(os) << xi_ << eid;
-                for(size_t i=eid.size();i<eqs.enw;++i) os << ' ';
+                dspNu(os) << xi_;
+                eqs.print(os, eqs(eq) );
                 return os;
             }
 
