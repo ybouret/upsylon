@@ -21,7 +21,7 @@ namespace upsylon
             }
         }
 
-        void Reactor:: topology(const Accessible &C) throw()
+        bool Reactor:: topology(const Accessible &C) throw()
         {
             XiLimits &_ = aliasing::_(limits); assert(N==limits.size());
             for(size_t i=N;i>0;--i) _[i].reset();
@@ -29,6 +29,12 @@ namespace upsylon
             {
                 cond[i](_,C);
             }
+            bool res = true;
+            for(size_t i=N;i>0;--i)
+            {
+                if(!_[i].update()) res = false;
+            }
+            return res;
         }
         
 
@@ -113,13 +119,23 @@ namespace upsylon
             {
                 assert(NA>0);
                 showConditions(std::cerr,C);
-                topology(C);
+                const bool mobile = topology(C);
                 for(size_t i=1;i<=N;++i)
                 {
-                    
+                    const Equilibrium &eq = eqs(i);
+                    eqs.print(std::cerr,eq) << " : ";
+                    const Limits &L = limits[i];
+                    L.show(std::cerr) << std::endl;
                 }
-                std::cerr << "topology=" << limits << std::endl;
 
+                if(!mobile)
+                {
+                    std::cerr << "BAD!" << std::endl;
+                }
+                else
+                {
+                    std::cerr << "GOOD!" << std::endl;
+                }
 
                 double Psi0 = Psi(C);
                 std::cerr << "Psi0=" << Psi0 << std::endl;

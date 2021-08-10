@@ -21,15 +21,102 @@ namespace upsylon
         inline void reset() throw() { on=false; xi=0; }
         Y_PAIR_END();
 
-
-        Y_PAIR_DECL(STANDARD,Limits,Limit,lower,Limit,upper);
-        inline      Limits() throw() : lower(), upper() {}
-        inline void reset() throw() { lower.reset(); upper.reset(); }
-        inline bool blocked() const throw()
+        //! Limits possibilities
+        enum LimitsState
         {
-            return lower.on && upper.on && (upper.xi <= lower.xi);
+            LimitsUnbounded, //!< lower.off and upper.off
+            LimitsUpperOnly, //!< lower.off and upper.on
+            LimitsLowerOnly, //!< lower.on  and upper.off
+            LimitsWithRange, //!< lower.on  and upper.on, lower.xi <= upper.xi
+            LimitsExclusive  //!< lower.on and upper.on,  lower.xi >  upper.xi
+        };
+
+        Y_TRIPLE_DECL(STANDARD,Limits,
+                      Limit,      lower,
+                      Limit,      upper,
+                      LimitsState,state);
+        static const char * LimitsText(const LimitsState)   throw();
+
+        inline      Limits() throw() : lower(), upper(), state(LimitsUnbounded) {}
+        inline void reset() throw() { lower.reset(); upper.reset(); state=LimitsUnbounded; }
+        inline bool update() throw()
+        {
+            if(lower.on)
+            {
+                if(upper.on)
+                {
+                    if(lower.xi<=upper.xi)
+                    {
+                        state = LimitsWithRange;
+                    }
+                    else
+                    {
+                        state = LimitsExclusive;
+                    }
+                }
+                else
+                {
+                    assert(!upper.on);
+                    state = LimitsLowerOnly;
+                }
+            }
+            else
+            {
+                assert(!lower.on);
+                if(upper.on)
+                {
+                    state = LimitsUpperOnly;
+                }
+                else
+                {
+                    assert(!upper.on);
+                    state = LimitsUnbounded;
+                }
+            }
+            return state != LimitsExclusive;
         }
-        Y_PAIR_END();
+
+        template <typename OSTREAM> inline
+        OSTREAM & show(OSTREAM &os) const
+        {
+            switch(state)
+            {
+                case LimitsUnbounded:
+                    assert(!lower.on);
+                    assert(!upper.on);
+                    os << "Unbounded";
+                    break;
+
+                case LimitsUpperOnly:
+                    assert(!lower.on);
+                    assert(upper.on);
+                    os << "UpperOnly <= " << upper.xi;
+                    break;
+
+                case LimitsLowerOnly:
+                    assert(lower.on);
+                    assert(!upper.on);
+                    os << "LowerOnly >= " << lower.xi;
+                    break;
+
+                case LimitsWithRange:
+                    assert(lower.on);
+                    assert(upper.on);
+                    assert(lower.xi<=upper.xi);
+                    os << "WithRange [" << lower.xi << "->" << upper.xi << "]";
+                    break;
+
+                case LimitsExclusive:
+                    assert(lower.on);
+                    assert(upper.on);
+                    assert(lower.xi>upper.xi);
+                    os << "Exclusive " << lower.xi << " > " << upper.xi;
+                    break;
+            }
+            return os;
+        }
+
+        Y_TRIPLE_END();
 
         typedef vector<Limits,Allocator> XiLimits;
         //______________________________________________________________________

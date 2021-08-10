@@ -69,18 +69,38 @@ namespace upsylon
         void Condition:: operator()(XiLimits &limits, const Accessible &C) const throw()
         {
             const double c = C[sp];
-            Limits      &l = limits[eq];
+            Limits      &L = limits[eq];
             switch(id)
             {
                 case GEQ:
-                    l.lower.on = true;
-                    l.lower.xi = -c/nu;
-                    break;
+                {
+                    Limit       &l = L.lower;
+                    const double v = -c/nu;
+                    if(l.on)
+                    {
+                        l.xi = max_of(l.xi,v);
+                    }
+                    else
+                    {
+                        l.on = true;
+                        l.xi = v;
+                    }
+                } break;
 
                 case LEQ:
-                    l.upper.on = true;
-                    l.upper.xi = c/nu;
-                    break;
+                {
+                    Limit       &l = L.upper;
+                    const double v = c/nu;
+                    if(l.on)
+                    {
+                        l.xi = min_of(l.xi,v);
+                    }
+                    else
+                    {
+                        l.on = true;
+                        l.xi = v;
+                    }
+                } break;
             }
         }
 

@@ -51,9 +51,9 @@ namespace upsylon
             //__________________________________________________________________
             void   displayState()               const; //!< info to debug
             bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
-            bool   balance(Addressable &C)    throw(); //!< balance current concentration
+            bool   balance(Addressable &C)    throw();                           //!< balance current concentration
             void   restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
-            void   topology(const Accessible &) throw();
+            bool   topology(const Accessible &) throw();                        //!< check compatible extent
 
             //! initialize
             double Psi(const Accessible &C) throw();
