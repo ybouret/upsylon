@@ -87,8 +87,8 @@ namespace upsylon
                 dspEq(os);
                 switch(id)
                 {
-                    case LEQ: os << vformat("<= %.15g", C[sp]); break;
-                    case GEQ: os << vformat(">= %.15g",-C[sp]); break;
+                    case LEQ: os << vformat(" <= %.15g", C[sp]); break;
+                    case GEQ: os << vformat(" >= %.15g",-C[sp]); break;
                 }
                 return os;
             }
@@ -102,8 +102,9 @@ namespace upsylon
 
             template <typename OSTREAM> inline
             OSTREAM & dspEq(OSTREAM &os) const {
-                dspNu(os) << "xi_" << eqs(eq).name;
-                for(size_t i=eqs.enw;i>0;--i) os << ' ';
+                const string &eid = eqs(eq).name;
+                dspNu(os) << "xi_" << eid;
+                for(size_t i=eid.size();i<eqs.enw;++i) os << ' ';
                 return os;
             }
 
