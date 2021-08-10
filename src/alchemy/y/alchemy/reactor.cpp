@@ -3,7 +3,6 @@
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
-#include "y/mkl/timings.hpp"
 #include "y/exception.hpp"
 
 namespace upsylon
@@ -45,12 +44,11 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        C2min( timings::round_floor(  numeric<double>::minimum*2 ) ),
         Csqr(M,as_capacity),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
-            std::cerr << "<Setup " << CLID << " @C2min=" << C2min << ">" << std::endl;
+            std::cerr << "<Setup " << CLID << ">" << std::endl;
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
@@ -118,6 +116,7 @@ namespace upsylon
                     assert( !active[sp] );
                 }
             }
+            
             std::cerr << " NuS   = " << NuS  << std::endl;
             std::cerr << " Cond  : " << Cond << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;

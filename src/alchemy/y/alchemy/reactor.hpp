@@ -140,8 +140,7 @@ namespace upsylon
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            const double      C2min;  //!< 2*minimum
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             Vector          Csqr;     //!< [0..M]   C square
