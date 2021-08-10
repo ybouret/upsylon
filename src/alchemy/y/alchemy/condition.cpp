@@ -54,7 +54,6 @@ namespace upsylon
         {
             double      &x = xi[eq];
             const double c = C[sp];
-            //dspEq(std::cerr); std::cerr <<  " = " << x << " => ";
             switch(id)
             {
                 case GEQ:
@@ -65,7 +64,24 @@ namespace upsylon
                     x = min_of(x,c/nu);
                     break;
             }
-            //std::cerr << x << std::endl;
+        }
+
+        void Condition:: operator()(XiLimits &limits, const Accessible &C) const throw()
+        {
+            const double c = C[sp];
+            Limits      &l = limits[eq];
+            switch(id)
+            {
+                case GEQ:
+                    l.lower.on = true;
+                    l.lower.xi = -c/nu;
+                    break;
+
+                case LEQ:
+                    l.upper.on = true;
+                    l.upper.xi = c/nu;
+                    break;
+            }
         }
 
     }

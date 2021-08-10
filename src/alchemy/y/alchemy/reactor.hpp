@@ -16,6 +16,7 @@ namespace upsylon
         typedef vector<size_t,Allocator>       uVector;      //!< alias
         typedef vector<bool,Allocator>         Flags;        //!<  alias
 
+    
 
         //______________________________________________________________________
         //
@@ -52,7 +53,12 @@ namespace upsylon
             bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool   balance(Addressable &C)    throw(); //!< balance current concentration
             void   restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
+            void   topology(const Accessible &) throw();
+
+            //! initialize
             double Psi(const Accessible &C) throw();
+
+            //! look-up
             double Psi(const Accessible &C, const double u) throw();
 
             //__________________________________________________________________
@@ -134,6 +140,7 @@ namespace upsylon
             const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
+            const XiLimits    limits; //!< [N]   limits of extent
             const Vector      Cpsi;   //!< [M]   to buildPsi
             const Vector      Xpsi;   //!< [N]   search extent = nu*Cpsi
             const Vector      Xtry;   //!< [N]   trial extents

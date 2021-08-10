@@ -21,6 +21,14 @@ namespace upsylon
             }
         }
 
+        void Reactor:: topology(const Accessible &C) throw()
+        {
+            memset( (void*)*limits,0,limits.length());
+            for(size_t i=cond.size();i>0;--i)
+            {
+                cond[i](aliasing::_(limits),C);
+            }
+        }
         
 
         double Reactor:: Psi(const Accessible &C) throw()
@@ -82,7 +90,20 @@ namespace upsylon
             return sorted_sum(Csqr)*0.5;
         }
 
+        namespace
+        {
+            struct Balancing
+            {
+                const Accessible &C0;
+                Reactor          &cs;
 
+                double operator()(double u) throw()
+                {
+                    return cs.Psi(C0,u);
+                }
+
+            };
+        }
         
         bool Reactor:: balance(Addressable &C) throw()
         {
@@ -91,16 +112,21 @@ namespace upsylon
             {
                 assert(NA>0);
                 showConditions(std::cerr,C);
+                topology(C);
+                std::cerr << "topology=" << limits << std::endl;
 
 
                 double Psi0 = Psi(C);
                 std::cerr << "Psi0=" << Psi0 << std::endl;
 
+
+                return 0;
+                Balancing F = { C, *this };
                 {
                     ios::ocstream fp("psi.dat");
-                    for(double u=0;u<=2.0;u+=0.02)
+                    for(double u=0;u<=10.0;u+=0.1)
                     {
-                        fp("%g %g\n", u, Psi(C,u) );
+                        fp("%g %g\n", u, F(u) );
                     }
                 }
                 

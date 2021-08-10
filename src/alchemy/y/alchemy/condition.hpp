@@ -6,6 +6,7 @@
 
 #include "y/alchemy/library.hpp"
 #include "y/alchemy/equilibria.hpp"
+#include "y/container/tuple.hpp"
 
 namespace upsylon
 {
@@ -14,7 +15,17 @@ namespace upsylon
 
 
         class Reactor;      //!< forward
+        
+        Y_PAIR_DECL(STANDARD,Limit,bool,on,double,xi);
+        inline Limit() throw() : on(false), xi(0) {}
+        Y_PAIR_END();
 
+
+        Y_PAIR_DECL(STANDARD,Limits,Limit,lower,Limit,upper);
+        inline Limits() throw() : lower(), upper() {}
+        Y_PAIR_END();
+
+        typedef vector<Limits,Allocator> XiLimits;
         //______________________________________________________________________
         //
         //
@@ -66,6 +77,7 @@ namespace upsylon
             void operator()(Addressable      &xi,
                             const Accessible &C) const throw();
 
+            void operator()(XiLimits &limits, const Accessible &C) const throw();
 
             //! default output
             template <typename OSTREAM> inline friend

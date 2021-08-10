@@ -15,6 +15,7 @@ namespace upsylon
         
 
 
+
         const char Reactor:: CLID[] = "Reactor";
 
 
@@ -30,6 +31,7 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
+        limits(N,as_capacity),
         Cpsi(M,0),
         Xpsi(N,0),
         Xtry(N,0),
@@ -115,7 +117,11 @@ namespace upsylon
                     assert( !active[sp] );
                 }
             }
-            
+            for(size_t i=N;i>0;--i)
+            {
+                const Limits tmp;
+                aliasing::_(limits).push_back(tmp);
+            }
             std::cerr << " NuS   = " << NuS  << std::endl;
             std::cerr << " cond  : " << cond << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
