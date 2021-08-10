@@ -1,11 +1,9 @@
-
 //! \file
 
 #ifndef Y_ALCHEMY_REACTOR_INCLUDED
 #define Y_ALCHEMY_REACTOR_INCLUDED 1
 
-#include "y/alchemy/library.hpp"
-#include "y/alchemy/equilibria.hpp"
+#include "y/alchemy/condition.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon
@@ -17,107 +15,7 @@ namespace upsylon
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<size_t,Allocator>       uVector;      //!< alias
         typedef vector<bool,Allocator>         Flags;        //!<  alias
-        class                                  Reactor;      //!< forward
 
-        //______________________________________________________________________
-        //
-        //
-        //! primary condition
-        //
-        //______________________________________________________________________
-        class Condition
-        {
-        public:
-            //__________________________________________________________________
-            //
-            // types and definition
-            //__________________________________________________________________
-
-            //! limiting condition
-            enum Type
-            {
-                LEQ, //!< xi[eq] * nu <=   A[sp]
-                GEQ  //!< xi[eq] * nu >=  -A[sp]
-            };
-
-            //__________________________________________________________________
-            //
-            // C++
-            //__________________________________________________________________
-            Condition(const size_t,
-                      const size_t,
-                      const long,
-                      const Reactor &) throw();   //!< setup
-            ~Condition() throw();                 //!< cleanup
-            Condition(const Condition &) throw(); //!< copy
-
-            const Type     id; //!< type of condition
-            const size_t   eq; //!< equilibrium index
-            const size_t   sp; //!< species     index
-            const size_t   nu; //!< positive coefficient
-            const Reactor &cs; //!< reactor
-
-
-            //__________________________________________________________________
-            //
-            // methods
-            //__________________________________________________________________
-
-            //! regulate extent according to concentration
-            void operator()(Addressable &xi, const Accessible &C) const throw();
-
-
-            //! default output
-            template <typename OSTREAM> inline friend
-            OSTREAM &operator<<(OSTREAM &os, const Condition c)
-            {
-                os << '\n' << '{';
-                c.dspEq(os);
-                switch(c.id)
-                {
-                    case LEQ: os << "<=  "; break;
-                    case GEQ: os << ">= -"; break;
-                }
-                os << '[' << c.spID() << ']';
-                for(size_t i=c.spNS();i>0;--i) os << ' ';
-
-                os << '}';
-                return os;
-            }
-
-            //! specific output
-            template <typename OSTREAM> inline
-            OSTREAM & show(OSTREAM &os, const Accessible &C) const
-            {
-                dspEq(os);
-                switch(id)
-                {
-                    case LEQ: os << vformat("<= %.15g", C[sp]); break;
-                    case GEQ: os << vformat(">= %.15g",-C[sp]); break;
-                }
-                return os;
-            }
-
-
-        private:
-            Y_DISABLE_ASSIGN(Type);
-            const string & eqID() const throw();
-            const string & spID() const throw();
-            size_t         eqNS() const throw();
-            size_t         spNS() const throw();
-
-            template <typename OSTREAM> inline
-            void padEq(OSTREAM &os) const { for(size_t i=eqNS();i>0;--i) os << ' '; }
-
-            template <typename OSTREAM> inline
-            void dspNu(OSTREAM &os) const { if(nu<1) os << vformat("%lu ", (unsigned long)nu ); }
-
-            template <typename OSTREAM> inline
-            void dspEq(OSTREAM &os) const { dspNu(os); os << "xi_" << eqID(); padEq(os); }
-            
-        };
-
-        typedef vector<Condition,Allocator> Conditions; //!< alias
 
         //______________________________________________________________________
         //
@@ -171,7 +69,7 @@ namespace upsylon
 
                         if(nu<0)
                         {
-                            if(nu < -1) os << nu; else os << '-';
+                            if(nu < -1) os << vformat("%ld",nu); else os << '-';
                         }
                         else
                         {
@@ -179,7 +77,7 @@ namespace upsylon
                             if(!first) os << '+';
                             if(nu>1)
                             {
-                                os << nu;
+                                os << vformat("%ld",nu);
                             }
                         }
                         first = false;
@@ -194,16 +92,27 @@ namespace upsylon
                 return os << '\n';
             }
 
-            //! use Cbad as workspace
-            /**
-             compute Cbad, xi,
-             restrict xi, compute dC,
-             return Psi
-             */
-            double  Psi(Addressable &C) throw();
-
-            //! Psi at Ctry, using dC
-            double  PsiTry(const Accessible &C, const double u) throw();
+            //! show all conditions
+            template <typename OSTREAM> inline
+            OSTREAM & showConditions(OSTREAM &os, const Accessible &C) const
+            {
+                os << "<Conditions>\n";
+                os << " <General>\n";
+                for(const Species::Node *node=lib->head();node;node=node->next)
+                {
+                    const Species &sp = ***node;
+                    showCondition(os << "  ",sp,C);
+                }
+                os << " <General/>\n";
+                os << " <Primary>\n";
+                for(size_t i=Cond.size();i>0;--i)
+                {
+                    Cond[i].show(os << "  ",C) << '\n';
+                }
+                os << " <Primary/>\n";
+                os << "<Conditions/>\n";
+                return os;
+            }
 
             //__________________________________________________________________
             //
@@ -238,9 +147,7 @@ namespace upsylon
             Vector          Csqr;     //!< [0..M]   C square
             const   Freezer lfrz;
             const   Freezer efrz;
-
-
-
+            
             //! restrain current xi from C values
             void    RestrainXi(const Accessible &C) throw();
 
