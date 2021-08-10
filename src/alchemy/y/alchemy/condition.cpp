@@ -6,7 +6,9 @@ namespace upsylon
 
     namespace Alchemy
     {
-        
+
+        const char Condition::xi_[] = "xi_" ;
+
         Condition:: Condition(const size_t      eq_,
                               const size_t      sp_,
                               const long        nu_,

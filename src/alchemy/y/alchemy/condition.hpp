@@ -36,6 +36,8 @@ namespace upsylon
                 GEQ  //!< xi[eq] * nu >=  -A[sp]
             };
 
+            static const char xi_[]; //!< "xi_";
+
             //__________________________________________________________________
             //
             // C++
@@ -61,7 +63,8 @@ namespace upsylon
             //__________________________________________________________________
 
             //! regulate extent[eq] according to concentration[sp]
-            void operator()(Addressable &xi, const Accessible &C) const throw();
+            void operator()(Addressable      &xi,
+                            const Accessible &C) const throw();
 
 
             //! default output
@@ -103,7 +106,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & dspEq(OSTREAM &os) const {
                 const string &eid = eqs(eq).name;
-                dspNu(os) << "xi_" << eid;
+                dspNu(os) << xi_ << eid;
                 for(size_t i=eid.size();i<eqs.enw;++i) os << ' ';
                 return os;
             }

@@ -10,16 +10,16 @@ namespace upsylon
 
     namespace Alchemy
     {
-        void    Reactor:: RestrainXi(const Accessible &C) throw()
+        
+
+        void Reactor:: restrain(Addressable      &extents,
+                                const Accessible &concentrations) const throw()
         {
-            for(size_t j=Cond.size();j>0;--j)
+            for(size_t i=cond.size();i>0;--i)
             {
-                const Condition &cond = Cond[j];
-                cond( aliasing::_(xi1), C);
+                cond[i](extents,concentrations);
             }
         }
-
-
 
 
         bool Reactor:: balance(Addressable &C) throw()

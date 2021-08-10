@@ -98,71 +98,32 @@ meaning
 \begin{equation}
 	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
 \end{equation}
-
-We define a scalar balance indicator function $\psi(x)$ which is minimised when $x\geq0$.
-We define a scalar balance indicator field $\Psi(\vec{A})$ 
-which is minimised when all $\psi([A_j])$ are minimised.
-Then starting from $\vec{A}_n$:
+We want to minimize:
 \begin{equation}
-	\Psi(\vec{A}_n + \delta\vec{A}_n) \simeq \Psi(\vec{A}_n) + \partial_{\vec{A}} \Psi \cdot \delta\vec{A}_n
-\end{equation}
-
-\begin{equation}
-	\Psi(\vec{A}_n + \bm{\nu}^t \vec{\xi}_n) \simeq \Psi(\vec{A}_n) + (\bm{\nu} \partial_{\vec{A}} \Psi) \cdot  \vec{\xi}_n
-\end{equation}
-
-If we use a generic function:
-\begin{equation}
-\left \lbrace
-\begin{array}{rcl}
-	f(x)      & \geq &0\\
-	f'(x>0)   &> 0 \\
-\end{array}
-\right.
-\end{equation}
-
-The we use:
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\psi( f(x) ) &= &\max(-f(x),0)\\
-	\\
-	\psi'( f(x) ) & = &
-	\left\lbrace
-	\begin{array}{rcl}
-		x\leq0 & \to & -f'(x)\\
-		x>0    & \to & 0\\
-	\end{array}
-	\right.
-\end{array}
-\right.
-\end{equation}
-
-\begin{equation}
-	\Psi = \dfrac{1}{\alpha}\sum_j \mathbb{A}_j \max(0,-([A_j]+\vec{v}_j \vec{\xi})^\alpha)
-\end{equation}
-
-\begin{equation}
-	-\partial_{\vec{A}} \Psi (\vec{0}) = 
-	\begin{bmatrix}
-	\vdots \\
-	\mathbb{A}_j \times
+	\Psi\left(\vec{A}+\bm{\nu}^t \vec{\xi}\right) 
+	= 
+	%\dfrac{a}{2} {\vec{\xi}}^2 + 
+	\sum_{j}
+	\left[ \omega_j \mathbb{A}_j \times 
 	\left\lbrace
 	\begin{array}{rclcl}
-	[A_j] & \leq & 0 & \to & ([A_j])^{\alpha-1} \\
-	[A_j] & >    & 0 & \to & 0 \\
+	[A_j] + \vec{v}_j \cdot \vec{\xi} & \leq & 0 & \to & \frac{1}{2}([A_j] + \vec{v}_j \cdot \vec{\xi})^2 \\
+	\\
+	{[A_j]} + \vec{v}_j \cdot \vec{\xi} & >    & 0 & \to & 0 \\
 	\end{array}
 	\right.
-	 \\
+	\right]
+\end{equation}
+
+\begin{equation}
+	\partial_\xi \Psi(\vec{A}) = \bm{\nu}\bm{\Omega}
+	\begin{bmatrix}
+	\vdots\\
+	- \mathbb{A}_j \max(-[A_j],0)\\
 	\vdots\\
 	\end{bmatrix}
-\end{equation}
- 
- We look for:
- \begin{equation}
-  	\vec{\xi} = -u \bm{\nu}\partial_{\vec{A}} \Psi (\vec{0})
- \end{equation}
- 
+\end{equation} 
+  
 \section{Newton$^+$'s Algorithm}
 
 Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:

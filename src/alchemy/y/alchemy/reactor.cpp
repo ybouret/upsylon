@@ -30,15 +30,10 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
-        xi0(N,0),
-        xi1(N,0),
-        dC(M,0),
-        Cbad(M,0),
-        Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         NuS(M,1),
-        Cond(NuT.rows,as_capacity),
+        cond(NuT.rows,as_capacity),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
@@ -107,8 +102,8 @@ namespace upsylon
                     if(1==nok)
                     {
                         assert(nu!=0);
-                        const Condition cond(eq,sp,nu,lib,eqs);
-                        aliasing::_(Cond).push_back_(cond);
+                        const Condition cc(eq,sp,nu,lib,eqs);
+                        aliasing::_(cond).push_back_(cc);
                     }
                 }
                 else
@@ -118,7 +113,7 @@ namespace upsylon
             }
             
             std::cerr << " NuS   = " << NuS  << std::endl;
-            std::cerr << " Cond  : " << Cond << std::endl;
+            std::cerr << " cond  : " << cond << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }

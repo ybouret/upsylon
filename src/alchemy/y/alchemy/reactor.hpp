@@ -51,6 +51,12 @@ namespace upsylon
             void displayState()               const; //!< info to debug
             bool isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool balance(Addressable &C)    throw(); //!< balance current concentration
+            void restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
+
+            //__________________________________________________________________
+            //
+            // methods/display
+            //__________________________________________________________________
 
             //! output condition for one species
             template <typename OSTREAM> inline
@@ -105,9 +111,9 @@ namespace upsylon
                 }
                 os << " <General/>\n";
                 os << " <Primary>\n";
-                for(size_t i=Cond.size();i>0;--i)
+                for(size_t i=cond.size();i>0;--i)
                 {
-                    Cond[i].show(os << "  ",C) << '\n';
+                    cond[i].show(os << "  ",C) << '\n';
                 }
                 os << " <Primary/>\n";
                 os << "<Conditions/>\n";
@@ -126,31 +132,24 @@ namespace upsylon
             const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
-            const Vector      xi0;    //!< [N]   extents
-            const Vector      xi1;    //!< [N]   extents
-            const Vector      dC;     //!< [M]   delta C
-            const Vector      Cbad;   //!< [M]   C minus
-            const Vector      Ctry;   //!< [M]   trial C
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
             const Vector      NuS;    //!< [M]   scaling for Psi
-            const Conditions  Cond;   //!< ...
+            const Conditions  cond;   //!< [0..N] conditions
             const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long        dNu2;   //!<       determinant if Nu*Nu'
             const Matrix      Phi;    //!< [NxM] jacobian
             const Matrix      J;      //!< [NxN] PhiNuT
             const Matrix      W;      //!< [NxN] LU::build(J)
-            
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             Vector          Csqr;     //!< [0..M]   C square
             const   Freezer lfrz;
             const   Freezer efrz;
-            
-            //! restrain current xi from C values
-            void    RestrainXi(const Accessible &C) throw();
 
-            
 
         };
 

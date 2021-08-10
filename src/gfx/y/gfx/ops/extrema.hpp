@@ -138,7 +138,7 @@ namespace upsylon
                 }
                 normalize(target,source,apply,vmin,vmax);
             }
-            
+
         private:
             template <typename T> static inline
             void kernel_maxi(const tile &t, void *args, lockable &) throw()
