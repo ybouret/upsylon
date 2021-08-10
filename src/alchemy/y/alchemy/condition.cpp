@@ -54,7 +54,7 @@ namespace upsylon
         {
             double      &x = xi[eq];
             const double c = C[sp];
-            dspEq(std::cerr); std::cerr <<  " = " << x << " => ";
+            //dspEq(std::cerr); std::cerr <<  " = " << x << " => ";
             switch(id)
             {
                 case GEQ:
@@ -65,7 +65,7 @@ namespace upsylon
                     x = min_of(x,c/nu);
                     break;
             }
-            std::cerr << x << std::endl;
+            //std::cerr << x << std::endl;
         }
 
     }

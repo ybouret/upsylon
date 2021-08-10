@@ -30,6 +30,10 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
+        Cpsi(M,0),
+        Xpsi(N,0),
+        Xtry(N,0),
+        Ctry(M,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         NuS(M,1),
@@ -143,7 +147,6 @@ namespace upsylon
                     ans = false;
                     std::cerr << sp << "=" << C[sp.indx] << "<0 !" << std::endl;
                 }
-
             }
             return ans;
         }

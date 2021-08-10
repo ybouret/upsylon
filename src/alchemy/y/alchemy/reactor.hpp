@@ -48,10 +48,12 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void displayState()               const; //!< info to debug
-            bool isValid(const Accessible &C) const; //!< check active C are >0, display error
-            bool balance(Addressable &C)    throw(); //!< balance current concentration
-            void restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
+            void   displayState()               const; //!< info to debug
+            bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
+            bool   balance(Addressable &C)    throw(); //!< balance current concentration
+            void   restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
+            double Psi(const Accessible &C) throw();
+            double Psi(const Accessible &C, const double u) throw();
 
             //__________________________________________________________________
             //
@@ -132,6 +134,10 @@ namespace upsylon
             const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
+            const Vector      Cpsi;   //!< [M]   to buildPsi
+            const Vector      Xpsi;   //!< [N]   search extent = nu*Cpsi
+            const Vector      Xtry;   //!< [N]   trial extents
+            const Vector      Ctry;   //!< [M]   trial concentrations
             const iMatrix     Nu;     //!< [NxM] topology matrix
             const iMatrix     NuT;    //!< [MxN] transposed Nu
             const Vector      NuS;    //!< [M]   scaling for Psi
@@ -149,8 +155,6 @@ namespace upsylon
             Vector          Csqr;     //!< [0..M]   C square
             const   Freezer lfrz;
             const   Freezer efrz;
-
-
         };
 
     }
