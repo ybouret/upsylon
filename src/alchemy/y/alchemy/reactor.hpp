@@ -3,7 +3,8 @@
 #ifndef Y_ALCHEMY_REACTOR_INCLUDED
 #define Y_ALCHEMY_REACTOR_INCLUDED 1
 
-#include "y/alchemy/condition.hpp"
+#include "y/alchemy/equilibria.hpp"
+#include "y/alchemy/library.hpp"
 #include "y/sequence/vector.hpp"
 
 namespace upsylon
@@ -16,7 +17,37 @@ namespace upsylon
         typedef vector<size_t,Allocator>       uVector;      //!< alias
         typedef vector<bool,Allocator>         Flags;        //!<  alias
 
-    
+        class Primary
+        {
+        public:
+            static const char Prefix[];
+            typedef vector<Primary,Allocator> Array;
+
+            virtual ~Primary() throw()
+            {
+            }
+
+            explicit Primary(const Primary &_) throw():
+            eq(_.eq),
+            sp(_.sp),
+            nu(_.nu)
+            {
+            }
+
+            explicit Primary(const size_t eq_, const size_t sp_, const size_t nu_) throw() :
+            eq(eq_),
+            sp(sp_),
+            nu(nu_)
+            {
+            }
+
+            const size_t eq;
+            const size_t sp;
+            const size_t nu;
+
+        private:
+            Y_DISABLE_ASSIGN(Primary);
+        };
 
         //______________________________________________________________________
         //
@@ -51,9 +82,7 @@ namespace upsylon
             //__________________________________________________________________
             void   displayState()               const; //!< info to debug
             bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
-            bool   balance(Addressable &C)    throw();                           //!< balance current concentration
-            void   restrain(Addressable & , const Accessible & ) const throw(); //!< apply all conditions
-            bool   topology(const Accessible &) throw();                        //!< check compatible extent
+            bool   balance(Addressable &C)    throw(); //!< balance current concentration
 
             //! initialize
             double Psi(const Accessible &C) throw();
@@ -95,7 +124,7 @@ namespace upsylon
                             }
                         }
                         first = false;
-                        os << Condition::pfx << '<' << eqs(i).name << '>';
+                        os << Primary::Prefix << '<' << eqs(i).name << '>';
 
                     }
                     os << " >= " << -C[j];
@@ -112,20 +141,45 @@ namespace upsylon
             OSTREAM & showConditions(OSTREAM &os, const Accessible &C) const
             {
                 os << "<Conditions>\n";
-                os << " <General>\n";
+                os << "  <General>\n";
                 for(const Species::Node *node=lib->head();node;node=node->next)
                 {
                     const Species &sp = ***node;
-                    showCondition(os << "  ",sp,C);
+                    showCondition(os << "    ",sp,C);
                 }
-                os << " <General/>\n";
-                os << " <Primary>\n";
-                for(size_t i=cond.size();i>0;--i)
-                {
-                    cond[i].show(os << "  ",C) << '\n';
-                }
-                os << " <Primary/>\n";
+                os << "  <General/>\n";
+                showPrimary(os,C);
                 os << "<Conditions/>\n";
+                return os;
+            }
+
+            template <typename OSTREAM> inline
+            OSTREAM & showPrimary(OSTREAM &os, const Accessible &C) const
+            {
+                os << "  <Primary>\n";
+                os << "    <LEQ>\n";
+                for(size_t i=leq.size();i>0;--i)
+                {
+                    const Primary     &p  = leq[i];
+                    const Equilibrium &eq = eqs(p.eq);
+                    assert(p.nu>0);
+                    os << "      ";
+                    if(p.nu>1) os << vformat("%u*", unsigned(p.nu));
+                    eqs.print(os << Primary::Prefix,eq) << " <= " << C[p.sp] << '\n';
+                }
+                os << "    <LEQ/>\n";
+                os << "    <GEQ>\n";
+                for(size_t i=geq.size();i>0;--i)
+                {
+                    const Primary     &p  = geq[i];
+                    const Equilibrium &eq = eqs(p.eq);
+                    assert(p.nu>0);
+                    os << "      ";
+                    if(p.nu>1) os << vformat("%u*", unsigned(p.nu));
+                    eqs.print(os << Primary::Prefix,eq) << " >= " << -C[p.sp] << '\n';
+                }
+                os << "    <GEQ/>\n";
+                os << " <Primary>\n";
                 return os;
             }
 
@@ -133,28 +187,28 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Library    &lib;    //!< support library
-            const Equilibria &eqs;    //!< support equlibria
-            const size_t      N;      //!< number of equilibria
-            const size_t      M;      //!< number of components
-            const Flags       active; //!< [M]   active flags
-            const size_t      NA;     //!< number of active species
-            const Vector      K;      //!< [N]   constants
-            const Vector      Gam;    //!< [N]   indicators
-            const Limits::Array limits; //!< [N]   limits of extent
-            const Vector      Cpsi;   //!< [M]   to buildPsi
-            const Vector      Xpsi;   //!< [N]   search extent = nu*Cpsi
-            const Vector      Xtry;   //!< [N]   trial extents
-            const Vector      Ctry;   //!< [M]   trial concentrations
-            const iMatrix     Nu;     //!< [NxM] topology matrix
-            const iMatrix     NuT;    //!< [MxN] transposed Nu
-            const Vector      NuS;    //!< [M]   scaling for Psi
-            const Conditions  cond;   //!< [0..N] conditions
-            const iMatrix     aNu2;   //!< [NxN] adjoint Nu*Nu'
-            const long        dNu2;   //!<       determinant if Nu*Nu'
-            const Matrix      Phi;    //!< [NxM] jacobian
-            const Matrix      J;      //!< [NxN] PhiNuT
-            const Matrix      W;      //!< [NxN] LU::build(J)
+            const Library       &lib;    //!< support library
+            const Equilibria    &eqs;    //!< support equlibria
+            const size_t         N;      //!< number of equilibria
+            const size_t         M;      //!< number of components
+            const Flags          active; //!< [M]   active flags
+            const size_t         NA;     //!< number of active species
+            const Vector         K;      //!< [N]   constants
+            const Vector         Gam;    //!< [N]   indicators
+            const Primary::Array leq;    //!<
+            const Primary::Array geq;    //!< 
+            const Vector         Cpsi;   //!< [M]   to buildPsi
+            const Vector         Xpsi;   //!< [N]   search extent = nu*Cpsi
+            const Vector         Xtry;   //!< [N]   trial extents
+            const Vector         Ctry;   //!< [M]   trial concentrations
+            const iMatrix        Nu;     //!< [NxM] topology matrix
+            const iMatrix        NuT;    //!< [MxN] transposed Nu
+            const Vector         NuS;    //!< [M]   scaling for Psi
+            const iMatrix        aNu2;   //!< [NxN] adjoint Nu*Nu'
+            const long           dNu2;   //!<       determinant if Nu*Nu'
+            const Matrix         Phi;    //!< [NxM] jacobian
+            const Matrix         J;      //!< [NxN] PhiNuT
+            const Matrix         W;      //!< [NxN] LU::build(J)
 
 
 

@@ -50,14 +50,8 @@ Y_UTEST(balance)
     lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)
     {
-        if(cs.active[j])
-        {
-            if( alea.choice() ) C[j] = -C[j];
-        }
-        else
-        {
-            //C[j]=0;
-        }
+        if( alea.choice() ) C[j] = -C[j];
+
     }
 
     //lib(C,"H+") = - alea.to<double>();

@@ -31,7 +31,8 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
-        limits(N),
+        leq(N,as_capacity),
+        geq(N,as_capacity),
         Cpsi(M,0),
         Xpsi(N,0),
         Xtry(N,0),
@@ -39,7 +40,6 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         NuS(M,1),
-        cond(NuT.rows,as_capacity),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
@@ -62,8 +62,8 @@ namespace upsylon
             //__________________________________________________________________
             eqs.fill( aliasing::_(Nu) );
             aliasing::_(NuT).assign_transpose(Nu);
-            std::cerr << " Nu    = " << Nu  << std::endl;
-            std::cerr << " NuT   = " << NuT << std::endl;
+            std::cerr << " Nu     = " << Nu  << std::endl;
+            std::cerr << " NuT    = " << NuT << std::endl;
 
             //__________________________________________________________________
             //
@@ -75,7 +75,7 @@ namespace upsylon
                 apk::convert(aliasing::_(aNu2),aNu2_);
                 aliasing::_(dNu2) = dNu2_.cast_to<long>("determinant(Nu2)");
             }
-            std::cerr << " dNu2  = " << dNu2 << std::endl;
+            std::cerr << " dNu2   = " << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
             //__________________________________________________________________
@@ -111,8 +111,16 @@ namespace upsylon
                     if(1==nok)
                     {
                         assert(nu!=0);
-                        const Condition cc(eq,sp,nu,lib,eqs);
-                        aliasing::_(cond).push_back_(cc);
+                        if(nu>0)
+                        {
+                            const Primary primary(eq,sp,static_cast<size_t>(nu));
+                            aliasing::_(geq).push_back_(primary);
+                        }
+                        else
+                        {
+                            const Primary primary(eq,sp,static_cast<size_t>(-nu));
+                            aliasing::_(leq).push_back_(primary);
+                        }
                     }
                 }
                 else
@@ -122,8 +130,7 @@ namespace upsylon
             }
 
             
-            std::cerr << " NuS   = " << NuS  << std::endl;
-            std::cerr << " cond  : " << cond << std::endl;
+            std::cerr << " NuS    = " << NuS  << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }
