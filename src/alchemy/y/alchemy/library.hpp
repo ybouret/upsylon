@@ -160,7 +160,16 @@ namespace upsylon
             //
             // helpers
             //__________________________________________________________________
+            const Species &get(const string &); //!< simple parsing
+            const Species &get(const char   *); //!< simple parsing wrapper
 
+            //! simple parsing helper
+            template <typename ID> inline
+            Library & operator<<(const ID &id)
+            {
+                (void)get(id);
+                return *this;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
