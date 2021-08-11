@@ -123,7 +123,7 @@ namespace upsylon
                 for(size_t i=1;i<=N;++i)
                 {
                     const Equilibrium &eq = eqs(i);
-                    eqs.print(std::cerr,eq) << " : ";
+                    eqs.print(std::cerr << Condition::pfx,eq) << " : ";
                     const Limits &L = limits[i];
                     L.show(std::cerr) << std::endl;
                 }
