@@ -86,6 +86,8 @@ namespace upsylon
 
         void Equilibrium:: verify() const
         {
+            if(prod->size()<=0 && reac->size()<=0) throw exception("%s is empty",*name);
+
             // verify charge
             {
                 const long DrZ = prod.z() - reac.z();

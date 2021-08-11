@@ -45,9 +45,70 @@ namespace upsylon
             const size_t sp;
             const size_t nu;
 
+            template <typename OSTREAM> inline
+            OSTREAM & show(OSTREAM &os,
+                           const Library     &lib,
+                           const Equilibria  &eqs,
+                           const Accessible  &C,
+                           const bool         leq) const
+            {
+                if(nu>1)
+                    os << vformat("%2u*",unsigned(nu));
+                eqs.print(os<<Prefix,eqs(eq));
+                const Species &s = *(lib->fetch(sp-1));
+                if(leq)
+                {
+                    os << " <=  ";
+                    lib.print(os,s) << vformat(" = %.15g", C[sp]);
+                }
+                else
+                {
+                    os << " >= -";
+                    lib.print(os,s) << vformat(" = %.15g", -C[sp]);
+                }
+                return os;
+            }
+
         private:
             Y_DISABLE_ASSIGN(Primary);
         };
+
+        class Sentry : public object, public counted
+        {
+        public:
+            typedef arc_ptr<Sentry>            Pointer;
+            typedef vector<Pointer,Allocator>  Array_;
+
+            class Array : public Array_
+            {
+            public:
+                explicit Array(size_t n) : Array_(n,as_capacity)
+                {
+                    while(n-- >0 )
+                    {
+                        const Pointer p = new Sentry();
+                        push_back_(p);
+                    }
+                }
+                virtual ~Array() throw() {}
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Array);
+            };
+
+            explicit Sentry() throw() : leq(), geq() {}
+            virtual ~Sentry() throw()
+            {
+            }
+
+            Primary::Array leq;
+            Primary::Array geq;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Sentry);
+        };
+
+
 
         //______________________________________________________________________
         //
@@ -95,6 +156,63 @@ namespace upsylon
             // methods/display
             //__________________________________________________________________
 
+
+            //! show all conditions
+            template <typename OSTREAM> inline
+            OSTREAM & showConditions(OSTREAM &os, const Accessible &C) const
+            {
+                os << "<Conditions>\n";
+                os << "  <General>\n";
+                for(const Species::Node *node=lib->head();node;node=node->next)
+                {
+                    const Species &sp = ***node;
+                    showCondition(os << "    ",sp,C);
+                }
+                os << "  <General/>\n";
+                showPrimary(os,C);
+                os << "<Conditions/>\n";
+                return os;
+            }
+
+
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Library        &lib;    //!< support library
+            const Equilibria     &eqs;    //!< support equlibria
+            const size_t          N;      //!< number of equilibria
+            const size_t          M;      //!< number of components
+            const Flags           active; //!< [M]   active flags
+            const size_t          NA;     //!< number of active species
+            const Vector          K;      //!< [N]   constants
+            const Vector          Gam;    //!< [N]   indicators
+            const Primary::Array  leq;    //!<
+            const Primary::Array  geq;    //!<
+            const Sentry::Array   sentries;
+            const Vector          Cpsi;   //!< [M]   to buildPsi
+            const Vector          Xpsi;   //!< [N]   search extent = nu*Cpsi
+            const Vector          Xtry;   //!< [N]   trial extents
+            const Vector          Ctry;   //!< [M]   trial concentrations
+            const iMatrix         Nu;     //!< [NxM] topology matrix
+            const iMatrix         NuT;    //!< [MxN] transposed Nu
+            const Vector          NuS;    //!< [M]   scaling for Psi
+            const iMatrix         aNu2;   //!< [NxN] adjoint Nu*Nu'
+            const long            dNu2;   //!<       determinant if Nu*Nu'
+            const Matrix          Phi;    //!< [NxM] jacobian
+            const Matrix          J;      //!< [NxN] PhiNuT
+            const Matrix          W;      //!< [NxN] LU::build(J)
+
+
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Reactor);
+            Vector          Csqr;     //!< [0..M]   C square
+            const   Freezer lfrz;
+            const   Freezer efrz;
+
+
             //! output condition for one species
             template <typename OSTREAM> inline
             OSTREAM & showCondition(OSTREAM &os, const Species &sp, const Accessible &C) const
@@ -136,25 +254,38 @@ namespace upsylon
                 return os << '\n';
             }
 
-            //! show all conditions
             template <typename OSTREAM> inline
-            OSTREAM & showConditions(OSTREAM &os, const Accessible &C) const
+            OSTREAM & showPrimary(OSTREAM &os, const Accessible &C) const
             {
-                os << "<Conditions>\n";
-                os << "  <General>\n";
-                for(const Species::Node *node=lib->head();node;node=node->next)
+                os << "  <Primary>\n";
+                for(size_t i=1;i<=N;++i)
                 {
-                    const Species &sp = ***node;
-                    showCondition(os << "    ",sp,C);
+                    const Equilibrium &eq     = eqs(i);
+                    const Sentry      &sentry = *sentries[i];
+                    os << "    <" << eq.name << ">\n";
+                    for(size_t j=sentry.leq.size();j>0;--j)
+                    {
+                        const Primary &p = sentry.leq[j];
+                        assert(p.eq==i);
+                        assert(p.nu>0);
+                        p.show(os << "      ",lib,eqs,C,true) << '\n';
+                    }
+                    for(size_t j=sentry.geq.size();j>0;--j)
+                    {
+                        const Primary &p = sentry.geq[j];
+                        assert(p.eq==i);
+                        assert(p.nu>0);
+                        p.show(os << "      ",lib,eqs,C,false) << '\n';
+                    }
+                    os << "    <" << eq.name << "/>\n";
+
                 }
-                os << "  <General/>\n";
-                showPrimary(os,C);
-                os << "<Conditions/>\n";
+                os << " <Primary>\n";
                 return os;
             }
 
             template <typename OSTREAM> inline
-            OSTREAM & showPrimary(OSTREAM &os, const Accessible &C) const
+            OSTREAM & showPrimary2(OSTREAM &os, const Accessible &C) const
             {
                 os << "  <Primary>\n";
                 os << "    <LEQ>\n";
@@ -183,40 +314,8 @@ namespace upsylon
                 return os;
             }
 
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            const Library       &lib;    //!< support library
-            const Equilibria    &eqs;    //!< support equlibria
-            const size_t         N;      //!< number of equilibria
-            const size_t         M;      //!< number of components
-            const Flags          active; //!< [M]   active flags
-            const size_t         NA;     //!< number of active species
-            const Vector         K;      //!< [N]   constants
-            const Vector         Gam;    //!< [N]   indicators
-            const Primary::Array leq;    //!<
-            const Primary::Array geq;    //!< 
-            const Vector         Cpsi;   //!< [M]   to buildPsi
-            const Vector         Xpsi;   //!< [N]   search extent = nu*Cpsi
-            const Vector         Xtry;   //!< [N]   trial extents
-            const Vector         Ctry;   //!< [M]   trial concentrations
-            const iMatrix        Nu;     //!< [NxM] topology matrix
-            const iMatrix        NuT;    //!< [MxN] transposed Nu
-            const Vector         NuS;    //!< [M]   scaling for Psi
-            const iMatrix        aNu2;   //!< [NxN] adjoint Nu*Nu'
-            const long           dNu2;   //!<       determinant if Nu*Nu'
-            const Matrix         Phi;    //!< [NxM] jacobian
-            const Matrix         J;      //!< [NxN] PhiNuT
-            const Matrix         W;      //!< [NxN] LU::build(J)
+            void applyGEQ(Addressable &C) const throw();
 
-
-
-        private:
-            Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            Vector          Csqr;     //!< [0..M]   C square
-            const   Freezer lfrz;
-            const   Freezer efrz;
         };
 
     }

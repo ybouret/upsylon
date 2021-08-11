@@ -14,7 +14,19 @@ namespace upsylon
         const char Primary::Prefix[] = "@";
         
         
-        
+        void Reactor:: applyGEQ(Addressable &C) const throw()
+        {
+            for(size_t i=geq.size();i>0;--i)
+            {
+                const Primary &p  = geq[i];
+                const double   c  = -C[p.sp];
+                if(c>0)
+                {
+
+                }
+            }
+        }
+
         
         bool Reactor:: balance(Addressable &C) throw()
         {
@@ -24,6 +36,7 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
 
+                
 
                 return false;
             }
