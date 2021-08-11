@@ -140,7 +140,7 @@ namespace upsylon
             const size_t      NA;     //!< number of active species
             const Vector      K;      //!< [N]   constants
             const Vector      Gam;    //!< [N]   indicators
-            const XiLimits    limits; //!< [N]   limits of extent
+            const Limits::Array limits; //!< [N]   limits of extent
             const Vector      Cpsi;   //!< [M]   to buildPsi
             const Vector      Xpsi;   //!< [N]   search extent = nu*Cpsi
             const Vector      Xtry;   //!< [N]   trial extents

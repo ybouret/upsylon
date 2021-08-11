@@ -23,7 +23,7 @@ namespace upsylon
 
         bool Reactor:: topology(const Accessible &C) throw()
         {
-            XiLimits &_ = aliasing::_(limits); assert(N==limits.size());
+            Limits::Array &_ = aliasing::_(limits); assert(N==limits.size());
             for(size_t i=N;i>0;--i) _[i].reset();
             for(size_t i=cond.size();i>0;--i)
             {
@@ -32,7 +32,7 @@ namespace upsylon
             bool res = true;
             for(size_t i=N;i>0;--i)
             {
-                if(!_[i].update()) res = false;
+                if(!_[i].mobility()) res = false;
             }
             return res;
         }

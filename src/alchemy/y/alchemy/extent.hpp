@@ -14,7 +14,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! extent of a side of a reaction
+        //! extent of a side of a reaction, to solve valid state
         //
         //______________________________________________________________________
         class Extent
@@ -37,7 +37,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! couple of extents
+        //! couple of extents for a valid state
         //
         //______________________________________________________________________
         class Extents

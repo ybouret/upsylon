@@ -66,7 +66,7 @@ namespace upsylon
             }
         }
 
-        void Condition:: operator()(XiLimits &limits, const Accessible &C) const throw()
+        void Condition:: operator()(Limits::Array &limits, const Accessible &C) const throw()
         {
             const double c = C[sp];
             Limits      &L = limits[eq];
