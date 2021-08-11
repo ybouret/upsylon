@@ -16,13 +16,13 @@ Y_UTEST(balance)
     Equilibria     eqs;
 
     const Species &h  = lib("H+",1);
-    const Species &w  = lib("HO-",-1);
+    (void)   lib("HO-",-1);
 
 
     (void) lib("Na+",1);
     (void) lib("Cl-",-1);
 
-    Equilibrium &water    = eqs("water",  1e-14); water(1,h); water(1,w);
+   (void) eqs.water(lib,1e-14); //eqs("water",  1e-14); water(1,h); water(1,w);
 
     if(false)
     {

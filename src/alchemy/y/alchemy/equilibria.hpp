@@ -15,7 +15,8 @@ namespace upsylon
 
         typedef matrix<double> Matrix;  //!< alias
         typedef matrix<long>   iMatrix; //!< alias
-
+        class                  Library; //!< forward declaration
+        
         //______________________________________________________________________
         //
         //
@@ -129,6 +130,8 @@ namespace upsylon
             //! guess all active species
             size_t guess(addressable<bool> &active) const throw();
 
+            //! helper: create Water
+            Equilibrium &water(Library &, const double);
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
