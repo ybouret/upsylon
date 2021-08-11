@@ -58,7 +58,6 @@ namespace upsylon
             }
             
 
-           
             //! fill coefficients row of signed integer type
             template <typename T> inline
             void fill(addressable<T> &Nu) const throw()
@@ -67,8 +66,12 @@ namespace upsylon
                 prod.fill(Nu, 1);
             }
 
+            //! verify
+            /**
+             - charge conservation
+             */
+            void verify() const;
 
-            
             //! find extents
             Extents findExtents(const Accessible &C) const throw();
 
@@ -80,7 +83,6 @@ namespace upsylon
 
             //! solve unique equilibrium
             bool   solve(const double K0, Addressable  &C) const;
-
 
             //! compute jacobian row and return K0*reac-prod
             double compute(Addressable &phi, const double K0, const Accessible &C) const throw();

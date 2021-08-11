@@ -77,6 +77,9 @@ namespace upsylon
              */
             double activity(const Accessible &C, const double xi) const throw();
 
+            //! return positive charge
+            long z() const throw();
+
             //__________________________________________________________________
             //
             // members

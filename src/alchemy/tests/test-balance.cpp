@@ -16,9 +16,9 @@ Y_UTEST(balance)
     Equilibria     eqs;
 
     const Species &h  = lib("H+",1);
-    const Species &w  = lib("HO-",1);
+    const Species &w  = lib("HO-",-1);
     const Species &ah = lib("AH",0);
-    const Species &am = lib("Am",-1);
+    const Species &am = lib("A-",-1);
 
     (void) lib("Na+",1);
     (void) lib("Cl-",-1);

@@ -83,6 +83,17 @@ namespace upsylon
             reac.guess(active);
             prod.guess(active);
         }
+
+        void Equilibrium:: verify() const
+        {
+            // verify charge
+            {
+                const long DrZ = prod.z() - reac.z();
+                if(DrZ!=0) throw exception("%s has Delta_rZ=%ld", *name, DrZ);
+            }
+        }
+
+
     }
 }
 

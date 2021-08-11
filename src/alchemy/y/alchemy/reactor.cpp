@@ -53,6 +53,9 @@ namespace upsylon
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
+            eqs.verify();
+
+
             //__________________________________________________________________
             //
             // initialize

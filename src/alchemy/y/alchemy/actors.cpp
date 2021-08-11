@@ -101,6 +101,16 @@ namespace upsylon
         }
 
 
+        long Actors:: z() const throw()
+        {
+            long res = 0;
+            for(const Actor::Node *node = adb.head();node;node=node->next)
+            {
+                res += (**node).z();
+            }
+            return res;
+        }
+
         double Actors:: jacobian(double            target,
                                  Addressable      &phi,
                                  const double      jscale,

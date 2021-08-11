@@ -42,6 +42,16 @@ namespace upsylon
             return *edb.fetch(indx-1);
         }
 
+
+        void Equilibria:: verify() const
+        {
+            for(const Equilibrium::Node *node=edb.head();node;node=node->next)
+            {
+                (**node)->verify();
+            }
+        }
+
+
         void Equilibria:: compute(Addressable &K, const double t) const throw()
         {
             assert(K.size()>=edb.size());

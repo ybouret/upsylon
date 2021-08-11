@@ -107,6 +107,9 @@ namespace upsylon
             //! mass action after extent (careful with the sign of xi)
             double massAction(double target, const Accessible &C, const double xi) const throw();
 
+            //! positive charge
+            long z() const throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             virtual const_type & bulk() const throw();
