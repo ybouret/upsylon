@@ -5,7 +5,6 @@
 #define Y_ALCHEMY_LIMIT_INCLUDED 1
 
 #include "y/alchemy/library.hpp"
-#include "y/container/tuple.hpp"
 
 namespace upsylon
 {

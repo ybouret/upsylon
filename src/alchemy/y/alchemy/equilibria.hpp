@@ -133,6 +133,11 @@ namespace upsylon
             //! helper: create Water
             Equilibrium &water(Library &, const double);
             
+
+
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type & bulk() const throw();

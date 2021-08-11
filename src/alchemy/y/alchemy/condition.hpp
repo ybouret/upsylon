@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_ALCHEMY_CONDITION_INCLUDED
@@ -12,10 +11,6 @@ namespace upsylon
 {
     namespace Alchemy
     {
-
-
-
-   
         //______________________________________________________________________
         //
         //
@@ -37,7 +32,7 @@ namespace upsylon
                 GEQ  //!< xi[eq] * nu >=  -A[sp]
             };
 
-            static const char xi_[]; //!< "xi_";
+            static const char pfx[]; //!< prefix for extent
 
             //__________________________________________________________________
             //
@@ -108,8 +103,8 @@ namespace upsylon
 
             template <typename OSTREAM> inline
             OSTREAM & dspEq(OSTREAM &os) const {
-                dspNu(os) << xi_;
-                eqs.print(os, eqs(eq) );
+                dspNu(os) << pfx;
+                eqs.print(os,eqs(eq) );
                 return os;
             }
 

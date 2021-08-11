@@ -74,13 +74,13 @@ namespace upsylon
                 lib.print(os,sp);
                 if(sp.active)
                 {
-                    os << " : ";
+                    os << " :";
                     bool first = true;
                     for(size_t i=1;i<=N;++i)
                     {
                         const long nu = NuT[j][i];
                         if(nu==0) continue;
-
+                        os << ' ';
                         if(nu<0)
                         {
                             if(nu < -1) os << vformat("%ld",nu); else os << '-';
@@ -95,7 +95,8 @@ namespace upsylon
                             }
                         }
                         first = false;
-                        os << "xi_" << eqs(i).name;
+                        os << Condition::pfx << '<' << eqs(i).name << '>';
+
                     }
                     os << " >= " << -C[j];
                 }

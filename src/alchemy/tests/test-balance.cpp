@@ -5,6 +5,8 @@
 #include "y/yap.hpp"
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
+#include "y/alchemy/weak-acid.hpp"
+
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -15,38 +17,28 @@ Y_UTEST(balance)
     Library        lib;
     Equilibria     eqs;
 
-    const Species &h  = lib("H+",1);
-    (void)   lib("HO-",-1);
-
-
-    (void) lib("Na+",1);
-    (void) lib("Cl-",-1);
-
-   (void) eqs.water(lib,1e-14); //eqs("water",  1e-14); water(1,h); water(1,w);
+    (void) eqs.water(lib,1e-14);
 
     if(false)
     {
-        const Species &ah     = lib("AH",0);
-        const Species &am     = lib("A-",-1);
-        Equilibrium   &acetic = eqs("acetic", 1e-4);  acetic(1,h); acetic(1,am); acetic(-1,ah);
+        (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
 
     if(false)
     {
-        const Species &nh4     = lib("NH4+",1);
-        const Species &nh3     = lib("NH3",0);
-        Equilibrium   &ammonia = eqs("ammonia", 1e-9); ammonia(1,h); ammonia(1,nh3); ammonia(-1,nh4);
+        (void) WeakAcid::Add(eqs,lib,"ammonia","NH4+", "NH3", pow(10.0,-9.2));
     }
 
     if(true)
     {
-        const Species &OxH2 = lib("OxH2",0);
-        const Species &OxHm = lib("OxH-",-1);
-        const Species &Oxmm = lib("Oxmm",-2);
-        Equilibrium   &Ox1  = eqs("Ox1",pow(10.0,-1.2)); Ox1(1,h); Ox1(1,OxHm); Ox1(-1,OxH2);
-        Equilibrium   &Ox2  = eqs("Ox2",pow(10.0,-4.3)); Ox2(1,h); Ox2(1,Oxmm); Ox2(-1,OxHm);
-
+        (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
+        (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
+
+
+
+    lib.get("Na+");
+    lib.get("Cl-");
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
