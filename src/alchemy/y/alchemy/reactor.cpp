@@ -31,8 +31,6 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
-        leq(),
-        geq(),
         sentries(N),
         Cpsi(M,0),
         Xpsi(N,0),
@@ -114,18 +112,15 @@ namespace upsylon
                         assert(nu!=0);
                         if(nu>0)
                         {
-                            std::cerr << "New GEQ" << std::endl;
+                            //std::cerr << "New GEQ" << std::endl;
                             const Primary primary(eq,sp,static_cast<size_t>(nu));
-                            aliasing::_(geq).push_back(primary);
-                            aliasing::_(sentries)[eq]->geq.push_back(primary);
+                            aliasing::_(sentries)[eq]->addGEQ(primary);
                         }
                         else
                         {
-                            std::cerr << "New LEQ" << std::endl;
+                            //std::cerr << "New LEQ" << std::endl;
                             const Primary primary(eq,sp,static_cast<size_t>(-nu));
-                            aliasing::_(leq).push_back(primary);
-                            aliasing::_(sentries)[eq]->leq.push_back(primary);
-
+                            aliasing::_(sentries)[eq]->addLEQ(primary);
                         }
                     }
                 }

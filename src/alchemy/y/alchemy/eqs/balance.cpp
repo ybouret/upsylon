@@ -14,19 +14,7 @@ namespace upsylon
         const char Primary::Prefix[] = "@";
         
         
-        void Reactor:: applyGEQ(Addressable &C) const throw()
-        {
-            for(size_t i=geq.size();i>0;--i)
-            {
-                const Primary &p  = geq[i];
-                const double   c  = -C[p.sp];
-                if(c>0)
-                {
-
-                }
-            }
-        }
-
+        
         
         bool Reactor:: balance(Addressable &C) throw()
         {
@@ -36,7 +24,17 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
 
-                
+                for(size_t i=1;i<=N;++i)
+                {
+                    std::cerr << "For " << eqs(i).name << std::endl;
+                    const Sentry &sentry = *sentries[i];
+                    size_t sp=0;
+                    const double xi_min = sentry.getMin(sp,C);
+                    std::cerr << "xi_min=" << xi_min << " @" << sp << std::endl;
+                    const double xi_max = sentry.getMax(sp,C);
+                    std::cerr << "xi_max=" << xi_max << " @" << sp << std::endl;
+
+                }
 
                 return false;
             }

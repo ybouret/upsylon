@@ -78,6 +78,14 @@ namespace upsylon
         public:
             typedef arc_ptr<Sentry>            Pointer;
             typedef vector<Pointer,Allocator>  Array_;
+            enum Type
+            {
+                HasNoBound,
+                HasOnlyLEQ,
+                HasOnlyGEQ,
+                HasTwoWays
+            };
+
 
             class Array : public Array_
             {
@@ -96,16 +104,122 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Array);
             };
 
-            explicit Sentry() throw() : leq(), geq() {}
+            explicit Sentry() throw() : leq(), geq(), type(HasNoBound) {}
             virtual ~Sentry() throw()
             {
             }
 
-            Primary::Array leq;
-            Primary::Array geq;
+            void addLEQ(const Primary &p)
+            {
+                aliasing::_(leq).push_back(p);
+                update();
+            }
+
+            void addGEQ(const Primary &p)
+            {
+                aliasing::_(geq).push_back(p);
+                update();
+            }
+
+            const char *typeText() const throw()
+            {
+                switch(type)
+                {
+                    case HasNoBound: return "HasNoBound";
+                    case HasOnlyLEQ: return "HasOnlyLEQ";
+                    case HasOnlyGEQ: return "HasOnlyGEQ";
+                    case HasTwoWays: return "HasTwoWays";
+                }
+                return "???";
+            }
+
+            //! getMin = max of geq
+            double getMin(size_t &sp, const Accessible &C) const throw()
+            {
+                sp = 0;
+                if(geq.size())
+                {
+                    sp        = geq[1].sp;
+                    double xi = -C[sp]/geq[1].nu;
+                    for(size_t i=geq.size();i>1;--i)
+                    {
+                        const Primary &tmp    = geq[i];
+                        const size_t   sp_tmp = tmp.sp;
+                        const double   xi_tmp = -C[sp_tmp]/tmp.nu;
+                        if(xi_tmp>xi)
+                        {
+                            xi=xi_tmp;
+                            sp=sp_tmp;
+                        }
+                    }
+                    return xi;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+            //! getMax = min of leq
+            double getMax(size_t &sp, const Accessible &C) const throw()
+            {
+                sp = 0;
+                if(leq.size())
+                {
+                    sp        = leq[1].sp;
+                    double xi = C[sp]/geq[1].nu;
+                    for(size_t i=leq.size();i>1;--i)
+                    {
+                        const Primary &tmp    = leq[i];
+                        const size_t   sp_tmp = tmp.sp;
+                        const double   xi_tmp = C[sp_tmp]/tmp.nu;
+                        if(xi_tmp<xi)
+                        {
+                            xi=xi_tmp;
+                            sp=sp_tmp;
+                        }
+                    }
+                    return xi;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
+
+
+            const Primary::Array leq;
+            const Primary::Array geq;
+            const Type           type;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Sentry);
+            void update() throw()
+            {
+                if(leq.size()>0)
+                {
+                    if(geq.size()>0)
+                    {
+                        aliasing::_(type) = HasTwoWays;
+                    }
+                    else
+                    {
+                        aliasing::_(type) = HasOnlyLEQ;
+                    }
+                }
+                else
+                {
+                    if(geq.size()>0)
+                    {
+                        aliasing::_(type) = HasOnlyGEQ;
+                    }
+                    else
+                    {
+                        aliasing::_(type) = HasNoBound;
+                    }
+                }
+            }
         };
 
 
@@ -188,8 +302,6 @@ namespace upsylon
             const size_t          NA;     //!< number of active species
             const Vector          K;      //!< [N]   constants
             const Vector          Gam;    //!< [N]   indicators
-            const Primary::Array  leq;    //!<
-            const Primary::Array  geq;    //!<
             const Sentry::Array   sentries;
             const Vector          Cpsi;   //!< [M]   to buildPsi
             const Vector          Xpsi;   //!< [N]   search extent = nu*Cpsi
@@ -262,7 +374,7 @@ namespace upsylon
                 {
                     const Equilibrium &eq     = eqs(i);
                     const Sentry      &sentry = *sentries[i];
-                    os << "    <" << eq.name << ">\n";
+                    os << "    <" << eq.name << "> [" << sentry.typeText() << "]\n";
                     for(size_t j=sentry.leq.size();j>0;--j)
                     {
                         const Primary &p = sentry.leq[j];
@@ -284,38 +396,9 @@ namespace upsylon
                 return os;
             }
 
-            template <typename OSTREAM> inline
-            OSTREAM & showPrimary2(OSTREAM &os, const Accessible &C) const
-            {
-                os << "  <Primary>\n";
-                os << "    <LEQ>\n";
-                for(size_t i=leq.size();i>0;--i)
-                {
-                    const Primary     &p  = leq[i];
-                    const Equilibrium &eq = eqs(p.eq);
-                    assert(p.nu>0);
-                    os << "      ";
-                    if(p.nu>1) os << vformat("%u*", unsigned(p.nu));
-                    eqs.print(os << Primary::Prefix,eq) << " <= " << C[p.sp] << '\n';
-                }
-                os << "    <LEQ/>\n";
-                os << "    <GEQ>\n";
-                for(size_t i=geq.size();i>0;--i)
-                {
-                    const Primary     &p  = geq[i];
-                    const Equilibrium &eq = eqs(p.eq);
-                    assert(p.nu>0);
-                    os << "      ";
-                    if(p.nu>1) os << vformat("%u*", unsigned(p.nu));
-                    eqs.print(os << Primary::Prefix,eq) << " >= " << -C[p.sp] << '\n';
-                }
-                os << "    <GEQ/>\n";
-                os << " <Primary>\n";
-                return os;
-            }
 
-            void applyGEQ(Addressable &C) const throw();
 
+            
         };
 
     }
