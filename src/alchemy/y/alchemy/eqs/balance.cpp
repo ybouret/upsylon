@@ -114,7 +114,7 @@ namespace upsylon
         
         bool Reactor:: balance(Addressable &C) throw()
         {
-            std::cerr << "C=" << C << std::endl;
+            lib.display(std::cerr << "C=",C) << std::endl;
             if(N>0)
             {
                 assert(NA>0);
