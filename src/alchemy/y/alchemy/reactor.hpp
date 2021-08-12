@@ -55,7 +55,7 @@ namespace upsylon
                 if(nu>1)
                     os << vformat("%2u*",unsigned(nu));
                 eqs.print(os<<Prefix,eqs(eq));
-                const Species &s = *(lib->fetch(sp-1));
+                const Species &s = lib(sp);
                 if(leq)
                 {
                     os << " <=  ";
