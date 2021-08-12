@@ -83,7 +83,14 @@ namespace upsylon
             return NULL != sdb.search(_);
         }
 
-
+        const Species & Library:: operator()(const size_t indx) const
+        {
+            assert(indx>0);
+            assert(indx<=sdb.size());
+            const Species &sp = *sdb.fetch(indx-1);
+            assert(indx==sp.indx);
+            return sp;
+        }
 
     }
 }

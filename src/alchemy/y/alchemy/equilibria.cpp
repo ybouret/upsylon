@@ -43,7 +43,9 @@ namespace upsylon
         const Equilibrium & Equilibria:: operator()(const size_t indx) const throw()
         {
             assert(indx>=1);assert(indx<=edb.size());
-            return *edb.fetch(indx-1);
+            const Equilibrium &eq = *edb.fetch(indx-1);
+            assert(indx==eq.indx);
+            return eq;
         }
 
 

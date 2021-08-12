@@ -60,12 +60,7 @@ namespace upsylon
             const Species & operator[](const string &)    const; //!< look up by name
             const Species & operator[](const char *  )    const; //!< look up by name
 
-            //! get index of a named species
-            template <typename ID> inline
-            size_t operator()(const ID &id) const
-            {
-                return (*this)[id].indx;
-            }
+            const Species & operator()(const size_t indx) const; //!< slow access by index
 
             //! access array content by name
             template <typename ARR, typename ID> inline
