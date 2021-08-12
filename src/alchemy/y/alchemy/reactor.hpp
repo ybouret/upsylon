@@ -167,7 +167,7 @@ namespace upsylon
                 if(leq.size())
                 {
                     sp        = leq[1].sp;
-                    double xi = C[sp]/geq[1].nu;
+                    double xi = C[sp]/leq[1].nu;
                     for(size_t i=leq.size();i>1;--i)
                     {
                         const Primary &tmp    = leq[i];
@@ -259,12 +259,7 @@ namespace upsylon
             bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool   balance(Addressable &C)    throw(); //!< balance current concentration
 
-            //! initialize
-            double Psi(const Accessible &C) throw();
-
-            //! look-up
-            double Psi(const Accessible &C, const double u) throw();
-
+            
             //__________________________________________________________________
             //
             // methods/display
