@@ -33,6 +33,7 @@ namespace upsylon
         K(N,0),
         Gam(N,0),
         sentries(N),
+        xi(N),
         Cpsi(M,0),
         Xpsi(N,0),
         Xtry(N,0),

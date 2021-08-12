@@ -19,7 +19,7 @@ Y_UTEST(balance)
 
     (void) eqs.water(lib,1e-14);
 
-    // if(false)
+    //if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
@@ -44,9 +44,16 @@ Y_UTEST(balance)
         dummy(3,lib.get("D"));
     }
 
+    if(false)
+    {
+        Equilibrium &combine = eqs("combine",10.2);
+        combine(-1, lib.get("X"));
+        combine(-1, lib.get("Y"));
+    }
 
-    lib.get("Na+");
-    lib.get("Cl-");
+
+    //lib.get("Na+");
+    //lib.get("Cl-");
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
@@ -59,7 +66,7 @@ Y_UTEST(balance)
     for(size_t j=cs.M;j>0;--j)
     {
         if( alea.choice() ) C[j] = -C[j];
-
+        //if( !cs.active[j]) C[j] = 0;
     }
 
     //lib(C,"H+") = - alea.to<double>();

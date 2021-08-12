@@ -24,6 +24,7 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
 
+                //bool solvedPrimary = true;
                 for(size_t i=1;i<=N;++i)
                 {
                     const Sentry &sentry = *sentries[i];
@@ -34,17 +35,27 @@ namespace upsylon
                         case Sentry::HasOnlyGEQ: {
                             const Primary &pmin = sentry.getMin(C);
                             lib.print( std::cerr << "min for ", lib(pmin.sp) ) << " = " << -C[pmin.sp] << std::endl;
+                            const Sentry::State state = sentry.solveHasOnlyGEQ(C,NuT, aliasing::_(xi));
+                            std::cerr << Sentry::StateText(state) << std::endl;
                         }
                         break;
+
                         case Sentry::HasOnlyLEQ: {
                             const Primary &pmax = sentry.getMax(C);
                             lib.print( std::cerr << "max for ", lib(pmax.sp) ) << " = " << C[pmax.sp] << std::endl;
+                            const Sentry::State state = sentry.solveHasOnlyLEQ(C,NuT, aliasing::_(xi));
+                            std::cerr << Sentry::StateText(state) << std::endl;
                         } break;
-                        case Sentry::IsBothWays: break;
+
+                        case Sentry::IsBothWays: {
+                            const Sentry::State state = sentry.solveIsBothWays(C,NuT, aliasing::_(xi));
+                            std::cerr << Sentry::StateText(state) << std::endl;
+                        } break;
                     }
 
-                    sentry.solve(C);
                 }
+                lib.display(std::cerr,C) << std::endl;
+
 
                 return false;
             }
