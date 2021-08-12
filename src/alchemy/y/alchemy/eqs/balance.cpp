@@ -26,14 +26,24 @@ namespace upsylon
 
                 for(size_t i=1;i<=N;++i)
                 {
-                    std::cerr << "For " << eqs(i).name << std::endl;
                     const Sentry &sentry = *sentries[i];
-                    size_t sp=0;
-                    const double xi_min = sentry.getMin(sp,C);
-                    std::cerr << "xi_min=" << xi_min << " @" << sp << std::endl;
-                    const double xi_max = sentry.getMax(sp,C);
-                    std::cerr << "xi_max=" << xi_max << " @" << sp << std::endl;
+                    std::cerr << "For " << eqs(i).name << " [" << sentry.typeText() << "]" << std::endl;
+                    switch(sentry.type)
+                    {
+                        case Sentry::HasNoBound: break;
+                        case Sentry::HasOnlyGEQ: {
+                            const Primary &pmin = sentry.getMin(C);
+                            lib.print( std::cerr << "min for ", lib(pmin.sp) ) << " = " << -C[pmin.sp] << std::endl;
+                        }
+                        break;
+                        case Sentry::HasOnlyLEQ: {
+                            const Primary &pmax = sentry.getMax(C);
+                            lib.print( std::cerr << "max for ", lib(pmax.sp) ) << " = " << C[pmax.sp] << std::endl;
+                        } break;
+                        case Sentry::IsBothWays: break;
+                    }
 
+                    sentry.solve(C);
                 }
 
                 return false;

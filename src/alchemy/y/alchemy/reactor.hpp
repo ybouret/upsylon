@@ -133,58 +133,58 @@ namespace upsylon
                 return "???";
             }
 
-            //! getMin = max of geq
-            double getMin(size_t &sp, const Accessible &C) const throw()
+
+            //! getMax = min of leq, leq.size()>0
+            const Primary &getMax(const Accessible &C) const throw()
             {
-                sp = 0;
-                if(geq.size())
+                assert(leq.size()>0);
+                assert(HasOnlyLEQ==type||IsBothWays==type);
+                const Primary *opt = &leq[1];
+                for(size_t i=leq.size();i>1;--i)
                 {
-                    sp        = geq[1].sp;
-                    double xi = -C[sp]/geq[1].nu;
-                    for(size_t i=geq.size();i>1;--i)
+                    const Primary *tmp = &leq[i];
+                    const double xi_opt = C[opt->sp]/opt->nu;
+                    const double xi_tmp = C[tmp->sp]/tmp->nu;
+                    if(xi_tmp<xi_opt)
                     {
-                        const Primary &tmp    = geq[i];
-                        const size_t   sp_tmp = tmp.sp;
-                        const double   xi_tmp = -C[sp_tmp]/tmp.nu;
-                        if(xi_tmp>xi)
-                        {
-                            xi=xi_tmp;
-                            sp=sp_tmp;
-                        }
+                        opt = tmp;
                     }
-                    return xi;
                 }
-                else
-                {
-                    return 0;
-                }
+                return *opt;
+
             }
 
-            //! getMax = min of leq
-            double getMax(size_t &sp, const Accessible &C) const throw()
+            //! getMin = max of geq, geq.size()>0
+            const Primary &getMin(const Accessible &C) const throw()
             {
-                sp = 0;
-                if(leq.size())
+                assert(geq.size()>0);
+                assert(HasOnlyGEQ==type||IsBothWays==type);
+                const Primary *opt = &geq[1];
+                for(size_t i=geq.size();i>1;--i)
                 {
-                    sp        = leq[1].sp;
-                    double xi = C[sp]/leq[1].nu;
-                    for(size_t i=leq.size();i>1;--i)
+                    const Primary *tmp    = &geq[i];
+                    const double   xi_opt = -C[opt->sp]/opt->nu;
+                    const double   xi_tmp = -C[tmp->sp]/tmp->nu;
+                    if(xi_tmp>xi_opt)
                     {
-                        const Primary &tmp    = leq[i];
-                        const size_t   sp_tmp = tmp.sp;
-                        const double   xi_tmp = C[sp_tmp]/tmp.nu;
-                        if(xi_tmp<xi)
-                        {
-                            xi=xi_tmp;
-                            sp=sp_tmp;
-                        }
+                        opt = tmp;
                     }
-                    return xi;
                 }
-                else
+                return *opt;
+            }
+
+            bool solve(Addressable &C) const throw()
+            {
+                switch(type)
                 {
-                    return 0;
+                    case HasOnlyGEQ: {
+                        const Primary &p = getMin(C);
+                        
+                    } break;
+
+                    default: break;
                 }
+                return false;
             }
 
 
@@ -220,6 +220,8 @@ namespace upsylon
                     }
                 }
             }
+
+
         };
 
 
