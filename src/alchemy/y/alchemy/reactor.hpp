@@ -83,7 +83,7 @@ namespace upsylon
                 HasNoBound,
                 HasOnlyLEQ,
                 HasOnlyGEQ,
-                HasTwoWays
+                IsBothWays
             };
 
 
@@ -128,7 +128,7 @@ namespace upsylon
                     case HasNoBound: return "HasNoBound";
                     case HasOnlyLEQ: return "HasOnlyLEQ";
                     case HasOnlyGEQ: return "HasOnlyGEQ";
-                    case HasTwoWays: return "HasTwoWays";
+                    case IsBothWays: return "IsBothWays";
                 }
                 return "???";
             }
@@ -201,7 +201,7 @@ namespace upsylon
                 {
                     if(geq.size()>0)
                     {
-                        aliasing::_(type) = HasTwoWays;
+                        aliasing::_(type) = IsBothWays;
                     }
                     else
                     {

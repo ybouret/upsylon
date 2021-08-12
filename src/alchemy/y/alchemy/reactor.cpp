@@ -4,6 +4,7 @@
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/exception.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -145,10 +146,39 @@ namespace upsylon
                     assert(false==active[sp]);
                 }
             }
-
-
-
             std::cerr << " NuS    = " << NuS  << std::endl;
+
+            std::cerr << "  <Sentries>" << std::endl;
+            for(size_t i=1;i<=N;++i)
+            {
+                const Sentry      &sentry = *sentries[i];
+                const Equilibrium &eq     = eqs(i);
+                eqs.print(std::cerr << "    ", eq) << " : " << sentry.typeText() << std::endl;
+                for(size_t j=sentry.leq.size();j>0;--j)
+                {
+                    const Primary &p = sentry.leq[j];
+                    std::cerr << "     | ";
+                    if(p.nu>1)
+                        std::cerr << std::setw(2) << p.nu << "*";
+                    std::cerr << Primary::Prefix;
+                    eqs.print(std::cerr,eq) << " <=  " << lib(p.sp) << std::endl;
+                }
+                for(size_t j=sentry.geq.size();j>0;--j)
+                {
+                    const Primary &p = sentry.geq[j];
+                    std::cerr << "     | ";
+                    if(p.nu>1)
+                        std::cerr << std::setw(2) << p.nu << "*";
+                    std::cerr << Primary::Prefix;
+                    eqs.print(std::cerr,eq) << " >= -" << lib(p.sp) << std::endl;
+                }
+
+
+                eqs.print(std::cerr << "    ", eqs(i)) << std::endl;
+                if(i<N)
+                    std::cerr << std::endl;
+            }
+            std::cerr << "  <Sentries/>" << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }

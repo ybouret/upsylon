@@ -19,7 +19,7 @@ Y_UTEST(balance)
 
     (void) eqs.water(lib,1e-14);
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
@@ -29,7 +29,7 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"ammonia","NH4+", "NH3", pow(10.0,-9.2));
     }
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
