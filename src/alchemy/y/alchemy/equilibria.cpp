@@ -28,10 +28,14 @@ namespace upsylon
         Equilibrium & Equilibria:: operator()(Equilibrium *eq)
         {
             assert(eq);
-            const Equilibrium::Pointer p(eq);
+            // take care of eq
+            const Equilibrium::Pointer p(eq); assert(0==eq->indx);
             if(frozen)         throw exception("%s: frozen while adding '%s'",CLID,*(eq->name));
             if(!edb.insert(p)) throw exception("%s: multipliple equilibrium '%s'", CLID, *(eq->name) );
-            aliasing::_(enw) = max_of(enw,eq->name.size());
+
+            // update status
+            aliasing::_(enw)      = max_of(enw,eq->name.size());
+            aliasing::_(eq->indx) = edb.size();
             return *eq;
         }
 
@@ -45,9 +49,12 @@ namespace upsylon
 
         void Equilibria:: verify() const
         {
+            size_t indx = 0;
             for(const Equilibrium::Node *node=edb.head();node;node=node->next)
             {
-                (**node)->verify();
+                const Equilibrium &eq = ***node;
+                if(++indx!=eq.indx) throw exception("%s wrong index for '%s'",CLID, *eq.name);
+                eq.verify();
             }
         }
 

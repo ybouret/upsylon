@@ -94,6 +94,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
+            const size_t   indx;  //!< index
             const string   name;  //!< identifier
             const Actors   reac;  //!< reactants
             const Actors   prod;  //!< products
@@ -101,7 +102,7 @@ namespace upsylon
         protected:
             //! initialize
             template <typename ID> inline
-            explicit Equilibrium(const ID &id) : name(id), reac(), prod() {}
+            explicit Equilibrium(const ID &id) : indx(0), name(id), reac(), prod() {}
 
             
         private:
