@@ -7,6 +7,7 @@
 #include "y/alchemy/species.hpp"
 #include "y/type/authority.hpp"
 #include "y/sequence/accessible.hpp"
+#include "y/ios/scribe.hpp"
 
 namespace upsylon
 {
@@ -47,9 +48,10 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Actor &a)
             {
+                static const ios::scribe &_ = ios::scribe::query( typeid(a.nu) );
                 if(a.nu>1)
                 {
-                    const string coef = vformat("%lu",a.nu);
+                    const string coef = _.write( &a.nu );
                     os << coef << ' ';
                 }
                 return os << *a;
