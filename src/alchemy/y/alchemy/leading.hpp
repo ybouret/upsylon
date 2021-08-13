@@ -12,33 +12,48 @@ namespace upsylon
 {
     namespace Alchemy
     {
-
+        //______________________________________________________________________
+        //
+        //
         //! Leading condition
+        //
+        //______________________________________________________________________
         class Leading
         {
         public:
-            static const char EXT_[];
-            static const char LEQ_[];
-            static const char GEQ_[];
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef vector<const Leading,Allocator> Array;
 
+            static const char EXT_[]; //!< prefix
+            static const char LEQ_[]; //!< symbol
+            static const char GEQ_[]; //!< symbol
+
+            //! information
             enum Kind
             {
-                LEQ,
-                GEQ
+                LEQ, //!< <= -[something]
+                GEQ  //!< >=  [something]
             };
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             Leading(const Equilibrium &,
                     const Species     &,
                     const size_t       ,
-                    const Kind)  throw();
-            ~Leading() throw();
-            Leading(const Leading &other) throw();
+                    const Kind)           throw(); //!< setup
+            ~Leading()                    throw(); //!< cleanup
+            Leading(const Leading &other) throw(); //!< opy
 
-            const Equilibrium &eq; //!< equilibrium with indx
-            const Species     &sp; //!< species     with indx
-            const size_t       nu; //!< POSITIVE    coefficient
-            const Kind         id; //!< to check
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             template <typename OSTREAM> inline
             OSTREAM & print(OSTREAM          &os,
                             const Library    &lib,
@@ -57,7 +72,15 @@ namespace upsylon
                 lib.print(os,sp);
                 return os;
             }
-            
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Equilibrium &eq; //!< equilibrium with indx
+            const Species     &sp; //!< species     with indx
+            const size_t       nu; //!< POSITIVE    coefficient
+            const Kind         id; //!< to check
 
         private:
             Y_DISABLE_ASSIGN(Leading);

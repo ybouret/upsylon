@@ -4,7 +4,7 @@
 #define Y_ALCHEMY_REACTOR_INCLUDED 1
 
 #include "y/alchemy/primary.hpp"
-#include "y/alchemy/leading.hpp"
+#include "y/alchemy/guard.hpp"
 
 namespace upsylon
 {
@@ -90,6 +90,7 @@ namespace upsylon
             const Vector          K;      //!< [N]   constants
             const Vector          Gam;    //!< [N]   indicators
             const Sentry::Array   sentries; //!< [N]
+            const Guard::Array    guards;   //!< [N]
             const Vector          xi;     //!< [N]
             const Vector          Cpsi;   //!< [M]   to buildPsi
             const Vector          Xpsi;   //!< [N]   search extent = nu*Cpsi

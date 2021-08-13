@@ -33,6 +33,7 @@ namespace upsylon
         K(N,0),
         Gam(N,0),
         sentries(N),
+        guards(N),
         xi(N),
         Cpsi(M,0),
         Xpsi(N,0),
@@ -192,6 +193,7 @@ namespace upsylon
                     assert(pEq!=NULL);
                     if(1==nok)
                     {
+                        Guard &guard = aliasing::_(*guards[pEq->indx]);
                         if(snu>0)
                         {
                             //__________________________________________________
