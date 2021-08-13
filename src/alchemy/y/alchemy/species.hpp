@@ -4,10 +4,9 @@
 #ifndef Y_ALCHEMY_SPECIES_INCLUDED
 #define Y_ALCHEMY_SPECIES_INCLUDED 1
 
-#include "y/string.hpp"
-#include "y/ptr/intr.hpp"
+#include "y/alchemy/types.hpp"
 #include "y/associative/hash/set.hpp"
-#include "y/sequence/addressable.hpp"
+#include "y/ptr/intr.hpp"
 
 namespace upsylon
 {
@@ -20,7 +19,6 @@ namespace upsylon
     namespace Alchemy
     {
 
-        typedef addressable<double> Addressable; //!< aliasing
 
         //______________________________________________________________________
         //

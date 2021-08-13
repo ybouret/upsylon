@@ -12,7 +12,6 @@ namespace upsylon
 {
     namespace Alchemy
     {
-        typedef accessible<double> Accessible;   //!< alias
 
         //______________________________________________________________________
         //
@@ -34,9 +33,9 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit Actor(const Species &, const unsigned long) throw(); //!< setup
-            virtual ~Actor()    throw();                                  //!< cleanup
-            Actor(const Actor&) throw();                                  //!< copy
+            explicit Actor(const Species &, const size_t) throw(); //!< setup
+            virtual ~Actor()    throw();                           //!< cleanup
+            Actor(const Actor&) throw();                           //!< copy
             
             //__________________________________________________________________
             //
@@ -84,8 +83,8 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const unsigned long nu;  //!< coefficient
-            const unsigned long nu1; //!< nu-1, for jacobian
+            const size_t nu;  //!< coefficient
+            const size_t nu1; //!< nu-1, for jacobian
             
         private:
             Y_DISABLE_ASSIGN(Actor);

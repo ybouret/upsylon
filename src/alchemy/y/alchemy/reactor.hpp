@@ -4,6 +4,7 @@
 #define Y_ALCHEMY_REACTOR_INCLUDED 1
 
 #include "y/alchemy/primary.hpp"
+#include "y/alchemy/leading.hpp"
 
 namespace upsylon
 {

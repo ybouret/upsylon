@@ -16,7 +16,16 @@ namespace upsylon
         {
         }
         
-        
+        bool Equilibrium:: owns(const Species &sp) const throw()
+        {
+            return reac.owns(sp) || prod.owns(sp);
+        }
+
+        size_t Equilibrium:: weight(const Species &sp) const throw()
+        {
+            return max_of(reac.coeff(sp),prod.coeff(sp));
+        }
+
         
         void Equilibrium:: operator()(const long nu, const Species &sp)
         {

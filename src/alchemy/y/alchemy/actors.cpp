@@ -34,8 +34,34 @@ namespace upsylon
             return adb;
         }
         
-        
-    
+        bool Actors:: owns(const Species &sp) const throw()
+        {
+            const Actor *pA = adb.search(sp.name);
+            if(pA)
+            {
+                const Species &mine = **pA;
+                return &mine == &sp;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        size_t Actors:: coeff(const Species &sp) const throw()
+        {
+            const Actor *pA = adb.search(sp.name);
+            if(pA)
+            {
+                assert( &(**pA) == &sp );
+                return pA->nu;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
 
         
         

@@ -90,6 +90,13 @@ namespace upsylon
             //! guess who is active among reac and prod
             void guess(addressable<bool> &active) const throw();
 
+            //! test ownership
+            bool owns(const Species &sp) const throw();
+
+            //! positive coefficient, for balancing
+            size_t weight(const Species &sp) const throw();
+
+
             //__________________________________________________________________
             //
             // members

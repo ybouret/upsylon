@@ -6,7 +6,6 @@
 
 #include "y/alchemy/equilibria.hpp"
 #include "y/alchemy/library.hpp"
-#include "y/sequence/vector.hpp"
 
 namespace upsylon
 {

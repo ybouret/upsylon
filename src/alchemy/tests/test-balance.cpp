@@ -60,7 +60,7 @@ Y_UTEST(balance)
 
     Reactor cs(lib,eqs);
 
-    
+    return 0;
     Vector  C(cs.M,0);
     lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)

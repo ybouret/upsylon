@@ -14,7 +14,7 @@ namespace upsylon
     {
 
         typedef matrix<double> Matrix;  //!< alias
-        typedef matrix<long>   iMatrix; //!< alias
+        typedef matrix<unit_t> iMatrix; //!< alias
         class                  Library; //!< forward declaration
         
         //______________________________________________________________________

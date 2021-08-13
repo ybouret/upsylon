@@ -3,19 +3,16 @@
 #ifndef Y_ALCHEMY_LIBRARY_INCLUDED
 #define Y_ALCHEMY_LIBRARY_INCLUDED 1
 
+#include "y/alchemy/types.hpp"
 #include "y/alchemy/species.hpp"
 #include "y/alchemy/freezable.hpp"
 #include "y/type/gateway.hpp"
 #include "y/ios/scribe.hpp"
-#include "y/sequence/vector.hpp"
-#include "y/memory/allocator/dyadic.hpp"
 
 namespace upsylon
 {
     namespace Alchemy
     {
-        typedef memory::dyadic                 Allocator;    //!< alias
-        typedef vector<string,Allocator>       Strings;      //!< alias
 
         //______________________________________________________________________
         //

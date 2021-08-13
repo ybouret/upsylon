@@ -6,7 +6,6 @@
 #include "y/alchemy/actor.hpp"
 #include "y/alchemy/extent.hpp"
 
-#include "y/sequence/addressable.hpp"
 #include "y/associative/hash/set.hpp"
 #include "y/type/gateway.hpp"
 
@@ -74,7 +73,7 @@ namespace upsylon
                     for(const_iterator it=adb.begin();it!=adb.end();++it)
                     {
                         const Actor &a = *it;
-                        Nu[a->indx] = static_cast<long>( a.nu );
+                        Nu[a->indx] = static_cast<unit_t>( a.nu );
                     }
                 }
                 else
@@ -83,7 +82,7 @@ namespace upsylon
                     for(const_iterator it=adb.begin();it!=adb.end();++it)
                     {
                         const Actor &a = *it;
-                        Nu[a->indx] = -static_cast<long>( a.nu );
+                        Nu[a->indx] = -static_cast<unit_t>( a.nu );
                     }
                 }
 
@@ -107,8 +106,15 @@ namespace upsylon
             //! mass action after extent (careful with the sign of xi)
             double massAction(double target, const Accessible &C, const double xi) const throw();
 
-            //! positive charge
+            //! algebraic charge
             long z() const throw();
+
+            //! test ownership
+            bool owns(const Species &sp) const throw();
+
+            //! Actor for species
+            size_t coeff(const Species &sp) const throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
