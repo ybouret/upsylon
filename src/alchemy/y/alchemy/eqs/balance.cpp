@@ -24,6 +24,20 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
 
+
+                {
+                    Addressable &Xi = aliasing::_(xi);
+                    for(const Equilibrium::Node *node = eqs->head();node;node=node->next)
+                    {
+                        const Equilibrium &eq = ***node;
+                        eqs.print(std::cerr << "guard ",eq) << std::endl;
+                        guards[eq.indx]->solve(C,NuT,Xi);
+                    }
+
+                }
+
+                lib.display(std::cerr,C) << std::endl;
+                
 #if 0
                 //bool solvedPrimary = true;
                 for(size_t i=1;i<=N;++i)

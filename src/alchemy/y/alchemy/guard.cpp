@@ -1,8 +1,11 @@
 
 #include "y/alchemy/guard.hpp"
+#include "y/mkl/tao.hpp"
 
 namespace upsylon
 {
+    using namespace mkl;
+
     namespace Alchemy
     {
 
@@ -130,6 +133,35 @@ namespace upsylon
                 }
             }
             return *opt;
+        }
+
+
+        void Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
+        {
+            std::cerr << "  " << classText() << std::endl;
+            switch(cls)
+            {
+                case HasNoBound: return;
+
+                case HasOnlyGEQ: {
+                    const Leading &lmin = xiMin(C);
+                    const double   xmin  =-C[lmin.sp.indx]/lmin.nu;
+                    std::cerr << "  xmin=" << xmin << std::endl;
+                    if(xmin>0)
+                    {
+                        tao::ld(xi,0);
+                        xi[lmin.eq.indx] = xmin;
+                        tao::mul_add(C,NuT,xi);
+                        C[lmin.sp.indx]  = 0;
+                    }
+                } break;
+
+                case HasOnlyLEQ:
+                    break;
+
+                case IsBothWays:
+                    break;
+            }
         }
 
     }

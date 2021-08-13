@@ -88,6 +88,7 @@ namespace upsylon
             //! getMin = max of geq, geq.size()>0
             const Leading &xiMin(const Accessible &C) const throw();
 
+            void solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //
@@ -96,7 +97,6 @@ namespace upsylon
             const Leading::Array leq;
             const Leading::Array geq;
             const Class          cls;
-
 
 
         private:
