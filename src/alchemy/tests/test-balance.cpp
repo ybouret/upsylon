@@ -19,7 +19,7 @@ Y_UTEST(balance)
 
     (void) eqs.water(lib,1e-14);
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
@@ -44,7 +44,7 @@ Y_UTEST(balance)
         dummy(3,lib.get("D"));
     }
 
-    if(false)
+    //if(false)
     {
         Equilibrium &combine = eqs("combine",10.2);
         combine(-1, lib.get("X"));

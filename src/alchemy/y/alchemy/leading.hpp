@@ -49,7 +49,6 @@ namespace upsylon
             ~Leading()                    throw(); //!< cleanup
             Leading(const Leading &other) throw(); //!< opy
 
-
             //__________________________________________________________________
             //
             // methods

@@ -64,16 +64,6 @@ namespace upsylon
             void         addLEQ(const Leading &);
             void         addGEQ(const Leading &);
             const char * classText() const throw();
-
-            
-            //__________________________________________________________________
-            //
-            // members
-            //__________________________________________________________________
-            const Leading::Array leq;
-            const Leading::Array geq;
-            const Class          cls;
-
             template <typename OSTREAM> inline
             OSTREAM &print(OSTREAM          &os,
                            const Library    &lib,
@@ -86,6 +76,28 @@ namespace upsylon
                 print_(os,lib,eqs,geq,C,pfx);
                 return os;
             }
+
+            //__________________________________________________________________
+            //
+            // computation methods
+            //__________________________________________________________________
+            
+            //! getMax = min of leq, leq.size()>0
+            const Leading &xiMax(const Accessible &C) const throw();
+
+            //! getMin = max of geq, geq.size()>0
+            const Leading &xiMin(const Accessible &C) const throw();
+
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Leading::Array leq;
+            const Leading::Array geq;
+            const Class          cls;
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guard);

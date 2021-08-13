@@ -91,6 +91,47 @@ namespace upsylon
             }
         }
 
+
+
+        //! getMax = min of leq, leq.size()>0
+        const Leading & Guard:: xiMax(const Accessible &C) const throw()
+        {
+            assert(leq.size()>0);
+            assert(HasOnlyLEQ==cls||IsBothWays==cls);
+            const Leading *opt = &leq[1];
+            for(size_t i=leq.size();i>1;--i)
+            {
+                const Leading *tmp = &leq[i];
+                const double xi_opt = C[opt->sp.indx]/opt->nu;
+                const double xi_tmp = C[tmp->sp.indx]/tmp->nu;
+                if(xi_tmp<xi_opt)
+                {
+                    opt = tmp;
+                }
+            }
+            return *opt;
+        }
+
+
+        //! getMin = max of geq, geq.size()>0
+        const Leading & Guard:: xiMin(const Accessible &C) const throw()
+        {
+            assert(geq.size()>0);
+            assert(HasOnlyGEQ==cls||IsBothWays==cls);
+            const Leading *opt = &geq[1];
+            for(size_t i=geq.size();i>1;--i)
+            {
+                const Leading *tmp    = &geq[i];
+                const double   xi_opt = -C[opt->sp.indx]/opt->nu;
+                const double   xi_tmp = -C[tmp->sp.indx]/tmp->nu;
+                if(xi_tmp>xi_opt)
+                {
+                    opt = tmp;
+                }
+            }
+            return *opt;
+        }
+
     }
 
 }
