@@ -74,9 +74,38 @@ namespace upsylon
             const Leading::Array geq;
             const Class          cls;
 
+            template <typename OSTREAM> inline
+            OSTREAM &print(OSTREAM          &os,
+                           const Library    &lib,
+                           const Equilibria &eqs,
+                           const Accessible &C,
+                           const char       *pfx = 0) const
+            {
+                if(!pfx) pfx = "";
+                print_(os,lib,eqs,leq,C,pfx);
+                print_(os,lib,eqs,geq,C,pfx);
+                return os;
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guard);
             void update() throw();
+            template <typename OSTREAM> inline static
+            OSTREAM &print_(OSTREAM               &os,
+                            const Library         &lib,
+                            const Equilibria      &eqs,
+                            const Leading::Array  &arr,
+                            const Accessible      &C,
+                            const char            *pfx)
+            {
+                assert(pfx);
+                for(size_t i=1;i<=arr.size();++i)
+                {
+                    arr[i].print(os << pfx ,lib,eqs,C) << '\n';
+                }
+                return os;
+            }
+
         };
 
     }

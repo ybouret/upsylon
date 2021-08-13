@@ -193,10 +193,11 @@ namespace upsylon
                 {
                     const Equilibrium &eq    = ***node;
                     const Guard       &guard = *guards[eq.indx];
-                    eqs.print(os << "    ",eq) << ' ' << '[' << guard.classText() << ']' << '\n';
-                    
-                    os << "    <" << eq.name << "/>\n";
 
+                    eqs.print(os << "    ",eq) << ' ' << '[' << guard.classText() << ']' << '\n';
+                    guard.print(os,lib,eqs,C,"    | ");
+                    os << "    <" << eq.name << "/>\n";
+                    if(node->next) os << '\n';
                 }
 
                 os << " <Leading>\n";
