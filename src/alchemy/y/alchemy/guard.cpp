@@ -206,13 +206,13 @@ namespace upsylon
                     std::cerr << "  xmin=" << xmin << std::endl;
                     std::cerr << "  xmax=" << xmax << std::endl;
 
-                    if(xmin>=xmax)
+                    if(xmin>xmax)
                     {
                         return IsJammed;
                     }
                     else
                     {
-                        assert(xmin<xmax);
+                        assert(xmin<=xmax);
                         if(xmax<0)
                         {
                             return guardMove(lmax,C,NuT,xi,xmax);

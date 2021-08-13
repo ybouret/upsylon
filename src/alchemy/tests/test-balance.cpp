@@ -35,7 +35,7 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
 
-    if(false)
+    //if(false)
     {
         Equilibrium &dummy = eqs("dummy",1);
         dummy(-1,lib.get("A"));
@@ -44,7 +44,7 @@ Y_UTEST(balance)
         dummy(3,lib.get("D"));
     }
 
-    //if(false)
+    if(false)
     {
         Equilibrium &combine = eqs("combine",10.2);
         combine(-1, lib.get("X"));
