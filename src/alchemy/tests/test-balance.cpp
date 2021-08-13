@@ -35,7 +35,7 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
 
-    //if(false)
+    if(false)
     {
         Equilibrium &dummy = eqs("dummy",1);
         dummy(-1,lib.get("A"));
@@ -61,14 +61,14 @@ Y_UTEST(balance)
     Reactor cs(lib,eqs);
 
     Vector  C(cs.M,0);
-    //lib.draw(alea,C);
+    lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)
     {
         if( alea.choice() ) C[j] = -C[j];
         //if( !cs.active[j]) C[j] = 0;
     }
 
-    lib(C,"H+") = - alea.to<double>();
+    //lib(C,"H+") = - alea.to<double>();
     //lib(C,"H+") *= -1;
     cs.balance(C);
 

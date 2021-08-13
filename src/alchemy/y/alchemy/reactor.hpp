@@ -88,12 +88,8 @@ namespace upsylon
             const size_t          NA;     //!< number of active species
             const Vector          K;      //!< [N]   constants
             const Vector          Gam;    //!< [N]   indicators
-            const Guard::Array    guards;   //!< [N]
+            const Guard::Array    guards; //!< [N]
             const Vector          xi;     //!< [N]
-            const Vector          Cpsi;   //!< [M]   to buildPsi
-            const Vector          Xpsi;   //!< [N]   search extent = nu*Cpsi
-            const Vector          Xtry;   //!< [N]   trial extents
-            const Vector          Ctry;   //!< [M]   trial concentrations
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
             const Vector          NuS;    //!< [M]   scaling for Psi
