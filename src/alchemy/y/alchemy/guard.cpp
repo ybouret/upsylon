@@ -148,6 +148,18 @@ namespace upsylon
         }
 
 
+        static Guard::State guardMove(const Leading &l,
+                                      Addressable   &C,
+                                      const iMatrix &NuT,
+                                      Addressable   &xi,
+                                      const double  x) throw()
+        {
+            tao::ld(xi,0);            xi[l.eq.indx] = x;
+            tao::mul_add(C, NuT, xi); C[l.sp.indx]  = 0;
+
+            return Guard::WasMoved;
+        }
+
         Guard::State Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
         {
             std::cerr << "  " << classText() << std::endl;
@@ -160,11 +172,7 @@ namespace upsylon
                     std::cerr << "  xmin=" << xmin << std::endl;
                     if(xmin>0)
                     {
-                        tao::ld(xi,0);
-                        xi[lmin.eq.indx] = xmin;
-                        tao::mul_add(C,NuT,xi);
-                        C[lmin.sp.indx]  = 0;
-                        return WasMoved;
+                        return guardMove(lmin,C,NuT,xi,xmin);
                     }
                     else
                     {
@@ -174,16 +182,12 @@ namespace upsylon
 
                     
                 case HasOnlyLEQ: {
-                    const Leading &lmax = xiMax(C);
-                    const double   xmax = C[lmax.sp.indx]/lmax.nu;
-                    std::cerr << " xmax=" << xmax << std::endl;
+                    const Leading  &lmax = xiMax(C);
+                    const double    xmax = C[lmax.sp.indx]/lmax.nu;
+                    std::cerr << "  xmax=" << xmax << std::endl;
                     if(xmax<0)
                     {
-                        tao::ld(xi,0);
-                        xi[lmax.eq.indx] = xmax;
-                        tao::mul_add(C,NuT,xi);
-                        C[lmax.sp.indx]  = 0;
-                        return WasMoved;
+                        return guardMove(lmax,C,NuT,xi,xmax);
                     }
                     else
                     {
