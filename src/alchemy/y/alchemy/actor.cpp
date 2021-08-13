@@ -8,7 +8,7 @@ namespace upsylon
 {
     namespace Alchemy
     {
-        Actor:: Actor(const Species &_sp, const unsigned long _nu) throw() :
+        Actor:: Actor(const Species &_sp, const size_t _nu) throw() :
         authority<const Species>(_sp),
         nu(_nu),
         nu1(nu-1)
