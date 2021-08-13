@@ -51,9 +51,9 @@ namespace upsylon
             return  ipower<double>( max_of<double>(c,0), n);
         }
 
-        long Actor:: z() const throw()
+        unit_t Actor:: z() const throw()
         {
-            return long(nu) * ( (**this).z );
+            return unit_t(nu) * ( (**this).z );
         }
 
 

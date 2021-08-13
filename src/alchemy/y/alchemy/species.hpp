@@ -48,7 +48,7 @@ namespace upsylon
             //! constructor
             template <typename ID> inline
             explicit Species(const ID    &_name,
-                             const long   _z,
+                             const unit_t _z,
                              const size_t _indx) :
             name(_name),
             z(_z),
@@ -81,7 +81,7 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const string name;   //!< identifier
-            const long   z;      //!< algebraic charge
+            const unit_t z;      //!< algebraic charge
             const size_t indx;   //!< index in library
             const bool   active; //!< modified upon equilibrium
 

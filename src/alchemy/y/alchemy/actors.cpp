@@ -127,9 +127,9 @@ namespace upsylon
         }
 
 
-        long Actors:: z() const throw()
+        unit_t Actors:: z() const throw()
         {
-            long res = 0;
+            unit_t res = 0;
             for(const Actor::Node *node = adb.head();node;node=node->next)
             {
                 res += (**node).z();

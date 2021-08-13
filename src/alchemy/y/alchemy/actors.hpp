@@ -107,7 +107,7 @@ namespace upsylon
             double massAction(double target, const Accessible &C, const double xi) const throw();
 
             //! algebraic charge
-            long z() const throw();
+            unit_t z() const throw();
 
             //! test ownership
             bool owns(const Species &sp) const throw();
