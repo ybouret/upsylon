@@ -64,7 +64,7 @@ namespace upsylon
             typename ARR::type &operator()(ARR &arr, const ID &id) const
             {
                 const Library &self = *this;
-                return arr[ self(id) ];
+                return arr[ self[id].indx ];
             }
 
             //! access array content by name, const
