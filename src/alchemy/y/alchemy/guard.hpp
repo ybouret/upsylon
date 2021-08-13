@@ -25,8 +25,8 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef arc_ptr<Guard>            Pointer;
-            typedef vector<Pointer,Allocator> Array_;
+            typedef arc_ptr<Guard>            Pointer; //!< alias
+            typedef vector<Pointer,Allocator> Array_;  //!< alias
 
             //! class of guard
             enum Class
@@ -37,20 +37,22 @@ namespace upsylon
                 IsBothWays    //!< leq.size>0, geq.size>0
             };
 
+            //! named class
             static const char * ClassText(const Class c) throw();
 
 
             //! state of solving
             enum State
             {
-                WasValid,
-                WasMoved,
-                IsJammed
+                WasValid, //!< didn't need to be moved
+                WasMoved, //!< was moved
+                IsJammed  //!< jammed
             };
 
+            //! named state
             static const char * StateText(const State s) throw();
 
-            //! pre-allocated arrays
+            //! pre-allocated array of guards
             class Array : public Array_
             {
             public:
@@ -64,16 +66,18 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit Guard() throw();
-            virtual ~Guard() throw();
+            explicit Guard() throw(); //!< setup
+            virtual ~Guard() throw(); //!< cleanup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            void         addLEQ(const Leading &);
-            void         addGEQ(const Leading &);
-            const char * classText() const throw();
+            void         addLEQ(const Leading &);   //!< add to leq, update
+            void         addGEQ(const Leading &);   //!< add to geq, update
+            const char * classText() const throw(); //!< get named class
+
+            //! print status w.r.t. concentrations
             template <typename OSTREAM> inline
             OSTREAM &print(OSTREAM          &os,
                            const Library    &lib,
@@ -92,21 +96,22 @@ namespace upsylon
             // computation methods
             //__________________________________________________________________
             
-            //! getMax = min of leq, leq.size()>0
+            //!  min of leq, leq.size()>0
             const Leading &xiMax(const Accessible &C) const throw();
 
-            //! getMin = max of geq, geq.size()>0
+            //!  max of geq, geq.size()>0
             const Leading &xiMin(const Accessible &C) const throw();
 
+            //! solve in different cases
             State solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const Leading::Array leq;
-            const Leading::Array geq;
-            const Class          cls;
+            const Leading::Array leq; //!< nu * xi <= [conc]
+            const Leading::Array geq; //!< nu * xi >= -[conc]
+            const Class          cls; //!< depending on leq/geq
 
 
         private:

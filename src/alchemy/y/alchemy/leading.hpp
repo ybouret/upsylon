@@ -25,11 +25,10 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef vector<const Leading,Allocator> Array;
-
-            static const char EXT_[]; //!< prefix
-            static const char LEQ_[]; //!< symbol
-            static const char GEQ_[]; //!< symbol
+            typedef vector<const Leading,Allocator> Array;  //!< alas
+            static  const char                      EXT_[]; //!< prefix
+            static  const char                      LEQ_[]; //!< symbol
+            static  const char                      GEQ_[]; //!< symbol
 
             //! information
             enum Kind

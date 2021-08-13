@@ -66,12 +66,14 @@ namespace upsylon
 
         void Guard:: addLEQ(const Leading &leading)
         {
+            assert(leading.id==Leading::LEQ);
             aliasing::_(leq).push_back(leading);
             update();
         }
 
         void Guard:: addGEQ(const Leading &leading)
         {
+            assert(leading.id==Leading::GEQ);
             aliasing::_(geq).push_back(leading);
             update();
         }
