@@ -24,6 +24,7 @@ namespace upsylon
                 assert(NA>0);
                 showConditions(std::cerr,C);
 
+#if 0
                 //bool solvedPrimary = true;
                 for(size_t i=1;i<=N;++i)
                 {
@@ -55,7 +56,7 @@ namespace upsylon
 
                 }
                 lib.display(std::cerr,C) << std::endl;
-
+#endif
 
                 return false;
             }

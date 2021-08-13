@@ -191,6 +191,7 @@ namespace upsylon
                     assert(true==active[sp.indx]);
                     assert(snu!=0);
                     assert(pEq!=NULL);
+                    
                     if(1==nok)
                     {
                         Guard &guard = aliasing::_(*guards[pEq->indx]);
@@ -201,7 +202,8 @@ namespace upsylon
                             // Create a new GEQ
                             //__________________________________________________
                             const Leading leading(*pEq,sp, static_cast<size_t>(snu), Leading::GEQ);
-                            leading.print(std::cerr << "    ",lib,eqs) << std::endl;
+                            leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                            guard.addGEQ(leading);
                         }
                         else
                         {
@@ -210,7 +212,8 @@ namespace upsylon
                             // Create a new LEQ
                             //__________________________________________________
                             const Leading leading(*pEq,sp, static_cast<size_t>(-snu), Leading::LEQ);
-                            leading.print(std::cerr << "    ",lib,eqs) << std::endl;
+                            leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                            guard.addLEQ(leading);
                         }
                     }
 
@@ -226,6 +229,7 @@ namespace upsylon
 
             std::cerr << " NuS    = " << NuS  << std::endl;
 
+#if 0
             std::cerr << "  <Sentries>" << std::endl;
             for(size_t i=1;i<=N;++i)
             {
@@ -257,6 +261,7 @@ namespace upsylon
                     std::cerr << std::endl;
             }
             std::cerr << "  <Sentries/>" << std::endl;
+#endif
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }

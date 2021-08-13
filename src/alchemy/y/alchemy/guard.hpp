@@ -11,10 +11,20 @@ namespace upsylon
 {
     namespace Alchemy
     {
+
+        //______________________________________________________________________
+        //
+        //
         //! guard leading conditions for an equilibrium
+        //
+        //______________________________________________________________________
         class Guard : public object, public counted
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef arc_ptr<Guard>            Pointer;
             typedef vector<Pointer,Allocator> Array_;
 
@@ -26,7 +36,10 @@ namespace upsylon
                 HasOnlyGEQ,   //!< leq.size==0, geq.size>0
                 IsBothWays    //!< leq.size>0, geq.size>0
             };
-            
+
+            static const char * ClassText(const Class c) throw();
+
+
             //! pre-allocated arrays
             class Array : public Array_
             {
@@ -37,15 +50,33 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Array);
             };
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit Guard() throw();
             virtual ~Guard() throw();
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void         addLEQ(const Leading &);
+            void         addGEQ(const Leading &);
+            const char * classText() const throw();
+
+            
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const Leading::Array leq;
             const Leading::Array geq;
             const Class          cls;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Guard);
+            void update() throw();
         };
 
     }

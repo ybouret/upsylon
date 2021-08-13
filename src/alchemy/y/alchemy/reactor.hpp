@@ -70,7 +70,7 @@ namespace upsylon
                     showCondition(os << "    ",sp,C);
                 }
                 os << "  <General/>\n";
-                showPrimary(os,C);
+                showLeading(os,C);
                 os << "<Conditions/>\n";
                 return os;
             }
@@ -182,6 +182,24 @@ namespace upsylon
 
                 }
                 os << " <Primary>\n";
+                return os;
+            }
+
+            template <typename OSTREAM> inline
+            OSTREAM & showLeading(OSTREAM &os, const Accessible &C) const
+            {
+                os << "  <Leading>\n";
+                for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
+                {
+                    const Equilibrium &eq    = ***node;
+                    const Guard       &guard = *guards[eq.indx];
+                    eqs.print(os << "    ",eq) << ' ' << '[' << guard.classText() << ']' << '\n';
+                    
+                    os << "    <" << eq.name << "/>\n";
+
+                }
+
+                os << " <Leading>\n";
                 return os;
             }
 
