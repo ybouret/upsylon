@@ -197,7 +197,36 @@ namespace upsylon
 
                 case IsBothWays:
                 {
-                    return IsJammed;
+                    const Leading  &lmin = xiMin(C);
+                    const double    xmin  =-C[lmin.sp.indx]/lmin.nu;
+                    const Leading  &lmax = xiMax(C);
+                    const double    xmax = C[lmax.sp.indx]/lmax.nu;
+                    std::cerr << "  xmin=" << xmin << std::endl;
+                    std::cerr << "  xmax=" << xmax << std::endl;
+
+                    if(xmin>=xmax)
+                    {
+                        return IsJammed;
+                    }
+                    else
+                    {
+                        assert(xmin<xmax);
+                        if(xmax<0)
+                        {
+                            return guardMove(lmax,C,NuT,xi,xmax);
+                        }
+                        else
+                        {
+                            if(xmin>0)
+                            {
+                                return guardMove(lmin,C,NuT,xi,xmin);
+                            }
+                            else
+                            {
+                                return WasValid;
+                            }
+                        }
+                    }
                 } break;
 
 
