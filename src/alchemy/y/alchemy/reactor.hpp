@@ -3,7 +3,6 @@
 #ifndef Y_ALCHEMY_REACTOR_INCLUDED
 #define Y_ALCHEMY_REACTOR_INCLUDED 1
 
-#include "y/alchemy/primary.hpp"
 #include "y/alchemy/guard.hpp"
 
 namespace upsylon
@@ -89,7 +88,6 @@ namespace upsylon
             const size_t          NA;     //!< number of active species
             const Vector          K;      //!< [N]   constants
             const Vector          Gam;    //!< [N]   indicators
-            const Sentry::Array   sentries; //!< [N]
             const Guard::Array    guards;   //!< [N]
             const Vector          xi;     //!< [N]
             const Vector          Cpsi;   //!< [M]   to buildPsi
@@ -143,7 +141,7 @@ namespace upsylon
                             }
                         }
                         first = false;
-                        os << Primary::Prefix << '<' << eqs(i).name << '>';
+                        os << Leading::EXT_ << '<' << eqs(i).name << '>';
 
                     }
                     os << " >= " << -C[j];
@@ -155,36 +153,7 @@ namespace upsylon
                 return os << '\n';
             }
 
-            template <typename OSTREAM> inline
-            OSTREAM & showPrimary(OSTREAM &os, const Accessible &C) const
-            {
-                os << "  <Primary>\n";
-                for(size_t i=1;i<=N;++i)
-                {
-                    const Equilibrium &eq     = eqs(i);
-                    const Sentry      &sentry = *sentries[i];
-                    os << "    <" << eq.name << "> [" << sentry.typeText() << "]\n";
-                    for(size_t j=sentry.leq.size();j>0;--j)
-                    {
-                        const Primary &p = sentry.leq[j];
-                        assert(p.eq==i);
-                        assert(p.nu>0);
-                        p.show(os << "      ",lib,eqs,C,true) << '\n';
-                    }
-                    for(size_t j=sentry.geq.size();j>0;--j)
-                    {
-                        const Primary &p = sentry.geq[j];
-                        assert(p.eq==i);
-                        assert(p.nu>0);
-                        p.show(os << "      ",lib,eqs,C,false) << '\n';
-                    }
-                    os << "    <" << eq.name << "/>\n";
-
-                }
-                os << " <Primary>\n";
-                return os;
-            }
-
+            
             template <typename OSTREAM> inline
             OSTREAM & showLeading(OSTREAM &os, const Accessible &C) const
             {

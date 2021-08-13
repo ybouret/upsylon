@@ -32,7 +32,6 @@ namespace upsylon
         NA( eqs.guess( aliasing::_(active) ) ),
         K(N,0),
         Gam(N,0),
-        sentries(N),
         guards(N),
         xi(N),
         Cpsi(M,0),
@@ -84,70 +83,7 @@ namespace upsylon
             std::cerr << " dNu2   = " << dNu2 << std::endl;
             if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
 
-            //__________________________________________________________________
-            //
-            //
-            // building balance info
-            //
-            //__________________________________________________________________
-            for(size_t sp=NuT.rows;sp>0;--sp)
-            {
-                //______________________________________________________________
-                //
-                // initialize
-                //______________________________________________________________
-                const accessible<long> &v   = NuT[sp];
-                size_t                  nok = 0;
-                size_t                  eq  = 0;
-                long                    nu  = 0;
-                double                  sum = 0;
-
-                //______________________________________________________________
-                //
-                // loop to count active equilibria changing species
-                //______________________________________________________________
-                for(size_t i=N;i>0;--i)
-                {
-                    const long cof = v[i];
-                    if(0!=cof)
-                    {
-                        nu   = cof;
-                        eq   = i;
-                        sum += abs_of(nu);
-                        ++nok;
-                    }
-                }
-
-                //______________________________________________________________
-                //
-                // check active species
-                //______________________________________________________________
-                if(nok>0)
-                {
-                    assert(true==active[sp]);
-                    aliasing::_(NuS[sp]) = sum;
-                    if(1==nok)
-                    {
-                        assert(nu!=0);
-                        if(nu>0)
-                        {
-                            //std::cerr << "New GEQ" << std::endl;
-                            const Primary primary(eq,sp,static_cast<size_t>(nu));
-                            aliasing::_(sentries)[eq]->addGEQ(primary);
-                        }
-                        else
-                        {
-                            //std::cerr << "New LEQ" << std::endl;
-                            const Primary primary(eq,sp,static_cast<size_t>(-nu));
-                            aliasing::_(sentries)[eq]->addLEQ(primary);
-                        }
-                    }
-                }
-                else
-                {
-                    assert(false==active[sp]);
-                }
-            }
+            
 
             //__________________________________________________________________
             //

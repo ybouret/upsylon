@@ -11,7 +11,6 @@ namespace upsylon
     namespace Alchemy
     {
 
-        const char Primary::Prefix[] = "@";
         
         
         
