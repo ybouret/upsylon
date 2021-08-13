@@ -116,6 +116,9 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & showCondition(OSTREAM &os, const Species &sp, const Accessible &C) const
             {
+                static const ios::scribe &writeNu = ios::scribe::query<unit_t>();
+                static const ios::scribe &writeC  = ios::scribe::query<double>();
+
                 const size_t j = sp.indx;
                 lib.print(os,sp);
                 if(sp.active)
@@ -124,12 +127,12 @@ namespace upsylon
                     bool first = true;
                     for(size_t i=1;i<=N;++i)
                     {
-                        const long nu = NuT[j][i];
+                        const unit_t nu = NuT[j][i];
                         if(nu==0) continue;
                         os << ' ';
                         if(nu<0)
                         {
-                            if(nu < -1) os << vformat("%ld",nu); else os << '-';
+                            if(nu < -1) os << writeNu.write(&nu); else os << '-';
                         }
                         else
                         {
@@ -137,18 +140,19 @@ namespace upsylon
                             if(!first) os << '+';
                             if(nu>1)
                             {
-                                os << vformat("%ld",nu);
+                                os << writeNu.write(&nu);
                             }
                         }
                         first = false;
                         os << Leading::EXT_ << '<' << eqs(i).name << '>';
 
                     }
-                    os << " >= " << -C[j];
+                    const double tmp = -C[j];
+                    os << " >= " << writeC.write(&tmp);
                 }
                 else
                 {
-                    os << " = " << C[j];
+                    os << " = " << writeC.write(&C[j]);
                 }
                 return os << '\n';
             }
