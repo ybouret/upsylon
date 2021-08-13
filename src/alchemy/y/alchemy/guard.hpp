@@ -40,6 +40,16 @@ namespace upsylon
             static const char * ClassText(const Class c) throw();
 
 
+            //! state of solving
+            enum State
+            {
+                WasValid,
+                WasMoved,
+                IsJammed
+            };
+
+            static const char * StateText(const State s) throw();
+
             //! pre-allocated arrays
             class Array : public Array_
             {
@@ -88,7 +98,7 @@ namespace upsylon
             //! getMin = max of geq, geq.size()>0
             const Leading &xiMin(const Accessible &C) const throw();
 
-            void solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
+            State solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //

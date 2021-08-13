@@ -29,9 +29,9 @@ namespace upsylon
                     Addressable &Xi = aliasing::_(xi);
                     for(const Equilibrium::Node *node = eqs->head();node;node=node->next)
                     {
-                        const Equilibrium &eq = ***node;
-                        eqs.print(std::cerr << "guard ",eq) << std::endl;
-                        guards[eq.indx]->solve(C,NuT,Xi);
+                        const Equilibrium &eq = ***node;                          eqs.print(std::cerr << "guard ",eq) << std::endl;
+                        const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi); std::cerr << "  " << Guard::StateText(st) << std::endl;
+
                     }
 
                 }

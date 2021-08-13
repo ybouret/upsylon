@@ -23,6 +23,18 @@ namespace upsylon
             return "???";
         }
 
+        const char * Guard:: StateText(const State s) throw()
+        {
+            switch(s)
+            {
+                    Y_ALCHEMY_GUARD(WasValid);
+                    Y_ALCHEMY_GUARD(WasMoved);
+                    Y_ALCHEMY_GUARD(IsJammed);
+            }
+            return "???";
+        }
+
+
         const char * Guard:: classText() const throw()
         {
             return ClassText(cls);
@@ -136,16 +148,15 @@ namespace upsylon
         }
 
 
-        void Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
+        Guard::State Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
         {
             std::cerr << "  " << classText() << std::endl;
             switch(cls)
             {
-                case HasNoBound: return;
 
                 case HasOnlyGEQ: {
-                    const Leading &lmin = xiMin(C);
-                    const double   xmin  =-C[lmin.sp.indx]/lmin.nu;
+                    const Leading  &lmin = xiMin(C);
+                    const double    xmin  =-C[lmin.sp.indx]/lmin.nu;
                     std::cerr << "  xmin=" << xmin << std::endl;
                     if(xmin>0)
                     {
@@ -153,15 +164,47 @@ namespace upsylon
                         xi[lmin.eq.indx] = xmin;
                         tao::mul_add(C,NuT,xi);
                         C[lmin.sp.indx]  = 0;
+                        return WasMoved;
+                    }
+                    else
+                    {
+                        return WasValid;
+                    }
+                }
+
+                    
+                case HasOnlyLEQ: {
+                    const Leading &lmax = xiMax(C);
+                    const double   xmax = C[lmax.sp.indx]/lmax.nu;
+                    std::cerr << " xmax=" << xmax << std::endl;
+                    if(xmax<0)
+                    {
+                        tao::ld(xi,0);
+                        xi[lmax.eq.indx] = xmax;
+                        tao::mul_add(C,NuT,xi);
+                        C[lmax.sp.indx]  = 0;
+                        return WasMoved;
+                    }
+                    else
+                    {
+                        return WasValid;
                     }
                 } break;
 
-                case HasOnlyLEQ:
-                    break;
-
                 case IsBothWays:
-                    break;
+                {
+                    return IsJammed;
+                } break;
+
+
+                default: break;
+
             }
+
+
+            assert(HasNoBound==cls);
+            return WasValid;
+
         }
 
     }
