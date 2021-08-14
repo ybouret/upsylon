@@ -49,7 +49,7 @@ namespace upsylon
             void   displayState()               const; //!< info to debug
             bool   isValid(const Accessible &C) const; //!< check active C are >0, display error
             bool   balance(Addressable &C)    throw(); //!< balance current concentration
-
+            
             
             //__________________________________________________________________
             //
@@ -90,6 +90,7 @@ namespace upsylon
             const Vector          Gam;    //!< [N]   indicators
             const Guard::Array    guards; //!< [N]
             const Vector          xi;     //!< [N]
+            Vector                xiTry;  //!< [0..M], workspace
             const Flags           ok;     //!< [N]
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
@@ -104,11 +105,12 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            Vector          Csqr;     //!< [0..M]   C square
             const   Freezer lfrz;
             const   Freezer efrz;
 
-
+            bool balance1(Addressable &C)     throw();
+            void buildXi(const Accessible &C) throw();
+            
             //! output condition for one species
             template <typename OSTREAM> inline
             OSTREAM & showCondition(OSTREAM &os, const Species &sp, const Accessible &C) const

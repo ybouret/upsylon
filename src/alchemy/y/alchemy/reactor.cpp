@@ -34,6 +34,7 @@ namespace upsylon
         Gam(N,0),
         guards(N),
         xi(N,0),
+        xiTry(M,as_capacity),
         ok(N,false),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
@@ -43,7 +44,6 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        Csqr(M,as_capacity),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
