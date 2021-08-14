@@ -62,7 +62,11 @@ namespace upsylon
                     }
                 }
                 std::cerr << "xiTry=" << xiTry << std::endl;
-                
+                if(xiTry.size())
+                {
+                    hsort(xiTry, comparison::decreasing_abs<double>);
+                    std::cerr << " => " << xiTry << std::endl;
+                }
             }
             
             std::cerr << "Guess=" << Xi << std::endl;
