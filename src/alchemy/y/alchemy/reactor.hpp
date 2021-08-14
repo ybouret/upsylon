@@ -90,6 +90,7 @@ namespace upsylon
             const Vector          Gam;    //!< [N]   indicators
             const Guard::Array    guards; //!< [N]
             const Vector          xi;     //!< [N]
+            const Flags           ok;     //!< [N]
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
             const Vector          NuS;    //!< [M]   scaling for Psi
