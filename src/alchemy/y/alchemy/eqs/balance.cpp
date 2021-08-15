@@ -88,7 +88,25 @@ namespace upsylon
                 }
                 std::cerr << "Balanced Leading!" << std::endl;
                 
-                buildXi(C);
+                size_t nbad = 0;
+                for(size_t j=M;j>0;--j)
+                {
+                    Ibad[j] = false;
+                    Cbad[j] = 0;
+                    if(active[j])
+                    {
+                        const double Cj = C[j];
+                        if(Cj<0)
+                        {
+                            ++nbad;
+                            Ibad[j] = true;
+                            Cbad[j] = -Cj;
+                        }
+                    }
+                }
+                std::cerr  << "nbad=" << nbad << std::endl;
+                lib.display(std::cerr,Ibad)   << std::endl;
+               
                
                 return false;
             }

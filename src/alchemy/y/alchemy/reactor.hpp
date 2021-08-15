@@ -105,6 +105,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
+            Vector          Cbad; //!< [M]
+            Flags           Ibad; //!< [M]
             const   Freezer lfrz;
             const   Freezer efrz;
 

@@ -80,6 +80,37 @@ namespace upsylon
 
             };
 
+            class bool_writer : public scribe1D
+            {
+            public:
+                
+                inline virtual ~bool_writer() throw()
+                {
+                }
+                
+                inline explicit bool_writer() :
+                scribe1D( typeid(bool) )
+                {}
+                
+                inline virtual string write(const void *addr) const
+                {
+                    assert(addr);
+                    const bool b = static_cast<const bool *>(addr);
+                    if(b)
+                    {
+                        return string("true");
+                    }
+                    else
+                    {
+                        return string("false");
+                    }
+                }
+                
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(bool_writer);
+            };
+            
+            
         }
 
         scribes:: ~scribes() throw()
@@ -116,6 +147,11 @@ namespace upsylon
             Y_SCRIBE_INAT(size_t,unsigned long, "%lu" );
             Y_SCRIBE_INAT(ptrdiff_t,long, "%ld" );
 
+            {
+                const scribe_handle h = new bool_writer();
+                (void)aliasing::_(all).insert(h);
+            }
+            
             Y_SCRIBE_NAT(float,"%.15g");
             Y_SCRIBE_NAT(double,"%.15g");
 
@@ -188,6 +224,7 @@ namespace upsylon
         {
             const rtti          &key = rtti::of(tid);
             const scribe_handle *pps = all.search(key);
+            //std::cerr << "Looking For Scribe<" << key.name() << ">" << std::endl;
             if(!pps)
             {
                 throw exception("%s(none for <%s>)", call_sign, key.text() );

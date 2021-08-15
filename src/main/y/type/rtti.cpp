@@ -291,6 +291,7 @@ namespace upsylon
         Y_RTTI(unsigned long long);
         Y_RTTI(size_t);
 
+        Y_RTTI(bool);
         
         Y_RTTI(float);
         Y_RTTI(double);

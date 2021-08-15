@@ -44,6 +44,8 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
+        Cbad(M,0),
+        Ibad(M,0),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
