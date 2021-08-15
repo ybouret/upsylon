@@ -95,7 +95,7 @@ namespace upsylon
                 inline virtual string write(const void *addr) const
                 {
                     assert(addr);
-                    const bool b = static_cast<const bool *>(addr);
+                    const bool b = *static_cast<const bool *>(addr);
                     if(b)
                     {
                         return string("true");

@@ -106,7 +106,19 @@ namespace upsylon
                 }
                 std::cerr  << "nbad=" << nbad << std::endl;
                 lib.display(std::cerr,Ibad)   << std::endl;
-               
+                lib.display(std::cerr,Cbad)   << std::endl;
+                Addressable &Xi = aliasing::_(xi); assert(N==xi.size());
+                
+                if(nbad>0)
+                {
+                    tao::mul(Xi,Nu,Cbad);
+                    std::cerr << "nub=" << Xi << std::endl;
+                    std::cerr << "Nu=" << Nu << std::endl;
+                    std::cerr << "Om=Nu*diagm(" << Ibad << ")*Nu'" << std::endl;
+                    
+                }
+                
+                
                
                 return false;
             }

@@ -113,7 +113,7 @@ namespace upsylon
             {
                 const ios::scribe &_   = ios::scribe::query<T>();
                 size_t             ans = 0;
-
+                
                 str.free();
                 for(const_iterator it=sdb.begin();it!=sdb.end();++it)
                 {
