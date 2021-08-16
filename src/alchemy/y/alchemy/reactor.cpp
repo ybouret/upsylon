@@ -174,6 +174,7 @@ namespace upsylon
             std::cerr << "    NLead = " << NL   << std::endl;
             std::cerr << "    NScnd = " << NS   << std::endl;
             std::cerr << "    NActv = " << NA   << std::endl;
+            std::cerr << "    Srank = " << apk::rank(NuS) << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
 

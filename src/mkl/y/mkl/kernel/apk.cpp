@@ -95,3 +95,65 @@ namespace upsylon
     }
 
 }
+
+
+#include "y/counting/comb.hpp"
+
+namespace upsylon
+{
+    namespace mkl
+    {
+
+        size_t apk:: rank_of(const matrix<apz> &source)
+        {
+
+            const size_t nmax = source.rows;
+            const size_t dims = source.cols;
+
+            size_t count = 0;
+            for(size_t n=nmax;n>0;--n)
+            {
+                combination comb(nmax,n);
+                count += comb.count;
+                const accessible<size_t> &indx = comb;
+                matrix<apq> G(n,n);
+                for(comb.boot();comb.good();comb.next())
+                {
+                    for(size_t i=n;i>0;--i)
+                    {
+                        const size_t      lid = indx[i];
+                        const array<apz> &lhs = source[lid];
+                        array<apq>       &tgt = G[i];
+                        for(size_t j=i;j>0;--j)
+                        {
+                            const size_t      rid = indx[j];
+                            const array<apz> &rhs = source[rid];
+                            apq res = 0;
+                            for(size_t k=dims;k>0;--k)
+                            {
+                                const apz p = lhs[k] * rhs[k];
+                                res += p;
+                            }
+                            tgt[j] = res;
+                        }
+                    }
+
+                    for(size_t i=n;i>0;--i)
+                    {
+                        for(size_t j=n;j>i;--j)
+                        {
+                            G[i][j] = G[j][i];
+                        }
+                    }
+
+                    //std::cerr << "    " << "@" << indx << " G=" << G << std::endl;
+                    const apq d = __determinant(G);
+                    assert(d.den.is(1));
+                    if(d!=0) return n;
+                }
+            }
+            return 0;
+        }
+    }
+
+}

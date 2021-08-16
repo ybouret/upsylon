@@ -124,6 +124,29 @@ namespace
     
 }
 
+namespace
+{
+    template <typename T>
+    static inline
+    void test_rank()
+    {
+        for(size_t dim=1;dim<=8;++dim)
+        {
+            std::cerr << "<dim=" << dim << ">" << std::endl;
+            for(size_t sub=1;sub<=dim;++sub)
+            {
+                std::cerr << "  <sub=" << sub << ">" << std::endl;
+                matrix<T> source(sub,dim);
+                support::fill2D(source);
+                std::cerr << "    source=" << source << std::endl;
+                std::cerr << "    rank  =" << apk::rank(source) << std::endl;
+                std::cerr << "  <sub=" << sub << "/>" << std::endl;
+            }
+            std::cerr << "<dim=" << dim << "/>" << std::endl;
+
+        }
+    }
+}
 
 Y_UTEST(apk)
 {
@@ -134,11 +157,13 @@ Y_UTEST(apk)
     SHOW_MOD(1,-2);
     SHOW_MOD(-1,-2);
     SHOW_MOD(-3,-2);
-    
+
+    test_rank<int16_t>();
+
     test_idet<int16_t>(6);
     test_idet<int>(8);
-
     test_adjoint_gram<int>(6);
+
 
 }
 Y_UTEST_DONE()
