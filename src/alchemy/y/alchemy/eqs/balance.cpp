@@ -36,8 +36,9 @@ namespace upsylon
             return balanced;
         }
 
-        
-        
+        static inline double psi_der(double x) { return min_of(0.0,x);  }
+        static inline long   psi_sec(double x) { return x<=0.0 ? 1 : 0; }
+
         bool Reactor:: balance(Addressable &C) throw()
         {
             lib.display(std::cerr << "C=",C) << std::endl;
@@ -54,35 +55,27 @@ namespace upsylon
                 std::cerr << "Balanced Leading!" << std::endl;
                 
                 size_t nbad = 0;
+                vector<long> Dbad(M,0);
                 for(size_t j=M;j>0;--j)
                 {
-                    Ibad[j] = false;
+                    Dbad[j] = 0;
                     Cbad[j] = 0;
                     if(active[j])
                     {
                         const double Cj = C[j];
-                        if(Cj<0)
-                        {
-                            ++nbad;
-                            Ibad[j] = true;
-                            Cbad[j] = -Cj;
-                        }
+                        if(Cj<0) ++ nbad;
+                        Cbad[j] = psi_der(Cj);
+                        Dbad[j] = psi_sec(Cj);
                     }
                 }
                 std::cerr  << "nbad=" << nbad << std::endl;
-                lib.display(std::cerr,Ibad)   << std::endl;
-                lib.display(std::cerr,Cbad)   << std::endl;
-                Addressable &Xi = aliasing::_(xi); assert(N==xi.size());
-                
-                if(nbad>0)
-                {
-                    tao::mul(Xi,Nu,Cbad);
-                    std::cerr << "nub=" << Xi << std::endl;
-                    std::cerr << "Nu=" << Nu << std::endl;
-                    std::cerr << "Om=Nu*diagm(" << Ibad << ")*Nu'" << std::endl;
-                    
-                }
-                
+                lib.display(std::cerr << "Psi2=",Dbad)   << std::endl;
+                lib.display(std::cerr << "Psi1=",Cbad)   << std::endl;
+                Addressable &Xi = aliasing::_(xi);
+                std::cerr << "Nu="   << Nu << std::endl;
+                std::cerr << "Psi1=" << Cbad << std::endl;
+                tao::mul(Xi,Nu,Cbad);
+                std::cerr << "dPsi=" << Xi << std::endl;
                 
                
                 return false;

@@ -115,7 +115,7 @@ Let us define:
 \begin{array}{rcl}
 	\psi(x)   & = & \dfrac{1}{2} \left[ \max\left( -x, 0 \right) \right]^2\\
 	\psi'(x)  & = & \min(x,0) \\
-	\psi''(x) & = & \mathcal{H}(-x)\\
+	\psi''(x) & = & \mathtt{H}(-x)\\
 \end{array}
 \right.
 \end{equation} 
@@ -130,17 +130,34 @@ Let us define:
 \begin{equation}
 	\partial_{\xi_i}\psi_j = v_{ji}\psi'( [A_j] + \vec{v}_j \cdot \vec{\xi} )  
  \; \Rightarrow \;
-	\partial_{\xi_i}\Psi = \sum_j \mathbb{A}_j  v_{ji}\psi'_j( [A_j] + \vec{v}_j \cdot \vec{\xi} )  
+	\partial_{\xi_i}\Psi = \sum_j \mathbb{A}_j  v_{ji}\psi'_j\left( [A_j] + \vec{v}_j \cdot \vec{\xi} \right)  
 \end{equation}
 
 \begin{equation}
-	\partial_{\vec{\xi}} \Psi = \bm{\nu} 
+	\vec{\nabla}_{\vec{\xi}}\, \Psi = \bm{\nu} 
 	\begin{bmatrix}
 	\vdots\\
 	\mathbb{A}_j \psi'_j( [A_j] + \vec{v}_j \cdot \vec{\xi} )\\
 	\vdots\\
 	\end{bmatrix}
 \end{equation}
+
+\begin{equation}
+	\partial_{\xi_k}\partial_{\xi_i}\psi_j = v_{ji} v_{jk}\psi''( [A_j] + \vec{v}_j \cdot \vec{\xi} )  
+ \; \Rightarrow \;
+	\mathcal{H}_{\vec{\xi}} \Psi =  \bm{\nu}
+	\begin{bmatrix}
+	\ddots & & \\
+	  & \mathbb{A}_j \psi''( [A_j] + \vec{v}_j \cdot \vec{\xi} ) & \\
+	  & & \ddots\\
+	\end{bmatrix}
+	\bm{\nu}^t
+\end{equation}
+
+\begin{equation}
+\Psi(\vec{\xi}) \simeq \Psi(\vec{0}) + \vec{\nabla}_{\vec{\xi}}\, \Psi(\vec{0}) \cdot \vec{\xi} + \dfrac{1}{2} \vec{\xi} \cdot \mathcal{H}_{\vec{\xi}} \Psi(\vec{0}) \vec{\xi}
+\end{equation}
+
 
    
 \section{Newton$^+$'s Algorithm}
