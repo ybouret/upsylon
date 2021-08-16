@@ -3,6 +3,7 @@
 #include "y/type/utils.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ocstream.hpp"
+#include "y/alea.hpp"
 
 namespace upsylon
 {
@@ -22,8 +23,8 @@ namespace upsylon
                 for(const Equilibrium::Node *node = eqs->head();node;node=node->next)
                 {
                     const Equilibrium &eq = ***node;
-                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi);
                     eqs.print(std::cerr << "guard ",eq) << std::endl;
+                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi);
                     std::cerr << "  " << Guard::StateText(st) << std::endl;
                     if(Guard::IsJammed==st)
                     {
@@ -53,7 +54,25 @@ namespace upsylon
                     return false;
                 }
                 std::cerr << "Balanced Leading!" << std::endl;
-                
+                Addressable &Xi = aliasing::_(xi);
+
+                for(size_t i=N;i>0;--i)
+                {
+                    Xi[i] = alea.symm<double>();
+                }
+                std::cerr << "xi0=" << xi << std::endl;
+
+                for(size_t i=guards.size();i>0;--i)
+                {
+                    guards[i]->limit(Xi,C);
+                }
+                std::cerr << "xi1=" << xi  << std::endl;
+
+
+
+
+
+#if 0
                 size_t nbad = 0;
                 vector<long> Dbad(M,0);
                 for(size_t j=M;j>0;--j)
@@ -71,7 +90,6 @@ namespace upsylon
                 std::cerr  << "nbad=" << nbad << std::endl;
                 lib.display(std::cerr << "Psi2=",Dbad)   << std::endl;
                 lib.display(std::cerr << "Psi1=",Cbad)   << std::endl;
-                Addressable &Xi = aliasing::_(xi);
                 std::cerr << "Nu="   << Nu << std::endl;
                 std::cerr << "Psi1=" << Cbad << std::endl;
                 std::cerr << "Psi2=" << Dbad << std::endl;
@@ -81,7 +99,7 @@ namespace upsylon
                 Matrix Omega(N,N);
                 tao::gram(Omega, Nu, Dbad);
                 std::cerr << "Omega=" << Omega << std::endl;
-
+#endif
                
                 return false;
             }

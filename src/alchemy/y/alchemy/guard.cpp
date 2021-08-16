@@ -164,7 +164,7 @@ namespace upsylon
 
         Guard::State Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
         {
-            std::cerr << "  " <<  " solve " << classText() << std::endl;
+            std::cerr << "  " <<  "solve " << classText() << std::endl;
             switch(cls)
             {
 
@@ -242,12 +242,51 @@ namespace upsylon
 
         }
 
+
+        static inline
+        void guardLimitMin(const Leading    &lmin,
+                           Addressable      &xi,
+                           const Accessible &C) throw()
+        {
+            const double    xmin = -C[lmin.sp.indx]/lmin.nu;
+            const size_t    imin = lmin.eq.indx;
+            xi[imin] = max_of(xi[imin],xmin);
+        }
+
+        static inline
+        void guardLimitMax(const Leading    &lmax,
+                           Addressable      &xi,
+                           const Accessible &C) throw()
+        {
+            const double    xmax = C[lmax.sp.indx]/lmax.nu;
+            const size_t    imax = lmax.eq.indx;
+            xi[imax] = min_of(xi[imax],xmax);
+        }
+
+
+
+
         void Guard:: limit(Addressable &xi, const Accessible &C) const throw()
         {
-            std::cerr << "  " <<  " solve " << classText() << std::endl;
+            std::cerr << "  " <<  "limit " << classText() << std::endl;
             switch(cls)
             {
-                case HasNoBound: return;
+                case HasNoBound:
+                    break;
+
+                case HasOnlyGEQ:
+                    guardLimitMin(xiMin(C),xi,C);
+                    break;
+
+
+                case HasOnlyLEQ:
+                    guardLimitMax(xiMax(C),xi,C);
+                    break;
+
+                case IsBothWays:
+                    guardLimitMin(xiMin(C),xi,C);
+                    guardLimitMax(xiMax(C),xi,C);
+                    break;
             }
         }
     }
