@@ -14,6 +14,8 @@ namespace upsylon
 
         namespace
         {
+
+            //! helper to use same native scribes
             template <typename T, typename U>
             class native_for : public native_scribe
             {
@@ -30,7 +32,7 @@ namespace upsylon
                 inline virtual string write(const void *addr) const
                 {
                     assert(addr);
-                    const U  cnv(*static_cast<const T *>(addr));
+                    const U  cnv = static_cast<U>(*static_cast<const T *>(addr));
                     return vformat(*fmt,cnv);
                 }
 
@@ -38,6 +40,7 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(native_for);
             };
 
+            //! helper for object that can be converted as string
 #define Y_SCRIBE_IMPL(CLASS,CODE) \
 /**/  class CLASS##_scribe : public scribe1D {\
 /**/  Y_DISABLE_COPY_AND_ASSIGN(CLASS##_scribe);\
@@ -54,6 +57,7 @@ namespace upsylon
             Y_SCRIBE_IMPL(apn,return obj.to_dec());
             Y_SCRIBE_IMPL(apz,return obj.to_dec());
 
+            //! rational writer, based on native<double>
             class apq_writer : public scribe1D
             {
                 Y_DISABLE_COPY_AND_ASSIGN(apq_writer);
@@ -80,6 +84,10 @@ namespace upsylon
 
             };
 
+            //! specific for boolean
+            /**
+             if bool is aliased to an integer type, won't be used!
+             */
             class bool_writer : public scribe1D
             {
             public:
@@ -224,11 +232,8 @@ namespace upsylon
         {
             const rtti          &key = rtti::of(tid);
             const scribe_handle *pps = all.search(key);
-            //std::cerr << "Looking For Scribe<" << key.name() << ">" << std::endl;
-            if(!pps)
-            {
-                throw exception("%s(none for <%s>)", call_sign, key.text() );
-            }
+            
+            if(!pps) throw exception("%s(none for <%s>)", call_sign, key.text() );
             return **pps;
         }
 
