@@ -106,6 +106,7 @@ void gram( matrix<T> &M, const matrix<U> &A )
         }
     }
 
+    // completer
     for(size_t i=n;i>0;--i)
     {
         for(size_t j=i-1;j>0;--j)
@@ -115,6 +116,49 @@ void gram( matrix<T> &M, const matrix<U> &A )
     }
 
 }
+
+//! M = A*diagm(DIAG)*A'
+template <typename T, typename U, typename DIAG> static inline
+void gram( matrix<T> &M, const matrix<U> &A, DIAG &diag )
+{
+    assert(M.rows==A.rows);
+    assert(M.cols==A.rows);
+    assert(diag.size()>=A.rows);
+
+    // half
+    const size_t r = M.rows;
+    const size_t c = M.cols;
+    for(size_t i=r;i>0;--i)
+    {
+        array<T>       &M_i = M[i];
+        const array<U> &A_i = A[i];
+        for(size_t j=r;j>=i;--j)
+        {
+            const array<U> &A_j = A[j];
+            T               sum(0);
+            for(size_t k=c;k>0;--k)
+            {
+                sum +=
+                (auto_cast<T, U>::_(A_i[k])) *
+                diag[k] *
+                (auto_cast<T, U>::_(A_j[k]));
+            }
+            M_i[j] = sum;
+        }
+    }
+
+    // complete
+    for(size_t i=r;i>0;--i)
+    {
+        for(size_t j=i-1;j>0;--j)
+        {
+            M[i][j] = M[j][i];
+        }
+    }
+
+}
+
+
 
 //! M = A'*B
 template <typename T,typename U,typename V> static inline

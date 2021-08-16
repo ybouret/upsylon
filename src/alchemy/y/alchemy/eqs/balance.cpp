@@ -74,9 +74,14 @@ namespace upsylon
                 Addressable &Xi = aliasing::_(xi);
                 std::cerr << "Nu="   << Nu << std::endl;
                 std::cerr << "Psi1=" << Cbad << std::endl;
+                std::cerr << "Psi2=" << Dbad << std::endl;
                 tao::mul(Xi,Nu,Cbad);
                 std::cerr << "dPsi=" << Xi << std::endl;
-                
+
+                Matrix Omega(N,N);
+                tao::gram(Omega, Nu, Dbad);
+                std::cerr << "Omega=" << Omega << std::endl;
+
                
                 return false;
             }
