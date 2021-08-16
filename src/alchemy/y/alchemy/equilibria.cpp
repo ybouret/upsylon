@@ -49,14 +49,14 @@ namespace upsylon
         }
 
 
-        void Equilibria:: verify() const
+        void Equilibria:: verify(const unsigned flags) const
         {
             size_t indx = 0;
             for(const Equilibrium::Node *node=edb.head();node;node=node->next)
             {
                 const Equilibrium &eq = ***node;
                 if(++indx!=eq.indx) throw exception("%s wrong index for '%s'",CLID, *eq.name);
-                eq.verify();
+                eq.verify(flags);
             }
         }
 

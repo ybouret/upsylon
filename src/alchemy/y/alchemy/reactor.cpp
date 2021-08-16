@@ -23,7 +23,8 @@ namespace upsylon
         
 
         Reactor:: Reactor(Library    &_lib,
-                          Equilibria &_eqs) :
+                          Equilibria &_eqs,
+                          const unsigned flags) :
         lib(_lib),
         eqs(_eqs),
         N(eqs->size()),
@@ -54,7 +55,7 @@ namespace upsylon
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
-            eqs.verify();
+            eqs.verify(flags);
 
 
             //__________________________________________________________________

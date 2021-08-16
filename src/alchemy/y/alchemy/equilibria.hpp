@@ -98,7 +98,7 @@ namespace upsylon
             }
 
             //! verify each equilibrium
-            void verify() const;
+            void verify(const unsigned flags) const;
 
             //! compute K only
             void compute(Addressable &K, const double t) const throw();

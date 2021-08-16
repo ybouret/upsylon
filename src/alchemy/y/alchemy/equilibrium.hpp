@@ -30,6 +30,9 @@ namespace upsylon
             typedef hash_set<string,Pointer>           Set;       //!< alias
             typedef Set::node_type                     Node;      //!< alias
 
+            static const unsigned Default = 0x00;
+            static const unsigned Minimal = 0x01;
+            
             //__________________________________________________________________
             //
             // C++
@@ -70,7 +73,7 @@ namespace upsylon
             /**
              - charge conservation
              */
-            void verify() const;
+            void verify(const unsigned flags) const;
 
             //! find extents
             Extents findExtents(const Accessible &C) const throw();

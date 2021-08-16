@@ -93,17 +93,7 @@ namespace upsylon
             prod.guess(active);
         }
 
-        void Equilibrium:: verify() const
-        {
-            if(prod->size()<=0 && reac->size()<=0) throw exception("%s is empty",*name);
-
-            // verify charge
-            {
-                const long DrZ = prod.z() - reac.z();
-                if(DrZ!=0) throw exception("%s has Delta_rZ=%ld", *name, DrZ);
-            }
-        }
-
+       
 
     }
 }
@@ -121,5 +111,60 @@ namespace upsylon
             return Kvalue;
         }
     }
+}
+
+#include "y/yap/natural.hpp"
+
+namespace upsylon
+{
+    namespace Alchemy
+    {
+        void Equilibrium:: verify(const unsigned flags) const
+        {
+            if(prod->size()<=0 && reac->size()<=0) throw exception("%s is empty",*name);
+            
+            // verify charge, mandatory
+            {
+                const long DrZ = prod.z() - reac.z();
+                if(DrZ!=0) throw exception("%s has Delta_rZ=%ld", *name, DrZ);
+            }
+            
+            // verifiy co-primary coefficient
+            if( 0 != (flags&Minimal) )
+            {
+                vector<apn,Allocator> coeff(reac->size()+prod->size(),as_capacity);
+                for(const Actor::Node *node=reac->head();node;node=node->next)
+                {
+                    const apn cof = (**node).nu;
+                    coeff.push_back_(cof);
+                }
+                for(const Actor::Node *node=prod->head();node;node=node->next)
+                {
+                    const apn cof = (**node).nu;
+                    coeff.push_back_(cof);
+                }
+                //std::cerr << "coeff=" << coeff << std::endl;
+                apn  gcd = coeff[1];
+                bool res = false;
+                for(size_t i=coeff.size();i>1;--i)
+                {
+                    gcd = apn::gcd(gcd,coeff[i]);
+                    if(1==gcd)
+                    {
+                        res = true;
+                        break;
+                    }
+                }
+                if(!res)
+                {
+                    const string tmp = gcd.to_dec();
+                    throw exception("%s is not minimal: should be divided by %s",*name,*tmp);
+                }
+            }
+            
+        }
+
+    }
+    
 }
 

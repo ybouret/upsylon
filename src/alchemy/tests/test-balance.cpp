@@ -35,16 +35,16 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
 
-    if(false)
+    //if(false)
     {
         Equilibrium &dummy = eqs("dummy",1);
-        dummy(-1,lib.get("A"));
         dummy(-2,lib.get("B"));
+        dummy(-1,lib.get("A"));
         dummy( 1,lib.get("C"));
         dummy( 3,lib.get("D"));
     }
 
-    if(false)
+    //if(false)
     {
         Equilibrium &combine = eqs("combine",10.2);
         combine(-1, lib.get("X"));
@@ -58,7 +58,7 @@ Y_UTEST(balance)
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
 
-    Reactor cs(lib,eqs);
+    Reactor cs(lib,eqs, Equilibrium::Minimal);
 
     Vector  C(cs.M,0);
     lib.draw(alea,C);

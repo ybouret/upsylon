@@ -37,7 +37,8 @@ namespace upsylon
 
             //! setup
             explicit Reactor(Library    &,
-                             Equilibria &);
+                             Equilibria &,
+                             const unsigned);
 
             //! cleanup
             virtual ~Reactor() throw();
