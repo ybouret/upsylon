@@ -92,7 +92,10 @@ namespace upsylon
             const Vector          xi;     //!< [N]
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
-            const Vector          NuS;    //!< [M]   scaling for Psi
+            const iMatrix         NuTS;   //!< [MxN] secondary Nu
+            const iMatrix         NuS;    //!< [NXM] transposed of NuTS
+            const size_t          NL;     //!< number of leading     species
+            const size_t          NS;     //!< number of secondaries species
             const iMatrix         aNu2;   //!< [NxN] adjoint Nu*Nu'
             const long            dNu2;   //!<       determinant if Nu*Nu'
             const Matrix          Phi;    //!< [NxM] jacobian
@@ -109,7 +112,6 @@ namespace upsylon
             const   Freezer efrz;
 
             bool balance1(Addressable &C)     throw();
-            void buildXi(const Accessible &C) throw();
             
             //! output condition for one species
             template <typename OSTREAM> inline

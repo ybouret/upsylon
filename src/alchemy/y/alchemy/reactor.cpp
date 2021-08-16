@@ -36,7 +36,10 @@ namespace upsylon
         xi(N,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
-        NuS(M,1),
+        NuTS(NuT.rows,NuT.cols),
+        NuS(Nu.rows,Nu.cols),
+        NL(0),
+        NS(0),
         aNu2(N,N),
         dNu2(0),
         Phi(Nu.rows,Nu.cols),
@@ -98,6 +101,7 @@ namespace upsylon
                 // initialize
                 //______________________________________________________________
                 const accessible<unit_t> &v   = NuT[si];
+                addressable<unit_t>      &s   = aliasing::_(NuTS[si]);
                 size_t                    nok = 0;
                 const Equilibrium        *pEq = 0;
                 unit_t                    snu = 0;
@@ -148,18 +152,31 @@ namespace upsylon
                             leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
                             guard.addLEQ(leading);
                         }
+                        aliasing::incr(NL);
+                    }
+                    else
+                    {
+                        aliasing::incr(NS);
+                        tao::set(s,v);
                     }
 
                 }
                 else
                 {
                     assert(false==active[sp.indx]);
+                    tao::set(s,v);
                 }
 
             }
+            aliasing::_(NuS).assign_transpose(NuTS);
+            std::cerr << "    NuTS  = " << NuTS << std::endl;
+            std::cerr << "    NuS   = " << NuS  << std::endl;
+            std::cerr << "    NLead = " << NL   << std::endl;
+            std::cerr << "    NScnd = " << NS   << std::endl;
+            std::cerr << "    NActv = " << NA   << std::endl;
+            assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
 
-            std::cerr << " NuS    = " << NuS  << std::endl;
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
 
         }
