@@ -110,15 +110,15 @@ namespace upsylon
             const size_t nmax = source.rows;
             const size_t dims = source.cols;
 
-            size_t count = 0;
             for(size_t n=nmax;n>0;--n)
             {
-                combination comb(nmax,n);
-                count += comb.count;
+                combination               comb(nmax,n);
                 const accessible<size_t> &indx = comb;
-                matrix<apq> G(n,n);
+                matrix<apq>               G(n,n);
+                
                 for(comb.boot();comb.good();comb.next())
                 {
+                    // compute half Gram Matrix
                     for(size_t i=n;i>0;--i)
                     {
                         const size_t      lid = indx[i];
@@ -138,6 +138,7 @@ namespace upsylon
                         }
                     }
 
+                    // symetrize Gram Matrix
                     for(size_t i=n;i>0;--i)
                     {
                         for(size_t j=n;j>i;--j)
@@ -146,7 +147,6 @@ namespace upsylon
                         }
                     }
 
-                    //std::cerr << "    " << "@" << indx << " G=" << G << std::endl;
                     const apq d = __determinant(G);
                     assert(d.den.is(1));
                     if(d!=0) return n;

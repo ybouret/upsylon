@@ -171,10 +171,11 @@ namespace upsylon
             aliasing::_(NuS).assign_transpose(NuTS);
             std::cerr << "    NuTS  = " << NuTS << std::endl;
             std::cerr << "    NuS   = " << NuS  << std::endl;
-            std::cerr << "    NLead = " << NL   << std::endl;
-            std::cerr << "    NScnd = " << NS   << std::endl;
+            std::cerr << "    NEqs  = " << N    << std::endl;
             std::cerr << "    NActv = " << NA   << std::endl;
-            std::cerr << "    Srank = " << apk::rank(NuS) << std::endl;
+            std::cerr << "      NLead = " << NL   << std::endl;
+            std::cerr << "      NScnd = " << NS   << std::endl;
+            std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
 
