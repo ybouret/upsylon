@@ -98,32 +98,22 @@ meaning
 \begin{equation}
 	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
 \end{equation}
-We want to minimize:
+
+%\frac{1}{2} \left([A_j]+\vec{v}_j \cdot \vec{\xi} \right)^2
+Let us define:
 \begin{equation}
-	\Psi\left(\vec{A}+\bm{\nu}^t \vec{\xi}\right) 
-	= 
-	%\dfrac{a}{2} {\vec{\xi}}^2 + 
-	\sum_{j}
-	\left[ \omega_j \mathbb{A}_j \times 
-	\left\lbrace
-	\begin{array}{rclcl}
-	[A_j] + \vec{v}_j \cdot \vec{\xi} & \leq & 0 & \to & \frac{1}{2}([A_j] + \vec{v}_j \cdot \vec{\xi})^2 \\
-	\\
-	{[A_j]} + \vec{v}_j \cdot \vec{\xi} & >    & 0 & \to & 0 \\
+	\mathbb{A}_j = \left\lbrace
+	\begin{array}{cl}
+	1 & \text{if $A_j$ is active}\\
+	0 & \text{if $A_j$ is spectator}\\
 	\end{array}
 	\right.
-	\right]
 \end{equation}
 
 \begin{equation}
-	\partial_\xi \Psi(\vec{A}) = \bm{\nu}\bm{\Omega}
-	\begin{bmatrix}
-	\vdots\\
-	- \mathbb{A}_j \max(-[A_j],0)\\
-	\vdots\\
-	\end{bmatrix}
+	\psi_j(\vec{\xi}) = \dfrac{1}{2}\mathbb{A}_j \max\left[ -\left([A_j] + \vec{v}_j\cdot \vec{\xi}\right), 0 \right]^2
 \end{equation} 
-  
+   
 \section{Newton$^+$'s Algorithm}
 
 Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:

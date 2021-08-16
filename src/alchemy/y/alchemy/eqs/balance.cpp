@@ -36,41 +36,6 @@ namespace upsylon
             return balanced;
         }
 
-        void Reactor:: buildXi(const Accessible &C) throw()
-        {
-            assert(N>0);
-            assert(NA>0);
-            Addressable &Xi = aliasing::_(xi); assert(N==xi.size());
-            
-            for(size_t i=N;i>0;--i)
-            {
-                std::cerr << "for "; eqs.print(std::cerr,eqs(i)) << std::endl;
-                Xi[i] = 0;
-                xiTry.free();
-                const accessible<unit_t> &nu_i = Nu[i];
-                for(size_t j=M;j>0;--j)
-                {
-                    const unit_t nu = nu_i[j];
-                    if(nu)
-                    {
-                        assert(active[j]);
-                        const double c = C[j];
-                        if(c<0)
-                        {
-                            xiTry.push_back_(-c/nu);
-                        }
-                    }
-                }
-                std::cerr << "xiTry=" << xiTry << std::endl;
-                if(xiTry.size())
-                {
-                    hsort(xiTry, comparison::decreasing_abs<double>);
-                    std::cerr << " => " << xiTry << std::endl;
-                }
-            }
-            
-            std::cerr << "Guess=" << Xi << std::endl;
-        }
         
         
         bool Reactor:: balance(Addressable &C) throw()

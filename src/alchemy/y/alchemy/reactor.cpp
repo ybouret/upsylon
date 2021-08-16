@@ -34,8 +34,6 @@ namespace upsylon
         Gam(N,0),
         guards(N),
         xi(N,0),
-        xiTry(M,as_capacity),
-        ok(N,false),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         NuS(M,1),
