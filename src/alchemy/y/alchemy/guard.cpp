@@ -164,7 +164,7 @@ namespace upsylon
 
         Guard::State Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
         {
-            std::cerr << "  " << classText() << std::endl;
+            std::cerr << "  " <<  " solve " << classText() << std::endl;
             switch(cls)
             {
 
@@ -242,6 +242,14 @@ namespace upsylon
 
         }
 
+        void Guard:: limit(Addressable &xi, const Accessible &C) const throw()
+        {
+            std::cerr << "  " <<  " solve " << classText() << std::endl;
+            switch(cls)
+            {
+                case HasNoBound: return;
+            }
+        }
     }
 
 }

@@ -105,6 +105,10 @@ namespace upsylon
             //! solve in different cases
             State solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
 
+            //! limit in different cases
+            void limit(Addressable &xi, const Accessible &C) const throw();
+            
+
             //__________________________________________________________________
             //
             // members
