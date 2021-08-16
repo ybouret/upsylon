@@ -89,11 +89,11 @@ namespace upsylon
             template <typename T> inline
             void fill(matrix<T> &Nu) const
             {
-                size_t row = 0;
-                for(const_iterator it=edb.begin();it!=edb.end();++it)
+                size_t row = 1;
+                for(const_iterator it=edb.begin();it!=edb.end();++it,++row)
                 {
-                    const Equilibrium &eq = **it;
-                    eq.fill(Nu[++row]);
+                    const Equilibrium &eq = **it; assert(eq.indx==row);
+                    eq.fill(Nu[row]);
                 }
             }
 
