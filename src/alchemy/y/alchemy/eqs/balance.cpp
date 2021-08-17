@@ -37,8 +37,6 @@ namespace upsylon
             return balanced;
         }
 
-        //static inline double psi_der(double x) { return min_of(0.0,x);  }
-        //static inline long   psi_sec(double x) { return x<=0.0 ? 1 : 0; }
 
         bool Reactor:: balance(Addressable &C) throw()
         {
@@ -54,6 +52,7 @@ namespace upsylon
                     return false;
                 }
                 std::cerr << "Balanced Leading!" << std::endl;
+
                 Addressable &Xi = aliasing::_(xi);
 
                 for(size_t i=N;i>0;--i)
@@ -68,7 +67,7 @@ namespace upsylon
                 }
                 std::cerr << "xi1=" << xi  << std::endl;
 
-
+                
                 
                 return false;
             }

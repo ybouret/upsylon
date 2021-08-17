@@ -34,7 +34,6 @@ namespace upsylon
             if(N>0)
             {
                 const size_t r = apk::rank(Nu);
-                std::cerr << " NuT    = " << NuT << std::endl;
                 std::cerr << " NuRank = " << r   << "/" << N << std::endl;
 
                 if(r<N)

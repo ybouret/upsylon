@@ -29,13 +29,13 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"ammonia","NH4+", "NH3", pow(10.0,-9.2));
     }
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
 
-    //if(false)
+    if(false)
     {
         Equilibrium &dummy = eqs("dummy",1);
         dummy(-2,lib.get("B"));
@@ -44,7 +44,7 @@ Y_UTEST(balance)
         dummy( 3,lib.get("D"));
     }
 
-    //if(false)
+    if(false)
     {
         Equilibrium &combine = eqs("combine",10.2);
         combine(-1, lib.get("X"));
@@ -74,6 +74,7 @@ Y_UTEST(balance)
     //lib(C,"H+") = - alea.to<double>();
     //lib(C,"H+") *= -1;
     cs.balance(C);
+    std::cerr << "C=" << C << std::endl;
 
     
 
