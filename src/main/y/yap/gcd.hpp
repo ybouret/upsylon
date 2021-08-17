@@ -25,7 +25,8 @@ namespace upsylon
             template <typename T> static inline
             T of(const accessible<T> &arr)
             {
-                size_t n = arr.size();
+                const  T one(1);
+                size_t   n = arr.size();
                 switch(n)
                 {
                     case 1:
@@ -33,16 +34,18 @@ namespace upsylon
                         const T &x = arr[1];
                         if(0!=x) return x;
                     } // FALLTHRU
-                    case 0: return T(1);
+                    case 0: return one;
 
                     default:
                         break;
                 }
                 assert(n>1);
-                T res = from(arr[1],arr[n]);  
+                T res = from(arr[1],arr[n]);
+                if(one==res) return one;
                 for(--n;n>1;--n)
                 {
                     res = from(res,arr[n]);
+                    if(one==res) return one;
                 }
                 return res;
             };

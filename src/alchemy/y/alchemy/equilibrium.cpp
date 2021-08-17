@@ -113,7 +113,7 @@ namespace upsylon
     }
 }
 
-#include "y/yap/natural.hpp"
+#include "y/yap/gcd.hpp"
 
 namespace upsylon
 {
@@ -143,19 +143,9 @@ namespace upsylon
                     const apn cof = (**node).nu;
                     coeff.push_back_(cof);
                 }
-                //std::cerr << "coeff=" << coeff << std::endl;
-                apn  gcd = coeff[1];
-                bool res = false;
-                for(size_t i=coeff.size();i>1;--i)
-                {
-                    gcd = apn::gcd(gcd,coeff[i]);
-                    if(1==gcd)
-                    {
-                        res = true;
-                        break;
-                    }
-                }
-                if(!res)
+
+                const apn gcd = yap::compute_gcd::of(coeff);
+                if( !gcd.is(1) )
                 {
                     const string tmp = gcd.to_dec();
                     throw exception("%s is not minimal: should be divided by %s",*name,*tmp);
