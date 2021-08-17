@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef YAP_LCM_INCLUDED

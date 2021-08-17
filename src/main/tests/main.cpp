@@ -250,6 +250,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(yap_pt);
     Y_UTEST(factorial);
     Y_UTEST(yap_mod_exp);
+    Y_UTEST(yap_gcd);
     Y_UTEST(yap_lcm);
     Y_UTEST(yap_mul);
     Y_UTEST(yap_mul_perf);
