@@ -16,9 +16,17 @@ SET(eqs_srcs ${eqs_decl} ${eqs_code})
 SOURCE_GROUP( alchemy/eqs FILES ${eqs_srcs} )
 INSTALL( FILES ${eqs_decl} DESTINATION include/y/alchemy/eqs ) 
  
+ 
+FILE(GLOB reactor_decl y/alchemy/reactor/*.hpp)
+FILE(GLOB reactor_code y/alchemy/reactor/*.cpp)
+SET(reactor_srcs ${reactor_decl} ${reactor_code})
+SOURCE_GROUP( alchemy/reactor FILES ${reactor_srcs} )
+INSTALL( FILES ${reactor_decl} DESTINATION include/y/alchemy/reactor ) 
+ 
 ADD_LIBRARY(y-alchemy STATIC 
 ${main_srcs}
 ${eqs_srcs}
+${reactor_srcs}
 )
 INSTALL( TARGETS y-alchemy ARCHIVE DESTINATION lib )
 
