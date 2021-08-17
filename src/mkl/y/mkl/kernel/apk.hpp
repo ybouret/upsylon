@@ -134,16 +134,25 @@ namespace upsylon
 
             }
 
-            //! compute the rank of source
+            //! compute the rank of source rows
             static size_t rank_of(const matrix<apz> &source);
 
             //! compute the rank of M with internal conversion
             template <typename T> static inline
             size_t rank(const matrix<T> &M)
             {
-                matrix<apz> source(M.rows,M.cols);
-                source.assign(M);
-                return rank_of(source);
+                if(M.rows<=M.cols)
+                {
+                    matrix<apz> source(M.rows,M.cols);
+                    source.assign(M);
+                    return rank_of(source);
+                }
+                else
+                {
+                    matrix<apz> source(M.cols,M.rows);
+                    source.assign_transpose(M);
+                    return rank_of(source);
+                }
             }
 
         };

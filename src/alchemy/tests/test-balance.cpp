@@ -6,7 +6,7 @@
 #include "y/sequence/vector.hpp"
 #include "support.hpp"
 #include "y/alchemy/weak-acid.hpp"
-
+#include "y/mkl/kernel/apk.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -60,6 +60,9 @@ Y_UTEST(balance)
 
     Reactor cs(lib,eqs, Equilibrium::Minimal);
 
+
+
+    
     Vector  C(cs.M,0);
     lib.draw(alea,C);
     for(size_t j=cs.M;j>0;--j)
