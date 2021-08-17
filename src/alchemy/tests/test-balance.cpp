@@ -44,7 +44,7 @@ Y_UTEST(balance)
         dummy( 3,lib.get("D"));
     }
 
-    //if(false)
+    if(false)
     {
         Equilibrium &combine = eqs("combine",10.2);
         combine(-1, lib.get("X"));

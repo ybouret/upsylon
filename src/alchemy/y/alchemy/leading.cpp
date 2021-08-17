@@ -6,8 +6,8 @@ namespace upsylon
     {
 
         const char Leading:: EXT_[] = "@";
-        const char Leading:: LEQ_[] = " <= -";
-        const char Leading:: GEQ_[] = " >=  ";
+        const char Leading:: LEQ_[] = " <=  ";
+        const char Leading:: GEQ_[] = " >= -";
 
 
         Leading:: ~Leading() throw()
