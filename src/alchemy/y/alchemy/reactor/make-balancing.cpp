@@ -11,6 +11,7 @@ namespace upsylon
     {
         void Reactor:: makeBalancing()
         {
+            
             //__________________________________________________________________
             //
             // Build balancing info:
@@ -27,6 +28,7 @@ namespace upsylon
                 // initialize
                 //______________________________________________________________
                 const accessible<unit_t> &v   = NuT[si];
+                addressable<unit_t>      &l   = aliasing::_(NuTL[si]);
                 addressable<unit_t>      &s   = aliasing::_(NuTS[si]);
                 size_t                    nok = 0;
                 const Equilibrium        *pEq = 0;
@@ -79,6 +81,7 @@ namespace upsylon
                             guard.addLEQ(leading);
                         }
                         aliasing::incr(NL);
+                        tao::set(l,v);
                     }
                     else
                     {
@@ -94,7 +97,10 @@ namespace upsylon
                 }
 
             }
+            aliasing::_(NuL).assign_transpose(NuTL);
             aliasing::_(NuS).assign_transpose(NuTS);
+            std::cerr << "    NuTL  = " << NuTL << std::endl;
+            std::cerr << "    NuL   = " << NuL  << std::endl;
             std::cerr << "    NuTS  = " << NuTS << std::endl;
             std::cerr << "    NuS   = " << NuS  << std::endl;
             std::cerr << "    NEqs  = " << N    << std::endl;

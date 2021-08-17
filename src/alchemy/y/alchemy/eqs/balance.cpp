@@ -67,7 +67,7 @@ namespace upsylon
                 }
                 std::cerr << "xi1=" << xi  << std::endl;
 
-                
+                showConditions(std::cerr,C);
                 
                 return false;
             }

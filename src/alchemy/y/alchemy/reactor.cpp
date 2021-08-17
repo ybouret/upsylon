@@ -31,6 +31,8 @@ namespace upsylon
         xi(N,0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        NuTL(NuT.rows,NuT.cols),
+        NuL(Nu.rows,Nu.cols),
         NuTS(NuT.rows,NuT.cols),
         NuS(Nu.rows,Nu.cols),
         NL(0),

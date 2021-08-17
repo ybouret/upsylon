@@ -93,6 +93,8 @@ namespace upsylon
             const Vector          xi;     //!< [N]
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
+            const iMatrix         NuTL;   //!< [MxN] leading NuT
+            const iMatrix         NuL;    //!< [NxM] leading Nu
             const iMatrix         NuTS;   //!< [MxN] secondary Nu
             const iMatrix         NuS;    //!< [NXM] transposed of NuTS
             const size_t          NL;     //!< number of leading     species
