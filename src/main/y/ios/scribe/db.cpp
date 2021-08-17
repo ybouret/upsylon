@@ -4,6 +4,7 @@
 #include "y/type/complex.hpp"
 #include "y/type/point3d.hpp"
 #include "y/yap.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -104,14 +105,7 @@ namespace upsylon
                 {
                     assert(addr);
                     const bool b = *static_cast<const bool *>(addr);
-                    if(b)
-                    {
-                        return string("true");
-                    }
-                    else
-                    {
-                        return string("false");
-                    }
+                    return string( textual::boolean(b) );
                 }
                 
             private:

@@ -4,6 +4,7 @@
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/exception.hpp"
+#include "y/code/textual.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -13,14 +14,7 @@ namespace upsylon
     namespace Alchemy
     {
 
-        
-
-
-
         const char Reactor:: CLID[] = "Reactor";
-
-
-        
 
         Reactor:: Reactor(Library    &_lib,
                           Equilibria &_eqs,
@@ -41,8 +35,6 @@ namespace upsylon
         NuS(Nu.rows,Nu.cols),
         NL(0),
         NS(0),
-        aNu2(N,N),
-        dNu2(0),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
@@ -56,7 +48,26 @@ namespace upsylon
             std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
 
             eqs.verify(flags);
+            checkTopology();
+            makeBalancing();
 
+            
+
+
+
+            std::cerr << "<Setup " << CLID << "/>" << std::endl;
+
+        }
+
+        Reactor:: ~Reactor() throw()
+        {
+        }
+
+
+        void Reactor:: checkTopology()
+        {
+
+            std::cerr << "  <Topology>" << std::endl;
 
             //__________________________________________________________________
             //
@@ -75,17 +86,25 @@ namespace upsylon
             // checking consistency
             //
             //__________________________________________________________________
+            if(N>0)
             {
-                matrix<apz> aNu2_(N,N);
-                const apz   dNu2_ = apk::adjoint_gram(aNu2_,Nu);
-                apk::convert(aliasing::_(aNu2),aNu2_);
-                aliasing::_(dNu2) = dNu2_.cast_to<long>("determinant(Nu2)");
+                const size_t r = apk::rank(Nu);
+                std::cerr << " NuT    = " << NuT << std::endl;
+                std::cerr << " NuRank = " << r   << "/" << N << std::endl;
+
+                if(r<N)
+                {
+                    const unsigned long ns = static_cast<unsigned long>(N-r);
+                    throw exception("%s has %lu redundant equilibri%s",CLID,ns,textual::plural_a(ns));
+                }
             }
-            std::cerr << " dNu2   = " << dNu2 << std::endl;
-            if(dNu2<=0) throw exception("%s detected redundant equilibria",CLID);
+            std::cerr << "  <Topology/>" << std::endl;
 
-            
+        }
 
+
+        void Reactor:: makeBalancing()
+        {
             //__________________________________________________________________
             //
             // Build balancing info:
@@ -129,7 +148,7 @@ namespace upsylon
                     assert(true==active[sp.indx]);
                     assert(snu!=0);
                     assert(pEq!=NULL);
-                    
+
                     if(1==nok)
                     {
                         Guard &guard = aliasing::_(*guards[pEq->indx]);
@@ -179,15 +198,7 @@ namespace upsylon
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
-
-            std::cerr << "<Setup " << CLID << "/>" << std::endl;
-
         }
-
-        Reactor:: ~Reactor() throw()
-        {
-        }
-
 
         void Reactor:: displayState() const
         {
@@ -212,7 +223,7 @@ namespace upsylon
             }
             return ans;
         }
- 
+
 
     }
 

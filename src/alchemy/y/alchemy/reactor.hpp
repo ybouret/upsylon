@@ -97,8 +97,6 @@ namespace upsylon
             const iMatrix         NuS;    //!< [NXM] transposed of NuTS
             const size_t          NL;     //!< number of leading     species
             const size_t          NS;     //!< number of secondaries species
-            const iMatrix         aNu2;   //!< [NxN] adjoint Nu*Nu'
-            const long            dNu2;   //!<       determinant if Nu*Nu'
             const Matrix          Phi;    //!< [NxM] jacobian
             const Matrix          J;      //!< [NxN] PhiNuT
             const Matrix          W;      //!< [NxN] LU::build(J)
@@ -111,6 +109,9 @@ namespace upsylon
             Flags           Ibad; //!< [M]
             const   Freezer lfrz;
             const   Freezer efrz;
+
+            void checkTopology();
+            void makeBalancing();
 
             bool balance1(Addressable &C)     throw();
             

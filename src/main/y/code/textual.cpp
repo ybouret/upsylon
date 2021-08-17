@@ -9,6 +9,12 @@ namespace upsylon
         return (count<=1) ? "" : "s";
     }
 
+
+    const char * textual:: plural_a(const size_t count) throw()
+    {
+        return (count<=1) ? "um" : "a";
+    }
+
     const char * textual:: boolean(const bool flag) throw()
     {
         return flag ?
