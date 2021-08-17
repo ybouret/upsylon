@@ -125,8 +125,8 @@ namespace upsylon
             
             // verify charge, mandatory
             {
-                const long DrZ = prod.z() - reac.z();
-                if(DrZ!=0) throw exception("%s has Delta_rZ=%ld", *name, DrZ);
+                const unit_t DrZ = prod.z() - reac.z();
+                if(DrZ!=0) throw exception("%s has Delta_rZ=%ld", *name, long(DrZ) );
             }
             
             // verifiy co-primary coefficient
