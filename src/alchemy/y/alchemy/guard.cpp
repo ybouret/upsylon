@@ -162,7 +162,10 @@ namespace upsylon
             return Guard::WasMoved;
         }
 
-        Guard::State Guard:: solve(Addressable &C, const iMatrix &NuT, Addressable &xi ) const throw()
+        Guard::State Guard:: solve(Addressable   &C,
+                                   const iMatrix &NuT,
+                                   Addressable   &xi,
+                                   Flags         &ok) const throw()
         {
             std::cerr << "  " <<  "solve " << classText() << std::endl;
             switch(cls)
@@ -200,14 +203,18 @@ namespace upsylon
                 case IsBothWays:
                 {
                     const Leading  &lmin = xiMin(C);
-                    const double    xmin  =-C[lmin.sp.indx]/lmin.nu;
+                    const size_t    imin = lmin.sp.indx;
+                    const double    xmin  =-C[imin]/lmin.nu;
                     const Leading  &lmax = xiMax(C);
-                    const double    xmax = C[lmax.sp.indx]/lmax.nu;
+                    const size_t    imax = lmax.sp.indx;
+                    const double    xmax = C[imax]/lmax.nu;
                     std::cerr << "  xmin=" << xmin << std::endl;
                     std::cerr << "  xmax=" << xmax << std::endl;
 
                     if(xmin>xmax)
                     {
+                        ok[imin] = false;
+                        ok[imax] = false;
                         return IsJammed;
                     }
                     else

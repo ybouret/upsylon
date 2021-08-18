@@ -16,9 +16,11 @@ namespace upsylon
         typedef memory::dyadic                 Allocator;    //!< alias
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<string,Allocator>       Strings;      //!< alias
+        typedef vector<bool,Allocator>         Flags;        //!< alias
         typedef addressable<double>            Addressable;  //!< alias
         typedef accessible<double>             Accessible;   //!< alias
-        
+        typedef vector<size_t,Allocator>       Indices;      //!< alias
+
 
     }
 

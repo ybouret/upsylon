@@ -103,7 +103,10 @@ namespace upsylon
             const Leading &xiMin(const Accessible &C) const throw();
 
             //! solve in different cases
-            State solve(Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
+            State solve(Addressable    &C,
+                        const iMatrix  &NuT,
+                        Addressable    &xi,
+                        Flags          &ok) const throw();
 
             //! limit in different cases
             void limit(Addressable &xi, const Accessible &C) const throw();

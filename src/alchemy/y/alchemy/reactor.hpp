@@ -11,8 +11,6 @@ namespace upsylon
     {
 
         
-        typedef vector<size_t,Allocator>       uVector;      //!< alias
-        typedef vector<bool,Allocator>         Flags;        //!< alias
 
 
         //______________________________________________________________________
@@ -91,6 +89,7 @@ namespace upsylon
             const Vector          Gam;    //!< [N]   indicators
             const Guard::Array    guards; //!< [N]
             const Vector          xi;     //!< [N]
+            const Flags           ok;     //!< [M] to check balance1 error(s)
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
             const iMatrix         NuTL;   //!< [MxN] leading NuT
@@ -107,8 +106,6 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            Vector          Cbad; //!< [M]
-            Flags           Ibad; //!< [M]
             const   Freezer lfrz;
             const   Freezer efrz;
 

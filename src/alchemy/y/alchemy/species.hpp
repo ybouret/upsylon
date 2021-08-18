@@ -33,9 +33,9 @@ namespace upsylon
             //
             // types and definitions
             //__________________________________________________________________
-            typedef intr_ptr<string,Species>          Pointer; //!< alias
-            typedef hash_set<string,Species::Pointer> Set;     //!< alias
-            typedef Set::node_type                    Node;    //!< alias
+            typedef intr_ptr<string,Species>          Pointer;         //!< alias
+            typedef hash_set<string,Species::Pointer> Set;             //!< alias
+            typedef Set::node_type                    Node;            //!< alias
             static  const int                         min_exp10 = -14; //!< for random concentration
             static  const int                         max_exp10 = 0;   //!< for random concentration
             static  double Concentration(randomized::bits&) throw();   //!< get a random concentration
@@ -43,7 +43,7 @@ namespace upsylon
             //__________________________________________________________________
             //
             // C++
-            //__________________________________________________________________
+            //________________________________________________________________
 
             //! constructor
             template <typename ID> inline

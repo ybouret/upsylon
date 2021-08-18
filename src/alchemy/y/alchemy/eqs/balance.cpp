@@ -24,7 +24,7 @@ namespace upsylon
                 {
                     const Equilibrium &eq = ***node;
                     eqs.print(std::cerr << "guard ",eq) << std::endl;
-                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi);
+                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi,aliasing::_(ok));
                     std::cerr << "  " << Guard::StateText(st) << std::endl;
                     if(Guard::IsJammed==st)
                     {
@@ -41,6 +41,7 @@ namespace upsylon
         bool Reactor:: balance(Addressable &C) throw()
         {
             lib.display(std::cerr << "C=",C) << std::endl;
+            tao::ld( aliasing::_(ok),true);
             if(N>0)
             {
                 assert(NA>0);
@@ -48,7 +49,7 @@ namespace upsylon
 
                 if( !balance1(C) )
                 {
-                    std::cerr << "Unbalanced Leading..." << std::endl;
+                    lib.display(std::cerr << "ok=", ok)  << std::endl;
                     return false;
                 }
                 std::cerr << "Balanced Leading!" << std::endl;

@@ -29,6 +29,7 @@ namespace upsylon
         Gam(N,0),
         guards(N),
         xi(N,0),
+        ok(M,false),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         NuTL(NuT.rows,NuT.cols),
@@ -40,8 +41,6 @@ namespace upsylon
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
-        Cbad(M,0),
-        Ibad(M,0),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
@@ -53,12 +52,7 @@ namespace upsylon
             checkTopology();
             makeBalancing();
 
-            
-
-
-
             std::cerr << "<Setup " << CLID << "/>" << std::endl;
-
         }
 
         Reactor:: ~Reactor() throw()
