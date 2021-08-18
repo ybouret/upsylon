@@ -19,9 +19,13 @@ namespace upsylon
         //______________________________________________________________________
         struct compute_gcd
         {
+            //! check and use natural::gcd
             static natural from(const natural &lhs, const natural &rhs);
+
+            //! positive gcd of absolute values
             static integer from(const integer &lhs, const integer &rhs);
 
+            //! for apn/apz
             template <typename T> static inline
             T of(const accessible<T> &arr)
             {

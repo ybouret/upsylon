@@ -30,8 +30,8 @@ namespace upsylon
             typedef hash_set<string,Pointer>           Set;       //!< alias
             typedef Set::node_type                     Node;      //!< alias
 
-            static const unsigned Default = 0x00;
-            static const unsigned Minimal = 0x01;
+            static const unsigned Default = 0x00; //!< will check charges
+            static const unsigned Minimal = 0x01; //!< will check coprimality of coefficients
             
             //__________________________________________________________________
             //
