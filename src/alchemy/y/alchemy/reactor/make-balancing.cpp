@@ -11,7 +11,8 @@ namespace upsylon
     {
         void Reactor:: makeBalancing()
         {
-            
+            vector<Species::Pointer> subs;
+
             //__________________________________________________________________
             //
             // Build balancing info:
@@ -59,6 +60,7 @@ namespace upsylon
 
                     if(1==nok)
                     {
+                        // leading condition
                         Guard &guard = aliasing::_(*guards[pEq->indx]);
                         if(snu>0)
                         {
@@ -85,8 +87,10 @@ namespace upsylon
                     }
                     else
                     {
+                        // subs condidition
                         aliasing::incr(NS);
                         tao::set(s,v);
+                        subs.push_back(**snode);
                     }
 
                 }
@@ -108,6 +112,7 @@ namespace upsylon
             std::cerr << "      NLead = " << NL   << std::endl;
             std::cerr << "      NScnd = " << NS   << std::endl;
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
+            std::cerr << "      Subs  = " << subs << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
         }
