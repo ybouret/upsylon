@@ -59,11 +59,7 @@ namespace upsylon
         {
         }
 
-
-     
-
-       
-
+        
         void Reactor:: displayState() const
         {
             std::cerr << "K   = " << K   << std::endl;
