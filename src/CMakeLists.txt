@@ -151,10 +151,10 @@ MESSAGE(STATUS "")
 ##
 ########################################################################
 
-ADD_CUSTOM_TARGET(core
-DEPENDS test-main test-mkl test-jive test-json test-spade test-alchemy test-gfx test-net
-COMMENT "Built Core Libraries"
-)
+#ADD_CUSTOM_TARGET(core
+#DEPENDS test-main test-mkl test-jive test-json test-spade test-alchemy test-gfx test-net
+#COMMENT "Built Core Libraries"
+#)
 
 #ADD_SUBDIRECTORY(python)
 
