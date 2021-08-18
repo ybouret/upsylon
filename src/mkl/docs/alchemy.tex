@@ -90,16 +90,6 @@ Time constants are inverse of the eigenvalues of the matrix.
 
 \section{Balancing}
 
-We want
-\begin{equation}
-	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
-\end{equation}
-meaning
-\begin{equation}
-	\forall j, \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
-\end{equation}
-
-%\frac{1}{2} \left([A_j]+\vec{v}_j \cdot \vec{\xi} \right)^2
 Let us define:
 \begin{equation}
 	\mathbb{A}_j = \left\lbrace
@@ -110,69 +100,34 @@ Let us define:
 	\right.
 \end{equation}
 
+We want to reach the following state, for \textbf{active} species:
 \begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\psi(x)   & = & \dfrac{1}{2} \left[ \max\left( -x, 0 \right) \right]^2\\
-	\psi'(x)  & = & \min(x,0) \\
-	\psi''(x) & = & \mathtt{H}(-x)\\
-\end{array}
-\right.
-\end{equation} 
-
-\begin{equation}
-	\psi_j(\vec{\xi}) = \psi( [A_j] + \vec{v}_j \cdot \vec{\xi})
- \; \Rightarrow \;
-	\Psi(\vec{\xi}) = \sum_j \mathbb{A}_j \psi_j(\vec{\xi})
+	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
 \end{equation}
-
-
+meaning
 \begin{equation}
-	\partial_{\xi_i}\psi_j = v_{ji}\psi'( [A_j] + \vec{v}_j \cdot \vec{\xi} )  
- \; \Rightarrow \;
-	\partial_{\xi_i}\Psi = \sum_j \mathbb{A}_j  v_{ji}\psi'_j\left( [A_j] + \vec{v}_j \cdot \vec{\xi} \right)  
+	\forall j, \mathbb{A}_j\not=0 \Rightarrow \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
 \end{equation}
+Among the $N_A\leq M$ active species, we make the distinction between 
+\begin{itemize}
+\item  $N_L$ \textbf{leading} species, where only one coefficient of $\vec{v}_j$ is not zero,
+\item  $N_S$ \textbf{subordinate} species, where more than two coefficients of $\vec{v}_j$ are not zeros,
+\item  with $N_A=N_L+N_S$.
+\end{itemize}
+For a set of concentrations $\vec{A}$, the leading species allow the computation of $N$ domains $\Omega_{[1:N]}$, one for each $\xi_{[1:N]}$
 
-\begin{equation}
-	\vec{\nabla}_{\vec{\xi}}\, \Psi = \bm{\nu} 
-	\begin{bmatrix}
-	\vdots\\
-	\mathbb{A}_j \psi'_j( [A_j] + \vec{v}_j \cdot \vec{\xi} )\\
-	\vdots\\
-	\end{bmatrix}
-\end{equation}
 
-\begin{equation}
-	\partial_{\xi_k}\partial_{\xi_i}\psi_j = v_{ji} v_{jk}\psi''( [A_j] + \vec{v}_j \cdot \vec{\xi} )  
- \; \Rightarrow \;
-	\mathcal{H}_{\vec{\xi}}   =  \bm{\nu}
-	\begin{bmatrix}
-	\ddots & & \\
-	  & \mathbb{A}_j \psi''( [A_j] + \vec{v}_j \cdot \vec{\xi} ) & \\
-	  & & \ddots\\
-	\end{bmatrix}
-	\bm{\nu}^t
-\end{equation}
-
-\begin{equation}
-\Psi(\vec{\xi}) \simeq \Psi(\vec{0}) + \vec{\nabla}_{\vec{\xi}}\, \Psi(\vec{0}) \cdot \vec{\xi} + \dfrac{1}{2} \vec{\xi} \cdot \mathcal{H}_{\vec{\xi}} \ (\vec{0}) \cdot \vec{\xi}
-\end{equation}
-
-\begin{equation}
-	 \mathcal{H}_{\vec{\xi}} = \bm{P} \bm{D} \bm{P}^t, \;\; \vec{\xi} = \bm{P} \vec{Y}
-\end{equation}
-
-\begin{equation}
-	\Psi(\vec{Y}) = (\bm{P}^t \vec{\nabla}_{\vec{\xi}}\, \Psi) \cdot \vec{Y} + \dfrac{1}{2} \vec{Y} \cdot \bm{D} \cdot{Y}
-\end{equation}
-
-\begin{equation}
-\begin{array}{rrcl}
-	\forall r, D_r > 0, & Y_r & = &-(\bm{P}^t \vec{\nabla}_{\vec{\xi}}\, \Psi)_r / D_r\\
- 	\forall r, D_r = 0, & Y_r & = &0 \\
-\end{array}
-\end{equation}
-
+%
+%\begin{equation}
+%\left\lbrace
+%\begin{array}{rcl}
+%	\psi(x)   & = & \dfrac{1}{2} \left[ \max\left( -x, 0 \right) \right]^2\\
+%	\psi'(x)  & = & \min(x,0) \\
+%	\psi''(x) & = & \mathtt{H}(-x)\\
+%\end{array}
+%\right.
+%\end{equation} 
+ 
 
    
 \section{Newton$^+$'s Algorithm}
