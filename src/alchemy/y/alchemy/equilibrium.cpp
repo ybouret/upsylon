@@ -55,7 +55,8 @@ namespace upsylon
                     throw exception("%s: zero coefficient for '%s'", *name, *sp.name);
                 }
             }
-            aliasing::_(sp.active) = true;
+            aliasing::_(sp.active)=true;
+            aliasing::_(sp.rating)++;
         }
         
         const string & Equilibrium:: key() const throw()

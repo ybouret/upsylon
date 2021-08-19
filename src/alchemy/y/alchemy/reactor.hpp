@@ -9,10 +9,6 @@ namespace upsylon
 {
     namespace Alchemy
     {
-
-        
-
-
         //______________________________________________________________________
         //
         //
@@ -84,6 +80,7 @@ namespace upsylon
             const size_t          N;      //!< number of equilibria
             const size_t          M;      //!< number of components
             const Flags           active; //!< [M]   active flags
+            
             const size_t          NA;     //!< number of active species
             const Vector          K;      //!< [N]   constants
             const Vector          Gam;    //!< [N]   indicators

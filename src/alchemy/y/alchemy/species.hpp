@@ -53,7 +53,8 @@ namespace upsylon
             name(_name),
             z(_z),
             indx(_indx),
-            active(false)
+            active(false),
+            rating(0)
             {
                 checkIndex();
             }
@@ -84,6 +85,7 @@ namespace upsylon
             const unit_t z;      //!< algebraic charge
             const size_t indx;   //!< index in library
             const bool   active; //!< modified upon equilibrium
+            const size_t rating; //!< number of use
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);

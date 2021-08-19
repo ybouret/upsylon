@@ -101,7 +101,7 @@ namespace upsylon
                 {
                     const Species &sp = **it;
                     lib.print(os << ' ',sp);
-                    os << vformat(" : %3ld @%u\n", static_cast<long>(sp.z), unsigned(sp.indx));
+                    os << vformat(" : %3ld @%2u #%2u\n", static_cast<long>(sp.z), unsigned(sp.indx), unsigned(sp.rating));
                 }
                 os << '}';
                 return os;
