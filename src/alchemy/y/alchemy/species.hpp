@@ -77,7 +77,15 @@ namespace upsylon
             {
                 return (os << '[' << sp.name << ']');
             }
-            
+
+            //! human readible rating
+            /**
+             - neutral : rating = 0
+             - leading : rating = 1
+             - seeking : rating > 1
+             */
+            const char *ratingText() const throw();
+
             //__________________________________________________________________
             //
             // members

@@ -22,7 +22,7 @@ Y_UTEST(balance)
         (void) eqs.water(lib,1e-14);
     }
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
@@ -37,6 +37,15 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
+
+    //if(false)
+    {
+        (void) WeakAcid::Add(eqs,lib,"Citric1","CitH3",  "CitH2-", pow(10.0,-3.13));
+        (void) WeakAcid::Add(eqs,lib,"Citric2","CitH2-", "CitH--", pow(10.0,-4.76));
+        (void) WeakAcid::Add(eqs,lib,"Citric3","CitH--", "Cit---", pow(10.0,-6.40));
+
+    }
+
 
     if(false)
     {
