@@ -19,7 +19,7 @@ ADD_TEST(eq      test-alchemy eq)
 ADD_TEST(eqs     test-alchemy eqs)
 ADD_TEST(balance test-alchemy balance)
 ADD_TEST(reactor test-alchemy reactor)
-ADD_TEST(lua     test-alchemy lua)
+ADD_TEST(lua     test-alchemy lua "water:H+:HO-:@1e-14" "acid:H+:A-:-AH:@10^(-4.8)" )
 
 
 ADD_CUSTOM_TARGET(utest-alchemy
