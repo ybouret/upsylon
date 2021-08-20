@@ -13,5 +13,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(eqs);
     Y_UTEST(balance);
     Y_UTEST(reactor);
+    Y_UTEST(lua);
 }
 Y_UTEST_EXEC()

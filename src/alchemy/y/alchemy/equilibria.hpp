@@ -7,9 +7,14 @@
 #include "y/alchemy/equilibrium.hpp"
 #include "y/alchemy/freezable.hpp"
 #include "y/container/matrix.hpp"
-
+ 
 namespace upsylon
 {
+    namespace Lua
+    {
+        class State;
+    };
+    
     namespace Alchemy
     {
 
@@ -133,11 +138,13 @@ namespace upsylon
             //! helper: create Water
             Equilibrium &water(Library &, const double);
             
+            //! helper
+            Equilibrium &parse(const string &info, Lua::State &);
+            
 
 
 
-
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type & bulk() const throw();
@@ -145,9 +152,9 @@ namespace upsylon
             Equilibrium::Set    edb; //!< database
             
         public:
-            const size_t        enw; //!< equilibrium name width
+            const size_t        enw;   //!< equilibrium name width
             mutable double      tdisp; //!< to display status at specific time
-
+            
         };
 
 

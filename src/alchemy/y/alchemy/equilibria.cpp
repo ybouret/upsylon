@@ -19,7 +19,8 @@ namespace upsylon
             
         }
         
-        Equilibria:: Equilibria() : edb(), enw(), tdisp(0)
+        Equilibria:: Equilibria() :
+        edb(), enw(), tdisp(0)
         {
         }
 
@@ -156,6 +157,8 @@ namespace upsylon
             }
             return ans;
         }
+
+        
 
         
     }

@@ -27,7 +27,7 @@ namespace upsylon
             virtual ~State() throw(); //!< destrcutor
 
             //! load file
-            void doFile(   const string &filename );
+            void doFile(const string &filename);
 
             //! load code
             inline
@@ -78,8 +78,21 @@ namespace upsylon
             inline
             bool exists( const char   *name) { const string _(name); return exists(_); }
 
+            //! eval expression within "ans"
+            void eval_(const string &expr);
+            
+            //! eval and get
+            template <typename T> inline
+            T eval(const string &expr)
+            {
+                eval_(expr);
+                return get<T>(__ans__);
+            }
+            
+            
         private:
-            lua_State *L;
+            lua_State    *L;
+            const string  __ans__;
             Y_DISABLE_COPY_AND_ASSIGN(State);
         };
 

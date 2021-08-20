@@ -44,7 +44,8 @@ namespace upsylon
             return 1;
         }
 
-        State:: State() : L( lua_newstate(__luaAllocator,NULL) )
+        State:: State() : L( lua_newstate(__luaAllocator,NULL) ),
+        __ans__("__ans__")
         {
             //std::cerr << "Opening Libs" << std::endl;
             luaL_openlibs(L);
@@ -229,6 +230,14 @@ namespace upsylon
             return int( lua_tointeger(L, i) );
         }
 
+        void State:: eval_(const string &expr)
+        {
+            lua_settop(L,0);
+            const string code = __ans__ + '='  + expr;
+            doString(code);
+        }
+
+        
     }
 
 }
