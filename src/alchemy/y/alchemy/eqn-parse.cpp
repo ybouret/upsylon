@@ -1,5 +1,7 @@
 #include "y/alchemy/equilibrium.hpp"
+#include "y/alchemy/library.hpp"
 #include "y/exception.hpp"
+#include <cstdlib>
 
 namespace upsylon {
 
@@ -13,7 +15,7 @@ namespace upsylon {
 
         void Equilibrium:: parse(const string &info, Library &lib)
         {
-            static const char fn[] = ".parse ";
+            static const char fn[] = ".parse";
             const size_t n = info.size();
             if(n<=0) throw exception("%s%s empty info",*name,fn);
 
@@ -29,23 +31,41 @@ namespace upsylon {
             }
             while(i<n&&isInt(info[i])) coef << info[i++];
 
-            std::cerr << "coef=(" << coef << ")" << std::endl;
-
+            
+            // skip blanks
             while(i<n&&isSpc(info[i])) ++i;
 
+            // get data
             while(i<n) data << info[i++];
 
-            std::cerr << "data=(" << data << ")" << std::endl;
-
+            if(data.size()<=0) throw exception("%s%s no species in '%s'",*name,fn,*info);
+            
             // parse num
             long   nu    = 0;
+            switch(coef.size())
             {
-                bool        ng = false;
-                const char *ch = *coef;
-                size_t      nc = coef.size();
-                
+                case 0: nu=1; break;
+                case 1:
+                    switch(coef[0])
+                    {
+                        case '-': nu=-1; break;
+                        default :
+                            assert( isInt(coef[0]) );
+                            nu = long(coef[0])-long('0');
+                            break;
+                    }
+                    break;
+                    
+                default:
+                    nu = atol( *coef );
+                    break;
             }
-
+            
+            if(0==nu) throw exception("%s%s nu=0 for '%s'",*name,fn,*data);
+            
+            // create actor
+            Equilibrium &self = *this;
+            self(nu,lib.get(data));
         }
 
     }

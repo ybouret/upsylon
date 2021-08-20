@@ -10,7 +10,7 @@ Y_UTEST(parser)
 {
 
     Library          lib;
-    ConstEquilibrium eqn("toto",1.1);
+    ConstEquilibrium eqn("equilib",1.1);
 
     std::cerr << eqn << std::endl;
 
@@ -18,6 +18,8 @@ Y_UTEST(parser)
     {
         eqn.parse(argv[i],lib);
     }
+    
+    std::cerr << eqn << std::endl;
 
 }
 Y_UTEST_DONE()
