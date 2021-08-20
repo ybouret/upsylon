@@ -111,14 +111,17 @@ meaning
 Among the $N_A\leq M$ active species, we make the distinction between 
 \begin{itemize}
 \item  $N_L$ \textbf{leading} species, where only one coefficient of $\vec{v}_j$ is not zero,
-\item  $N_S$ \textbf{subordinate} species, where more than two coefficients of $\vec{v}_j$ are not zeros,
+\item  $N_S$ \textbf{seaking} species, where more than two coefficients of $\vec{v}_j$ are not zeros,
 \item  with $N_A=N_L+N_S$.
 \end{itemize}
 We proceed as follow:
 \begin{enumerate}
 \item For a set of concentrations $\vec{A}$, the leading species allows the $N_L$ conditions to be adjusted.
-If we met those leading conditions, then each equilibrium extent $\xi_i$ is associated with a domaine $\Omega_i$.
-Otherwise, the set $\vec{A}$ is primarily invalid.
+If we met those leading conditions, then each equilibrium extent $\xi_i$ is associated with a domaine $\Omega_i$,
+Otherwise, the set $\vec{A}$ is fundamentally invalid.
+
+\item We obtain a set of partially balanced concentration $\vec{B}$, and we want to find another extent $\vec{\xi}$ that
+fulfils the positivity constraints, with the fact that $\vec{\xi}=\vec{0}$ solves all the leading species.
 
 \item Then we must solve $N_S$ subordinate constraints by choosing $\vec{\xi}$ in its domains.
 \end{enumerate}

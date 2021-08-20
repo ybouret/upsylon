@@ -89,10 +89,10 @@ namespace upsylon
             const Flags           ok;     //!< [M] to check balance1 error(s)
             const iMatrix         Nu;     //!< [NxM] topology matrix
             const iMatrix         NuT;    //!< [MxN] transposed Nu
-            const iMatrix         NuTL;   //!< [MxN] leading NuT
-            const iMatrix         NuL;    //!< [NxM] leading Nu
-            const iMatrix         NuTS;   //!< [MxN] secondary Nu
-            const iMatrix         NuS;    //!< [NXM] transposed of NuTS
+            const iMatrix         NuLT;   //!< [MxN] leading topology, transposed
+            const iMatrix         NuL;    //!< [NxM] leading topology
+            const iMatrix         NuST;   //!< [MxN] seeking topology, transposed
+            const iMatrix         NuS;    //!< [NXM] transposed of NuST
             const size_t          NL;     //!< number of leading     species
             const size_t          NS;     //!< number of secondaries species
             const Matrix          Phi;    //!< [NxM] jacobian

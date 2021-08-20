@@ -29,8 +29,8 @@ namespace upsylon
                 // initialize
                 //______________________________________________________________
                 const accessible<unit_t> &v   = NuT[si];
-                addressable<unit_t>      &l   = aliasing::_(NuTL[si]);
-                addressable<unit_t>      &s   = aliasing::_(NuTS[si]);
+                addressable<unit_t>      &l   = aliasing::_(NuLT[si]);
+                addressable<unit_t>      &s   = aliasing::_(NuST[si]);
                 size_t                    nok = 0;
                 const Equilibrium        *pEq = 0;
                 unit_t                    snu = 0;
@@ -51,6 +51,8 @@ namespace upsylon
                         snu = cof;
                     }
                 }
+
+                if(nok!=sp.rating) throw exception("%s invalid rating for '%s'",CLID,*(sp.name));
 
                 if(nok>0)
                 {
@@ -96,23 +98,24 @@ namespace upsylon
                 }
                 else
                 {
+                    assert(0==nok);
                     assert(false==active[sp.indx]);
                     tao::set(s,v);
                 }
 
             }
-            aliasing::_(NuL).assign_transpose(NuTL);
-            aliasing::_(NuS).assign_transpose(NuTS);
-            std::cerr << "    NuTL  = " << NuTL << std::endl;
+            aliasing::_(NuL).assign_transpose(NuLT);
+            aliasing::_(NuS).assign_transpose(NuST);
+            std::cerr << "    NuLT  = " << NuLT << std::endl;
             std::cerr << "    NuL   = " << NuL  << std::endl;
-            std::cerr << "    NuTS  = " << NuTS << std::endl;
+            std::cerr << "    NuST  = " << NuST << std::endl;
             std::cerr << "    NuS   = " << NuS  << std::endl;
             std::cerr << "    NEqs  = " << N    << std::endl;
             std::cerr << "    NActv = " << NA   << std::endl;
             std::cerr << "      NLead = " << NL   << std::endl;
-            std::cerr << "      NScnd = " << NS   << std::endl;
+            std::cerr << "      NSeek = " << NS   << std::endl;
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
-            std::cerr << "      Subs  = " << subs << std::endl;
+            std::cerr << "      Seek  = " << subs << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
         }
