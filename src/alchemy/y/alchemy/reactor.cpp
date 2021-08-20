@@ -38,6 +38,7 @@ namespace upsylon
         NuS(Nu.rows,Nu.cols),
         NL(0),
         NS(0),
+        Vs(),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),

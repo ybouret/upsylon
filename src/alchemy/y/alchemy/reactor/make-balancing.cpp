@@ -11,7 +11,7 @@ namespace upsylon
     {
         void Reactor:: makeBalancing()
         {
-            vector<Species::Pointer> subs;
+            vector<Species::Pointer> seeking;
 
             //__________________________________________________________________
             //
@@ -92,7 +92,7 @@ namespace upsylon
                         // subs condidition
                         aliasing::incr(NS);
                         tao::set(s,v);
-                        subs.push_back(**snode);
+                        seeking.push_back(**snode);
                     }
 
                 }
@@ -104,8 +104,22 @@ namespace upsylon
                 }
 
             }
+
+            assert(NS==seeking.size());
+
             aliasing::_(NuL).assign_transpose(NuLT);
             aliasing::_(NuS).assign_transpose(NuST);
+
+
+            if(NS>0)
+            {
+                aliasing::_(Vs).make(NS,N);
+                for(size_t i=1;i<=seeking.size();++i)
+                {
+                    tao::set( aliasing::_(Vs[i]),NuT[seeking[i]->indx]);
+                }
+            }
+
             std::cerr << "    NuLT  = " << NuLT << std::endl;
             std::cerr << "    NuL   = " << NuL  << std::endl;
             std::cerr << "    NuST  = " << NuST << std::endl;
@@ -115,7 +129,8 @@ namespace upsylon
             std::cerr << "      NLead = " << NL   << std::endl;
             std::cerr << "      NSeek = " << NS   << std::endl;
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
-            std::cerr << "      Seek  = " << subs << std::endl;
+            std::cerr << "      Seek  = " << seeking << std::endl;
+            std::cerr << "      Vs    = " << Vs      << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
         }

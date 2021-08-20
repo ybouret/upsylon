@@ -95,6 +95,7 @@ namespace upsylon
             const iMatrix         NuS;    //!< [NXM] transposed of NuST
             const size_t          NL;     //!< number of leading     species
             const size_t          NS;     //!< number of secondaries species
+            const iMatrix         Vs;     //!< [NSxN]...
             const Matrix          Phi;    //!< [NxM] jacobian
             const Matrix          J;      //!< [NxN] PhiNuT
             const Matrix          W;      //!< [NxN] LU::build(J)
