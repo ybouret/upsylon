@@ -8,6 +8,7 @@ namespace upsylon {
     namespace Alchemy
     {
 
+#if 0
         static inline bool isInt(const char C)   throw() { return C>='0' && C <= '9'; }
 
         static inline bool isSpc(const char C)   throw() { return C == ' ' || C == '\t'; }
@@ -67,6 +68,7 @@ namespace upsylon {
             Equilibrium &self = *this;
             self(nu,lib.get(data));
         }
-
+#endif
+        
     }
 }
