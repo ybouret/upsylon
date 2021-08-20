@@ -36,6 +36,7 @@ namespace upsylon
             typedef intr_ptr<string,Species>          Pointer;         //!< alias
             typedef hash_set<string,Species::Pointer> Set;             //!< alias
             typedef Set::node_type                    Node;            //!< alias
+            typedef vector<const Pointer,Allocator>   Array;           //!< alias
             static  const int                         min_exp10 = -14; //!< for random concentration
             static  const int                         max_exp10 = 0;   //!< for random concentration
             static  double Concentration(randomized::bits&) throw();   //!< get a random concentration

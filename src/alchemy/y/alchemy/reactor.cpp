@@ -38,10 +38,12 @@ namespace upsylon
         NuS(Nu.rows,Nu.cols),
         NL(0),
         NS(0),
-        Vs(),
+        leading(M,as_capacity),
+        seeking(M,as_capacity),
         Phi(Nu.rows,Nu.cols),
         J(N,N),
         W(N,N),
+        Vs(),
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
