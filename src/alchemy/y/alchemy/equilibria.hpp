@@ -139,10 +139,16 @@ namespace upsylon
             Equilibrium &water(Library &, const double);
             
             //! helper
+            /**
+             "name:actor1:actor2:@K"
+             */
             Equilibrium &parse(const string &info,
                                Library      &lib,
                                Lua::State   &vm);
             
+            Equilibrium &parse(const char   *info,
+                               Library      &lib,
+                               Lua::State   &vm);
 
 
 

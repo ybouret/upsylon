@@ -7,6 +7,7 @@
 #include "support.hpp"
 #include "y/alchemy/weak-acid.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/lua++/state.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -16,7 +17,8 @@ Y_UTEST(balance)
 
     Library        lib;
     Equilibria     eqs;
-
+    Lua::State     vm;
+    
     //if(false)
     {
         (void) eqs.water(lib,1e-14);
@@ -32,13 +34,13 @@ Y_UTEST(balance)
         (void) WeakAcid::Add(eqs,lib,"ammonia","NH4+", "NH3", pow(10.0,-9.2));
     }
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
         (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
     }
 
-    //if(false)
+    if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"Citric1","CitH3",  "CitH2-", pow(10.0,-3.13));
         (void) WeakAcid::Add(eqs,lib,"Citric2","CitH2-", "CitH--", pow(10.0,-4.76));
@@ -49,18 +51,12 @@ Y_UTEST(balance)
 
     if(false)
     {
-        Equilibrium &dummy = eqs("dummy",1);
-        dummy(-2,lib.get("B"));
-        dummy(-1,lib.get("A"));
-        dummy( 1,lib.get("C"));
-        dummy( 3,lib.get("D"));
+        eqs.parse("dummy:-2A:-B:C:3D:@1",lib,vm);
     }
 
     if(false)
     {
-        Equilibrium &combine = eqs("combine",10.2);
-        combine(-1, lib.get("X"));
-        combine(-1, lib.get("Y"));
+        eqs.parse("combine:-X:-Y:@10.2",lib,vm);
     }
 
 

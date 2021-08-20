@@ -11,7 +11,14 @@ namespace upsylon
     
     namespace Alchemy
     {
-
+        Equilibrium &Equilibria::parse(const char  *info,
+                                       Library      &lib,
+                                       Lua::State   &vm)
+        {
+            const string _(info);
+            return parse(_,lib,vm);
+        }
+        
         Equilibrium &Equilibria::parse(const string &info,
                                        Library      &lib,
                                        Lua::State   &vm)
@@ -19,7 +26,6 @@ namespace upsylon
             static const char fn[] = ".parse";
             list<string> words;
             tokenizer<char>::split_with(words,info,':');
-            std::cerr << "words=" << words << std::endl;
             
             if(words.size()<3)
             {
@@ -42,10 +48,8 @@ namespace upsylon
             for(list<string>::iterator it=words.begin();it!=words.end();++it)
             {
                 const string &a = *it;
-                std::cerr << "-> " << a << std::endl;
                 eq.parse(a,lib);
             }
-            std::cerr << eq << std::endl;
             return eq;
         }
     }
