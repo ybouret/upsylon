@@ -73,7 +73,7 @@ namespace upsylon
                     for(const_iterator it=adb.begin();it!=adb.end();++it)
                     {
                         const Actor &a = *it;
-                        Nu[a->indx] = unit_t( a.nu );
+                        Nu[a->indx] = static_cast<T>( a.nu );
                     }
                 }
                 else
@@ -82,7 +82,7 @@ namespace upsylon
                     for(const_iterator it=adb.begin();it!=adb.end();++it)
                     {
                         const Actor &a = *it;
-                        Nu[a->indx] = -unit_t( a.nu );
+                        Nu[a->indx] = -static_cast<T>( a.nu );
                     }
                 }
 
