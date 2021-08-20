@@ -24,7 +24,7 @@ Y_UTEST(balance)
         (void) eqs.water(lib,1e-14);
     }
 
-    if(false)
+    //if(false)
     {
         (void) WeakAcid::Add(eqs,lib,"acetic",  "AH",  "A-",  pow(10.0,-4.8));
     }
@@ -59,9 +59,7 @@ Y_UTEST(balance)
         eqs.parse("combine:-X:-Y:@10.2",lib,vm);
     }
 
-
-    //lib.get("Na+");
-    //lib.get("Cl-");
+    lib << "Na+" << "Cl-";
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;

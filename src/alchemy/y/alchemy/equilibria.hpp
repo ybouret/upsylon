@@ -146,6 +146,7 @@ namespace upsylon
                                Library      &lib,
                                Lua::State   &vm);
             
+            //! helper to parse equilibrium
             Equilibrium &parse(const char   *info,
                                Library      &lib,
                                Lua::State   &vm);

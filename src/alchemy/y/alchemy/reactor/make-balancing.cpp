@@ -115,9 +115,13 @@ namespace upsylon
             if(NS>0)
             {
                 aliasing::_(Vs).make(NS,N);
+                aliasing::_(Vs2).make(NS,0);
                 for(size_t i=1;i<=seeking.size();++i)
                 {
-                    tao::set( aliasing::_(Vs[i]),NuT[seeking[i]->indx]);
+                    const array<unit_t> &s = NuT[seeking[i]->indx];
+                    
+                    tao::set( aliasing::_(Vs[i]),s);
+                    aliasing::_(Vs2[i]) = tao::mod2<unit_t>::of(Vs[i]);
                 }
             }
 
@@ -131,6 +135,7 @@ namespace upsylon
             std::cerr << "      NSeek = " << NS   << " => " << seeking << std::endl;
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
             std::cerr << "      Vs    = " << Vs      << std::endl;
+            std::cerr << "      Vs2   = " << Vs2     << std::endl;
             assert(NL+NS==NA);
             std::cerr << "  <Balancing/>" << std::endl;
         }

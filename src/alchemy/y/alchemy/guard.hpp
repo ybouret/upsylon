@@ -58,6 +58,10 @@ namespace upsylon
             public:
                 explicit Array(size_t);   //!< setup
                 virtual ~Array() throw(); //!< cleanup
+                
+                //! apply all limitation to an extent
+                void     limit(Addressable      &xi,
+                               const Accessible &C) const throw();
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Array);
             };

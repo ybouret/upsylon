@@ -45,6 +45,10 @@ namespace upsylon
             if(N>0)
             {
                 assert(NA>0);
+                //______________________________________________________________
+                //
+                // starting point: need to be reduced
+                // _____________________________________________________________
                 showConditions(std::cerr,C);
 
                 if( !balance1(C) )
@@ -53,9 +57,40 @@ namespace upsylon
                     return false;
                 }
                 std::cerr << "Balanced Leading!" << std::endl;
-
+           
+                //______________________________________________________________
+                //
+                // reduced starting point
+                // _____________________________________________________________
+                showConditions(std::cerr,C);
+                std::cerr << "Seeking:" << std::endl;
+                for(size_t j=1;j<=NS;++j)
+                {
+                    const Species &sp = *seeking[j];
+                    const double   Cj = C[sp.indx];
+                    if(Cj<0)
+                    {
+                        std::cerr << sp << " = " << Cj << std::endl;
+                        Vector v(N,0);
+                        for(size_t i=N;i>0;--i)
+                        {
+                            v[i] = -(Vs[j][i]*Cj) / Vs2[j];
+                        }
+                        std::cerr << "v" << j << "_full  = " << v << std::endl;
+                        guards.limit(v,C);
+                        std::cerr << "v" << j << "_clip  = " << v << std::endl;
+                        tao::mulset(v,2);
+                        std::cerr << "v" << j << "_twice = " << v << std::endl;
+                        guards.limit(v,C);
+                        std::cerr << "v" << j << "_clip2 = " << v << std::endl;
+                    }
+                    
+                }
+                
+                
+#if 0
                 Addressable &Xi = aliasing::_(xi);
-
+                
                 for(size_t i=N;i>0;--i)
                 {
                     Xi[i] = alea.symm<double>();
@@ -67,8 +102,8 @@ namespace upsylon
                     guards[i]->limit(Xi,C);
                 }
                 std::cerr << "xi1=" << xi  << std::endl;
-
-                showConditions(std::cerr,C);
+#endif
+                
                 
                 return false;
             }

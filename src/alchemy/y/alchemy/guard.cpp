@@ -63,6 +63,14 @@ namespace upsylon
                 push_back_(p);
             }
         }
+        
+        void Guard::Array:: limit(Addressable &xi, const Accessible &C) const throw()
+        {
+            for(size_t i=size();i>0;--i)
+            {
+                (*this)[i]->limit(xi,C);
+            }
+        }
 
         void Guard:: addLEQ(const Leading &leading)
         {
@@ -275,7 +283,7 @@ namespace upsylon
 
         void Guard:: limit(Addressable &xi, const Accessible &C) const throw()
         {
-            std::cerr << "  " <<  "limit " << classText() << std::endl;
+            //std::cerr << "  " <<  "limit " << classText() << std::endl;
             switch(cls)
             {
                 case HasNoBound:
