@@ -13,6 +13,8 @@ namespace upsylon
     namespace Alchemy
     {
 
+        class Library; //!< forward declaration
+
         //______________________________________________________________________
         //
         //
@@ -47,6 +49,8 @@ namespace upsylon
             void operator()(const long nu, const Species &sp); //!< register
             const string & key() const throw();                //!< for hash_set
 
+            void parse(const string &, Library &); //!< parse integer blank species
+
 
 
            
@@ -71,7 +75,8 @@ namespace upsylon
 
             //! verify
             /**
-             - charge conservation
+             - charge conservation (Default=always)
+             - co-primality        (flags&Minimal)
              */
             void verify(const unsigned flags) const;
 
