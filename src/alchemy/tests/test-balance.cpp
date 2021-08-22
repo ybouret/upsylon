@@ -76,7 +76,7 @@ Y_UTEST(balance)
         switch( lib(j).rating )
         {
             case 0: C[j] = 0; break;
-            case 1: break;
+            case 1: C[j] = 0; break;
             default: C[j] = -C[j]; break;
         }
     }

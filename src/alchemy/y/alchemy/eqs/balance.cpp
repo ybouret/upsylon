@@ -77,12 +77,14 @@ namespace upsylon
                             v[i] = -(Vs[j][i]*Cj) / Vs2[j];
                         }
                         std::cerr << "v" << j << "_full  = " << v << std::endl;
+#if 0
                         guards.limit(v,C);
                         std::cerr << "v" << j << "_clip  = " << v << std::endl;
                         tao::mulset(v,2);
                         std::cerr << "v" << j << "_twice = " << v << std::endl;
                         guards.limit(v,C);
                         std::cerr << "v" << j << "_clip2 = " << v << std::endl;
+#endif
                     }
                     
                 }
