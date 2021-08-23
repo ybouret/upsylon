@@ -11,6 +11,11 @@
 
 namespace upsylon
 {
+    namespace Lua
+    {
+        class State;
+    };
+    
     namespace Alchemy
     {
 
@@ -163,7 +168,11 @@ namespace upsylon
                 (void)get(id);
                 return *this;
             }
-
+            
+            //! TODO, implement...
+            void load(const string &ID, Lua::State &vm);
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw(); //!< sdb
