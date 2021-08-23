@@ -11,7 +11,7 @@ using namespace Alchemy;
 
 Y_UTEST(lua)
 {
-    Library lib;
+    Library    lib;
     Equilibria eqs;
 
     Lua::VM vm = new Lua::State();

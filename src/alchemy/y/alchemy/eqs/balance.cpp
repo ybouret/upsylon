@@ -1,5 +1,6 @@
 #include "y/alchemy/reactor.hpp"
 #include "y/mkl/tao.hpp"
+#include "y/mkl/kernel/apk.hpp"
 #include "y/type/utils.hpp"
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ocstream.hpp"
@@ -64,6 +65,13 @@ namespace upsylon
                 // _____________________________________________________________
                 showConditions(std::cerr,C);
                 std::cerr << "Seeking:" << std::endl;
+                std::cerr << " Vs=" << Vs << std::endl;
+
+                matrix<apz> aVs(NS,NS);
+                const apz   dVs = apk::adjoint_gram(aVs,Vs);
+                std::cerr << "aVs=" << aVs << std::endl;
+                std::cerr << "dVs=" << dVs << std::endl;
+
                 for(size_t j=1;j<=NS;++j)
                 {
                     const Species &sp = *seeking[j];
@@ -89,22 +97,6 @@ namespace upsylon
                     
                 }
                 
-                
-#if 0
-                Addressable &Xi = aliasing::_(xi);
-                
-                for(size_t i=N;i>0;--i)
-                {
-                    Xi[i] = alea.symm<double>();
-                }
-                std::cerr << "xi0=" << xi << std::endl;
-
-                for(size_t i=guards.size();i>0;--i)
-                {
-                    guards[i]->limit(Xi,C);
-                }
-                std::cerr << "xi1=" << xi  << std::endl;
-#endif
                 
                 
                 return false;
