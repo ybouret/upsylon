@@ -5,6 +5,7 @@
 #include "y/sort/sorted-sum.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/alea.hpp"
+#include "y/mkl/kernel/gram-schmidt.hpp"
 
 namespace upsylon
 {
@@ -12,6 +13,17 @@ namespace upsylon
 
     namespace Alchemy
     {
+        const char * Reactor:: Qualify(const double c) throw()
+        {
+            if(c<0)
+            {
+                return "(wrong)";
+            }
+            else
+            {
+                return "(valid)";
+            }
+        }
 
         
         bool Reactor:: balance1(Addressable &C) throw()
@@ -64,16 +76,24 @@ namespace upsylon
                 // reduced starting point
                 // _____________________________________________________________
                 showConditions(std::cerr,C);
-                showSeeking(std::cerr,C);
                 
                 
                 std::cerr << " Vs=" << Vs << std::endl;
-
+                
                 matrix<apz> aVs(NS,NS);
                 const apz   dVs = apk::adjoint_gram(aVs,Vs);
                 std::cerr << "aVs=" << aVs << std::endl;
                 std::cerr << "dVs=" << dVs << std::endl;
 
+                matrix<unit_t> Gs(Vs);
+                if(!GramSchmidt::iOrtho(Gs))
+                {
+                    std::cerr << "No ortho" << std::endl;
+                }
+                else
+                {
+                    std::cerr << "Gs=" << Gs << std::endl;
+                }
                 for(size_t j=1;j<=NS;++j)
                 {
                     const Species &sp = *seeking[j];

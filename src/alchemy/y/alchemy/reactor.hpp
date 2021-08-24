@@ -65,23 +65,12 @@ namespace upsylon
                 }
                 os << "  <General/>\n";
                 showLeading(os,C);
+                showSeeking(os,C);
                 os << "<Conditions/>\n";
                 return os;
             }
 
-            //! show seeking conditions
-            template <typename OSTREAM> inline
-            OSTREAM & showSeeking(OSTREAM &os, const Accessible &C) const
-            {
-                os << "<Seeking>\n";
-                for(size_t j=1;j<=NS;++j)
-                {
-                    const Species &sp = *seeking[j];
-                    showCondition(os << "   ",sp,C);
-                }
-                os << "<Seeking/>\n";
-                return os;
-            }
+            
 
 
             //__________________________________________________________________
@@ -124,8 +113,9 @@ namespace upsylon
 
             void checkTopology();
             void makeBalancing();
-
             bool balance1(Addressable &C)     throw();
+            
+            static const char *Qualify(const double c) throw();
             
             //! output condition for one species
             template <typename OSTREAM> inline
@@ -192,7 +182,22 @@ namespace upsylon
                 return os;
             }
 
-
+            //! show seeking conditions
+            template <typename OSTREAM> inline
+            OSTREAM & showSeeking(OSTREAM &os, const Accessible &C) const
+            {
+                os << "  <Seeking>\n";
+                for(size_t j=1;j<=NS;++j)
+                {
+                    const Species &sp = *seeking[j];
+                    assert(sp.active);
+                    assert(sp.rating>1);
+                    
+                    showCondition(os << "     " << Qualify(C[sp.indx]) << ' ',sp,C);
+                }
+                os << "  <Seeking/>\n";
+                return os;
+            }
 
             
         };
