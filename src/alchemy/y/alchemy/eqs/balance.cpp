@@ -64,7 +64,9 @@ namespace upsylon
                 // reduced starting point
                 // _____________________________________________________________
                 showConditions(std::cerr,C);
-                std::cerr << "Seeking:" << std::endl;
+                showSeeking(std::cerr,C);
+                
+                
                 std::cerr << " Vs=" << Vs << std::endl;
 
                 matrix<apz> aVs(NS,NS);
