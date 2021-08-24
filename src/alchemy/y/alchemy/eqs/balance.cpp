@@ -10,7 +10,7 @@
 namespace upsylon
 {
     using namespace mkl;
-
+    
     namespace Alchemy
     {
         const char * Reactor:: Qualify(const double c) throw()
@@ -24,7 +24,7 @@ namespace upsylon
                 return "(valid)";
             }
         }
-
+        
         
         bool Reactor:: balance1(Addressable &C) throw()
         {
@@ -49,8 +49,8 @@ namespace upsylon
             lib.display(std::cerr << "Cbal=", C) << std::endl;
             return balanced;
         }
-
-
+        
+        
         bool Reactor:: balance(Addressable &C) throw()
         {
             lib.display(std::cerr << "C=",C) << std::endl;
@@ -63,14 +63,14 @@ namespace upsylon
                 // starting point: need to be reduced
                 // _____________________________________________________________
                 showConditions(std::cerr,C);
-
+                
                 if( !balance1(C) )
                 {
                     lib.display(std::cerr << "ok=", ok)  << std::endl;
                     return false;
                 }
                 std::cerr << "Balanced Leading!" << std::endl;
-           
+                
                 //______________________________________________________________
                 //
                 // reduced starting point
@@ -84,40 +84,17 @@ namespace upsylon
                 const apz   dVs = apk::adjoint_gram(aVs,Vs);
                 std::cerr << "aVs=" << aVs << std::endl;
                 std::cerr << "dVs=" << dVs << std::endl;
-
-                matrix<unit_t> Gs(Vs);
-                if(!GramSchmidt::iOrtho(Gs))
-                {
-                    std::cerr << "No ortho" << std::endl;
-                }
-                else
-                {
-                    std::cerr << "Gs=" << Gs << std::endl;
-                }
+                matrix<apz> IVS(N,NS);
+                tao::mmul_ltrn(IVS, Vs, aVs);
+                std::cerr << "IVS=" << IVS << std::endl;
+                
+                Vector Cs(NS,0);
                 for(size_t j=1;j<=NS;++j)
                 {
-                    const Species &sp = *seeking[j];
-                    const double   Cj = C[sp.indx];
-                    if(Cj<0)
-                    {
-                        std::cerr << sp << " = " << Cj << std::endl;
-                        Vector v(N,0);
-                        for(size_t i=N;i>0;--i)
-                        {
-                            v[i] = -(Vs[j][i]*Cj) / Vs2[j];
-                        }
-                        std::cerr << "v" << j << "_full  = " << v << std::endl;
-#if 0
-                        guards.limit(v,C);
-                        std::cerr << "v" << j << "_clip  = " << v << std::endl;
-                        tao::mulset(v,2);
-                        std::cerr << "v" << j << "_twice = " << v << std::endl;
-                        guards.limit(v,C);
-                        std::cerr << "v" << j << "_clip2 = " << v << std::endl;
-#endif
-                    }
-                    
+                    Cs[j] = -C[seeking[j]->indx];
                 }
+                std::cerr << "Cs=" << Cs << std::endl;
+                
                 
                 
                 
@@ -128,11 +105,11 @@ namespace upsylon
                 return true;
             }
         }
-
         
-
+        
+        
     }
-
+    
 }
 
 
