@@ -36,8 +36,8 @@ Y_UTEST(balance)
 
     if(false)
     {
-        (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",    pow(10.0,-1.2));
-        (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "OxH--",   pow(10.0,-4.3));
+        (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",   pow(10.0,-1.2));
+        (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "Ox--",   pow(10.0,-4.3));
     }
 
     //if(false)
