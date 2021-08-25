@@ -20,6 +20,10 @@ namespace upsylon
         {
         public:
 
+            void operator()(const string &info);
+            const string & operator[](const string &name) const;
+            const string & operator[](const char   *name) const;
+
         private:
             explicit EqDB();
             virtual ~EqDB() throw();
