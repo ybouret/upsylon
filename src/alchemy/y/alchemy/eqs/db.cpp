@@ -75,12 +75,14 @@ namespace upsylon
                                     Library      &lib,
                                     Lua::VM      &vm)
         {
-           static const EqDB &_    = EqDB::instance();
-           Strings            keys(_->size(),as_capacity);
-           _.find(keys,name);
-           for(size_t i=1;i<=keys.size();++i)
+           static const EqDB &eqdb  = EqDB::instance();
+           Strings            keys(eqdb->size(),as_capacity);
+           const size_t       neqs = eqdb.find(keys,name);
+           if(!neqs) throw exception("%s found no equilibrium matching '%s'",CLID,*name);
+
+           for(size_t i=1;i<=neqs;++i)
            {
-               (void) parse( _[keys[i]], lib, vm);
+               (void) parse( eqdb[keys[i]], lib, vm);
            }
 
         }
