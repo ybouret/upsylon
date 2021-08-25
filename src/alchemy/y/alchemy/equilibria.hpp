@@ -37,7 +37,7 @@ namespace upsylon
             //__________________________________________________________________
             typedef type::const_iterator const_iterator; //!< alias
             static  const char           CLID[];         //!< Equilibria
-            
+            static  const char           ksym;           //!< '@', for parsing
 
             //__________________________________________________________________
             //

@@ -18,10 +18,12 @@ namespace upsylon
             const string _(info);
             return parse(_,lib,vm);
         }
-        
-        Equilibrium &Equilibria::parse(const string &info,
-                                       Library      &lib,
-                                       Lua::State   &vm)
+
+        const char   Equilibria:: ksym = '@';
+
+        Equilibrium &Equilibria:: parse(const string &info,
+                                        Library      &lib,
+                                        Lua::State   &vm)
         {
             static const char fn[] = ".parse";
             list<string> words;
@@ -40,7 +42,7 @@ namespace upsylon
             const string name = words.front(); words.pop_front();
             string       kval = words.back();  words.pop_back();
             if(kval.size()<=1) throw exception("%s%s invalid kval '%s'",CLID,fn,*kval);
-            if('@'!=kval[0])   throw exception("%s%s constant '%s' should start with '@'",CLID,fn,*kval);
+            if(ksym!=kval[0])   throw exception("%s%s constant '%s' should start with '%c'",CLID,fn,*kval,ksym);
             
             kval.skip(1);
             const double K  = vm.eval<double>(kval);
