@@ -1,6 +1,7 @@
 
 #include "y/alchemy/eqs/db.hpp"
 #include "y/string/tokenizer.hpp"
+#include "y/jive/pattern/matching.hpp"
 
 namespace upsylon
 {
@@ -13,6 +14,7 @@ namespace upsylon
         static const char *built_in_eqs[] =
         {
             "water:H+:HO-:@1e-14",
+            
             "ethanoic:H+:-EtCOOH:EtCOO-:@10^(-4.18)",
             "ammoniac:H+:-NH4+:NH3:@10^(-9.2)",
 
@@ -64,6 +66,37 @@ namespace upsylon
             if(!ps) throw exception("no equilibrium '%s' in database", *name);
 
             return *ps;
+        }
+
+       void Equilibria:: operator()(const string &name,
+                                    Library      &lib,
+                                    Lua::VM      &vm)
+        {
+           static const EqDB &_    = EqDB::instance();
+           Strings            keys(_->size(),as_capacity);
+           _.find(keys,name);
+           for(size_t i=1;i<=keys.size();++i)
+           {
+               (void) parse( _[keys[i]], lib, vm);
+           }
+
+        }
+
+        size_t EqDB:: find(sequence<string> &which,
+                           const string     &rx) const
+        {
+            Jive::Matching  matching(rx);
+            size_t          count = 0;
+            for(const EqInfo::node_type *node=db.head();node;node=node->next)
+            {
+                const string &label  = node->ckey;
+                if(matching.isExactly(label))
+                {
+                    which.push_back(label);
+                    ++count;
+                }
+            }
+            return count;
         }
 
     }

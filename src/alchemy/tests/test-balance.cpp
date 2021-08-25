@@ -18,36 +18,12 @@ Y_UTEST(balance)
     Library        lib;
     Equilibria     eqs;
     Lua::VM        vm = new Lua::State();
-    
-   // if(false)
+
+    for(int i=1;i<argc;++i)
     {
-        (void) eqs.water(lib,1e-14);
+        const string rx = argv[i];
+        eqs(rx,lib,vm);
     }
-
-    if(false)
-    {
-        eqs.parse("acetic:H+:A-:-AH:@10^(-4.8)",lib,vm);
-    }
-
-    if(false)
-    {
-        (void) WeakAcid::Add(eqs,lib,"ammonia","NH4+", "NH3", pow(10.0,-9.2));
-    }
-
-    if(false)
-    {
-        (void) WeakAcid::Add(eqs,lib,"Ox1","OxH2", "OxH-",   pow(10.0,-1.2));
-        (void) WeakAcid::Add(eqs,lib,"Ox2","OxH-", "Ox--",   pow(10.0,-4.3));
-    }
-
-    //if(false)
-    {
-        (void) WeakAcid::Add(eqs,lib,"Citric1","CitH3",  "CitH2-", pow(10.0,-3.13));
-        (void) WeakAcid::Add(eqs,lib,"Citric2","CitH2-", "CitH--", pow(10.0,-4.76));
-        (void) WeakAcid::Add(eqs,lib,"Citric3","CitH--", "Cit---", pow(10.0,-6.40));
-
-    }
-
 
     if(false)
     {
@@ -66,7 +42,7 @@ Y_UTEST(balance)
 
     Reactor cs(lib,eqs, Equilibrium::Minimal);
 
-
+    
 
     
     Vector  C(cs.M,0);

@@ -154,7 +154,12 @@ namespace upsylon
                       Library      &lib,
                       Lua::VM      &vm);
 
+            //! load matching equilibria names from database
+            void operator()(const string &rx,
+                            Library      &lib,
+                            Lua::VM      &vm);
 
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

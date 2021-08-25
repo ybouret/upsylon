@@ -6,9 +6,20 @@
 using namespace upsylon;
 using namespace Alchemy;
 
+namespace
+{
+    static inline void findEQDB(const char *rx)
+    {
+        Strings      keys;
+        const size_t n = EqDB::instance().find(keys,rx);
+        std::cerr << "found " << n << " for " << rx << std::endl;
+        std::cerr << keys << std::endl;
+    }
+}
+
 Y_UTEST(eqdb)
 {
-    EqDB &edb = EqDB::instance();
+    EqDB &edb =  EqDB::instance();
 
     std::cerr << "#edb=" << edb->size() << std::endl;
 
@@ -29,7 +40,10 @@ Y_UTEST(eqdb)
     std::cerr << eqs << std::endl;
 
     Reactor cs(lib,eqs,Equilibrium::Minimal);
-
+    findEQDB("wat.*");
+    findEQDB("o&x.*");
+    findEQDB("(o&x.*)|(c&it.*)");
+    
 
 }
 Y_UTEST_DONE()

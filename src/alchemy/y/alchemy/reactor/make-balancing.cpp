@@ -18,96 +18,103 @@ namespace upsylon
             // outer loop over species
             //__________________________________________________________________
             std::cerr << "  <Balancing>" << std::endl;
-            for(const Species::Node *snode = lib->head(); snode; snode=snode->next)
+
+            if(NA>0)
             {
-                const Species &sp = ***snode;
-                const size_t   si = sp.indx;
-
-                //______________________________________________________________
-                //
-                // initialize
-                //______________________________________________________________
-                const accessible<unit_t> &v   = NuT[si];
-                addressable<unit_t>      &l   = aliasing::_(NuLT[si]);
-                addressable<unit_t>      &s   = aliasing::_(NuST[si]);
-                size_t                    nok = 0;
-                const Equilibrium        *pEq = 0;
-                unit_t                    snu = 0;
-
-                //______________________________________________________________
-                //
-                // inner loop over equilibria
-                //______________________________________________________________
-                for(const Equilibrium::Node *enode=eqs->head();enode;enode=enode->next)
+                for(const Species::Node *snode = lib->head(); snode; snode=snode->next)
                 {
-                    const Equilibrium &eq  = ***enode;
-                    const size_t       ei  = eq.indx;
-                    const unit_t       cof = v[ei];
-                    if(0!=cof)
+                    const Species &sp = ***snode;
+                    const size_t   si = sp.indx;
+
+                    //__________________________________________________________
+                    //
+                    // initialize
+                    //__________________________________________________________
+                    const accessible<unit_t> &v   = NuT[si];
+                    addressable<unit_t>      &l   = aliasing::_(NuLT[si]);
+                    addressable<unit_t>      &s   = aliasing::_(NuST[si]);
+                    size_t                    nok = 0;
+                    const Equilibrium        *pEq = 0;
+                    unit_t                    snu = 0;
+
+                    //__________________________________________________________
+                    //
+                    // inner loop over equilibria
+                    //__________________________________________________________
+                    for(const Equilibrium::Node *enode=eqs->head();enode;enode=enode->next)
                     {
-                        ++nok;
-                        pEq = &eq;
-                        snu = cof;
-                    }
-                }
-
-                if(nok!=sp.rating) throw exception("%s invalid rating for '%s'",CLID,*(sp.name));
-
-                if(nok>0)
-                {
-                    assert(true==active[sp.indx]);
-                    assert(snu!=0);
-                    assert(pEq!=NULL);
-
-                    if(1==nok)
-                    {
-                        // leading condition
-                        Guard &guard = aliasing::_(*guards[pEq->indx]);
-                        if(snu>0)
+                        const Equilibrium &eq  = ***enode;
+                        const size_t       ei  = eq.indx;
+                        const unit_t       cof = v[ei];
+                        if(0!=cof)
                         {
-                            //__________________________________________________
-                            //
-                            // Create a new GEQ
-                            //__________________________________________________
-                            const Leading leading(*pEq,sp, static_cast<size_t>(snu), Leading::GEQ);
-                            leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
-                            guard.addGEQ(leading);
+                            ++nok;
+                            pEq = &eq;
+                            snu = cof;
+                        }
+                    }
+
+                    if(nok!=sp.rating) throw exception("%s invalid rating for '%s'",CLID,*(sp.name));
+
+                    if(nok>0)
+                    {
+                        assert(true==active[sp.indx]);
+                        assert(snu!=0);
+                        assert(pEq!=NULL);
+
+                        if(1==nok)
+                        {
+                            // leading condition
+                            Guard &guard = aliasing::_(*guards[pEq->indx]);
+                            if(snu>0)
+                            {
+                                //______________________________________________
+                                //
+                                // Create a new GEQ
+                                //______________________________________________
+                                const Leading leading(*pEq,sp, static_cast<size_t>(snu), Leading::GEQ);
+                                leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                                guard.addGEQ(leading);
+                            }
+                            else
+                            {
+                                //______________________________________________
+                                //
+                                // Create a new LEQ
+                                //______________________________________________
+                                const Leading leading(*pEq,sp, static_cast<size_t>(-snu), Leading::LEQ);
+                                leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                                guard.addLEQ(leading);
+                            }
+                            aliasing::incr(NL);
+                            tao::set(l,v);
+                            aliasing::_(leading).push_back_(**snode);
                         }
                         else
                         {
                             //__________________________________________________
                             //
-                            // Create a new LEQ
+                            // seeking condidition
                             //__________________________________________________
-                            const Leading leading(*pEq,sp, static_cast<size_t>(-snu), Leading::LEQ);
-                            leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
-                            guard.addLEQ(leading);
+                            aliasing::incr(NS);
+                            tao::set(s,v);
+                            aliasing::_(seeking).push_back_(**snode);
                         }
-                        aliasing::incr(NL);
-                        tao::set(l,v);
-                        aliasing::_(leading).push_back_(**snode);
+
                     }
                     else
                     {
-                        // subs condidition
-                        aliasing::incr(NS);
+                        assert(0==nok);
+                        assert(false==active[sp.indx]);
                         tao::set(s,v);
-                        aliasing::_(seeking).push_back_(**snode);
                     }
 
                 }
-                else
-                {
-                    assert(0==nok);
-                    assert(false==active[sp.indx]);
-                    tao::set(s,v);
-                }
-
             }
 
             assert(NS==seeking.size());
             assert(NL==leading.size());
-
+            
             aliasing::_(NuL).assign_transpose(NuLT);
             aliasing::_(NuS).assign_transpose(NuST);
 
@@ -130,7 +137,7 @@ namespace upsylon
             std::cerr << "    NuST  = " << NuST << std::endl;
             std::cerr << "    NuS   = " << NuS  << std::endl;
             std::cerr << "    NEqs  = " << N    << std::endl;
-            std::cerr << "    NActv = " << NA   << std::endl;
+            std::cerr << "    NAct  = " << NA   << std::endl;
             std::cerr << "      NLead = " << NL   << " => " << leading << std::endl;
             std::cerr << "      NSeek = " << NS   << " => " << seeking << std::endl;
             std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
