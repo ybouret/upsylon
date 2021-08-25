@@ -169,8 +169,8 @@ namespace upsylon
                 return *this;
             }
             
-            //! TODO, implement...
-            void load(const string &ID, Lua::State &vm);
+            //! load lua table ID and use it { "A", "B" ... }
+            void load(const string &id, Lua::State &vm);
             
             
         private:
