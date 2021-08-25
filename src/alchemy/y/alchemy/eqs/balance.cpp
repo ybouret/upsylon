@@ -77,24 +77,25 @@ namespace upsylon
                 // _____________________________________________________________
                 showConditions(std::cerr,C);
                 
-                
-                std::cerr << " Vs=" << Vs << std::endl;
-                
-                matrix<apz> aVs(NS,NS);
-                const apz   dVs = apk::adjoint_gram(aVs,Vs);
-                std::cerr << "aVs=" << aVs << std::endl;
-                std::cerr << "dVs=" << dVs << std::endl;
-                matrix<apz> IVS(N,NS);
-                tao::mmul_ltrn(IVS, Vs, aVs);
-                std::cerr << "IVS=" << IVS << std::endl;
-                
-                Vector Cs(NS,0);
-                for(size_t j=1;j<=NS;++j)
+                if(NS>0)
                 {
-                    Cs[j] = -C[seeking[j]->indx];
+                    std::cerr << " Vs=" << Vs << std::endl;
+
+                    matrix<apz> aVs(NS,NS);
+                    const apz   dVs = apk::adjoint_gram(aVs,Vs);
+                    std::cerr << "aVs=" << aVs << std::endl;
+                    std::cerr << "dVs=" << dVs << std::endl;
+                    matrix<apz> IVS(N,NS);
+                    tao::mmul_ltrn(IVS, Vs, aVs);
+                    std::cerr << "IVS=" << IVS << std::endl;
+
+                    Vector Cs(NS,0);
+                    for(size_t j=1;j<=NS;++j)
+                    {
+                        Cs[j] = -C[seeking[j]->indx];
+                    }
+                    std::cerr << "Cs=" << Cs << std::endl;
                 }
-                std::cerr << "Cs=" << Cs << std::endl;
-                
                 
                 
                 
