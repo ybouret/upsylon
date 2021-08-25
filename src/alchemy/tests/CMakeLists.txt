@@ -20,7 +20,7 @@ ADD_TEST(eqs     test-alchemy eqs)
 ADD_TEST(balance test-alchemy balance)
 ADD_TEST(reactor test-alchemy reactor)
 ADD_TEST(lua     test-alchemy lua  ${HERE}/sample.lua )
-
+ADD_TEST(eqdb    test-alchemy eqdb)
 
 ADD_CUSTOM_TARGET(utest-alchemy
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
