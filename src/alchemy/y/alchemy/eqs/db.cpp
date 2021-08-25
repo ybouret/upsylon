@@ -18,13 +18,16 @@ namespace upsylon
             "ethanoic:H+:-EtCOOH:EtCOO-:@10^(-4.18)",
             "ammoniac:H+:-NH4+:NH3:@10^(-9.2)",
 
-            "Ox1:H+:-OxH2:OxH-:@10^(-1.2)",
-            "Ox2:H+:-OxH-:Ox--:@10^(-4.3)",
+            "oxalic1:H+:-OxH2:OxH-:@10^(-1.2)",
+            "oxalic2:H+:-OxH-:Ox--:@10^(-4.3)",
 
-            "Citric1:H+:-CitH3:CitH2-:@10^(-3.13)",
-            "Citric2:H+:-CitH2-:CitH--:@10^(-4.76)",
-            "Citric3:H+:-CitH--:Cit---:@10^(-6.40)"
+            "citric1:H+:-CitH3:CitH2-:@10^(-3.13)",
+            "citric2:H+:-CitH2-:CitH--:@10^(-4.76)",
+            "citric3:H+:-CitH--:Cit---:@10^(-6.40)",
 
+            "phosphoric1:H+:-H3PO4:H2PO4-:@10^(-2.15)",
+            "phosphoric2:H+:-H2PO4-:HPO4--:@10^(-7.20)",
+            "phosphoric3:H+:-HPO4--:PO4---:@10^(-12.42)"
 
         };
 

@@ -103,7 +103,6 @@ namespace upsylon
             const Matrix          J;      //!< [NxN] PhiNuT
             const Matrix          W;      //!< [NxN] LU::build(J)
             const iMatrix         Vs;     //!< [NSxN]...
-            const iVector         Vs2;    //!< [NS]
 
 
         private:
