@@ -97,6 +97,7 @@ namespace upsylon
 }
 
 
+
 #include "y/counting/comb.hpp"
 
 namespace upsylon
@@ -104,21 +105,7 @@ namespace upsylon
     namespace mkl
     {
 
-        static inline bool isZero(const array<apz> &arr) throw()
-        {
-            for(size_t i=arr.size();i>0;--i)
-            {
-                switch(arr[i].s)
-                {
-                    case yap::__zero: break;
-                    case yap::__negative:
-                    case yap::__positive:
-                        return false;
-                }
-            }
-            return true;
-        }
-        size_t apk:: rank_of(const matrix<apz> &source)
+        size_t apk:: gram_rank_of(const matrix<apz> &source)
         {
 
             const size_t nmax = source.rows;
@@ -133,41 +120,40 @@ namespace upsylon
 
                 for(comb.boot();comb.good();comb.next())
                 {
+
+                    // compute half Gram Matrix
+                    for(size_t i=n;i>0;--i)
                     {
-                        // compute half Gram Matrix
-                        for(size_t i=n;i>0;--i)
+                        const size_t      lid = indx[i];
+                        const array<apz> &lhs = source[lid];
+                        array<apq>       &tgt = G[i];
+                        for(size_t j=i;j>0;--j)
                         {
-                            const size_t      lid = indx[i];
-                            const array<apz> &lhs = source[lid]; if(isZero(lhs)) goto SKIP;
-                            array<apq>       &tgt = G[i];
-                            for(size_t j=i;j>0;--j)
+                            const size_t      rid = indx[j];
+                            const array<apz> &rhs = source[rid];
+                            apq res = 0;
+                            for(size_t k=dims;k>0;--k)
                             {
-                                const size_t      rid = indx[j];
-                                const array<apz> &rhs = source[rid];
-                                apq res = 0;
-                                for(size_t k=dims;k>0;--k)
-                                {
-                                    const apz p = lhs[k] * rhs[k];
-                                    res += p;
-                                }
-                                tgt[j] = res;
+                                const apz p = lhs[k] * rhs[k];
+                                res += p;
                             }
+                            tgt[j] = res;
                         }
-
-                        // symetrize Gram Matrix
-                        for(size_t i=n;i>0;--i)
-                        {
-                            for(size_t j=n;j>i;--j)
-                            {
-                                G[i][j] = G[j][i];
-                            }
-                        }
-
-                        const apq d = __determinant(G);
-                        assert(d.den.is(1));
-                        if(d!=0) return n;
                     }
-                SKIP:;
+
+                    // symetrize Gram Matrix
+                    for(size_t i=n;i>0;--i)
+                    {
+                        for(size_t j=n;j>i;--j)
+                        {
+                            G[i][j] = G[j][i];
+                        }
+                    }
+
+                    const apq d = __determinant(G);
+                    assert(d.den.is(1));
+                    if(d!=0) return n;
+
                 }
             }
             return 0;

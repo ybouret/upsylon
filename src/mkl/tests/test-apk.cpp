@@ -146,7 +146,11 @@ namespace
 
         }
     }
+
+
 }
+
+
 
 Y_UTEST(apk)
 {
@@ -158,6 +162,7 @@ Y_UTEST(apk)
     SHOW_MOD(-1,-2);
     SHOW_MOD(-3,-2);
 
+    
     test_rank<int16_t>();
 
     test_idet<int16_t>(6);

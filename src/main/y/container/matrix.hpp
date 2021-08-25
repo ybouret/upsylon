@@ -469,6 +469,7 @@ namespace upsylon
             swap_cols(i,j);
         }
 
+        
         //! apply to a vector of same type, using internal backup
         template <typename TARGET>
         inline void operator()(TARGET &v) const

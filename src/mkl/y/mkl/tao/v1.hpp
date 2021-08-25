@@ -254,6 +254,8 @@ void muladd(TARGET &target, typename TARGET::param_type value, LHS &lhs )
 // RANGE
 //
 //==============================================================================
+
+//! range of source
 template <typename T, typename U, typename SOURCE> static inline
 void range(T &lower, U &upper, SOURCE &source)
 {
@@ -280,4 +282,21 @@ void range(T &lower, U &upper, SOURCE &source)
     }
 }
 
+//==============================================================================
+//
+// swap
+//
+//==============================================================================
+
+//! swap based on lhs.size()
+template <typename LHS, typename RHS> static inline
+void swap(LHS &lhs, RHS &rhs)
+{
+    assert(rhs.size()>=lhs.size());
+    for(size_t i=lhs.size();i>0;--i)
+    {
+        cswap(lhs[i],rhs[i]);
+    }
+
+}
 #endif
