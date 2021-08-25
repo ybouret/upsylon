@@ -3,7 +3,7 @@ INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
 FILE(GLOB data *.lua)
 
-ADD_EXECUTABLE(test-alchemy main.cpp ${srcs} ${data})
+ADD_EXECUTABLE(test-alchemy main.cpp ${srcs} ${data} ${data})
 TARGET_LINK_Y(test-alchemy alchemy mkl lua++ jive)
 
 SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -19,7 +19,7 @@ ADD_TEST(eq      test-alchemy eq)
 ADD_TEST(eqs     test-alchemy eqs)
 ADD_TEST(balance test-alchemy balance)
 ADD_TEST(reactor test-alchemy reactor)
-ADD_TEST(lua     test-alchemy lua "water:H+:HO-:@1e-14" "acid:H+:A-:-AH:@10^(-4.8)" )
+ADD_TEST(lua     test-alchemy lua  ${HERE}/sample.lua )
 
 
 ADD_CUSTOM_TARGET(utest-alchemy

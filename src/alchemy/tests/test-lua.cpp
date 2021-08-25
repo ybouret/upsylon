@@ -17,9 +17,13 @@ Y_UTEST(lua)
     if(argc>1)
     {
         vm->doFile(argv[1]);
+        if(vm->exists("lib"))
+        {
+            lib.load("lib",vm);
+        }
     }
 
-    lib.load("lib",vm);
+    std::cerr << "lib=" << lib << std::endl;
 
 
 }

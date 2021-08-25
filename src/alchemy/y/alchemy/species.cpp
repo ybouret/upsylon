@@ -33,7 +33,7 @@ namespace upsylon
         const char * Species:: ratingText() const throw()
         {
             static const char *msg[3] = {
-                "neutral",
+                "waiting",
                 "leading",
                 "seeking"
             };
