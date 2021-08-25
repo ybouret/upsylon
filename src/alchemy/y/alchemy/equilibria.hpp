@@ -149,6 +149,10 @@ namespace upsylon
                                Library      &lib,
                                Lua::VM      &vm);
 
+            //! load a table from lua
+            void load(const string &id,
+                      Library      &lib,
+                      Lua::VM      &vm);
 
 
             

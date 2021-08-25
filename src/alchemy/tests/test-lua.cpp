@@ -21,9 +21,15 @@ Y_UTEST(lua)
         {
             lib.load("lib",vm);
         }
+
+        if(vm->exists("eqs"))
+        {
+            eqs.load("eqs",lib,vm);
+        }
     }
 
-    std::cerr << "lib=" << lib << std::endl;
+    std::cerr << "lib=" << std::endl << lib << std::endl;
+    std::cerr << "eqs=" << std::endl << eqs << std::endl;
 
 
 }

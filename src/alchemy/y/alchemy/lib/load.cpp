@@ -16,7 +16,6 @@ namespace upsylon
             lua_getglobal(L,*id);
             if( ! lua_istable(L,-1) ) throw exception("%s%s '%s' is not a table",CLID,fn,*id);
             const unsigned long n = lua_rawlen(L,-1);
-            std::cerr << "#" << n << std::endl;
             for(unsigned long i=1;i<=n;++i)
             {
                 lua_rawgeti(L,-1,i);

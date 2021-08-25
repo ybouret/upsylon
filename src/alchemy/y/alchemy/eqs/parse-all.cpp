@@ -1,8 +1,6 @@
 
 #include "y/alchemy/equilibria.hpp"
 #include "y/alchemy/library.hpp"
-#include "y/lua++/state.hpp"
-
 #include "y/string/tokenizer.hpp"
 #include "y/sequence/list.hpp"
 
