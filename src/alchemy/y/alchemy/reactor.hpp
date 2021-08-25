@@ -57,6 +57,7 @@ namespace upsylon
             OSTREAM & showConditions(OSTREAM &os, const Accessible &C) const
             {
                 os << "<Conditions>\n";
+#if 0
                 os << "  <General>\n";
                 for(const Species::Node *node=lib->head();node;node=node->next)
                 {
@@ -64,6 +65,7 @@ namespace upsylon
                     showCondition(os << "    ",sp,C);
                 }
                 os << "  <General/>\n";
+#endif
                 showLeading(os,C);
                 showSeeking(os,C);
                 os << "<Conditions/>\n";
