@@ -35,7 +35,7 @@ Y_UTEST(balance)
         eqs.parse("combine:-X:-Y:@10.2",lib,vm);
     }
 
-    lib << "Na+" << "Cl-";
+    // lib << "Na+" << "Cl-";
 
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
