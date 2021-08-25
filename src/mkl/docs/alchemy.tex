@@ -126,20 +126,19 @@ fulfils the positivity constraints, with the fact that $\vec{\xi}=\vec{0}$ solve
 \item Then we must solve $N_S$ subordinate constraints by choosing $\vec{\xi}$ in its domains $\bigotimes_i \Omega_i$.
 \end{enumerate}
 
-We form the vector of seeking concentrations $\vec{A}_s$
-
-%
-%\begin{equation}
-%\left\lbrace
-%\begin{array}{rcl}
-%	\psi(x)   & = & \dfrac{1}{2} \left[ \max\left( -x, 0 \right) \right]^2\\
-%	\psi'(x)  & = & \min(x,0) \\
-%	\psi''(x) & = & \mathtt{H}(-x)\\
-%\end{array}
-%\right.
-%\end{equation} 
- 
-
+We form the vector of seeking concentrations $\vec{A}_s$, corresponding to a sub matrix $\bm{V}_s$ of $\bm{\nu}^t$
+such that we look for:
+\begin{equation}
+	\vec{A}_s + \bm{V}_s \cdot \vec{\xi} \geq \vec{0}
+\end{equation}
+If we look for
+\begin{equation}
+	\vec{A}_s + \bm{V}_s \cdot \vec{\xi} = \vec{Y}
+\end{equation} 
+then
+\begin{equation}
+	\vec{\xi} =  \bm{V}_s^t \left(\bm{V}_s \bm{V}_s^t\right) ^{-1} \left( \vec{Y} - \vec{A}_s\right)
+\end{equation}
    
 \section{Newton$^+$'s Algorithm}
 

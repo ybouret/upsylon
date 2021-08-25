@@ -4,7 +4,6 @@
 #include "y/alchemy/equilibria.hpp"
 #include "y/alchemy/library.hpp"
 
-#include "y/lua++/state.hpp"
 
 using namespace upsylon;
 using namespace Alchemy;
@@ -13,16 +12,16 @@ Y_UTEST(lua)
 {
     Library    lib;
     Equilibria eqs;
+    Lua::VM    vm = new Lua::State();
 
-    Lua::VM vm = new Lua::State();
-    for(int i=1;i<argc;++i)
+    if(argc>1)
     {
-        const string info = argv[i];
-        eqs.parse(info,lib,*vm);
+        vm->doFile(argv[1]);
     }
-    
-    std::cerr << lib << std::endl;
-    std::cerr << eqs << std::endl;
+
+    lib.load("lib",vm);
+
+
 }
 Y_UTEST_DONE()
 

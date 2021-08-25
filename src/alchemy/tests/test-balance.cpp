@@ -17,7 +17,7 @@ Y_UTEST(balance)
 
     Library        lib;
     Equilibria     eqs;
-    Lua::State     vm;
+    Lua::VM        vm = new Lua::State();
     
    // if(false)
     {

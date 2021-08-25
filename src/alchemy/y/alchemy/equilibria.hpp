@@ -7,13 +7,11 @@
 #include "y/alchemy/equilibrium.hpp"
 #include "y/alchemy/freezable.hpp"
 #include "y/container/matrix.hpp"
- 
+#include "y/lua++/state.hpp"
+
 namespace upsylon
 {
-    namespace Lua
-    {
-        class State;
-    };
+
     
     namespace Alchemy
     {
@@ -144,12 +142,12 @@ namespace upsylon
              */
             Equilibrium &parse(const string &info,
                                Library      &lib,
-                               Lua::State   &vm);
+                               Lua::VM      &vm);
             
             //! helper to parse equilibrium
             Equilibrium &parse(const char   *info,
                                Library      &lib,
-                               Lua::State   &vm);
+                               Lua::VM      &vm);
 
 
 

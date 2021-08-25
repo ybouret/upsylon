@@ -8,13 +8,11 @@
 #include "y/alchemy/freezable.hpp"
 #include "y/type/gateway.hpp"
 #include "y/ios/scribe.hpp"
+#include "y/lua++/state.hpp"
 
 namespace upsylon
 {
-    namespace Lua
-    {
-        class State;
-    };
+
     
     namespace Alchemy
     {
@@ -170,7 +168,7 @@ namespace upsylon
             }
             
             //! load lua table ID and use it { "A", "B" ... }
-            void load(const string &id, Lua::State &vm);
+            void load(const string &id, Lua::VM &vm);
             
             
         private:

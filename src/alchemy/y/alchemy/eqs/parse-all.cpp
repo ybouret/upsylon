@@ -13,7 +13,7 @@ namespace upsylon
     {
         Equilibrium &Equilibria::parse(const char  *info,
                                        Library      &lib,
-                                       Lua::State   &vm)
+                                       Lua::VM      &vm)
         {
             const string _(info);
             return parse(_,lib,vm);
@@ -23,7 +23,7 @@ namespace upsylon
 
         Equilibrium &Equilibria:: parse(const string &info,
                                         Library      &lib,
-                                        Lua::State   &vm)
+                                        Lua::VM      &vm)
         {
             static const char fn[] = ".parse";
             list<string> words;
@@ -45,7 +45,7 @@ namespace upsylon
             if(ksym!=kval[0])   throw exception("%s%s constant '%s' should start with '%c'",CLID,fn,*kval,ksym);
             
             kval.skip(1);
-            const double K  = vm.eval<double>(kval);
+            const double K  = vm->eval<double>(kval);
             Equilibrium &eq = (*this)(name,K);
             for(list<string>::iterator it=words.begin();it!=words.end();++it)
             {
