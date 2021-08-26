@@ -13,7 +13,7 @@ namespace upsylon
 
         void Reactor:: checkTopology()
         {
-            std::cerr << "  <Topology>" << std::endl;
+            Y_ALCHEM_PRINTLN("  <Topology>");
             //__________________________________________________________________
             //
             //
@@ -22,8 +22,8 @@ namespace upsylon
             //__________________________________________________________________
             eqs.fill( aliasing::_(Nu) );
             aliasing::_(NuT).assign_transpose(Nu);
-            std::cerr << " Nu     = " << Nu  << std::endl;
-            std::cerr << " NuT    = " << NuT << std::endl;
+            Y_ALCHEM_PRINTLN(" Nu     = " << Nu);
+            Y_ALCHEM_PRINTLN(" NuT    = " << NuT);
 
             //__________________________________________________________________
             //
@@ -34,7 +34,7 @@ namespace upsylon
             if(N>0)
             {
                 const size_t r = apk::rank(Nu);
-                std::cerr << " NuRank = " << r   << "/" << N << std::endl;
+                Y_ALCHEM_PRINTLN(" NuRank = " << r   << "/" << N);
 
                 if(r<N)
                 {
@@ -42,7 +42,7 @@ namespace upsylon
                     throw exception("%s has %lu redundant equilibri%s",CLID,ns,textual::plural_a(ns));
                 }
             }
-            std::cerr << "  <Topology/>" << std::endl;
+            Y_ALCHEM_PRINTLN("  <Topology/>");
         }
 
     }

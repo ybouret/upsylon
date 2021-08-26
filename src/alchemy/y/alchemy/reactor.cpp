@@ -14,8 +14,8 @@ namespace upsylon
     namespace Alchemy
     {
 
-        const char Reactor:: CLID[] = "Reactor";
-
+        const char Reactor:: CLID[]  = "Reactor";
+        
         Reactor:: Reactor(Library    &_lib,
                           Equilibria &_eqs,
                           const unsigned flags) :
@@ -47,21 +47,31 @@ namespace upsylon
         lfrz(_lib,Library::CLID),
         efrz(_eqs,Equilibria::CLID)
         {
-            std::cerr << "<Setup " << CLID << ">" << std::endl;
+            Y_ALCHEM_PRINTLN("<Setup " << CLID << ">");
             if(N>M) throw exception("%s detected too many equilibria!",CLID);
-            std::cerr << " active = " << active << " // #" << NA << "/" << M << std::endl;
-
+            Y_ALCHEM_PRINTLN(" active = " << active << " // #" << NA << "/" << M);
             eqs.verify(flags);
             checkTopology();
             makeBalancing();
-
-            std::cerr << "<Setup " << CLID << "/>" << std::endl;
+            Y_ALCHEM_PRINTLN("<Setup " << CLID << "/>");
         }
 
         Reactor:: ~Reactor() throw()
         {
         }
 
+        const char * Reactor:: Qualify(const double c) throw()
+        {
+            if(c<0)
+            {
+                return "(wrong)";
+            }
+            else
+            {
+                return "(valid)";
+            }
+        }
+        
         
         void Reactor:: displayState() const
         {

@@ -6,6 +6,7 @@
 #include "y/ios/ocstream.hpp"
 #include "y/alea.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -13,48 +14,61 @@ namespace upsylon
     
     namespace Alchemy
     {
-        const char * Reactor:: Qualify(const double c) throw()
-        {
-            if(c<0)
-            {
-                return "(wrong)";
-            }
-            else
-            {
-                return "(valid)";
-            }
-        }
+       
         
         
-        bool Reactor:: balance1(Addressable &C) throw()
+        bool Reactor:: balanceLeading(Addressable &C) throw()
         {
             assert(N>0);
             assert(NA>0);
-            bool balanced = true;
+            
+            if(Verbosity)
             {
+                std::cerr << "<Balance Leading>" << std::endl;
+                lib.display(std::cerr << "C=", C) << std::endl;
+                showConditions(std::cerr,C);
+            }
+
+            //------------------------------------------------------------------
+            //
+            // initialize
+            //
+            //------------------------------------------------------------------
+            Flags &OK = aliasing::_(ok);
+            tao::ld(OK,true);
+            bool balanced = true;
+
+            {
+                Y_ALCHEM_PRINTLN("  <Guard>");
                 Addressable &Xi = aliasing::_(xi); assert(N==xi.size());
                 for(const Equilibrium::Node *node = eqs->head();node;node=node->next)
                 {
                     const Equilibrium &eq = ***node;
-                    eqs.print(std::cerr << "guard ",eq) << std::endl;
-                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi,aliasing::_(ok));
-                    std::cerr << "  " << Guard::StateText(st) << std::endl;
+                    if (Verbosity) eqs.print(std::cerr << "    ",eq) << std::endl;
+                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi,OK);
+                    if (Verbosity) eqs.print(std::cerr << "    ",eq) << ' ' << Guard::StateText(st) << std::endl;
                     if(Guard::IsJammed==st)
                     {
                         balanced = false;
                     }
+                    if(Verbosity&&node->next) std::cerr << std::endl;
                 }
+                Y_ALCHEM_PRINTLN("  <Guard/>");
             }
-            
-            lib.display(std::cerr << "Cbal=", C) << std::endl;
+
+            if(Verbosity)
+            {
+                std::cerr << "  ==> [" <<textual::boolean(balanced) << "] <==" << std::endl;
+                lib.display(std::cerr << "OK=",ok) << std::endl;
+                lib.display(std::cerr << "C=",  C) << std::endl;
+                std::cerr << "<Balance Leading/>"  << std::endl;
+            }
             return balanced;
         }
         
         
         bool Reactor:: balance(Addressable &C) throw()
         {
-            lib.display(std::cerr << "C=",C) << std::endl;
-            tao::ld( aliasing::_(ok),true);
             if(N>0)
             {
                 assert(NA>0);
@@ -62,21 +76,18 @@ namespace upsylon
                 //
                 // starting point: need to be reduced
                 // _____________________________________________________________
-                showConditions(std::cerr,C);
-                
-                if( !balance1(C) )
+                if( !balanceLeading(C) )
                 {
-                    lib.display(std::cerr << "ok=", ok)  << std::endl;
                     return false;
                 }
-                std::cerr << "Balanced Leading!" << std::endl;
-                
+
                 //______________________________________________________________
                 //
                 // reduced starting point
                 // _____________________________________________________________
-                showConditions(std::cerr,C);
-                
+                //showConditions(std::cerr,C);
+                return false;
+
                 if(NS>0)
                 {
                     std::cerr << " Vs=" << Vs << std::endl;

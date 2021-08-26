@@ -175,14 +175,15 @@ namespace upsylon
                                    Addressable   &xi,
                                    Flags         &ok) const throw()
         {
-            std::cerr << "  " <<  "solve " << classText() << std::endl;
+            static const char pfx[] ="    | ";
+            Y_ALCHEM_PRINTLN( pfx << classText() );
             switch(cls)
             {
 
                 case HasOnlyGEQ: {
                     const Leading  &lmin = xiMin(C);
                     const double    xmin  =-C[lmin.sp.indx]/lmin.nu;
-                    std::cerr << "  xmin=" << xmin << std::endl;
+                    Y_ALCHEM_PRINTLN(pfx << "xmin=" << xmin);
                     if(xmin>0)
                     {
                         return guardMove(lmin,C,NuT,xi,xmin);
@@ -197,7 +198,7 @@ namespace upsylon
                 case HasOnlyLEQ: {
                     const Leading  &lmax = xiMax(C);
                     const double    xmax = C[lmax.sp.indx]/lmax.nu;
-                    std::cerr << "  xmax=" << xmax << std::endl;
+                    Y_ALCHEM_PRINTLN(pfx << "xmax=" << xmax);
                     if(xmax<0)
                     {
                         return guardMove(lmax,C,NuT,xi,xmax);
@@ -216,8 +217,8 @@ namespace upsylon
                     const Leading  &lmax = xiMax(C);
                     const size_t    imax = lmax.sp.indx;
                     const double    xmax = C[imax]/lmax.nu;
-                    std::cerr << "  xmin=" << xmin << std::endl;
-                    std::cerr << "  xmax=" << xmax << std::endl;
+                    Y_ALCHEM_PRINTLN(pfx << "xmin=" << xmin);
+                    Y_ALCHEM_PRINTLN(pfx << "xmax=" << xmax);
 
                     if(xmin>xmax)
                     {
@@ -283,7 +284,6 @@ namespace upsylon
 
         void Guard:: limit(Addressable &xi, const Accessible &C) const throw()
         {
-            //std::cerr << "  " <<  "limit " << classText() << std::endl;
             switch(cls)
             {
                 case HasNoBound:

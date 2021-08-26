@@ -17,7 +17,7 @@ namespace upsylon
             // Build balancing info:
             // outer loop over species
             //__________________________________________________________________
-            std::cerr << "  <Balancing>" << std::endl;
+            Y_ALCHEM_PRINTLN("  <Balancing>");
 
             if(NA>0)
             {
@@ -73,7 +73,7 @@ namespace upsylon
                                 // Create a new GEQ
                                 //______________________________________________
                                 const Leading leading(*pEq,sp, static_cast<size_t>(snu), Leading::GEQ);
-                                leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                                if(Verbosity) leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
                                 guard.addGEQ(leading);
                             }
                             else
@@ -83,7 +83,7 @@ namespace upsylon
                                 // Create a new LEQ
                                 //______________________________________________
                                 const Leading leading(*pEq,sp, static_cast<size_t>(-snu), Leading::LEQ);
-                                leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
+                                if(Verbosity) leading.print(std::cerr << "   | ",lib,eqs) << std::endl;
                                 guard.addLEQ(leading);
                             }
                             aliasing::incr(NL);
@@ -128,19 +128,21 @@ namespace upsylon
                     tao::set( aliasing::_(Vs[i]),s);
                 }
             }
-
-            std::cerr << "    NuLT  = " << NuLT << std::endl;
-            std::cerr << "    NuL   = " << NuL  << std::endl;
-            std::cerr << "    NuST  = " << NuST << std::endl;
-            std::cerr << "    NuS   = " << NuS  << std::endl;
-            std::cerr << "    NEqs  = " << N    << std::endl;
-            std::cerr << "    NAct  = " << NA   << std::endl;
-            std::cerr << "      NLead = " << NL   << " => " << leading << std::endl;
-            std::cerr << "      NSeek = " << NS   << " => " << seeking << std::endl;
-            std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
-            std::cerr << "      Vs    = " << Vs      << std::endl;
             assert(NL+NS==NA);
-            std::cerr << "  <Balancing/>" << std::endl;
+            if(Verbosity)
+            {
+                std::cerr << "    NuLT  = " << NuLT << std::endl;
+                std::cerr << "    NuL   = " << NuL  << std::endl;
+                std::cerr << "    NuST  = " << NuST << std::endl;
+                std::cerr << "    NuS   = " << NuS  << std::endl;
+                std::cerr << "    NEqs  = " << N    << std::endl;
+                std::cerr << "    NAct  = " << NA   << std::endl;
+                std::cerr << "      NLead = " << NL   << " => " << leading << std::endl;
+                std::cerr << "      NSeek = " << NS   << " => " << seeking << std::endl;
+                std::cerr << "      Srank = " << apk::rank(NuS) << std::endl;
+                std::cerr << "      Vs    = " << Vs      << std::endl;
+            }
+            Y_ALCHEM_PRINTLN("  <Balancing/>");
         }
     }
 

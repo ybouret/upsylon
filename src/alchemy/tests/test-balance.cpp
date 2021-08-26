@@ -37,13 +37,16 @@ Y_UTEST(balance)
 
     // lib << "Na+" << "Cl-";
 
+    std::cerr << "<System>" << std::endl;
     std::cerr << lib << std::endl;
-    std::cerr << eqs << std::endl;
+    std::cerr << eqs;
+    std::cerr << "<System/>" << std::endl << std::endl;
 
+
+    //Verbosity = false;
     Reactor cs(lib,eqs, Equilibrium::Minimal);
 
     
-
     
     Vector  C(cs.M,0);
     lib.draw(alea,C);

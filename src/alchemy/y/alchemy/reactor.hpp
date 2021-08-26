@@ -9,6 +9,8 @@ namespace upsylon
 {
     namespace Alchemy
     {
+
+        
         //______________________________________________________________________
         //
         //
@@ -23,7 +25,7 @@ namespace upsylon
             // types and definitions
             //__________________________________________________________________
             static  const char                     CLID[];       //!< "Reactor"
-
+            
             //__________________________________________________________________
             //
             // C++
@@ -114,7 +116,7 @@ namespace upsylon
 
             void checkTopology();
             void makeBalancing();
-            bool balance1(Addressable &C)     throw();
+            bool balanceLeading(Addressable &C)     throw();
             
             static const char *Qualify(const double c) throw();
             
@@ -179,7 +181,7 @@ namespace upsylon
                     if(node->next) os << '\n';
                 }
 
-                os << " <Leading>\n";
+                os << "  <Leading>\n";
                 return os;
             }
 

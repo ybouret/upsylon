@@ -13,6 +13,7 @@ namespace upsylon
 {
     namespace Alchemy
     {
+        extern  bool                           Verbosity;    //!< for output
         typedef memory::dyadic                 Allocator;    //!< alias
         typedef vector<double,Allocator>       Vector;       //!< alias
         typedef vector<unit_t,Allocator>       iVector;      //!< alias
@@ -21,6 +22,9 @@ namespace upsylon
         typedef addressable<double>            Addressable;  //!< alias
         typedef accessible<double>             Accessible;   //!< alias
         typedef vector<size_t,Allocator>       Indices;      //!< alias
+
+        //! macro to use verbosity dependent messages
+#define Y_ALCHEM_PRINTLN(MSG) do { if(Alchemy::Verbosity) std::cerr << MSG << std::endl; } while(false)
 
 
     }

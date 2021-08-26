@@ -54,7 +54,7 @@ namespace upsylon
             {
                 string name( tkn.token(), tkn.units() );
                 name.clean_with(" \t");
-                std::cerr << "name='" << name << "'" << std::endl;
+                //std::cerr << "name='" << name << "'" << std::endl;
                 if(!db.insert(name,info)) throw exception("multiple equilibrium '%s'",*name);
             }
             else
