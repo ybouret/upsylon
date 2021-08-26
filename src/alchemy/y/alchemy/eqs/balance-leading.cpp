@@ -61,8 +61,8 @@ namespace upsylon
             if(Verbosity)
             {
                 std::cerr << "  ==> [" <<textual::boolean(balanced) << "] <==" << std::endl;
-                lib.display(std::cerr << "OK=",ok) << std::endl;
-                lib.display(std::cerr << "C=",  C) << std::endl;
+                lib.display(std::cerr << "balanced=",ok) << std::endl;
+                lib.display(std::cerr << "Cleading=",  C) << std::endl;
                 std::cerr << "<Balance Leading/>"  << std::endl;
             }
             return balanced;
