@@ -23,21 +23,19 @@ namespace upsylon
             if(N>0)
             {
                 assert(NA>0);
+
                 //______________________________________________________________
                 //
-                // starting point: need to be reduced
+                // balance leading conditions
                 // _____________________________________________________________
-                if( !balanceLeading(C) )
-                {
-                    return false;
-                }
+                if( !balanceLeading(C) ) return false;
+
 
                 //______________________________________________________________
                 //
                 // reduced starting point
                 // _____________________________________________________________
-                //showConditions(std::cerr,C);
-                return false;
+                return balanceSeeking(C);
 
                 if(NS>0)
                 {

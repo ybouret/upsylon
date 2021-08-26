@@ -116,9 +116,10 @@ namespace upsylon
 
             void checkTopology();
             void makeBalancing();
-            bool balanceLeading(Addressable &C)     throw();
-            
-            static const char *Qualify(const double c) throw();
+            bool balanceLeading(Addressable &C) throw();
+            bool balanceSeeking(Addressable &C);
+
+            static const char *Qualify(const double) throw();
             
             //! output condition for one species
             template <typename OSTREAM> inline
