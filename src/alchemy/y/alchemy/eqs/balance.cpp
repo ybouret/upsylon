@@ -16,56 +16,7 @@ namespace upsylon
     {
        
         
-        
-        bool Reactor:: balanceLeading(Addressable &C) throw()
-        {
-            assert(N>0);
-            assert(NA>0);
-            
-            if(Verbosity)
-            {
-                std::cerr << "<Balance Leading>" << std::endl;
-                lib.display(std::cerr << "C=", C) << std::endl;
-                showConditions(std::cerr,C);
-            }
-
-            //------------------------------------------------------------------
-            //
-            // initialize
-            //
-            //------------------------------------------------------------------
-            Flags &OK = aliasing::_(ok);
-            tao::ld(OK,true);
-            bool balanced = true;
-
-            {
-                Y_ALCHEM_PRINTLN("  <Guard>");
-                Addressable &Xi = aliasing::_(xi); assert(N==xi.size());
-                for(const Equilibrium::Node *node = eqs->head();node;node=node->next)
-                {
-                    const Equilibrium &eq = ***node;
-                    if (Verbosity) eqs.print(std::cerr << "    ",eq) << std::endl;
-                    const Guard::State st = guards[eq.indx]->solve(C,NuT,Xi,OK);
-                    if (Verbosity) eqs.print(std::cerr << "    ",eq) << ' ' << Guard::StateText(st) << std::endl;
-                    if(Guard::IsJammed==st)
-                    {
-                        balanced = false;
-                    }
-                    if(Verbosity&&node->next) std::cerr << std::endl;
-                }
-                Y_ALCHEM_PRINTLN("  <Guard/>");
-            }
-
-            if(Verbosity)
-            {
-                std::cerr << "  ==> [" <<textual::boolean(balanced) << "] <==" << std::endl;
-                lib.display(std::cerr << "OK=",ok) << std::endl;
-                lib.display(std::cerr << "C=",  C) << std::endl;
-                std::cerr << "<Balance Leading/>"  << std::endl;
-            }
-            return balanced;
-        }
-        
+       
         
         bool Reactor:: balance(Addressable &C) throw()
         {
