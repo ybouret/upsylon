@@ -77,17 +77,14 @@ namespace upsylon
                     Y_ALCHEM_PRINTLN("Xi="<<Xi);
 
                     // study Xi
-                    for(size_t i=1;i<=N;++i)
+                    for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
                     {
-                        const Guard &guard = *guards[i];
-                        bool         trunc = false;
-                        switch(guard.cls)
+                        const Equilibrium &eq = ***node;
+                        const size_t       i  = eq.indx;
+                        const Guard       &g  = *guards[i];
+                        if(Verbosity)
                         {
-                            case Guard::HasNoBound: break;
-                        }
-                        if(trunc)
-                        {
-
+                            eqs.print(std::cerr,eq) << " [" << g.classText() << "] xi=" << Xi[i] << std::endl;
                         }
                     }
 
