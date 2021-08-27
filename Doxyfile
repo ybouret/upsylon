@@ -874,8 +874,8 @@ WARN_LOGFILE           =
 INPUT                  = src/main/y \
                          src/mkl/y \
                          src/gfx/y \
-                         src/aqua/y \
                          src/alchemy/y \
+                         src/chemical/y \
                          src/jive/y \
                          src/json/y \
                          src/spade/y \
