@@ -8,7 +8,8 @@ namespace upsylon
     {
         Species:: ~Species() throw()
         {
-            aliasing::_(z) = 0;
+            aliasing::_(charge) = 0;
+            aliasing::_(rating) = 0;
         }
     }
     
