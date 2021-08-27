@@ -50,8 +50,8 @@ namespace upsylon
 
             if(NS>0)
             {
-                Vector         Cb(NS,0);
-                Addressable   &Xi = aliasing::_(xi);
+                Vector         Cs(NS,0);
+                Vector         Xs(NS,0);
                 Y_ALCHEM_PRINTLN("Vs="<<Vs);
 
                 matrix<double> Vm(NS,N);
@@ -68,13 +68,13 @@ namespace upsylon
                     balanced = false;
                     goto DONE;
                 }
-                const size_t nb = seekingSpecies(Cb,C);
-                Y_ALCHEM_PRINTLN("Cb="<<Cb);
+                const size_t nb = seekingSpecies(Cs,C);
+                Y_ALCHEM_PRINTLN("Cs="<<Cs);
                 if(nb>0)
                 {
-                    LU::solve(V2,Cb);
-                    tao::mul(Xi,tV,Cb);
-                    Y_ALCHEM_PRINTLN("Xi="<<Xi);
+                    LU::solve(V2,Cs);
+                    tao::mul(Xs,tV,Cs);
+                    Y_ALCHEM_PRINTLN("Xs="<<Xs);
 
                     // study Xi
                     for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
@@ -84,7 +84,7 @@ namespace upsylon
                         const Guard       &g  = *guards[i];
                         if(Verbosity)
                         {
-                            eqs.print(std::cerr,eq) << " [" << g.classText() << "] xi=" << Xi[i] << std::endl;
+                            eqs.print(std::cerr,eq) << " [" << g.classText() << "] xi=" << Xs[i] << std::endl;
                         }
                     }
 

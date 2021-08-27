@@ -25,12 +25,11 @@ IF(OpenMP_C_FOUND)
 	ENDIF(NOT MSVC)
 
 	# check the need for libatomic
+	SET(LIBATOMIC)
 	IF(Y_FREEBSD AND Y_CLANG)
-		MESSAGE( STATUS "need libatomic" )
-		FIND_FILE(LIBATOMIC libatomic.a PATHS /usr/local/lib/gcc9)
-		MESSAGE( STATUS "LIBATOMIC=${LIBATOMIC}" )
-	ELSE(Y_FREEBSD AND Y_CLANG)
-		SET(LIBATOMIC)
+		#MESSAGE( STATUS "need libatomic" )
+		#FIND_FILE(LIBATOMIC libatomic.a PATHS /usr/local/lib/gcc9)
+		#MESSAGE( STATUS "LIBATOMIC=${LIBATOMIC}" )		
 	ENDIF(Y_FREEBSD AND Y_CLANG)
 
     ADD_EXECUTABLE(pi pi.c)
