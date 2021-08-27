@@ -30,7 +30,7 @@ Y_UTEST(balance)
         eqs.parse("dummy:-2A:-B:C:3D:@1",lib,vm);
     }
 
-    if(false)
+    //if(false)
     {
         eqs.parse("combine:-X:-Y:@10.2",lib,vm);
     }

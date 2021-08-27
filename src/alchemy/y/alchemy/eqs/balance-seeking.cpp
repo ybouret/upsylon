@@ -51,7 +51,7 @@ namespace upsylon
             if(NS>0)
             {
                 Vector         Cs(NS,0);
-                Vector         Xs(NS,0);
+                Vector         Xs(N,0);
                 Y_ALCHEM_PRINTLN("Vs="<<Vs);
 
                 matrix<double> Vm(NS,N);
@@ -76,21 +76,36 @@ namespace upsylon
                     tao::mul(Xs,tV,Cs);
                     Y_ALCHEM_PRINTLN("Xs="<<Xs);
 
-                    // study Xi
+                    
                     for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
                     {
-                        const Equilibrium &eq = ***node;
-                        const size_t       i  = eq.indx;
-                        const Guard       &g  = *guards[i];
-                        if(Verbosity)
+                        const Equilibrium &_ = ***node;
+                        const size_t       i = _.indx;
+                        const Guard       &g = *guards[i];
+                        double            &x = Xs[i];
+                        eqs.print(std::cerr << "  ",_) << ' ' << g.classText() << '/' << x << std::endl;
+                        switch(g.cls)
                         {
-                            eqs.print(std::cerr,eq) << " [" << g.classText() << "] xi=" << Xs[i] << std::endl;
+                            case Guard::HasNoBound:
+                                break;
+
+                            case Guard::HasOnlyGEQ:
+                                break;
+
+                            case Guard::HasOnlyLEQ:
+                                break;
+
+                            case Guard::IsBothWays:
+                                break;
                         }
                     }
 
 
                 }
-
+                else
+                {
+                    goto DONE;
+                }
 
             }
 
