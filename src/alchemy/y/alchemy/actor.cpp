@@ -45,8 +45,8 @@ namespace upsylon
 
         double Actor:: activity(const Accessible &C, const double xi) const throw()
         {
-            double              c = C[(**this).indx];
-            const unsigned long n = nu;
+            double       c = C[(**this).indx];
+            const size_t n = nu;
             c += (n*xi);
             return  ipower<double>( max_of<double>(c,0), n);
         }
