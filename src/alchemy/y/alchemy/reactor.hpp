@@ -114,10 +114,11 @@ namespace upsylon
             const   Freezer lfrz;
             const   Freezer efrz;
 
-            void checkTopology();
-            void makeBalancing();
-            bool balanceLeading(Addressable &C) throw();
-            bool balanceSeeking(Addressable &C);
+            void   checkTopology();
+            void   makeBalancing();
+            bool   balanceLeading(Addressable &C) throw();
+            bool   balanceSeeking(Addressable &C);
+            size_t seekingSpecies(Addressable &Cbad, const Accessible &C) const throw();
 
             static const char *Qualify(const double) throw();
             

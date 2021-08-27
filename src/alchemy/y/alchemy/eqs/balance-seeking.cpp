@@ -12,6 +12,32 @@ namespace upsylon
 
     namespace Alchemy
     {
+        static inline double u2d(const unit_t u)
+        {
+            return double(u);
+        }
+
+        size_t Reactor:: seekingSpecies(Addressable &Cbad, const Accessible &C) const throw()
+        {
+            assert(NS==Cbad.size());
+            size_t nbad = 0;
+            for(size_t j=NS;j>0;--j)
+            {
+                const double Cj = C[ seeking[j]->indx ];
+                if(Cj<=0)
+                {
+                    Cbad[j] = -Cj;
+                    ++nbad;
+                }
+                else
+                {
+                    Cbad[j] = 0;
+                }
+            }
+            return nbad;
+        }
+
+
         bool Reactor:: balanceSeeking(Addressable &C)
         {
             bool balanced = true;
@@ -24,57 +50,33 @@ namespace upsylon
 
             if(NS>0)
             {
-                size_t Nx = N;     //! number of xi
-                Flags  Fx(N,true);
+                Vector         Cb(NS,0);
+                Addressable   &Xi = aliasing::_(xi);
+                Y_ALCHEM_PRINTLN("Vs="<<Vs);
+
+                matrix<double> Vm(NS,N);
+                matrix<double> tV(N,NS);
                 matrix<double> V2(NS,NS);
-                Vector         Cs(NS,0);
-                size_t         bad=0;
-                for(size_t j=NS;j>0;--j)
+                Vm.assign(Vs,u2d);
+                tV.assign_transpose(Vm);
+                tao::gram(V2,Vm);
+                Y_ALCHEM_PRINTLN("V2="<<V2);
+                if(!LU::build(V2))
                 {
-                    const double Cj =C[ seeking[j]->indx ];
-                    if(Cj<0)
-                    {
-                        Cs[j] = -Cj;
-                        ++bad;
-                    }
-                }
-
-                std::cerr << "bad = " << bad << std::endl;
-                std::cerr << "Cs  = " << Cs  << std::endl;
-
-                if(bad)
-                {
-                    matrix<double> Vm(NS,Nx);
-                    for(size_t i=1;i<=NS;++i)
-                    {
-                        size_t j=0;
-                        for(size_t k=1;k<=N;++k)
-                        {
-                            if(Fx[k])
-                            {
-                                Vm[i][++j] = Vs[i][k];
-                            }
-                        }
-                    }
-                    std::cerr << "Vm  = " << Vm << std::endl;
-                    tao::gram(V2,Vm);
-                    std::cerr << "V2  = " << V2 << std::endl;
-                    if(!LU::build(V2))
-                    {
-                        balanced = false; goto DONE;
-                    }
-                    LU::solve(V2,Cs);
-                    Vector Xi(Nx,0);
-                    tao::mul_trn(Xi,Vm,Cs);
-                    std::cerr << "Xi  = " << Xi << std::endl;
-
-
-
-                }
-                else
-                {
+                    Y_ALCHEM_PRINTLN("  singular seeking matrix");
+                    balanced = false;
                     goto DONE;
                 }
+                const size_t nb = seekingSpecies(Cb,C);
+                Y_ALCHEM_PRINTLN("Cb="<<Cb);
+                if(nb>0)
+                {
+                    LU::solve(V2,Cb);
+                    tao::mul(Xi,tV,Cb);
+                    Y_ALCHEM_PRINTLN("Xi="<<Xi);
+
+                }
+
 
             }
 
