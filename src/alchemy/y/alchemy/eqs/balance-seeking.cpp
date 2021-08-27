@@ -46,66 +46,148 @@ namespace upsylon
             {
                 std::cerr << "<Balance Seeking>" << std::endl;
                 showConditions(std::cerr,C);
+                lib.display(std::cerr,C) << std::endl;
             }
 
             if(NS>0)
             {
                 Vector         Cs(NS,0);
                 Vector         Xs(N,0);
+                Addressable   &Xi = aliasing::_(xi);
                 Y_ALCHEM_PRINTLN("Vs="<<Vs);
 
                 matrix<double> Vm(NS,N);
                 matrix<double> tV(N,NS);
                 matrix<double> V2(NS,NS);
 
-                Vm.assign(Vs,u2d);
-                tV.assign_transpose(Vm);
-                tao::gram(V2,Vm);
-                Y_ALCHEM_PRINTLN("V2="<<V2);
-                if(!LU::build(V2))
+                while(true)
                 {
-                    Y_ALCHEM_PRINTLN("  singular seeking matrix");
-                    balanced = false;
-                    goto DONE;
-                }
-                const size_t nb = seekingSpecies(Cs,C);
-                Y_ALCHEM_PRINTLN("Cs="<<Cs);
-                if(nb>0)
-                {
-                    LU::solve(V2,Cs);
-                    tao::mul(Xs,tV,Cs);
-                    Y_ALCHEM_PRINTLN("Xs="<<Xs);
-
-                    
-                    for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
+                    Vm.assign(Vs,u2d);
+                    tV.assign_transpose(Vm);
+                    tao::gram(V2,Vm);
+                    Y_ALCHEM_PRINTLN("V2="<<V2);
+                    if(!LU::build(V2))
                     {
-                        const Equilibrium &_ = ***node;
-                        const size_t       i = _.indx;
-                        const Guard       &g = *guards[i];
-                        double            &x = Xs[i];
-                        eqs.print(std::cerr << "  ",_) << ' ' << g.classText() << '/' << x << std::endl;
-                        switch(g.cls)
+                        Y_ALCHEM_PRINTLN("  singular seeking matrix");
+                        balanced = false;
+                        goto DONE;
+                    }
+                    const size_t nb = seekingSpecies(Cs,C);
+                    Y_ALCHEM_PRINTLN("Cs="<<Cs);
+                    if(nb>0)
+                    {
+                        LU::solve(V2,Cs);
+                        tao::mul(Xs,tV,Cs);
+                        Y_ALCHEM_PRINTLN("Xs="<<Xs);
+
+                        bool clipped = false;
+                        for(const Equilibrium::Node *node=eqs->head();node;node=node->next)
                         {
-                            case Guard::HasNoBound:
-                                break;
+                            const Equilibrium &_ = ***node;
+                            const size_t       i = _.indx;
+                            const Guard       &g = *guards[i];
+                            double            &x = Xs[i];
+                            eqs.print(std::cerr << "  ",_) << ' ' << g.classText() << '/' << x << std::endl;
+                            switch(g.cls)
+                            {
+                                case Guard::HasNoBound:
+                                    break;
 
-                            case Guard::HasOnlyGEQ: {
-                                const Leading &lmin = g.xiMin(C); assert( &lmin.eq == &_ );
-                            } break;
+                                case Guard::HasOnlyGEQ: {
+                                    const Leading &lmin = g.xiMin(C); assert( &lmin.eq == &_ );
+                                    const double   xmin = -C[lmin.sp.indx] / lmin.nu;
+                                    if(x>=xmin)
+                                    {
+                                        std::cerr << "  |_valid" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        tao::ld(Xi,0);
+                                        Xi[i] = xmin;
+                                        tao::mul_add(C,NuT,Xi);
+                                        C[lmin.sp.indx] = 0;
+                                        aliasing::_(Vs).ld_col(i,0);
+                                        clipped = true;
+                                    }
 
-                            case Guard::HasOnlyLEQ:
-                                break;
+                                } break;
 
-                            case Guard::IsBothWays:
-                                break;
+                                case Guard::HasOnlyLEQ:
+                                {
+                                    const Leading &lmax = g.xiMax(C); assert( &lmax.eq == &_ );
+                                    const double   xmax = C[lmax.sp.indx] / lmax.nu;
+                                    if(x<=xmax)
+                                    {
+                                        std::cerr << "  |_valid" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        tao::ld(Xi,0);
+                                        Xi[i] = xmax;
+                                        tao::mul_add(C,NuT,Xi);
+                                        C[lmax.sp.indx] = 0;
+                                        aliasing::_(Vs).ld_col(i,0);
+                                        clipped = true;
+                                    }
+                                }
+                                    break;
+
+                                case Guard::IsBothWays:
+                                {
+                                    const Leading &lmin = g.xiMin(C); assert( &lmin.eq == &_ );
+                                    const double   xmin = -C[lmin.sp.indx] / lmin.nu;
+                                    const Leading &lmax = g.xiMax(C); assert( &lmax.eq == &_ );
+                                    const double   xmax = C[lmax.sp.indx] / lmax.nu;
+                                    std::cerr << "  [" << xmin << ":" << xmax << "]" << std::endl;
+
+                                    if(x<xmin)
+                                    {
+                                        tao::ld(Xi,0);
+                                        Xi[i] = xmin;
+                                        tao::mul_add(C,NuT,Xi);
+                                        C[lmin.sp.indx] = 0;
+                                        aliasing::_(Vs).ld_col(i,0);
+                                        clipped = true;
+
+                                    }
+
+                                    if(x>xmax)
+                                    {
+                                        tao::ld(Xi,0);
+                                        Xi[i] = xmax;
+                                        tao::mul_add(C,NuT,Xi);
+                                        C[lmax.sp.indx] = 0;
+                                        aliasing::_(Vs).ld_col(i,0);
+                                        clipped = true;
+                                    }
+
+
+                                }   break;
+                            }
                         }
+
+                        lib.display(std::cerr,C) << std::endl;
+
+                        std::cerr << "Vs=" << Vs << std::endl;
+                        std::cerr << "clipped=" << clipped << std::endl;
+                        if(clipped)
+                            continue;
+
+                        // found
+                        tao::mul_add(C,NuT,Xs);
+                        for(size_t j=M;j>0;--j)
+                        {
+                            if(active[j]&&C[j]<=0) C[j]=0;
+                        }
+
+                        break;
+
+                    }
+                    else
+                    {
+                        goto DONE;
                     }
 
-
-                }
-                else
-                {
-                    goto DONE;
                 }
 
             }
@@ -114,6 +196,7 @@ namespace upsylon
             if(Verbosity)
             {
                 std::cerr << "  ==> [" <<textual::boolean(balanced) << "] <==" << std::endl;
+                lib.display(std::cerr,C) << std::endl;
                 std::cerr << "<Balanced Seeking/>" << std::endl;
             }
 

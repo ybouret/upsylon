@@ -469,6 +469,24 @@ namespace upsylon
             swap_cols(i,j);
         }
 
+        //! load same values into a row
+        inline void ld_row(const size_t i, param_type value)
+        {
+            assert(i>=1);
+            assert(i<=rows);
+            array<T> &r_i = (*this)[i];
+            for(size_t j=cols;j>0;--j) r_i[j] = value;
+        }
+
+        //! load same values into a row
+        inline void ld_col(const size_t j, param_type value)
+        {
+            assert(j>=1);
+            assert(j<=cols);
+            matrix<T> &self = *this;
+            for(size_t i=rows;i>0;--i) self[i][j] = value;
+        }
+
         
         //! apply to a vector of same type, using internal backup
         template <typename TARGET>
