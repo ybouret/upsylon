@@ -89,8 +89,9 @@ namespace upsylon
                             case Guard::HasNoBound:
                                 break;
 
-                            case Guard::HasOnlyGEQ:
-                                break;
+                            case Guard::HasOnlyGEQ: {
+                                const Leading &lmin = g.xiMin(C); assert( &lmin.eq == &_ );
+                            } break;
 
                             case Guard::HasOnlyLEQ:
                                 break;
