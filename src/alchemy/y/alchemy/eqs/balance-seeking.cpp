@@ -57,6 +57,7 @@ namespace upsylon
                 matrix<double> Vm(NS,N);
                 matrix<double> tV(N,NS);
                 matrix<double> V2(NS,NS);
+
                 Vm.assign(Vs,u2d);
                 tV.assign_transpose(Vm);
                 tao::gram(V2,Vm);
@@ -74,6 +75,22 @@ namespace upsylon
                     LU::solve(V2,Cb);
                     tao::mul(Xi,tV,Cb);
                     Y_ALCHEM_PRINTLN("Xi="<<Xi);
+
+                    // study Xi
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        const Guard &guard = *guards[i];
+                        bool         trunc = false;
+                        switch(guard.cls)
+                        {
+                            case Guard::HasNoBound: break;
+                        }
+                        if(trunc)
+                        {
+
+                        }
+                    }
+
 
                 }
 
