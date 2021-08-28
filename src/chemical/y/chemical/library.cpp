@@ -2,6 +2,7 @@
 #include "y/chemical/library.hpp"
 #include "y/exception.hpp"
 #include "y/type/utils.hpp"
+#include "y/jive/regexp.hpp"
 
 namespace upsylon
 {
@@ -11,7 +12,14 @@ namespace upsylon
         {
         }
         
-        Library:: Library() : sdb() {}
+        Library:: Library() :
+        sdb(),
+        name(   Jive::RegExp("[:upper:][:word:]*",NULL) ),
+        charge( Jive::RegExp("\\-+|\\++",NULL) )
+        {
+            //name->graphViz("name.dot");
+            //charge->graphViz("charge.dot");
+        }
         
         Library::const_type & Library::bulk() const throw()
         {

@@ -7,6 +7,7 @@
 #include "y/chemical/species.hpp"
 #include "y/chemical/freezable.hpp"
 #include "y/type/gateway.hpp"
+#include "y/jive/pattern.hpp"
 
 namespace upsylon
 {
@@ -47,8 +48,10 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw();
+            Species::Set       sdb;
+            const Jive::Motif  name;
+            const Jive::Motif  charge;
             
-            Species::Set sdb;
             const Species & use(Species *);
             void update() throw();
             

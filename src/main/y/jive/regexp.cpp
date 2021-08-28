@@ -436,6 +436,7 @@ case 't': return Single::Create('\t')
                         case  'x': return hexadecimalEscape();
                         case '\\':
                         case  '+':
+                        case  '-':
                         case  '*':
                         case  '?':
                         case  '~':
