@@ -29,6 +29,11 @@ namespace upsylon
         {
             return prod.totalCharge() - reac.totalCharge();
         }
+        
+        const string & Equilibrium:: key() const throw()
+        {
+            return name;
+        }
 
         
         void Equilibrium:: operator()(const unit_t nu, const Species &sp)

@@ -1,5 +1,3 @@
-
-
 //! \file
 
 #ifndef Y_CHEMICAL_EQUILIBRIUM_INCLUDED
@@ -21,7 +19,8 @@ namespace upsylon
         class Equilibrium : public Labeled
         {
         public:
-            
+            typedef intr_ptr<string,Equilibrium> Pointer;
+            typedef hash_set<string,Pointer>     Set;
             //__________________________________________________________________
             //
             // C++
@@ -77,6 +76,10 @@ namespace upsylon
             //! charge creation
             unit_t deltaCharge() const throw();
             
+            //! key for set
+            const string &key() const throw();
+            
+            
             //__________________________________________________________________
             //
             // members
@@ -89,6 +92,8 @@ namespace upsylon
             string Kstr(const double t) const;
         };
         
+        typedef Equilibrium::Set::node_type ENode;
+
         //______________________________________________________________________
         //
         //
