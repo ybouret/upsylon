@@ -19,22 +19,31 @@ namespace upsylon
         class Labeled : public Indexed
         {
         public:
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            virtual ~Labeled() throw(); //!< cleanup
             
-            virtual ~Labeled() throw();
-            
+            //! pad up to nmax
             template <typename OSTREAM> inline
-            OSTREAM & pad(OSTREAM &os) const
-            {
+            OSTREAM & pad(OSTREAM &os) const {
                 for(size_t i=name.size();i<nmax;++i) os << ' ';
                 return os;
             }
             
-            
-            const string name;
-            const size_t nmax;
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const string name; //!< the name
+            const size_t nmax; //!< padding value
             
         protected:
+            //__________________________________________________________________
+            //
             //! constructor
+            //__________________________________________________________________
             template <typename ID> inline
             explicit Labeled(const ID &id) :
             Indexed(), name(id), nmax(0) {}

@@ -11,6 +11,8 @@ namespace upsylon
             aliasing::_(charge) = 0;
             aliasing::_(rating) = 0;
         }
+        
+        const string & Species:: key() const throw() { return name; }
     }
     
 }

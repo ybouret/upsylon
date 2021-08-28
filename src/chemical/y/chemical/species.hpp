@@ -1,4 +1,3 @@
-
 //! \file
 
 #ifndef Y_CHEMICAL_SPECIES_INCLUDED
@@ -24,14 +23,16 @@ namespace upsylon
             //
             // types
             //__________________________________________________________________
-            typedef intr_ptr<string,const Species> Pointer;
-            typedef hash_set<string,Pointer>       Set;
-            typedef Set::node_type                 Node;
+            typedef intr_ptr<string,const Species> Pointer; //!< smart pointer
+            typedef hash_set<string,Pointer>       Set;     //!< database
+            typedef Set::node_type                 Node;    //!< for iterating
             
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
+            
+            //! setup
             template <typename ID> inline
             Species(const ID &the_name, const unit_t the_charge) :
             Labeled(the_name),
@@ -39,13 +40,16 @@ namespace upsylon
             rating(0)
             {}
             
-            
+            //! cleanup
             virtual ~Species() throw();
             
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
+            const string & key() const throw(); //!< for Set
+            
+            //! output with internal alignement
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Species &sp)
             {
