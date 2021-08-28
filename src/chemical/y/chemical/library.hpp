@@ -66,7 +66,7 @@ namespace upsylon
                     os << ' ' << '(' << Species::Status(sp.rating) << ')';
                     os << '\n';
                 }
-                os << '}' << '\n';
+                os << '}';
                 return os;
             }
             

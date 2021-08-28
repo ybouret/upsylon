@@ -1,5 +1,6 @@
 
 #include "y/chemical/library.hpp"
+#include "y/chemical/actors.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -15,6 +16,9 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Chemical::Freezable::Latch);
 
     Y_UTEST_SIZEOF(Chemical::Library);
+    Y_UTEST_SIZEOF(Chemical::Actor);
+    Y_UTEST_SIZEOF(Chemical::Actor::Map);
+    Y_UTEST_SIZEOF(Chemical::Actors);
 
 
 }
