@@ -3,6 +3,7 @@
 #include "y/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/jive/regexp.hpp"
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -16,9 +17,11 @@ namespace upsylon
         sdb(),
         jN( Jive::RegExp("[:upper:][:word:]*",NULL) ),
         jZ( Jive::RegExp("\\-+|\\++",NULL) ),
-        jS( Jive::RegExp("a",NULL) )
+        jS( Jive::RegExp("[-+]?[:digit:]*",NULL) )
         {
-            
+            //jN->graphViz("jN.dot");
+            //jZ->graphViz("jZ.dot");
+            //jS->graphViz("jS.dot");
         }
         
         Library::const_type & Library::bulk() const throw()
@@ -97,11 +100,46 @@ namespace upsylon
             return(*this)(name,charge);
         }
         
+        static inline unit_t token2nu(Jive::Token &token) throw()
+        {
+            unit_t nu=0;
+            switch(token.size)
+            {
+                    // empty
+                case 0: nu=1; break;
+                    
+                    // one char
+                case 1:
+                {
+                    const uint8_t c = token.head->code;
+                    switch(c)
+                    {
+                        case '-': nu=-1; break;
+                        case '+': nu=1;  break;
+                        default: assert(c>='0'); assert(c<='9');
+                            nu = c-uint8_t('0');
+                            break;
+                    }
+                } break;
+                    
+                    // default
+                default: {
+                    const string s = token.toString();
+                    nu = atol(*s);
+                } break;
+            }
+            
+            return nu;
+        }
+        
         unit_t Library:: get(Jive::Source &source, const Species **pps)
         {
             assert(NULL!=pps);
             assert(NULL==*pps);
-            return 0;
+            Jive::Token token;
+            const unit_t nu = jS->accept(token,source) ? token2nu(token) : 1;
+            *pps            = & use(source);
+            return nu;
         }
 
         

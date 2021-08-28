@@ -38,7 +38,17 @@ namespace upsylon
             return adb.search(key) != NULL;
         }
 
-        
+        unit_t Actors:: totalCharge() const throw()
+        {
+            unit_t sum = 0;
+            for(const ANode *node=adb.head();node;node=node->next)
+            {
+                const Actor &a = **node;
+                sum += unit_t(a.nu) * a.sp.charge;
+            }
+            return sum;
+        }
+
     }
     
 }

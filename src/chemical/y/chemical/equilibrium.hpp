@@ -6,6 +6,7 @@
 #define Y_CHEMICAL_EQUILIBRIUM_INCLUDED 1
 
 #include "y/chemical/actors.hpp"
+#include "y/chemical/library.hpp"
 
 namespace upsylon
 {
@@ -25,8 +26,10 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            virtual ~Equilibrium() throw();
+            virtual ~Equilibrium() throw(); //!< cleanup
             
+        protected:
+            //! setup
             template <typename NAME> inline
             explicit Equilibrium(const NAME &id) :
             Labeled(id),
@@ -35,6 +38,7 @@ namespace upsylon
             {
             }
             
+        public:
             //__________________________________________________________________
             //
             // methods
@@ -47,6 +51,14 @@ namespace upsylon
             void operator()(const unit_t nu, const Species &sp);
             
             //! with parsing
+            template <typename RX> inline
+            void operator()(const RX &rx, Library &lib)
+            {
+                Jive::Source source( Jive::Module::OpenData(rx) );
+                const Species *ps = 0;
+                const unit_t   nu = lib.get(source, &ps); assert(ps!=NULL);
+                (*this)(nu,*ps);
+            }
             
             //! aligned output
             template <typename OSTREAM> inline
@@ -62,29 +74,41 @@ namespace upsylon
                 return os << (*this)  << " : " << reac << " <=> " << prod << " (" << Kstr(t) << ")";
             }
             
+            //! charge creation
+            unit_t deltaCharge() const throw();
+            
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const Actors reac;
-            const Actors prod;
+            const Actors reac; //!< reactant
+            const Actors prod; //!< product
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             string Kstr(const double t) const;
         };
         
+        //______________________________________________________________________
+        //
+        //
+        //! a simple constant equilibrium
+        //
+        //______________________________________________________________________
         class ConstEquilibrium : public Equilibrium
         {
         public:
+            //! cleanup
             virtual ~ConstEquilibrium() throw();
             
+            //! setup
             template <typename NAME> inline
             explicit ConstEquilibrium(const NAME &id, const double Kvalue) :
             Equilibrium(id), K_(Kvalue)
             {
             }
             
+            //! constant value
             virtual double K(double) const throw();
 
         private:

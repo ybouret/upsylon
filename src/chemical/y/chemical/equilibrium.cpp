@@ -25,6 +25,12 @@ namespace upsylon
             return K_;
         }
 
+        unit_t Equilibrium:: deltaCharge() const throw()
+        {
+            return prod.totalCharge() - reac.totalCharge();
+        }
+
+        
         void Equilibrium:: operator()(const unit_t nu, const Species &sp)
         {
             if(prod.owns(sp)) throw exception("'%s' already in <%s> products",*sp.name,*name);

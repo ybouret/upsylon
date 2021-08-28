@@ -32,7 +32,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            //! register
+            //! register and increase species rating
             void operator()(const size_t, const Species &sp);
             
             //! find
@@ -53,6 +53,9 @@ namespace upsylon
                 }
                 return os;
             }
+            
+            //! signed total charge
+            unit_t totalCharge() const throw();
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

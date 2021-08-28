@@ -52,6 +52,11 @@ namespace upsylon
                 return use(source);
             }
             
+            //! helper for equilibria
+            unit_t get(Jive::Source &source, const Species **pps);
+
+            
+            //! simple parsing of species to be declared
             template <typename RX> inline
             Library & operator<<( const RX &rx )
             {
@@ -91,7 +96,6 @@ namespace upsylon
             const Species & use(Species *);
             void            update() throw();
             const Species & use(Jive::Source &source);
-            unit_t          get(Jive::Source &source, const Species **pps);
             
             
         };
