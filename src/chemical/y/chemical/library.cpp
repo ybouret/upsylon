@@ -70,11 +70,14 @@ namespace upsylon
             assert(module!=NULL);
             Jive::Source source(module);
             
+            // extract name
             Jive::Token token;
             if(!jN->accept(token,source)) throw exception("%s no species name",CLID);
             string       name   = token.toString();
             unit_t       charge = 0;
             token.release();
+            
+            // extract charge
             if(jZ->accept(token,source))
             {
                 assert(token.size>0);
@@ -86,10 +89,12 @@ namespace upsylon
             }
             name += token.toString();
             token.release();
+            
+            // check done
             if(source.is_active()) throw exception("%s invalid char '%c' in species name",CLID, source.peek()->code);
             
             
-            
+            // create species
             return(*this)(name,charge);
         }
         
