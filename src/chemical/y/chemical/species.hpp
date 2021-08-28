@@ -23,9 +23,10 @@ namespace upsylon
             //
             // types
             //__________________________________________________________________
-            typedef intr_ptr<string,const Species> Pointer; //!< smart pointer
-            typedef hash_set<string,Pointer>       Set;     //!< database
-            typedef Set::node_type                 Node;    //!< for iterating
+            typedef intr_ptr<string,const Species>     Pointer; //!< smart pointer
+            typedef hash_set<string,Pointer>           Set;     //!< database
+            typedef Set::node_type                     Node;    //!< for iterating
+            static const char *Status(const size_t) throw();    //!< waiting,leading, seeking
             
             //__________________________________________________________________
             //

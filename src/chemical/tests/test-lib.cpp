@@ -10,10 +10,10 @@ Y_UTEST(lib)
 {
     Library lib;
     
-    lib("H+",1);
-    lib("HO-",-1);
-
-    std::cerr << *lib << std::endl;
+    lib("H+");
+    lib("HO-");
+    
+    std::cerr << lib << std::endl;
     
     
 }
