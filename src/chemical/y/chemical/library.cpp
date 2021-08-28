@@ -15,7 +15,8 @@ namespace upsylon
         Library:: Library() :
         sdb(),
         jN( Jive::RegExp("[:upper:][:word:]*",NULL) ),
-        jZ( Jive::RegExp("\\-+|\\++",NULL) )
+        jZ( Jive::RegExp("\\-+|\\++",NULL) ),
+        jS( Jive::RegExp("a",NULL) )
         {
             
         }
@@ -65,10 +66,8 @@ namespace upsylon
             }
         }
         
-        const Species &Library:: use(Jive::Module *module)
+        const Species &Library:: use(Jive::Source &source)
         {
-            assert(module!=NULL);
-            Jive::Source source(module);
             
             // extract name
             Jive::Token token;
@@ -98,6 +97,13 @@ namespace upsylon
             return(*this)(name,charge);
         }
         
+        unit_t Library:: get(Jive::Source &source, const Species **pps)
+        {
+            assert(NULL!=pps);
+            assert(NULL==*pps);
+            return 0;
+        }
+
         
     }
 }

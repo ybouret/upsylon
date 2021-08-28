@@ -35,15 +35,21 @@ namespace upsylon
             //! register
             void operator()(const size_t, const Species &sp);
             
+            //! find
+            bool owns(const Species &sp) const throw();
+            
             //! display
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Actors &A)
             {
                 const ANode *node = A->head();
-                os << **node;
-                for(node=node->next;node;node=node->next)
+                if(node)
                 {
-                    os << '+' << **node;
+                    os << **node;
+                    for(node=node->next;node;node=node->next)
+                    {
+                        os << '+' << **node;
+                    }
                 }
                 return os;
             }

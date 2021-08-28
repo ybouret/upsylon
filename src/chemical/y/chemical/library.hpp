@@ -48,7 +48,16 @@ namespace upsylon
             template <typename RX> inline
             const Species & operator()(const RX &rx)
             {
-                return use( Jive::Module::OpenData(rx) );
+                Jive::Source source(Jive::Module::OpenData(rx) );
+                return use(source);
+            }
+            
+            template <typename RX> inline
+            Library & operator<<( const RX &rx )
+            {
+                Library &self = *this;
+                (void) self(rx);
+                return self;
             }
             
             //! output
@@ -59,7 +68,7 @@ namespace upsylon
                 for(const Species::Node *node=lib->head();node;node=node->next)
                 {
                     const Species &sp = ***node;
-                    os << sp;
+                    os << ' ' << sp;
                     os << vformat(" : @%u", unsigned(sp.indx));
                     os << vformat(" : z =%3d", int(sp.charge) );
                     os << vformat(" : r =%3u", unsigned(sp.rating));
@@ -75,12 +84,15 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw();
             Species::Set       sdb;
-            const Jive::Motif  jN;
-            const Jive::Motif  jZ;
+            const Jive::Motif  jN; //!< for name
+            const Jive::Motif  jZ; //!< for charge
+            const Jive::Motif  jS; //!< for coefficient
             
             const Species & use(Species *);
             void            update() throw();
-            const Species & use(Jive::Module *);
+            const Species & use(Jive::Source &source);
+            unit_t          get(Jive::Source &source, const Species **pps);
+            
             
         };
     }

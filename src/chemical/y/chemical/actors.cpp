@@ -23,6 +23,8 @@ namespace upsylon
                 throw exception("multiple actor '%s'",*sp.name);
             }
             
+            aliasing::incr(sp.rating);
+            
         }
 
         Actors::const_type & Actors:: bulk() const throw()
@@ -30,7 +32,12 @@ namespace upsylon
             return adb;
         }
         
-        
+        bool Actors:: owns(const Species &sp) const throw()
+        {
+            const be_key key(sp);
+            return adb.search(key) != NULL;
+        }
+
         
     }
     
