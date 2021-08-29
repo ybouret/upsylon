@@ -97,6 +97,24 @@ namespace upsylon
             //! get constant as string
             string Kstr(const double t) const;
 
+            //! fill topology
+            template <typename T> inline
+            void fill(addressable<T> &Nu) const throw()
+            {
+                for(const ANode *node=reac->head();node;node=node->next)
+                {
+                    const Actor &a = **node;
+                    Nu[a.sp.indx] = static_cast<T>(-a.snu);
+                }
+                
+                for(const ANode *node=prod->head();node;node=node->next)
+                {
+                    const Actor &a = **node;
+                    Nu[a.sp.indx] = static_cast<T>(a.snu);
+                }
+                
+            }
+            
             
             //__________________________________________________________________
             //
