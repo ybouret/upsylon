@@ -1,11 +1,14 @@
 #include "y/chemical/reactor.hpp"
-
+#include "y/mkl/kernel/apk.hpp"
 
 namespace upsylon
 {
+    using namespace mkl;
     
     namespace Chemical
     {
+        
+        const char Reactor:: CLID[] = "Chemical::Reactor";
         
         Reactor:: ~Reactor() throw()
         {}
@@ -31,18 +34,40 @@ namespace upsylon
             //
             //------------------------------------------------------------------
             Y_CHEMICAL_PRINTLN("<Reactor>");
-            Y_CHEMICAL_PRINTLN("  M  = " << M);
-            Y_CHEMICAL_PRINTLN("  N  = " << N);
-            Y_CHEMICAL_PRINTLN("  NW = " << NW);
-            Y_CHEMICAL_PRINTLN("  NL = " << NL);
-            Y_CHEMICAL_PRINTLN("  NS = " << NS);
-
+            Y_CHEMICAL_PRINTLN("  M   = " << M);
+            Y_CHEMICAL_PRINTLN("  N   = " << N);
+            Y_CHEMICAL_PRINTLN("  NW  = " << NW);
+            Y_CHEMICAL_PRINTLN("  NL  = " << NL);
+            Y_CHEMICAL_PRINTLN("  NS  = " << NS);
+            
+            //------------------------------------------------------------------
+            //
+            // check topology
+            //
+            //------------------------------------------------------------------
             eqs.verify(flags);
-            
-            
-            Y_CHEMICAL_PRINTLN("<Reactor/>");
+            eqs.fill( aliasing::_(Nu) );
+            aliasing::_(NuT).assign_transpose(Nu);
+            const size_t rankNu = apk::rank(Nu);
 
+            Y_CHEMICAL_PRINTLN("  Nu  = " << Nu);
+            Y_CHEMICAL_PRINTLN("  NuT = " << NuT);
+            Y_CHEMICAL_PRINTLN("      |_rank= " << rankNu);
+            if(rankNu<N) throw exception("%s equilibria are not independent",CLID);
             
+            //------------------------------------------------------------------
+            //
+            // create leading conditions
+            //
+            //------------------------------------------------------------------
+            
+            
+            //------------------------------------------------------------------
+            //
+            // done
+            //
+            //------------------------------------------------------------------
+            Y_CHEMICAL_PRINTLN("<Reactor/>");
         }
         
         

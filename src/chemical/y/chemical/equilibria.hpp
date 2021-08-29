@@ -84,13 +84,26 @@ namespace upsylon
                             Library      &lib,
                             Lua::VM      &vm);
             
+            //! using db, wrapper
             void operator()(const char   *rx,
                             Library      &lib,
                             Lua::VM      &vm);
             
             
-            //! verify all
+            //! verify all with flags
             void verify(const unsigned flags) const;
+            
+            //! fill topology matrix
+            template <typename T> inline
+            void fill(matrix<T> &Nu) const throw()
+            {
+                for(const ENode *node=edb.head();node;node=node->next)
+                {
+                    const Equilibrium &eq = ***node;
+                    eq.fill(Nu[eq.indx]);
+                }
+            }
+            
             
             
         private:

@@ -57,6 +57,22 @@ namespace upsylon
             //! signed total charge
             unit_t totalCharge() const throw();
             
+            //! load coefficients, used to check minimal equilibrium
+            template <typename T> inline
+            void save(sequence<T> &coeff) const
+            {
+                for(const ANode *node = adb.head();node;node=node->next)
+                {
+                    typename sequence<T>::const_type temp( (**node).nu );
+                    coeff.push_back(temp);
+                }
+            }
+            
+            //! count leading here
+            size_t tellLeading() const throw();
+            //! append leading
+            void   fillLeading(sequence<Actor> &) const;
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);
             virtual const_type &bulk() const throw();

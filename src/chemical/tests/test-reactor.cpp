@@ -13,6 +13,14 @@ Y_UTEST(reactor)
     Equilibria       eqs;
     Lua::VM          vm = new Lua::State();
     
+    for(int i=1;i<argc;++i)
+    {
+        eqs(argv[i],lib,vm);
+    }
+    
+    Reactor cs(lib,eqs,Equilibrium::Minimal);
+    
+    
 }
 Y_UTEST_DONE()
 

@@ -49,6 +49,22 @@ namespace upsylon
             return sum;
         }
 
+        size_t Actors:: tellLeading() const throw()
+        {
+            size_t res = 0;
+            for(const ANode *node=adb.head();node;node=node->next)
+            {
+                if( 1 == (**node).sp.rating) ++res;
+            }
+            return res;
+        }
+        
+        void Actors:: fillLeading(sequence<Actor> &leading) const
+        {
+            
+        }
+
+        
     }
     
 }

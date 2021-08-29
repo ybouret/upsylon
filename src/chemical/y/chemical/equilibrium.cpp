@@ -71,12 +71,28 @@ namespace upsylon
             }
         }
 
+    }
+    
+}
+
+#include "y/yap/gcd.hpp"
+
+namespace upsylon
+{
+    namespace Chemical
+    {
         void Equilibrium:: verify(const unsigned flags) const
         {
             const unit_t dz = deltaCharge();
             if(dz) throw exception("<%s> has deltaCharge=%ld",*name, long(dz));
+           
             if(flags&Minimal)
             {
+                vector<apn,Allocator> coef(reac->size()+prod->size(),as_capacity);
+                reac.save(coef);
+                prod.save(coef);
+                const apn g = yap::compute_gcd::of(coef);
+                if(g!=1) throw exception("<%s> is not minimal",*name);
             }
         }
 

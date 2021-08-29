@@ -117,9 +117,9 @@ namespace upsylon
             //! draw a random concentration
             void drawC(Addressable &,randomized::bits &) const throw();
 
-            size_t countWorking() const throw();
-            size_t countLeading() const throw();
-            size_t countSeeking() const throw();
+            size_t countWorking() const throw(); //!< count working species
+            size_t countLeading() const throw(); //!< count leading species
+            size_t countSeeking() const throw(); //!< count seeking species
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
