@@ -23,8 +23,12 @@ Y_UTEST(eqs)
         (void) eqs(argv[i],lib,vm);
     }
     
+    std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
-    
+ 
+    Vector C(lib->size(),1.2);
+    lib.drawC(C,alea);
+    lib.display(std::cerr,C) << std::endl;
 }
 Y_UTEST_DONE()
 

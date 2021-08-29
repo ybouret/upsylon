@@ -4,11 +4,26 @@
 #include "y/type/utils.hpp"
 #include "y/jive/regexp.hpp"
 #include <cstdlib>
+#include "y/randomized/bits.hpp"
 
 namespace upsylon
 {
     namespace Chemical
     {
+        
+        double Library:: RandomC(randomized::bits &ran) throw()
+        {
+            return pow(10.0,ran.within<double>(CMinPow,CMaxPow));
+        }
+        
+        void Library:: drawC(Addressable &C, randomized::bits &ran) const throw()
+        {
+            for(const Species::Node *node=sdb.head();node;node=node->next)
+            {
+                C[(***node).indx] = RandomC(ran);
+            }
+        }
+        
         Library:: ~Library() throw()
         {
         }

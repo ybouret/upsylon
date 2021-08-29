@@ -8,9 +8,15 @@
 #include "y/chemical/freezable.hpp"
 #include "y/type/gateway.hpp"
 #include "y/jive/pattern.hpp"
+#include "y/ios/scribe.hpp"
 
 namespace upsylon
 {
+    namespace randomized
+    {
+        class bits;
+    }
+    
     namespace Chemical
     {
         //______________________________________________________________________
@@ -26,8 +32,17 @@ namespace upsylon
             //
             // types and definition
             //__________________________________________________________________
-            static const char CLID[]; //!< "Chemical::Library"
+            static const char CLID[];        //!< "Chemical::Library"
+            static const int  CMinPow = -14; //!< for randomC
+            static const int  CMaxPow =   1; //!< for randomC
             
+            //! a radom concentration
+            static double     RandomC(randomized::bits &) throw();
+            
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit Library();         //!< setup empty
             virtual ~Library() throw(); //!< cleanup
             
@@ -84,7 +99,24 @@ namespace upsylon
                 return os;
             }
             
+            //! display array mapped to species
+            template <typename OSTREAM, typename ARR> inline
+            OSTREAM & display(OSTREAM &os, ARR &arr) const
+            {
+                static const ios::scribe &_ = ios::scribe::query<typename ARR::mutable_type>();
+                os << '{' << '\n';
+                for(const Species::Node *node=sdb.head();node;node=node->next)
+                {
+                    const Species &sp = ***node;
+                    os << ' ' << sp << " = " << _.write( &arr[sp.indx] ) << '\n';
+                }
+                os << '}';
+                return os;
+            }
             
+            //! draw a random concentration
+            void drawC(Addressable &,randomized::bits &) const throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw();

@@ -12,17 +12,37 @@ namespace upsylon
     namespace Chemical
     {
         
+        //______________________________________________________________________
+        //
+        //
+        //! collection of unique equilibria
+        //
+        //______________________________________________________________________
         class Equilibria : public Freezable, public gateway<const Equilibrium::Set>
         {
         public:
-            static const char CLID[];
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char CLID[]; //!< "Chemical::Equilibria"
             
-            explicit Equilibria();
-            virtual ~Equilibria() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Equilibria();            //!< setup empty
+            virtual ~Equilibria() throw();    //!< cleanup
+            
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
             
             //! insert and update
             Equilibrium & use(Equilibrium *);
             
+            //! display
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Equilibria &eqs)
             {
@@ -44,14 +64,17 @@ namespace upsylon
                 return os;
             }
             
+            //! create from name and constant description
             Equilibrium &create(const string &name,
                                 const string &kstr,
                                 Lua::VM      &vm);
             
+            //! simple parsing
             Equilibrium & operator()(const string &info,
                                      Library      &lib,
                                      Lua::VM      &vm);
             
+            //! simple parsing, wrapper
             Equilibrium & operator()(const char  *info,
                                      Library      &lib,
                                      Lua::VM      &vm);
@@ -65,7 +88,7 @@ namespace upsylon
             
             
         public:
-            mutable double      tdisp;
+            mutable double      tdisp; //!< to display K(t) for eqs
         };
     }
 }

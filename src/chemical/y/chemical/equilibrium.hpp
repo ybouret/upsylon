@@ -19,8 +19,13 @@ namespace upsylon
         class Equilibrium : public Labeled
         {
         public:
-            typedef intr_ptr<string,Equilibrium> Pointer;
-            typedef hash_set<string,Pointer>     Set;
+            //__________________________________________________________________
+            //
+            // types
+            //__________________________________________________________________
+            typedef intr_ptr<string,Equilibrium> Pointer; //!< alias
+            typedef hash_set<string,Pointer>     Set;     //!< database alias
+            
             //__________________________________________________________________
             //
             // C++
@@ -104,6 +109,10 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
         };
         
+        //______________________________________________________________________
+        //
+        //! iterator for equilibria
+        //______________________________________________________________________
         typedef Equilibrium::Set::node_type ENode;
 
         //______________________________________________________________________
