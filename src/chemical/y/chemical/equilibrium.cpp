@@ -20,7 +20,7 @@ namespace upsylon
         {
         }
         
-        double ConstEquilibrium:: K(double) const throw()
+        double ConstEquilibrium:: K(double) const 
         {
             return K_;
         }

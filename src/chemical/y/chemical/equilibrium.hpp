@@ -44,7 +44,7 @@ namespace upsylon
             //__________________________________________________________________
            
             //! get constant value
-            virtual double K(double) const throw() = 0;
+            virtual double K(double) const = 0;
            
             //! add an actor
             void operator()(const unit_t nu, const Species &sp);
@@ -114,7 +114,7 @@ namespace upsylon
             }
             
             //! constant value
-            virtual double K(double) const throw();
+            virtual double K(double) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(ConstEquilibrium);
