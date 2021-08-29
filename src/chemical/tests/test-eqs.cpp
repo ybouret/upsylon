@@ -2,7 +2,7 @@
 
 
 #include "y/chemical/library.hpp"
-#include "y/chemical/equilibria.hpp"
+#include "y/chemical/eqs/db.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/osstream.hpp"
@@ -11,8 +11,7 @@ using namespace upsylon;
 using namespace Chemical;
 
 Y_UTEST(eqs)
-{
-    
+{ 
     Library          lib;
     Equilibria       eqs;
     Lua::VM          vm = new Lua::State();
@@ -20,7 +19,7 @@ Y_UTEST(eqs)
     
     for(int i=1;i<argc;++i)
     {
-        (void) eqs(argv[i],lib,vm);
+        eqs(argv[i],lib,vm);
     }
     
     std::cerr << lib << std::endl;

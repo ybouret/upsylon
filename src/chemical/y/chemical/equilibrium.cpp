@@ -71,6 +71,16 @@ namespace upsylon
             }
         }
 
+        void Equilibrium:: verify(const unsigned flags) const
+        {
+            const unit_t dz = deltaCharge();
+            if(dz) throw exception("<%s> has deltaCharge=%ld",*name, long(dz));
+            if(flags&Minimal)
+            {
+            }
+        }
+
+        
     }
     
 }

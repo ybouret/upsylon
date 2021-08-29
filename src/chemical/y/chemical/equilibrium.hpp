@@ -25,6 +25,8 @@ namespace upsylon
             //__________________________________________________________________
             typedef intr_ptr<string,Equilibrium> Pointer; //!< alias
             typedef hash_set<string,Pointer>     Set;     //!< database alias
+            static const unsigned Default = 0x00;
+            static const unsigned Minimal = 0x01;
             
             //__________________________________________________________________
             //
@@ -115,6 +117,7 @@ namespace upsylon
                 
             }
             
+            void verify(const unsigned flags) const;
             
             //__________________________________________________________________
             //

@@ -24,7 +24,7 @@ namespace upsylon
         typedef vector<string,Allocator>  Strings;     //!< default sequence of strings
         typedef addressable<double>       Addressable; //!< default addressable
         typedef accessible<double>        Accessible;  //!< default addressable
-
+        typedef matrix<unit_t>            iMatrix;     //!< default matrix of integers
         
         //! output a debug message
 #define Y_CHEMICAL_PRINTLN(MSG) do { if(Verbosity) { std::cerr << MSG << std::endl; } } while(false)

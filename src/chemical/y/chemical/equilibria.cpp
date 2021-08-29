@@ -20,6 +20,15 @@ namespace upsylon
         {
             return edb;
         }
+        
+        void Equilibria:: verify(const unsigned flags) const
+        {
+            for(const ENode *node=edb.head();node;node=node->next)
+            {
+                (***node).verify(flags);
+            }
+        }
+
             
         size_t Equilibria:: rawStrings(Strings &raw) const
         {
@@ -37,6 +46,8 @@ namespace upsylon
         Equilibrium & Equilibria:: use(Equilibrium *eq)
         {
             Equilibrium::Pointer p(eq);
+            if(frozen) throw exception("%s is frozen while adding <%s>",CLID,*(p->name));
+            
             if(!edb.insert(p))
             {
                 throw exception("%s multiple <%s>", CLID, *(p->name));
@@ -114,9 +125,9 @@ namespace upsylon
             throw exception("%s%s invalid first char '%c' in constant string for <%s>",CLID,fn,ch,*name);
         }
         
-        Equilibrium & Equilibria::operator()(const string &info,
-                                             Library      &lib,
-                                             Lua::VM      &vm)
+        Equilibrium & Equilibria:: load(const string &info,
+                                        Library      &lib,
+                                        Lua::VM      &vm)
         {
             // analyze info
             Strings words(8,as_capacity);
@@ -135,12 +146,12 @@ namespace upsylon
             return eq;
         }
         
-        Equilibrium & Equilibria::operator()(const char  *info,
-                                             Library      &lib,
-                                             Lua::VM      &vm)
+        Equilibrium & Equilibria:: load(const char  *info,
+                                        Library      &lib,
+                                        Lua::VM      &vm)
         {
             const string _(info);
-            return (*this)(_,lib,vm);
+            return load(_,lib,vm);
         }
         
     }

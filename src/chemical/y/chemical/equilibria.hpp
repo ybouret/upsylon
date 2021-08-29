@@ -70,14 +70,28 @@ namespace upsylon
                                 Lua::VM      &vm);
             
             //! simple parsing
-            Equilibrium & operator()(const string &info,
-                                     Library      &lib,
-                                     Lua::VM      &vm);
+            Equilibrium & load(const string &info,
+                               Library      &lib,
+                               Lua::VM      &vm);
             
             //! simple parsing, wrapper
-            Equilibrium & operator()(const char  *info,
-                                     Library      &lib,
-                                     Lua::VM      &vm);
+            Equilibrium & load(const char  *info,
+                               Library      &lib,
+                               Lua::VM      &vm);
+            
+            //! using db
+            void operator()(const string &rx,
+                            Library      &lib,
+                            Lua::VM      &vm);
+            
+            void operator()(const char   *rx,
+                            Library      &lib,
+                            Lua::VM      &vm);
+            
+            
+            //! verify all
+            void verify(const unsigned flags) const;
+            
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);

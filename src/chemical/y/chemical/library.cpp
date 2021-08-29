@@ -176,6 +176,39 @@ namespace upsylon
             return nu;
         }
         
+        size_t Library:: countWorking() const throw()
+        {
+            size_t NW = 0;
+            for(const Species::Node *node=sdb.head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(sp.rating>0) ++NW;
+            }
+            return NW;
+        }
+        
+        size_t Library:: countLeading() const throw()
+        {
+            size_t NL = 0;
+            for(const Species::Node *node=sdb.head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(1==sp.rating) ++NL;
+            }
+            return NL;
+        }
+        
+        size_t Library:: countSeeking() const throw()
+        {
+            size_t NS = 0;
+            for(const Species::Node *node=sdb.head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(1<sp.rating) ++NS;
+            }
+            return NS;
+        }
+
         
     }
 }
