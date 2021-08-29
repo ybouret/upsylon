@@ -17,11 +17,13 @@ namespace upsylon
         sdb(),
         jN( Jive::RegExp("[:upper:][:word:]*",NULL) ),
         jZ( Jive::RegExp("\\-+|\\++",NULL) ),
-        jS( Jive::RegExp("[-+]?[:digit:]*",NULL) )
+        jS( Jive::RegExp("[-+]?[:digit:]*",NULL) ),
+        jB( Jive::RegExp("[:blank:]*",NULL) )
         {
             //jN->graphViz("jN.dot");
             //jZ->graphViz("jZ.dot");
             //jS->graphViz("jS.dot");
+            //jB->graphViz("jB.dot");
         }
         
         Library::const_type & Library::bulk() const throw()
@@ -69,28 +71,44 @@ namespace upsylon
             }
         }
         
+        void Library:: noBlank(Jive::Source &source) const
+        {
+            Jive::Token token;
+            (void) jB->accept(token,source);
+        }
+        
+        string Library:: getName(Jive::Source &source) const
+        {
+            Jive::Token token;
+            if(!jN->accept(token,source)) throw exception("%s no species name",CLID);
+            return token.toString();
+        }
+        
         const Species &Library:: use(Jive::Source &source)
         {
             
-            // extract name
-            Jive::Token token;
-            if(!jN->accept(token,source)) throw exception("%s no species name",CLID);
-            string       name   = token.toString();
-            unit_t       charge = 0;
-            token.release();
             
-            // extract charge
-            if(jZ->accept(token,source))
+            // extract name
+            noBlank(source);
+            string name   = getName(source);
+            noBlank(source);
+            
+            unit_t charge = 0;
             {
-                assert(token.size>0);
-                switch(token.head->code)
+                // extract charge
+                Jive::Token token;
+                if(jZ->accept(token,source))
                 {
-                    case '+': charge =  unit_t(token.size); break;
-                    case '-': charge = -unit_t(token.size); break;
+                    assert(token.size>0);
+                    switch(token.head->code)
+                    {
+                        case '+': charge =  unit_t(token.size); break;
+                        case '-': charge = -unit_t(token.size); break;
+                    }
                 }
+                name += token.toString();
             }
-            name += token.toString();
-            token.release();
+            noBlank(source);
             
             // check done
             if(source.is_active()) throw exception("%s invalid char '%c' in species name",CLID, source.peek()->code);
@@ -136,12 +154,13 @@ namespace upsylon
         {
             assert(NULL!=pps);
             assert(NULL==*pps);
+            noBlank(source);
             Jive::Token token;
             const unit_t nu = jS->accept(token,source) ? token2nu(token) : 1;
             *pps            = & use(source);
             return nu;
         }
-
+        
         
     }
 }

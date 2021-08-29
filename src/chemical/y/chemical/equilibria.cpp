@@ -21,6 +21,19 @@ namespace upsylon
             return edb;
         }
             
+        size_t Equilibria:: rawStrings(Strings &raw) const
+        {
+            size_t w = 0;
+            for(const ENode *node=edb.head();node;node=node->next)
+            {
+                const string r = (***node).toRawString();
+                raw.push_back(r);
+                w = max_of(w,r.size());
+            }
+            return w;
+        }
+
+        
         Equilibrium & Equilibria:: use(Equilibrium *eq)
         {
             Equilibrium::Pointer p(eq);
@@ -51,6 +64,7 @@ namespace upsylon
 }
 
 #include "y/lua++/function.hpp"
+#include "y/string/tokenizer.hpp"
 
 namespace upsylon
 {
@@ -99,5 +113,35 @@ namespace upsylon
             }
             throw exception("%s%s invalid first char '%c' in constant string for <%s>",CLID,fn,ch,*name);
         }
+        
+        Equilibrium & Equilibria::operator()(const string &info,
+                                             Library      &lib,
+                                             Lua::VM      &vm)
+        {
+            // analyze info
+            Strings words(8,as_capacity);
+            tokenizer<char>::split_with(words,info,':');
+            if(words.size()<2) throw exception("%s need <name>:...:[=|@]k",CLID);
+            
+            // create equilibrium
+            Equilibrium &eq = create(words.front(),words.back(),vm);
+            
+            // populate equilibrium
+            for(size_t i=2;i<words.size();++i)
+            {
+                eq(words[i],lib);
+            }
+            
+            return eq;
+        }
+        
+        Equilibrium & Equilibria::operator()(const char  *info,
+                                             Library      &lib,
+                                             Lua::VM      &vm)
+        {
+            const string _(info);
+            return (*this)(_,lib,vm);
+        }
+        
     }
 }

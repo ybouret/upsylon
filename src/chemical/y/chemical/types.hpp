@@ -17,10 +17,11 @@ namespace upsylon
         //
         // global types
         //______________________________________________________________________
-        extern bool                      Verbosity; //!< to debug
-        typedef memory::dyadic           Allocator; //!< default allocator
-        typedef matrix<double>           Matrix;    //!< default matrix
-        typedef vector<double,Allocator> Vector;    //!< default vector
+        extern bool                       Verbosity; //!< to debug
+        typedef memory::dyadic            Allocator; //!< default allocator
+        typedef matrix<double>            Matrix;    //!< default matrix
+        typedef vector<double,Allocator>  Vector;    //!< default vector
+        typedef vector<string,Allocator>  Strings;   //!< default sequence of strings
         
         //! output a debug message
 #define Y_CHEMICAL_PRINTLN(MSG) do { if(Verbosity) { std::cerr << MSG << std::endl; } } while(false)

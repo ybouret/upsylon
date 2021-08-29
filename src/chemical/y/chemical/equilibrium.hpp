@@ -68,9 +68,19 @@ namespace upsylon
             
             //! full display
             template <typename OSTREAM> inline
+            OSTREAM & display_raw(OSTREAM &os) const
+            {
+                return os << (*this)  << " : " << reac << " <=> " << prod;
+            }
+            
+            //! convert raw to sring
+            string toRawString() const;
+            
+            //! full display
+            template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const double t=0) const
             {
-                return os << (*this)  << " : " << reac << " <=> " << prod << " (" << Kstr(t) << ")";
+                 return display_raw(os) << " (" << Kstr(t) << ")";
             }
             
             //! charge creation
@@ -78,7 +88,10 @@ namespace upsylon
             
             //! key for set
             const string &key() const throw();
-            
+          
+            //! get constant as string
+            string Kstr(const double t) const;
+
             
             //__________________________________________________________________
             //
@@ -89,7 +102,6 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
-            string Kstr(const double t) const;
         };
         
         typedef Equilibrium::Set::node_type ENode;

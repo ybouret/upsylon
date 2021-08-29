@@ -17,20 +17,13 @@ Y_UTEST(eqs)
     Equilibria       eqs;
     Lua::VM          vm = new Lua::State();
     vm->doString("function f(t) return 10^(-4.18) end");
-    Equilibrium &water = eqs("water","=10^(-14)",vm);
-    Equilibrium &acid  = eqs("acid","@f",vm);
-
-    std::cerr << eqs << std::endl;
     
-#if 0
-    ConstEquilibrium eq("eq",1.2);
     for(int i=1;i<argc;++i)
     {
-        eq(argv[i],lib);
+        (void) eqs(argv[i],lib,vm);
     }
-    eq.display(std::cerr) << std::endl;
-#endif
     
+    std::cerr << eqs << std::endl;
     
 }
 Y_UTEST_DONE()

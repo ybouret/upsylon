@@ -92,11 +92,13 @@ namespace upsylon
             const Jive::Motif  jN; //!< for name
             const Jive::Motif  jZ; //!< for charge
             const Jive::Motif  jS; //!< for coefficient
+            const Jive::Motif  jB; //!< for blanks
             
             const Species & use(Species *);
             void            update() throw();
             const Species & use(Jive::Source &source);
-            
+            string          getName(Jive::Source &) const; //!< get name
+            void            noBlank(Jive::Source &) const; //!< skip blanks
             
         };
     }

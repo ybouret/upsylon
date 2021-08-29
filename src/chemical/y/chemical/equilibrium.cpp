@@ -1,6 +1,7 @@
 
 #include "y/chemical/equilibrium.hpp"
 #include "y/ios/scribe.hpp"
+#include "y/ios/osstream.hpp"
 
 namespace upsylon
 {
@@ -15,6 +16,17 @@ namespace upsylon
             const  double k = K(t);
             return S.write(&k);
         }
+        
+        string Equilibrium:: toRawString() const
+        {
+            string        res;
+            ios::osstream fp(res);
+            display_raw(static_cast<ios::ostream &>(fp));
+            return res;
+        }
+            
+
+        
             
         ConstEquilibrium:: ~ConstEquilibrium() throw()
         {
