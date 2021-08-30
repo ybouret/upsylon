@@ -28,9 +28,9 @@ Y_UTEST(eqs)
 
     for(const ENode *node=eqs->head();node;node=node->next)
     {
-        const Equilibrium &eq = ***node;
-        const Leading     leading(eq);
-        
+        const Equilibrium::Pointer &ep = **node;
+        const Leading     leading(ep);
+        std::cerr << leading << std::endl;
     }
 
     Vector C(lib->size(),1.2);

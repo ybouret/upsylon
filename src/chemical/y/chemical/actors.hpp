@@ -68,10 +68,9 @@ namespace upsylon
                 }
             }
             
-            //! count leading here
-            size_t tellLeading() const throw();
-            //! append leading
-            void   fillLeading(sequence<Actor> &) const;
+
+            size_t tellLeading() const throw();                //!< count leading here
+            void   fillLeading(sequence<const Actor> &) const; //!< append leading
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

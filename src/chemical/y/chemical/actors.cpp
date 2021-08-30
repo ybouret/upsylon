@@ -59,7 +59,7 @@ namespace upsylon
             return res;
         }
         
-        void Actors:: fillLeading(sequence<Actor> &leading) const
+        void Actors:: fillLeading(sequence<const Actor> &leading) const
         {
             for(const ANode *node=adb.head();node;node=node->next)
             {
