@@ -18,6 +18,8 @@ Y_UTEST(reactor)
         eqs(argv[i],lib,vm);
     }
 
+    eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
+
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 

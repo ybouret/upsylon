@@ -138,7 +138,7 @@ namespace upsylon
                                                 Addressable   &xi) const throw()
         {
             const Actor &amax = maxFromReac(C);
-            Y_CHEMICAL_PRINTLN( "@" << root->name << ".max=" << xmax << " from " << amax.sp << "=" << C[amax.sp.indx]);
+            Y_CHEMICAL_PRINTLN( "    |_max=" << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
             if(xmax<0)
             {
                 tao::ld(xi,0);
@@ -158,7 +158,7 @@ namespace upsylon
                                                 Addressable   &xi) const throw()
         {
             const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("@" << root->name << ".min=" << xmin << " from " << amin.sp << "=" << C[amin.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_min=" << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
             if(xmin>0)
             {
                 tao::ld(xi,0);
@@ -179,8 +179,8 @@ namespace upsylon
         {
             const Actor &amax = maxFromReac(C);
             const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("@" << root->name << ".min=" << xmin << " from " << amin.sp << "=" << C[amin.sp.indx]);
-            Y_CHEMICAL_PRINTLN("@" << root->name << ".max=" << xmax << " from " << amax.sp << "=" << C[amax.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_min=" << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_max=" << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
 
             if(xmin>xmax)
             {
@@ -188,7 +188,25 @@ namespace upsylon
             }
             else
             {
-                return Rejected;
+                if(xmin>0)
+                {
+                    tao::ld(xi,0);
+                    xi[root->indx] = xmin;
+                    tao::mul_add(C,NuT,xi);
+                    C[amin.sp.indx] = 0;
+                    return Modified;
+                }
+
+                if(xmax<0)
+                {
+                    tao::ld(xi,0);
+                    xi[root->indx] = xmax;
+                    tao::mul_add(C,NuT,xi);
+                    C[amax.sp.indx] = 0;
+                    return Modified;
+                }
+
+                return Accepted;
             }
 
 
@@ -200,6 +218,7 @@ namespace upsylon
                                         const iMatrix &NuT,
                                         Addressable   &xi) const throw()
         {
+            Y_CHEMICAL_PRINTLN("    " << root);
             Leading::Status status = Rejected;
             switch(kind)
             {
@@ -208,7 +227,7 @@ namespace upsylon
                 case LimitedByProd: status = limitedByProd(C,NuT,xi); break;
                 case LimitedByBoth: status = limitedByBoth(C,NuT,xi); break;
             }
-            Y_CHEMICAL_PRINTLN("|_" << StatusText(status));
+            Y_CHEMICAL_PRINTLN("    |_" << StatusText(status));
             return status;
         }
 
