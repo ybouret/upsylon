@@ -42,6 +42,7 @@ namespace upsylon
                 if(Verbosity)
                 {
                     lib.display(std::cerr,C) << std::endl;
+                    //showLeading(std::cerr);
                 }
                 for(size_t j=NS;j>0;--j)
                 {
