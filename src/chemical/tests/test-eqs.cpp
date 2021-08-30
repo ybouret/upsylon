@@ -3,6 +3,7 @@
 
 #include "y/chemical/library.hpp"
 #include "y/chemical/eqs/db.hpp"
+#include "y/chemical/leading.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/osstream.hpp"
@@ -24,7 +25,14 @@ Y_UTEST(eqs)
     
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
- 
+
+    for(const ENode *node=eqs->head();node;node=node->next)
+    {
+        const Equilibrium &eq = ***node;
+        const Leading     leading(eq);
+        
+    }
+
     Vector C(lib->size(),1.2);
     lib.drawC(C,alea);
     lib.display(std::cerr,C) << std::endl;

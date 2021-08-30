@@ -1,6 +1,5 @@
 
-#include "y/chemical/library.hpp"
-#include "y/chemical/actors.hpp"
+#include "y/chemical/reactor.hpp"
 #include "y/utest/run.hpp"
 #include "y/utest/sizeof.hpp"
 
@@ -20,6 +19,8 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Chemical::Actor::Map);
     Y_UTEST_SIZEOF(Chemical::Actors);
 
+    Y_UTEST_SIZEOF(Chemical::Equilibrium);
+    Y_UTEST_SIZEOF(Chemical::Equilibria);
 
 }
 Y_UTEST_DONE()

@@ -4,7 +4,7 @@
 #define Y_CHEMICAL_REACTOR_INCLUDED 1
 
 #include "y/chemical/equilibria.hpp"
-
+#include "y/chemical/leading.hpp"
 
 namespace upsylon
 {

@@ -26,7 +26,8 @@ namespace upsylon
             //
             // types
             //__________________________________________________________________
-            typedef suffix_map<be_key,const Actor> Map; //!< database
+            typedef suffix_map<be_key,const Actor> Map;   //!< database
+            
             //__________________________________________________________________
             //
             // C++

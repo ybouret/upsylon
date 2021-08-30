@@ -61,7 +61,11 @@ namespace upsylon
         
         void Actors:: fillLeading(sequence<Actor> &leading) const
         {
-            
+            for(const ANode *node=adb.head();node;node=node->next)
+            {
+                const Actor &a = **node;
+                if( 1 == a.sp.rating) leading.push_back(a);
+            }
         }
 
         
