@@ -25,6 +25,7 @@ namespace upsylon
         NS(lib.countSeeking()),
         Nu(N>0?N:0,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        leading(N,as_capacity),
         lockLib(lib),
         lockEqs(eqs)
         {
@@ -60,8 +61,17 @@ namespace upsylon
             // create leading conditions
             //
             //------------------------------------------------------------------
-            
-            
+            for(const ENode *node=eqs->head();node;node=node->next)
+            {
+                const Leading::Pointer p( new Leading(**node) );
+                aliasing::_(leading).push_back_(p);
+            }
+
+            if(Verbosity)
+            {
+                showLeading(std::cerr);
+            }
+
             //------------------------------------------------------------------
             //
             // done

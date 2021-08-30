@@ -29,8 +29,9 @@ namespace upsylon
             };
             static const char *KindText(const Kind) throw();
 
-            typedef arc_ptr<Leading>               Pointer;  //!< alias
-            typedef vector<const Actor,Allocator>  Limiting; //!< array alias
+            typedef arc_ptr<const Leading>             Pointer;  //!< alias
+            typedef vector<Leading::Pointer,Allocator> Array;    //!< alias
+            typedef vector<const Actor,Allocator>      Limiting; //!< array alias
 
             explicit Leading(const Equilibrium::Pointer &);
             virtual ~Leading() throw();
@@ -45,7 +46,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Leading &leading)
             {
-                os << "  " << *leading.root << ' ' << leading.kindText() << '\n';
+                os << "    " << *leading.root << ' ' << leading.kindText() << '\n';
                 leading.display(os,leading.reac," <=  ");
                 leading.display(os,leading.prod," >= -");
                 return os;
@@ -65,7 +66,7 @@ namespace upsylon
                 for(size_t i=1;i<=n;++i)
                 {
                     const Actor &a = limiting[i];
-                    os << "    ";
+                    os << "    | ";
                     if(a.nu>1)
                     {
                         os << vformat("%u*", unsigned(a.nu));

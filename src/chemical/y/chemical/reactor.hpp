@@ -38,7 +38,13 @@ namespace upsylon
             explicit Reactor(Library       &usrLib,
                              Equilibria    &usrEqs,
                              const unsigned flags);
-            
+
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+
             //__________________________________________________________________
             //
             // members
@@ -52,7 +58,26 @@ namespace upsylon
             const size_t  NS;  //!< number of seeking species
             const iMatrix Nu;  //!< topology matrix
             const iMatrix NuT; //!< Nu'
-            
+            const Leading::Array leading;
+
+
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+            template <typename OSTREAM> inline
+            OSTREAM & showLeading(OSTREAM &os) const
+            {
+                os << "  <Leading>\n";
+                for(size_t i=1;i<=N;++i)
+                {
+                    os << *leading[i];
+                }
+                os << "  <Leading/>\n";
+                return os;
+            }
+
+
         private:
             const Freezable::Latch lockLib;
             const Freezable::Latch lockEqs;
