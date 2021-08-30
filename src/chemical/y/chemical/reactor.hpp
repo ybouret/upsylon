@@ -59,10 +59,11 @@ namespace upsylon
             const iMatrix        Nu;      //!< [NxM] topology matrix
             const iMatrix        NuT;     //!< [MxN] Nu'
             const Leading::Array leading; //!< [N] leading conditions
+            Vector               xi;      //!< [N] extent
 
 
             //! balance leading conditions
-            bool balanceLeading(Addressable &C) const throw();
+            bool balanceLeading(Addressable &C) throw();
 
             //__________________________________________________________________
             //

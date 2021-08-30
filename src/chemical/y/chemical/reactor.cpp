@@ -26,6 +26,8 @@ namespace upsylon
         Nu(N>0?N:0,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         leading(N,as_capacity),
+        xi(N,0),
+        // private
         lockLib(lib),
         lockEqs(eqs)
         {

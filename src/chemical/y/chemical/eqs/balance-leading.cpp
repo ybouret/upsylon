@@ -6,9 +6,8 @@ namespace upsylon
 
     namespace Chemical
     {
-        bool Reactor:: balanceLeading(Addressable &C) const throw()
+        bool Reactor:: balanceLeading(Addressable &C) throw()
         {
-            Vector xi(N,0);
             Y_CHEMICAL_PRINTLN("  <Balance Leading>");
             bool result = true;
             for(size_t i=N;i>0;--i)
