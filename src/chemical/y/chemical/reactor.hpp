@@ -45,6 +45,14 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+            //! balance leading conditions
+            bool balanceLeading(Addressable &C) throw();
+
+            //! balance seeking conditions
+            bool balanceSeeking(Addressable &C) throw();
+
+            //! full algorithm
+            bool balance(Addressable &C) throw();
 
             //__________________________________________________________________
             //
@@ -62,10 +70,11 @@ namespace upsylon
             const Leading::Array leading; //!< [N]  leading conditions
             const Seeking::Array seeking; //!< [NS] seeking conditions
             Vector               xi;      //!< [N] extent
+            Matrix               NuS;     //!< [NSxN] numerical
+            Matrix               NuST;    //!< [NxNS] NuS'
+            Matrix               NuS2;    //!< [NSxNS] numerical NuS * NuS'
 
 
-            //! balance leading conditions
-            bool balanceLeading(Addressable &C) throw();
 
             //__________________________________________________________________
             //

@@ -9,6 +9,10 @@ namespace upsylon
         bool Reactor:: balanceLeading(Addressable &C) throw()
         {
             Y_CHEMICAL_PRINTLN("  <Balance Leading>");
+            if(Verbosity)
+            {
+                lib.display(std::cerr,C) << std::endl;
+            }
             bool result = true;
             for(size_t i=N;i>0;--i)
             {
@@ -22,9 +26,9 @@ namespace upsylon
                         break;
                 }
             }
-            Y_CHEMICAL_PRINTLN("    [balanced=" << textual::boolean(result) << "]" );
+            Y_CHEMICAL_PRINTLN("    [leading balanced=" << textual::boolean(result) << "]" );
             Y_CHEMICAL_PRINTLN("  <Balance Leading/>");
-            return false;
+            return result;
         }
 
 

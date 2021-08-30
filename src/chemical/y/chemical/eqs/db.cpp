@@ -27,8 +27,11 @@ namespace upsylon
             "phosphoric2:H+:-H2PO4-:HPO4--:=10^(-7.20)",
             "phosphoric3:H+:-HPO4--:PO4---:=10^(-12.42)",
 
+            "sulfuric:2H+:-H2SO4:SO4--:=10^(1.1)",
+
             "iwater:-H+:-HO-:=1e14"
-            
+
+
         };
         
         

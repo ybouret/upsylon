@@ -1,5 +1,6 @@
 #include "y/chemical/reactor.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/code/textual.hpp"
 
 namespace upsylon
 {
@@ -28,6 +29,9 @@ namespace upsylon
         leading(N,as_capacity),
         seeking(NS,as_capacity),
         xi(N,0),
+        NuS(NS,NS>0?N:0),
+        NuST(NuS.cols,NuS.rows),
+        NuS2(NS,NS),
         // private
         lockLib(lib),
         lockEqs(eqs)
@@ -85,7 +89,7 @@ namespace upsylon
                 const Species &sp = ***node;
                 if(sp.rating>1)
                 {
-                    const Seeking::Pointer p( new Seeking(sp,NuT) );
+                    const Seeking::Pointer p( new Seeking(sp,NuT,eqs->head()) );
                     aliasing::_(seeking).push_back_(p);
                 }
             }
@@ -105,7 +109,18 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("<Reactor/>");
         }
         
-        
+        bool Reactor:: balance(Addressable &C) throw()
+        {
+            Y_CHEMICAL_PRINTLN("<Balance>");
+            bool result = balanceLeading(C);
+            if(result)
+            {
+                result = balanceSeeking(C);
+            }
+            Y_CHEMICAL_PRINTLN("  [balanced=" << textual::boolean(result) << "]" );
+            Y_CHEMICAL_PRINTLN("<Balance/>");
+            return result;
+        }
     }
 }
 

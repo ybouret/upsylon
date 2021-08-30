@@ -1,6 +1,5 @@
 
 #include "y/chemical/reactor.hpp"
-
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
@@ -18,8 +17,8 @@ Y_UTEST(reactor)
         eqs(argv[i],lib,vm);
     }
 
-    eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
-
+    //eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
+    
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
@@ -41,7 +40,7 @@ Y_UTEST(reactor)
 
     lib.display(std::cerr << "C=",C) << std::endl;
 
-    cs.balanceLeading(C);
+    cs.balance(C);
     
     lib.display(std::cerr << "C=",C) << std::endl;
 
