@@ -173,19 +173,43 @@ namespace upsylon
             }
         }
 
+        Leading::Status Leading:: limitedByBoth(Addressable   &C,
+                                                const iMatrix &NuT,
+                                                Addressable   &xi) const throw()
+        {
+            const Actor &amax = maxFromReac(C);
+            const Actor &amin = minFromProd(C);
+            Y_CHEMICAL_PRINTLN("@" << root->name << ".min=" << xmin << " from " << amin.sp << "=" << C[amin.sp.indx]);
+            Y_CHEMICAL_PRINTLN("@" << root->name << ".max=" << xmax << " from " << amax.sp << "=" << C[amax.sp.indx]);
+
+            if(xmin>xmax)
+            {
+                return Rejected;
+            }
+            else
+            {
+                return Rejected;
+            }
+
+
+        }
+
+
+
         Leading::Status Leading:: solve(Addressable   &C,
                                         const iMatrix &NuT,
                                         Addressable   &xi) const throw()
         {
+            Leading::Status status = Rejected;
             switch(kind)
             {
-                case LimitedByNone: return Accepted;
-                case LimitedByReac: return limitedByReac(C,NuT,xi);
-                case LimitedByProd: return limitedByProd(C,NuT,xi);
-
+                case LimitedByNone: status = Accepted; break;
+                case LimitedByReac: status = limitedByReac(C,NuT,xi); break;
+                case LimitedByProd: status = limitedByProd(C,NuT,xi); break;
+                case LimitedByBoth: status = limitedByBoth(C,NuT,xi); break;
             }
-
-            return Rejected; // never get here
+            Y_CHEMICAL_PRINTLN("|_" << StatusText(status));
+            return status;
         }
 
     }
