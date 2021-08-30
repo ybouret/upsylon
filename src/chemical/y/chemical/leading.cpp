@@ -47,7 +47,9 @@ namespace upsylon
         root(ep),
         reac( root->reac.tellLeading(), as_capacity),
         prod( root->prod.tellLeading(), as_capacity),
-        kind(LimitedByNone)
+        kind(LimitedByNone),
+        xmax(0),
+        xmin(0)
         {
             root->reac.fillLeading( aliasing::_(reac) );
             root->prod.fillLeading( aliasing::_(prod) );

@@ -26,6 +26,7 @@ namespace upsylon
         Nu(N>0?N:0,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         leading(N,as_capacity),
+        seeking(NS,as_capacity),
         xi(N,0),
         // private
         lockLib(lib),
@@ -73,6 +74,28 @@ namespace upsylon
             {
                 showLeading(std::cerr);
             }
+
+            //------------------------------------------------------------------
+            //
+            // create seeking conditions
+            //
+            //------------------------------------------------------------------
+            for(const SNode *node=lib->head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(sp.rating>1)
+                {
+                    const Seeking::Pointer p( new Seeking(sp,NuT) );
+                    aliasing::_(seeking).push_back_(p);
+                }
+            }
+
+            if(Verbosity)
+            {
+                showSeeking(std::cerr);
+            }
+
+
 
             //------------------------------------------------------------------
             //

@@ -5,6 +5,7 @@
 
 #include "y/chemical/equilibria.hpp"
 #include "y/chemical/leading.hpp"
+#include "y/chemical/seeking.hpp"
 
 namespace upsylon
 {
@@ -58,7 +59,8 @@ namespace upsylon
             const size_t         NS;      //!< number of seeking species
             const iMatrix        Nu;      //!< [NxM] topology matrix
             const iMatrix        NuT;     //!< [MxN] Nu'
-            const Leading::Array leading; //!< [N] leading conditions
+            const Leading::Array leading; //!< [N]  leading conditions
+            const Seeking::Array seeking; //!< [NS] seeking conditions
             Vector               xi;      //!< [N] extent
 
 
@@ -80,6 +82,19 @@ namespace upsylon
                     os << *leading[i];
                 }
                 os << "  <Leading/>\n";
+                return os;
+            }
+
+
+            //! show all seeking conditions
+            template <typename OSTREAM> inline
+            OSTREAM & showSeeking(OSTREAM &os) const
+            {
+                os << "  <Seeking>\n";
+                for(size_t i=1;i<=NS;++i)
+                {
+                }
+                os << "  <Seeking/>\n";
                 return os;
             }
 
