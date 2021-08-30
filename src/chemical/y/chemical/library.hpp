@@ -85,7 +85,7 @@ namespace upsylon
             friend OSTREAM & operator<<(OSTREAM &os, const Library &lib)
             {
                 os << '{' << '\n';
-                for(const Species::Node *node=lib->head();node;node=node->next)
+                for(const SNode *node=lib->head();node;node=node->next)
                 {
                     const Species &sp = ***node;
                     os << ' ' << sp;
@@ -105,7 +105,7 @@ namespace upsylon
             {
                 static const ios::scribe &_ = ios::scribe::query<typename ARR::mutable_type>();
                 os << '{' << '\n';
-                for(const Species::Node *node=sdb.head();node;node=node->next)
+                for(const SNode *node=sdb.head();node;node=node->next)
                 {
                     const Species &sp = ***node;
                     os << ' ' << sp << " = " << _.write( &arr[sp.indx] ) << '\n';
@@ -115,11 +115,11 @@ namespace upsylon
             }
             
             //! draw a random concentration
-            void drawC(Addressable &,randomized::bits &) const throw();
-
+            void   drawC(Addressable &,randomized::bits &) const throw();
             size_t countWorking() const throw(); //!< count working species
             size_t countLeading() const throw(); //!< count leading species
             size_t countSeeking() const throw(); //!< count seeking species
+
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);

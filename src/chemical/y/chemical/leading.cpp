@@ -6,20 +6,33 @@ namespace upsylon
     {
 
 
-#define Y_CHEM_LEAD_KIND(TYPE) case TYPE: return #TYPE
+#define Y_CHEM_LEAD(TYPE) case TYPE: return #TYPE
 
         const char * Leading:: KindText(const Kind k) throw()
         {
             switch(k)
             {
-                    Y_CHEM_LEAD_KIND(LimitedByNone);
-                    Y_CHEM_LEAD_KIND(LimitedByReac);
-                    Y_CHEM_LEAD_KIND(LimitedByProd);
-                    Y_CHEM_LEAD_KIND(LimitedByBoth);
+                    Y_CHEM_LEAD(LimitedByNone);
+                    Y_CHEM_LEAD(LimitedByReac);
+                    Y_CHEM_LEAD(LimitedByProd);
+                    Y_CHEM_LEAD(LimitedByBoth);
             }
 
             return "???";
         }
+
+        const char * Leading:: StatusText(const Status s) throw()
+        {
+            switch(s)
+            {
+                    Y_CHEM_LEAD(Accepted);
+                    Y_CHEM_LEAD(Modified);
+                    Y_CHEM_LEAD(Rejected);
+            }
+
+            return "???";
+        }
+
 
         const char * Leading:: kindText() const throw()
         {
@@ -65,6 +78,94 @@ namespace upsylon
                 }
             }
         }
-        
+
+        const Actor & Leading:: maxFromReac(const Accessible &C) const throw()
+        {
+            assert(reac.size()>0);
+            assert(LimitedByReac==kind||LimitedByBoth==kind);
+            
+            const Actor *best = &reac[1];
+            xmax              = C[best->sp.indx]/best->nu;
+            for(size_t i=reac.size();i>1;--i)
+            {
+                const Actor *temp = &reac[i];
+                const double xtmp = C[temp->sp.indx]/temp->nu;
+                if(xtmp<xmax)
+                {
+                    xmax = xtmp;
+                    best = temp;
+                }
+            }
+            return *best;
+        }
+
+        const Actor & Leading:: minFromProd(const Accessible &C) const throw()
+        {
+            assert(prod.size()>0);
+            assert(LimitedByProd==kind||LimitedByBoth==kind);
+
+            const Actor *best = &prod[1];
+            xmin              = -C[best->sp.indx]/best->nu;
+            for(size_t i=prod.size();i>1;--i)
+            {
+                const Actor *temp = &prod[i];
+                const double xtmp = -C[temp->sp.indx]/temp->nu;
+                if(xtmp>xmin)
+                {
+                    xmin = xtmp;
+                    best = temp;
+                }
+            }
+            return *best;
+        }
+
+    }
+
+}
+
+
+#include "y/mkl/tao.hpp"
+
+namespace upsylon
+{
+    using namespace mkl;
+
+    namespace Chemical
+    {
+
+
+
+        Leading::Status Leading:: solve(Addressable   &C,
+                                        const iMatrix &NuT,
+                                        Addressable   &xi) const throw()
+        {
+            switch(kind)
+            {
+                case LimitedByNone: return Accepted;
+
+                case LimitedByReac: {
+                    const Actor &amax = maxFromReac(C);
+                    std::cerr << "xmax=" << xmax << " from " << amax.sp << "=" << C[amax.sp.indx] << std::endl;
+                    if(xmax<0)
+                    {
+                        tao::ld(xi,0);
+                        xi[root->indx] = -xmax;
+                        tao::mul_add(C,NuT,xi);
+                        C[amax.sp.indx] = 0;
+                        return Modified;
+                    }
+                    else
+                    {
+                        return Accepted;
+                    }
+                }
+
+
+
+            }
+
+            return Rejected; // never get here
+        }
+
     }
 }

@@ -25,7 +25,6 @@ namespace upsylon
             //__________________________________________________________________
             typedef intr_ptr<string,const Species>     Pointer; //!< smart pointer
             typedef hash_set<string,Pointer>           Set;     //!< database
-            typedef Set::node_type                     Node;    //!< for iterating
             static const char *Status(const size_t) throw();    //!< waiting,leading, seeking
             
             //__________________________________________________________________
@@ -68,6 +67,9 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };
+
+        typedef Species::Set::node_type SNode;    //!< for iterating
+
     }
 }
 

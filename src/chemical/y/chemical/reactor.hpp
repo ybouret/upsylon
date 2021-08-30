@@ -49,22 +49,27 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            Library      &lib; //!< user's library
-            Equilibria   &eqs; //!< user's equilibria
-            const size_t  M;   //!< lib size
-            const size_t  N;   //!< eqs size
-            const size_t  NW;  //!< number of working species
-            const size_t  NL;  //!< number of leading species
-            const size_t  NS;  //!< number of seeking species
-            const iMatrix Nu;  //!< topology matrix
-            const iMatrix NuT; //!< Nu'
-            const Leading::Array leading;
+            Library             &lib;     //!< user's library
+            Equilibria          &eqs;     //!< user's equilibria
+            const size_t         M;       //!< lib size
+            const size_t         N;       //!< eqs size
+            const size_t         NW;      //!< number of working species
+            const size_t         NL;      //!< number of leading species
+            const size_t         NS;      //!< number of seeking species
+            const iMatrix        Nu;      //!< [NxM] topology matrix
+            const iMatrix        NuT;     //!< [MxN] Nu'
+            const Leading::Array leading; //!< [N] leading conditions
 
+
+            //! balance leading conditions
+            bool balanceLeading(Addressable &C) const throw();
 
             //__________________________________________________________________
             //
             // helpers
             //__________________________________________________________________
+
+            //! show all leading conditions
             template <typename OSTREAM> inline
             OSTREAM & showLeading(OSTREAM &os) const
             {

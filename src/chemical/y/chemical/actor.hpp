@@ -33,8 +33,8 @@ namespace upsylon
             // C++
             //__________________________________________________________________
             Actor(const size_t, const Species &) throw(); //!< setup
-            ~Actor() throw();                             //!< cleanup
-            Actor(const Actor &) throw();                 //!< copy
+            ~Actor() throw();                              //!< cleanup
+            Actor(const Actor &) throw();                          //!< copy
             
             //__________________________________________________________________
             //

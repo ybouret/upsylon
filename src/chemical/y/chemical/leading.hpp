@@ -20,37 +20,80 @@ namespace upsylon
         class Leading : public Object
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+
+            //! kind of leading conditions
             enum Kind
             {
-                LimitedByNone,
-                LimitedByReac,
-                LimitedByProd,
-                LimitedByBoth
+                LimitedByNone, //!< free
+                LimitedByReac, //!< <= [someting]
+                LimitedByProd, //!< >= -[something]
+                LimitedByBoth  //!< in [-something;something_else]
             };
+
+            //! helper
             static const char *KindText(const Kind) throw();
+
+            //! status of solve
+            enum Status
+            {
+                Accepted,
+                Modified,
+                Rejected
+            };
+
+            static const char *StatusText(const Status) throw();
+
 
             typedef arc_ptr<const Leading>             Pointer;  //!< alias
             typedef vector<Leading::Pointer,Allocator> Array;    //!< alias
             typedef vector<const Actor,Allocator>      Limiting; //!< array alias
 
-            explicit Leading(const Equilibrium::Pointer &);
-            virtual ~Leading() throw();
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Leading(const Equilibrium::Pointer &); //!< build
+            virtual ~Leading() throw();                     //!< cleanup
 
-            const Equilibrium::Pointer root;
-            const Limiting             reac;
-            const Limiting             prod;
-            const Kind                 kind;
 
-            const char *kindText() const throw();
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            const char *kindText() const throw(); //!< display kind
 
+            //! display
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Leading &leading)
             {
-                os << "    " << *leading.root << ' ' << leading.kindText() << '\n';
+                os << "    " << *leading.root << " [" << leading.kindText() << "]\n";
                 leading.display(os,leading.reac," <=  ");
                 leading.display(os,leading.prod," >= -");
                 return os;
             }
+
+            const Actor &maxFromReac(const Accessible &C) const throw();
+            const Actor &minFromProd(const Accessible &C) const throw();
+
+            Status solve(Addressable   &C,
+                         const iMatrix &NuT,
+                         Addressable   &xi) const throw();
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Equilibrium::Pointer root; //!< root equilibrium
+            const Limiting             reac; //!< limiting reactant(s)
+            const Limiting             prod; //!< limiting product(s)
+            const Kind                 kind; //!< kind according to structure
+            mutable double             xmax; //!< last computed from reactant(s)
+            mutable double             xmin; //!< last computed from product(s)
+
 
 
         private:

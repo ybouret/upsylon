@@ -18,7 +18,7 @@ namespace upsylon
         
         void Library:: drawC(Addressable &C, randomized::bits &ran) const throw()
         {
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 C[(***node).indx] = RandomC(ran);
             }
@@ -72,13 +72,13 @@ namespace upsylon
         void Library:: update() throw()
         {
             size_t nmax = 0;
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 nmax = max_of(nmax,(***node).name.size());
             }
             
             size_t i=0;
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
                 aliasing::_(sp.nmax) = nmax;
@@ -179,7 +179,7 @@ namespace upsylon
         size_t Library:: countWorking() const throw()
         {
             size_t NW = 0;
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
                 if(sp.rating>0) ++NW;
@@ -190,7 +190,7 @@ namespace upsylon
         size_t Library:: countLeading() const throw()
         {
             size_t NL = 0;
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
                 if(1==sp.rating) ++NL;
@@ -201,7 +201,7 @@ namespace upsylon
         size_t Library:: countSeeking() const throw()
         {
             size_t NS = 0;
-            for(const Species::Node *node=sdb.head();node;node=node->next)
+            for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
                 if(1<sp.rating) ++NS;
