@@ -2,6 +2,7 @@
 #include "y/chemical/reactor.hpp"
 #include "y/code/textual.hpp"
 #include "y/mkl/tao.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon
 {
@@ -46,12 +47,21 @@ namespace upsylon
                 {
                     tao::set(NuS[j],seeking[j]->nu);
                 }
-
+                NuST.assign_transpose(NuS);
+                
                 while( hasSeeking(C) )
                 {
                     tao::gram(NuS2,NuS);
                     Y_CHEMICAL_PRINTLN("    NuS  = " << NuS);
                     Y_CHEMICAL_PRINTLN("    NuS2 = " << NuS2);
+                    if(!LU::build(NuS2))
+                    {
+                        result=false;
+                        break;
+                    }
+                    LU::solve(NuS2,Cs);
+                    tao::mul(xi,NuST,Cs);
+                    
                     exit(-1);
                 }
 
