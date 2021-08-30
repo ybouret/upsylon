@@ -62,6 +62,8 @@ namespace upsylon
                     LU::solve(NuS2,Cs);
                     tao::mul(xi,NuST,Cs);
                     
+                    eqs.display(std::cerr,xi) << std::endl;
+                    
                     exit(-1);
                 }
 

@@ -104,6 +104,20 @@ namespace upsylon
                 }
             }
             
+            //! display array mapped to equilibria
+            template <typename OSTREAM, typename ARR> inline
+            OSTREAM & display(OSTREAM &os, ARR &arr) const
+            {
+                static const ios::scribe &_ = ios::scribe::query<typename ARR::mutable_type>();
+                os << '{' << '\n';
+                for(const ENode *node=edb.head();node;node=node->next)
+                {
+                    const Equilibrium &eq = ***node;
+                    os << ' ' << eq << " = " << _.write( &arr[eq.indx] ) << '\n';
+                }
+                os << '}';
+                return os;
+            }
             
             
         private:

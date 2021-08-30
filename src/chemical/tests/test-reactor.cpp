@@ -33,7 +33,7 @@ Y_UTEST(reactor)
         const Species &sp = ***node;
         if(1==sp.rating)
         {
-            if( alea.to<double>() > 0.75 ) C[sp.indx] *= -1;
+            if( alea.to<double>() > 0.5 ) C[sp.indx] *= -1;
         }
     }
 
