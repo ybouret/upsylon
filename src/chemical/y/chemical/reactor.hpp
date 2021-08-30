@@ -73,7 +73,7 @@ namespace upsylon
             Matrix               NuS;     //!< [NSxN] numerical
             Matrix               NuST;    //!< [NxNS] NuS'
             Matrix               NuS2;    //!< [NSxNS] numerical NuS * NuS'
-
+            Vector               Cs;      //!< [Ns]
 
 
             //__________________________________________________________________
@@ -114,6 +114,8 @@ namespace upsylon
             const Freezable::Latch lockLib;
             const Freezable::Latch lockEqs;
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
+            //! create Cs
+            bool hasSeeking(const Accessible &C)  throw();
         };
     }
 }

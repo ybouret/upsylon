@@ -9,28 +9,51 @@ namespace upsylon
 
     namespace Chemical
     {
+
+        bool Reactor:: hasSeeking(const Accessible &C) throw()
+        {
+            size_t nbad = 0;
+            for(size_t j=NS;j>0;--j)
+            {
+                const double   Cj = C[seeking[j]->sp.indx];
+                if(Cj<0)
+                {
+                    ++nbad;
+                    Cs[j] = -Cj;
+                }
+            }
+            Y_CHEMICAL_PRINTLN("    Cs   = " << Cs);
+            return nbad>0;
+        }
+
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
             Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
             bool result = true;
             if(NS>0)
             {
-                if(Verbosity)
-                {
-                    lib.display(std::cerr,C) << std::endl;
-                }
+
                 //--------------------------------------------------------------
                 //
                 // initialize full search
                 //
                 //--------------------------------------------------------------
-                for(size_t i=NS;i>0;--i)
+                if(Verbosity)
                 {
-                    tao::set(NuS[i],seeking[i]->nu);
+                    lib.display(std::cerr,C) << std::endl;
                 }
-                tao::gram(NuS2,NuS);
-                Y_CHEMICAL_PRINTLN("    NuS  = " << NuS);
-                Y_CHEMICAL_PRINTLN("    NuS2 = " << NuS2);
+                for(size_t j=NS;j>0;--j)
+                {
+                    tao::set(NuS[j],seeking[j]->nu);
+                }
+
+                while( hasSeeking(C) )
+                {
+                    tao::gram(NuS2,NuS);
+                    Y_CHEMICAL_PRINTLN("    NuS  = " << NuS);
+                    Y_CHEMICAL_PRINTLN("    NuS2 = " << NuS2);
+                    exit(-1);
+                }
 
 
             }
