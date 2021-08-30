@@ -21,7 +21,7 @@ Y_UTEST(reactor)
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 
-    Verbosity = false;
+    //Verbosity = false;
     Reactor cs(lib,eqs,Equilibrium::Minimal);
 
     Vector C(cs.M,0);

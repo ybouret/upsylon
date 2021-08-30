@@ -118,7 +118,8 @@ namespace upsylon
                 }
             }
 
-
+            Status limitedByReac(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
+            Status limitedByProd(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
 
         };
 
