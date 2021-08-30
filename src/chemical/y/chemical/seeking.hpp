@@ -23,6 +23,13 @@ namespace upsylon
             const Species            &sp;
             const accessible<unit_t> &nu;
 
+            template <typename OSTREAM> inline
+            friend OSTREAM & operator<<(OSTREAM &os, const Seeking &s)
+            {
+                os << s.nu << ".xi";
+                os << " >= -" << s.sp;
+                return os;
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Seeking);

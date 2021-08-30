@@ -93,6 +93,8 @@ namespace upsylon
                 os << "  <Seeking>\n";
                 for(size_t i=1;i<=NS;++i)
                 {
+                    os << "    ";
+                    os << *seeking[i] << '\n';
                 }
                 os << "  <Seeking/>\n";
                 return os;
