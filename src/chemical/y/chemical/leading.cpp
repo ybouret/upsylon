@@ -267,6 +267,7 @@ namespace upsylon
                                Addressable   &xi,
                                const Library &lib) const throw()
         {
+            Y_CHEMICAL_PRINTLN("    moveAll " << root << " [" << kindText() << "]" );
             bool res = true;
             tao::ld(xi,0);
             switch(kind)
