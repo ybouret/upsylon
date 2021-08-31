@@ -41,7 +41,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if(Verbosity)
                 {
-                    lib.display(std::cerr,C) << std::endl;
+                    lib.display(std::cerr << "C1=",C) << std::endl;
                     //showLeading(std::cerr);
                 }
                 for(size_t j=NS;j>0;--j)
@@ -63,7 +63,7 @@ namespace upsylon
                     LU::solve(NuS2,Cs);
                     tao::mul(xi,NuST,Cs);
                     
-                    eqs.display(std::cerr,xi) << std::endl;
+                    eqs.display(std::cerr << "xi=",xi) << std::endl;
                     
                     exit(-1);
                 }

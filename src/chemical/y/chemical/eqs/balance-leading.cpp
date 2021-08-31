@@ -11,7 +11,7 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("  <Balance Leading>");
             if(Verbosity)
             {
-                lib.display(std::cerr,C) << std::endl;
+                lib.display(std::cerr << "C0=",C) << std::endl;
             }
             bool result = true;
             for(size_t i=N;i>0;--i)
