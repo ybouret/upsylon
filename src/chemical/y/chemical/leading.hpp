@@ -101,6 +101,7 @@ Addressable   &C,                   \
 const iMatrix &NuT,                 \
 Addressable   &xi 
 
+            //! try to move all extent or cut
             Y_CHEMICAL_LEADING_MOVE_RET moveAll(Y_CHEMICAL_LEADING_MOVE_API) const throw();
             
             //__________________________________________________________________
