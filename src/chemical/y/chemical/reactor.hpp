@@ -74,7 +74,7 @@ namespace upsylon
             Matrix               NuST;    //!< [NxNS] NuS'
             Matrix               NuS2;    //!< [NSxNS] numerical NuS * NuS'
             Vector               Cs;      //!< [Ns]
-
+            Vector               xs;      //!< [N]
 
             //__________________________________________________________________
             //

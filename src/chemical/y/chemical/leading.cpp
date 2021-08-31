@@ -127,6 +127,7 @@ namespace upsylon
 
 
 #include "y/mkl/tao.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -134,13 +135,14 @@ namespace upsylon
 
     namespace Chemical
     {
+        static const unsigned xwidth = 16;
 
         Leading::Status Leading:: limitedByReac(Addressable   &C,
                                                 const iMatrix &NuT,
                                                 Addressable   &xi) const throw()
         {
             const Actor &amax = maxFromReac(C);
-            Y_CHEMICAL_PRINTLN( "    |_max=" << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
+            Y_CHEMICAL_PRINTLN( "    |_max=" << std::setw(xwidth) << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
             if(xmax<0)
             {
                 tao::ld(xi,0);
@@ -160,7 +162,7 @@ namespace upsylon
                                                 Addressable   &xi) const throw()
         {
             const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("    |_min=" << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_min=" << std::setw(xwidth) << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
             if(xmin>0)
             {
                 tao::ld(xi,0);
@@ -181,8 +183,8 @@ namespace upsylon
         {
             const Actor &amax = maxFromReac(C);
             const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("    |_min=" << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
-            Y_CHEMICAL_PRINTLN("    |_max=" << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_min=" << std::setw(xwidth) << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
+            Y_CHEMICAL_PRINTLN("    |_max=" << std::setw(xwidth) << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
 
             if(xmin>xmax)
             {
@@ -229,9 +231,65 @@ namespace upsylon
                 case LimitedByProd: status = limitedByProd(C,NuT,xi); break;
                 case LimitedByBoth: status = limitedByBoth(C,NuT,xi); break;
             }
-            Y_CHEMICAL_PRINTLN("    |_" << StatusText(status));
+            Y_CHEMICAL_PRINTLN("    |_<" << StatusText(status) << ">");
             return status;
         }
 
     }
 }
+
+namespace upsylon
+{
+    using namespace mkl;
+
+    namespace Chemical
+    {
+
+        static inline
+        void ensurePositive(Addressable   &C,
+                            const Library &lib)
+        {
+            for(const SNode *node=lib->head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(sp.rating>0)
+                {
+                    const size_t j = sp.indx;
+                    C[j] = max_of(C[j],0.0);
+                }
+            }
+        }
+
+
+        bool Leading:: moveAll(const double   x,
+                               Addressable   &C,
+                               const iMatrix &NuT,
+                               Addressable   &xi,
+                               const Library &lib) const throw()
+        {
+            bool res = true;
+            tao::ld(xi,0);
+            switch(kind)
+            {
+                case LimitedByNone:
+                    xi[root->indx] = x;
+                    tao::mul_add(C,NuT,xi);
+                    ensurePositive(C,lib);
+                    break;
+
+                case LimitedByReac:
+                    break;
+
+                case LimitedByProd:
+                    break;
+
+                case LimitedByBoth:
+                    break;
+            }
+
+            return res;
+        }
+
+    }
+}
+

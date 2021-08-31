@@ -33,6 +33,7 @@ namespace upsylon
         NuST(NuS.cols,NuS.rows),
         NuS2(NS,NS),
         Cs(NS,0),
+        xs(N,0),
         // private
         lockLib(lib),
         lockEqs(eqs)

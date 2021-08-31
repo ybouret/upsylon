@@ -61,11 +61,15 @@ namespace upsylon
                         break;
                     }
                     LU::solve(NuS2,Cs);
-                    tao::mul(xi,NuST,Cs);
+                    tao::mul(xs,NuST,Cs);
                     
-                    eqs.display(std::cerr << "xi=",xi) << std::endl;
+                    eqs.display(std::cerr << "xs=",xs) << std::endl;
 
-                    
+                    // explore leading
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        (void) leading[i]->moveAll(xs[i],C,NuT,xi,lib);
+                    }
 
 
 

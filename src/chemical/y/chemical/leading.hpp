@@ -91,6 +91,13 @@ namespace upsylon
                          const iMatrix &NuT,
                          Addressable   &xi) const throw();
 
+            
+            bool moveAll(const double   x,
+                         Addressable   &C,
+                         const iMatrix &NuT,
+                         Addressable   &xi,
+                         const Library &lib) const throw();
+            
             //__________________________________________________________________
             //
             // members
