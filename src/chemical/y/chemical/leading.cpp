@@ -276,10 +276,9 @@ namespace upsylon
             const Actor &amax = maxFromReac(C);
             Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() << " <=  " << amax.sp << "/" << amax.nu <<  " = " << xmax);
             tao::mul_add(C,NuT,xi);
-
+            
             return true;
         }
-
 
 
         Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByProd(Y_CHEMICAL_LEADING_MOVE_API) const throw()

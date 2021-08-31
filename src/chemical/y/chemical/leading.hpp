@@ -91,7 +91,10 @@ namespace upsylon
                          const iMatrix &NuT,
                          Addressable   &xi) const throw();
 
+            //! return type for moveXXX functions
 #define Y_CHEMICAL_LEADING_MOVE_RET bool
+
+            //! parameters for moveXXX functions
 #define Y_CHEMICAL_LEADING_MOVE_API \
 const double   x,                   \
 Addressable   &C,                   \
