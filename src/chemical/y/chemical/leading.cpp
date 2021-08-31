@@ -245,6 +245,7 @@ namespace upsylon
     namespace Chemical
     {
 
+#if 0
         static inline
         void ensurePositive(Addressable   &C,
                             const Library &lib)
@@ -259,7 +260,7 @@ namespace upsylon
                 }
             }
         }
-
+#endif
 
         bool Leading:: moveAll(const double   x,
                                Addressable   &C,
@@ -267,15 +268,16 @@ namespace upsylon
                                Addressable   &xi,
                                const Library &lib) const throw()
         {
-            Y_CHEMICAL_PRINTLN("    moveAll " << root << " [" << kindText() << "]" );
+            Y_CHEMICAL_PRINTLN("    moveAll " << root << " [" << kindText() << "] = " << x);
             bool res = true;
             tao::ld(xi,0);
+            lib.display(std::cerr << "from C=",C) << std::endl;
             switch(kind)
             {
                 case LimitedByNone:
                     xi[root->indx] = x;
                     tao::mul_add(C,NuT,xi);
-                    ensurePositive(C,lib);
+                    //ensurePositive(C,lib);
                     break;
 
                 case LimitedByReac:
@@ -287,6 +289,7 @@ namespace upsylon
                 case LimitedByBoth:
                     break;
             }
+            lib.display(std::cerr << "to   C=",C) << std::endl;
 
             return res;
         }
