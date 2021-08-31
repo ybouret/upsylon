@@ -62,14 +62,20 @@ namespace upsylon
                     }
                     LU::solve(NuS2,Cs);
                     tao::mul(xs,NuST,Cs);
-                    
-                    eqs.display(std::cerr << "xs=",xs) << std::endl;
 
-                    // explore leading
+                    if(Verbosity)
+                    {
+                        eqs.display(std::cerr << "    xs   = ",xs) << std::endl;
+                    }
+
+                    // move Leading
+                    Y_CHEMICAL_PRINTLN("    <Moving Procedure>");
+
                     for(size_t i=1;i<=N;++i)
                     {
-                        (void) leading[i]->moveAll(xs[i],C,NuT,xi,lib);
+                        (void) leading[i]->moveAll(xs[i],C,NuT,xi);
                     }
+                    Y_CHEMICAL_PRINTLN("    <Moving Procedure/>");
 
 
 

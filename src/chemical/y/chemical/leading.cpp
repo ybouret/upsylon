@@ -262,35 +262,60 @@ namespace upsylon
         }
 #endif
 
-        bool Leading:: moveAll(const double   x,
-                               Addressable   &C,
-                               const iMatrix &NuT,
-                               Addressable   &xi,
-                               const Library &lib) const throw()
+
+        Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByNone(Y_CHEMICAL_LEADING_MOVE_API) const throw()
         {
-            Y_CHEMICAL_PRINTLN("    moveAll " << root << " [" << kindText() << "] = " << x);
+            Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() );
+            xi[root->indx] = x;
+            tao::mul_add(C,NuT,xi);
+            return true;
+        }
+
+        Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByReac(Y_CHEMICAL_LEADING_MOVE_API) const throw()
+        {
+            const Actor &amax = maxFromReac(C);
+            Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() << " <=  " << amax.sp << "/" << amax.nu <<  " = " << xmax);
+            tao::mul_add(C,NuT,xi);
+
+            return true;
+        }
+
+
+
+        Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByProd(Y_CHEMICAL_LEADING_MOVE_API) const throw()
+        {
+            const Actor &amin = minFromProd(C);
+            Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() << " >= -" << amin.sp << "/" << amin.nu << " = " << xmin);
+            tao::mul_add(C,NuT,xi);
+            return true;
+        }
+
+        Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByBoth(Y_CHEMICAL_LEADING_MOVE_API) const throw()
+        {
+            const Actor &amax = maxFromReac(C);
+            const Actor &amin = minFromProd(C);
+            Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText()
+                               << " in [-" << amin.sp << "/" << amin.nu << " = " << xmin
+                               << ":"      << amax.sp << "/" << amax.nu << " = " << xmax
+                               << "]");
+            tao::mul_add(C,NuT,xi);
+            return true;
+        }
+
+
+#define Y_CHEMICAL_MOVE_KIND(KIND) case KIND : res = move##KIND(x,C,NuT,xi); break
+
+        Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveAll(Y_CHEMICAL_LEADING_MOVE_API) const throw()
+        {
             bool res = true;
             tao::ld(xi,0);
-            lib.display(std::cerr << "from C=",C) << std::endl;
             switch(kind)
             {
-                case LimitedByNone:
-                    xi[root->indx] = x;
-                    tao::mul_add(C,NuT,xi);
-                    //ensurePositive(C,lib);
-                    break;
-
-                case LimitedByReac:
-                    break;
-
-                case LimitedByProd:
-                    break;
-
-                case LimitedByBoth:
-                    break;
+                    Y_CHEMICAL_MOVE_KIND(LimitedByNone);
+                    Y_CHEMICAL_MOVE_KIND(LimitedByReac);
+                    Y_CHEMICAL_MOVE_KIND(LimitedByProd);
+                    Y_CHEMICAL_MOVE_KIND(LimitedByBoth);
             }
-            lib.display(std::cerr << "to   C=",C) << std::endl;
-
             return res;
         }
 
