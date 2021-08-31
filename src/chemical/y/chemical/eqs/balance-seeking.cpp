@@ -42,7 +42,6 @@ namespace upsylon
                 if(Verbosity)
                 {
                     lib.display(std::cerr << "C1=",C) << std::endl;
-                    //showLeading(std::cerr);
                 }
                 for(size_t j=NS;j>0;--j)
                 {
@@ -52,6 +51,7 @@ namespace upsylon
                 
                 while( hasSeeking(C) )
                 {
+                    // compute optimized extent
                     tao::gram(NuS2,NuS);
                     Y_CHEMICAL_PRINTLN("    NuS  = " << NuS);
                     Y_CHEMICAL_PRINTLN("    NuS2 = " << NuS2);
@@ -64,7 +64,11 @@ namespace upsylon
                     tao::mul(xi,NuST,Cs);
                     
                     eqs.display(std::cerr << "xi=",xi) << std::endl;
+
                     
+
+
+
                     exit(-1);
                 }
 

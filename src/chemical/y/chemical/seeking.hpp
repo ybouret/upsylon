@@ -11,21 +11,39 @@ namespace upsylon
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! characteristic for seeking species
+        //
+        //______________________________________________________________________
         class Seeking : public Object
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
             typedef arc_ptr<const Seeking>             Pointer;  //!< alias
             typedef vector<Seeking::Pointer,Allocator> Array;    //!< alias
-            
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            //! setup s
             explicit Seeking(const Species &,
                              const iMatrix &,
                              const ENode   *);
+            //! cleanup
             virtual ~Seeking() throw();
 
-            const Species            &sp;
-            const accessible<unit_t> &nu;
-            const ENode * const       en;
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            //! display info
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Seeking &s)
             {
@@ -45,6 +63,14 @@ namespace upsylon
                 os << " >= -" << s.sp;
                 return os;
             }
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Species            &sp; //!< species
+            const accessible<unit_t> &nu; //!< corresponding in NuT
+            const ENode * const       en; //!< first not-zero nu[en->indx]
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Seeking);

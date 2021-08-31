@@ -45,6 +45,7 @@ namespace upsylon
                 Rejected
             };
 
+            //! human readable text for a status
             static const char *StatusText(const Status) throw();
 
 
@@ -76,9 +77,16 @@ namespace upsylon
                 return os;
             }
 
+            //! get limiting reactant, set xmax
             const Actor &maxFromReac(const Accessible &C) const throw();
+
+            //! get limiting reactant, set xmin
             const Actor &minFromProd(const Accessible &C) const throw();
 
+            //! Check C, using NuT and xi to modify
+            /**
+             \return Accepted: untouched C | Modified: moved C | Rejected: invalid C
+             */
             Status solve(Addressable   &C,
                          const iMatrix &NuT,
                          Addressable   &xi) const throw();
