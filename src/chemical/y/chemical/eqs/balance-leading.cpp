@@ -26,7 +26,8 @@ namespace upsylon
                         break;
                 }
             }
-            Y_CHEMICAL_PRINTLN("    [leading balanced=" << textual::boolean(result) << "]" );
+
+            Y_CHEMICAL_PRINTLN("    [ ==> leading balanced=" << textual::boolean(result) << " ]" );
             Y_CHEMICAL_PRINTLN("  <Balance Leading/>");
             return result;
         }

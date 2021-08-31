@@ -18,9 +18,12 @@ Y_UTEST(reactor)
     }
 
     //eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
-    
+
+    lib << "Na+" << "Cl-";
+
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
+
 
     //Verbosity = false;
     Reactor cs(lib,eqs,Equilibrium::Minimal);
@@ -31,10 +34,8 @@ Y_UTEST(reactor)
     for(const SNode *node=cs.lib->head();node;node=node->next)
     {
         const Species &sp = ***node;
-        if(1==sp.rating)
-        {
-            if( alea.to<double>() > 0.5 ) C[sp.indx] *= -1;
-        }
+        if( alea.to<double>() > 0.7 ) C[sp.indx] *= -1;
+
     }
 
 
