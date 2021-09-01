@@ -151,7 +151,8 @@ Addressable   &xi
             Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByBoth(Y_CHEMICAL_LEADING_MOVE_API) const throw();
 
             static void EnsurePositive(Addressable &C, const Limiting &actors) throw();
-
+            void        limitedBy(const Actor &a, const double x, Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
+            void        updateAll(const double x, Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
         };
 
     }

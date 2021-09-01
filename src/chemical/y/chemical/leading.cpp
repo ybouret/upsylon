@@ -254,17 +254,35 @@ namespace upsylon
                 if(1==sp.rating)
                 {
                     double &Cj = C[ sp.indx ];
-                    std::cerr << "    check leading " << sp << "@ " << Cj << std::endl;
+                    std::cerr << "       \\_check leading: " << sp << "@ " << Cj << std::endl;
                     if(Cj<0) Cj=0;
                 }
 
             }
         }
 
+
+
+
         void Leading::ensurePositive(Addressable &C) const throw()
         {
             EnsurePositive(C,reac);
             EnsurePositive(C,prod);
+        }
+
+        void Leading:: limitedBy(const Actor &a, const double x, Addressable &C, const iMatrix &NuT, Addressable &xi) const throw()
+        {
+            xi[root->indx] = x;
+            tao::mul_add(C,NuT,xi);
+            C[a.sp.indx] = 0;
+            ensurePositive(C);
+        }
+
+        void Leading:: updateAll(const double x, Addressable &C, const iMatrix &NuT, Addressable &xi) const throw()
+        {
+            xi[root->indx] = x;
+            tao::mul_add(C,NuT,xi);
+            ensurePositive(C);
         }
 
 
@@ -276,6 +294,9 @@ namespace upsylon
             return true;
         }
 
+
+
+
         Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByReac(Y_CHEMICAL_LEADING_MOVE_API) const throw()
         {
             const Actor &amax = maxFromReac(C);
@@ -284,18 +305,13 @@ namespace upsylon
 
             if(x>=xmax)
             {
-                Y_CHEMICAL_PRINTLN("       \\_limited by " << amax.sp);
-                // clamp
-                xi[root->indx] = xmax;
-                tao::mul_add(C,NuT,xi);
-                C[amax.sp.indx] = 0;
-                ensurePositive(C);
+                Y_CHEMICAL_PRINTLN("       \\_max limited by " << amax.sp);
+                limitedBy(amax,xmax,C,NuT,xi);
                 return false;
             }
             else
             {
-                xi[root->indx] = x;
-                tao::mul_add(C,NuT,xi);
+                updateAll(x,C,NuT,xi);
                 return true;
             }
         }
@@ -309,18 +325,13 @@ namespace upsylon
 
             if(x<=xmin)
             {
-                Y_CHEMICAL_PRINTLN("       \\_limited by " << amin.sp);
-                // clamp
-                xi[root->indx] = xmin;
-                tao::mul_add(C,NuT,xi);
-                C[amin.sp.indx] = 0;
-                ensurePositive(C);
+                Y_CHEMICAL_PRINTLN("       \\_min limited by " << amin.sp);
+                limitedBy(amin,xmin,C,NuT,xi);
                 return false;
             }
             else
             {
-                xi[root->indx] = x;
-                tao::mul_add(C,NuT,xi);
+                updateAll(x,C,NuT,xi);
                 return true;
             }
 
