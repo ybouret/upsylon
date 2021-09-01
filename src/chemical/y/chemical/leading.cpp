@@ -284,11 +284,12 @@ namespace upsylon
 
             if(x>=xmax)
             {
+                Y_CHEMICAL_PRINTLN("       \\_limited by " << amax.sp);
+                // clamp
                 xi[root->indx] = xmax;
                 tao::mul_add(C,NuT,xi);
                 C[amax.sp.indx] = 0;
                 ensurePositive(C);
-                Y_CHEMICAL_PRINTLN("       \\_limited by " << amax.sp);
                 return false;
             }
             else
@@ -304,8 +305,25 @@ namespace upsylon
         {
             const Actor &amin = minFromProd(C);
             Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() << " >= -" << amin.sp << "/" << amin.nu << " = " << xmin);
-            tao::mul_add(C,NuT,xi);
-            return true;
+
+
+            if(x<=xmin)
+            {
+                Y_CHEMICAL_PRINTLN("       \\_limited by " << amin.sp);
+                // clamp
+                xi[root->indx] = xmin;
+                tao::mul_add(C,NuT,xi);
+                C[amin.sp.indx] = 0;
+                ensurePositive(C);
+                return false;
+            }
+            else
+            {
+                xi[root->indx] = x;
+                tao::mul_add(C,NuT,xi);
+                return true;
+            }
+
         }
 
         Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByBoth(Y_CHEMICAL_LEADING_MOVE_API) const throw()
@@ -316,6 +334,8 @@ namespace upsylon
                                << " in [-" << amin.sp << "/" << amin.nu << " = " << xmin
                                << ":"      << amax.sp << "/" << amax.nu << " = " << xmax
                                << "]");
+
+            
             tao::mul_add(C,NuT,xi);
             return true;
         }
