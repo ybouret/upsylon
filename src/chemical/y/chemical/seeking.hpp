@@ -51,6 +51,7 @@ namespace upsylon
                 return os;
             }
 
+            //! display numerical info
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const Accessible &C) const
             {

@@ -52,7 +52,7 @@ namespace upsylon
                 {
                     const Seeking &s = *seeking[j];
                     tao::set(NuS[j],s.nu);
-                    s.display(std::cerr << "    ",C) << std::endl;
+                    if(Verbosity) s.display(std::cerr << "    ",C) << std::endl;
                 }
                 NuST.assign_transpose(NuS);
                 Y_CHEMICAL_PRINTLN("    NuS=" << NuS);
