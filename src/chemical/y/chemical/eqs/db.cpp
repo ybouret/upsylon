@@ -102,6 +102,7 @@ namespace upsylon {
             Strings            info(db.size(),as_capacity);
             
             const size_t       count = db.find(name,info,rx);
+            if(count<=0) throw exception("%s no equilibrium matching '%s'", CLID, *rx);
             for(size_t i=1;i<=count;++i)
             {
                 if(edb.search(name[i])) continue;

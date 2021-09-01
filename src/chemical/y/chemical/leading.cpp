@@ -245,22 +245,27 @@ namespace upsylon
     namespace Chemical
     {
 
-#if 0
-        static inline
-        void ensurePositive(Addressable   &C,
-                            const Library &lib)
+        void Leading:: EnsurePositive(Addressable &C, const Limiting &actors) throw()
         {
-            for(const SNode *node=lib->head();node;node=node->next)
+            for(size_t i=actors.size();i>0;--i)
             {
-                const Species &sp = ***node;
-                if(sp.rating>0)
+                const Actor   &a  = actors[i];
+                const Species &sp = a.sp;
+                if(1==sp.rating)
                 {
-                    const size_t j = sp.indx;
-                    C[j] = max_of(C[j],0.0);
+                    double &Cj = C[ sp.indx ];
+                    std::cerr << "    check leading " << sp << "@ " << Cj << std::endl;
+                    if(Cj<0) Cj=0;
                 }
+
             }
         }
-#endif
+
+        void Leading::ensurePositive(Addressable &C) const throw()
+        {
+            EnsurePositive(C,reac);
+            EnsurePositive(C,prod);
+        }
 
 
         Y_CHEMICAL_LEADING_MOVE_RET Leading:: moveLimitedByNone(Y_CHEMICAL_LEADING_MOVE_API) const throw()
@@ -282,8 +287,8 @@ namespace upsylon
                 xi[root->indx] = xmax;
                 tao::mul_add(C,NuT,xi);
                 C[amax.sp.indx] = 0;
+                ensurePositive(C);
                 Y_CHEMICAL_PRINTLN("       \\_limited by " << amax.sp);
-                // check other leading
                 return false;
             }
             else

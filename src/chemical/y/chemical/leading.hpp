@@ -103,7 +103,9 @@ Addressable   &xi
 
             //! try to move all extent or cut
             Y_CHEMICAL_LEADING_MOVE_RET moveAll(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-            
+
+            void ensurePositive(Addressable &C) const throw();
+
             //__________________________________________________________________
             //
             // members
@@ -147,6 +149,8 @@ Addressable   &xi
             Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByReac(Y_CHEMICAL_LEADING_MOVE_API) const throw();
             Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByProd(Y_CHEMICAL_LEADING_MOVE_API) const throw();
             Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByBoth(Y_CHEMICAL_LEADING_MOVE_API) const throw();
+
+            static void EnsurePositive(Addressable &C, const Limiting &actors) throw();
 
         };
 
