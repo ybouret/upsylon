@@ -62,7 +62,6 @@ namespace upsylon
                 VsT.assign_transpose(Vs);
                 Y_CHEMICAL_PRINTLN("    Vs =" << Vs);
                 tao::gram(Vs2,Vs);
-                std::cerr << "Vs2=" << Vs2 << std::endl;
                 if(!LU::build(Vs2))
                 {
                     std::cerr << "Singular system..." << std::endl;
@@ -70,11 +69,10 @@ namespace upsylon
                 }
                 Matrix IVs(NS,NS);
                 LU::inverse(Vs2,IVs);
-                std::cerr << "IVs=" << IVs << std::endl;
-
+                
                 Matrix Omega(N,NS);
                 tao::mmul(Omega,VsT,IVs);
-                std::cerr << "Omega=" << Omega << std::endl;
+                std::cerr << "    Omega=" << Omega << std::endl;
 
 
 
