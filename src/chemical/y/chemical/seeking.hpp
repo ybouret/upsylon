@@ -47,22 +47,18 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Seeking &s)
             {
-                const ENode *node = s.en; assert(node); assert(0!=s.nu[(***node).indx]);
-
-                Disp(os,s.nu[(***node).indx],true) << (***node).name;
-                for(node=node->next;node;node=node->next)
-                {
-                    const Equilibrium &eq = ***node;
-                    const unit_t       nv = s.nu[eq.indx];
-                    if(nv)
-                    {
-                        Disp(os,nv,false) << eq.name;
-                    }
-                }
-
-                os << " >= -" << s.sp;
+                s.displayLHS(os) << " >= -" << s.sp;
                 return os;
             }
+
+            template <typename OSTREAM> inline
+            OSTREAM & display(OSTREAM &os, const Accessible &C) const
+            {
+                displayLHS(os) << " >= -" << sp << " = " << -C[sp.indx];
+                return os;
+            }
+
+
 
             //__________________________________________________________________
             //
@@ -74,6 +70,26 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Seeking);
+
+            template <typename OSTREAM> inline
+            OSTREAM & displayLHS(OSTREAM &os) const
+            {
+                const Seeking &s    = *this;
+                const ENode   *node = s.en; assert(node); assert(0!=s.nu[(***node).indx]);
+
+                Disp(os,s.nu[(***node).indx],true) << (***node).name;
+                for(node=node->next;node;node=node->next)
+                {
+                    const Equilibrium &eq = ***node;
+                    const unit_t       nv = s.nu[eq.indx];
+                    if(nv)
+                    {
+                        Disp(os,nv,false) << eq.name;
+                    }
+                }
+                return os;
+            }
+
 
             template <typename OSTREAM> static inline
             OSTREAM & Disp(OSTREAM &os, const unit_t nu, const bool first)

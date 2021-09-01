@@ -47,6 +47,15 @@ namespace upsylon
                 {
                     lib.display(std::cerr << "    C1=" << std::endl,C,4) << std::endl;
                 }
+
+                for(size_t j=NS;j>0;--j)
+                {
+                    const Seeking &s = *seeking[j];
+                    tao::set(NuS[j],s.nu);
+                    s.display(std::cerr << "    ",C) << std::endl;
+                }
+                NuST.assign_transpose(NuS);
+                Y_CHEMICAL_PRINTLN("    NuS=" << NuS);
                 
             }
             Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );
