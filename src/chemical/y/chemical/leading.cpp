@@ -43,6 +43,11 @@ namespace upsylon
         {
         }
 
+        size_t Leading:: count() const throw()
+        {
+            return reac.size() + prod.size();
+        }
+
         Leading:: Leading(const Equilibrium::Pointer &ep) :
         root(ep),
         reac( root->reac.tellLeading(), as_capacity),
@@ -231,7 +236,7 @@ namespace upsylon
                 case LimitedByProd: status = limitedByProd(C,NuT,xi); break;
                 case LimitedByBoth: status = limitedByBoth(C,NuT,xi); break;
             }
-            Y_CHEMICAL_PRINTLN("    |_<" << StatusText(status) << ">");
+            Y_CHEMICAL_PRINTLN("    |_<" << StatusText(status) << ">" << std::endl);
             return status;
         }
 

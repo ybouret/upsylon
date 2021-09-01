@@ -31,6 +31,30 @@ namespace upsylon
             return nbad>0;
         }
 
+
+        bool Reactor:: balanceSeeking(Addressable &C) throw()
+        {
+            Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
+            bool result = true;
+            if(NS>0)
+            {
+                //--------------------------------------------------------------
+                //
+                // initialize full search
+                //
+                //--------------------------------------------------------------
+                if(Verbosity)
+                {
+                    lib.display(std::cerr << "    C1=" << std::endl,C,4) << std::endl;
+                }
+                
+            }
+            Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );
+            Y_CHEMICAL_PRINTLN("  <Balance Seeking/>");
+            return result;
+        }
+
+#if 0
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
             Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
@@ -95,6 +119,7 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("  <Balance Seeking/>");
             return result;
         }
+#endif
 
     }
 

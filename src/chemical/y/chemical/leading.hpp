@@ -71,7 +71,16 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Leading &leading)
             {
-                os << "    " << *leading.root << " [" << leading.kindText() << "]\n";
+                os << "    " << *leading.root << " [" << leading.kindText() << "] {";
+                for(size_t i=1;i<=leading.reac.size();++i)
+                {
+                    os << ' ' << leading.reac[i].sp.name;
+                }
+                for(size_t i=1;i<=leading.prod.size();++i)
+                {
+                    os << ' ' << leading.prod[i].sp.name;
+                }
+                os << " }\n";
                 leading.display(os,leading.reac," <=  ");
                 leading.display(os,leading.prod," >= -");
                 return os;
@@ -104,7 +113,8 @@ Addressable   &xi
             //! try to move all extent or cut
             Y_CHEMICAL_LEADING_MOVE_RET moveAll(Y_CHEMICAL_LEADING_MOVE_API) const throw();
 
-            void ensurePositive(Addressable &C) const throw();
+            void   ensurePositive(Addressable &C) const throw(); //!< of leading species
+            size_t count() const throw(); //!< reac.size() + prod.size()
 
             //__________________________________________________________________
             //
@@ -116,7 +126,6 @@ Addressable   &xi
             const Kind                 kind; //!< kind according to structure
             mutable double             xmax; //!< last computed from reactant(s)
             mutable double             xmin; //!< last computed from product(s)
-
 
 
         private:

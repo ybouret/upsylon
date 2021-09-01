@@ -28,6 +28,8 @@ Y_UTEST(reactor)
     //Verbosity = false;
     Reactor cs(lib,eqs,Equilibrium::Minimal);
 
+
+    
     Vector C(cs.M,0);
     lib.drawC(C,alea);
 
