@@ -75,6 +75,7 @@ namespace upsylon
                     {
                         (void) leading[i]->moveAll(xs[i],C,NuT,xi);
                     }
+                    lib.display(std::cerr << "    Cm=",C) << std::endl;
                     Y_CHEMICAL_PRINTLN("    <Moving Procedure/>");
 
 

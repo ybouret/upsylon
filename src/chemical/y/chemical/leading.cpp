@@ -275,9 +275,23 @@ namespace upsylon
         {
             const Actor &amax = maxFromReac(C);
             Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText() << " <=  " << amax.sp << "/" << amax.nu <<  " = " << xmax);
-            tao::mul_add(C,NuT,xi);
-            
-            return true;
+
+
+            if(x>=xmax)
+            {
+                xi[root->indx] = xmax;
+                tao::mul_add(C,NuT,xi);
+                C[amax.sp.indx] = 0;
+                Y_CHEMICAL_PRINTLN("       \\_limited by " << amax.sp);
+                // check other leading
+                return false;
+            }
+            else
+            {
+                xi[root->indx] = x;
+                tao::mul_add(C,NuT,xi);
+                return true;
+            }
         }
 
 
