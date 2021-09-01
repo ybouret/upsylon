@@ -101,16 +101,24 @@ namespace upsylon
             
             //! display array mapped to species
             template <typename OSTREAM, typename ARR> inline
-            OSTREAM & display(OSTREAM &os, ARR &arr) const
+            OSTREAM & display(OSTREAM &os, ARR &arr, const size_t indent=0) const
             {
                 static const ios::scribe &_ = ios::scribe::query<typename ARR::mutable_type>();
-                os << '{' << '\n';
+                Indent(os,indent) << '{' << '\n';
                 for(const SNode *node=sdb.head();node;node=node->next)
                 {
                     const Species &sp = ***node;
-                    os << ' ' << sp << " = " << _.write( &arr[sp.indx] ) << '\n';
+                    Indent(os,indent) << ' ' << sp << " = " << _.write( &arr[sp.indx] ) << '\n';
                 }
-                os << '}';
+                Indent(os,indent) << '}';
+                return os;
+            }
+
+            //! indent function
+            template <typename OSTREAM> static inline
+            OSTREAM & Indent(OSTREAM &os, size_t indent)
+            {
+                while(indent-- >0) os << ' ';
                 return os;
             }
             
@@ -135,7 +143,9 @@ namespace upsylon
             const Species & use(Jive::Source &source);
             string          getName(Jive::Source &) const; //!< get name
             void            noBlank(Jive::Source &) const; //!< skip blanks
-            
+
+
+
         };
     }
 }

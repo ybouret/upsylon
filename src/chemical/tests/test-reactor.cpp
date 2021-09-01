@@ -19,7 +19,7 @@ Y_UTEST(reactor)
 
     //eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
 
-    lib << "Na+" << "Cl-";
+    //lib << "Na+" << "Cl-";
 
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
@@ -41,7 +41,14 @@ Y_UTEST(reactor)
 
     lib.display(std::cerr << "C=",C) << std::endl;
 
-    cs.balance(C);
+    if( cs.balance(C) )
+    {
+        std::cerr << "SUCCESS" << std::endl;
+    }
+    else
+    {
+        std::cerr << "FAILURE" << std::endl;
+    }
     
     lib.display(std::cerr << "C=",C) << std::endl;
 

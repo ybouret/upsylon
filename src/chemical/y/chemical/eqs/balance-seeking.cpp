@@ -45,7 +45,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if(Verbosity)
                 {
-                    lib.display(std::cerr << "C1=",C) << std::endl;
+                    lib.display(std::cerr << "    C1=" << std::endl,C,4) << std::endl;
                 }
                 for(size_t j=NS;j>0;--j)
                 {
@@ -62,7 +62,7 @@ namespace upsylon
                     if(!LU::build(NuS2))
                     {
                         result=false;
-                        Y_CHEMICAL_PRINTLN("    Singular Seeking Condition");
+                        Y_CHEMICAL_PRINTLN("      ==> Singular Seeking Condition");
                         break;
                     }
                     LU::solve(NuS2,Cs);
@@ -70,7 +70,7 @@ namespace upsylon
 
                     if(Verbosity)
                     {
-                        eqs.display(std::cerr << "    xs   = ",xs) << std::endl;
+                        eqs.display(std::cerr << "    xs   =" << std::endl,xs,4) << std::endl;
                     }
 
                     // move Leading
@@ -86,7 +86,7 @@ namespace upsylon
                             NuST. ld_row(i,0);
                         }
                     }
-                    lib.display(std::cerr << "    Cm=",C) << std::endl;
+                    lib.display(std::cerr << "    Cm=" << std::endl,C,4) << std::endl;
                     Y_CHEMICAL_PRINTLN("    <Moving Procedure/>");
                 }
             }
