@@ -46,16 +46,40 @@ namespace upsylon
                 if(Verbosity)
                 {
                     lib.display(std::cerr << "    C1=" << std::endl,C,4) << std::endl;
+                    std::cerr << "    <Conditions>" << std::endl;
+                    for(size_t j=1;j<=NS;++j)
+                    {
+                        seeking[j]->display(std::cerr << "      ",C) << std::endl;
+                    }
+                    std::cerr << "    <Conditions/>" << std::endl;
                 }
 
                 for(size_t j=NS;j>0;--j)
                 {
                     const Seeking &s = *seeking[j];
-                    tao::set(NuS[j],s.nu);
-                    if(Verbosity) s.display(std::cerr << "    ",C) << std::endl;
+                    tao::set(Vs[j],s.nu);
                 }
-                NuST.assign_transpose(NuS);
-                Y_CHEMICAL_PRINTLN("    NuS=" << NuS);
+                VsT.assign_transpose(Vs);
+                Y_CHEMICAL_PRINTLN("    Vs =" << Vs);
+                tao::gram(Vs2,Vs);
+                std::cerr << "Vs2=" << Vs2 << std::endl;
+                if(!LU::build(Vs2))
+                {
+                    std::cerr << "Singular system..." << std::endl;
+                    return false;
+                }
+                Matrix IVs(NS,NS);
+                LU::inverse(Vs2,IVs);
+                std::cerr << "IVs=" << IVs << std::endl;
+
+                Matrix Omega(N,NS);
+                tao::mmul(Omega,VsT,IVs);
+                std::cerr << "Omega=" << Omega << std::endl;
+
+
+
+                hasSeeking(C);
+
                 
             }
             Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );

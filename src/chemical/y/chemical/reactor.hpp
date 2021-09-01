@@ -70,11 +70,11 @@ namespace upsylon
             const Leading::Array leading; //!< [N]  leading conditions
             const Seeking::Array seeking; //!< [NS] seeking conditions
             Vector               xi;      //!< [N] extent
-            Matrix               NuS;     //!< [NSxN] numerical
-            Matrix               NuST;    //!< [NxNS] NuS'
-            Matrix               NuS2;    //!< [NSxNS] numerical NuS * NuS'
-            Vector               Cs;      //!< [Ns]
-            Vector               xs;      //!< [N]
+            Matrix               Vs;     //!< [NSxN] numerical
+            Matrix               VsT;    //!< [NxNS] NuS'
+            Matrix               Vs2;    //!< [NSxNS] numerical NuS * NuS'
+            Vector               Cs;     //!< [Ns]
+            Vector               xs;     //!< [N]
 
             //__________________________________________________________________
             //

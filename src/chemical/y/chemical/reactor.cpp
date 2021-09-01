@@ -29,9 +29,9 @@ namespace upsylon
         leading(N,as_capacity),
         seeking(NS,as_capacity),
         xi(N,0),
-        NuS(NS,NS>0?N:0),
-        NuST(NuS.cols,NuS.rows),
-        NuS2(NS,NS),
+        Vs(NS,NS>0?N:0),
+        VsT(Vs.cols,Vs.rows),
+        Vs2(NS,NS),
         Cs(NS,0),
         xs(N,0),
         // private
