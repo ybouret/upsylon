@@ -22,6 +22,10 @@ namespace upsylon
                     ++nbad;
                     Cs[j] = -Cj;
                 }
+                else
+                {
+                    Cs[j] = 0;
+                }
             }
             Y_CHEMICAL_PRINTLN("    Cs   = " << Cs);
             return nbad>0;
@@ -58,6 +62,7 @@ namespace upsylon
                     if(!LU::build(NuS2))
                     {
                         result=false;
+                        Y_CHEMICAL_PRINTLN("    Singular Seeking Condition");
                         break;
                     }
                     LU::solve(NuS2,Cs);
@@ -69,21 +74,21 @@ namespace upsylon
                     }
 
                     // move Leading
-                    Y_CHEMICAL_PRINTLN("    <Moving Procedure>");
+                    Y_CHEMICAL_PRINTLN("    <Moving Procedure>" << std::endl);
 
                     for(size_t i=1;i<=N;++i)
                     {
-                        (void) leading[i]->moveAll(xs[i],C,NuT,xi);
+                        const Leading &lead = *leading[i];
+                        const bool     full = lead.moveAll(xs[i],C,NuT,xi);
+                        if(!full)
+                        {
+                            NuS.  ld_col(i,0);
+                            NuST. ld_row(i,0);
+                        }
                     }
                     lib.display(std::cerr << "    Cm=",C) << std::endl;
                     Y_CHEMICAL_PRINTLN("    <Moving Procedure/>");
-
-
-
-                    exit(-1);
                 }
-
-
             }
 
             Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );

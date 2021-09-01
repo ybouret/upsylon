@@ -342,13 +342,32 @@ namespace upsylon
             const Actor &amax = maxFromReac(C);
             const Actor &amin = minFromProd(C);
             Y_CHEMICAL_PRINTLN( "      " << root << " = " << std::setw(xwidth) << x << " is " << kindText()
-                               << " in [-" << amin.sp << "/" << amin.nu << " = " << xmin
+                               << " in { -" << amin.sp << "/" << amin.nu << " = " << xmin
                                << ":"      << amax.sp << "/" << amax.nu << " = " << xmax
-                               << "]");
+                               << " }");
 
+            if(x<=xmin)
+            {
+                Y_CHEMICAL_PRINTLN("       \\_min limited by " << amin.sp);
+                limitedBy(amin,xmin,C,NuT,xi);
+                return false;
+            }
+            else
+            {
+                if(x>=xmax)
+                {
+                    Y_CHEMICAL_PRINTLN("       \\_max limited by " << amax.sp);
+                    limitedBy(amax,xmax,C,NuT,xi);
+                    return false;
+                }
+                else
+                {
+                    updateAll(x,C,NuT,xi);
+                    return true;
+                }
+            }
             
-            tao::mul_add(C,NuT,xi);
-            return true;
+
         }
 
 
@@ -365,6 +384,7 @@ namespace upsylon
                     Y_CHEMICAL_MOVE_KIND(LimitedByProd);
                     Y_CHEMICAL_MOVE_KIND(LimitedByBoth);
             }
+            Y_CHEMICAL_PRINTLN( "      " << root << " ==> " << (res? "full move" : "limited") << std::endl);
             return res;
         }
 
