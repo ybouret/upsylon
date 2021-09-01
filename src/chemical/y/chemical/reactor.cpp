@@ -101,8 +101,6 @@ namespace upsylon
                 showSeeking(std::cerr);
             }
 
-
-
             //------------------------------------------------------------------
             //
             // done
@@ -117,6 +115,12 @@ namespace upsylon
             bool result = balanceLeading(C);
             if(result)
             {
+                if(Verbosity)
+                {
+                    lib.display(std::cerr << "    C1=" <<std::endl,C,4) << std::endl;
+                }
+                std::cerr << "Need Seeking..." << std::endl;
+                exit(0);
                 result = balanceSeeking(C);
             }
             Y_CHEMICAL_PRINTLN("  [balanced=" << textual::boolean(result) << "]" );
