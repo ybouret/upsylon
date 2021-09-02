@@ -70,6 +70,21 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if( hasSeeking(C) )
                 {
+
+#if 0
+                    Vector CC(M,0);
+                    for(size_t j=NS;j>0;--j)
+                    {
+                       CC[seeking[j]->sp.indx] = -C[seeking[j]->sp.indx];
+                    }
+#endif
+                    std::cerr << "NuT=" << NuT << std::endl;
+                    std::cerr << "C =" << C  << std::endl;
+                    //std::cerr << "CC=" << CC << std::endl;
+
+                    exit(0);
+
+
                     // first Rs
                     tao::set(Rs,Cs);
 

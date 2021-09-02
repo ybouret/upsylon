@@ -26,6 +26,10 @@ namespace upsylon
         NS(lib.countSeeking()),
         Nu(N>0?N:0,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
+        NuL(Nu.rows,Nu.cols),
+        NuLT(NuT.rows,NuT.cols),
+        NuS(Nu.rows,Nu.cols),
+        NuST(NuT.rows,NuT.cols),
         leading(N,as_capacity),
         seeking(NS,as_capacity),
         xi(N,0),
@@ -61,9 +65,8 @@ namespace upsylon
             aliasing::_(NuT).assign_transpose(Nu);
             const size_t rankNu = apk::rank(Nu);
 
-            Y_CHEMICAL_PRINTLN("  Nu  = " << Nu);
-            Y_CHEMICAL_PRINTLN("  NuT = " << NuT);
-            Y_CHEMICAL_PRINTLN("      |_rank= " << rankNu);
+            Y_CHEMICAL_PRINTLN("  Nu   = " << Nu);
+            Y_CHEMICAL_PRINTLN("  NuT  = " << NuT);
             if(rankNu<N) throw exception("%s equilibria are not independent",CLID);
             
             //------------------------------------------------------------------
@@ -77,10 +80,25 @@ namespace upsylon
                 aliasing::_(leading).push_back_(p);
             }
 
-            if(Verbosity)
+
+            for(size_t i=N;i>0;--i)
             {
-                showLeading(std::cerr);
+                const Leading &l = *leading[i];
+                const size_t   I = l.root->indx;
+                for(size_t j=l.reac.size();j>0;--j)
+                {
+                    const size_t J = l.reac[j].sp.indx;
+                    aliasing::_(NuL[I][J]) = Nu[I][J];
+                }
+                for(size_t j=l.prod.size();j>0;--j)
+                {
+                    const size_t J = l.prod[j].sp.indx;
+                    aliasing::_(NuL[I][J]) = Nu[I][J];
+                }
             }
+            aliasing::_(NuLT).assign_transpose(NuL);
+            Y_CHEMICAL_PRINTLN("  NuL  = " << NuL);
+            Y_CHEMICAL_PRINTLN("  NuLT = " << NuLT);
 
             //------------------------------------------------------------------
             //
@@ -94,11 +112,18 @@ namespace upsylon
                 {
                     const Seeking::Pointer p( new Seeking(sp,NuT,eqs->head()) );
                     aliasing::_(seeking).push_back_(p);
+                    tao::set(aliasing::_(NuST[sp.indx]),p->nu);
                 }
             }
+            aliasing::_(NuS).assign_transpose(NuST);
+            Y_CHEMICAL_PRINTLN("  NuS  = " << NuS);
+            Y_CHEMICAL_PRINTLN("  NuST = " << NuST);
+
+
 
             if(Verbosity)
             {
+                showLeading(std::cerr);
                 showSeeking(std::cerr);
             }
 

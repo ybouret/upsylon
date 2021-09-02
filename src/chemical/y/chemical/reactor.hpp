@@ -67,6 +67,10 @@ namespace upsylon
             const size_t         NS;      //!< number of seeking species
             const iMatrix        Nu;      //!< [NxM] topology matrix
             const iMatrix        NuT;     //!< [MxN] Nu'
+            const iMatrix        NuL;     //!< [NxM] leading topology matrix
+            const iMatrix        NuLT;    //!< [MxN] NuLT'
+            const iMatrix        NuS;     //!< [NxM] seaking topology matrix
+            const iMatrix        NuST;    //!< [MxN] NuST'
             const Leading::Array leading; //!< [N]  leading conditions
             const Seeking::Array seeking; //!< [NS] seeking conditions
             Vector               xi;      //!< [N] extent
