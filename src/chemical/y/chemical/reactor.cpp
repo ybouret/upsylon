@@ -31,8 +31,9 @@ namespace upsylon
         xi(N,0),
         Vs(NS,NS>0?N:0),
         VsT(Vs.cols,Vs.rows),
-        Vs2(NS,NS),
+        IV2(NS,NS),
         Cs(NS,0),
+        Rs(NS,0),
         xs(N,0),
         // private
         lockLib(lib),

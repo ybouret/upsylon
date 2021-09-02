@@ -72,8 +72,9 @@ namespace upsylon
             Vector               xi;      //!< [N] extent
             Matrix               Vs;     //!< [NSxN] numerical
             Matrix               VsT;    //!< [NxNS] NuS'
-            Matrix               Vs2;    //!< [NSxNS] numerical NuS * NuS'
+            Matrix               IV2;    //!< [NSxNS] LU of numerical NuS * NuS'
             Vector               Cs;     //!< [Ns]
+            Vector               Rs;     //!< [Ns]
             Vector               xs;     //!< [N]
 
             //__________________________________________________________________

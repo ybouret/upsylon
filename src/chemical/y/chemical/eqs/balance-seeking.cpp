@@ -40,7 +40,7 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
-                // initialize full search
+                // info
                 //
                 //--------------------------------------------------------------
                 if(Verbosity)
@@ -53,30 +53,43 @@ namespace upsylon
                     }
                     std::cerr << "    <Conditions/>" << std::endl;
                 }
-                
-                for(size_t j=NS;j>0;--j)
-                {
-                    const Seeking &s = *seeking[j];
-                    tao::set(Vs[j],s.nu);
-                }
-                VsT.assign_transpose(Vs);
-                Y_CHEMICAL_PRINTLN("    Vs =" << Vs);
-                tao::gram(Vs2,Vs);
-                if(!LU::build(Vs2))
-                {
-                    std::cerr << "Singular system..." << std::endl;
-                    return false;
-                }
-                Matrix IVs(NS,NS);
-                LU::inverse(Vs2,IVs);
-                
-                Matrix Omega(N,NS);
-                tao::mmul(Omega,VsT,IVs);
-                std::cerr << "    Omega=" << Omega << std::endl;
 
-                
+                //--------------------------------------------------------------
+                //
+                // check C
+                //
+                //--------------------------------------------------------------
+                if( hasSeeking(C) )
+                {
+                    // first Rs
+                    tao::set(Rs,Cs);
 
-                hasSeeking(C);
+                    // initialize Vs
+                    for(size_t j=NS;j>0;--j)
+                    {
+                        const Seeking &s = *seeking[j];
+                        tao::set(Vs[j],s.nu);
+                    }
+                    VsT.assign_transpose(Vs);
+                    Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
+
+                    // compute IV2
+                    tao::gram(IV2,Vs);
+                    if(!LU::build(IV2))
+                    {
+                        std::cerr << "Singular system..." << std::endl;
+                        return false;
+                    }
+
+                    // compute xs = Vs'*IV2*Rs
+                    LU::solve(IV2,Rs);
+                    tao::mul(xs,VsT,Rs);
+
+                    Y_CHEMICAL_PRINTLN("    xs   = " << xs);
+
+                    exit(-1);
+                }
+
 
                 
             }
@@ -84,73 +97,6 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("  <Balance Seeking/>");
             return result;
         }
-
-#if 0
-        bool Reactor:: balanceSeeking(Addressable &C) throw()
-        {
-            Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
-            bool result = true;
-            if(NS>0)
-            {
-
-                //--------------------------------------------------------------
-                //
-                // initialize full search
-                //
-                //--------------------------------------------------------------
-                if(Verbosity)
-                {
-                    lib.display(std::cerr << "    C1=" << std::endl,C,4) << std::endl;
-                }
-                for(size_t j=NS;j>0;--j)
-                {
-                    tao::set(NuS[j],seeking[j]->nu);
-                }
-                NuST.assign_transpose(NuS);
-                
-                while( hasSeeking(C) )
-                {
-                    // compute optimized extent
-                    tao::gram(NuS2,NuS);
-                    Y_CHEMICAL_PRINTLN("    NuS  = " << NuS);
-                    Y_CHEMICAL_PRINTLN("    NuS2 = " << NuS2);
-                    if(!LU::build(NuS2))
-                    {
-                        result=false;
-                        Y_CHEMICAL_PRINTLN("      ==> Singular Seeking Condition");
-                        break;
-                    }
-                    LU::solve(NuS2,Cs);
-                    tao::mul(xs,NuST,Cs);
-
-                    if(Verbosity)
-                    {
-                        eqs.display(std::cerr << "    xs   =" << std::endl,xs,4) << std::endl;
-                    }
-
-                    // move Leading
-                    Y_CHEMICAL_PRINTLN("    <Moving Procedure>" << std::endl);
-
-                    for(size_t i=1;i<=N;++i)
-                    {
-                        const Leading &lead = *leading[i];
-                        const bool     full = lead.moveAll(xs[i],C,NuT,xi);
-                        if(!full)
-                        {
-                            NuS.  ld_col(i,0);
-                            NuST. ld_row(i,0);
-                        }
-                    }
-                    lib.display(std::cerr << "    Cm=" << std::endl,C,4) << std::endl;
-                    Y_CHEMICAL_PRINTLN("    <Moving Procedure/>");
-                }
-            }
-
-            Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );
-            Y_CHEMICAL_PRINTLN("  <Balance Seeking/>");
-            return result;
-        }
-#endif
 
     }
 
