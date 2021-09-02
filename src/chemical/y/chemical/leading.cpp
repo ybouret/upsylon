@@ -5,6 +5,8 @@ namespace upsylon
     namespace Chemical
     {
 
+        const char Leading:: LeqText[] = " <=  ";
+        const char Leading:: GeqText[] = " >= -";
 
 #define Y_CHEM_LEAD(TYPE) case TYPE: return #TYPE
 

@@ -26,6 +26,8 @@ namespace upsylon
                 {
                     Cs[j] = 0;
                 }
+
+
             }
             Y_CHEMICAL_PRINTLN("    Cs   = " << Cs);
             return nbad>0;
@@ -52,6 +54,13 @@ namespace upsylon
                         seeking[j]->display(std::cerr << "      ",C) << std::endl;
                     }
                     std::cerr << "    <Conditions/>" << std::endl;
+                    std::cerr << "    <Limits>" << std::endl;
+                    for(size_t j=1;j<=N;++j)
+                    {
+                        leading[j]->display(std::cerr,C,6);
+                    }
+                    std::cerr << "    <Limits/>" << std::endl;
+
                 }
 
                 //--------------------------------------------------------------
@@ -86,6 +95,7 @@ namespace upsylon
                     tao::mul(xs,VsT,Rs);
 
                     Y_CHEMICAL_PRINTLN("    xs   = " << xs);
+
 
                     exit(-1);
                 }

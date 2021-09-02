@@ -48,6 +48,9 @@ namespace upsylon
             //! human readable text for a status
             static const char *StatusText(const Status) throw();
 
+            static const char  GeqText[]; //!< " >= -"
+            static const char  LeqText[]; //!< " <=  "
+
 
             typedef arc_ptr<const Leading>             Pointer;  //!< alias
             typedef vector<Leading::Pointer,Allocator> Array;    //!< alias
@@ -81,8 +84,29 @@ namespace upsylon
                     os << ' ' << leading.prod[i].sp.name;
                 }
                 os << " }\n";
-                leading.display(os,leading.reac," <=  ");
-                leading.display(os,leading.prod," >= -");
+                leading.display(os,leading.reac,LeqText);
+                leading.display(os,leading.prod,GeqText);
+                return os;
+            }
+
+            //! display numerical
+            template <typename OSTREAM> inline
+            OSTREAM & display(OSTREAM &os, const Accessible &C, const size_t indent) const
+            {
+                for(size_t i=1;i<=reac.size();++i)
+                {
+                    const Actor &a = reac[i];
+                    Library::Indent(os,indent) << *root << LeqText << a.sp;
+                    displayDivBy(os,a.nu);
+                    os << " = " << C[a.sp.indx]/a.nu << '\n';
+                }
+                for(size_t i=1;i<=prod.size();++i)
+                {
+                    const Actor &a = prod[i];
+                    Library::Indent(os,indent) << *root << GeqText << a.sp;
+                    displayDivBy(os,a.nu);
+                    os << " = " << -C[a.sp.indx]/a.nu << '\n';
+                }
                 return os;
             }
 
@@ -131,6 +155,20 @@ Addressable   &xi
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Leading);
 
+            template <typename OSTREAM> static inline
+            void displayDivBy(OSTREAM &os, const size_t nu)
+            {
+                if(nu>1)
+                {
+                    os << vformat("/%u",unsigned(nu));
+                }
+                else
+                {
+                    os << "  ";
+                }
+
+            }
+
             template <typename OSTREAM> inline
             void display(OSTREAM        &os,
                          const Limiting &limiting,
@@ -149,6 +187,12 @@ Addressable   &xi
                     os << '@' << *root << cmp << a.sp << '\n';
                 }
             }
+
+
+
+
+
+
 
             Status limitedByReac(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
             Status limitedByProd(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
