@@ -71,24 +71,10 @@ namespace upsylon
                 if( hasSeeking(C) )
                 {
 
-#if 0
-                    Vector CC(M,0);
-                    for(size_t j=NS;j>0;--j)
-                    {
-                       CC[seeking[j]->sp.indx] = -C[seeking[j]->sp.indx];
-                    }
-#endif
-                    std::cerr << "NuT=" << NuT << std::endl;
-                    std::cerr << "C =" << C  << std::endl;
-                    //std::cerr << "CC=" << CC << std::endl;
-
-                    exit(0);
-
-
-                    // first Rs
+                    // first Rs = Cs
                     tao::set(Rs,Cs);
 
-                    // initialize Vs
+                    // initialize full Vs
                     for(size_t j=NS;j>0;--j)
                     {
                         const Seeking &s = *seeking[j];
@@ -105,11 +91,21 @@ namespace upsylon
                         return false;
                     }
 
-                    // compute xs = Vs'*IV2*Rs
+                    // compute full xs = Vs'*IV2*Rs
                     LU::solve(IV2,Rs);
                     tao::mul(xs,VsT,Rs);
 
                     Y_CHEMICAL_PRINTLN("    xs   = " << xs);
+
+                    for(size_t i=N;i>0;--i)
+                    {
+                        if( leading[i]->isJammed(xs[i],C) )
+                        {
+                            std::cerr << leading[i]->root << " is jammed" << std::endl;
+                        }
+                    }
+
+
 
 
                     exit(-1);

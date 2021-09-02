@@ -124,6 +124,9 @@ namespace upsylon
                          const iMatrix &NuT,
                          Addressable   &xi) const throw();
 
+
+            bool isJammed(const double x, const Accessible &C) const throw();
+
             //! return type for moveXXX functions
 #define Y_CHEMICAL_LEADING_MOVE_RET bool
 

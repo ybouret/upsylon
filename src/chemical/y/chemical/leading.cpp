@@ -245,6 +245,43 @@ namespace upsylon
     }
 }
 
+
+namespace upsylon
+{
+    using namespace mkl;
+
+    namespace Chemical
+    {
+        bool Leading:: isJammed(const double      x,
+                                const Accessible &C) const throw()
+        {
+
+            switch(kind)
+            {
+
+                case LimitedByReac:
+                    if(x>=0)
+                    {
+                        (void) maxFromReac(C);
+                        return xmax<=0;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    
+                case LimitedByNone:
+                    break;
+            }
+            assert(LimitedByNone==kind);
+            return false;
+
+        }
+
+    }
+
+}
+
 namespace upsylon
 {
     using namespace mkl;
