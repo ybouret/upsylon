@@ -53,7 +53,7 @@ namespace upsylon
                     }
                     std::cerr << "    <Conditions/>" << std::endl;
                 }
-
+                
                 for(size_t j=NS;j>0;--j)
                 {
                     const Seeking &s = *seeking[j];
@@ -74,7 +74,7 @@ namespace upsylon
                 tao::mmul(Omega,VsT,IVs);
                 std::cerr << "    Omega=" << Omega << std::endl;
 
-
+                
 
                 hasSeeking(C);
 
