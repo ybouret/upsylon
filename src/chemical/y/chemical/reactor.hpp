@@ -125,6 +125,7 @@ namespace upsylon
             bool   hasSeeking(const Accessible &C)  throw(); //!< create Cs
             bool   computeXS()                      throw(); //!< from Cs and current Vs
             size_t countJammed(const Accessible &C) throw(); //!< equilibria that cannot move
+            void   jam(const size_t i)              throw(); //!< jam Vs ans VsT
             bool   moveFull(Addressable &C)         throw(); //!< from ok/xs/ix...
         };
     }

@@ -19,7 +19,7 @@ namespace upsylon
             size_t nbad = 0;
             for(size_t j=NS;j>0;--j)
             {
-                const double   Cj = C[seeking[j]->sp.indx];
+                const double Cj = C[seeking[j]->sp.indx];
                 if(Cj<0)
                 {
                     ++nbad;
@@ -52,6 +52,12 @@ namespace upsylon
             return true;
         }
 
+        void   Reactor:: jam(const size_t i) throw()
+        {
+            Vs.ld_col(i,0);
+            VsT.ld_row(i,0);
+        }
+        
         size_t Reactor:: countJammed(const Accessible &C) throw()
         {
             size_t nj=0;
@@ -59,25 +65,23 @@ namespace upsylon
             for(size_t i=N;i>0;--i)
             {
                 const double x = xs[i];
-                if(x>0)
+                if(x>0.0)
                 {
                     if(!leading[i]->queryForward(C))
                     {
                         ++nj;
-                        Vs.ld_col(i,0);
-                        VsT.ld_row(i,0);
+                        jam(i);
                         ok[i] = false;
                     }
                 }
                 else
                 {
-                    if(x<0)
+                    if(x<0.0)
                     {
                         if(!leading[i]->queryReverse(C))
                         {
                             ++nj;
-                            Vs.ld_col(i,0);
-                            VsT.ld_row(i,0);
+                            jam(i);
                             ok[i]=false;
                         }
                     }
