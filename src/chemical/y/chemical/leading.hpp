@@ -127,22 +127,6 @@ namespace upsylon
 
             
 
-            //! return type for moveXXX functions
-#define Y_CHEMICAL_LEADING_MOVE_RET bool
-
-            //! parameters for moveXXX functions
-#define Y_CHEMICAL_LEADING_MOVE_API \
-const double   x,                   \
-Addressable   &C,                   \
-const iMatrix &NuT,                 \
-Addressable   &xi 
-
-            //! try to move all extent or cut
-            Y_CHEMICAL_LEADING_MOVE_RET moveAll(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-
-            void   ensurePositive(Addressable &C) const throw(); //!< of leading species
-            size_t count() const throw(); //!< reac.size() + prod.size()
-
             //__________________________________________________________________
             //
             // members
@@ -201,14 +185,7 @@ Addressable   &xi
             Status limitedByProd(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
             Status limitedByBoth(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
 
-            Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByNone(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-            Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByReac(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-            Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByProd(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-            Y_CHEMICAL_LEADING_MOVE_RET moveLimitedByBoth(Y_CHEMICAL_LEADING_MOVE_API) const throw();
-
-            static void EnsurePositive(Addressable &C, const Limiting &actors) throw();
-            void        limitedBy(const Actor &a, const double x, Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
-            void        updateAll(const double x, Addressable &C, const iMatrix &NuT, Addressable &xi) const throw();
+            
         };
 
     }
