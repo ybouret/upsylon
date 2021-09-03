@@ -26,10 +26,11 @@ Y_UTEST(eqs)
     std::cerr << lib << std::endl;
     std::cerr << eqs << std::endl;
 
+    iMatrix NuT;
     for(const ENode *node=eqs->head();node;node=node->next)
     {
-        const Equilibrium::Pointer &ep = **node;
-        const Leading     leading(ep);
+        const Equilibrium  &eq = ***node;
+        const Leading       leading(eq,NuT);
         std::cerr << leading << std::endl;
     }
 

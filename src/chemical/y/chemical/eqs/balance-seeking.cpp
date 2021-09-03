@@ -101,7 +101,13 @@ namespace upsylon
 
             for(size_t ii=N;ii>0;--ii)
             {
-                const size_t i    = ix[ii]; if(!ok[i]) continue;
+                const size_t i    = ix[ii];
+                if(!ok[i])
+                {
+                    Y_CHEMICAL_PRINTLN("    Discarding " << leading[i]->root << " (jammed)");
+                    continue;
+                }
+                
                 const double x    = xs[i];
                 const bool   move = fabs(x)>0;
                 if(!move)
@@ -113,27 +119,7 @@ namespace upsylon
                 const Leading &l = *leading[i];
                 Y_CHEMICAL_PRINTLN("    Processing " << l.root << ' ' << l.kindText() << " @" << x);
 
-                tao::ld(xi,0);
-                switch(l.kind)
-                {
-                    case Leading::LimitedByNone:
-                        // move full
-                        xi[i] = x;
-                        tao::mul_add(C,NuT,xi);
-                        l.ensurePositive(C);
-                        break;
-
-                    case Leading::LimitedByReac:
-                        
-                        break;
-
-                    case Leading::LimitedByProd:
-                        break;
-
-                    case Leading::LimitedByBoth:
-                        break;
-
-                }
+                l.tryMoveFull(x,C,xi);
 
 
             }

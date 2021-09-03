@@ -47,16 +47,18 @@ namespace upsylon
         }
 
 
-        Leading:: Leading(const Equilibrium::Pointer &ep) :
+        Leading:: Leading(const Equilibrium  &ep,
+                          const iMatrix      &topo) :
         root(ep),
-        reac( root->reac.tellLeading(), as_capacity),
-        prod( root->prod.tellLeading(), as_capacity),
+        reac( root.reac.tellLeading(), as_capacity),
+        prod( root.prod.tellLeading(), as_capacity),
         kind(LimitedByNone),
         xmax(0),
-        xmin(0)
+        xmin(0),
+        NuT(topo)
         {
-            root->reac.fillLeading( aliasing::_(reac) );
-            root->prod.fillLeading( aliasing::_(prod) );
+            root.reac.fillLeading( aliasing::_(reac) );
+            root.prod.fillLeading( aliasing::_(prod) );
 
             if(reac.size()>0)
             {

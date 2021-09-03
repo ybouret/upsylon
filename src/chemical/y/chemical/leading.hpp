@@ -60,8 +60,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit Leading(const Equilibrium::Pointer &); //!< build
-            virtual ~Leading() throw();                     //!< cleanup
+            explicit Leading(const Equilibrium &, const iMatrix &); //!< build
+            virtual ~Leading() throw();            //!< cleanup
 
 
             //__________________________________________________________________
@@ -74,7 +74,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Leading &leading)
             {
-                os << "    " << *leading.root << " [" << leading.kindText() << "] {";
+                os << "    " << leading.root << " [" << leading.kindText() << "] {";
                 for(size_t i=1;i<=leading.reac.size();++i)
                 {
                     os << ' ' << leading.reac[i].sp.name;
@@ -96,14 +96,14 @@ namespace upsylon
                 for(size_t i=1;i<=reac.size();++i)
                 {
                     const Actor &a = reac[i];
-                    Library::Indent(os,indent) << *root << LeqText << a.sp;
+                    Library::Indent(os,indent) << root << LeqText << a.sp;
                     displayDivBy(os,a.nu);
                     os << " = " << C[a.sp.indx]/a.nu << '\n';
                 }
                 for(size_t i=1;i<=prod.size();++i)
                 {
                     const Actor &a = prod[i];
-                    Library::Indent(os,indent) << *root << GeqText << a.sp;
+                    Library::Indent(os,indent) << root << GeqText << a.sp;
                     displayDivBy(os,a.nu);
                     os << " = " << -C[a.sp.indx]/a.nu << '\n';
                 }
@@ -121,7 +121,6 @@ namespace upsylon
              \return Accepted: untouched C | Modified: moved C | Rejected: invalid C
              */
             Status solve(Addressable   &C,
-                         const iMatrix &NuT,
                          Addressable   &xi) const throw();
 
 
@@ -134,22 +133,21 @@ namespace upsylon
             //! ensure positivity after a valid (truncated) move
             void ensurePositive(Addressable &C) const throw();
 
-            bool tryMoveFull(const double  x,
-                             Addressable  &C,
-                             const Matrix &NuT,
-                             Addressable  &xi) const throw();
+            bool tryMoveFull(const double   x,
+                             Addressable   &C,
+                             Addressable   &xi) const throw();
             
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const Equilibrium::Pointer root; //!< root equilibrium
+            const Equilibrium         &root; //!< root equilibrium
             const Limiting             reac; //!< limiting reactant(s)
             const Limiting             prod; //!< limiting product(s)
             const Kind                 kind; //!< kind according to structure
             mutable double             xmax; //!< last computed from reactant(s)
             mutable double             xmin; //!< last computed from product(s)
-
+            const iMatrix             &NuT;  //!< to change C
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Leading);
@@ -183,16 +181,23 @@ namespace upsylon
                     {
                         os << vformat("%u*", unsigned(a.nu));
                     }
-                    os << '@' << *root << cmp << a.sp << '\n';
+                    os << '@' << root << cmp << a.sp << '\n';
                 }
             }
 
 
-            Status limitedByReac(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
-            Status limitedByProd(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
-            Status limitedByBoth(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
+            Status limitedByReac(Addressable &C, Addressable &xi) const throw();
+            Status limitedByProd(Addressable &C, Addressable &xi) const throw();
+            Status limitedByBoth(Addressable &C, Addressable &xi) const throw();
 
             
+            bool   moveLimitedByReac(const double x, Addressable &C, Addressable &xi) const throw();
+            bool   moveLimitedByProd(const double x, Addressable &C, Addressable &xi) const throw();
+            bool   moveLimitedByBoth(const double x, Addressable &C, Addressable &xi) const throw();
+
+            
+            void   moveTotally(const double x, Addressable &C, Addressable &xi) const throw();
+            void   moveLimited(const double x, Addressable &C, Addressable &xi, const Actor &) const throw();
         };
 
     }

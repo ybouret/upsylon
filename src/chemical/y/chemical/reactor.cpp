@@ -78,7 +78,7 @@ namespace upsylon
             //------------------------------------------------------------------
             for(const ENode *node=eqs->head();node;node=node->next)
             {
-                const Leading::Pointer p( new Leading(**node) );
+                const Leading::Pointer p( new Leading(***node,NuT) );
                 aliasing::_(leading).push_back_(p);
             }
 
@@ -86,7 +86,7 @@ namespace upsylon
             for(size_t i=N;i>0;--i)
             {
                 const Leading &l = *leading[i];
-                const size_t   I = l.root->indx;
+                const size_t   I = l.root.indx;
                 for(size_t j=l.reac.size();j>0;--j)
                 {
                     const size_t J = l.reac[j].sp.indx;

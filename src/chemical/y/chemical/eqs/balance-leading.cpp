@@ -16,7 +16,7 @@ namespace upsylon
             bool result = true;
             for(size_t i=N;i>0;--i)
             {
-                switch( leading[i]->solve(C, NuT, xi) )
+                switch( leading[i]->solve(C,xi) )
                 {
                     case Leading::Modified:
                     case Leading::Accepted:
