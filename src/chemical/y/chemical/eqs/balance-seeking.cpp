@@ -5,6 +5,7 @@
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/sort/index.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -177,6 +178,8 @@ namespace upsylon
                     // Try and move now
                     //
                     //----------------------------------------------------------
+                    indexing::make(ix,compare_xi,xs);
+                    std::cerr << ix << std::endl;
                     if(Verbosity)
                     {
                         for(const ENode *node=eqs->head();node;node=node->next)
@@ -185,15 +188,15 @@ namespace upsylon
                             const size_t       i  = eq.indx;
                             Library::Indent(std::cerr,6) << eq;
                             std::cerr << " : " << (ok[i]? "active" : "jammed" );
-                            std::cerr <<  " : " << xs[i];
+                            std::cerr << " : #" << std::setw(3) << (N+1-ix[i]);
+                            std::cerr << " : " << xs[i];
                             std::cerr << std::endl;
                         }
                     }
 
-                    vector<size_t,Allocator> ix(N,0);
-                    indexing::make(ix,compare_xi,xs);
-                    std::cerr << ix << std::endl;
 
+
+                    
 
 
                     exit(-1);

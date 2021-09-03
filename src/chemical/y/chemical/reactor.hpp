@@ -81,6 +81,7 @@ namespace upsylon
             Vector               Rs;     //!< [Ns]
             Vector               xs;     //!< [N]
             Flags                ok;     //!< [N]
+            Indices              ix;     //!< [N]
             
             //__________________________________________________________________
             //
