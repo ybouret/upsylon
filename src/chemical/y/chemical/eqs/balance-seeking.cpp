@@ -3,6 +3,7 @@
 #include "y/code/textual.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/mkl/kernel/apk.hpp"
 
 namespace upsylon
 {
@@ -52,6 +53,7 @@ namespace upsylon
         size_t Reactor:: countJammed(const Accessible &C) throw()
         {
             size_t nj=0;
+            tao::ld(ok,true);
             for(size_t i=N;i>0;--i)
             {
                 const double x = xs[i];
@@ -62,6 +64,7 @@ namespace upsylon
                         ++nj;
                         Vs.ld_col(i,0);
                         VsT.ld_row(i,0);
+                        ok[i] = false;
                     }
                 }
                 else
@@ -73,11 +76,12 @@ namespace upsylon
                             ++nj;
                             Vs.ld_col(i,0);
                             VsT.ld_row(i,0);
+                            ok[i]=false;
                         }
                     }
                     else
                     {
-
+                        // nothing...
                     }
                 }
             }
@@ -93,7 +97,7 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
-                // info
+                // status ath this point
                 //
                 //--------------------------------------------------------------
                 if(Verbosity)
@@ -147,7 +151,7 @@ namespace upsylon
 
                     //----------------------------------------------------------
                     //
-                    // check if we use all equilibira
+                    // check if we use all equilibira and recompute xs
                     //
                     //----------------------------------------------------------
                     const size_t jammed = countJammed(C);
@@ -161,6 +165,25 @@ namespace upsylon
                             return false;
                         }
                     }
+
+                    //----------------------------------------------------------
+                    //
+                    // Try and move now
+                    //
+                    //----------------------------------------------------------
+                    if(Verbosity)
+                    {
+                        for(const ENode *node=eqs->head();node;node=node->next)
+                        {
+                            const Equilibrium &eq = ***node;
+                            const size_t       i  = eq.indx;
+                            Library::Indent(std::cerr,6) << eq;
+                            std::cerr << " : " << (ok[i]? "active" : "jammed" );
+                            std::cerr <<  " : " << xs[i];
+                            std::cerr << std::endl;
+                        }
+                    }
+
 
 
 

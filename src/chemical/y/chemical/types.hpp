@@ -25,7 +25,8 @@ namespace upsylon
         typedef addressable<double>       Addressable; //!< default addressable
         typedef accessible<double>        Accessible;  //!< default addressable
         typedef matrix<unit_t>            iMatrix;     //!< default matrix of integers
-        
+        typedef vector<bool,Allocator>    Flags;       //!< default vector of booleans
+
         //! output a debug message
 #define Y_CHEMICAL_PRINTLN(MSG) do { if(Verbosity) { std::cerr << MSG << std::endl; } } while(false)
         

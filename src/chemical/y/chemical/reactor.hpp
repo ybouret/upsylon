@@ -80,7 +80,8 @@ namespace upsylon
             Vector               Cs;     //!< [Ns]
             Vector               Rs;     //!< [Ns]
             Vector               xs;     //!< [N]
-
+            Flags                ok;     //!< [N]
+            
             //__________________________________________________________________
             //
             // helpers
