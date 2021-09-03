@@ -115,12 +115,14 @@ namespace upsylon
             }
 
 
+
         private:
             const Freezable::Latch lockLib;
             const Freezable::Latch lockEqs;
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            //! create Cs
-            bool hasSeeking(const Accessible &C)  throw();
+            bool   hasSeeking(const Accessible &C)  throw(); //!< create Cs
+            bool   computeXS()                      throw(); //!< from Cs and current Vs
+            size_t countJammed(const Accessible &C) throw(); //!< equilibria that cannot move
         };
     }
 }

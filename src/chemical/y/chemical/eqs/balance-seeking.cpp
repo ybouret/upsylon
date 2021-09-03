@@ -34,6 +34,57 @@ namespace upsylon
         }
 
 
+        bool Reactor:: computeXS() throw()
+        {
+            tao::gram(IV2,Vs);
+            if(!LU::build(IV2))
+            {
+                Y_CHEMICAL_PRINTLN("    Singular System");
+                return false;
+            }
+            tao::set(Rs,Cs);
+            LU::solve(IV2,Rs);
+            tao::mul(xs,VsT,Rs);
+            Y_CHEMICAL_PRINTLN("    xs   = " << xs);
+            return true;
+        }
+
+        size_t Reactor:: countJammed(const Accessible &C) throw()
+        {
+            size_t nj=0;
+            for(size_t i=N;i>0;--i)
+            {
+                const double x = xs[i];
+                if(x>0)
+                {
+                    if(!leading[i]->queryForward(C))
+                    {
+                        ++nj;
+                        Vs.ld_col(i,0);
+                        VsT.ld_row(i,0);
+                    }
+                }
+                else
+                {
+                    if(x<0)
+                    {
+                        if(!leading[i]->queryForward(C))
+                        {
+                            ++nj;
+                            Vs.ld_col(i,0);
+                            VsT.ld_row(i,0);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            return nj;
+        }
+
+
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
             Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
@@ -70,10 +121,6 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if( hasSeeking(C) )
                 {
-
-                    // first Rs = Cs
-                    tao::set(Rs,Cs);
-
                     // initialize full Vs
                     for(size_t j=NS;j>0;--j)
                     {
@@ -84,54 +131,17 @@ namespace upsylon
                     Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                     Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
 
-                    // compute IV2
-                    tao::gram(IV2,Vs);
-                    if(!LU::build(IV2))
+                    // compute initial xs
+                    if(!computeXS())
                     {
-                        std::cerr << "Singular system..." << std::endl;
                         return false;
                     }
 
-                    // compute full xs = Vs'*IV2*Rs
-                    LU::solve(IV2,Rs);
-                    tao::mul(xs,VsT,Rs);
-
-                    Y_CHEMICAL_PRINTLN("    xs   = " << xs);
-
-                    // check if we use all equation
-                    size_t discarded=0;
-                    for(size_t i=N;i>0;--i)
+                    // check if we use all equilibira
+                    const size_t jammed = countJammed(C);
+                    if(jammed)
                     {
-                        const double x = xs[i];
-                        if(x>0)
-                        {
-                            if(!leading[i]->queryForward(C))
-                            {
-                                ++discarded;
-                                Vs.ld_col(i,0);
-                                VsT.ld_row(i,0);
-                            }
-                        }
-                        else
-                        {
-                            if(x<0)
-                            {
-                                if(!leading[i]->queryForward(C))
-                                {
-                                    ++discarded;
-                                    Vs.ld_col(i,0);
-                                    VsT.ld_row(i,0);
-                                }
-                            }
-                            else
-                            {
-
-                            }
-                        }
-                    }
-                    if(discarded)
-                    {
-                        std::cerr << "#DISCARDED=" << discarded << std::endl;
+                        std::cerr << "#JAMMED=" << jammed << std::endl;
                         Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                         Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
                     }
