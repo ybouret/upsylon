@@ -125,7 +125,12 @@ namespace upsylon
                          Addressable   &xi) const throw();
 
 
-            
+            //! check if possible positive extent
+            bool queryForward(const Accessible &C) const throw();
+
+            //! check if posssible negative extent
+            bool queryReverse(const Accessible &C) const throw();
+
 
             //__________________________________________________________________
             //
@@ -174,11 +179,6 @@ namespace upsylon
                     os << '@' << *root << cmp << a.sp << '\n';
                 }
             }
-
-
-
-
-
 
 
             Status limitedByReac(Addressable &C, const iMatrix &NuT, Addressable   &xi) const throw();
