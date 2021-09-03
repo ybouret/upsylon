@@ -4,6 +4,7 @@
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/sort/index.hpp"
 
 namespace upsylon
 {
@@ -88,6 +89,11 @@ namespace upsylon
             return nj;
         }
 
+        static inline
+        int compare_xi(const double lhs, const double rhs) throw()
+        {
+            return comparison::decreasing_abs(lhs,rhs);
+        }
 
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
@@ -184,6 +190,9 @@ namespace upsylon
                         }
                     }
 
+                    vector<size_t,Allocator> ix(N,0);
+                    indexing::make(ix,compare_xi,xs);
+                    std::cerr << ix << std::endl;
 
 
 
