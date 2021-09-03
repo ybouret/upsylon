@@ -82,6 +82,7 @@ namespace upsylon
                     }
                     VsT.assign_transpose(Vs);
                     Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
+                    Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
 
                     // compute IV2
                     tao::gram(IV2,Vs);
@@ -97,11 +98,43 @@ namespace upsylon
 
                     Y_CHEMICAL_PRINTLN("    xs   = " << xs);
 
+                    // check if we use all equation
+                    size_t discarded=0;
                     for(size_t i=N;i>0;--i)
                     {
-                        
-                    }
+                        const double x = xs[i];
+                        if(x>0)
+                        {
+                            if(!leading[i]->queryForward(C))
+                            {
+                                ++discarded;
+                                Vs.ld_col(i,0);
+                                VsT.ld_row(i,0);
+                            }
+                        }
+                        else
+                        {
+                            if(x<0)
+                            {
+                                if(!leading[i]->queryForward(C))
+                                {
+                                    ++discarded;
+                                    Vs.ld_col(i,0);
+                                    VsT.ld_row(i,0);
+                                }
+                            }
+                            else
+                            {
 
+                            }
+                        }
+                    }
+                    if(discarded)
+                    {
+                        std::cerr << "#DISCARDED=" << discarded << std::endl;
+                        Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
+                        Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
+                    }
 
 
 
