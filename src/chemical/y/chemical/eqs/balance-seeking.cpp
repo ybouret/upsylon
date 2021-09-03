@@ -121,7 +121,11 @@ namespace upsylon
                 //--------------------------------------------------------------
                 if( hasSeeking(C) )
                 {
+                    //----------------------------------------------------------
+                    //
                     // initialize full Vs
+                    //
+                    //----------------------------------------------------------
                     for(size_t j=NS;j>0;--j)
                     {
                         const Seeking &s = *seeking[j];
@@ -131,19 +135,31 @@ namespace upsylon
                     Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                     Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
 
+                    //----------------------------------------------------------
+                    //
                     // compute initial xs
+                    //
+                    //----------------------------------------------------------
                     if(!computeXS())
                     {
                         return false;
                     }
 
+                    //----------------------------------------------------------
+                    //
                     // check if we use all equilibira
+                    //
+                    //----------------------------------------------------------
                     const size_t jammed = countJammed(C);
                     if(jammed)
                     {
                         std::cerr << "#JAMMED=" << jammed << std::endl;
                         Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                         Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
+                        if(!computeXS())
+                        {
+                            return false;
+                        }
                     }
 
 
