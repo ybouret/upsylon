@@ -182,16 +182,34 @@ namespace upsylon
                     std::cerr << ix << std::endl;
                     if(Verbosity)
                     {
+                        const size_t N1 = N+1;
                         for(const ENode *node=eqs->head();node;node=node->next)
                         {
                             const Equilibrium &eq = ***node;
                             const size_t       i  = eq.indx;
                             Library::Indent(std::cerr,6) << eq;
                             std::cerr << " : " << (ok[i]? "active" : "jammed" );
-                            std::cerr << " : #" << std::setw(3) << (N+1-ix[i]);
+                            std::cerr << " : #" << std::setw(3) << (N1-ix[i]);
                             std::cerr << " : " << xs[i];
                             std::cerr << std::endl;
                         }
+                    }
+
+                    for(size_t ii=N;ii>0;--ii)
+                    {
+                        const size_t i    = ix[ii]; if(!ok[i]) continue;
+                        const double x    = xs[i];
+                        const bool   move = fabs(x)>0;
+                        if(move)
+                        {
+                            const Leading &l = *leading[i];
+                            Y_CHEMICAL_PRINTLN("    Processing " << l.root << " = " << x);
+                        }
+                        else
+                        {
+                            Y_CHEMICAL_PRINTLN("    Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
+                        }
+
                     }
 
 
