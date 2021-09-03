@@ -99,10 +99,7 @@ namespace upsylon
 
                     for(size_t i=N;i>0;--i)
                     {
-                        if( leading[i]->isJammed(xs[i],C) )
-                        {
-                            std::cerr << leading[i]->root << " is jammed" << std::endl;
-                        }
+                        
                     }
 
 

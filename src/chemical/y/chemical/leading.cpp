@@ -88,45 +88,7 @@ namespace upsylon
             }
         }
 
-        const Actor & Leading:: maxFromReac(const Accessible &C) const throw()
-        {
-            assert(reac.size()>0);
-            assert(LimitedByReac==kind||LimitedByBoth==kind);
-            
-            const Actor *best = &reac[1];
-            xmax              = C[best->sp.indx]/best->nu;
-            for(size_t i=reac.size();i>1;--i)
-            {
-                const Actor *temp = &reac[i];
-                const double xtmp = C[temp->sp.indx]/temp->nu;
-                if(xtmp<xmax)
-                {
-                    xmax = xtmp;
-                    best = temp;
-                }
-            }
-            return *best;
-        }
-
-        const Actor & Leading:: minFromProd(const Accessible &C) const throw()
-        {
-            assert(prod.size()>0);
-            assert(LimitedByProd==kind||LimitedByBoth==kind);
-
-            const Actor *best = &prod[1];
-            xmin              = -C[best->sp.indx]/best->nu;
-            for(size_t i=prod.size();i>1;--i)
-            {
-                const Actor *temp = &prod[i];
-                const double xtmp = -C[temp->sp.indx]/temp->nu;
-                if(xtmp>xmin)
-                {
-                    xmin = xtmp;
-                    best = temp;
-                }
-            }
-            return *best;
-        }
+       
 
     }
 
@@ -138,154 +100,8 @@ namespace upsylon
 
 namespace upsylon
 {
+
     using namespace mkl;
-
-    namespace Chemical
-    {
-        static const unsigned xwidth = 16;
-
-        Leading::Status Leading:: limitedByReac(Addressable   &C,
-                                                const iMatrix &NuT,
-                                                Addressable   &xi) const throw()
-        {
-            const Actor &amax = maxFromReac(C);
-            Y_CHEMICAL_PRINTLN( "    |_max=" << std::setw(xwidth) << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
-            if(xmax<0)
-            {
-                tao::ld(xi,0);
-                xi[root->indx] = xmax;
-                tao::mul_add(C,NuT,xi);
-                C[amax.sp.indx] = 0;
-                return Modified;
-            }
-            else
-            {
-                return Accepted;
-            }
-        }
-
-        Leading::Status Leading:: limitedByProd(Addressable   &C,
-                                                const iMatrix &NuT,
-                                                Addressable   &xi) const throw()
-        {
-            const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("    |_min=" << std::setw(xwidth) << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
-            if(xmin>0)
-            {
-                tao::ld(xi,0);
-                xi[root->indx] = xmin;
-                tao::mul_add(C,NuT,xi);
-                C[amin.sp.indx] = 0;
-                return Modified;
-            }
-            else
-            {
-                return Accepted;
-            }
-        }
-
-        Leading::Status Leading:: limitedByBoth(Addressable   &C,
-                                                const iMatrix &NuT,
-                                                Addressable   &xi) const throw()
-        {
-            const Actor &amax = maxFromReac(C);
-            const Actor &amin = minFromProd(C);
-            Y_CHEMICAL_PRINTLN("    |_min=" << std::setw(xwidth) << xmin << " from " << amin.sp << " = " << C[amin.sp.indx]);
-            Y_CHEMICAL_PRINTLN("    |_max=" << std::setw(xwidth) << xmax << " from " << amax.sp << " = " << C[amax.sp.indx]);
-
-            if(xmin>xmax)
-            {
-                return Rejected;
-            }
-            else
-            {
-                if(xmin>0)
-                {
-                    tao::ld(xi,0);
-                    xi[root->indx] = xmin;
-                    tao::mul_add(C,NuT,xi);
-                    C[amin.sp.indx] = 0;
-                    return Modified;
-                }
-
-                if(xmax<0)
-                {
-                    tao::ld(xi,0);
-                    xi[root->indx] = xmax;
-                    tao::mul_add(C,NuT,xi);
-                    C[amax.sp.indx] = 0;
-                    return Modified;
-                }
-
-                return Accepted;
-            }
-
-
-        }
-
-
-
-        Leading::Status Leading:: solve(Addressable   &C,
-                                        const iMatrix &NuT,
-                                        Addressable   &xi) const throw()
-        {
-            Y_CHEMICAL_PRINTLN("    " << root);
-            Leading::Status status = Rejected;
-            switch(kind)
-            {
-                case LimitedByNone: status = Accepted; break;
-                case LimitedByReac: status = limitedByReac(C,NuT,xi); break;
-                case LimitedByProd: status = limitedByProd(C,NuT,xi); break;
-                case LimitedByBoth: status = limitedByBoth(C,NuT,xi); break;
-            }
-            Y_CHEMICAL_PRINTLN("    |_<" << StatusText(status) << ">" << std::endl);
-            return status;
-        }
-
-    }
-}
-
-
-namespace upsylon
-{
-    using namespace mkl;
-
-    namespace Chemical
-    {
-        bool Leading:: isJammed(const double      x,
-                                const Accessible &C) const throw()
-        {
-
-            switch(kind)
-            {
-
-                case LimitedByReac:
-                    if(x>=0)
-                    {
-                        (void) maxFromReac(C);
-                        return xmax<=0;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    
-                case LimitedByNone:
-                    break;
-            }
-            assert(LimitedByNone==kind);
-            return false;
-
-        }
-
-    }
-
-}
-
-namespace upsylon
-{
-    using namespace mkl;
-
     namespace Chemical
     {
 
@@ -314,6 +130,8 @@ namespace upsylon
             EnsurePositive(C,prod);
         }
 
+
+#if 0
         void Leading:: limitedBy(const Actor &a, const double x, Addressable &C, const iMatrix &NuT, Addressable &xi) const throw()
         {
             xi[root->indx] = x;
@@ -431,7 +249,8 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN( "      " << root << " ==> " << (res? "full move" : "limited") << std::endl);
             return res;
         }
-
+#endif
+        
     }
 }
 
