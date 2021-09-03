@@ -1,4 +1,5 @@
 #include "y/chemical/leading.hpp"
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -84,7 +85,25 @@ namespace upsylon
             }
         }
 
-       
+        namespace
+        {
+            static inline void setPositive(double &c) throw()
+            {
+                c = max_of<double>(c,0);
+            }
+        }
+        void Leading:: ensurePositive(Addressable &C) const throw()
+        {
+            for(size_t i=reac.size();i>0;--i)
+            {
+                setPositive(C[reac[i].sp.indx]);
+            }
+            for(size_t i=prod.size();i>0;--i)
+            {
+                setPositive(C[prod[i].sp.indx]);
+            }
+
+        }
 
     }
 

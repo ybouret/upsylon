@@ -73,7 +73,7 @@ namespace upsylon
                 {
                     if(x<0)
                     {
-                        if(!leading[i]->queryForward(C))
+                        if(!leading[i]->queryReverse(C))
                         {
                             ++nj;
                             Vs.ld_col(i,0);
@@ -90,11 +90,52 @@ namespace upsylon
             return nj;
         }
 
-        static inline
-        int compare_xi(const double lhs, const double rhs) throw()
+
+        bool Reactor:: moveFull(Addressable &C) throw()
         {
-            return comparison::decreasing_abs(lhs,rhs);
+            bool result = true;
+
+            for(size_t ii=N;ii>0;--ii)
+            {
+                const size_t i    = ix[ii]; if(!ok[i]) continue;
+                const double x    = xs[i];
+                const bool   move = fabs(x)>0;
+                if(!move)
+                {
+                    Y_CHEMICAL_PRINTLN("    Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
+                    continue;
+                }
+
+                const Leading &l = *leading[i];
+                Y_CHEMICAL_PRINTLN("    Processing " << l.root << ' ' << l.kindText() << " @" << x);
+
+                tao::ld(xi,0);
+                switch(l.kind)
+                {
+                    case Leading::LimitedByNone:
+                        // move full
+                        xi[i] = x;
+                        tao::mul_add(C,NuT,xi);
+                        l.ensurePositive(C);
+                        break;
+
+                    case Leading::LimitedByReac:
+                        break;
+
+                    case Leading::LimitedByProd:
+                        break;
+
+                    case Leading::LimitedByBoth:
+                        break;
+
+                }
+
+
+            }
+
+            return result;
         }
+
 
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
@@ -178,7 +219,7 @@ namespace upsylon
                     // Try and move now
                     //
                     //----------------------------------------------------------
-                    indexing::make(ix,compare_xi,xs);
+                    indexing::make(ix,comparison::decreasing_abs<double>,xs);
                     std::cerr << ix << std::endl;
                     if(Verbosity)
                     {
@@ -195,24 +236,7 @@ namespace upsylon
                         }
                     }
 
-                    for(size_t ii=N;ii>0;--ii)
-                    {
-                        const size_t i    = ix[ii]; if(!ok[i]) continue;
-                        const double x    = xs[i];
-                        const bool   move = fabs(x)>0;
-                        if(move)
-                        {
-                            const Leading &l = *leading[i];
-                            Y_CHEMICAL_PRINTLN("    Processing " << l.root << " = " << x);
-                        }
-                        else
-                        {
-                            Y_CHEMICAL_PRINTLN("    Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
-                        }
-
-                    }
-
-
+                    moveFull(C);
 
                     
 

@@ -131,6 +131,8 @@ namespace upsylon
             //! check if posssible negative extent
             bool queryReverse(const Accessible &C) const throw();
 
+            //! ensure positivity after a valid (truncated) move
+            void ensurePositive(Addressable &C) const throw();
 
             //__________________________________________________________________
             //
