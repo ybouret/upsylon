@@ -8,7 +8,7 @@ namespace upsylon
     namespace Chemical
     {
         
-        void   Leading:: moveLimited(const double   x,
+        bool   Leading:: moveLimited(const double   x,
                                      Addressable   &C,
                                      Addressable   &xi,
                                      const Actor   &a) const throw()
@@ -17,17 +17,19 @@ namespace upsylon
             tao::mul_add(C,NuT,xi);
             C[a.sp.indx] = 0;
             ensurePositive(C);
+            return false;
         }
         
-        void   Leading:: moveTotally(const double   x,
+        bool   Leading:: moveTotally(const double   x,
                                      Addressable   &C,
                                      Addressable   &xi) const throw()
         {
             xi[root.indx] = x;
             tao::mul_add(C,NuT,xi);
             ensurePositive(C);
+            return true;
         }
-
+        
         bool   Leading:: moveLimitedByReac(const double   x,
                                            Addressable   &C,
                                            Addressable   &xi) const throw()
@@ -71,21 +73,18 @@ namespace upsylon
             const Actor &amin = minFromProd(C);
             if(x<=xmin)
             {
-                moveLimited(xmin,C,xi,amin);
-                return false;
+                return moveLimited(xmin,C,xi,amin);
             }
             else
             {
                 const Actor &amax = maxFromReac(C);
                 if(x>=xmax)
                 {
-                    moveLimited(xmax,C,xi,amax);
-                    return false;
+                    return moveLimited(xmax,C,xi,amax);
                 }
                 else
                 {
-                    moveTotally(x,C,xi);
-                    return true;
+                    return moveTotally(x,C,xi);
                 }
             }
         }
@@ -99,7 +98,7 @@ namespace upsylon
             
             switch(kind)
             {
-                
+                    
                 case LimitedByReac: return moveLimitedByReac(x,C,xi);
                 case LimitedByProd: return moveLimitedByProd(x,C,xi);
                 case LimitedByBoth: return moveLimitedByBoth(x,C,xi);

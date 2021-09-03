@@ -148,7 +148,7 @@ namespace upsylon
             mutable double             xmax; //!< last computed from reactant(s)
             mutable double             xmin; //!< last computed from product(s)
             const iMatrix             &NuT;  //!< to change C
-
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Leading);
 
@@ -196,8 +196,8 @@ namespace upsylon
             bool   moveLimitedByBoth(const double x, Addressable &C, Addressable &xi) const throw();
 
             
-            void   moveTotally(const double x, Addressable &C, Addressable &xi) const throw();
-            void   moveLimited(const double x, Addressable &C, Addressable &xi, const Actor &) const throw();
+            bool   moveTotally(const double x, Addressable &C, Addressable &xi) const throw();
+            bool   moveLimited(const double x, Addressable &C, Addressable &xi, const Actor &) const throw();
         };
 
     }

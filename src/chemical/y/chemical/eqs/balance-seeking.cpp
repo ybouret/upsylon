@@ -211,7 +211,8 @@ namespace upsylon
                     //
                     //----------------------------------------------------------
                     indexing::make(ix,comparison::decreasing_abs<double>,xs);
-                    std::cerr << ix << std::endl;
+                    Y_CHEMICAL_PRINTLN("    ix   = " << ix);
+
                     if(Verbosity)
                     {
                         const size_t N1 = N+1;
@@ -220,9 +221,9 @@ namespace upsylon
                             const Equilibrium &eq = ***node;
                             const size_t       i  = eq.indx;
                             Library::Indent(std::cerr,6) << eq;
-                            std::cerr << " : " << (ok[i]? "active" : "jammed" );
+                            std::cerr << " : "  << (ok[i]? "active" : "jammed" );
                             std::cerr << " : #" << std::setw(3) << (N1-ix[i]);
-                            std::cerr << " : " << xs[i];
+                            std::cerr << " : "  << xs[i];
                             std::cerr << std::endl;
                         }
                     }
