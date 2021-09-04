@@ -133,6 +133,7 @@ namespace upsylon
             //! ensure positivity after a valid (truncated) move
             void ensurePositive(Addressable &C) const throw();
 
+            //! try to move with a given extent
             bool tryMoveFull(const double   x,
                              Addressable   &C,
                              Addressable   &xi) const throw();

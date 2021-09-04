@@ -110,7 +110,7 @@ namespace upsylon
                 const size_t i    = ix[ii];
                 if(!ok[i])
                 {
-                    Y_CHEMICAL_PRINTLN("    Discarding " << leading[i]->root << " (jammed)");
+                    Y_CHEMICAL_PRINTLN("      Discarding " << leading[i]->root << " (jammed)");
                     continue;
                 }
                 
@@ -118,14 +118,17 @@ namespace upsylon
                 const bool   move = fabs(x)>0;
                 if(!move)
                 {
-                    Y_CHEMICAL_PRINTLN("    Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
+                    Y_CHEMICAL_PRINTLN("      Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
                     continue;
                 }
                 
                 const Leading &l = *leading[i];
-                Y_CHEMICAL_PRINTLN("    Processing " << l.root << ' ' << l.kindText() << " @" << x);
+                Y_CHEMICAL_PRINTLN("      Processing " << l.root << ' ' << l.kindText() << " @" << x);
                 
-                l.tryMoveFull(x,C,xi);
+                if(!l.tryMoveFull(x,C,xi))
+                {
+                    result = false;
+                }
                 
                 
             }
@@ -172,7 +175,9 @@ namespace upsylon
                 {
                     //----------------------------------------------------------
                     //
+                    //
                     // initialize full Vs
+                    //
                     //
                     //----------------------------------------------------------
                     for(size_t j=NS;j>0;--j)
@@ -185,6 +190,13 @@ namespace upsylon
                     Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
                     tao::ld(ok,true);
                     
+                    //----------------------------------------------------------
+                    //
+                    //
+                    // find dimension(s)
+                    //
+                    //
+                    //----------------------------------------------------------
                 FIND_XS:
                     //----------------------------------------------------------
                     //
@@ -211,8 +223,14 @@ namespace upsylon
                     
                     //----------------------------------------------------------
                     //
+                    //
                     // Try and move now
                     //
+                    //
+                    //----------------------------------------------------------
+                 
+                    //----------------------------------------------------------
+                    // indexing
                     //----------------------------------------------------------
                     indexing::make(ix,comparison::decreasing_abs<double>,xs);
                     Y_CHEMICAL_PRINTLN("    ix   = " << ix);
@@ -232,8 +250,11 @@ namespace upsylon
                         }
                     }
                     
+                    Y_CHEMICAL_PRINTLN("    <Moving>");
                     moveFull(C);
-                    
+                    lib.display(std::cerr,C,6)<<std::endl;
+                    Y_CHEMICAL_PRINTLN("    <Moving/>");
+
                     
                     
                     
