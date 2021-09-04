@@ -10,10 +10,10 @@
 namespace upsylon
 {
     using namespace mkl;
-
+    
     namespace Chemical
     {
-
+        
         bool Reactor:: hasSeeking(const Accessible &C) throw()
         {
             size_t nbad = 0;
@@ -29,14 +29,14 @@ namespace upsylon
                 {
                     Cs[j] = 0;
                 }
-
-
+                
+                
             }
             Y_CHEMICAL_PRINTLN("    Cs   = " << Cs);
             return nbad>0;
         }
-
-
+        
+        
         bool Reactor:: computeXS() throw()
         {
             tao::gram(IV2,Vs);
@@ -51,7 +51,7 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("    xs   = " << xs);
             return true;
         }
-
+        
         void   Reactor:: jam(const size_t i) throw()
         {
             Vs.ld_col(i,0);
@@ -61,28 +61,33 @@ namespace upsylon
         size_t Reactor:: countJammed(const Accessible &C) throw()
         {
             size_t nj=0;
-            tao::ld(ok,true);
+            Y_CHEMICAL_PRINTLN("    <Jamming>");
             for(size_t i=N;i>0;--i)
             {
+                if(!ok[i]) continue; //! already jammed
                 const double x = xs[i];
                 if(x>0.0)
                 {
-                    if(!leading[i]->queryForward(C))
+                    const Leading &l = *leading[i];
+                    if(!l.queryForward(C))
                     {
                         ++nj;
                         jam(i);
                         ok[i] = false;
+                        Y_CHEMICAL_PRINTLN("      no " << l.root << " forward");
                     }
                 }
                 else
                 {
                     if(x<0.0)
                     {
-                        if(!leading[i]->queryReverse(C))
+                        const Leading &l = *leading[i];
+                        if(!l.queryReverse(C))
                         {
                             ++nj;
                             jam(i);
                             ok[i]=false;
+                            Y_CHEMICAL_PRINTLN("      no " << l.root << " reverse");
                         }
                     }
                     else
@@ -91,14 +96,15 @@ namespace upsylon
                     }
                 }
             }
+            Y_CHEMICAL_PRINTLN("    <Jamming/>");
             return nj;
         }
-
-
+        
+        
         bool Reactor:: moveFull(Addressable &C) throw()
         {
             bool result = true;
-
+            
             for(size_t ii=N;ii>0;--ii)
             {
                 const size_t i    = ix[ii];
@@ -115,19 +121,19 @@ namespace upsylon
                     Y_CHEMICAL_PRINTLN("    Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
                     continue;
                 }
-
+                
                 const Leading &l = *leading[i];
                 Y_CHEMICAL_PRINTLN("    Processing " << l.root << ' ' << l.kindText() << " @" << x);
-
+                
                 l.tryMoveFull(x,C,xi);
-
-
+                
+                
             }
-
+            
             return result;
         }
-
-
+        
+        
         bool Reactor:: balanceSeeking(Addressable &C) throw()
         {
             Y_CHEMICAL_PRINTLN("  <Balance Seeking>");
@@ -154,9 +160,9 @@ namespace upsylon
                         leading[j]->display(std::cerr,C,6);
                     }
                     std::cerr << "    <Limits/>" << std::endl;
-
+                    
                 }
-
+                
                 //--------------------------------------------------------------
                 //
                 // check C
@@ -177,7 +183,9 @@ namespace upsylon
                     VsT.assign_transpose(Vs);
                     Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                     Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
-
+                    tao::ld(ok,true);
+                    
+                FIND_XS:
                     //----------------------------------------------------------
                     //
                     // compute initial xs
@@ -187,7 +195,7 @@ namespace upsylon
                     {
                         return false;
                     }
-
+                    
                     //----------------------------------------------------------
                     //
                     // check if we use all equilibira and recompute xs
@@ -196,15 +204,11 @@ namespace upsylon
                     const size_t jammed = countJammed(C);
                     if(jammed)
                     {
-                        std::cerr << "#JAMMED=" << jammed << std::endl;
                         Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
                         Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
-                        if(!computeXS())
-                        {
-                            return false;
-                        }
+                        goto FIND_XS;
                     }
-
+                    
                     //----------------------------------------------------------
                     //
                     // Try and move now
@@ -212,7 +216,7 @@ namespace upsylon
                     //----------------------------------------------------------
                     indexing::make(ix,comparison::decreasing_abs<double>,xs);
                     Y_CHEMICAL_PRINTLN("    ix   = " << ix);
-
+                    
                     if(Verbosity)
                     {
                         const size_t N1 = N+1;
@@ -227,24 +231,24 @@ namespace upsylon
                             std::cerr << std::endl;
                         }
                     }
-
-                    moveFull(C);
-
                     
-
-
+                    moveFull(C);
+                    
+                    
+                    
+                    
                     exit(-1);
                 }
-
-
+                
+                
                 
             }
             Y_CHEMICAL_PRINTLN("    [seeking balanced=" << textual::boolean(result) << "]" );
             Y_CHEMICAL_PRINTLN("  <Balance Seeking/>");
             return result;
         }
-
+        
     }
-
+    
 }
 
