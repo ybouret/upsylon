@@ -107,6 +107,9 @@ namespace upsylon
             
             for(size_t ii=N;ii>0;--ii)
             {
+                //--------------------------------------------------------------
+                // is it active ?
+                //--------------------------------------------------------------
                 const size_t i    = ix[ii];
                 if(!ok[i])
                 {
@@ -114,6 +117,9 @@ namespace upsylon
                     continue;
                 }
                 
+                //--------------------------------------------------------------
+                // is it not nul
+                //--------------------------------------------------------------
                 const double x    = xs[i];
                 const bool   move = fabs(x)>0;
                 if(!move)
@@ -122,6 +128,9 @@ namespace upsylon
                     continue;
                 }
                 
+                //--------------------------------------------------------------
+                // let's try
+                //--------------------------------------------------------------
                 const Leading &l = *leading[i];
                 Y_CHEMICAL_PRINTLN("      Processing " << l.root << ' ' << l.kindText() << " @" << x);
                 
@@ -251,11 +260,17 @@ namespace upsylon
                     }
                     
                     Y_CHEMICAL_PRINTLN("    <Moving>");
-                    moveFull(C);
+                    const bool fullyMoved = moveFull(C);
                     lib.display(std::cerr,C,6)<<std::endl;
                     Y_CHEMICAL_PRINTLN("    <Moving/>");
-
-                    
+                    if(fullyMoved)
+                    {
+                        Y_CHEMICAL_PRINTLN("  Full Moved");
+                    }
+                    else
+                    {
+                        Y_CHEMICAL_PRINTLN("  Part Moved");
+                    }
                     
                     
                     exit(-1);
