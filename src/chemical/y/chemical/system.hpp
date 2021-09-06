@@ -9,27 +9,55 @@ namespace upsylon
 {
     namespace Chemical
     {
-
+        //______________________________________________________________________
+        //
+        //
+        //! System
+        //
+        //______________________________________________________________________
         class System : public Object
         {
         public:
-            static const char CLID[];
-            static const char PrimaryEnter[];
-            static const char PrimaryLeave[];
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            static const char CLID[];         //!< "Chemical::System"
+            static const char PrimaryEnter[]; //!< "<Primary>"
+            static const char PrimaryLeave[]; //!< "<Primary/>"
 
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+
+            //! setup
             explicit System(const Library &, const Equilibria &, const unsigned);
+
+            //! cleanup
             virtual ~System() throw();
 
-            const Library       &lib; //!< (frozen) library
-            const Equilibria    &eqs; //!< (frozen) equilibria
-            const size_t         N;   //!< eqs size
-            const size_t         M;   //!< lib size
-            const Matrix         Nu;  //!< [NxM] topology
+            //__________________________________________________________________
+            //
+            // memebers
+            //__________________________________________________________________
+            const Library       &lib;     //!< (frozen) library
+            const Equilibria    &eqs;     //!< (frozen) equilibria
+            const size_t         N;       //!< eqs size
+            const size_t         M;       //!< lib size
+            const Matrix         Nu;      //!< [NxM] topology
             const Matrix         NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
             const size_t         NP;      //!< primary species [0..N]
 
+
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+
+            //! display numerical primary constraints
             template <typename OSTREAM>
             void showPrimary(OSTREAM &os, const Accessible &C, const size_t indent) const
             {

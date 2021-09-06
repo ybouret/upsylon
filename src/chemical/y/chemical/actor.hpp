@@ -52,6 +52,7 @@ namespace upsylon
                 return os << a.sp;
             }
 
+            //! nu or empty
             string nuString() const;
 
 

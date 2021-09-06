@@ -33,7 +33,7 @@ namespace upsylon
             return " <=  ";
         }
 
-        double Primary::LimitingReac:: by(const double c) const throw()
+        double Primary::LimitingReac:: rh_val(const double c) const throw()
         {
             return c;
         }
@@ -67,7 +67,7 @@ namespace upsylon
             return " >= -";
         }
 
-        double Primary::LimitingProd:: by(const double c) const throw()
+        double Primary::LimitingProd:: rh_val(const double c) const throw()
         {
             return -c;
         }

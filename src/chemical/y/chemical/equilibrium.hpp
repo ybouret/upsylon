@@ -117,11 +117,10 @@ namespace upsylon
                 
             }
             
-            //! verify with given flags
-            void verify(const unsigned flags) const;
 
-            size_t countPrimaryReac() const throw();
-            size_t countPrimaryProd() const throw();
+            void   verify(const unsigned flags) const; //!< verify with given flags
+            size_t countPrimaryReac()   const throw(); //!< with unit rating
+            size_t countPrimaryProd()   const throw(); //!< with unit ration
             
 
             //__________________________________________________________________

@@ -11,37 +11,57 @@ namespace upsylon
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! primary constraint definition
+        //
+        //______________________________________________________________________
         class Primary : public Object
         {
         public:
-            typedef arc_ptr<const Primary>        Pointer;
-            typedef vector<Pointer,Allocator>     Array;
-            typedef vector<const Actor,Allocator> Limiting_;
+            //__________________________________________________________________
+            //
+            // Types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<const Primary>        Pointer;   //!< alias
+            typedef vector<Pointer,Allocator>     Array;     //!< alias
+            typedef vector<const Actor,Allocator> Limiting_; //!< base class
 
+            //__________________________________________________________________
+            //
+            //! interface to limiting actors
+            //__________________________________________________________________
             class Limiting : public Limiting_
             {
             public:
-                virtual             ~Limiting()     throw();
-                virtual const char  *symbol() const throw() = 0;
+                virtual             ~Limiting()     throw();                   //!< cleanup
+                virtual const char  *symbol() const throw() = 0;               //!< textual comparison
+                virtual double       rh_val(const double c) const throw() = 0; //!< right hand value
+
+                //! compute limiting actor and extent (in x) from C
                 virtual const Actor & operator()(double &x, const Accessible &C) const throw() = 0;
-                virtual double       by(const double c) const throw() = 0;
 
             protected:
-                explicit Limiting(const size_t);
+                explicit Limiting(const size_t); //!< setup with memory
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Limiting);
             };
 
+            //__________________________________________________________________
+            //
+            //! limiting reactant(s)
+            //__________________________________________________________________
             class LimitingReac : public Limiting
             {
             public:
-                virtual ~LimitingReac() throw();
-                explicit LimitingReac(const size_t n);
+                virtual ~LimitingReac() throw();        //!< cleanup
+                explicit LimitingReac(const size_t n);  //!< setup
 
 
-                virtual const char  * symbol()           const throw(); //!< " <=  ";
-                virtual double        by(const double c) const throw(); //!< c
+                virtual const char  * symbol()               const throw(); //!< " <=  ";
+                virtual double        rh_val(const double c) const throw(); //!< c
                 virtual const Actor & operator()(double &x, const Accessible &C) const throw();
 
             private:
@@ -49,33 +69,51 @@ namespace upsylon
             };
 
 
+            //__________________________________________________________________
+            //
+            //! limiting product(s)
+            //__________________________________________________________________
             class LimitingProd : public Limiting
             {
             public:
-                static const char Symbol[];
-                virtual ~LimitingProd() throw();
-                explicit LimitingProd(const size_t n);
+                virtual ~LimitingProd() throw();       //!< cleanup
+                explicit LimitingProd(const size_t n); //!< setup
 
-                virtual const char *  symbol() const throw();           //!< " >= -";
-                virtual double        by(const double c) const throw(); //!< -c
-
+                virtual const char *  symbol()               const throw(); //!< " >= -";
+                virtual double        rh_val(const double c) const throw(); //!< -c
                 virtual const Actor & operator()(double &x, const Accessible &C) const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LimitingProd);
             };
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Primary(const Equilibrium &); //!< setup
+            virtual ~Primary() throw();            //!< cleanup
 
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            size_t   count() const throw(); //!< reac.size() + prod.size()
 
-            explicit Primary(const Equilibrium &);
-            virtual ~Primary() throw();
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const Equilibrium  &root;  //!< underlying equilibirum
+            const LimitingReac  reac;  //!< unit rating reactant(s)
+            const LimitingProd  prod;  //!< unit rating product(s)
 
-            size_t   count() const throw();
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
 
-            const Equilibrium  &root;
-            const LimitingReac  reac;
-            const LimitingProd  prod;
-
+            //! formal display
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const size_t indent) const
             {
@@ -84,6 +122,7 @@ namespace upsylon
                 return os;
             }
 
+            //! numerical display
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
@@ -112,7 +151,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << "| " << a.nuString() << root << l.symbol() << a.sp << " = " << l.by(C[a.sp.indx]) << '\n';
+                    Library::Indent(os,indent) << "| " << a.nuString() << root << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
                 }
             }
 
