@@ -14,7 +14,7 @@ namespace upsylon
     namespace Chemical
     {
         
-        bool Reactor:: hasSeeking(const Accessible &C) throw()
+        bool Reactor:: seekingQuery(const Accessible &C) throw()
         {
             size_t nbad = 0;
             for(size_t j=NS;j>0;--j)
@@ -35,9 +35,8 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("    Cs   = " << Cs);
             return nbad>0;
         }
-        
-        
-        bool Reactor:: computeXS() throw()
+
+        bool Reactor:: seekingExtra() throw()
         {
             tao::gram(IV2,Vs);
             if(!LU::build(IV2))
@@ -51,14 +50,59 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("    xs   = " << xs);
             return true;
         }
+
+        void   Reactor:: seekingBuild() throw()
+        {
+            tao::ld(ok,true);
+            for(size_t j=NS;j>0;--j)
+            {
+                const Seeking &s = *seeking[j];
+                tao::set(Vs[j],s.nu);
+            }
+            VsT.assign_transpose(Vs);
+            Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
+            Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
+        }
+
+        bool   Reactor:: seekingRaise(const Accessible &C) throw()
+        {
+        FIND_XS:
+            //----------------------------------------------------------
+            //
+            // compute initial xs
+            //
+            //----------------------------------------------------------
+            if(!seekingExtra())
+            {
+                return false;
+            }
+
+            //----------------------------------------------------------
+            //
+            // check if we use all equilibira and recompute xs
+            //
+            //----------------------------------------------------------
+            const size_t jammed = seekingJammd(C);
+            if(jammed)
+            {
+                Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
+                Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
+                goto FIND_XS;
+            }
+
+            return true;
+        }
+
         
-        void   Reactor:: jam(const size_t i) throw()
+
+        
+        void   Reactor:: seekingBlock(const size_t i) throw()
         {
             Vs.ld_col(i,0);
             VsT.ld_row(i,0);
         }
         
-        size_t Reactor:: countJammed(const Accessible &C) throw()
+        size_t Reactor:: seekingJammd(const Accessible &C) throw()
         {
             size_t nj=0;
             Y_CHEMICAL_PRINTLN("    <Jamming>");
@@ -72,7 +116,7 @@ namespace upsylon
                     if(!l.queryForward(C))
                     {
                         ++nj;
-                        jam(i);
+                        seekingBlock(i);
                         ok[i] = false;
                         Y_CHEMICAL_PRINTLN("      no " << l.root << " forward");
                     }
@@ -85,7 +129,7 @@ namespace upsylon
                         if(!l.queryReverse(C))
                         {
                             ++nj;
-                            jam(i);
+                            seekingBlock(i);
                             ok[i]=false;
                             Y_CHEMICAL_PRINTLN("      no " << l.root << " reverse");
                         }
@@ -99,9 +143,30 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("    <Jamming/>");
             return nj;
         }
+
+
+        void Reactor:: seekingIndex() throw()
+        {
+            indexing::make(ix,comparison::decreasing_abs<double>,xs);
+
+            if(Verbosity)
+            {
+                std::cerr << "    ix   = " << ix << std::endl;
+                const size_t N1 = N+1;
+                for(const ENode *node=eqs->head();node;node=node->next)
+                {
+                    const Equilibrium &eq = ***node;
+                    const size_t       i  = eq.indx;
+                    Library::Indent(std::cerr,6) << eq;
+                    std::cerr << " : "  << (ok[i]? "active" : "jammed" );
+                    std::cerr << " : #" << std::setw(3) << (N1-ix[i]);
+                    std::cerr << " : "  << xs[i];
+                    std::cerr << std::endl;
+                }
+            }
+        }
         
-        
-        bool Reactor:: moveFull(Addressable &C) throw()
+        bool Reactor:: seekingSolve(Addressable &C) throw()
         {
             bool result = true;
             
@@ -180,87 +245,36 @@ namespace upsylon
                 // check C
                 //
                 //--------------------------------------------------------------
-                if( hasSeeking(C) )
+                if( seekingQuery(C) )
                 {
                     //----------------------------------------------------------
                     //
-                    //
                     // initialize full Vs
                     //
-                    //
                     //----------------------------------------------------------
-                    for(size_t j=NS;j>0;--j)
-                    {
-                        const Seeking &s = *seeking[j];
-                        tao::set(Vs[j],s.nu);
-                    }
-                    VsT.assign_transpose(Vs);
-                    Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
-                    Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
-                    tao::ld(ok,true);
+                    seekingBuild();
                     
                     //----------------------------------------------------------
-                    //
                     //
                     // find dimension(s)
                     //
-                    //
                     //----------------------------------------------------------
-                FIND_XS:
-                    //----------------------------------------------------------
-                    //
-                    // compute initial xs
-                    //
-                    //----------------------------------------------------------
-                    if(!computeXS())
-                    {
-                        return false;
-                    }
-                    
+                    if(!seekingRaise(C)) return false;
+
                     //----------------------------------------------------------
                     //
-                    // check if we use all equilibira and recompute xs
+                    // indexing
                     //
                     //----------------------------------------------------------
-                    const size_t jammed = countJammed(C);
-                    if(jammed)
-                    {
-                        Y_CHEMICAL_PRINTLN("    Vs   = " << Vs);
-                        Y_CHEMICAL_PRINTLN("    VsT  = " << VsT);
-                        goto FIND_XS;
-                    }
-                    
+                    seekingIndex();
+
                     //----------------------------------------------------------
-                    //
                     //
                     // Try and move now
                     //
-                    //
                     //----------------------------------------------------------
-                 
-                    //----------------------------------------------------------
-                    // indexing
-                    //----------------------------------------------------------
-                    indexing::make(ix,comparison::decreasing_abs<double>,xs);
-                    Y_CHEMICAL_PRINTLN("    ix   = " << ix);
-                    
-                    if(Verbosity)
-                    {
-                        const size_t N1 = N+1;
-                        for(const ENode *node=eqs->head();node;node=node->next)
-                        {
-                            const Equilibrium &eq = ***node;
-                            const size_t       i  = eq.indx;
-                            Library::Indent(std::cerr,6) << eq;
-                            std::cerr << " : "  << (ok[i]? "active" : "jammed" );
-                            std::cerr << " : #" << std::setw(3) << (N1-ix[i]);
-                            std::cerr << " : "  << xs[i];
-                            std::cerr << std::endl;
-                        }
-                    }
-                    
                     Y_CHEMICAL_PRINTLN("    <Moving>");
-                    const bool fullyMoved = moveFull(C);
+                    const bool fullyMoved = seekingSolve(C);
                     lib.display(std::cerr,C,6)<<std::endl;
                     Y_CHEMICAL_PRINTLN("    <Moving/>");
                     if(fullyMoved)

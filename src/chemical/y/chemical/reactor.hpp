@@ -122,11 +122,15 @@ namespace upsylon
             const Freezable::Latch lockLib;
             const Freezable::Latch lockEqs;
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
-            bool   hasSeeking(const Accessible &C)  throw(); //!< create Cs
-            bool   computeXS()                      throw(); //!< from Cs and current Vs
-            size_t countJammed(const Accessible &C) throw(); //!< equilibria that cannot move
-            void   jam(const size_t i)              throw(); //!< jam Vs ans VsT
-            bool   moveFull(Addressable &C)         throw(); //!< from ok/xs/ix...
+
+            bool   seekingQuery(const Accessible &C) throw(); //!< create Cs, return true upon bad value
+            void   seekingBuild()                    throw(); //!< initialize Vs, set ok to true
+            bool   seekingRaise(const Accessible &C) throw(); //!< raise set of valid direction and compute xs
+            bool   seekingExtra()                    throw(); //!< compute xs from Cs and current Vs
+            size_t seekingJammd(const Accessible &C) throw(); //!< equilibria that cannot move
+            void   seekingBlock(const size_t i)      throw(); //!< block Vs ans VsT
+            void   seekingIndex()                    throw(); //!< compute indices in ix
+            bool   seekingSolve(Addressable &C)      throw(); //!< from ok/xs/ix full step?
         };
     }
 }

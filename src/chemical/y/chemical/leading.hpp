@@ -70,7 +70,7 @@ namespace upsylon
             //__________________________________________________________________
             const char *kindText() const throw(); //!< display kind
 
-            //! display
+            //! display formal
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Leading &leading)
             {
@@ -134,6 +134,10 @@ namespace upsylon
             void ensurePositive(Addressable &C) const throw();
 
             //! try to move with a given extent
+            /**
+             ensure positivity of leading concentrations,
+             and set limiting to 0 when necessary
+             */
             bool tryMoveFull(const double   x,
                              Addressable   &C,
                              Addressable   &xi) const throw();
