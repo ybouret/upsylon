@@ -46,6 +46,8 @@ namespace upsylon
         replica(N,as_capacity),
         xi(N,0),
         ok(N,false),
+        Vr(),
+        Vt(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -101,7 +103,11 @@ namespace upsylon
                 }
                 Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
                 Y_CHEMICAL_PRINTLN("  NR  = " << NR);
-                
+                if(NR>0)
+                {
+                    Vr.make(NR,N);
+                    Vt.make(N,NR);
+                }
             }
 
             Y_CHEMICAL_PRINTLN("<System/>");

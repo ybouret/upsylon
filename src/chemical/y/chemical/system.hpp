@@ -71,6 +71,8 @@ namespace upsylon
             const Replica::Array replica; //!< [NR]
             Vector               xi;      //!< [N]
             Flags                ok;      //!< [N]
+            Matrix               Vr;      //!< [NRxN]
+            Matrix               Vt;      //!< [NxNR]
             
             //__________________________________________________________________
             //
@@ -106,9 +108,11 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
 
+            
+            
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
-
+            
         };
     }
 

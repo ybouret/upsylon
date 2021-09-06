@@ -10,14 +10,31 @@ namespace upsylon
 {
     namespace Chemical
     {
-        
+        //______________________________________________________________________
+        //
+        //
+        //! collection of replica species
+        //
+        //______________________________________________________________________
         class Replica : public Object, public authority<const Species>
         {
         public:
-            typedef arc_ptr<const Replica>    Pointer;
-            typedef vector<Pointer,Allocator> Array;
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<const Replica>    Pointer; //!< alias
+            typedef vector<Pointer,Allocator> Array;   //!< alias
             
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            
+            //! cleanup
             virtual ~Replica() throw();
+            
+            //! setup
             explicit Replica(const Species    &,
                              const Accessible &,
                              const ENode      *) throw();
@@ -25,6 +42,12 @@ namespace upsylon
             const Accessible    &nu; //!< vector of NuT
             const ENode * const  en; //!< corresponding first not nul nu[en->indx]
             
+            //__________________________________________________________________
+            //
+            // helpers
+            //__________________________________________________________________
+           
+            //! formal display
             template <typename OSTREAM> inline
             void display(OSTREAM &os, const size_t indent) const
             {
@@ -32,6 +55,7 @@ namespace upsylon
                 os << '\n';
             }
             
+            //! numerical display
             template <typename OSTREAM> inline
             void display(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
