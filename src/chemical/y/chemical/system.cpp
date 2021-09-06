@@ -14,6 +14,8 @@ namespace upsylon
 
         const char System:: PrimaryEnter[] = "<Primary>";
         const char System:: PrimaryLeave[] = "<Primary/>";
+        const char System:: ReplicaEnter[] = "<Replica>";
+        const char System:: ReplicaLeave[] = "<Replica/>";
 
 
         System:: ~System() throw()
@@ -37,9 +39,11 @@ namespace upsylon
         N(eqs->size()),
         M( checkValidity(lib,eqs) ),
         NP(0),
+        NR(0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
+        replica(N,as_capacity),
         xi(N,0),
         ok(N,false),
         libLatch( aliasing::_(lib) ),
@@ -72,16 +76,32 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryEnter);;
                 for(const ENode *node=eqs->head();node;node=node->next)
                 {
-                    const Primary::Pointer p = new Primary(***node,NuT);
-                    aliasing::_(primary).push_back_(p);
-                    p->display(std::cerr,4);
-                    aliasing::_(NP) += p->count();
+                    const Primary::Pointer pp = new Primary(***node,NuT);
+                    aliasing::_(primary).push_back_(pp);
+                    aliasing::_(NP) += pp->count();
+                    if(Verbosity) pp->display(std::cerr,4);
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
-
-
                 Y_CHEMICAL_PRINTLN("  NP  = " << NP);
-
+                
+                // building primary
+                Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);;
+                for(const SNode *node=lib->head();node;node=node->next)
+                {
+                    const Species &sp = ***node;
+                    if(sp.rating>1)
+                    {
+                        const Accessible      &nu = NuT[sp.indx];
+                        const ENode           *en = eqs->head(); while(fabs(nu[ (***en).indx])<=0.0) en = en->next;
+                        const Replica::Pointer rp = new Replica(sp,nu,en);
+                        aliasing::_(replica).push_back_(rp);
+                        aliasing::incr(NR);
+                        if(Verbosity) rp->display(std::cerr,4);
+                    }
+                }
+                Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
+                Y_CHEMICAL_PRINTLN("  NR  = " << NR);
+                
             }
 
             Y_CHEMICAL_PRINTLN("<System/>");

@@ -35,7 +35,10 @@ Y_UTEST(sys)
         if(alea.choice()) C[i] = -C[i];
     }
 
-    cs.balancePrimary(C);
+    if(cs.balancePrimary(C))
+    {
+        cs.balanceReplica(C);
+    }
 
 
 }

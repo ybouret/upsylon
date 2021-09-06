@@ -26,7 +26,8 @@ namespace upsylon
             static const char CLID[];         //!< "Chemical::System"
             static const char PrimaryEnter[]; //!< "<Primary>"
             static const char PrimaryLeave[]; //!< "<Primary/>"
-
+            static const char ReplicaEnter[]; //!< "<Replica>"
+            static const char ReplicaLeave[]; //!< "<Replica/>"
 
             //__________________________________________________________________
             //
@@ -45,9 +46,14 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+           
             //! balance primary constraints
             bool balancePrimary(Addressable &C) throw();
 
+            //! balance replica constraints
+            bool balanceReplica(Addressable &C) throw();
+
+            
 
             //__________________________________________________________________
             //
@@ -58,9 +64,11 @@ namespace upsylon
             const size_t         N;       //!< eqs size
             const size_t         M;       //!< lib size
             const size_t         NP;      //!< primary species [0..N]
+            const size_t         NR;      //!< replica species [N-NP]
             const Matrix         Nu;      //!< [NxM] topology
             const Matrix         NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
+            const Replica::Array replica; //!< [NR]
             Vector               xi;      //!< [N]
             Flags                ok;      //!< [N]
             
@@ -80,6 +88,19 @@ namespace upsylon
                     primary[i]->display(os,C,sub);
                 }
                 Library::Indent(os,indent) << PrimaryLeave << std::endl;
+            }
+            
+            //! display numerical primary constraints
+            template <typename OSTREAM>
+            void showReplica(OSTREAM &os, const Accessible &C, const size_t indent) const
+            {
+                Library::Indent(os,indent) << ReplicaEnter << std::endl;
+                const size_t sub = indent+2;
+                for(size_t i=1;i<=NR;++i)
+                {
+                    replica[i]->display(os,C,sub);
+                }
+                Library::Indent(os,indent) << ReplicaLeave << std::endl;
             }
 
         private:
