@@ -44,6 +44,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
+            //! balance primary constraints
             bool balancePrimary(Addressable &C) throw();
 
 

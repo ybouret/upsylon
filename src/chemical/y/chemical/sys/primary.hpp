@@ -113,6 +113,8 @@ namespace upsylon
             //__________________________________________________________________
             size_t      count()    const throw(); //!< reac.size() + prod.size()
             const char *kindText() const throw(); //!< to add after "limited by "
+
+            //! move invalid primary concentrations
             bool        solve(Addressable &C, Addressable &xi) const throw();
 
             //__________________________________________________________________
