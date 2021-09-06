@@ -140,10 +140,10 @@ namespace upsylon
 
 
         Primary:: Primary(const Equilibrium &eq, const Matrix &topo) :
-        root(eq),
+        authority<const Equilibrium>(eq),
         NuT(topo),
-        reac(root.countPrimaryReac()),
-        prod(root.countPrimaryProd()),
+        reac((**this).countPrimaryReac()),
+        prod((**this).countPrimaryProd()),
         kind(LimitedByNone)
         {
 

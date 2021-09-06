@@ -4,7 +4,7 @@
 #define Y_CHEMICAL_PRIMARY_INCLUDED 1
 
 #include "y/chemical/equilibria.hpp"
-
+#include "y/type/authority.hpp"
 
 namespace upsylon
 {
@@ -17,7 +17,7 @@ namespace upsylon
         //! primary constraint definition
         //
         //______________________________________________________________________
-        class Primary : public Object
+        class Primary : public Object, public authority<const Equilibrium>
         {
         public:
             //__________________________________________________________________
@@ -121,7 +121,6 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Equilibrium  &root;  //!< underlying equilibirum
             const Matrix       &NuT;   //!< topology matrix
             const LimitingReac  reac;  //!< unit rating reactant(s)
             const LimitingProd  prod;  //!< unit rating product(s)
@@ -155,7 +154,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Primary);
-
+            
+            void update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw();
             bool solveLimitedByReac(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByProd(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByBoth(Addressable &C, Addressable &xi) const throw();
@@ -164,7 +164,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
-                Library::Indent(os,indent) << "|_" << root << " is limited by " << kindText();
+                Library::Indent(os,indent) << "|_" << **this << " is limited by " << kindText();
                 if(LimitedByNone!=kind)
                 {
                     os << " {";
@@ -188,7 +188,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << " |_" << a.nuString() << root << l.symbol() << a.sp << '\n';
+                    Library::Indent(os,indent) << " |_" << a.nuString() << **this << l.symbol() << a.sp << '\n';
                 }
             }
 
@@ -198,7 +198,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << " |_" << a.nuString() << root << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
+                    Library::Indent(os,indent) << " |_" << a.nuString() << **this << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
                 }
             }
 

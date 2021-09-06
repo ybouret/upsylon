@@ -3,6 +3,7 @@
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
 #include "y/chemical/sys/primary.hpp"
+#include "y/chemical/sys/replica.hpp"
 
 
 namespace upsylon

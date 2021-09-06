@@ -12,19 +12,28 @@ namespace upsylon
 
         static const size_t xwidth = 16;
 
+        void Primary:: update(Addressable &C,
+                              const double x,
+                              const Actor &a,
+                              Addressable &xi) const throw()
+        {
+            tao::ld(xi,0);
+            xi[(**this).indx] = x;
+            tao::mul_add(C,NuT,xi);
+            C[a.sp.indx] = 0;
+        }
+
+        
         bool Primary:: solveLimitedByReac(Addressable &C,
                                           Addressable &xi) const throw()
         {
             double       xmax = 0;
             const Actor &amax = reac(xmax,C);
-            Y_CHEMICAL_PRINTLN("      |_" << root << " max=" << std::setw(xwidth) << xmax << " <== " << amax.sp);
+            Y_CHEMICAL_PRINTLN("      |_" << **this << " max=" << std::setw(xwidth) << xmax << " <== " << amax.sp);
 
             if(xmax<0)
             {
-                tao::ld(xi,0);
-                xi[root.indx] = xmax;
-                tao::mul_add(C,NuT,xi);
-                C[amax.sp.indx] = 0;
+                update(C,xmax,amax,xi);
             }
 
             return true;
@@ -36,14 +45,11 @@ namespace upsylon
         {
             double       xmin = 0;
             const Actor &amin = prod(xmin,C);
-            Y_CHEMICAL_PRINTLN("      |_" << root << " min=" << std::setw(xwidth) << xmin << " <== " << amin.sp);
+            Y_CHEMICAL_PRINTLN("      |_" << **this << " min=" << std::setw(xwidth) << xmin << " <== " << amin.sp);
 
             if(xmin>0)
             {
-                tao::ld(xi,0);
-                xi[root.indx] = xmin;
-                tao::mul_add(C,NuT,xi);
-                C[amin.sp.indx] = 0;
+                update(C,xmin,amin,xi);
             }
 
             return true;
@@ -56,30 +62,24 @@ namespace upsylon
             const Actor &amin = prod(xmin,C);
             double       xmax = 0;
             const Actor &amax = reac(xmax,C);
-            Y_CHEMICAL_PRINTLN("      |_" << root << " min=" << std::setw(xwidth) << xmin << " <== " << amin.sp);
-            Y_CHEMICAL_PRINTLN("      |_" << root << " max=" << std::setw(xwidth) << xmax << " <== " << amax.sp);
+            Y_CHEMICAL_PRINTLN("      |_" << **this << " min=" << std::setw(xwidth) << xmin << " <== " << amin.sp);
+            Y_CHEMICAL_PRINTLN("      |_" << **this << " max=" << std::setw(xwidth) << xmax << " <== " << amax.sp);
 
             if(xmin>xmax)
             {
-                Y_CHEMICAL_PRINTLN("      |_" << root << " is invalid");
+                Y_CHEMICAL_PRINTLN("      |_" << **this << " is invalid");
                 return false;
             }
             else
             {
                 if(xmin>0)
                 {
-                    tao::ld(xi,0);
-                    xi[root.indx] = xmin;
-                    tao::mul_add(C,NuT,xi);
-                    C[amin.sp.indx] = 0;
+                    update(C,xmin,amin,xi);
                 }
 
                 if(xmax<0)
                 {
-                    tao::ld(xi,0);
-                    xi[root.indx] = xmax;
-                    tao::mul_add(C,NuT,xi);
-                    C[amax.sp.indx] = 0;
+                    update(C,xmax,amax,xi);
                 }
 
                 return true;
