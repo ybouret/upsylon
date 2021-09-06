@@ -17,8 +17,19 @@ namespace upsylon
             explicit System(const Library &, const Equilibria &, const unsigned);
             virtual ~System() throw();
 
+            const Library    &lib; //!< (frozen) library
+            const Equilibria &eqs; //!< (frozen) equilibria
+            const size_t      N;   //!< eqs size
+            const size_t      M;   //!< lib size
+            const Matrix      Nu;  //!< [NxM] topology
+            const Matrix      NuT; //!< [MxN] Nu'
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
+
+            const Freezable::Latch libLatch;
+            const Freezable::Latch eqsLatch;
+
         };
     }
 
