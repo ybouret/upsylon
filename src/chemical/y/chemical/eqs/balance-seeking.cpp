@@ -182,7 +182,6 @@ namespace upsylon
         bool Reactor:: seekingSolve(Addressable &C) throw()
         {
             bool          result = true;
-            vector<State> stype(N,Jam);
 
             for(size_t ii=N;ii>0;--ii)
             {
@@ -192,6 +191,7 @@ namespace upsylon
                 const size_t i    = ix[ii];
                 if(!ok[i])
                 {
+                    states[i] = Jam;
                     Y_CHEMICAL_PRINTLN("      Discarding " << leading[i]->root << " (jammed)");
                     continue;
                 }
@@ -203,7 +203,7 @@ namespace upsylon
                 const bool   move = fabs(x)>0;
                 if(!move)
                 {
-                    stype[i] = Nil;
+                    states[i] = Nil;
                     Y_CHEMICAL_PRINTLN("      Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
                     continue;
                 }
@@ -214,22 +214,26 @@ namespace upsylon
                 const Leading &l = *leading[i];
                 Y_CHEMICAL_PRINTLN("      Processing " << l.root << ' ' << l.kindText() << " @" << x);
 
-                stype[i] = All;
                 if(!l.tryMoveFull(x,C,xi))
                 {
-                    stype[i] = Cut;
+                    states[i] = Cut;
                     result = false;
                 }
-                
+                else
+                {
+                    states[i] = All;
+                }
                 
             }
 
             if(Verbosity)
             {
+                std::cerr << "    <Summary>" << std::endl;
                 for(size_t i=1;i<=N;++i)
                 {
-                    std::cerr << "      " << leading[i]->root << " : " << StateText(stype[i]) << std::endl;
+                    std::cerr << "      " << leading[i]->root << " : " << StateText(states[i]) << std::endl;
                 }
+                std::cerr << "    <Summary/>" << std::endl;
             }
 
             return result;
@@ -270,7 +274,7 @@ namespace upsylon
                 // check invalid C and take action
                 //
                 //--------------------------------------------------------------
-                if( seekingQuery(C) )
+                while( seekingQuery(C) )
                 {
                     //----------------------------------------------------------
                     //
@@ -311,8 +315,6 @@ namespace upsylon
                         Y_CHEMICAL_PRINTLN("  Part Moved");
                     }
                     
-                    
-                    exit(-1);
                 }
                 
                 

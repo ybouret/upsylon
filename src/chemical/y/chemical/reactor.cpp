@@ -41,6 +41,7 @@ namespace upsylon
         xs(N,0),
         ok(N,0),
         ix(N,0),
+        states(N,Jam),
         // private
         lockLib(lib),
         lockEqs(eqs)

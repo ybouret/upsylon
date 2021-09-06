@@ -35,6 +35,8 @@ namespace upsylon
                 Cut
             };
 
+            typedef vector<State,Allocator> States;
+
             static const char * StateText(const State) throw();
 
             //__________________________________________________________________
@@ -92,6 +94,7 @@ namespace upsylon
             Vector               xs;     //!< [N]  excess extents
             Flags                ok;     //!< [N]  active/jammed
             Indices              ix;     //!< [N]  solving order indices
+            States               states; //!< [N] states after solve
             
             //__________________________________________________________________
             //
