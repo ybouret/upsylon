@@ -25,6 +25,27 @@ namespace upsylon
             return res;
         }
             
+        size_t Equilibrium:: countPrimaryReac() const throw()
+        {
+            return CountPrimary(reac);
+        }
+
+
+        size_t Equilibrium:: countPrimaryProd() const throw()
+        {
+            return CountPrimary(prod);
+        }
+
+        size_t Equilibrium:: CountPrimary(const Actors &actors) throw()
+        {
+            size_t ans = 0;
+            for(const ANode *node=actors->head();node;node=node->next)
+            {
+                const Actor &a = **node;
+                if(1==a.sp.rating) ++ans;
+            }
+            return ans;
+        }
 
         
             

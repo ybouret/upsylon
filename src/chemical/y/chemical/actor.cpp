@@ -29,7 +29,20 @@ namespace upsylon
             assert(nu>0);
         }
         
-        
+        string Actor:: nuString() const
+        {
+            assert(nu>0);
+            if(nu>1)
+            {
+                return vformat("%u", unsigned(nu));
+            }
+            else
+            {
+                return string();
+            }
+
+        }
+
     }
     
 }

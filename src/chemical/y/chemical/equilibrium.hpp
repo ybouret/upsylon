@@ -119,7 +119,11 @@ namespace upsylon
             
             //! verify with given flags
             void verify(const unsigned flags) const;
+
+            size_t countPrimaryReac() const throw();
+            size_t countPrimaryProd() const throw();
             
+
             //__________________________________________________________________
             //
             // members
@@ -129,6 +133,7 @@ namespace upsylon
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
+            static size_t CountPrimary(const Actors &) throw();
         };
         
         //______________________________________________________________________

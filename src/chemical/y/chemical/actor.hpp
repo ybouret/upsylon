@@ -47,11 +47,14 @@ namespace upsylon
             {
                 if(a.nu>1)
                 {
-                    os << vformat("%u ", unsigned(a.nu));
+                    os << a.nuString() << ' ';
                 }
                 return os << a.sp;
             }
-            
+
+            string nuString() const;
+
+
             //__________________________________________________________________
             //
             // members
