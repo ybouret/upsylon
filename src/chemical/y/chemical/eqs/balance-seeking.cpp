@@ -13,7 +13,20 @@ namespace upsylon
     
     namespace Chemical
     {
-        
+
+        const char * Reactor:: StateText(const State s) throw()
+        {
+            switch(s)
+            {
+                case Jam : return "Jam";
+                case Nil : return "Nil";
+                case All : return "All";
+                case Cut : return "Cut";
+            }
+            return "???";
+        }
+
+
         bool Reactor:: seekingQuery(const Accessible &C) throw()
         {
             size_t nbad = 0;
@@ -168,8 +181,9 @@ namespace upsylon
         
         bool Reactor:: seekingSolve(Addressable &C) throw()
         {
-            bool result = true;
-            
+            bool          result = true;
+            vector<State> stype(N,Jam);
+
             for(size_t ii=N;ii>0;--ii)
             {
                 //--------------------------------------------------------------
@@ -189,6 +203,7 @@ namespace upsylon
                 const bool   move = fabs(x)>0;
                 if(!move)
                 {
+                    stype[i] = Nil;
                     Y_CHEMICAL_PRINTLN("      Forgetting " << leading[i]->root << ' ' << core::ptr::nil);
                     continue;
                 }
@@ -198,15 +213,25 @@ namespace upsylon
                 //--------------------------------------------------------------
                 const Leading &l = *leading[i];
                 Y_CHEMICAL_PRINTLN("      Processing " << l.root << ' ' << l.kindText() << " @" << x);
-                
+
+                stype[i] = All;
                 if(!l.tryMoveFull(x,C,xi))
                 {
+                    stype[i] = Cut;
                     result = false;
                 }
                 
                 
             }
-            
+
+            if(Verbosity)
+            {
+                for(size_t i=1;i<=N;++i)
+                {
+                    std::cerr << "      " << leading[i]->root << " : " << StateText(stype[i]) << std::endl;
+                }
+            }
+
             return result;
         }
         
@@ -242,7 +267,7 @@ namespace upsylon
                 
                 //--------------------------------------------------------------
                 //
-                // check C
+                // check invalid C and take action
                 //
                 //--------------------------------------------------------------
                 if( seekingQuery(C) )

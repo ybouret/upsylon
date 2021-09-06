@@ -26,7 +26,17 @@ namespace upsylon
             // types and definitions
             //__________________________________________________________________
             static const char CLID[]; //!< "Chemical::Reactor"
-            
+
+            enum State
+            {
+                Jam,
+                Nil,
+                All,
+                Cut
+            };
+
+            static const char * StateText(const State) throw();
+
             //__________________________________________________________________
             //
             // C++
@@ -35,7 +45,7 @@ namespace upsylon
             //! cleanup
             virtual ~Reactor() throw();
             
-            //! setu
+            //! setup
             explicit Reactor(Library       &usrLib,
                              Equilibria    &usrEqs,
                              const unsigned flags);
@@ -77,11 +87,11 @@ namespace upsylon
             Matrix               Vs;     //!< [NSxN] numerical
             Matrix               VsT;    //!< [NxNS] NuS'
             Matrix               IV2;    //!< [NSxNS] LU of numerical NuS * NuS'
-            Vector               Cs;     //!< [Ns]
-            Vector               Rs;     //!< [Ns]
-            Vector               xs;     //!< [N]
-            Flags                ok;     //!< [N]
-            Indices              ix;     //!< [N]
+            Vector               Cs;     //!< [Ns] excess concentrations
+            Vector               Rs;     //!< [Ns] used to solve system
+            Vector               xs;     //!< [N]  excess extents
+            Flags                ok;     //!< [N]  active/jammed
+            Indices              ix;     //!< [N]  solving order indices
             
             //__________________________________________________________________
             //
