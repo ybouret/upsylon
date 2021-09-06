@@ -38,7 +38,7 @@ namespace upsylon
             }
             else
             {
-                return string();
+                return string(' ');
             }
 
         }

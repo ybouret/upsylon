@@ -28,6 +28,16 @@ namespace upsylon
             typedef vector<Pointer,Allocator>     Array;     //!< alias
             typedef vector<const Actor,Allocator> Limiting_; //!< base class
 
+            //! kind of primary equilibria
+            enum Kind
+            {
+                LimitedByNone, //!< no primary species in equilibria
+                LimitedByReac, //!< limited by reactant(s)
+                LimitedByProd, //!< limited by product(s)
+                LimitedByBoth  //!< limitted by reactant(s) and product(s)
+            };
+
+
             //__________________________________________________________________
             //
             //! interface to limiting actors
@@ -62,6 +72,8 @@ namespace upsylon
 
                 virtual const char  * symbol()               const throw(); //!< " <=  ";
                 virtual double        rh_val(const double c) const throw(); //!< c
+
+                //! min extent(s)
                 virtual const Actor & operator()(double &x, const Accessible &C) const throw();
 
             private:
@@ -87,27 +99,32 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(LimitingProd);
             };
 
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
-            explicit Primary(const Equilibrium &); //!< setup
+            explicit Primary(const Equilibrium &, const Matrix &); //!< setup
             virtual ~Primary() throw();            //!< cleanup
 
             //__________________________________________________________________
             //
             // methods
             //__________________________________________________________________
-            size_t   count() const throw(); //!< reac.size() + prod.size()
+            size_t      count()    const throw(); //!< reac.size() + prod.size()
+            const char *kindText() const throw(); //!< to add after "limited by "
+            bool        solve(Addressable &C, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const Equilibrium  &root;  //!< underlying equilibirum
+            const Matrix       &NuT;   //!< topology matrix
             const LimitingReac  reac;  //!< unit rating reactant(s)
             const LimitingProd  prod;  //!< unit rating product(s)
-
+            const Kind          kind;  //!< from reac/prod
+            
             //__________________________________________________________________
             //
             // helpers
@@ -117,6 +134,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const size_t indent) const
             {
+                prolog(os,indent);
                 display(os,reac,indent);
                 display(os,prod,indent);
                 return os;
@@ -126,6 +144,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
+                prolog(os,indent);
                 display(os,C,reac,indent);
                 display(os,C,prod,indent);
                 return os;
@@ -135,13 +154,39 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Primary);
 
+            bool solveLimitedByReac(Addressable &C, Addressable &xi) const throw();
+            bool solveLimitedByProd(Addressable &C, Addressable &xi) const throw();
+            bool solveLimitedByBoth(Addressable &C, Addressable &xi) const throw();
+
+
+            template <typename OSTREAM> inline
+            void prolog(OSTREAM &os, const size_t indent) const
+            {
+                Library::Indent(os,indent) << "|_" << root << " is limited by " << kindText();
+                if(LimitedByNone!=kind)
+                {
+                    os << " {";
+                    for(size_t i=1;i<=reac.size();++i)
+                    {
+                        os << ' ' << reac[i].sp.name;
+                    }
+                    for(size_t i=1;i<=prod.size();++i)
+                    {
+                        os << ' ' << prod[i].sp.name;
+                    }
+                    os << " }";
+                }
+                os << '\n';
+            }
+
+
             template <typename OSTREAM> inline
             void display(OSTREAM &os, const Limiting &l, const size_t indent) const
             {
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << "| " << a.nuString() << root << l.symbol() << a.sp << '\n';
+                    Library::Indent(os,indent) << " |_" << a.nuString() << root << l.symbol() << a.sp << '\n';
                 }
             }
 
@@ -151,7 +196,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << "| " << a.nuString() << root << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
+                    Library::Indent(os,indent) << " |_" << a.nuString() << root << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
                 }
             }
 

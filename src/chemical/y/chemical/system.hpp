@@ -38,20 +38,30 @@ namespace upsylon
             //! cleanup
             virtual ~System() throw();
 
+
+
             //__________________________________________________________________
             //
-            // memebers
+            // methods
+            //__________________________________________________________________
+            bool balancePrimary(Addressable &C) throw();
+
+
+            //__________________________________________________________________
+            //
+            // members
             //__________________________________________________________________
             const Library       &lib;     //!< (frozen) library
             const Equilibria    &eqs;     //!< (frozen) equilibria
             const size_t         N;       //!< eqs size
             const size_t         M;       //!< lib size
+            const size_t         NP;      //!< primary species [0..N]
             const Matrix         Nu;      //!< [NxM] topology
             const Matrix         NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
-            const size_t         NP;      //!< primary species [0..N]
-
-
+            Vector               xi;      //!< [N]
+            Flags                ok;      //!< [N]
+            
             //__________________________________________________________________
             //
             // helpers

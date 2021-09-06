@@ -36,10 +36,12 @@ namespace upsylon
         eqs(usrEqs),
         N(eqs->size()),
         M( checkValidity(lib,eqs) ),
+        NP(0),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
-        NP(0),
+        xi(N,0),
+        ok(N,false),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -70,7 +72,7 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryEnter);;
                 for(const ENode *node=eqs->head();node;node=node->next)
                 {
-                    const Primary::Pointer p = new Primary(***node);
+                    const Primary::Pointer p = new Primary(***node,NuT);
                     aliasing::_(primary).push_back_(p);
                     p->display(std::cerr,4);
                     aliasing::_(NP) += p->count();
@@ -89,4 +91,39 @@ namespace upsylon
 
     }
 
+}
+
+namespace upsylon
+{
+
+    namespace Chemical
+    {
+
+        bool System:: balancePrimary(Addressable &C) throw()
+        {
+            if(Verbosity)
+            {
+                Library::Indent(std::cerr,2) << "<Balance Primary>" << std::endl;
+                lib.display(std::cerr,C,4) << std::endl;
+            }
+            bool result = true;
+            for(size_t i=1;i<=N;++i)
+            {
+                if( false == (ok[i]=primary[i]->solve(C,xi)))
+                {
+                    result= false;
+                }
+            }
+
+
+            if(Verbosity)
+            {
+                eqs.display(std::cerr,ok,4) << std::endl;
+                Library::Indent(std::cerr,2) << "<Balance Primary/>" << std::endl;
+            }
+            return result;
+        }
+
+
+    }
 }

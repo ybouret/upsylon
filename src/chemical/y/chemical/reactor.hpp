@@ -27,17 +27,18 @@ namespace upsylon
             //__________________________________________________________________
             static const char CLID[]; //!< "Chemical::Reactor"
 
+            //! state
             enum State
             {
-                Jam,
-                Nil,
-                All,
-                Cut
+                Jam, //!< jammed
+                Nil, //!< zero
+                All, //!< all good
+                Cut  //!< truncated
             };
 
-            typedef vector<State,Allocator> States;
+            typedef vector<State,Allocator> States; //!< alias
 
-            static const char * StateText(const State) throw();
+            static const char * StateText(const State) throw(); //!< helper
 
             //__________________________________________________________________
             //

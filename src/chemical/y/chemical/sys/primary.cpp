@@ -40,7 +40,22 @@ namespace upsylon
 
         const Actor & Primary:: LimitingReac:: operator()(double &x, const Accessible &C) const throw()
         {
-
+            assert(size()>0);
+            const Limiting &self = *this;
+            const Actor    *pOpt = &self[1];
+            double          xOpt = C[pOpt->sp.indx]/pOpt->nu;
+            for(size_t i=this->size();i>1;--i)
+            {
+                const Actor *pTmp = &self[i];
+                const double xTmp = C[pTmp->sp.indx]/pTmp->nu;
+                if(xTmp<xOpt)
+                {
+                    xOpt = xTmp;
+                    pOpt = pTmp;
+                }
+            }
+            x = xOpt;
+            return *pOpt;
         }
 
     }
@@ -74,7 +89,22 @@ namespace upsylon
 
         const Actor & Primary:: LimitingProd:: operator()(double &x, const Accessible &C) const throw()
         {
-
+            assert(size()>0);
+            const Limiting &self = *this;
+            const Actor    *pOpt = &self[1];
+            double          xOpt = -C[pOpt->sp.indx]/pOpt->nu;
+            for(size_t i=this->size();i>1;--i)
+            {
+                const Actor *pTmp = &self[i];
+                const double xTmp = -C[pTmp->sp.indx]/pTmp->nu;
+                if(xTmp>xOpt)
+                {
+                    xOpt = xTmp;
+                    pOpt = pTmp;
+                }
+            }
+            x = xOpt;
+            return *pOpt;
         }
     }
 
@@ -109,20 +139,133 @@ namespace upsylon
 
 
 
-        Primary:: Primary(const Equilibrium &eq) :
+        Primary:: Primary(const Equilibrium &eq, const Matrix &topo) :
         root(eq),
+        NuT(topo),
         reac(root.countPrimaryReac()),
-        prod(root.countPrimaryProd())
+        prod(root.countPrimaryProd()),
+        kind(LimitedByNone)
         {
 
             loadPrimary(aliasing::_(reac),eq.reac);
             loadPrimary(aliasing::_(prod),eq.prod);
-            
+
+            if(reac.size())
+            {
+                if(prod.size())
+                {
+                    // some reactant(s)/some product(s)
+                    aliasing::_(kind) = LimitedByBoth;
+                }
+                else
+                {
+                    // some reactant(s)/no product
+                    aliasing::_(kind) = LimitedByReac;
+                }
+            }
+            else
+            {
+
+                if(prod.size())
+                {
+                    // no reactant/some product(s)
+                    aliasing::_(kind) = LimitedByProd;
+                }
+                else
+                {
+                    // no reactant/no product
+                    aliasing::_(kind) = LimitedByNone;
+                }
+            }
+
         }
 
         size_t Primary:: count() const throw()
         {
             return reac.size()+prod.size();
+        }
+
+        const char * Primary:: kindText() const throw()
+        {
+            switch(kind)
+            {
+                case LimitedByNone: return "None";
+                case LimitedByReac: return (reac.size()>1 ? "Reactants" : "Reactant");
+                case LimitedByProd: return (prod.size()>1 ? "Products"  : "Product");
+                case LimitedByBoth:
+                    if(reac.size()>1)
+                    {
+                        if(prod.size()>1)
+                        {
+                            return "Reactants and Products";
+                        }
+                        else
+                        {
+                            return "Reactants and Product";
+                        }
+                    }
+                    else
+                    {
+                        if(prod.size()>1)
+                        {
+                            return "Reactant and Products";
+                        }
+                        else
+                        {
+                            return "Reactant and Product";
+                        }
+                    }
+            }
+            return "???";
+        }
+
+    }
+
+}
+
+#include "y/mkl/tao.hpp"
+namespace upsylon
+{
+    using namespace mkl;
+    
+    namespace Chemical
+    {
+
+        bool Primary:: solveLimitedByReac(Addressable &C,
+                                          Addressable &xi) const throw()
+        {
+            double       xmax = 0;
+            const Actor &amax = reac(xmax,C);
+            Y_CHEMICAL_PRINTLN(root << "_max=" << xmax << " <== " << amax.sp);
+
+            if(xmax<0)
+            {
+                tao::ld(xi,0);
+                xi[root.indx] = -xmax;
+
+            }
+
+            return false;
+        }
+
+        bool Primary:: solve(Addressable &C,
+                             Addressable &xi) const throw()
+        {
+            if(Verbosity)
+            {
+                prolog(std::cerr,4);
+            }
+            switch(kind)
+            {
+                case LimitedByNone:
+                    break;
+
+                case LimitedByReac: return solveLimitedByReac(C,xi);
+                case LimitedByProd: return false;
+                case LimitedByBoth: return false;
+            }
+            assert(LimitedByNone==kind);
+            return true;
         }
 
     }

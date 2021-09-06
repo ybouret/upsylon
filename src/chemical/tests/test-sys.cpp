@@ -30,10 +30,13 @@ Y_UTEST(sys)
 
     Vector C(cs.M,0);
     lib.drawC(C,alea);
+    for(size_t i=cs.M;i>0;--i)
+    {
+        if(alea.choice()) C[i] = -C[i];
+    }
 
-    lib.display(std::cerr,C) << std::endl;
+    cs.balancePrimary(C);
 
-    cs.showPrimary(std::cerr, C, 0);
 
 }
 Y_UTEST_DONE()
