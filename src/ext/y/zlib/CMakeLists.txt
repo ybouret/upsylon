@@ -57,10 +57,12 @@ INSTALL( FILES ${ZLIB_PUBLIC_HDRS} DESTINATION include/y/zlib )
 INSTALL( TARGETS y-z ARCHIVE       DESTINATION lib )
 add_executable(z-example test/example.c)
 target_link_libraries(z-example y-z)
-	
-ADD_CUSTOM_TARGET( utest-z
-COMMAND z-example
-COMMENT "Testing zlib")
+
+add_custom_command(TARGET z-example
+                   POST_BUILD
+                   COMMAND z-example
+                   COMMENT "Testing zlib" )
+
 	
 #add_executable(minigzip test/minigzip.c)
 #target_link_libraries(minigzip y-z)

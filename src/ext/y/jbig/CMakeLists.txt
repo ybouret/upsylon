@@ -8,7 +8,8 @@ ADD_LIBRARY(y-jbig STATIC ${srcs})
 ADD_EXECUTABLE(jbigtest tstcodec.c)
 TARGET_LINK_LIBRARIES(jbigtest y-jbig)
 
-ADD_CUSTOM_TARGET( utest-jbig 
+ADD_CUSTOM_COMMAND(TARGET jbigtest
+POST_BUILD
 COMMAND jbigtest 
 COMMENT "Testing jbig")
 

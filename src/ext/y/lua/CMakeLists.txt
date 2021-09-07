@@ -28,14 +28,14 @@ TARGET_LINK_LIBRARIES(y_lua  m)
 ENDIF()
 
 SET(LUA_TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-ENABLE_TESTING()
-ADD_TEST(Hello   y_lua ${LUA_TESTS_DIR}/hello.lua)
-ADD_TEST(Bisect  y_lua ${LUA_TESTS_DIR}/bisect.lua)
-ADD_TEST(Sort    y_lua ${LUA_TESTS_DIR}/sort.lua)
-ADD_TEST(Sieve   y_lua ${LUA_TESTS_DIR}/sieve.lua)
-#ADD_TEST(Life    y_lua ${LUA_TESTS_DIR}/life.lua)
- 
-ADD_CUSTOM_TARGET(utest-lua
-COMMAND ${CMAKE_CTEST_COMMAND} -V
-DEPENDS y_lua
-COMMENT "Testing lua")
+
+ADD_CUSTOM_COMMAND(TARGET y_lua
+POST_BUILD
+COMMAND y_lua ${LUA_TESTS_DIR}/hello.lua
+COMMAND y_lua ${LUA_TESTS_DIR}/bisect.lua
+COMMAND y_lua ${LUA_TESTS_DIR}/sort.lua
+COMMAND y_lua ${LUA_TESTS_DIR}/sieve.lua
+COMMENT "Testing Lua"
+)
+
+

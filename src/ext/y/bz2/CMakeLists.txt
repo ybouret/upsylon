@@ -25,7 +25,9 @@ SET(file1 ${CMAKE_CURRENT_SOURCE_DIR}/sample1.ref)
 SET(file2 ${CMAKE_CURRENT_SOURCE_DIR}/sample2.ref)
 SET(file3 ${CMAKE_CURRENT_SOURCE_DIR}/sample3.ref)
 
-ADD_CUSTOM_TARGET( utest-bz2
+ADD_CUSTOM_COMMAND( 
+	TARGET  y_bzip2
+	POST_BUILD
 	COMMAND y_bzip2 -1 < ${file1} > sample1.bz2
 	COMMAND y_bzip2 -d < sample1.bz2 > sample1.tst
 	COMMAND ${CMAKE_COMMAND} -E compare_files sample1.tst ${file1}
@@ -37,4 +39,3 @@ ADD_CUSTOM_TARGET( utest-bz2
 	COMMAND ${CMAKE_COMMAND}  -E compare_files sample3.tst ${file3}
 	COMMENT "Testing bz2" 
 	)
-

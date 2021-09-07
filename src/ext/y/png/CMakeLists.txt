@@ -20,6 +20,7 @@ IF(NOT WIN32)
 		TARGET_LINK_LIBRARIES(pngtest m)
 ENDIF()
 
-ADD_CUSTOM_TARGET( utest-png 
-COMMAND pngtest ${CMAKE_CURRENT_SOURCE_DIR}/pngtest.png
-COMMENT "Testing png")
+add_custom_command(TARGET pngtest
+                   POST_BUILD
+                   COMMAND pngtest ${CMAKE_CURRENT_SOURCE_DIR}/pngtest.png
+                   COMMENT "Testing png" )

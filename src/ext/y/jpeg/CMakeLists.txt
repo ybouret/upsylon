@@ -45,6 +45,7 @@ ENDIF()
 
 SET(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(cmp ${CMAKE_COMMAND} -E compare_files)
+
 ADD_CUSTOM_TARGET( utest-jpeg
 	COMMAND ${CMAKE_COMMAND} -E remove -f testout.*
 	COMMAND djpeg -dct int -ppm -outfile testout.ppm ${SRCDIR}/testorig.jpg
