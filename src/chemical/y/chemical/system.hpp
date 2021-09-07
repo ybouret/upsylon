@@ -120,11 +120,13 @@ namespace upsylon
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
 
-            void   replicaBuild() throw();                    //!< initial build of Vr, Ur, ok[2]
-            size_t replicaProbe(const Accessible &C) throw(); //!< build Cr and return number of invalid C
-            bool   replicaGuess() throw();                    //!< build xr from Vr and Cr, false if singular
+            void   replicaBuild() throw();                             //!< initial build of Vr, Ur, ok[2]
+            size_t replicaProbe(const Accessible &C) throw();          //!< build Cr and return number of invalid C
+            bool   replicaGuess() throw();                             //!< build xr from Vr and Cr, false if singular
             size_t replicaJammedByPrimary(const Accessible&C) throw(); //!< check all queries
-            void   replicaJam(const size_t i) throw(); //!< modify Vr, Ur, go
+            void   replicaJam(const size_t i) throw();                 //!< modify Vr, Ur, go
+            void   replicaSolve(Addressable &C) throw();               //!< best effort to move along computed xr
+
         };
     }
 

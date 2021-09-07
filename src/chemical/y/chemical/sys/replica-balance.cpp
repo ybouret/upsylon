@@ -95,6 +95,19 @@ namespace upsylon
             return jammed;
         }
 
+
+        void  System:: replicaSolve(Addressable &C) throw()
+        {
+
+            for(size_t ii=N;ii>0;--ii)
+            {
+                const size_t i = ix[ii];
+                const double x = xr[i];
+                //primary[i]->move(C,x,xi);
+            }
+
+        }
+
         bool System:: balanceReplica(Addressable &C) throw()
         {
             static const size_t from =      2;
@@ -185,30 +198,24 @@ namespace upsylon
                 //
                 //
                 //--------------------------------------------------------------
-                indexing::make(ix, comparison::decreasing_abs<double>,xr);
+                indexing::make(ix,comparison::decreasing_abs<double>,xr);
                 if(Verbosity)
                 {
                     Library::Indent(std::cerr,curr) << "ix = " << ix << std::endl;
                     for(size_t ii=N;ii>0;--ii)
                     {
-                        const size_t       i=ix[ii];
+                        const size_t       i  = ix[ii];
                         const Equilibrium &eq = **primary[i];
-                        Library::Indent(std::cerr,curr) << "(*) " << eq << " : ";
+                        Library::Indent(std::cerr,curr);
                         if(go[i])
-                        {
-                            std::cerr << "try "  << xr[i];
-                        }
+                            std::cerr << "(*) " << eq << " : " << std::setw(16) << xr[i];
                         else
-                        {
-                            std::cerr << "N/A";
-                        }
+                            std::cerr << "( ) " << eq;
                         std::cerr << std::endl;
                     }
                 }
 
                 exit(-1);
-
-
             }
 
 

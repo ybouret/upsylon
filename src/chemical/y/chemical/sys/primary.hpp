@@ -123,6 +123,8 @@ namespace upsylon
             //! can equilibrium accept a negative extent ?
             bool        queryReverse(const Accessible &C) const throw();
 
+            //! best effort move
+            void        move(Addressable &C, const double x, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //
