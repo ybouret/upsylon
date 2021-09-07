@@ -104,10 +104,17 @@ namespace upsylon
             {
                 const size_t i = ix[ii];
                 const double x = xr[i];
-                primary[i]->move(C,x,xi);
-                if(Verbosity)
+                if(fabs(x)>0)
                 {
-                    lib.display(std::cerr,C,sub) << std::endl;
+                    if(Verbosity)
+                    {
+                        Library::Indent(std::cerr,indent) << "@" << **primary[i] << " = " << x << std::endl;
+                    }
+                    primary[i]->move(C,x,xi);
+                    if(Verbosity)
+                    {
+                        lib.display(std::cerr,C,sub) << std::endl;
+                    }
                 }
             }
             if(Verbosity) Library::Indent(std::cerr,indent) << "<Replica Solve/>" << std::endl;
@@ -132,10 +139,6 @@ namespace upsylon
             if(Verbosity)
             {
                 Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
-                lib.display(std::cerr,C,curr) << "=C"  << std::endl;
-                showPrimary(std::cerr,C,curr);
-                showReplica(std::cerr,C,curr);
-                Library::Indent(std::cerr,curr) << "Cr = " << Cr << std::endl;
             }
 
 
@@ -149,8 +152,18 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 success      = false;
+                size_t cycle = 0;
             INITIALIZE:
+                ++cycle;
                 replicaBuild();
+                if(Verbosity)
+                {
+                    Library::Indent(std::cerr,from) << "---- Cycle #" << cycle << " ----" << std::endl;
+                    lib.display(std::cerr,C,curr) << "=C"  << std::endl;
+                    showPrimary(std::cerr,C,curr);
+                    showReplica(std::cerr,C,curr);
+                    Library::Indent(std::cerr,curr) << "Cr = " << Cr << std::endl;
+                }
 
                 //--------------------------------------------------------------
                 //
@@ -187,12 +200,12 @@ namespace upsylon
                     //----------------------------------------------------------
                     if( replicaJammedByPrimary(C) )
                     {
-                        Library::Indent(std::cerr,curr) << "<Jam/>" << std::endl;
+                        if(Verbosity) Library::Indent(std::cerr,curr) << "<Jam/>" << std::endl;
                         goto COMPUTE_STEP;
                     }
                     else
                     {
-                        Library::Indent(std::cerr,curr) << "<Run/>" << std::endl;
+                        if(Verbosity) Library::Indent(std::cerr,curr) << "<Run/>" << std::endl;
 
                     }
                 }
@@ -220,6 +233,7 @@ namespace upsylon
                         std::cerr << std::endl;
                     }
                 }
+
                 replicaSolve(C,curr);
                 const size_t nextBad = replicaProbe(C);
                 if(nextBad>0)
@@ -229,10 +243,6 @@ namespace upsylon
                 }
                 success=true;
             }
-            
-
-
-
 
             //------------------------------------------------------------------
             //

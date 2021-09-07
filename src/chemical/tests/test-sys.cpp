@@ -25,21 +25,31 @@ Y_UTEST(sys)
     std::cerr << "eqs=" << eqs << std::endl;
 
 
-    //Verbosity = false;
+    Verbosity = false;
     System cs(lib,eqs,Equilibrium::Minimal);
 
     Vector C(cs.M,0);
-    lib.drawC(C,alea);
-    for(size_t i=cs.M;i>0;--i)
-    {
-        if(alea.choice()) C[i] = -C[i];
-    }
 
-    if(cs.balancePrimary(C))
+    for(size_t iter=0;iter<16;++iter)
     {
-        cs.balanceReplica(C);
-    }
+        lib.drawC(C,alea);
+        for(size_t i=cs.M;i>0;--i)
+        {
+            if(alea.choice()) C[i] = -C[i];
+        }
 
+        lib.display(std::cerr << "initial = ",C) << std::endl;
+
+
+        if(cs.balance(C))
+        {
+            lib.display(std::cerr << "success = ",C) << std::endl;
+        }
+        else
+        {
+            lib.display(std::cerr << "failure = ",C) << std::endl;
+        }
+    }
 
 }
 Y_UTEST_DONE()

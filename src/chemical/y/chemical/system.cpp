@@ -144,6 +144,17 @@ namespace upsylon
 
         }
 
+        bool System:: balance(Addressable &C) throw()
+        {
+            Y_CHEMICAL_PRINTLN("<Balance>");
+            bool success = balancePrimary(C);
+            if( success )
+            {
+                success = balanceReplica(C);
+            }
+            Y_CHEMICAL_PRINTLN("<Balance/>");
+            return success;
+        }
 
     }
 
