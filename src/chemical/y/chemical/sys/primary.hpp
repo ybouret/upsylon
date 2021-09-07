@@ -168,6 +168,10 @@ namespace upsylon
             bool solveLimitedByReac(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByProd(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByBoth(Addressable &C, Addressable &xi) const throw();
+            void ensurePositive(Addressable &C) const throw();
+            void modify(Addressable &C, const double x, Addressable &xi) const throw();
+
+            
 
 
             template <typename OSTREAM> inline

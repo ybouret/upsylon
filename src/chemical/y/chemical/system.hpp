@@ -125,7 +125,7 @@ namespace upsylon
             bool   replicaGuess() throw();                             //!< build xr from Vr and Cr, false if singular
             size_t replicaJammedByPrimary(const Accessible&C) throw(); //!< check all queries
             void   replicaJam(const size_t i) throw();                 //!< modify Vr, Ur, go
-            void   replicaSolve(Addressable &C) throw();               //!< best effort to move along computed xr
+            void   replicaSolve(Addressable &C, const size_t) throw(); //!< best effort to move along computed xr
 
         };
     }

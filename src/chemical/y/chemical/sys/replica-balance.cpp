@@ -96,15 +96,21 @@ namespace upsylon
         }
 
 
-        void  System:: replicaSolve(Addressable &C) throw()
+        void  System:: replicaSolve(Addressable &C, const size_t indent) throw()
         {
-
+            const size_t sub = indent+2;
+            if(Verbosity) Library::Indent(std::cerr,indent) << "<Replica Solve>" << std::endl;
             for(size_t ii=N;ii>0;--ii)
             {
                 const size_t i = ix[ii];
                 const double x = xr[i];
-                //primary[i]->move(C,x,xi);
+                primary[i]->move(C,x,xi);
+                if(Verbosity)
+                {
+                    lib.display(std::cerr,C,sub) << std::endl;
+                }
             }
+            if(Verbosity) Library::Indent(std::cerr,indent) << "<Replica Solve/>" << std::endl;
 
         }
 
@@ -143,7 +149,7 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 success      = false;
-
+            INITIALIZE:
                 replicaBuild();
 
                 //--------------------------------------------------------------
@@ -214,10 +220,16 @@ namespace upsylon
                         std::cerr << std::endl;
                     }
                 }
-
-                exit(-1);
+                replicaSolve(C,curr);
+                const size_t nextBad = replicaProbe(C);
+                if(nextBad>0)
+                {
+                    currBad = nextBad;
+                    goto INITIALIZE;
+                }
+                success=true;
             }
-
+            
 
 
 
