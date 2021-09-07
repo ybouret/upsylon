@@ -64,10 +64,8 @@ namespace upsylon
             Ur.ld_row(i,0);
         }
 
-
-        size_t System:: replicaJammedByPrimary(const Accessible &C) throw()
+        bool System:: replicaJammedByPrimary(const Accessible &C) throw()
         {
-            size_t jammed = 0;
 
             for(size_t i=N;i>0;--i)
             {
@@ -77,7 +75,7 @@ namespace upsylon
                     if( !primary[i]->queryForward(C) )
                     {
                         replicaJam(i);
-                        ++jammed;
+                        return true;
                     }
                 }
                 else
@@ -87,14 +85,14 @@ namespace upsylon
                         if(!primary[i]->queryReverse(C))
                         {
                             replicaJam(i);
-                            ++jammed;
+                            return true;
                         }
                     }
                 }
             }
-            return jammed;
+            return false;
         }
-
+        
 
         void  System:: replicaSolve(Addressable &C, const size_t indent) throw()
         {

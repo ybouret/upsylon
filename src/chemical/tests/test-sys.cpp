@@ -1,9 +1,11 @@
 
 #include "y/chemical/system.hpp"
 #include "y/utest/run.hpp"
+#include "y/mkl/tao.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
+using namespace mkl;
 
 Y_UTEST(sys)
 {
@@ -25,7 +27,7 @@ Y_UTEST(sys)
     std::cerr << "eqs=" << eqs << std::endl;
 
 
-    Verbosity = false;
+    //Verbosity = false;
     System cs(lib,eqs,Equilibrium::Minimal);
 
     Vector C(cs.M,0);
@@ -50,6 +52,30 @@ Y_UTEST(sys)
             lib.display(std::cerr << "failure = ",C) << std::endl;
         }
     }
+
+
+    std::cerr << "Searching..." << std::endl;
+    Chemical::Verbosity = true;
+    {
+        for(size_t i=cs.N;i>0;--i)
+        {
+            cs.xi[i] = Library::RandomC(alea) * alea.symm<double>();
+        }
+        std::cerr << "xi=" << cs.xi << std::endl;
+        tao::mul(C,cs.NuT,cs.xi);
+        lib.display(std::cerr << "initial = ",C) << std::endl;
+
+
+        if(cs.balance(C))
+        {
+            lib.display(std::cerr << "success = ",C) << std::endl;
+        }
+        else
+        {
+            lib.display(std::cerr << "failure = ",C) << std::endl;
+        }
+    }
+
 
 }
 Y_UTEST_DONE()
