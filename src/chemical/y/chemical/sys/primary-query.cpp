@@ -26,6 +26,25 @@ namespace upsylon
             return true;
         }
 
+
+        bool Primary:: queryReverse(const Accessible &C) const throw()
+        {
+            switch(kind)
+            {
+                case LimitedByBoth:
+                case LimitedByProd: {
+                    double xmin = 0;
+                    (void) prod(xmin,C);
+                    return xmin<0;
+                }
+
+                case LimitedByNone:
+                case LimitedByReac:
+                    break;
+            }
+            return true;
+        }
+
         
 
     }

@@ -73,12 +73,15 @@ namespace upsylon
             const Primary::Array primary; //!< [N]
             const Replica::Array replica; //!< [NR]
             Vector               xi;      //!< [N] helper to move
-            matrix<bool>         ok;      //!< [N] primary status
+            Flags                ok;      //!< [N] primary status
             Matrix               Vr;      //!< [NRxN] replica vectors
             Matrix               Ur;      //!< [NxNR] Vr'
             Matrix               V2;      //!< [NRxNR] gram(Vr)
             Vector               Cr;      //!< [NR] replica conditions
+            Vector               Br;      //!< [NR] copy of Cr to compute Xr
             Vector               xr;      //!< [N]  optimal replica extent
+            Flags                go;      //!< [N] replica status
+            Indices              ix;      //!< [N] indices to move replica
 
             //__________________________________________________________________
             //
@@ -116,10 +119,12 @@ namespace upsylon
 
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
-            
-            size_t replicaProbe(const Accessible &C) throw();
 
-
+            void   replicaBuild() throw();                    //!< initial build of Vr, Ur, ok[2]
+            size_t replicaProbe(const Accessible &C) throw(); //!< build Cr and return number of invalid C
+            bool   replicaGuess() throw();                    //!< build xr from Vr and Cr, false if singular
+            size_t replicaJammedByPrimary(const Accessible&C) throw(); //!< check all queries
+            void   replicaJam(const size_t i) throw(); //!< modify Vr, Ur, go
         };
     }
 

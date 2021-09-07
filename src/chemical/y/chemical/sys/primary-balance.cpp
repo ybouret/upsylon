@@ -16,11 +16,10 @@ namespace upsylon
                 Library::Indent(std::cerr,4) << "<Solve Primary>" << std::endl;
             }
 
-            addressable<bool> &OK = ok[1];
             bool result = true;
             for(size_t i=1;i<=N;++i)
             {
-                if( false == (OK[i]=primary[i]->solve(C,xi)))
+                if( false == (ok[i]=primary[i]->solve(C,xi)))
                 {
                     result=false;
                 }
@@ -32,7 +31,7 @@ namespace upsylon
             {
                 Library::Indent(std::cerr,4) << "<Solve Primary/>" << std::endl;
                 lib.display(std::cerr,C,4)   << std::endl;
-                eqs.display(std::cerr,OK,4)  << std::endl;
+                eqs.display(std::cerr,ok,4)  << std::endl;
                 Library::Indent(std::cerr,4) << " ==> " << Outcome(result) << " <==" << std::endl;
                 Library::Indent(std::cerr,2) << "<Balance Primary/>" << std::endl;
             }

@@ -52,12 +52,14 @@ namespace upsylon
         primary(N,as_capacity),
         replica(N,as_capacity),
         xi(N,0),
-        ok(N>0?2:0,N),
+        ok(N,false),
         Vr(),
         Ur(),
         V2(),
         Cr(),
         xr(),
+        go(),
+        ix(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -131,7 +133,10 @@ namespace upsylon
                     Ur.make(N,NR);
                     V2.make(NR,NR);
                     Cr.make(NR,0);
+                    Br.make(NR,0);
                     xr.make(N,0);
+                    go.make(N,false);
+                    ix.make(N,0);
                 }
             }
 

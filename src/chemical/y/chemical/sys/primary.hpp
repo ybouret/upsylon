@@ -117,7 +117,10 @@ namespace upsylon
             //! move invalid primary concentrations
             bool        solve(Addressable &C, Addressable &xi) const throw();
 
+            //! can equilibrium accept a positive extent ?
             bool        queryForward(const Accessible &C) const throw();
+
+            //! can equilibrium accept a negative extent ?
             bool        queryReverse(const Accessible &C) const throw();
 
 

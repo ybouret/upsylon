@@ -1,6 +1,9 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/sort/index.hpp"
+#include "y/code/textual.hpp"
+#include <iomanip>
 
 namespace upsylon
 {
@@ -8,6 +11,17 @@ namespace upsylon
     
     namespace Chemical
     {
+
+        void   System:: replicaBuild() throw()
+        {
+            for(size_t i=NR;i>0;--i)
+            {
+                tao::set(Vr[i],replica[i]->nu);
+            }
+            Ur.assign_transpose(Vr);
+            tao::ld(go,true);
+        }
+
         size_t System:: replicaProbe(const Accessible &C) throw()
         {
             size_t res = 0;
@@ -26,8 +40,59 @@ namespace upsylon
                     Cr[j] = 0;
                 }
             }
-            Y_CHEMICAL_PRINTLN(" Cr=" << Cr);
             return res;
+        }
+
+
+        bool System:: replicaGuess() throw()
+        {
+            tao::gram(V2,Vr);
+            if(!LU::build(V2))
+            {
+                return false;
+            }
+            tao::set(Br,Cr);
+            LU::solve(V2,Br);
+            tao::mul(xr,Ur,Br);
+            return true;
+        }
+
+        void   System:: replicaJam(const size_t i) throw()
+        {
+            go[i] = false;
+            Vr.ld_col(i,0);
+            Ur.ld_row(i,0);
+        }
+
+
+        size_t System:: replicaJammedByPrimary(const Accessible &C) throw()
+        {
+            size_t jammed = 0;
+
+            for(size_t i=N;i>0;--i)
+            {
+                const double x = xr[i];
+                if(x>0)
+                {
+                    if( !primary[i]->queryForward(C) )
+                    {
+                        replicaJam(i);
+                        ++jammed;
+                    }
+                }
+                else
+                {
+                    if(x<0)
+                    {
+                        if(!primary[i]->queryReverse(C))
+                        {
+                            replicaJam(i);
+                            ++jammed;
+                        }
+                    }
+                }
+            }
+            return jammed;
         }
 
         bool System:: balanceReplica(Addressable &C) throw()
@@ -36,92 +101,135 @@ namespace upsylon
             static const size_t curr = from+2;
             static const size_t next = curr+2;
 
+            //------------------------------------------------------------------
+            //
+            //
+            // Enter Algorithm
+            //
+            //
+            //------------------------------------------------------------------
+            bool    success = true;
+            size_t  currBad = replicaProbe(C);
             if(Verbosity)
             {
                 Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
-                lib.display(std::cerr,C,curr) << std::endl;
+                lib.display(std::cerr,C,curr) << "=C"  << std::endl;
+                showPrimary(std::cerr,C,curr);
+                showReplica(std::cerr,C,curr);
+                Library::Indent(std::cerr,curr) << "Cr = " << Cr << std::endl;
             }
-            bool   success = true;
-            size_t currBad = replicaProbe(C);
+
 
             if(currBad>0)
             {
                 //--------------------------------------------------------------
                 //
                 //
-                // Initialize Look Up Algorithm
+                // initialize full matrix from replica
                 //
                 //
                 //--------------------------------------------------------------
                 success      = false;
-                size_t cycle = 1;
-                for(size_t i=NR;i>0;--i)
-                {
-                    tao::set(Vr[i],replica[i]->nu);
-                }
-                Ur.assign_transpose(Vr);
 
-                while(true)
-                {
-
-                    if(Verbosity)
-                    {
-                        Library::Indent(std::cerr,curr) << "<Cycle #" << cycle << ">" << std::endl;
-                        showPrimary(std::cerr,C,next);
-                        showReplica(std::cerr,C,next);
-                        Library::Indent(std::cerr,next) << "Vr = " << Vr << std::endl;
-                    }
-
-                    //----------------------------------------------------------
-                    //
-                    // compute Xr
-                    //
-                    //----------------------------------------------------------
-                    tao::gram(V2,Vr);
-                    if(!LU::build(V2))
-                    {
-                        if(Verbosity)  Library::Indent(std::cerr,next) << "[[ Singular Replica System ]]" << std::endl;
-                        success = false;
-                        goto END_CYCLE;
-                    }
-                    LU::solve(V2,Cr);
-                    tao::mul(xr,Ur,Cr);
-                    if(Verbosity)  Library::Indent(std::cerr,next) << "Xr = " << xr << std::endl;
-                    
-
-
-                END_CYCLE:
-                    if(Verbosity)
-                    {
-                        Library::Indent(std::cerr,curr) << "<Cycle #" << cycle << "/>" << std::endl;
-                    }
-
-                    if(!success)
-                        break;
-
-                    exit(-1);
-
-                }
-
+                replicaBuild();
 
                 //--------------------------------------------------------------
                 //
                 //
-                // End of Look Up Algorithm
+                // compute step with dimension reduction
                 //
                 //
                 //--------------------------------------------------------------
+                {
+                COMPUTE_STEP:
+                    if(Verbosity)
+                    {
+                        Library::Indent(std::cerr,curr) << "Vr = " << Vr  << std::endl;
+                        Library::Indent(std::cerr,curr) << "go = " << go  << std::endl;
+                    }
+
+                    //----------------------------------------------------------
+                    //
+                    // compute step from current Vr/Ur
+                    //
+                    //----------------------------------------------------------
+                    if(!replicaGuess())
+                    {
+                        if(Verbosity) Library::Indent(std::cerr,next) << "[[ Singular Replica ]]" << std::endl;
+                        goto DONE;
+                    }
+
+                    if(Verbosity) Library::Indent(std::cerr,curr) << "xr = " << xr    << std::endl;
+
+                    //----------------------------------------------------------
+                    //
+                    // check if dimension need to be reduced
+                    //
+                    //----------------------------------------------------------
+                    if( replicaJammedByPrimary(C) )
+                    {
+                        Library::Indent(std::cerr,curr) << "<Jam/>" << std::endl;
+                        goto COMPUTE_STEP;
+                    }
+                    else
+                    {
+                        Library::Indent(std::cerr,curr) << "<Run/>" << std::endl;
+
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                //
+                // try to move full
+                //
+                //
+                //--------------------------------------------------------------
+                indexing::make(ix, comparison::decreasing_abs<double>,xr);
+                if(Verbosity)
+                {
+                    Library::Indent(std::cerr,curr) << "ix = " << ix << std::endl;
+                    for(size_t ii=N;ii>0;--ii)
+                    {
+                        const size_t       i=ix[ii];
+                        const Equilibrium &eq = **primary[i];
+                        Library::Indent(std::cerr,curr) << "(*) " << eq << " : ";
+                        if(go[i])
+                        {
+                            std::cerr << "try "  << xr[i];
+                        }
+                        else
+                        {
+                            std::cerr << "N/A";
+                        }
+                        std::cerr << std::endl;
+                    }
+                }
+
+                exit(-1);
+
+
             }
-            
-            
+
+
+
+
+
+            //------------------------------------------------------------------
+            //
+            //
+            // Leave Algorithm
+            //
+            //
+            //------------------------------------------------------------------
+        DONE:
             if(Verbosity)
             {
-                lib.display(std::cerr,C,curr)   << std::endl;
                 Library::Indent(std::cerr,curr) << " ==> " << Outcome(success) << " <==" << std::endl;
                 Library::Indent(std::cerr,from) << "<Balance Replica/>" << std::endl;
             }
-            
-            return false;
+
+            return success;
         }
 
     }
