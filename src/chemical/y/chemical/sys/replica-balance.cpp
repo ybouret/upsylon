@@ -1,5 +1,6 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
+#include "y/mkl/kernel/lu.hpp"
 
 namespace upsylon
 {
@@ -54,10 +55,11 @@ namespace upsylon
                 {
                     tao::set(Vr[i],replica[i]->nu);
                 }
-                Vt.assign_transpose(Vr);
+                Ur.assign_transpose(Vr);
 
                 while(true)
                 {
+
                     if(Verbosity)
                     {
                         Library::Indent(std::cerr,4) << "<Cycle #" << cycle << ">" << std::endl;
@@ -66,8 +68,15 @@ namespace upsylon
                         std::cerr << "      Vr = " << Vr << std::endl;
                     }
 
-
-
+                    //----------------------------------------------------------
+                    //
+                    // compute Xr
+                    //
+                    //----------------------------------------------------------
+                    tao::gram(V2,Vr);
+                    if(!LU::build(V2))
+                    {
+                    }
 
 
                     if(Verbosity)

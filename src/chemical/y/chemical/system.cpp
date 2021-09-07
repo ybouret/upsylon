@@ -54,8 +54,10 @@ namespace upsylon
         xi(N,0),
         ok(N,false),
         Vr(),
-        Vt(),
+        Ur(),
+        V2(),
         Cr(),
+        xr(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -114,8 +116,10 @@ namespace upsylon
                 if(NR>0)
                 {
                     Vr.make(NR,N);
-                    Vt.make(N,NR);
+                    Ur.make(N,NR);
+                    V2.make(NR,NR);
                     Cr.make(NR,0);
+                    xr.make(N,0);
                 }
             }
 

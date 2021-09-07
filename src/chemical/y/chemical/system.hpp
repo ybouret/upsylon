@@ -31,7 +31,7 @@ namespace upsylon
             static const char Success[];      //!< "Success"
             static const char Failure[];      //!< "Failure"
             const char * Outcome(const bool) throw(); //!< Success/Failure
-            
+
             //__________________________________________________________________
             //
             // C++
@@ -75,9 +75,11 @@ namespace upsylon
             Vector               xi;      //!< [N]
             Flags                ok;      //!< [N]
             Matrix               Vr;      //!< [NRxN]
-            Matrix               Vt;      //!< [NxNR]
+            Matrix               Ur;      //!< [NxNR]
+            Matrix               V2;      //!< [NRxNR]
             Vector               Cr;      //!< [NR]
-            
+            Vector               xr;      //!< [N]
+
             //__________________________________________________________________
             //
             // helpers
