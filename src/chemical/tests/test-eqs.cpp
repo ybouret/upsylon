@@ -3,7 +3,7 @@
 
 #include "y/chemical/library.hpp"
 #include "y/chemical/eqs/db.hpp"
-#include "y/chemical/leading.hpp"
+#include "y/chemical/sys/primary.hpp"
 
 #include "y/utest/run.hpp"
 #include "y/ios/osstream.hpp"
@@ -30,8 +30,7 @@ Y_UTEST(eqs)
     for(const ENode *node=eqs->head();node;node=node->next)
     {
         const Equilibrium  &eq = ***node;
-        const Leading       leading(eq,NuT);
-        std::cerr << leading << std::endl;
+        const Primary       primary(eq,NuT);
     }
 
     Vector C(lib->size(),1.2);

@@ -11,7 +11,6 @@ ADD_TEST(types   test-chemical types)
 ADD_TEST(lib     test-chemical lib)
 ADD_TEST(actors  test-chemical actors)
 ADD_TEST(eqs     test-chemical eqs)
-ADD_TEST(reactor test-chemical reactor)
 ADD_TEST(sys     test-chemical sys)
 
 
