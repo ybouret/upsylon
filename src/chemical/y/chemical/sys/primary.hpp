@@ -117,6 +117,10 @@ namespace upsylon
             //! move invalid primary concentrations
             bool        solve(Addressable &C, Addressable &xi) const throw();
 
+            bool        queryForward(const Accessible &C) const throw();
+            bool        queryReverse(const Accessible &C) const throw();
+
+
             //__________________________________________________________________
             //
             // members

@@ -72,13 +72,13 @@ namespace upsylon
             const iMatrix        NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
             const Replica::Array replica; //!< [NR]
-            Vector               xi;      //!< [N]
-            Flags                ok;      //!< [N]
-            Matrix               Vr;      //!< [NRxN]
-            Matrix               Ur;      //!< [NxNR]
-            Matrix               V2;      //!< [NRxNR]
-            Vector               Cr;      //!< [NR]
-            Vector               xr;      //!< [N]
+            Vector               xi;      //!< [N] helper to move
+            matrix<bool>         ok;      //!< [N] primary status
+            Matrix               Vr;      //!< [NRxN] replica vectors
+            Matrix               Ur;      //!< [NxNR] Vr'
+            Matrix               V2;      //!< [NRxNR] gram(Vr)
+            Vector               Cr;      //!< [NR] replica conditions
+            Vector               xr;      //!< [N]  optimal replica extent
 
             //__________________________________________________________________
             //

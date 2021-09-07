@@ -52,7 +52,7 @@ namespace upsylon
         primary(N,as_capacity),
         replica(N,as_capacity),
         xi(N,0),
-        ok(N,false),
+        ok(N>0?2:0,N),
         Vr(),
         Ur(),
         V2(),
@@ -68,7 +68,11 @@ namespace upsylon
 
             if(N>0)
             {
+                //--------------------------------------------------------------
+                //
                 // checking equilibria
+                //
+                //--------------------------------------------------------------
                 eqs.verify(flags);
                 eqs.fill( aliasing::_(Nu) );
                 aliasing::_(NuT).assign_transpose(Nu);
@@ -84,7 +88,11 @@ namespace upsylon
                     }
                 }
 
+                //--------------------------------------------------------------
+                //
                 // building primary
+                //
+                //--------------------------------------------------------------
                 Y_CHEMICAL_PRINTLN("  " << PrimaryEnter);;
                 for(const ENode *node=eqs->head();node;node=node->next)
                 {
@@ -95,8 +103,12 @@ namespace upsylon
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
                 Y_CHEMICAL_PRINTLN("  NP  = " << NP);
-                
-                // building primary
+
+                //--------------------------------------------------------------
+                //
+                // building replica
+                //
+                //--------------------------------------------------------------
                 Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);;
                 for(const SNode *node=lib->head();node;node=node->next)
                 {

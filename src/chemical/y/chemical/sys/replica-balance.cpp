@@ -32,10 +32,14 @@ namespace upsylon
 
         bool System:: balanceReplica(Addressable &C) throw()
         {
+            static const size_t from =      2;
+            static const size_t curr = from+2;
+            static const size_t next = curr+2;
+
             if(Verbosity)
             {
-                Library::Indent(std::cerr,2) << "<Balance Replica>" << std::endl;
-                lib.display(std::cerr,C,4) << std::endl;
+                Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
+                lib.display(std::cerr,C,curr) << std::endl;
             }
             bool   success = true;
             size_t currBad = replicaProbe(C);
@@ -62,10 +66,10 @@ namespace upsylon
 
                     if(Verbosity)
                     {
-                        Library::Indent(std::cerr,4) << "<Cycle #" << cycle << ">" << std::endl;
-                        showPrimary(std::cerr,C,6);
-                        showReplica(std::cerr,C,6);
-                        std::cerr << "      Vr = " << Vr << std::endl;
+                        Library::Indent(std::cerr,curr) << "<Cycle #" << cycle << ">" << std::endl;
+                        showPrimary(std::cerr,C,next);
+                        showReplica(std::cerr,C,next);
+                        Library::Indent(std::cerr,next) << "Vr = " << Vr << std::endl;
                     }
 
                     //----------------------------------------------------------
@@ -76,15 +80,27 @@ namespace upsylon
                     tao::gram(V2,Vr);
                     if(!LU::build(V2))
                     {
+                        if(Verbosity)  Library::Indent(std::cerr,next) << "[[ Singular Replica System ]]" << std::endl;
+                        success = false;
+                        goto END_CYCLE;
                     }
+                    LU::solve(V2,Cr);
+                    tao::mul(xr,Ur,Cr);
+                    if(Verbosity)  Library::Indent(std::cerr,next) << "Xr = " << xr << std::endl;
+                    
 
 
+                END_CYCLE:
                     if(Verbosity)
                     {
-                        Library::Indent(std::cerr,4) << "<Cycle #" << cycle << "/>" << std::endl;
+                        Library::Indent(std::cerr,curr) << "<Cycle #" << cycle << "/>" << std::endl;
                     }
 
+                    if(!success)
+                        break;
+
                     exit(-1);
+
                 }
 
 
@@ -100,9 +116,9 @@ namespace upsylon
             
             if(Verbosity)
             {
-                lib.display(std::cerr,C,4)   << std::endl;
-                Library::Indent(std::cerr,4) << " ==> " << Outcome(success) << " <==" << std::endl;
-                Library::Indent(std::cerr,2) << "<Balance Replica/>" << std::endl;
+                lib.display(std::cerr,C,curr)   << std::endl;
+                Library::Indent(std::cerr,curr) << " ==> " << Outcome(success) << " <==" << std::endl;
+                Library::Indent(std::cerr,from) << "<Balance Replica/>" << std::endl;
             }
             
             return false;
