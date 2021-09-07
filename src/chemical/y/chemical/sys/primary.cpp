@@ -139,7 +139,7 @@ namespace upsylon
 
 
 
-        Primary:: Primary(const Equilibrium &eq, const Matrix &topo) :
+        Primary:: Primary(const Equilibrium &eq, const iMatrix &topo) :
         authority<const Equilibrium>(eq),
         NuT(topo),
         reac((**this).countPrimaryReac()),

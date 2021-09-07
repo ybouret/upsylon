@@ -104,8 +104,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            explicit Primary(const Equilibrium &, const Matrix &); //!< setup
-            virtual ~Primary() throw();            //!< cleanup
+            explicit Primary(const Equilibrium &, const iMatrix &); //!< setup
+            virtual ~Primary() throw();                             //!< cleanup
 
             //__________________________________________________________________
             //
@@ -121,7 +121,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Matrix       &NuT;   //!< topology matrix
+            const iMatrix      &NuT;   //!< topology matrix
             const LimitingReac  reac;  //!< unit rating reactant(s)
             const LimitingProd  prod;  //!< unit rating product(s)
             const Kind          kind;  //!< from reac/prod

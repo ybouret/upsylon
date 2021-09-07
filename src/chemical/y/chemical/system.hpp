@@ -28,7 +28,10 @@ namespace upsylon
             static const char PrimaryLeave[]; //!< "<Primary/>"
             static const char ReplicaEnter[]; //!< "<Replica>"
             static const char ReplicaLeave[]; //!< "<Replica/>"
-
+            static const char Success[];      //!< "Success"
+            static const char Failure[];      //!< "Failure"
+            const char * Outcome(const bool) throw(); //!< Success/Failure
+            
             //__________________________________________________________________
             //
             // C++
@@ -65,14 +68,15 @@ namespace upsylon
             const size_t         M;       //!< lib size
             const size_t         NP;      //!< primary species [0..N]
             const size_t         NR;      //!< replica species [N-NP]
-            const Matrix         Nu;      //!< [NxM] topology
-            const Matrix         NuT;     //!< [MxN] Nu'
+            const iMatrix        Nu;      //!< [NxM] topology
+            const iMatrix        NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
             const Replica::Array replica; //!< [NR]
             Vector               xi;      //!< [N]
             Flags                ok;      //!< [N]
             Matrix               Vr;      //!< [NRxN]
             Matrix               Vt;      //!< [NxNR]
+            Vector               Cr;      //!< [NR]
             
             //__________________________________________________________________
             //
@@ -108,11 +112,12 @@ namespace upsylon
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
 
-            
-            
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
             
+            size_t replicaProbe(const Accessible &C) throw();
+
+
         };
     }
 

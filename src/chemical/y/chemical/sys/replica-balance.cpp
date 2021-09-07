@@ -7,6 +7,28 @@ namespace upsylon
     
     namespace Chemical
     {
+        size_t System:: replicaProbe(const Accessible &C) throw()
+        {
+            size_t res = 0;
+            for(size_t j=NR;j>0;--j)
+            {
+                const Replica &r = *replica[j];
+                const Species &s = *r;
+                const double   c = C[s.indx];
+                if(c<0)
+                {
+                    Cr[j] = -c;
+                    ++res;
+                }
+                else
+                {
+                    Cr[j] = 0;
+                }
+            }
+            Y_CHEMICAL_PRINTLN(" Cr=" << Cr);
+            return res;
+        }
+
         bool System:: balanceReplica(Addressable &C) throw()
         {
             if(Verbosity)
@@ -14,50 +36,63 @@ namespace upsylon
                 Library::Indent(std::cerr,2) << "<Balance Replica>" << std::endl;
                 lib.display(std::cerr,C,4) << std::endl;
             }
-            
-            //------------------------------------------------------------------
-            //
-            // initialize
-            //
-            //------------------------------------------------------------------
-            size_t cycle = 1;
-            for(size_t i=NR;i>0;--i)
+            bool   success = true;
+            size_t currBad = replicaProbe(C);
+
+            if(currBad>0)
             {
-                tao::set(Vr[i],replica[i]->nu);
-            }
-            Vt.assign_transpose(Vr);
-            bool result = false;
-            
-            
-            while(true)
-            {
-                if(Verbosity)
+                //--------------------------------------------------------------
+                //
+                //
+                // Initialize Look Up Algorithm
+                //
+                //
+                //--------------------------------------------------------------
+                success      = false;
+                size_t cycle = 1;
+                for(size_t i=NR;i>0;--i)
                 {
-                    Library::Indent(std::cerr,4) << "<Cycle #" << cycle << ">" << std::endl;
-                    showPrimary(std::cerr,C,6);
-                    showReplica(std::cerr,C,6);
-                    std::cerr << "      Vr = " << Vr << std::endl;
+                    tao::set(Vr[i],replica[i]->nu);
                 }
-                
-                
-                
-                
-                
-                if(Verbosity)
+                Vt.assign_transpose(Vr);
+
+                while(true)
                 {
-                    Library::Indent(std::cerr,4) << "<Cycle #" << cycle << "/>" << std::endl;
+                    if(Verbosity)
+                    {
+                        Library::Indent(std::cerr,4) << "<Cycle #" << cycle << ">" << std::endl;
+                        showPrimary(std::cerr,C,6);
+                        showReplica(std::cerr,C,6);
+                        std::cerr << "      Vr = " << Vr << std::endl;
+                    }
+
+
+
+
+
+                    if(Verbosity)
+                    {
+                        Library::Indent(std::cerr,4) << "<Cycle #" << cycle << "/>" << std::endl;
+                    }
+
+                    exit(-1);
                 }
-                if(result)
-                {
-                    break;
-                }
+
+
+                //--------------------------------------------------------------
+                //
+                //
+                // End of Look Up Algorithm
+                //
+                //
+                //--------------------------------------------------------------
             }
             
             
             if(Verbosity)
             {
                 lib.display(std::cerr,C,4)   << std::endl;
-                Library::Indent(std::cerr,4) << " ==> " << (result ? "Success" : "Failure") << " <==" << std::endl;
+                Library::Indent(std::cerr,4) << " ==> " << Outcome(success) << " <==" << std::endl;
                 Library::Indent(std::cerr,2) << "<Balance Replica/>" << std::endl;
             }
             

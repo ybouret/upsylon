@@ -35,11 +35,11 @@ namespace upsylon
             virtual ~Replica() throw();
             
             //! setup
-            explicit Replica(const Species    &,
-                             const Accessible &,
-                             const ENode      *) throw();
+            explicit Replica(const Species     &,
+                             const iAccessible &,
+                             const ENode       *) throw();
             
-            const Accessible    &nu; //!< vector of NuT
+            const iAccessible   &nu; //!< vector of NuT
             const ENode * const  en; //!< corresponding first not nul nu[en->indx]
             
             //__________________________________________________________________
@@ -60,7 +60,15 @@ namespace upsylon
             void display(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
                 displayProlog(os,indent);
-                os << " = " << vformat("%.15g", -C[(**this).indx]);
+                const double c = C[(**this).indx];
+                if(c<0)
+                {
+                    os << " =  " << vformat("%.15g", -c);
+                }
+                else
+                {
+                    os << " >= 0";
+                }
                 os << '\n';
             }
             
@@ -83,18 +91,18 @@ namespace upsylon
             void displayHead(OSTREAM &os, const ENode *node) const
             {
                 const Equilibrium &eq   = ***node;
-                const double       coef = nu[eq.indx];
+                const unit_t       coef = nu[eq.indx];
                 if(coef<0)
                 {
-                    if(coef<-1)
-                        os << vformat("%g",coef);
+                    if(coef < -1)
+                        os << vformat("%d",int(coef));
                     else
                         os << '-';
                 }
                 else
                 {
-                    if(coef>1)
-                        os << vformat("%g",coef);
+                    if(coef > 1)
+                        os << vformat("%d",int(coef));
                 }
                 os << eq.name;
             }
@@ -107,14 +115,14 @@ namespace upsylon
                 if(coef<0)
                 {
                     if(coef<-1)
-                        os << vformat("%g",coef);
+                        os << vformat("%d",int(coef));
                     else
                         os << '-';
                 }
                 else
                 {
                     if(coef>1)
-                        os << vformat("+%g",coef);
+                        os << vformat("+%d",int(coef));
                     else
                         os << '+';
                 }

@@ -25,6 +25,7 @@ namespace upsylon
         typedef addressable<double>       Addressable; //!< default addressable
         typedef accessible<double>        Accessible;  //!< default addressable
         typedef matrix<unit_t>            iMatrix;     //!< default matrix of integers
+        typedef accessible<unit_t>        iAccessible; //!< default accessible integers
         typedef vector<bool,Allocator>    Flags;       //!< default vector of booleans
         typedef vector<size_t,Allocator>  Indices;     //!< default vector of indices
 

@@ -17,6 +17,13 @@ namespace upsylon
         const char System:: ReplicaEnter[] = "<Replica>";
         const char System:: ReplicaLeave[] = "<Replica/>";
 
+        const char System:: Success[] = "Success";
+        const char System:: Failure[] = "Failure";
+        
+        const char * System:: Outcome(const bool flag) throw()
+        {
+            return flag ? Success : Failure;
+        }
 
         System:: ~System() throw()
         {
@@ -48,6 +55,7 @@ namespace upsylon
         ok(N,false),
         Vr(),
         Vt(),
+        Cr(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -93,8 +101,8 @@ namespace upsylon
                     const Species &sp = ***node;
                     if(sp.rating>1)
                     {
-                        const Accessible      &nu = NuT[sp.indx];
-                        const ENode           *en = eqs->head(); while(fabs(nu[ (***en).indx])<=0.0) en = en->next;
+                        const iAccessible     &nu = NuT[sp.indx];
+                        const ENode           *en = eqs->head(); while( !nu[ (***en).indx] ) en = en->next;
                         const Replica::Pointer rp = new Replica(sp,nu,en);
                         aliasing::_(replica).push_back_(rp);
                         aliasing::incr(NR);
@@ -107,6 +115,7 @@ namespace upsylon
                 {
                     Vr.make(NR,N);
                     Vt.make(N,NR);
+                    Cr.make(NR,0);
                 }
             }
 

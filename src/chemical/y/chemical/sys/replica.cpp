@@ -12,9 +12,9 @@ namespace upsylon
         {
         }
         
-        Replica:: Replica(const Species    &sp_,
-                          const Accessible &nu_,
-                          const ENode      *en_) throw() :
+        Replica:: Replica(const Species     &sp_,
+                          const iAccessible &nu_,
+                          const ENode       *en_) throw() :
         Object(),
         authority<const Species>(sp_),
         nu(nu_),

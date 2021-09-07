@@ -33,7 +33,7 @@ namespace upsylon
                 Library::Indent(std::cerr,4) << "<Solve Primary/>" << std::endl;
                 lib.display(std::cerr,C,4)   << std::endl;
                 eqs.display(std::cerr,ok,4)  << std::endl;
-                Library::Indent(std::cerr,4) << " ==> " << (result ? "Success" : "Failure") << " <==" << std::endl;
+                Library::Indent(std::cerr,4) << " ==> " << Outcome(result) << " <==" << std::endl;
                 Library::Indent(std::cerr,2) << "<Balance Primary/>" << std::endl;
             }
             return result;
