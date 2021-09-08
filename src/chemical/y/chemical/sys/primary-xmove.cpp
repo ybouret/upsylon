@@ -8,6 +8,20 @@ namespace upsylon
     namespace Chemical
     {
 
+
+        void Primary:: update(Addressable &C,
+                              const double x,
+                              const Actor &a,
+                              Addressable &xi) const throw()
+        {
+            tao::ld(xi,0);
+            xi[(**this).indx] = x;
+            tao::mul_add(C,NuT,xi);
+            C[a.sp.indx] = 0;
+            ensurePositive(C);
+        }
+
+
         void Primary:: modify(Addressable &C, const double x, Addressable &xi) const throw()
         {
             xi[ (**this).indx ] = x;

@@ -10,37 +10,10 @@ namespace upsylon
     namespace Chemical
     {
 
+#if 0
         static const size_t xwidth = 16;
 
-        static inline void makePositive(double &c) throw()
-        {
-            c = max_of(c,0.0);
-        }
-
-        void Primary:: ensurePositive(Addressable &C) const throw()
-        {
-            for(size_t i=reac.size();i>0;--i)
-            {
-                makePositive( C[ reac[i].sp.indx ] );
-            }
-
-            for(size_t i=prod.size();i>0;--i)
-            {
-                makePositive( C[ prod[i].sp.indx ] );
-            }
-        }
-
-        void Primary:: update(Addressable &C,
-                              const double x,
-                              const Actor &a,
-                              Addressable &xi) const throw()
-        {
-            tao::ld(xi,0);
-            xi[(**this).indx] = x;
-            tao::mul_add(C,NuT,xi);
-            C[a.sp.indx] = 0;
-            ensurePositive(C);
-        }
+       
 
         
         bool Primary:: solveLimitedByReac(Addressable &C,
@@ -128,7 +101,8 @@ namespace upsylon
             
             return result;
         }
-
+#endif
+        
     }
 
 }

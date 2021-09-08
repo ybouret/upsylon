@@ -16,7 +16,7 @@ namespace upsylon
 
             //------------------------------------------------------------------
             //
-            // startup info
+            // enter info
             //
             //------------------------------------------------------------------
             if(Verbosity)
@@ -93,14 +93,17 @@ namespace upsylon
                 {
                     if(ok[i]) primary[i]->ensurePositive(C);
                 }
-
             }
 
-            
+            //------------------------------------------------------------------
+            //
+            // leave info
+            //
+            //------------------------------------------------------------------
             if(Verbosity)
             {
                 Library::Indent(std::cerr,curr) << "<Solve Primary/>" << std::endl;
-                lib.display(std::cerr,C,next)   << std::endl;
+                lib.display(std::cerr,C, next)  << std::endl;
                 eqs.display(std::cerr,ok,next)  << std::endl;
                 Library::Indent(std::cerr,curr) << " ==> " << Outcome(result) << " <==" << std::endl;
                 Library::Indent(std::cerr,from) << "<Balance Primary/>" << std::endl;

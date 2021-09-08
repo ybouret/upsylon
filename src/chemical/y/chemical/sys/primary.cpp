@@ -110,6 +110,7 @@ namespace upsylon
 
 }
 
+#include "y/type/utils.hpp"
 
 namespace upsylon
 {
@@ -128,7 +129,7 @@ namespace upsylon
             for(const ANode *node=actors->head();node;node=node->next)
             {
                 const Actor &a = **node;
-                if(1==a.sp.rating)
+                if(a.sp.isPrimary())
                 {
                     seq.push_back_(a);
                 }
@@ -217,6 +218,24 @@ namespace upsylon
                     }
             }
             return "???";
+        }
+
+        static inline void makePositive(double &c) throw()
+        {
+            c = max_of(c,0.0);
+        }
+
+        void Primary:: ensurePositive(Addressable &C) const throw()
+        {
+            for(size_t i=reac.size();i>0;--i)
+            {
+                makePositive( C[ reac[i].sp.indx ] );
+            }
+
+            for(size_t i=prod.size();i>0;--i)
+            {
+                makePositive( C[ prod[i].sp.indx ] );
+            }
         }
 
     }

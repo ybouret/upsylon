@@ -120,9 +120,6 @@ namespace upsylon
             //! ensure positivity of primary species after a valid shift
             void         ensurePositive(Addressable &C) const throw();
 
-            //! move invalid primary concentrations
-            bool        solve(Addressable &C, Addressable &xi) const throw();
-
             //! can equilibrium accept a positive extent ?
             bool        queryForward(const Accessible &C) const throw();
 
@@ -171,14 +168,9 @@ namespace upsylon
             Y_DISABLE_COPY_AND_ASSIGN(Primary);
             
             void update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw();
-            bool solveLimitedByReac(Addressable &C, Addressable &xi) const throw();
-            bool solveLimitedByProd(Addressable &C, Addressable &xi) const throw();
-            bool solveLimitedByBoth(Addressable &C, Addressable &xi) const throw();
             void modify(Addressable &C, const double x, Addressable &xi) const throw();
 
             
-
-
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
