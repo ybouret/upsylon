@@ -63,35 +63,6 @@ namespace upsylon
             Vr.ld_col(i,0);
             Ur.ld_row(i,0);
         }
-
-        bool System:: replicaJammedByPrimary(const Accessible &C) throw()
-        {
-
-            for(size_t i=N;i>0;--i)
-            {
-                const double x = xr[i];
-                if(x>0)
-                {
-                    if( !primary[i]->queryForward(C) )
-                    {
-                        replicaJam(i);
-                        return true;
-                    }
-                }
-                else
-                {
-                    if(x<0)
-                    {
-                        if(!primary[i]->queryReverse(C))
-                        {
-                            replicaJam(i);
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
         
 
         void  System:: replicaSolve(Addressable &C, const size_t indent) throw()
@@ -169,14 +140,79 @@ namespace upsylon
                 // compute step from current Vr
                 //
                 //--------------------------------------------------------------
+            STEP:
                 if(!replicaGuess())
                 {
                     if(Verbosity)  {  Library::Indent(std::cerr,curr) << "[[ Singular Replica ]]" << std::endl; }
                     goto DONE;
                 }
-                if(Verbosity) Library::Indent(std::cerr,curr) << "xr=" << xr << std::endl;
+                indexing::make(ix,comparison::decreasing_abs<double>,xr);
+                if(Verbosity){
+                    Library::Indent(std::cerr,curr) << "xr=" << xr << std::endl;
+                    Library::Indent(std::cerr,curr) << "ix=" << ix << std::endl;
+                }
 
-                
+                //--------------------------------------------------------------
+                //
+                // carefull jamming
+                //
+                //--------------------------------------------------------------
+                for(size_t ii=N;ii>0;--ii)
+                {
+                    const size_t   i = ix[ii]; if(!go[i]) continue;;
+                    double        &x = xr[i];
+                    const Primary &p = *primary[i];
+
+                    if(x>0)
+                    {
+                        if(!p.queryForward(C))
+                        {
+                            replicaJam(i);
+                            if(Verbosity) { Library::Indent(std::cerr,next) << "blocked forward " << *p << std::endl; }
+                            goto STEP;
+                        }
+                    }
+                    else
+                    {
+                        if(x<0)
+                        {
+                            if(!p.queryReverse(C))
+                            {
+                                replicaJam(i);
+                                if(Verbosity) { Library::Indent(std::cerr,next) << "blocked reverse " << *p << std::endl; }
+                                goto STEP;
+                            }
+                        }
+                        else
+                        {
+                            // x is numerically 0 => OK
+                            x=0;
+                        }
+                    }
+                }
+
+                //--------------------------------------------------------------
+                //
+                // trying step
+                //
+                //--------------------------------------------------------------
+                if(Verbosity)
+                {
+                    for(size_t ii=N;ii>0;--ii)
+                    {
+                        const size_t       i  = ix[ii];
+                        const Equilibrium &eq = **primary[i];
+                        Library::Indent(std::cerr,curr);
+                        if(go[i])
+                            std::cerr << "(*) " << eq << " : " << std::setw(16) << xr[i];
+                        else
+                            std::cerr << "( ) " << eq;
+                        std::cerr << std::endl;
+                    }
+                }
+
+
+
 
                 exit(1);
 
