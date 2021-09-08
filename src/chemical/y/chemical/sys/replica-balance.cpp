@@ -119,6 +119,85 @@ namespace upsylon
 
         }
 
+
+        bool System:: balanceReplica(Addressable &C) throw()
+        {
+            static const size_t from =      2;
+            static const size_t curr = from+2;
+            static const size_t next = curr+2;
+
+
+            //------------------------------------------------------------------
+            //
+            // enter info
+            //
+            //------------------------------------------------------------------
+            if(Verbosity) {
+                Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
+                lib.display(std::cerr,C,curr) << std::endl;
+            }
+
+            //------------------------------------------------------------------
+            //
+            // initialize algorithm
+            //
+            //------------------------------------------------------------------
+            bool   success = true;
+            size_t currBad = replicaProbe(C);
+            if(currBad>0)
+            {
+                success  = false;
+
+                //--------------------------------------------------------------
+                //
+                // initialize full search
+                //
+                //--------------------------------------------------------------
+                if(Verbosity) {
+                    showPrimary(std::cerr,C,curr);
+                    showReplica(std::cerr,C,curr);
+                }
+                replicaBuild();
+
+                if(Verbosity)  {
+                    Library::Indent(std::cerr,curr) << "Vr=" << Vr << std::endl;
+                    Library::Indent(std::cerr,curr) << "Cr=" << Cr << std::endl;
+                }
+
+                //--------------------------------------------------------------
+                //
+                // compute step from current Vr
+                //
+                //--------------------------------------------------------------
+                if(!replicaGuess())
+                {
+                    if(Verbosity)  {  Library::Indent(std::cerr,curr) << "[[ Singular Replica ]]" << std::endl; }
+                    goto DONE;
+                }
+                if(Verbosity) Library::Indent(std::cerr,curr) << "xr=" << xr << std::endl;
+
+                
+
+                exit(1);
+
+            }
+
+            //------------------------------------------------------------------
+            //
+            // leave info
+            //
+            //------------------------------------------------------------------
+        DONE:
+            if(Verbosity) {
+                Library::Indent(std::cerr,curr) << " ==> " << Outcome(success) << " <==" << std::endl;
+                Library::Indent(std::cerr,from) << "<Balance Replica/>" << std::endl;
+            }
+
+            return success;
+
+        }
+
+#if 0
         bool System:: balanceReplica(Addressable &C) throw()
         {
             static const size_t from =      2;
@@ -258,6 +337,7 @@ namespace upsylon
 
             return success;
         }
+#endif
 
     }
     

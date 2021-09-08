@@ -46,11 +46,20 @@ Y_UTEST(sys)
         if(cs.balancePrimary(C))
         {
             lib.display(std::cerr << "success = ",C) << std::endl;
+            if(cs.balanceReplica(C))
+            {
+
+            }
+            else
+            {
+
+            }
         }
         else
         {
             lib.display(std::cerr << "failure = ",C) << std::endl;
         }
+        return 0;
     }
 
 
