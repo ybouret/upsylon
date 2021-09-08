@@ -47,23 +47,28 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            const string & key() const throw(); //!< for Set
-            
+            const string & key()       const throw(); //!< for Set
+            bool           isWorking() const throw(); //!< 0<rating
+            bool           isPrimary() const throw(); //!< 1==rating
+            bool           isReplica() const throw(); //!< 1<rating
+
             //! output with internal alignement
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Species &sp)
             {
                 return sp.pad(os << '[' << sp.name << ']');
             }
-            
-            
+
+
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
             const unit_t charge;    //!< algebraic charge
             const size_t rating;    //!< times involved in equilibria
-       
+
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Species);
         };

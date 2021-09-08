@@ -187,24 +187,24 @@ namespace upsylon
             return NW;
         }
         
-        size_t Library:: countLeading() const throw()
+        size_t Library:: countPrimary() const throw()
         {
             size_t NL = 0;
             for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
-                if(1==sp.rating) ++NL;
+                if(sp.isPrimary()) ++NL;
             }
             return NL;
         }
         
-        size_t Library:: countSeeking() const throw()
+        size_t Library:: countReplica() const throw()
         {
             size_t NS = 0;
             for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
-                if(1<sp.rating) ++NS;
+                if(sp.isReplica()) ++NS;
             }
             return NS;
         }

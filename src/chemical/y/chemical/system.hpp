@@ -67,8 +67,9 @@ namespace upsylon
             const Equilibria    &eqs;     //!< (frozen) equilibria
             const size_t         N;       //!< eqs size
             const size_t         M;       //!< lib size
-            const size_t         NP;      //!< primary species [0..N]
-            const size_t         NR;      //!< replica species [N-NP]
+            const size_t         MW;      //!< working species [0..M]
+            const size_t         MP;      //!< primary species [0..M]
+            const size_t         MR;      //!< replica species [M-NP]
             const iMatrix        Nu;      //!< [NxM] topology
             const iMatrix        NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
@@ -108,7 +109,7 @@ namespace upsylon
             {
                 Library::Indent(os,indent) << ReplicaEnter << std::endl;
                 const size_t sub = indent+2;
-                for(size_t i=1;i<=NR;++i)
+                for(size_t i=1;i<=MR;++i)
                 {
                     replica[i]->display(os,C,sub);
                 }

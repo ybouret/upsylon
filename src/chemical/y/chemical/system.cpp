@@ -45,18 +45,20 @@ namespace upsylon
         eqs(usrEqs),
         N(eqs->size()),
         M( checkValidity(lib,eqs) ),
-        NP(0),
-        NR(0),
+        MW( lib.countWorking() ),
+        MP( lib.countPrimary() ),
+        MR( lib.countReplica() ),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
-        primary(N,as_capacity),
-        replica(N,as_capacity),
+        primary(N, as_capacity),
+        replica(MR,as_capacity),
         xi(N,0),
         ok(N,false),
         Vr(),
         Ur(),
         V2(),
         Cr(),
+        Br(),
         xr(),
         go(),
         ix(),
@@ -100,11 +102,11 @@ namespace upsylon
                 {
                     const Primary::Pointer pp = new Primary(***node,NuT);
                     aliasing::_(primary).push_back_(pp);
-                    aliasing::_(NP) += pp->count();
+                    //aliasing::_(NP) += pp->count();
                     if(Verbosity) pp->display(std::cerr,4);
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
-                Y_CHEMICAL_PRINTLN("  NP  = " << NP);
+                Y_CHEMICAL_PRINTLN("  MP  = " << MP);
 
                 //--------------------------------------------------------------
                 //
@@ -121,19 +123,18 @@ namespace upsylon
                         const ENode           *en = eqs->head(); while( !nu[ (***en).indx] ) en = en->next;
                         const Replica::Pointer rp = new Replica(sp,nu,en);
                         aliasing::_(replica).push_back_(rp);
-                        aliasing::incr(NR);
                         if(Verbosity) rp->display(std::cerr,4);
                     }
                 }
                 Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
-                Y_CHEMICAL_PRINTLN("  NR  = " << NR);
-                if(NR>0)
+                Y_CHEMICAL_PRINTLN("  MR  = " << MR);
+                if(MR>0)
                 {
-                    Vr.make(NR,N);
-                    Ur.make(N,NR);
-                    V2.make(NR,NR);
-                    Cr.make(NR,0);
-                    Br.make(NR,0);
+                    Vr.make(MR,N);
+                    Ur.make(N,MR);
+                    V2.make(MR,MR);
+                    Cr.make(MR,0);
+                    Br.make(MR,0);
                     xr.make(N,0);
                     go.make(N,false);
                     ix.make(N,0);

@@ -19,12 +19,29 @@ namespace upsylon
         {
             static const char *msg[] = {
                 "waiting",
-                "leading",
-                "seeking"
+                "primary",
+                "replica"
             };
             
             return msg[min_of<size_t>(r,2)];
         }
+
+        bool Species:: isWorking() const throw()
+        {
+            return 0<rating;
+        }
+
+        bool Species:: isPrimary() const throw()
+        {
+            return 1==rating;
+        }
+
+        bool Species:: isReplica() const throw()
+        {
+            return 1<rating;
+        }
+
+
     }
     
 }

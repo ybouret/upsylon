@@ -47,7 +47,7 @@ namespace upsylon
             public:
                 virtual             ~Limiting()     throw();                   //!< cleanup
                 virtual const char  *symbol() const throw() = 0;               //!< textual comparison
-                virtual double       rh_val(const double c) const throw() = 0; //!< right hand value
+                virtual double       rh_val(const double c) const throw() = 0; //!< right hand value (+/- c)
 
                 //! compute limiting actor and extent (in x) from C
                 virtual const Actor & operator()(double &x, const Accessible &C) const throw() = 0;
@@ -69,12 +69,9 @@ namespace upsylon
                 virtual ~LimitingReac() throw();        //!< cleanup
                 explicit LimitingReac(const size_t n);  //!< setup
 
-
-                virtual const char  * symbol()               const throw(); //!< " <=  ";
-                virtual double        rh_val(const double c) const throw(); //!< c
-
-                //! min extent(s)
-                virtual const Actor & operator()(double &x, const Accessible &C) const throw();
+                virtual const char  * symbol()                                 const throw(); //!< " <=  ";
+                virtual double        rh_val(const double c)                   const throw(); //!< c
+                virtual const Actor & operator()(double &, const Accessible &) const throw(); //! min extent(s)
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LimitingReac);
@@ -91,9 +88,9 @@ namespace upsylon
                 virtual ~LimitingProd() throw();       //!< cleanup
                 explicit LimitingProd(const size_t n); //!< setup
 
-                virtual const char *  symbol()               const throw(); //!< " >= -";
-                virtual double        rh_val(const double c) const throw(); //!< -c
-                virtual const Actor & operator()(double &x, const Accessible &C) const throw();
+                virtual const char *  symbol()               const throw();                   //!< " >= -";
+                virtual double        rh_val(const double c) const throw();                   //!< -c
+                virtual const Actor & operator()(double &, const Accessible &) const throw(); //!< max extent(s)
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(LimitingProd);
@@ -131,9 +128,9 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const iMatrix      &NuT;   //!< topology matrix
-            const LimitingReac  reac;  //!< unit rating reactant(s)
-            const LimitingProd  prod;  //!< unit rating product(s)
-            const Kind          kind;  //!< from reac/prod
+            const LimitingReac  reac;  //!< primary reactant(s)
+            const LimitingProd  prod;  //!< primary product(s)
+            const Kind          kind;  //!< from reac/prod count
             
             //__________________________________________________________________
             //

@@ -14,7 +14,7 @@ namespace upsylon
 
         void   System:: replicaBuild() throw()
         {
-            for(size_t i=NR;i>0;--i)
+            for(size_t i=MR;i>0;--i)
             {
                 tao::set(Vr[i],replica[i]->nu);
             }
@@ -25,7 +25,7 @@ namespace upsylon
         size_t System:: replicaProbe(const Accessible &C) throw()
         {
             size_t res = 0;
-            for(size_t j=NR;j>0;--j)
+            for(size_t j=MR;j>0;--j)
             {
                 const Replica &r = *replica[j];
                 const Species &s = *r;
