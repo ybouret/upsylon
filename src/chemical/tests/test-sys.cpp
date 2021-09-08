@@ -32,7 +32,7 @@ Y_UTEST(sys)
 
     Vector C(cs.M,0);
 
-    for(size_t iter=0;iter<16;++iter)
+    for(size_t iter=0;iter<1;++iter)
     {
         lib.drawC(C,alea);
         for(size_t i=cs.M;i>0;--i)
@@ -51,9 +51,9 @@ Y_UTEST(sys)
         {
             lib.display(std::cerr << "failure = ",C) << std::endl;
         }
-        break;
     }
 
+    return 0;
 
     std::cerr << std::endl << "Searching..." << std::endl;
     Chemical::Verbosity = true;

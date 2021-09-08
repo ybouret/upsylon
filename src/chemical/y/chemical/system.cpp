@@ -54,6 +54,7 @@ namespace upsylon
         replica(MR,as_capacity),
         xi(N,0),
         ok(N,false),
+        who(N,as_capacity),
         Vr(),
         Ur(),
         V2(),

@@ -111,6 +111,15 @@ namespace upsylon
             size_t      count()    const throw(); //!< reac.size() + prod.size()
             const char *kindText() const throw(); //!< to add after "limited by "
 
+
+            //! search regularizing extent
+            bool        search(double           &x,
+                               const Actor *    &pA,
+                               const Accessible &C) const throw();
+
+            //! ensure positivity of primary species after a valid shift
+            void         ensurePositive(Addressable &C) const throw();
+
             //! move invalid primary concentrations
             bool        solve(Addressable &C, Addressable &xi) const throw();
 
@@ -165,7 +174,6 @@ namespace upsylon
             bool solveLimitedByReac(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByProd(Addressable &C, Addressable &xi) const throw();
             bool solveLimitedByBoth(Addressable &C, Addressable &xi) const throw();
-            void ensurePositive(Addressable &C) const throw();
             void modify(Addressable &C, const double x, Addressable &xi) const throw();
 
             

@@ -30,7 +30,9 @@ namespace upsylon
             static const char ReplicaLeave[]; //!< "<Replica/>"
             static const char Success[];      //!< "Success"
             static const char Failure[];      //!< "Failure"
+
             const char * Outcome(const bool) throw(); //!< Success/Failure
+            typedef vector<Actor * const,Allocator> Vanishing; //!< alias;
 
             //__________________________________________________________________
             //
@@ -76,6 +78,7 @@ namespace upsylon
             const Replica::Array replica; //!< [NR]
             Vector               xi;      //!< [N] helper to move
             Flags                ok;      //!< [N] primary status
+            Vanishing            who;     //!< [0..N], at most one per equilibria
             Matrix               Vr;      //!< [NRxN] replica vectors
             Matrix               Ur;      //!< [NxNR] Vr'
             Matrix               V2;      //!< [NRxNR] gram(Vr)
