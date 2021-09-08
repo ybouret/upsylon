@@ -23,6 +23,7 @@ namespace upsylon
             {
                 Library::Indent(std::cerr,from) << "<Balance Primary>" << std::endl;
                 lib.display(std::cerr,C,curr)  << std::endl;
+                showPrimary(std::cerr,C,curr);
                 Library::Indent(std::cerr,curr) << "<Solve Primary>" << std::endl;
             }
 
