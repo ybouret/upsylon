@@ -43,7 +43,7 @@ Y_UTEST(sys)
         lib.display(std::cerr << "initial = ",C) << std::endl;
 
 
-        if(cs.balance(C))
+        if(cs.balancePrimary(C))
         {
             lib.display(std::cerr << "success = ",C) << std::endl;
         }
@@ -51,10 +51,11 @@ Y_UTEST(sys)
         {
             lib.display(std::cerr << "failure = ",C) << std::endl;
         }
+        break;
     }
 
 
-    std::cerr << "Searching..." << std::endl;
+    std::cerr << std::endl << "Searching..." << std::endl;
     Chemical::Verbosity = true;
     {
         for(size_t i=cs.N;i>0;--i)
@@ -66,7 +67,7 @@ Y_UTEST(sys)
         lib.display(std::cerr << "initial = ",C) << std::endl;
 
 
-        if(cs.balance(C))
+        if(cs.balancePrimary(C))
         {
             lib.display(std::cerr << "success = ",C) << std::endl;
         }

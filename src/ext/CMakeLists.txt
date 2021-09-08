@@ -4,8 +4,6 @@ FOREACH( word IN ITEMS "-Wextra" )
 	STRING(REPLACE "${word}" "" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}" )
 ENDFOREACH()
 
-SET(EXT_TESTS "" )
-
 MESSAGE( STATUS "                   lua")
 ADD_SUBDIRECTORY(y/lua)
 
