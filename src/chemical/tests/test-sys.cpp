@@ -55,8 +55,7 @@ Y_UTEST(sys)
 
 
     std::cerr << std::endl << "Searching..." << std::endl;
-    Chemical::Verbosity = true;
-    for(size_t iter=0;iter<128;++iter)
+    for(size_t iter=0;iter<1024;++iter)
     {
         for(size_t i=cs.N;i>0;--i)
         {
@@ -66,10 +65,13 @@ Y_UTEST(sys)
         tao::mul(C,cs.NuT,cs.xi);
         lib.display(std::cerr << "initial = ",C) << std::endl;
 
-
         if(!cs.balancePrimary(C))
         {
             throw exception("failure balancePrimary");
+        }
+        else
+        {
+            lib.display(std::cerr << "final   = ",C) << std::endl;
         }
 
     }

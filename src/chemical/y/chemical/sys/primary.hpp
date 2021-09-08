@@ -170,7 +170,7 @@ namespace upsylon
             void update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw();
             void modify(Addressable &C, const double x, Addressable &xi) const throw();
 
-            
+
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
@@ -198,7 +198,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << " |_" << a.nuString() << **this << l.symbol() << a.sp << '\n';
+                    Library::Indent(os,indent) << " |" << a.nuString() << **this << l.symbol() << a.sp << '\n';
                 }
             }
 
@@ -208,7 +208,7 @@ namespace upsylon
                 for(size_t i=1;i<=l.size();++i)
                 {
                     const Actor &a = l[i];
-                    Library::Indent(os,indent) << " |_" << a.nuString() << **this << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
+                    Library::Indent(os,indent) << " |" << a.nuString() << **this << l.symbol() << a.sp << " = " << l.rh_val(C[a.sp.indx]) << '\n';
                 }
             }
 

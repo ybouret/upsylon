@@ -68,17 +68,17 @@ namespace upsylon
                     }
                     std::cerr << std::endl;
                 }
-                Library::Indent(std::cerr,next) << "=>vanishing:";
+                Library::Indent(std::cerr,next) << "vanishing = {";
                 for(size_t j=1;j<=who.size();++j)
                 {
                     std::cerr << ' ' << *who[j];
                 }
-                std::cerr << std::endl;
+                std::cerr << " }" << std::endl;
             }
 
             //------------------------------------------------------------------
             //
-            // if at least one need to be moved
+            // if at least one need to be moved => who is not empty
             //
             //------------------------------------------------------------------
             if(who.size())
