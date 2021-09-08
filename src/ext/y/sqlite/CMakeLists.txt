@@ -1,12 +1,11 @@
 PROJECT(sqlite3 C)
 
 IF(Y_SUNOS)
-ADD_DEFINITIONS(-std=c99)
+	ADD_DEFINITIONS(-std=c99)
 ENDIF()
 
 ADD_LIBRARY(y-sqlite3 STATIC sqlite3.c)
-
-INSTALL( FILES sqlite3.h sqlite3.h DESTINATION include/y/sqlite )
+INSTALL( FILES sqlite3.h sqlite3ext.h DESTINATION include/y/sqlite )
 INSTALL( TARGETS y-sqlite3 ARCHIVE DESTINATION lib )
 
 ADD_EXECUTABLE(y_sqlite shell.c)
@@ -18,4 +17,4 @@ ENDIF()
 IF(Y_FREEBSD OR Y_OPENBSD)
 	TARGET_LINK_LIBRARIES(y_sqlite pthread)
 ENDIF()
-INSTALL( TARGETS y_sqlite RUNTIME DESTINATION bin )
+INSTALL(TARGETS y_sqlite RUNTIME DESTINATION bin)
