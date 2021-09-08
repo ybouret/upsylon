@@ -9,7 +9,7 @@ namespace upsylon
     {
 
 
-        void Primary:: update(Addressable &C,
+        bool Primary:: update(Addressable &C,
                               const double x,
                               const Actor &a,
                               Addressable &xi) const throw()
@@ -19,76 +19,82 @@ namespace upsylon
             tao::mul_add(C,NuT,xi);
             C[a.sp.indx] = 0;
             ensurePositive(C);
+            return false;
         }
 
 
-        void Primary:: modify(Addressable &C, const double x, Addressable &xi) const throw()
+        bool Primary:: modify(Addressable &C, const double x, Addressable &xi) const throw()
         {
             xi[ (**this).indx ] = x;
             tao::mul_add(C,NuT,xi);
             ensurePositive(C);
+            return true;
         }
 
-        void Primary:: move(Addressable &C, const double x, Addressable &xi) const throw()
+        bool Primary:: xmoveByReac(Addressable &C, const double x, Addressable &xi) const throw()
+        {
+            double       xmax = 0;
+            const Actor &amax = reac(xmax,C);
+            if(x>xmax)
+            {
+                return update(C,xmax,amax,xi);
+            }
+            else
+            {
+                return modify(C,x,xi);
+            }
+        }
+
+        bool Primary:: xmoveByProd(Addressable &C, const double x, Addressable &xi) const throw()
+        {
+            double       xmin = 0;
+            const Actor &amin = prod(xmin,C);
+            if(x<xmin)
+            {
+                return update(C,xmin,amin,xi);
+            }
+            else
+            {
+                return modify(C,x,xi);
+            }
+        }
+
+        bool Primary:: xmoveByBoth(Addressable &C, const double x, Addressable &xi) const throw()
+        {
+            double       xmax = 0;
+            const Actor &amax = reac(xmax,C);
+            if(x>xmax)
+            {
+                return update(C,xmax,amax,xi);
+            }
+            else
+            {
+                double       xmin = 0;
+                const Actor &amin = prod(xmin,C);
+                if(x<xmin)
+                {
+                    return update(C,xmin,amin,xi);
+                }
+                else
+                {
+                    return modify(C,x,xi);
+                }
+            }
+        }
+
+
+        bool Primary:: xmove(Addressable &C, const double x, Addressable &xi) const throw()
         {
             tao::ld(xi,0);
             switch(kind)
             {
-                case LimitedByNone:
-                    modify(C,x,xi);
-                    break;
-
-                case LimitedByReac: {
-                    double       xmax = 0;
-                    const Actor &amax = reac(xmax,C);
-                    if(x>xmax)
-                    {
-                        update(C,xmax,amax,xi);
-                    }
-                    else
-                    {
-                        modify(C,x,xi);
-                    }
-                } break;
-
-                case LimitedByProd: {
-                    double       xmin = 0;
-                    const Actor &amin = prod(xmin,C);
-                    if(x<xmin)
-                    {
-                        update(C,xmin,amin,xi);
-                    }
-                    else
-                    {
-                        modify(C,x,xi);
-                    }
-                } break;
-
-                case LimitedByBoth: {
-                    double       xmax = 0;
-                    const Actor &amax = reac(xmax,C);
-                    if(x>xmax)
-                    {
-                        update(C,xmax,amax,xi);
-                    }
-                    else
-                    {
-                        double       xmin = 0;
-                        const Actor &amin = prod(xmin,C);
-                        if(x<xmin)
-                        {
-                            update(C,xmin,amin,xi);
-                        }
-                        else
-                        {
-                            modify(C,x,xi);
-                        }
-                    }
-                } break;
-
-
+                case LimitedByNone: break;
+                case LimitedByReac: return xmoveByReac(C,x,xi);
+                case LimitedByProd: return xmoveByProd(C,x,xi);
+                case LimitedByBoth: return xmoveByBoth(C,x,xi);
             }
-            
+            assert(LimitedByNone==kind);
+            return modify(C,x,xi);
         }
 
     }

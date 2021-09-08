@@ -79,7 +79,7 @@ namespace upsylon
                     {
                         Library::Indent(std::cerr,indent) << "@" << **primary[i] << " = " << x << std::endl;
                     }
-                    primary[i]->move(C,x,xi);
+                    primary[i]->xmove(C,x,xi);
                     if(Verbosity)
                     {
                         lib.display(std::cerr,C,sub) << std::endl;

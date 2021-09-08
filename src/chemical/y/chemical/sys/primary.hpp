@@ -127,7 +127,7 @@ namespace upsylon
             bool        queryReverse(const Accessible &C) const throw();
 
             //! best effort move
-            void        move(Addressable &C, const double x, Addressable &xi) const throw();
+            bool        xmove(Addressable &C, const double x, Addressable &xi) const throw();
 
             //__________________________________________________________________
             //
@@ -166,9 +166,14 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Primary);
-            
-            void update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw();
-            void modify(Addressable &C, const double x, Addressable &xi) const throw();
+
+            bool update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw(); //!< move truncated, return false
+            bool modify(Addressable &C, const double x, Addressable &xi) const throw();                 //!< move full, return true
+
+
+            bool xmoveByReac(Addressable &C, const double x, Addressable &xi) const throw();
+            bool xmoveByProd(Addressable &C, const double x, Addressable &xi) const throw();
+            bool xmoveByBoth(Addressable &C, const double x, Addressable &xi) const throw();
 
 
             template <typename OSTREAM> inline
