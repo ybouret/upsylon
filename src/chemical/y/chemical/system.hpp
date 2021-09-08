@@ -75,19 +75,16 @@ namespace upsylon
             const iMatrix        Nu;      //!< [NxM] topology
             const iMatrix        NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
-            const Replica::Array replica; //!< [NR]
+            const Replica::Array replica; //!< [MR]
             Vector               xi;      //!< [N] helper to move
             Flags                ok;      //!< [N] primary status
             Vanishing            who;     //!< [0..N], at most one per equilibria
-            Matrix               Vr;      //!< [NRxN] replica vectors
-            Matrix               Ur;      //!< [NxNR] Vr'
-            Matrix               V2;      //!< [NRxNR] gram(Vr)
-            Vector               Cr;      //!< [NR] replica conditions
-            Vector               Br;      //!< [NR] copy of Cr to compute Xr
-            Vector               xr;      //!< [N]  optimal replica extent
-            Flags                go;      //!< [N] replica status
-            Indices              ix;      //!< [N] indices to move replica
-
+            Indices              ix;      //!< [N] indices to rank xi
+            Flags                go;      //!< [N] active replica equilibria
+            Indices              xv;      //!< [0..N] indices of active species
+            Vector               Cr;      //!< [MR] invalid C
+            Vector               Br;      //!< [MR] helper for Cr
+            
             //__________________________________________________________________
             //
             // helpers

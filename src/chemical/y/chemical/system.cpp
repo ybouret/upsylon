@@ -55,14 +55,11 @@ namespace upsylon
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
-        Vr(),
-        Ur(),
-        V2(),
+        ix(N,0),
+        go(N,false),
+        xv(N,as_capacity),
         Cr(),
         Br(),
-        xr(),
-        go(),
-        ix(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -129,17 +126,13 @@ namespace upsylon
                 }
                 Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
                 Y_CHEMICAL_PRINTLN("  MR  = " << MR);
+
                 if(MR>0)
                 {
-                    Vr.make(MR,N);
-                    Ur.make(N,MR);
-                    V2.make(MR,MR);
                     Cr.make(MR,0);
                     Br.make(MR,0);
-                    xr.make(N,0);
-                    go.make(N,false);
-                    ix.make(N,0);
                 }
+
             }
 
             Y_CHEMICAL_PRINTLN("<System/>");

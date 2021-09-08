@@ -24,7 +24,17 @@ namespace upsylon
             assert(nu[(***en).indx]);
         }
         
-        
+        void Replica:: activate( addressable<bool> &go ) const throw()
+        {
+            const ENode *node = en;
+            go[ (***node).indx ] = true;
+            for(node=node->next;node;node=node->next)
+            {
+                const size_t i = (***node).indx;
+                if(nu[i]) go[i] = true;
+            }
+        }
+
     }
     
 }

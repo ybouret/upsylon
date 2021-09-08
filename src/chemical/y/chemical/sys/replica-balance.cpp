@@ -14,12 +14,14 @@ namespace upsylon
 
         void   System:: replicaBuild() throw()
         {
+#if 0
             for(size_t i=MR;i>0;--i)
             {
                 tao::set(Vr[i],replica[i]->nu);
             }
             Ur.assign_transpose(Vr);
             tao::ld(go,true);
+#endif
         }
 
         size_t System:: replicaProbe(const Accessible &C) throw()
@@ -46,6 +48,7 @@ namespace upsylon
 
         bool System:: replicaGuess() throw()
         {
+#if 0
             tao::gram(V2,Vr);
             if(!LU::build(V2))
             {
@@ -55,48 +58,27 @@ namespace upsylon
             LU::solve(V2,Br);
             tao::mul(xr,Ur,Br);
             return true;
+#endif
+            return false;
         }
 
         void   System:: replicaJam(const size_t i) throw()
         {
+#if 0
             go[i] = false;
             Vr.ld_col(i,0);
             Ur.ld_row(i,0);
+#endif
         }
         
-
-        void  System:: replicaSolve(Addressable &C, const size_t indent) throw()
-        {
-            const size_t sub = indent+2;
-            if(Verbosity) Library::Indent(std::cerr,indent) << "<Replica Solve>" << std::endl;
-            for(size_t ii=N;ii>0;--ii)
-            {
-                const size_t i = ix[ii];
-                const double x = xr[i];
-                if(fabs(x)>0)
-                {
-                    if(Verbosity)
-                    {
-                        Library::Indent(std::cerr,indent) << "@" << **primary[i] << " = " << x << std::endl;
-                    }
-                    primary[i]->xmove(C,x,xi);
-                    if(Verbosity)
-                    {
-                        lib.display(std::cerr,C,sub) << std::endl;
-                    }
-                }
-            }
-            if(Verbosity) Library::Indent(std::cerr,indent) << "<Replica Solve/>" << std::endl;
-
-        }
-
+        
 
         bool System:: balanceReplica(Addressable &C) throw()
         {
             static const size_t from =      2;
             static const size_t curr = from+2;
-            static const size_t next = curr+2;
 
+            bool success = true;
 
             //------------------------------------------------------------------
             //
@@ -105,69 +87,84 @@ namespace upsylon
             //------------------------------------------------------------------
             if(Verbosity) {
                 Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
-                lib.display(std::cerr,C,curr) << std::endl;
             }
 
-            //------------------------------------------------------------------
-            //
-            // initialize algorithm
-            //
-            //------------------------------------------------------------------
-            bool   success = true;
-            size_t currBad = replicaProbe(C);
-            if(currBad>0)
+
+            if(replicaProbe(C))
             {
-                success  = false;
+                Vector xt(N,0);
+                success = false;
+
             INIT:
-                //--------------------------------------------------------------
-                //
-                // initialize full search
-                //
-                //--------------------------------------------------------------
-                if(Verbosity) {
-                    showPrimary(std::cerr,C,curr);
-                    showReplica(std::cerr,C,curr);
-                }
-                replicaBuild();
+                lib.display(std::cerr,C,curr) << std::endl;
+                showPrimary(std::cerr,C,curr);
+                showReplica(std::cerr,C,curr);
 
-
-                //--------------------------------------------------------------
-                //
-                // compute step from current Vr
-                //
-                //--------------------------------------------------------------
-            STEP:
-                if(Verbosity)  {
-                    Library::Indent(std::cerr,curr) << "Vr=" << Vr << std::endl;
-                    Library::Indent(std::cerr,curr) << "Cr=" << Cr << std::endl;
-                }
-                if(!replicaGuess())
+                std::cerr << "Cr=" << Cr << std::endl;
+                tao::ld(go,false);
+                for(size_t j=MR;j>0;--j)
                 {
-                    if(Verbosity)  {  Library::Indent(std::cerr,curr) << "[[ Singular Replica ]]" << std::endl; }
+                    replica[j]->activate(go);
+                }
+            STEP:
+                xv.free();
+                for(size_t i=1;i<=N;++i)
+                {
+                    if(go[i]) xv.push_back_(i);
+                }
+
+                std::cerr << "go=" << go << std::endl;
+                std::cerr << "xv=" << xv << std::endl;
+
+                Matrix V2(MR,MR);
+                size_t dim = xv.size();
+
+                Matrix     Vr(MR,dim);
+                Matrix     Ur(dim,MR);
+                Vector     xr(dim,0);
+                for(size_t j=MR;j>0;--j)
+                {
+                    const Replica     &repl = *replica[j];
+                    const iAccessible &nutj = repl.nu;
+                    for(size_t i=dim;i>0;--i)
+                    {
+                        Vr[j][i] = nutj[ xv[i] ];
+                    }
+                }
+                Ur.assign_transpose(Vr);
+                std::cerr << "Vr=" << Vr << std::endl;
+                tao::gram(V2,Vr);
+                if(!LU::build(V2))
+                {
+                    std::cerr << "Singular Matrix..." << std::endl;
                     goto DONE;
                 }
-                indexing::make(ix,comparison::decreasing_abs<double>,xr);
-                if(Verbosity){
-                    Library::Indent(std::cerr,curr) << "xr=" << xr << std::endl;
-                    Library::Indent(std::cerr,curr) << "ix=" << ix << std::endl;
-                }
+                tao::set(Br,Cr);
+                LU::solve(V2,Br);
+                tao::mul(xr,Ur,Br);
+                std::cerr << "xr=" << xr << std::endl;
 
-                //--------------------------------------------------------------
-                //
-                // carefull jamming
-                //
-                //--------------------------------------------------------------
+
+                tao::ld(xi,0);
+                for(size_t i=dim;i>0;--i)
+                {
+                    xi[ xv[i] ] = xr[i];
+                }
+                std::cerr << "xi=" << xi << std::endl;
+                indexing::make(ix, comparison::decreasing_abs<double>,xi);
+                std::cerr << "ix=" << ix << std::endl;
+
                 for(size_t ii=N;ii>0;--ii)
                 {
                     const size_t   i = ix[ii]; if(!go[i]) continue;
-                    double        &x = xr[i];
+                    double        &x = xi[i];
                     const Primary &p = *primary[i];
-
                     if(x>0)
                     {
-                        if(!p.queryForward(C))
+                         if(!p.queryForward(C))
                         {
-                            replicaJam(i); if(Verbosity) { Library::Indent(std::cerr,next) << "blocked forward " << *p << std::endl; }
+                            std::cerr << "blocked forward " << *p << std::endl;
+                            go[i] = false;
                             goto STEP;
                         }
                     }
@@ -177,84 +174,50 @@ namespace upsylon
                         {
                             if(!p.queryReverse(C))
                             {
-                                replicaJam(i);if(Verbosity) { Library::Indent(std::cerr,next) << "blocked reverse " << *p << std::endl; }
+                                std::cerr << "blocked reverse " << *p << std::endl;
+                                go[i] = false;
                                 goto STEP;
                             }
                         }
                         else
                         {
-                            // x is numerically 0 => OK
                             x=0;
                         }
                     }
                 }
 
-                //--------------------------------------------------------------
-                //
-                // trying corrected step
-                //
-                //--------------------------------------------------------------
-                if(Verbosity)
-                {
-                    for(size_t ii=N;ii>0;--ii)
-                    {
-                        const size_t       i  = ix[ii];
-                        const Equilibrium &eq = **primary[i];
-                        Library::Indent(std::cerr,curr);
-                        if(go[i])
-                            std::cerr << "(*) " << eq << " : " << std::setw(16) << xr[i];
-                        else
-                            std::cerr << "( ) " << eq;
-                        std::cerr << std::endl;
-                    }
-                }
 
-                if(Verbosity) {
-                    Library::Indent(std::cerr,curr) << "<Moving>" << std::endl;
-                }
-                size_t moved = 0;
                 for(size_t ii=N;ii>0;--ii)
                 {
-                    const size_t   i = ix[ii]; if(!go[i])         continue;
-                    double        &x = xr[i];  if( fabs(x) <= 0 ) continue;
+                    const size_t   i = ix[ii]; if(!go[i])     continue;
+                    double        &x = xi[i];  if(fabs(x)<=0) continue;
                     const Primary &p = *primary[i];
-
-                    ++moved;
-                    const bool full = p.xmove(C,x,xi);
-                    if(Verbosity) {
-                        Library::Indent(std::cerr,next) << " -> " << *p << " : ";
-                        std::cerr << (full?"full":"cut!");
-                        std::cerr << std::endl;
-                        if(!full)
-                        {
-                            lib.display(std::cerr,C,next) << std::endl;
-                            Library::Indent(std::cerr,curr) << "<Moving/>" << std::endl;
-                        }
-                    }
-
-                    if( !full )
+                    std::cerr << "Trying " << *p << std::endl;
+                    if(p.xmove(C,x,xt))
                     {
-                        goto INIT;
+                        std::cerr << "cut" << std::endl;
+                    }
+                    else
+                    {
+                        std::cerr << "full" << std::endl;
                     }
                 }
 
-                if(Verbosity) {
-                    Library::Indent(std::cerr,next) <<  "moved=" << moved << std::endl;
-                    lib.display(std::cerr,C,next)   << std::endl;
-                    Library::Indent(std::cerr,curr) << "<Moving/>" << std::endl;
+                if(replicaProbe(C))
+                {
+                    goto INIT;
                 }
-
-                exit(1);
+                else
+                {
+                    success = true;
+                    goto DONE;
+                }
 
             }
 
-            //------------------------------------------------------------------
-            //
-            // leave info
-            //
-            //------------------------------------------------------------------
         DONE:
             if(Verbosity) {
+                lib.display(std::cerr,C,curr) << std::endl;
                 Library::Indent(std::cerr,curr) << " ==> " << Outcome(success) << " <==" << std::endl;
                 Library::Indent(std::cerr,from) << "<Balance Replica/>" << std::endl;
             }

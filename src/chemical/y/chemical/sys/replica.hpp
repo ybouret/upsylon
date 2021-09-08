@@ -38,7 +38,17 @@ namespace upsylon
             explicit Replica(const Species     &,
                              const iAccessible &,
                              const ENode       *) throw();
-            
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void activate( addressable<bool> &go ) const throw();
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const iAccessible   &nu; //!< vector of NuT
             const ENode * const  en; //!< corresponding first not nul nu[en->indx]
             
