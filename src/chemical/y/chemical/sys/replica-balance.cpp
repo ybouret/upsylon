@@ -118,7 +118,7 @@ namespace upsylon
             if(currBad>0)
             {
                 success  = false;
-
+            INIT:
                 //--------------------------------------------------------------
                 //
                 // initialize full search
@@ -130,10 +130,6 @@ namespace upsylon
                 }
                 replicaBuild();
 
-                if(Verbosity)  {
-                    Library::Indent(std::cerr,curr) << "Vr=" << Vr << std::endl;
-                    Library::Indent(std::cerr,curr) << "Cr=" << Cr << std::endl;
-                }
 
                 //--------------------------------------------------------------
                 //
@@ -141,6 +137,10 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
             STEP:
+                if(Verbosity)  {
+                    Library::Indent(std::cerr,curr) << "Vr=" << Vr << std::endl;
+                    Library::Indent(std::cerr,curr) << "Cr=" << Cr << std::endl;
+                }
                 if(!replicaGuess())
                 {
                     if(Verbosity)  {  Library::Indent(std::cerr,curr) << "[[ Singular Replica ]]" << std::endl; }
@@ -159,7 +159,7 @@ namespace upsylon
                 //--------------------------------------------------------------
                 for(size_t ii=N;ii>0;--ii)
                 {
-                    const size_t   i = ix[ii]; if(!go[i]) continue;;
+                    const size_t   i = ix[ii]; if(!go[i]) continue;
                     double        &x = xr[i];
                     const Primary &p = *primary[i];
 
@@ -167,8 +167,7 @@ namespace upsylon
                     {
                         if(!p.queryForward(C))
                         {
-                            replicaJam(i);
-                            if(Verbosity) { Library::Indent(std::cerr,next) << "blocked forward " << *p << std::endl; }
+                            replicaJam(i); if(Verbosity) { Library::Indent(std::cerr,next) << "blocked forward " << *p << std::endl; }
                             goto STEP;
                         }
                     }
@@ -178,8 +177,7 @@ namespace upsylon
                         {
                             if(!p.queryReverse(C))
                             {
-                                replicaJam(i);
-                                if(Verbosity) { Library::Indent(std::cerr,next) << "blocked reverse " << *p << std::endl; }
+                                replicaJam(i);if(Verbosity) { Library::Indent(std::cerr,next) << "blocked reverse " << *p << std::endl; }
                                 goto STEP;
                             }
                         }
@@ -193,7 +191,7 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // trying step
+                // trying corrected step
                 //
                 //--------------------------------------------------------------
                 if(Verbosity)
@@ -211,8 +209,40 @@ namespace upsylon
                     }
                 }
 
+                if(Verbosity) {
+                    Library::Indent(std::cerr,curr) << "<Moving>" << std::endl;
+                }
+                size_t moved = 0;
+                for(size_t ii=N;ii>0;--ii)
+                {
+                    const size_t   i = ix[ii]; if(!go[i])         continue;
+                    double        &x = xr[i];  if( fabs(x) <= 0 ) continue;
+                    const Primary &p = *primary[i];
 
+                    ++moved;
+                    const bool full = p.xmove(C,x,xi);
+                    if(Verbosity) {
+                        Library::Indent(std::cerr,next) << " -> " << *p << " : ";
+                        std::cerr << (full?"full":"cut!");
+                        std::cerr << std::endl;
+                        if(!full)
+                        {
+                            lib.display(std::cerr,C,next) << std::endl;
+                            Library::Indent(std::cerr,curr) << "<Moving/>" << std::endl;
+                        }
+                    }
 
+                    if( !full )
+                    {
+                        goto INIT;
+                    }
+                }
+
+                if(Verbosity) {
+                    Library::Indent(std::cerr,next) <<  "moved=" << moved << std::endl;
+                    lib.display(std::cerr,C,next)   << std::endl;
+                    Library::Indent(std::cerr,curr) << "<Moving/>" << std::endl;
+                }
 
                 exit(1);
 
