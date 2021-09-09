@@ -78,7 +78,7 @@ namespace upsylon
             static const size_t from =      2;
             static const size_t curr = from+2;
 
-            bool success = true;
+            bool success = false;
 
             //------------------------------------------------------------------
             //
@@ -87,137 +87,22 @@ namespace upsylon
             //------------------------------------------------------------------
             if(Verbosity) {
                 Library::Indent(std::cerr,from) << "<Balance Replica>" << std::endl;
-            }
-
-
-            if(replicaProbe(C))
-            {
-                Vector xt(N,0);
-                success = false;
-
-            INIT:
-                lib.display(std::cerr,C,curr) << std::endl;
                 showPrimary(std::cerr,C,curr);
                 showReplica(std::cerr,C,curr);
-
-                std::cerr << "Cr=" << Cr << std::endl;
-                tao::ld(go,false);
-                for(size_t j=MR;j>0;--j)
-                {
-                    replica[j]->activate(go);
-                }
-            STEP:
-                xv.free();
-                for(size_t i=1;i<=N;++i)
-                {
-                    if(go[i]) xv.push_back_(i);
-                }
-
-                std::cerr << "go=" << go << std::endl;
-                std::cerr << "xv=" << xv << std::endl;
-
-                Matrix V2(MR,MR);
-                size_t dim = xv.size();
-
-                Matrix     Vr(MR,dim);
-                Matrix     Ur(dim,MR);
-                Vector     xr(dim,0);
-                for(size_t j=MR;j>0;--j)
-                {
-                    const Replica     &repl = *replica[j];
-                    const iAccessible &nutj = repl.nu;
-                    for(size_t i=dim;i>0;--i)
-                    {
-                        Vr[j][i] = nutj[ xv[i] ];
-                    }
-                }
-                Ur.assign_transpose(Vr);
-                std::cerr << "Vr=" << Vr << std::endl;
-                tao::gram(V2,Vr);
-                if(!LU::build(V2))
-                {
-                    std::cerr << "Singular Matrix..." << std::endl;
-                    goto DONE;
-                }
-                tao::set(Br,Cr);
-                LU::solve(V2,Br);
-                tao::mul(xr,Ur,Br);
-                std::cerr << "xr=" << xr << std::endl;
-
-
-                tao::ld(xi,0);
-                for(size_t i=dim;i>0;--i)
-                {
-                    xi[ xv[i] ] = xr[i];
-                }
-                std::cerr << "xi=" << xi << std::endl;
-                indexing::make(ix, comparison::decreasing_abs<double>,xi);
-                std::cerr << "ix=" << ix << std::endl;
-
-                for(size_t ii=N;ii>0;--ii)
-                {
-                    const size_t   i = ix[ii]; if(!go[i]) continue;
-                    double        &x = xi[i];
-                    const Primary &p = *primary[i];
-                    if(x>0)
-                    {
-                         if(!p.queryForward(C))
-                        {
-                            std::cerr << "blocked forward " << *p << std::endl;
-                            go[i] = false;
-                            goto STEP;
-                        }
-                    }
-                    else
-                    {
-                        if(x<0)
-                        {
-                            if(!p.queryReverse(C))
-                            {
-                                std::cerr << "blocked reverse " << *p << std::endl;
-                                go[i] = false;
-                                goto STEP;
-                            }
-                        }
-                        else
-                        {
-                            x=0;
-                        }
-                    }
-                }
-
-
-                for(size_t ii=N;ii>0;--ii)
-                {
-                    const size_t   i = ix[ii]; if(!go[i])     continue;
-                    double        &x = xi[i];  if(fabs(x)<=0) continue;
-                    const Primary &p = *primary[i];
-                    std::cerr << "Trying " << *p << std::endl;
-                    if(p.xmove(C,x,xt))
-                    {
-                        std::cerr << "cut" << std::endl;
-                    }
-                    else
-                    {
-                        std::cerr << "full" << std::endl;
-                    }
-                }
-
-                if(replicaProbe(C))
-                {
-                    goto INIT;
-                }
-                else
-                {
-                    success = true;
-                    goto DONE;
-                }
-
             }
 
-        DONE:
+            if(MR)
+            {
+                Matrix Vr(MR,N);
+                for(size_t i=MR;i>0;--i)
+                {
+                    tao::set(Vr[i],replica[i]->nu);
+                }
+                std::cerr << "Vr=" << Vr << std::endl;
+            }
+            
+            
             if(Verbosity) {
-                lib.display(std::cerr,C,curr) << std::endl;
                 Library::Indent(std::cerr,curr) << " ==> " << Outcome(success) << " <==" << std::endl;
                 Library::Indent(std::cerr,from) << "<Balance Replica/>" << std::endl;
             }
