@@ -3,6 +3,10 @@
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
 #include "y/sort/unique.hpp"
+#include "y/core/dnode.hpp"
+
+#include "y/ios/tools/vizible.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -38,6 +42,43 @@ namespace upsylon
             if(M<eqs->size()) throw exception("%s has too many equilibria",System::CLID);
             return M;
         }
+
+        class SpecNode;
+        typedef core::list_of_cpp<SpecNode> SpecList;
+
+        class SpecNode : public dnode<SpecNode>, public ios::vizible
+        {
+        public:
+            const Species *sp; //!< link
+            SpecList       ch; //!< child[ren]
+
+            explicit SpecNode(const Species *usr) throw() : sp(usr), ch() {}
+            virtual ~SpecNode() throw() {}
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(SpecNode);
+            virtual void vizCore(ios::ostream &fp) const
+            {
+                if(sp)
+                {
+                    const string s = string_convert::to_printable(sp->name);
+                    endl( vizName(fp) << "[label=\"" << s << "\"]" );
+
+                }
+                else
+                {
+                    endl( vizName(fp) << "[label=\"root\"]" );
+                }
+
+                for(const SpecNode *node=ch.head;node;node=node->next)
+                {
+                    node->vizCore(fp);
+                    vizJoin(fp,node);
+                }
+
+            }
+        };
+
 
         System:: System(const Library    &usrLib,
                         const Equilibria &usrEqs,
@@ -137,10 +178,47 @@ namespace upsylon
 
                 if(MR>0)
                 {
+                    Matrix Vr(MR,N);
+                    for(size_t i=MR;i>0;--i)
+                    {
+                        tao::set(Vr[i],replica[i]->nu);
+                    }
+                    std::cerr << "Vr=" << Vr << std::endl;
                     Cr.make(MR,0);
                     Br.make(MR,0);
-
                 }
+
+
+                std::cerr << "Creating Tree..." << std::endl;
+                std::cerr << "sizeof(Node)=" << sizeof(SpecNode) << std::endl;
+                {
+                    SpecList stk;
+                    for(const SNode *node=lib->head();node;node=node->next)
+                    {
+                        const Species &sp = ***node;
+                        if(sp.rating>0)
+                        {
+                            stk.push_back( new SpecNode(&sp) );
+                        }
+                    }
+
+                    SpecNode root(NULL);
+                    for(size_t k=ratings.size();k>0;--k)
+                    {
+                        const size_t rating = ratings[k];
+                        std::cerr << "Looking for rating=" << rating << std::endl;
+                        
+                    }
+
+
+
+                    if(stk.size)
+                    {
+                        stk.head->graphViz("gspec.dot");
+                    }
+                }
+
+
 
             }
 

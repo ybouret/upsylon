@@ -23,6 +23,14 @@ Y_UTEST(sys)
 
     //lib << "Na+" << "Cl-";
 
+    if(false)
+    {
+        eqs.load("dum1:-A:B:2C:Q:=1",lib,vm);
+        eqs.load("dum2:-D:E:3C:Q:=2",lib,vm);
+        eqs.load("dum3:-F:G:4C:Q:=3",lib,vm);
+        eqs.load("dum4:-C:H:=4",lib,vm);
+    }
+
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
 

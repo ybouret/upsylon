@@ -89,7 +89,7 @@ namespace upsylon
                 {
                     const Species &sp = ***node;
                     os << ' ' << sp;
-                    os << vformat(" : @%u", unsigned(sp.indx));
+                    os << vformat(" : @%2u", unsigned(sp.indx));
                     os << vformat(" : z =%3d", int(sp.charge) );
                     os << vformat(" : r =%3u", unsigned(sp.rating));
                     os << ' ' << '(' << Species::Status(sp.rating) << ')';
