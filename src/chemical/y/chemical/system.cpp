@@ -2,6 +2,7 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/sort/unique.hpp"
 
 namespace upsylon
 {
@@ -111,10 +112,12 @@ namespace upsylon
                 // building replica
                 //
                 //--------------------------------------------------------------
-                Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);;
+                Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);
+                Indices ratings(M,as_capacity);
                 for(const SNode *node=lib->head();node;node=node->next)
                 {
                     const Species &sp = ***node;
+                    const size_t   sr = sp.rating;
                     if(sp.rating>1)
                     {
                         const iAccessible     &nu = NuT[sp.indx];
@@ -123,14 +126,20 @@ namespace upsylon
                         aliasing::_(replica).push_back_(rp);
                         if(Verbosity) rp->display(std::cerr,4);
                     }
+                    ratings.push_back_(sr);
                 }
                 Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
                 Y_CHEMICAL_PRINTLN("  MR  = " << MR);
+                Y_CHEMICAL_PRINTLN("  ratings  = " << ratings);
+                unique(ratings);
+                Y_CHEMICAL_PRINTLN("  ratings  = " << ratings);
+
 
                 if(MR>0)
                 {
                     Cr.make(MR,0);
                     Br.make(MR,0);
+
                 }
 
             }
