@@ -12,7 +12,6 @@ ADD_TEST(lib     test-chemical lib)
 ADD_TEST(actors  test-chemical actors)
 ADD_TEST(eqs     test-chemical eqs)
 ADD_TEST(sys     test-chemical sys)
-ADD_TEST(plexus  test-chemical plexus)
 
 
 ADD_CUSTOM_TARGET(utest-chemical
