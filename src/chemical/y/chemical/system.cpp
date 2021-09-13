@@ -147,7 +147,7 @@ namespace upsylon
                     if(dim>0)
                     {
                         iMatrix Omega(dim,M);
-
+                        Flags   alive(M,true);
                         // spectator only constraints
                         {
                             for(const SNode *node=lib->head();node;node=node->next)
@@ -155,7 +155,9 @@ namespace upsylon
                                 const Species &sp = ***node;
                                 if(sp.rating<=0)
                                 {
-                                    Omega[dim--][sp.indx] = 1;
+                                    const size_t j  = sp.indx;
+                                    Omega[dim--][j] = 1;
+                                    alive[j]        = false;
                                 }
                             }
                         }
@@ -163,6 +165,7 @@ namespace upsylon
                         assert(dim==Nc);
 
                         const size_t nr = ratings.size();
+
                         for(size_t r=1;r<=nr;++r)
                         {
                             const size_t rating = ratings[r];
