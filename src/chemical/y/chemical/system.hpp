@@ -3,7 +3,6 @@
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
 #include "y/chemical/sys/primary.hpp"
-#include "y/chemical/sys/replica.hpp"
 
 
 namespace upsylon
@@ -55,11 +54,7 @@ namespace upsylon
             //! balance primary constraints
             bool balancePrimary(Addressable &C) throw();
 
-            //! balance replica constraints
-            bool balanceReplica(Addressable &C) throw();
 
-            ///! balance all
-            bool balance(Addressable &C) throw();
 
             //__________________________________________________________________
             //
@@ -71,19 +66,13 @@ namespace upsylon
             const size_t         M;       //!< lib size
             const size_t         MW;      //!< working species [0..M]
             const size_t         MP;      //!< primary species [0..M]
-            const size_t         MR;      //!< replica species [M-NP]
             const iMatrix        Nu;      //!< [NxM] topology
             const iMatrix        NuT;     //!< [MxN] Nu'
             const Primary::Array primary; //!< [N]
-            const Replica::Array replica; //!< [MR]
             Vector               xi;      //!< [N] helper to move
             Flags                ok;      //!< [N] primary status
             Vanishing            who;     //!< [0..N], at most one per equilibria
-            Indices              ix;      //!< [N] indices to rank xi
-            Flags                go;      //!< [N] active replica equilibria
-            Indices              xv;      //!< [0..N] indices of active species
-            Vector               Cr;      //!< [MR] invalid C
-            Vector               Br;      //!< [MR] helper for Cr
+
             
             //__________________________________________________________________
             //
@@ -103,18 +92,6 @@ namespace upsylon
                 Library::Indent(os,indent) << PrimaryLeave << std::endl;
             }
             
-            //! display numerical primary constraints
-            template <typename OSTREAM>
-            void showReplica(OSTREAM &os, const Accessible &C, const size_t indent) const
-            {
-                Library::Indent(os,indent) << ReplicaEnter << std::endl;
-                const size_t sub = indent+2;
-                for(size_t i=1;i<=MR;++i)
-                {
-                    replica[i]->display(os,C,sub);
-                }
-                Library::Indent(os,indent) << ReplicaLeave << std::endl;
-            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
@@ -122,11 +99,7 @@ namespace upsylon
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
 
-            size_t replicaProbe(const Accessible &C) throw();          //!< build Cr and return number of invalid C
-            void   replicaBuild() throw();                             //!< initial build of Vr, Ur, ok[2]
-            bool   replicaGuess() throw();                             //!< build xr from Vr and Cr, false if singular
-            void   replicaJam(const size_t i) throw();                 //!< modify Vr, Ur, go
-            void   replicaSolve(Addressable &C, const size_t) throw(); //!< best effort to move along computed xr
+            
 
         };
     }

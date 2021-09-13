@@ -55,19 +55,12 @@ namespace upsylon
         M( checkValidity(lib,eqs) ),
         MW( lib.countWorking() ),
         MP( lib.countPrimary() ),
-        MR( lib.countReplica() ),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N, as_capacity),
-        replica(MR,as_capacity),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
-        ix(N,0),
-        go(N,false),
-        xv(N,as_capacity),
-        Cr(),
-        Br(),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
@@ -114,47 +107,8 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
                 Y_CHEMICAL_PRINTLN("  MP  = " << MP);
 
-                //--------------------------------------------------------------
-                //
-                // building replica
-                //
-                //--------------------------------------------------------------
-                Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);
-                Indices ratings(M,as_capacity);
-                for(const SNode *node=lib->head();node;node=node->next)
-                {
-                    const Species &sp = ***node;
-                    const size_t   sr = sp.rating;
-                    if(sp.rating>1)
-                    {
-                        const iAccessible     &nu = NuT[sp.indx];
-                        const ENode           *en = eqs->head(); while( !nu[ (***en).indx] ) en = en->next;
-                        const Replica::Pointer rp = new Replica(sp,nu,en);
-                        aliasing::_(replica).push_back_(rp);
-                        if(Verbosity) rp->display(std::cerr,4);
-                    }
-                    ratings.push_back_(sr);
-                }
-                Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);;
-                Y_CHEMICAL_PRINTLN("  MR  = " << MR);
-                Y_CHEMICAL_PRINTLN("  ratings  = " << ratings);
-                unique(ratings);
-                Y_CHEMICAL_PRINTLN("  ratings  = " << ratings);
 
-
-                if(MR>0)
-                {
-                    Matrix Vr(MR,N);
-                    for(size_t i=MR;i>0;--i)
-                    {
-                        tao::set(Vr[i],replica[i]->nu);
-                    }
-                    std::cerr << "Vr=" << Vr << std::endl;
-                    Cr.make(MR,0);
-                    Br.make(MR,0);
-                }
-
-
+                
                 
 
 
@@ -164,18 +118,7 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("<System/>");
 
         }
-
-        bool System:: balance(Addressable &C) throw()
-        {
-            Y_CHEMICAL_PRINTLN("<Balance>");
-            bool success = balancePrimary(C);
-            if( success )
-            {
-                success = balanceReplica(C);
-            }
-            Y_CHEMICAL_PRINTLN("<Balance/>");
-            return success;
-        }
+        
 
     }
 
