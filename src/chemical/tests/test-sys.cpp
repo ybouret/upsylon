@@ -19,11 +19,11 @@ Y_UTEST(sys)
         eqs(argv[i],lib,vm);
     }
 
-    //    eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
+    // eqs.load("dummy:-A:-2B:3C:4D:=1",lib,vm);
 
-    //lib << "Na+" << "Cl-";
+    lib << "Na+" << "Cl-";
 
-    //if(false)
+    if(false)
     {
         lib << "A" << "B" << "C" << "D" << "E" << "F" << "G" << "H";
         eqs.load("dum1:-A:B:2C:Q:=1",lib,vm);

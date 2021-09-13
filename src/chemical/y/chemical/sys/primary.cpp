@@ -145,7 +145,8 @@ namespace upsylon
         NuT(topo),
         reac((**this).countPrimaryReac()),
         prod((**this).countPrimaryProd()),
-        kind(LimitedByNone)
+        kind(LimitedByNone),
+        keep(eq.isBounded())
         {
 
             loadPrimary(aliasing::_(reac),eq.reac);
@@ -179,6 +180,7 @@ namespace upsylon
                 }
             }
 
+            
         }
 
         size_t Primary:: count() const throw()
@@ -218,6 +220,13 @@ namespace upsylon
                     }
             }
             return "???";
+        }
+
+        const char * Primary:: keepText() const throw()
+        {
+            return keep ?
+            "BOUNDED" :
+            "ENDLESS";
         }
 
         static inline void makePositive(double &c) throw()

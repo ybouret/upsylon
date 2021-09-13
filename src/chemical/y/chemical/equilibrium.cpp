@@ -9,7 +9,14 @@ namespace upsylon
     {
         
         Equilibrium:: ~Equilibrium() throw() {}
-        
+
+
+        bool Equilibrium:: isBounded() const throw()
+        {
+            return (reac->size()>0) && (prod->size()>0);
+        }
+
+
         string Equilibrium:: Kstr(const double t) const
         {
             static const ios::scribe &S = ios::scribe::query<double>();
@@ -104,6 +111,7 @@ namespace upsylon
     {
         void Equilibrium:: verify(const unsigned flags) const
         {
+
             const unit_t dz = deltaCharge();
             if(dz) throw exception("<%s> has deltaCharge=%ld",*name, long(dz));
            

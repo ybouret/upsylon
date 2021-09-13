@@ -60,18 +60,21 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Library       &lib;     //!< (frozen) library
-            const Equilibria    &eqs;     //!< (frozen) equilibria
-            const size_t         N;       //!< eqs size
-            const size_t         M;       //!< lib size
-            const size_t         MW;      //!< working species [0..M]
-            const size_t         MP;      //!< primary species [0..M]
-            const iMatrix        Nu;      //!< [NxM] topology
-            const iMatrix        NuT;     //!< [MxN] Nu'
-            const Primary::Array primary; //!< [N]
-            Vector               xi;      //!< [N] helper to move
-            Flags                ok;      //!< [N] primary status
-            Vanishing            who;     //!< [0..N], at most one per equilibria
+            const Library       &lib;        //!< (frozen) library
+            const Equilibria    &eqs;        //!< (frozen) equilibria
+            const size_t         N;          //!< eqs size
+            const size_t         M;          //!< lib size
+            const size_t         MW;         //!< working species [0..M]
+            const size_t         MP;         //!< primary species [0..M]
+            const size_t         MR;         //!< replica species [0..M]
+            const size_t         MS;         //!< spectators      [0..M]
+            const iMatrix        Nu;         //!< [NxM] topology
+            const iMatrix        NuT;        //!< [MxN] Nu'
+            const Primary::Array primary;    //!< [N]
+            const Flags          bounded;    //!< [M] from primary keep flag
+            Vector               xi;         //!< [N] helper to move
+            Flags                ok;         //!< [N] primary status
+            Vanishing            who;        //!< [0..N], at most one per equilibria
 
             
             //__________________________________________________________________

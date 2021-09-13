@@ -32,8 +32,9 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            virtual ~Equilibrium() throw(); //!< cleanup
-            
+            virtual ~Equilibrium() throw();     //!< cleanup
+            bool     isBounded() const throw(); //!< has reactant(s) AND product(s)
+
         protected:
             //! setup
             template <typename NAME> inline

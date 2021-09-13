@@ -15,8 +15,7 @@ namespace upsylon
     namespace Chemical
     {
 
-        const char System::CLID[] = "Chemical::System";
-
+        const char System:: CLID[] = "Chemical::System";
         const char System:: PrimaryEnter[] = "<Primary>";
         const char System:: PrimaryLeave[] = "<Primary/>";
         const char System:: ReplicaEnter[] = "<Replica>";
@@ -55,9 +54,12 @@ namespace upsylon
         M( checkValidity(lib,eqs) ),
         MW( lib.countWorking() ),
         MP( lib.countPrimary() ),
+        MR( lib.countReplica() ),
+        MS( lib.spectators()   ),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N, as_capacity),
+        bounded(N,true),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
@@ -68,6 +70,10 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("<System>");
             Y_CHEMICAL_PRINTLN("  N   = " << N);
             Y_CHEMICAL_PRINTLN("  M   = " << M);
+            Y_CHEMICAL_PRINTLN("  MW  = " << MW);
+            Y_CHEMICAL_PRINTLN("  MP  = " << MP);
+            Y_CHEMICAL_PRINTLN("  MR  = " << MR);
+            Y_CHEMICAL_PRINTLN("  MS  = " << MS);
 
             if(N>0)
             {
@@ -101,11 +107,14 @@ namespace upsylon
                 {
                     const Primary::Pointer pp = new Primary(***node,NuT);
                     aliasing::_(primary).push_back_(pp);
-                    //aliasing::_(NP) += pp->count();
                     if(Verbosity) pp->display(std::cerr,4);
+                    if(!pp->keep)
+                    {
+                        
+                    }
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
-                Y_CHEMICAL_PRINTLN("  MP  = " << MP);
+
 
 
                 

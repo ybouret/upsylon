@@ -38,6 +38,7 @@ namespace upsylon
             };
 
 
+
             //__________________________________________________________________
             //
             //! interface to limiting actors
@@ -110,6 +111,7 @@ namespace upsylon
             //__________________________________________________________________
             size_t      count()    const throw(); //!< reac.size() + prod.size()
             const char *kindText() const throw(); //!< to add after "limited by "
+            const char *keepText() const throw(); //!< "bound" / "loose"
 
 
             //! search regularizing extent
@@ -137,7 +139,8 @@ namespace upsylon
             const LimitingReac  reac;  //!< primary reactant(s)
             const LimitingProd  prod;  //!< primary product(s)
             const Kind          kind;  //!< from reac/prod count
-            
+            const bool          keep;  //!< conserving matter or not
+
             //__________________________________________________________________
             //
             // helpers
@@ -179,7 +182,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
-                Library::Indent(os,indent) << "|_" << **this << " is limited by " << kindText();
+                Library::Indent(os,indent) << "|_" << **this << " is " << keepText() << " and is limited by " << kindText();
                 if(LimitedByNone!=kind)
                 {
                     os << " {";

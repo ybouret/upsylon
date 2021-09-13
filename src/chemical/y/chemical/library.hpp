@@ -124,6 +124,7 @@ namespace upsylon
             
             //! draw a random concentration
             void   drawC(Addressable &,randomized::bits &) const throw();
+            size_t spectators()   const throw(); //!< count spectators
             size_t countWorking() const throw(); //!< count working species
             size_t countPrimary() const throw(); //!< count primary species
             size_t countReplica() const throw(); //!< count replica species

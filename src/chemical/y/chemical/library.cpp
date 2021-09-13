@@ -186,6 +186,17 @@ namespace upsylon
             }
             return NW;
         }
+
+        size_t Library:: spectators() const throw()
+        {
+            size_t NS = 0;
+            for(const SNode *node=sdb.head();node;node=node->next)
+            {
+                const Species &sp = ***node;
+                if(sp.rating<=0) ++NS;
+            }
+            return NS;
+        }
         
         size_t Library:: countPrimary() const throw()
         {
@@ -200,13 +211,13 @@ namespace upsylon
         
         size_t Library:: countReplica() const throw()
         {
-            size_t NS = 0;
+            size_t NR = 0;
             for(const SNode *node=sdb.head();node;node=node->next)
             {
                 const Species &sp = ***node;
-                if(sp.isReplica()) ++NS;
+                if(sp.isReplica()) ++NR;
             }
-            return NS;
+            return NR;
         }
 
         
