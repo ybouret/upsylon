@@ -116,17 +116,11 @@ namespace upsylon
                     if(Verbosity) pp->display(std::cerr,4);
                     if(!pp->keep)
                     {
-                        for(const ANode *a=eq.reac->head();a;a=a->next)
+                        for(const CNode *sub=eq.used.head();sub;sub=sub->next)
                         {
-                            const Species &sp = (**a).sp;
-                            aliasing::_(bounded)[sp.indx] = false;
+                            const Compound &cmp = **sub;
+                            aliasing::_(bounded[cmp->sp.indx]) = false;
                         }
-                        for(const ANode *a=eq.prod->head();a;a=a->next)
-                        {
-                            const Species &sp = (**a).sp;
-                            aliasing::_(bounded)[sp.indx] = false;
-                        }
-
                     }
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
@@ -167,8 +161,8 @@ namespace upsylon
                         std::cerr << "Omega=" << Omega << std::endl;
                         assert(dim==Nc);
 
+                        // loop on ratings
                         const size_t nr = ratings.size();
-
                         for(size_t r=1;r<=nr;++r)
                         {
                             const size_t rating = ratings[r];
@@ -177,7 +171,32 @@ namespace upsylon
                             const counting &endx = comb;
                             for(comb.boot();comb.good();comb.next())
                             {
-                                std::cerr << "Trying " << endx << std::endl;
+                                std::cerr << "Trying {";
+                                for(size_t i=1;i<=rating;++i)
+                                {
+                                    std::cerr << " " << **primary[ comb[i] ];
+                                }
+                                std::cerr << " } ";
+                                
+                                // checking validity
+                                bool valid = true;
+                                for(size_t ii=rating;ii>0;--ii)
+                                {
+                                    const size_t   i = comb[ii];
+                                    const Primary &p = *primary[i];
+                                    if(!p.keep)
+                                    {
+                                        valid = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if(!valid)
+                                {
+                                    std::cerr << "Unbounded" << std::endl;
+                                    continue;
+                                }
+                                std::cerr << "Valid" << std::endl;
                             }
                             
                         }
