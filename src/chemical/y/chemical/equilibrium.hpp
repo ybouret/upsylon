@@ -12,10 +12,10 @@ namespace upsylon
     namespace Chemical
     {
         
-        class Player : public Object, public authority<const Actor>
+        class Compound : public Object, public authority<const Actor>
         {
         public:
-            typedef hash_set<string,Player> Set;
+            typedef suffix_map<be_key,const Compound> Map;
             
             enum Role
             {
@@ -25,14 +25,16 @@ namespace upsylon
             
             const Role   role;
             
-            const string &key() const throw();
-            explicit      Player(const Actor &, const Role) throw();
-            virtual      ~Player() throw();
-            Player(const Player &) throw();
+            explicit      Compound(const Actor &, const Role) throw();
+            virtual      ~Compound() throw();
+            Compound(const Compound &) throw();
             
         private:
-            Y_DISABLE_ASSIGN(Player);
+            Y_DISABLE_ASSIGN(Compound);
         };
+        
+        typedef Compound::Map::data_node CNode;
+
         
         //______________________________________________________________________
         //
@@ -153,9 +155,9 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Actors       reac; //!< reactant
-            const Actors       prod; //!< product
-            const Player::Set  used; //!< all of em
+            const Actors         reac; //!< reactant
+            const Actors         prod; //!< product
+            const Compound::Map  used; //!< all of'em
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
@@ -168,6 +170,8 @@ namespace upsylon
         //______________________________________________________________________
         typedef Equilibrium::Set::node_type ENode;
 
+
+        
         //______________________________________________________________________
         //
         //
