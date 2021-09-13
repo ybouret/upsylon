@@ -31,8 +31,7 @@ namespace upsylon
             static const char Failure[];      //!< "Failure"
 
             const char * Outcome(const bool) throw(); //!< Success/Failure
-            typedef vector<Actor * const,Allocator> Vanishing; //!< alias;
-
+            
             //__________________________________________________________________
             //
             // C++
@@ -75,7 +74,7 @@ namespace upsylon
             const Flags          bounded;    //!< [M] from primary keep flag
             Vector               xi;         //!< [N] helper to move
             Flags                ok;         //!< [N] primary status
-            Vanishing            who;        //!< [0..N], at most one per equilibria
+            Actor::Array         who;        //!< [0..N], at most one per equilibria
 
             
             //__________________________________________________________________

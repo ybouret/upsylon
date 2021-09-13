@@ -4,7 +4,6 @@
 #define Y_CHEMICAL_PRIMARY_INCLUDED 1
 
 #include "y/chemical/equilibria.hpp"
-#include "y/type/authority.hpp"
 
 namespace upsylon
 {

@@ -24,7 +24,6 @@ namespace upsylon
             }
             
             aliasing::incr(sp.rating);
-            
         }
 
         Actors::const_type & Actors:: bulk() const throw()

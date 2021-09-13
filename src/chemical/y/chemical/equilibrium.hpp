@@ -5,11 +5,35 @@
 
 #include "y/chemical/actors.hpp"
 #include "y/chemical/library.hpp"
+#include "y/type/authority.hpp"
 
 namespace upsylon
 {
     namespace Chemical
     {
+        
+        class Player : public Object, public authority<const Actor>
+        {
+        public:
+            typedef hash_set<string,Player> Set;
+            
+            enum Role
+            {
+                Reactant,
+                Product
+            };
+            
+            const Role   role;
+            
+            const string &key() const throw();
+            explicit      Player(const Actor &, const Role) throw();
+            virtual      ~Player() throw();
+            Player(const Player &) throw();
+            
+        private:
+            Y_DISABLE_ASSIGN(Player);
+        };
+        
         //______________________________________________________________________
         //
         //
@@ -41,7 +65,8 @@ namespace upsylon
             explicit Equilibrium(const NAME &id) :
             Labeled(id),
             reac(),
-            prod()
+            prod(),
+            used()
             {
             }
             
@@ -128,8 +153,9 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Actors reac; //!< reactant
-            const Actors prod; //!< product
+            const Actors       reac; //!< reactant
+            const Actors       prod; //!< product
+            const Player::Set  used; //!< all of em
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);

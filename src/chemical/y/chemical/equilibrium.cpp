@@ -7,6 +7,38 @@ namespace upsylon
 {
     namespace Chemical
     {
+        Player:: ~Player() throw()
+        {
+        }
+        
+        Player:: Player(const Actor &a, const Role r) throw() :
+        Object(),
+        authority<const Actor>(a),
+        role(r)
+        {
+            
+        }
+        
+        Player:: Player(const Player &other) throw() :
+        Object(),
+        authority<const Actor>(other),
+        role(other.role)
+        {
+            
+        }
+
+        
+        const string &Player:: key() const throw() { return (**this).sp.name; }
+        
+            
+    }
+    
+}
+
+namespace upsylon
+{
+    namespace Chemical
+    {
         
         Equilibrium:: ~Equilibrium() throw() {}
 
@@ -84,12 +116,22 @@ namespace upsylon
             if(nu<0)
             {
                 aliasing::_(reac)( size_t(-nu), sp);
+                const Player pl( **(reac->tail()), Player::Reactant );
+                if(!aliasing::_(used).insert(pl))
+                {
+                    throw exception("unexpected multiple reactant '%s' in used species of <%s>",*sp.name,*name);
+                }
             }
             else
             {
                 if(nu>0)
                 {
-                    aliasing::_(prod)( size_t(nu), sp);
+                    aliasing::_(prod)( size_t(nu), sp) ;
+                    const Player pl( **(prod->tail()), Player::Product );
+                    if(!aliasing::_(used).insert(pl))
+                    {
+                        throw exception("unexpected multiple product '%s' in used species of <%s>",*sp.name,*name);
+                    }
                 }
                 else
                 {

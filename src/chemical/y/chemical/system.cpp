@@ -132,6 +132,8 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
                 if(Verbosity) lib.display(std::cerr<<"  bounded =",bounded,2) << std::endl;
 
+                
+                
                 Indices ratings(MW,as_capacity);
                 for(const SNode *node=lib->head();node;node=node->next)
                 {

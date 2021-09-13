@@ -5,6 +5,7 @@
 
 #include "y/chemical/labeled.hpp"
 #include "y/ptr/intr.hpp"
+#include "y/associative/hash/set.hpp"
 
 namespace upsylon
 {

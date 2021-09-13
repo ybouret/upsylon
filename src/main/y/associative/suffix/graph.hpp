@@ -451,6 +451,12 @@ catch(...) { dpool.store(node); throw; }
         //! direct access to head for internal faster scan
         //______________________________________________________________________
         inline const data_node *head() const throw() { return dlist.head; }
+       
+        //______________________________________________________________________
+        //
+        //! direct access to tail for internal faster scan
+        //______________________________________________________________________
+        inline const data_node *tail() const throw() { return dlist.tail; }
 
     private:
         data_list dlist;
