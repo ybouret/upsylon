@@ -7,6 +7,7 @@
 
 #include "y/ios/tools/vizible.hpp"
 #include "y/string/convert.hpp"
+#include "y/counting/comb.hpp"
 
 #include <iomanip>
 
@@ -131,26 +132,52 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
                 if(Verbosity) lib.display(std::cerr<<"  bounded =",bounded,2) << std::endl;
 
+                Indices ratings(MW,as_capacity);
+                for(const SNode *node=lib->head();node;node=node->next)
                 {
-                    const size_t dim = M-N;
+                    const size_t r = (***node).rating;
+                    if(r>0)
+                        ratings.push_back_(r);
+                }
+                unique(ratings);
+                std::cerr << "Ratings=" << ratings << std::endl;
+
+                {
+                    size_t dim = M-N;
                     if(dim>0)
                     {
                         iMatrix Omega(dim,M);
+
+                        // spectator only constraints
                         {
-                            size_t  i=dim;
                             for(const SNode *node=lib->head();node;node=node->next)
                             {
                                 const Species &sp = ***node;
                                 if(sp.rating<=0)
                                 {
-                                    Omega[i--][sp.indx] = 1;
+                                    Omega[dim--][sp.indx] = 1;
                                 }
                             }
                         }
                         std::cerr << "Omega=" << Omega << std::endl;
-                    }
+                        assert(dim==Nc);
 
+                        const size_t nr = ratings.size();
+                        for(size_t r=1;r<=nr;++r)
+                        {
+                            const size_t rating = ratings[r];
+                            std::cerr << "Look Up rating=" << rating << std::endl;
+                            combination               comb(N,rating);
+                            const accessible<size_t> &endx = comb;
+                            for(comb.boot();comb.good();comb.next())
+                            {
+                                std::cerr << "Trying " << endx << std::endl;
+                            }
+                        }
+
+                    }
                 }
+
 
                 
                 
