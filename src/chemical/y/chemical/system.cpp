@@ -8,6 +8,8 @@
 #include "y/ios/tools/vizible.hpp"
 #include "y/string/convert.hpp"
 
+#include <iomanip>
+
 namespace upsylon
 {
     using namespace mkl;
@@ -65,14 +67,18 @@ namespace upsylon
         {
 
             Y_CHEMICAL_PRINTLN("<System>");
-            Y_CHEMICAL_PRINTLN("  N   = " << N);
-            Y_CHEMICAL_PRINTLN("  M   = " << M);
-            Y_CHEMICAL_PRINTLN("  MW  = " << MW);
-            Y_CHEMICAL_PRINTLN("  MP  = " << MP);
-            Y_CHEMICAL_PRINTLN("  MR  = " << MR);
-            Y_CHEMICAL_PRINTLN("  MS  = " << MS);
+            Y_CHEMICAL_PRINTLN("  N   = " << std::setw(3) << N  << " # equilibria");
+            Y_CHEMICAL_PRINTLN("  M   = " << std::setw(3) << M  << " # species");
+            Y_CHEMICAL_PRINTLN("  MW  = " << std::setw(3) << MW << " # working species");
+            Y_CHEMICAL_PRINTLN("  Nc  = " << std::setw(3) << Nc << " # conservations");
+            Y_CHEMICAL_PRINTLN("  MP  = " << std::setw(3) << MP << " # primary species");
+            Y_CHEMICAL_PRINTLN("  MR  = " << std::setw(3) << MR << " # replica species");
+            Y_CHEMICAL_PRINTLN("  MS  = " << std::setw(3) << MS << " # spectators");
 
-            
+            assert(N+Nc==MW);
+            assert(MP+MR==MW);
+            assert(MW+MS==M);
+
             if(N>0)
             {
                 //--------------------------------------------------------------
