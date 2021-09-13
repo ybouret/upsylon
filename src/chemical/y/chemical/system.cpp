@@ -168,7 +168,6 @@ namespace upsylon
                             const size_t rating = ratings[r];
                             std::cerr << "Look Up rating=" << rating << std::endl;
                             combination     comb(N,rating);
-                            const counting &endx = comb;
                             for(comb.boot();comb.good();comb.next())
                             {
                                 std::cerr << "Trying {";
@@ -197,6 +196,10 @@ namespace upsylon
                                     continue;
                                 }
                                 std::cerr << "Valid" << std::endl;
+                                
+                                
+                                
+                                
                             }
                             
                         }

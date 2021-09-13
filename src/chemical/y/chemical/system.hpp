@@ -75,7 +75,8 @@ namespace upsylon
             Vector               xi;         //!< [N] helper to move
             Flags                ok;         //!< [N] primary status
             Actor::Array         who;        //!< [0..N], at most one per equilibria
-
+            
+            
             
             //__________________________________________________________________
             //
