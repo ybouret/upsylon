@@ -150,6 +150,7 @@ namespace upsylon
                     {
                         iMatrix Omega(dim,M);
                         Flags   alive(M,true);
+                        
                         // spectator only constraints
                         {
                             for(const SNode *node=lib->head();node;node=node->next)
@@ -172,12 +173,13 @@ namespace upsylon
                         {
                             const size_t rating = ratings[r];
                             std::cerr << "Look Up rating=" << rating << std::endl;
-                            combination               comb(N,rating);
-                            const accessible<size_t> &endx = comb;
+                            combination     comb(N,rating);
+                            const counting &endx = comb;
                             for(comb.boot();comb.good();comb.next())
                             {
                                 std::cerr << "Trying " << endx << std::endl;
                             }
+                            
                         }
 
                     }
