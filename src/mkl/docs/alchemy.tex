@@ -82,81 +82,25 @@ We may also compute the jacobian of $\vec{\Gamma}$:
 	      & \ddots & \\
 	      & & k^d_N\\ 
 	\end{bmatrix}
-	}_{\bm{\Omega}}
+	}_{\bm{k}_d}
 	\vec{\Gamma}(\vec{A}_0 + \bm{\nu}^t \vec{\xi})
-	\simeq \bm{\Omega} \bm{\Phi}_0 \bm{\nu}^t \vec{\xi}
+	\simeq \bm{k}_d \bm{\Phi}_0 \bm{\nu}^t \vec{\xi}
 \end{equation}
-Time constants are inverse of the eigenvalues of the matrix.
+Time constants are inverse of the eigenvalues of the matrix before $\vec{\xi}$.
 
 \section{Balancing}
 
-Let us define:
-\begin{equation}
-	\mathbb{A}_j = \left\lbrace
-	\begin{array}{cl}
-	1 & \text{if $A_j$ is active}\\
-	0 & \text{if $A_j$ is spectator}\\
-	\end{array}
-	\right.
-\end{equation}
+\subsection{Algebraic}
 
-We want to reach the following state, for \textbf{active} species:
 \begin{equation}
-	\vec{A} + \bm{\nu}^t \vec{\xi} \geq 0
+\left\lbrace
+\begin{array}{rcl}
+	\vec{C} & = & \vec{A} +\bm{\nu}^t \vec{\xi} + \bm{\Omega}^t\vec{\lambda}\\
+	\bm{\nu}    & \in & \mathcal{M}_{N,M} \\
+	\bm{\Omega} & \in & \mathcal{M}_{M-N,M}\\
+	\bm{\nu}    & \perp & \bm{\Omega} \\
+\end{array}
+\right.
 \end{equation}
-meaning
-\begin{equation}
-	\forall j, \mathbb{A}_j\not=0 \Rightarrow \;\; [A_j] + \vec{v}_j \cdot \vec{\xi} \geq 0
-\end{equation}
-Among the $N_A\leq M$ active species, we make the distinction between 
-\begin{itemize}
-\item  $N_L$ \textbf{leading} species, where only one coefficient of $\vec{v}_j$ is not zero,
-\item  $N_S$ \textbf{seeking} species, where more than two coefficients of $\vec{v}_j$ are not zeros,
-\item  with $N_A=N_L+N_S$.
-\end{itemize}
-We proceed as follow:
-\begin{enumerate}
-\item For a set of concentrations $\vec{A}$, the leading species allows the $N_L$ conditions to be adjusted.
-If we met those leading conditions, then each equilibrium extent $\xi_i$ is associated with a domaine $\Omega_i$,
-Otherwise, the set $\vec{A}$ is fundamentally invalid.
-
-\item We obtain a set of partially balanced concentration $\vec{B}$, and we want to find another extent $\vec{\xi}$ that
-fulfils the positivity constraints, with the fact that $\vec{\xi}=\vec{0}$ solves all the leading species.
-
-\item Then we must solve $N_S$ subordinate constraints by choosing $\vec{\xi}$ in its domains $\bigotimes_i \Omega_i$.
-\end{enumerate}
-
-We form the vector of seeking concentrations $\vec{A}_s$, corresponding to a sub matrix $\bm{V}_s$ of $\bm{\nu}^t$
-such that we look for:
-\begin{equation}
-	\vec{A}_s + \bm{V}_s \cdot \vec{\xi} \geq \vec{0}
-\end{equation}
-If we look for
-\begin{equation}
-	\vec{A}_s + \bm{V}_s \cdot \vec{\xi} = \vec{Y}
-\end{equation} 
-then
-\begin{equation}
-	\vec{\xi} =  \bm{V}_s^t \left(\bm{V}_s \bm{V}_s^t\right) ^{-1} \left( \vec{Y} - \vec{A}_s\right)
-\end{equation}
-   
-\begin{equation}
-	b(x,\xi_{min},\xi_{max}) = \dfrac{ \left(\xi_{max}-\xi_{min}\right) x + \left(\xi_{max}+\xi_{min}\right) x^2 }{2}
-\end{equation}  
-   
-\section{Newton$^+$'s Algorithm}
-
-Starting from $\vec{A}_n\geq\vec{0}$, we want to compute:
-\begin{equation}
-	\vec{\Gamma}(\vec{A}_n+\delta\vec{A}_n) = \vec{0}
-\end{equation}
-	
-\begin{equation}
-	\delta\vec{A}_n = \bm{\nu}^t \vec{\xi}_n
-\end{equation}
-Leading to
-\begin{equation}
-	\vec{\Gamma}_n + (\bm{\Phi}_n \bm{\nu}^t ) \vec{\xi}_n \simeq \vec{0}
-\end{equation}
- 
+  
 \end{document}
