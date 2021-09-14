@@ -211,11 +211,20 @@ namespace upsylon
                     const Lineage &l = *lineage[i];
                     if(l->rating<=0)
                     {
+                        assert(l.bounded);
                         const size_t j = l->indx;
                         Omega[dim][j]  = 1;
                         alive[j]       = false;
                         --dim;
                     }
+                    else
+                    {
+                        if(!l.bounded)
+                        {
+                            alive[l->indx] = false;
+                        }
+                    }
+
                 }
                 assert(Nc==dim);
 
