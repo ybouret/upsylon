@@ -2,11 +2,6 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
-#include "y/sort/unique.hpp"
-#include "y/core/dnode.hpp"
-
-#include "y/counting/comb.hpp"
-
 #include <iomanip>
 
 namespace upsylon
