@@ -233,9 +233,28 @@ namespace upsylon
                 size_t freeSpace = M-N;
                 vector<qShared,Allocator> OmegaV(freeSpace,as_capacity);
 
+
                 //--------------------------------------------------------------
                 //
-                // spectators and endless species setup
+                // remove endless species
+                //
+                //--------------------------------------------------------------
+                for(size_t j=M;j>0;--j)
+                {
+                    const Lineage &l = *lineage[j];
+                    if(!l.bounded)
+                    {
+                        assert(remaining);
+                        assert(available[j]);
+                        available[j] = false;
+                        --remaining;
+                    }
+                }
+
+
+                //--------------------------------------------------------------
+                //
+                // transform spectators into unit constraint
                 //
                 //--------------------------------------------------------------
                 for(size_t j=M;j>0;--j)
@@ -243,6 +262,7 @@ namespace upsylon
                     const Lineage &l = *lineage[j];
                     if(l->rating<=0)
                     {
+                        // this is a spectator
                         assert(l.bounded);
                         assert(remaining);
                         assert(available[j]);
@@ -255,36 +275,28 @@ namespace upsylon
                         --freeSpace;
                         --remaining;
                     }
-                    else
-                    {
-                        if(!l.bounded)
-                        {
-                            assert(remaining);
-                            assert(available[j]);
-                            available[j] = false;
-                            --remaining;
-                        }
-                    }
 
                 }
                 assert(Nc==freeSpace);
 
+
+
+
                 lib.display(std::cerr << "    available0=" << std::endl,available,4) << std::endl;
+
 
                 //--------------------------------------------------------------
                 //
-                // each equilibrium
+                // first pass: check primary constraints
                 //
                 //--------------------------------------------------------------
                 for(size_t i=1;i<=N;++i)
                 {
                     const Primary &pp = *primary[i];
-                    std::cerr << "    " << *pp << " : " << pp.keepText() << std::endl;
-                    if(!pp.keep) continue;
-
+                    std::cerr << "    " << *pp << " : " << pp.keepText() << " => ";
                     if(Primary::LimitedByBoth==pp.kind)
                     {
-                        std::cerr << "    \\_may conserve primary" << std::endl;
+                        std::cerr << "may conserve primary" << std::endl;
                         qShared Q = new qVector(M,0);
                         OmegaV.push_back(Q);
                         // take first item a indicator
@@ -294,18 +306,39 @@ namespace upsylon
                         (*Q)[rhs.sp.indx] = apq(1,rhs.nu);
 
                         // disable all primaries
+                        assert(pp.reac.size()+pp.prod.size()<=remaining);
                         remaining -= disable(available,pp.reac);
                         remaining -= disable(available,pp.prod);
 
+                        // simplify
                         {
                             const apz fac = yap::lcm::of_denominators( & (*Q)[1], M);
                             tao::mulset(*Q,fac);
                         }
                         --freeSpace;
                     }
+                    else
+                    {
+                        std::cerr << "no primary conservation" << std::endl;
+                    }
                 }
 
                 lib.display(std::cerr << "    available1=" << std::endl,available,4) << std::endl;
+
+
+                //--------------------------------------------------------------
+                //
+                // second pass: replica
+                //
+                //--------------------------------------------------------------
+                for(size_t j=M;j>0;--j)
+                {
+                    const Lineage &l = *lineage[j];
+                    const Species &s = *l;
+                    if( (s.rating<2) || ( !available[j]) ) continue;
+                    std::cerr << "Looking at " << s << ", rating=" << s.rating << std::endl;
+
+                }
 
 
                 const size_t dof = OmegaV.size();
@@ -322,8 +355,10 @@ namespace upsylon
                     std::cerr << "    Omega     = " << Omega     << std::endl;
                     std::cerr << "    remaining = " << remaining << std::endl;
                     std::cerr << "    freeSpace = " << freeSpace << std::endl;
-
                 }
+
+
+
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
 
