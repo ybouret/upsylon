@@ -5,8 +5,6 @@
 #include "y/sort/unique.hpp"
 #include "y/core/dnode.hpp"
 
-#include "y/ios/tools/vizible.hpp"
-#include "y/string/convert.hpp"
 #include "y/counting/comb.hpp"
 
 #include <iomanip>
@@ -203,16 +201,15 @@ namespace upsylon
 
                 //--------------------------------------------------------------
                 //
-                // spectators
+                // spectators and endless species setup
                 //
                 //--------------------------------------------------------------
-                for(size_t i=M;i>0;--i)
+                for(size_t j=M;j>0;--j)
                 {
-                    const Lineage &l = *lineage[i];
+                    const Lineage &l = *lineage[j];
                     if(l->rating<=0)
                     {
                         assert(l.bounded);
-                        const size_t j = l->indx;
                         Omega[dim][j]  = 1;
                         alive[j]       = false;
                         --dim;
@@ -221,7 +218,7 @@ namespace upsylon
                     {
                         if(!l.bounded)
                         {
-                            alive[l->indx] = false;
+                            alive[j] = false;
                         }
                     }
 
@@ -229,22 +226,6 @@ namespace upsylon
                 assert(Nc==dim);
 
 
-                //--------------------------------------------------------------
-                //
-                // ...
-                //
-                //--------------------------------------------------------------
-                for(size_t j=1;j<=M;++j)
-                {
-                    const Lineage &l = *lineage[j];
-                    std::cerr << "Checking " << *l << " : ";
-                    if(!alive[j])
-                    {
-                        std::cerr << "...used" << std::endl;
-                        continue;
-                    }
-                    std::cerr << "..." << std::endl;
-                }
 
 
                 std::cerr << "Omega=" << Omega << std::endl;
