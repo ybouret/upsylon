@@ -143,6 +143,7 @@ namespace upsylon
             const Freezable::Latch libLatch;
             const Freezable::Latch eqsLatch;
 
+            void buildOmega();
             
 
         };

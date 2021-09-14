@@ -164,7 +164,7 @@ namespace upsylon
                     const iAccessible &nu = NuT[sp.indx];
                     Lineage           *l = new Lineage(sp);
                     Lineage::Pointer  lp = l;
-                    std::cerr << "    " << sp << " :";
+                    std::cerr << "    " << sp << " #" << std::setw(3) << sp.rating << " :";
                     aliasing::_(lineage).push_back_(lp);
                     for(size_t i=1;i<=N;++i)
                     {
@@ -181,7 +181,7 @@ namespace upsylon
 
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
 
-                
+                buildOmega();
 
 
 
@@ -192,6 +192,36 @@ namespace upsylon
         }
         
 
+        void System::buildOmega()
+        {
+            Y_CHEMICAL_PRINTLN("  <Omega>");
+            if(M>N)
+            {
+                iMatrix Omega(M-N,M);
+                Flags   alive(M,true);
+                size_t  dim = M-N;
+
+                // spectators
+                for(size_t i=M;i>0;--i)
+                {
+                    const Lineage &l = *lineage[i];
+                    if(l->rating<=0)
+                    {
+                        const size_t j = l->indx;
+                        Omega[dim][j]  = 1;
+                        alive[dim]     = false;
+                        --dim;
+                    }
+                }
+
+                assert(Nc==dim);
+
+
+                std::cerr << "Omega=" << Omega << std::endl;
+            }
+            Y_CHEMICAL_PRINTLN("  <Omega/>");
+
+        }
     }
 
 }
