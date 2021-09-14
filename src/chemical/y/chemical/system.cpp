@@ -201,7 +201,11 @@ namespace upsylon
                 Flags   alive(M,true);
                 size_t  dim = M-N;
 
+                //--------------------------------------------------------------
+                //
                 // spectators
+                //
+                //--------------------------------------------------------------
                 for(size_t i=M;i>0;--i)
                 {
                     const Lineage &l = *lineage[i];
@@ -209,12 +213,29 @@ namespace upsylon
                     {
                         const size_t j = l->indx;
                         Omega[dim][j]  = 1;
-                        alive[dim]     = false;
+                        alive[j]       = false;
                         --dim;
                     }
                 }
-
                 assert(Nc==dim);
+
+
+                //--------------------------------------------------------------
+                //
+                // ...
+                //
+                //--------------------------------------------------------------
+                for(size_t j=1;j<=M;++j)
+                {
+                    const Lineage &l = *lineage[j];
+                    std::cerr << "Checking " << *l << " : ";
+                    if(!alive[j])
+                    {
+                        std::cerr << "...used" << std::endl;
+                        continue;
+                    }
+                    std::cerr << "..." << std::endl;
+                }
 
 
                 std::cerr << "Omega=" << Omega << std::endl;
