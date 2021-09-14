@@ -2,7 +2,7 @@
 #ifndef Y_CHEMICAL_SYSTEM_INCLUDED
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
-#include "y/chemical/lineage.hpp"
+#include "y/chemical/sys/lineage.hpp"
 
 
 namespace upsylon
