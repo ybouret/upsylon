@@ -222,11 +222,16 @@ namespace upsylon
             return "???";
         }
 
-        const char * Primary:: keepText() const throw()
+        const char * Primary:: KeepText(const bool flag) throw()
         {
-            return keep ?
+            return flag ?
             "BOUNDED" :
             "ENDLESS";
+        }
+
+        const char * Primary:: keepText() const throw()
+        {
+            return KeepText(keep);
         }
 
         static inline void makePositive(double &c) throw()

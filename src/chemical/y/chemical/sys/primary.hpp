@@ -108,9 +108,10 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t      count()    const throw(); //!< reac.size() + prod.size()
-            const char *kindText() const throw(); //!< to add after "limited by "
-            const char *keepText() const throw(); //!< "bound" / "loose"
+            size_t             count()        const throw(); //!< reac.size() + prod.size()
+            const char *       kindText()     const throw(); //!< to add after "limited by "
+            static const char *KeepText(const bool) throw(); //!< "bounded" / "endless"
+            const char *       keepText()     const throw(); //!< keepText(keep)
 
 
             //! search regularizing extent

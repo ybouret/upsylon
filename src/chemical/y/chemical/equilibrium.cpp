@@ -32,8 +32,8 @@ namespace upsylon
             display_raw(static_cast<ios::ostream &>(fp));
             return res;
         }
-        
-        size_t Equilibrium:: countPrimaryReac() const throw()
+
+         size_t Equilibrium:: countPrimaryReac() const throw()
         {
             return CountPrimary(reac);
         }
@@ -50,12 +50,11 @@ namespace upsylon
             for(const ANode *node=actors->head();node;node=node->next)
             {
                 const Actor &a = **node;
-                if(1==a.sp.rating) ++ans;
+                if(1==a.sp.isPrimary()) ++ans;
             }
             return ans;
         }
-        
-        
+
         
         ConstEquilibrium:: ~ConstEquilibrium() throw()
         {
@@ -126,7 +125,27 @@ namespace upsylon
                 }
             }
         }
-        
+
+
+        unit_t Equilibrium:: stoichiometry(const Species &sp) const throw()
+        {
+            const be_key             k   = sp;
+            const Compound::Pointer *ppc = used.search(k);
+            if(ppc)
+            {
+                const Compound &compound = **ppc;
+                switch(compound.tier)
+                {
+                    case Reactant: return -(compound->snu);
+                    case Product:  return  (compound->snu);
+                }
+            }
+            
+            return 0;
+
+        }
+
+
     }
     
 }

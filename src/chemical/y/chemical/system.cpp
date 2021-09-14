@@ -13,6 +13,39 @@
 
 namespace upsylon
 {
+
+    namespace Chemical
+    {
+
+        Lineage:: ~Lineage() throw()
+        {
+        }
+
+        Lineage:: Lineage( const Species &sp ) :
+        authority<const Species>(sp),
+        bounded(true),
+        primary(sp.rating,as_capacity)
+        {
+
+        }
+
+
+        void Lineage:: link(const Primary::Pointer &p) throw()
+        {
+            aliasing::_(primary).push_back_(p);
+            if(!p->keep)
+            {
+                aliasing::_(bounded) = false;
+            }
+        }
+
+    }
+
+}
+
+
+namespace upsylon
+{
     using namespace mkl;
 
     namespace Chemical
@@ -59,7 +92,7 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N, as_capacity),
-        bounded(M,true),
+        lineage(M,as_capacity),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
@@ -114,23 +147,40 @@ namespace upsylon
                     const Primary::Pointer pp = new Primary(eq,NuT);
                     aliasing::_(primary).push_back_(pp);
                     if(Verbosity) pp->display(std::cerr,4);
-                    if(!pp->keep)
-                    {
-                        for(const CNode *sub=eq.used.head();sub;sub=sub->next)
-                        {
-                            const Compound &cmp = ***sub;
-                            aliasing::_(bounded[cmp->sp.indx]) = false;
-                        }
-                    }
+
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
-                if(Verbosity) lib.display(std::cerr<<"  bounded =",bounded,2) << std::endl;
 
                 
-                
+                //--------------------------------------------------------------
+                //
+                // building lineage
+                //
+                //--------------------------------------------------------------
+                Y_CHEMICAL_PRINTLN("  <Lineage>");
+                for(const SNode *node=lib->head();node;node=node->next)
+                {
+                    const Species     &sp = ***node;
+                    const iAccessible &nu = NuT[sp.indx];
+                    Lineage           *l = new Lineage(sp);
+                    Lineage::Pointer  lp = l;
+                    std::cerr << "    " << sp << " :";
+                    aliasing::_(lineage).push_back_(lp);
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        if(nu[i])
+                        {
+                            l->link(primary[i]);
+                            std::cerr << ' ' << (**primary[i]).name;
+                        }
+                    }
+                    
+                    std::cerr << " => " << Primary::KeepText(l->bounded) << std::endl;
 
+                }
 
-                
+                Y_CHEMICAL_PRINTLN("  <Lineage/>");
+
                 
 
 

@@ -9,6 +9,47 @@ namespace upsylon
 {
     namespace Chemical
     {
+
+        //______________________________________________________________________
+        //
+        //
+        //! lineage of a species
+        //
+        //______________________________________________________________________
+        class Lineage : public Object, public authority<const Species>
+        {
+        public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<const Lineage>    Pointer; //!< alias
+            typedef vector<Pointer,Allocator> Array;   //!< alias
+
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            explicit Lineage(const Species &); //!< setup with memory
+            virtual ~Lineage() throw();        //!< cleanup
+
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            void link(const Primary::Pointer &p) throw();
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const bool           bounded; //!< default=true
+            const Primary::Array primary; //!< list of depending primary
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Lineage);
+        };
+
         //______________________________________________________________________
         //
         //
@@ -54,7 +95,6 @@ namespace upsylon
             bool balancePrimary(Addressable &C) throw();
 
 
-
             //__________________________________________________________________
             //
             // members
@@ -71,7 +111,7 @@ namespace upsylon
             const iMatrix        Nu;         //!< [NxM] topology
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]
-            const Flags          bounded;    //!< [M] from primary keep flag
+            const Lineage::Array lineage;    //!< [M] per species with depending primaries(=equilibria)
             Vector               xi;         //!< [N] helper to move
             Flags                ok;         //!< [N] primary status
             Actor::Array         who;        //!< [0..N], at most one per equilibria

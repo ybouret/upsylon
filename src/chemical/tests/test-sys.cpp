@@ -43,6 +43,7 @@ Y_UTEST(sys)
     
     Vector C(cs.M,0);
 
+#if 0
     for(size_t iter=0;iter<0;++iter)
     {
         lib.drawC(C,alea);
@@ -65,7 +66,7 @@ Y_UTEST(sys)
         }
         return 0;
     }
-
+#endif
 
     std::cerr << std::endl << "Searching..." << std::endl;
     for(size_t iter=0;iter<1024;++iter)

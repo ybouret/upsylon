@@ -169,6 +169,9 @@ namespace upsylon
         //! for specific iteration
         inline const node_type *head() const throw() { return table.nodes.head; }
 
+        //! for specific iteration
+        inline const node_type *tail() const throw() { return table.nodes.tail; }
+
     protected:
         //! setup
         inline explicit hash_proto(const size_t factor) :
