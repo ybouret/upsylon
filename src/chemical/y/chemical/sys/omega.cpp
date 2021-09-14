@@ -106,7 +106,7 @@ namespace upsylon
                 for(size_t i=1;i<=N;++i)
                 {
                     const Primary &pp = *primary[i];
-                    std::cerr << "    " << *pp << " : " << pp.boundedText() << " => ";
+                    std::cerr << "    " << *pp << " : " << pp.boundedText() << " | ";
                     if(Primary::LimitedByBoth==pp.kind)
                     {
                         std::cerr << "may conserve primary" << std::endl;
@@ -160,8 +160,10 @@ namespace upsylon
                         const Primary     &p  = *l.primary[ii]; assert(p.bounded);
                         const size_t       i  = p->indx;
                         const unit_t       nu = nut[i];
-                        std::cerr << "      in " << *p << ", " << s << " is " << nu << std::endl;
-                        
+                        std::cerr << "      in " << *p << ", " << s << " is " << std::setw(3) << nu;
+                        std::cerr << " : primary | reac = " << p.reac << " | prod=" << p.prod << std::endl;
+
+
                     }
 
                     
