@@ -59,7 +59,7 @@ namespace upsylon
                 return use( new Species(name,charge) );
             }
             
-            //! declare new species by parsing
+            //! declare one new species by parsing
             template <typename RX> inline
             const Species & operator()(const RX &rx)
             {
@@ -70,16 +70,22 @@ namespace upsylon
             //! helper for equilibria
             unit_t get(Jive::Source &source, const Species **pps);
 
+            //! load multiple ':' separated species
+            void load(const string &multipleSpecies);
+
+            //! load multiple ':' separated species, wrapper
+            void load(const char *multipleSpecies);
+
             
-            //! simple parsing of species to be declared
             template <typename RX> inline
             Library & operator<<( const RX &rx )
             {
                 Library &self = *this;
-                (void) self(rx);
+                load(rx);
                 return self;
             }
-            
+
+
             //! output
             template <typename OSTREAM> inline
             friend OSTREAM & operator<<(OSTREAM &os, const Library &lib)

@@ -3,8 +3,9 @@
 #include "y/exception.hpp"
 #include "y/type/utils.hpp"
 #include "y/jive/regexp.hpp"
-#include <cstdlib>
 #include "y/randomized/bits.hpp"
+#include "y/string/tokenizer.hpp"
+#include <cstdlib>
 
 namespace upsylon
 {
@@ -130,7 +131,7 @@ namespace upsylon
             
             
             // create species
-            return(*this)(name,charge);
+            return (*this)(name,charge);
         }
         
         static inline unit_t token2nu(Jive::Token &token) throw()
@@ -174,6 +175,23 @@ namespace upsylon
             const unit_t nu = jS->accept(token,source) ? token2nu(token) : 1;
             *pps            = & use(source);
             return nu;
+        }
+
+        void Library:: load(const string &multipleSpecies)
+        {
+            Strings words;
+            tokenizer<char>::split_with(words,multipleSpecies,':');
+            for(size_t i=1;i<=words.size();++i)
+            {
+                Jive::Source source(Jive::Module::OpenData(words[i]) );
+                (void)use(source);
+            }
+        }
+
+        void Library:: load(const char *multipleSpecies)
+        {
+            const string _(multipleSpecies);
+            return load(_);
         }
         
         size_t Library:: countWorking() const throw()
