@@ -138,6 +138,7 @@ namespace upsylon
             const iMatrix      &NuT;   //!< topology matrix
             const LimitingReac  reac;  //!< primary reactant(s)
             const LimitingProd  prod;  //!< primary product(s)
+            //const Actor::Array  used;  //!< all primaries
             const Kind          kind;  //!< from reac/prod count
             const bool          keep;  //!< conserving matter or not
 

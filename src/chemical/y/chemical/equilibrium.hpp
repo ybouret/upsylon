@@ -125,7 +125,8 @@ namespace upsylon
 
             void   verify(const unsigned flags) const;           //!< verify with given flags
             size_t countPrimaryReac()   const throw();           //!< with unit rating
-            size_t countPrimaryProd()   const throw();           //!< with unit ration
+            size_t countPrimaryProd()   const throw();           //!< with unit rating
+            size_t grabAllPrimaries()   const throw();           //!< all with unit ratin
             unit_t stoichiometry(const Species &) const throw(); //!< probe used compound
 
             //__________________________________________________________________

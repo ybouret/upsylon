@@ -33,7 +33,7 @@ namespace upsylon
             return res;
         }
 
-         size_t Equilibrium:: countPrimaryReac() const throw()
+        size_t Equilibrium:: countPrimaryReac() const throw()
         {
             return CountPrimary(reac);
         }
@@ -42,6 +42,11 @@ namespace upsylon
         size_t Equilibrium:: countPrimaryProd() const throw()
         {
             return CountPrimary(prod);
+        }
+
+        size_t Equilibrium:: grabAllPrimaries()   const throw()
+        {
+            return countPrimaryProd()+countPrimaryReac();
         }
         
         size_t Equilibrium:: CountPrimary(const Actors &actors) throw()
@@ -140,7 +145,7 @@ namespace upsylon
                     case Product:  return  (compound->snu);
                 }
             }
-            
+
             return 0;
 
         }

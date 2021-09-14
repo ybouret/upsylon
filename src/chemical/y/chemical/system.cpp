@@ -195,6 +195,7 @@ namespace upsylon
 }
 
 #include "y/mkl/kernel/apk.hpp"
+#include "y/yap/lcm.hpp"
 
 namespace upsylon
 {
@@ -206,14 +207,31 @@ namespace upsylon
         typedef vector<apq,Allocator> qVector;
         typedef arc_ptr<qVector>      qShared;
 
+        template <typename ACTORS>
+        static inline
+        size_t disable(Flags &alive, const ACTORS &arr)
+        {
+            const size_t n=arr.size();
+            for(size_t jj=n;jj>0;--jj)
+            {
+                const Actor   &a = arr[jj];
+                const Species &s = a.sp;
+                const size_t   j = s.indx;
+                assert(true==alive[j]);
+                alive[j] = false;
+            }
+            return n;
+        }
+
         void System::buildOmega()
         {
             Y_CHEMICAL_PRINTLN("  <Omega>");
             if(M>N)
             {
                 Flags         alive(M,true);
-                size_t        dim = M-N;
-                list<qShared> Omega;
+                size_t        count = M;
+                size_t        dim   = M-N;
+                vector<qShared,Allocator> OmegaV(dim,as_capacity);
 
                 //--------------------------------------------------------------
                 //
@@ -227,23 +245,78 @@ namespace upsylon
                     {
                         assert(l.bounded);
                         qShared Q = new qVector(M,0);
-                        Omega.push_back(Q);
+                        OmegaV.push_back(Q);
                         (*Q)[j]   = 1;
                         alive[j]  = false;
                         --dim;
+                        --count;
                     }
                     else
                     {
                         if(!l.bounded)
                         {
                             alive[j] = false;
+                            --count;
                         }
                     }
 
                 }
                 assert(Nc==dim);
 
-                std::cerr << "Omega=" << Omega << std::endl;
+                lib.display(std::cerr << "    alive0=" << std::endl,alive,4) << std::endl;
+
+                //--------------------------------------------------------------
+                //
+                // each equilibrium
+                //
+                //--------------------------------------------------------------
+                for(size_t i=1;i<=N;++i)
+                {
+                    const Primary &pp = *primary[i];
+                    std::cerr << "    " << *pp << " : " << pp.keepText() << std::endl;
+                    if(!pp.keep) continue;
+                    if(Primary::LimitedByBoth==pp.kind)
+                    {
+                        std::cerr << "    \\_may conserve primary" << std::endl;
+                        qShared Q = new qVector(M,0);
+                        OmegaV.push_back(Q);
+                        // take first item a indicator
+                        const Actor &lhs = pp.reac.front();
+                        const Actor &rhs = pp.prod.front();
+                        (*Q)[lhs.sp.indx] = apq(1,lhs.nu);
+                        (*Q)[rhs.sp.indx] = apq(1,rhs.nu);
+
+                        // disable all primaries
+                        count -= disable(alive,pp.reac);
+                        count -= disable(alive,pp.prod);
+
+                        {
+                            const apz fac = yap::lcm::of_denominators( & (*Q)[1], M);
+                            tao::mulset(*Q,fac);
+                        }
+                        --dim;
+                    }
+                }
+
+                lib.display(std::cerr << "    alive1=" << std::endl,alive,4) << std::endl;
+
+
+                const size_t dof = OmegaV.size();
+                if(dof)
+                {
+                    iMatrix Omega(dof,M);
+                    for(size_t i=dof;i>0;--i)
+                    {
+                        for(size_t j=M;j>0;--j)
+                        {
+                            Omega[i][j] = (*OmegaV[i])[j].num.cast_to<unit_t>();
+                        }
+                    }
+                    std::cerr << "    Omega=" << Omega << std::endl;
+                    std::cerr << "    count=" << count << std::endl;
+                    std::cerr << "    dim  =" << dim   << std::endl;
+
+                }
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
 

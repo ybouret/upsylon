@@ -134,23 +134,38 @@ namespace upsylon
                     seq.push_back_(a);
                 }
             }
-
         }
 
+
+        template <typename SEQ>
+        static inline
+        void loadPrimaryAddr(SEQ &seq, const Primary::Limiting &source)
+        {
+            const size_t n = source.size();
+            for(size_t i=1;i<=n;++i)
+            {
+                const Actor &a = source[i];
+                seq.push_back_( (Actor *)&a );
+            }
+        }
 
 
 
         Primary:: Primary(const Equilibrium &eq, const iMatrix &topo) :
         authority<const Equilibrium>(eq),
         NuT(topo),
-        reac((**this).countPrimaryReac()),
-        prod((**this).countPrimaryProd()),
+        reac( (**this).countPrimaryReac() ),
+        prod( (**this).countPrimaryProd() ),
+        //used( (**this).grabAllPrimaries(),as_capacity),
         kind(LimitedByNone),
         keep(eq.isBounded())
         {
 
             loadPrimary(aliasing::_(reac),eq.reac);
             loadPrimary(aliasing::_(prod),eq.prod);
+
+            //loadPrimaryAddr(aliasing::_(used),reac);
+            //loadPrimaryAddr(aliasing::_(used),prod);
 
             if(reac.size())
             {
