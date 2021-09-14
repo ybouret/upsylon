@@ -21,10 +21,10 @@ Y_UTEST(sys)
 
     
 
-    //if(false)
+    if(false)
     {
         lib << "A" << "B" << "C" << "D" << "E" << "F" << "G" << "H";
-        eqs.load("dum1:-A:B:2C:Q:=1",lib,vm);
+        eqs.load("dum1:-2A:B:2C:3Q:=1",lib,vm);
         eqs.load("dum2:-D:E:3C:Q:=2",lib,vm);
         eqs.load("dum3:-F:G:4C:Q:=3",lib,vm);
         eqs.load("dum4:-C:H:=4",lib,vm);

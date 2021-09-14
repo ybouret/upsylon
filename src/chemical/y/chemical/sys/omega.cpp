@@ -36,6 +36,14 @@ namespace upsylon
             return n;
         }
 
+
+        static inline
+        void simplify( qShared &Q )
+        {
+            const apz fac = yap::lcm::of_denominators( & (*Q)[1], Q->size() );
+            tao::mulset(*Q,fac);
+        }
+
         void System::buildOmega()
         {
             Y_CHEMICAL_PRINTLN("  <Omega>");
@@ -124,10 +132,7 @@ namespace upsylon
                         remaining -= disable(available,pp.prod);
 
                         // simplify
-                        {
-                            const apz fac = yap::lcm::of_denominators( & (*Q)[1], M);
-                            tao::mulset(*Q,fac);
-                        }
+                        simplify(Q);
                         --freeSpace;
                     }
                     else
@@ -147,26 +152,121 @@ namespace upsylon
                 //--------------------------------------------------------------
                 for(size_t j=M;j>0;--j)
                 {
+                    //----------------------------------------------------------
+                    //
+                    // take a species and its lineage
+                    //
+                    //----------------------------------------------------------
                     const Lineage &l = *lineage[j];
                     const Species &s = *l;
                     if( (s.rating<2) || ( !available[j]) ) continue;
 
                     assert(l.bounded);
-                    std::cerr << "    Looking at " << s << ", rating=" << s.rating << std::endl;
-                    const iAccessible &nut = NuT[j];
+                    assert(available[j]);
+                    assert(remaining>0);
+                    assert(freeSpace>0);
 
+                    std::cerr << "    Looking at " << s << ", rating=" << s.rating << std::endl;
+
+                    //----------------------------------------------------------
+                    //
+                    // prepare vector
+                    //
+                    //----------------------------------------------------------
+                    qShared Q = new qVector(M,0);
+                    (*Q)[j] = 1;
+
+                    //----------------------------------------------------------
+                    //
+                    // loop over depending equilibria (wrapped in primaries)
+                    //
+                    //----------------------------------------------------------
                     for(size_t ii=l.primary.size();ii>0;--ii)
                     {
-                        const Primary     &p  = *l.primary[ii]; assert(p.bounded);
-                        const size_t       i  = p->indx;
-                        const unit_t       nu = nut[i];
+                        const Primary           &p       = *l.primary[ii]; assert(p.bounded);
+                        const size_t             i       = p->indx;
+                        const unit_t             nu      = NuT[j][i];         assert(nu!=0);
+                        const Primary::Limiting *xlim[2] = { &p.reac, &p.prod };
+                        const Actor             *xact    = NULL;
+                        const apq                xfac    = -nu;
+
                         std::cerr << "      in " << *p << ", " << s << " is " << std::setw(3) << nu;
                         std::cerr << " : primary | reac = " << p.reac << " | prod=" << p.prod << std::endl;
 
 
+
+                        if(nu<0)
+                        {
+                            // preferences for positive signs
+                            cswap(xlim[0],xlim[1]);
+                        }
+
+
+
+                        for(size_t I=0;I<2;++I)
+                        {
+                            const Primary::Limiting &probe = *xlim[I];
+                            if(probe.size())
+                            {
+                                xact = &probe.front();
+                                break;
+                            }
+                        }
+
+                        if(xact)
+                        {
+                            const size_t J = xact->sp.indx;
+                            apq temp = NuT[J][i];
+                            std::cerr << "        Found " << *xact <<  " : nu=" << temp << std::endl;
+                            (*Q)[J] = xfac/temp;
+
+                            if(available[J])
+                            {
+                                available[J] = false;
+                                --remaining;
+                            }
+
+                        }
+                        else
+                        {
+                            std::cerr << "        Not Found..." << std::endl;
+                        }
                     }
 
+                    //----------------------------------------------------------
+                    //
+                    // create constraint and updated counters
+                    //
+                    //----------------------------------------------------------
+
+                    simplify(Q);
+                    std::cerr << "    Om" << l->name << "=" << *Q << std::endl;
+                    OmegaV.push_back(Q);
+                    --freeSpace;
+                    available[j] = false;
+                    --remaining;
                     
+                }
+
+
+                if(freeSpace>0)
+                {
+
+                    qShared Q       =  new qVector(M,0);
+                    unit_t  sumAbsZ = 0;
+                    for(size_t j=M;j>0;--j)
+                    {
+                        const Species &s = **lineage[j];
+                        const unit_t   z = s.charge;
+                        (*Q)[j] = z;
+                        sumAbsZ += abs_of(z);
+                    }
+                    std::cerr << "    Z=" << *Q << std::endl;
+                    if(sumAbsZ)
+                    {
+                        OmegaV.push_back(Q);
+                        --freeSpace;
+                    }
                 }
 
 
@@ -187,17 +287,6 @@ namespace upsylon
                 }
 
 
-
-                vector<unit_t,Allocator> Z(M,0);
-                unit_t sz=0;
-                for(size_t j=M;j>0;--j)
-                {
-                    const Species &s = **lineage[j];
-                    const unit_t   z = s.charge;
-                    Z[j] = z;
-                    sz  += abs_of(z);
-                }
-                std::cerr << "Z=" << Z << std::endl;
 
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
