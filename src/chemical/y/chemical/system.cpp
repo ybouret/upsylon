@@ -147,7 +147,7 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
             
-            buildOmega();
+           // buildOmega();
 
 
             Y_CHEMICAL_PRINTLN("<System/>");
