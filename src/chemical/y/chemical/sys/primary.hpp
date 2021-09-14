@@ -108,10 +108,10 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            size_t             count()        const throw(); //!< reac.size() + prod.size()
-            const char *       kindText()     const throw(); //!< to add after "limited by "
-            static const char *KeepText(const bool) throw(); //!< "bounded" / "endless"
-            const char *       keepText()     const throw(); //!< keepText(keep)
+            size_t             count()           const throw(); //!< reac.size() + prod.size()
+            const char *       kindText()        const throw(); //!< to add after "limited by "
+            static const char *BoundedText(const bool) throw(); //!< "bounded" / "endless"
+            const char *       boundedText()     const throw(); //!< BoundedText(bounded)
 
 
             //! search regularizing extent
@@ -135,12 +135,11 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const iMatrix      &NuT;   //!< topology matrix
-            const LimitingReac  reac;  //!< primary reactant(s)
-            const LimitingProd  prod;  //!< primary product(s)
-            //const Actor::Array  used;  //!< all primaries
-            const Kind          kind;  //!< from reac/prod count
-            const bool          keep;  //!< conserving matter or not
+            const iMatrix      &NuT;     //!< topology matrix
+            const LimitingReac  reac;    //!< primary reactant(s)
+            const LimitingProd  prod;    //!< primary product(s)
+            const Kind          kind;    //!< from reac/prod count
+            const bool          bounded; //!< conserving some matter or not
 
             //__________________________________________________________________
             //
@@ -183,7 +182,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
-                Library::Indent(os,indent) << "|_" << **this << " is " << keepText() << " and is limited by " << kindText();
+                Library::Indent(os,indent) << "|_" << **this << " is " << boundedText() << " and is limited by " << kindText();
                 if(LimitedByNone!=kind)
                 {
                     os << " {";

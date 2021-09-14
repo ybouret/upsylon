@@ -137,17 +137,7 @@ namespace upsylon
         }
 
 
-        template <typename SEQ>
-        static inline
-        void loadPrimaryAddr(SEQ &seq, const Primary::Limiting &source)
-        {
-            const size_t n = source.size();
-            for(size_t i=1;i<=n;++i)
-            {
-                const Actor &a = source[i];
-                seq.push_back_( (Actor *)&a );
-            }
-        }
+
 
 
 
@@ -156,16 +146,13 @@ namespace upsylon
         NuT(topo),
         reac( (**this).countPrimaryReac() ),
         prod( (**this).countPrimaryProd() ),
-        //used( (**this).grabAllPrimaries(),as_capacity),
         kind(LimitedByNone),
-        keep(eq.isBounded())
+        bounded(eq.isBounded())
         {
 
             loadPrimary(aliasing::_(reac),eq.reac);
             loadPrimary(aliasing::_(prod),eq.prod);
 
-            //loadPrimaryAddr(aliasing::_(used),reac);
-            //loadPrimaryAddr(aliasing::_(used),prod);
 
             if(reac.size())
             {
@@ -237,16 +224,16 @@ namespace upsylon
             return "???";
         }
 
-        const char * Primary:: KeepText(const bool flag) throw()
+        const char * Primary:: BoundedText(const bool flag) throw()
         {
             return flag ?
             "BOUNDED" :
             "ENDLESS";
         }
 
-        const char * Primary:: keepText() const throw()
+        const char * Primary:: boundedText() const throw()
         {
-            return KeepText(keep);
+            return BoundedText(bounded);
         }
 
         static inline void makePositive(double &c) throw()

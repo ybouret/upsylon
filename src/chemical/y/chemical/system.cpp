@@ -31,7 +31,7 @@ namespace upsylon
         void Lineage:: link(const Primary::Pointer &p) throw()
         {
             aliasing::_(primary).push_back_(p);
-            if(!p->keep)
+            if(!p->bounded)
             {
                 aliasing::_(bounded) = false;
             }
@@ -173,7 +173,7 @@ namespace upsylon
                         }
                     }
                     
-                    std::cerr << " => " << Primary::KeepText(l->bounded) << std::endl;
+                    std::cerr << " => " << Primary::BoundedText(l->bounded) << std::endl;
 
                 }
 
@@ -230,7 +230,7 @@ namespace upsylon
             {
                 Flags  available(M,true); //!< array of available species
                 size_t remaining = M;     //!< count of remaining species
-                size_t freeSpace = M-N;
+                size_t freeSpace = M-N;   //!< complementary degrees of freedom
                 vector<qShared,Allocator> OmegaV(freeSpace,as_capacity);
 
 
@@ -293,7 +293,7 @@ namespace upsylon
                 for(size_t i=1;i<=N;++i)
                 {
                     const Primary &pp = *primary[i];
-                    std::cerr << "    " << *pp << " : " << pp.keepText() << " => ";
+                    std::cerr << "    " << *pp << " : " << pp.boundedText() << " => ";
                     if(Primary::LimitedByBoth==pp.kind)
                     {
                         std::cerr << "may conserve primary" << std::endl;
@@ -342,13 +342,11 @@ namespace upsylon
 
                     for(size_t ii=l.primary.size();ii>0;--ii)
                     {
-                        const Primary     &p = *l.primary[ii];
-                        //const Equilibrium &eq = *pp;
+                        const Primary     &p  = *l.primary[ii]; assert(p.bounded);
                         const size_t       i  = p->indx;
                         const unit_t       nu = nut[i];
                         std::cerr << "      in " << *p << ", " << s << " is " << nu << std::endl;
                     }
-
 
 
                 }

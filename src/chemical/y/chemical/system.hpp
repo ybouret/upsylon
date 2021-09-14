@@ -43,7 +43,7 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const bool           bounded; //!< default=true
+            const bool           bounded; //!< if all primary are bounded
             const Primary::Array primary; //!< list of depending primary
 
         private:
