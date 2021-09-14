@@ -114,40 +114,41 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
 
                 
+
+
+
+            }
+
+            {
                 //--------------------------------------------------------------
                 //
-                // building lineage
+                // building lineage, even in case of no equilibria
                 //
                 //--------------------------------------------------------------
                 Y_CHEMICAL_PRINTLN("  <Lineage>");
                 for(const SNode *node=lib->head();node;node=node->next)
                 {
                     const Species     &sp = ***node;
-                    const iAccessible &nu = NuT[sp.indx];
                     Lineage           *l = new Lineage(sp);
                     Lineage::Pointer  lp = l;
                     std::cerr << "    " << sp << " #" << std::setw(3) << sp.rating << " :";
                     aliasing::_(lineage).push_back_(lp);
                     for(size_t i=1;i<=N;++i)
                     {
-                        if(nu[i])
+                        if(NuT[sp.indx][i])
                         {
                             l->link(primary[i]);
                             std::cerr << ' ' << (**primary[i]).name;
                         }
                     }
-                    
                     std::cerr << " => " << Primary::BoundedText(l->bounded) << std::endl;
-
                 }
 
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
-
-                buildOmega();
-
-
-
             }
+            
+            buildOmega();
+
 
             Y_CHEMICAL_PRINTLN("<System/>");
 
