@@ -37,7 +37,7 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-            void link(const Primary::Pointer &p) throw();
+            void link(const Primary::Pointer &p) throw(); //!< append and check bounded
 
             //__________________________________________________________________
             //
