@@ -336,7 +336,20 @@ namespace upsylon
                     const Lineage &l = *lineage[j];
                     const Species &s = *l;
                     if( (s.rating<2) || ( !available[j]) ) continue;
-                    std::cerr << "Looking at " << s << ", rating=" << s.rating << std::endl;
+                    assert(l.bounded);
+                    std::cerr << "    Looking at " << s << ", rating=" << s.rating << std::endl;
+                    const iAccessible &nut = NuT[j];
+
+                    for(size_t ii=l.primary.size();ii>0;--ii)
+                    {
+                        const Primary     &p = *l.primary[ii];
+                        //const Equilibrium &eq = *pp;
+                        const size_t       i  = p->indx;
+                        const unit_t       nu = nut[i];
+                        std::cerr << "      in " << *p << ", " << s << " is " << nu << std::endl;
+                    }
+
+
 
                 }
 
@@ -358,6 +371,17 @@ namespace upsylon
                 }
 
 
+
+                vector<unit_t,Allocator> Z(M,0);
+                unit_t sz=0;
+                for(size_t j=M;j>0;--j)
+                {
+                    const Species &s = **lineage[j];
+                    const unit_t   z = s.charge;
+                    Z[j] = z;
+                    sz  += abs_of(z);
+                }
+                std::cerr << "Z=" << Z << std::endl;
 
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
