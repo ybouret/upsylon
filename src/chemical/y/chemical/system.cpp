@@ -209,7 +209,7 @@ namespace upsylon
 
         template <typename ACTORS>
         static inline
-        size_t disable(Flags &alive, const ACTORS &arr)
+        size_t disable(Flags &available, const ACTORS &arr)
         {
             const size_t n=arr.size();
             for(size_t jj=n;jj>0;--jj)
@@ -217,8 +217,8 @@ namespace upsylon
                 const Actor   &a = arr[jj];
                 const Species &s = a.sp;
                 const size_t   j = s.indx;
-                assert(true==alive[j]);
-                alive[j] = false;
+                assert(true==available[j]);
+                available[j] = false;
             }
             return n;
         }
@@ -228,10 +228,10 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("  <Omega>");
             if(M>N)
             {
-                Flags         alive(M,true);
-                size_t        count = M;
-                size_t        dim   = M-N;
-                vector<qShared,Allocator> OmegaV(dim,as_capacity);
+                Flags  available(M,true); //!< array of available species
+                size_t remaining = M;     //!< count of remaining species
+                size_t freeSpace = M-N;
+                vector<qShared,Allocator> OmegaV(freeSpace,as_capacity);
 
                 //--------------------------------------------------------------
                 //
@@ -244,26 +244,32 @@ namespace upsylon
                     if(l->rating<=0)
                     {
                         assert(l.bounded);
+                        assert(remaining);
+                        assert(available[j]);
+                        assert(freeSpace);
+
                         qShared Q = new qVector(M,0);
                         OmegaV.push_back(Q);
-                        (*Q)[j]   = 1;
-                        alive[j]  = false;
-                        --dim;
-                        --count;
+                        (*Q)[j]       = 1;
+                        available[j]  = false;
+                        --freeSpace;
+                        --remaining;
                     }
                     else
                     {
                         if(!l.bounded)
                         {
-                            alive[j] = false;
-                            --count;
+                            assert(remaining);
+                            assert(available[j]);
+                            available[j] = false;
+                            --remaining;
                         }
                     }
 
                 }
-                assert(Nc==dim);
+                assert(Nc==freeSpace);
 
-                lib.display(std::cerr << "    alive0=" << std::endl,alive,4) << std::endl;
+                lib.display(std::cerr << "    available0=" << std::endl,available,4) << std::endl;
 
                 //--------------------------------------------------------------
                 //
@@ -275,6 +281,7 @@ namespace upsylon
                     const Primary &pp = *primary[i];
                     std::cerr << "    " << *pp << " : " << pp.keepText() << std::endl;
                     if(!pp.keep) continue;
+
                     if(Primary::LimitedByBoth==pp.kind)
                     {
                         std::cerr << "    \\_may conserve primary" << std::endl;
@@ -287,18 +294,18 @@ namespace upsylon
                         (*Q)[rhs.sp.indx] = apq(1,rhs.nu);
 
                         // disable all primaries
-                        count -= disable(alive,pp.reac);
-                        count -= disable(alive,pp.prod);
+                        remaining -= disable(available,pp.reac);
+                        remaining -= disable(available,pp.prod);
 
                         {
                             const apz fac = yap::lcm::of_denominators( & (*Q)[1], M);
                             tao::mulset(*Q,fac);
                         }
-                        --dim;
+                        --freeSpace;
                     }
                 }
 
-                lib.display(std::cerr << "    alive1=" << std::endl,alive,4) << std::endl;
+                lib.display(std::cerr << "    available1=" << std::endl,available,4) << std::endl;
 
 
                 const size_t dof = OmegaV.size();
@@ -312,9 +319,9 @@ namespace upsylon
                             Omega[i][j] = (*OmegaV[i])[j].num.cast_to<unit_t>();
                         }
                     }
-                    std::cerr << "    Omega=" << Omega << std::endl;
-                    std::cerr << "    count=" << count << std::endl;
-                    std::cerr << "    dim  =" << dim   << std::endl;
+                    std::cerr << "    Omega     = " << Omega     << std::endl;
+                    std::cerr << "    remaining = " << remaining << std::endl;
+                    std::cerr << "    freeSpace = " << freeSpace << std::endl;
 
                 }
             }
