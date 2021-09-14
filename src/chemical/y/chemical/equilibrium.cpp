@@ -3,36 +3,6 @@
 #include "y/ios/scribe.hpp"
 #include "y/ios/osstream.hpp"
 
-namespace upsylon
-{
-    namespace Chemical
-    {
-        Compound:: ~Compound() throw()
-        {
-        }
-        
-        Compound:: Compound(const Actor &a, const Role r) throw() :
-        Object(),
-        authority<const Actor>(a),
-        role(r)
-        {
-            
-        }
-        
-        Compound:: Compound(const Compound &other) throw() :
-        Object(),
-        authority<const Actor>(other),
-        role(other.role)
-        {
-            
-        }
-        
-        
-        
-        
-    }
-    
-}
 
 namespace upsylon
 {
@@ -116,8 +86,8 @@ namespace upsylon
             {
                 aliasing::_(reac)( size_t(-nu), sp);
                 
-                const Compound c( **(reac->tail()), Compound::Reactant );
-                const be_key   k(sp);
+                const Compound::Pointer c = new Compound(**(reac->tail()),Reactant);
+                const be_key            k(sp);
                 try
                 {
                     if(!aliasing::_(used).insert(k,c))
@@ -135,8 +105,8 @@ namespace upsylon
                 if(nu>0)
                 {
                     aliasing::_(prod)( size_t(nu), sp) ;
-                    const Compound c( **(prod->tail()), Compound::Product );
-                    const be_key   k(sp);
+                    const Compound::Pointer c = new Compound(**(prod->tail()),Product);
+                    const be_key            k(sp);
                     try
                     {
                         if(!aliasing::_(used).insert(k,c))

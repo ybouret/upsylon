@@ -5,35 +5,12 @@
 
 #include "y/chemical/actors.hpp"
 #include "y/chemical/library.hpp"
-#include "y/type/authority.hpp"
+#include "y/chemical/compound.hpp"
 
 namespace upsylon
 {
     namespace Chemical
     {
-        
-        class Compound : public Object, public authority<const Actor>
-        {
-        public:
-            typedef suffix_map<be_key,const Compound> Map;
-            
-            enum Role
-            {
-                Reactant,
-                Product
-            };
-            
-            const Role   role;
-            
-            explicit      Compound(const Actor &, const Role) throw();
-            virtual      ~Compound() throw();
-            Compound(const Compound &) throw();
-            
-        private:
-            Y_DISABLE_ASSIGN(Compound);
-        };
-        
-        typedef Compound::Map::data_node CNode;
 
         
         //______________________________________________________________________

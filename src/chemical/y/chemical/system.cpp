@@ -118,7 +118,7 @@ namespace upsylon
                     {
                         for(const CNode *sub=eq.used.head();sub;sub=sub->next)
                         {
-                            const Compound &cmp = **sub;
+                            const Compound &cmp = ***sub;
                             aliasing::_(bounded[cmp->sp.indx]) = false;
                         }
                     }
@@ -128,84 +128,6 @@ namespace upsylon
 
                 
                 
-                Indices ratings(MW,as_capacity);
-                for(const SNode *node=lib->head();node;node=node->next)
-                {
-                    const size_t r = (***node).rating;
-                    if(r>0)
-                        ratings.push_back_(r);
-                }
-                unique(ratings);
-                std::cerr << "Ratings=" << ratings << std::endl;
-
-                {
-                    size_t dim = M-N;
-                    if(dim>0)
-                    {
-                        iMatrix Omega(dim,M);
-                        Flags   alive(M,true);
-                        
-                        // spectator only constraints
-                        {
-                            for(const SNode *node=lib->head();node;node=node->next)
-                            {
-                                const Species &sp = ***node;
-                                if(sp.rating<=0)
-                                {
-                                    const size_t j  = sp.indx;
-                                    Omega[dim--][j] = 1;
-                                    alive[j]        = false;
-                                }
-                            }
-                        }
-                        std::cerr << "Omega=" << Omega << std::endl;
-                        assert(dim==Nc);
-
-                        // loop on ratings
-                        const size_t nr = ratings.size();
-                        for(size_t r=1;r<=nr;++r)
-                        {
-                            const size_t rating = ratings[r];
-                            std::cerr << "Look Up rating=" << rating << std::endl;
-                            combination     comb(N,rating);
-                            for(comb.boot();comb.good();comb.next())
-                            {
-                                std::cerr << "Trying {";
-                                for(size_t i=1;i<=rating;++i)
-                                {
-                                    std::cerr << " " << **primary[ comb[i] ];
-                                }
-                                std::cerr << " } ";
-                                
-                                // checking validity
-                                bool valid = true;
-                                for(size_t ii=rating;ii>0;--ii)
-                                {
-                                    const size_t   i = comb[ii];
-                                    const Primary &p = *primary[i];
-                                    if(!p.keep)
-                                    {
-                                        valid = false;
-                                        break;
-                                    }
-                                }
-                                
-                                if(!valid)
-                                {
-                                    std::cerr << "Unbounded" << std::endl;
-                                    continue;
-                                }
-                                std::cerr << "Valid" << std::endl;
-                                
-                                
-                                
-                                
-                            }
-                            
-                        }
-
-                    }
-                }
 
 
                 
