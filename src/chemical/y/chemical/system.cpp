@@ -190,14 +190,30 @@ namespace upsylon
         }
         
 
+    }
+
+}
+
+#include "y/mkl/kernel/apk.hpp"
+
+namespace upsylon
+{
+    using namespace mkl;
+
+    namespace Chemical
+    {
+
+        typedef vector<apq,Allocator> qVector;
+        typedef arc_ptr<qVector>      qShared;
+
         void System::buildOmega()
         {
             Y_CHEMICAL_PRINTLN("  <Omega>");
             if(M>N)
             {
-                iMatrix Omega(M-N,M);
-                Flags   alive(M,true);
-                size_t  dim = M-N;
+                Flags         alive(M,true);
+                size_t        dim = M-N;
+                list<qShared> Omega;
 
                 //--------------------------------------------------------------
                 //
@@ -210,8 +226,10 @@ namespace upsylon
                     if(l->rating<=0)
                     {
                         assert(l.bounded);
-                        Omega[dim][j]  = 1;
-                        alive[j]       = false;
+                        qShared Q = new qVector(M,0);
+                        Omega.push_back(Q);
+                        (*Q)[j]   = 1;
+                        alive[j]  = false;
                         --dim;
                     }
                     else
@@ -225,9 +243,6 @@ namespace upsylon
                 }
                 assert(Nc==dim);
 
-
-
-
                 std::cerr << "Omega=" << Omega << std::endl;
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
@@ -236,4 +251,3 @@ namespace upsylon
     }
 
 }
-
