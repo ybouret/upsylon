@@ -122,6 +122,8 @@ namespace upsylon
                 //
                 //--------------------------------------------------------------
                 Y_CHEMICAL_PRINTLN("  <Strains>");
+
+                Y_CHEMICAL_PRINTLN("    <Building>");
                 for(const SNode *node=lib->head();node;node=node->next)
                 {
                     const Species         &s = ***node;
@@ -129,52 +131,37 @@ namespace upsylon
                     { const Strain::Pointer  tmp(S); aliasing::_(strain).push_back_(tmp); }
                     const size_t           j = s.indx;
 
-                    if(Verbosity) std::cerr << "    " << s << " #" << std::setw(3) << s.rating << " :";
+                    if(Verbosity) std::cerr << "      " << s << " #" << std::setw(3) << s.rating << " :";
 
                     for(size_t i=1;i<=N;++i)
                     {
+                        const unit_t nu = NuT[j][i];
                         if(NuT[j][i]!=0)
                         {
-                            S->link(primary[i]);
-                            if(Verbosity) std::cerr << ' ' << (**primary[i]).name;
+                            const Primary &p = *primary[i];
+                            S->link(nu,p);
+                            if(Verbosity) std::cerr << ' ' << p->name;
                         }
                     }
                     if(Verbosity) std::cerr << " => " << S->stateText() << std::endl;
 
                 }
+                Y_CHEMICAL_PRINTLN("    <Building/>");
+
+                Y_CHEMICAL_PRINTLN("    <Compiled>");
+                if(Verbosity)
+                {
+                    for(size_t i=1;i<=M;++i)
+                    {
+                        std::cerr << "      " << *strain[i] << std::endl;
+                    }
+                }
+                Y_CHEMICAL_PRINTLN("    <Compiled/>");
+
 
                 Y_CHEMICAL_PRINTLN("  <Strains/>");
             }
-
-#if 0
-            {
-                //--------------------------------------------------------------
-                //
-                // building lineage, even in case of no equilibria
-                //
-                //--------------------------------------------------------------
-                Y_CHEMICAL_PRINTLN("  <Lineage>");
-                for(const SNode *node=lib->head();node;node=node->next)
-                {
-                    const Species     &sp = ***node;
-                    Lineage           *l = new Lineage(sp);
-                    Lineage::Pointer  lp = l;
-                    std::cerr << "    " << sp << " #" << std::setw(3) << sp.rating << " :";
-                    aliasing::_(lineage).push_back_(lp);
-                    for(size_t i=1;i<=N;++i)
-                    {
-                        if(NuT[sp.indx][i])
-                        {
-                            l->link(primary[i]);
-                            std::cerr << ' ' << (**primary[i]).name;
-                        }
-                    }
-                    std::cerr << " => " << Primary::BoundedText(l->bounded) << std::endl;
-                }
-
-                Y_CHEMICAL_PRINTLN("  <Lineage/>");
-            }
-#endif
+            
            // buildOmega();
 
 

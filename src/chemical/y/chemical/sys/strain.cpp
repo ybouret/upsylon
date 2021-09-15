@@ -6,25 +6,50 @@ namespace upsylon
     namespace Chemical
     {
 
+        Appliance:: ~Appliance() throw()
+        {
+        }
+
+        Appliance:: Appliance(const unit_t coef, const Primary &self) throw() :
+        Object(),
+        authority<const Primary>(self),
+        dnode<Appliance>(),
+        nu(coef)
+        {
+        }
+
+
         Strain:: ~Strain() throw()
         {
 
         }
 
-        Strain:: Strain(const Species &sp) :
+        Strain:: Strain(const Species &sp) throw() :
         Object(),
         authority<const Species>(sp),
         Flow(Bounded),
-        primary( (**this).rating, as_capacity)
+        consumers(),
+        producers()
         {
             
         }
 
-        void  Strain:: link(const Primary::Pointer &p) throw()
+        void  Strain:: link(const unit_t nu, const Primary &p)
         {
-            aliasing::_(primary).push_back_(p);
+            assert(nu!=0);
+            assert(nu==p->stoichiometry(**this));
 
-            if( (**p).state == Endless )
+            Appliance *app = new Appliance(nu,p);
+            if(nu<0)
+            {
+                aliasing::_(consumers).push_back(app);
+            }
+            else
+            {
+                aliasing::_(producers).push_back(app);
+            }
+
+            if( p->state == Endless )
             {
                 aliasing::_(state) = Endless;
             }

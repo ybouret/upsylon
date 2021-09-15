@@ -9,6 +9,7 @@
 
 #include "y/mkl/kernel/apk.hpp"
 #include "y/yap/lcm.hpp"
+#include "y/core/dnode.hpp"
 
 namespace upsylon
 {
@@ -45,6 +46,7 @@ namespace upsylon
             tao::mulset(*Q,fac);
         }
 #endif
+
 
         void System::buildOmega()
         {
