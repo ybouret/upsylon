@@ -66,8 +66,15 @@ namespace upsylon
                 {
                     const Strain  &s  = *strain[j];
                     const Species &sp = *s;
+                    const char *shape = "egg";
+                    const char *style = "bold";
+                    if(sp.rating==1)
+                    {
+                        style="bold,filled";
+                        shape="egg";
+                    }
 
-                    fp.viz(&sp) << "[label=\"" << string_convert::to_printable(sp.name) << "\",shape=rectangle];\n";
+                    fp.viz(&sp) << "[label=\"" << string_convert::to_printable(sp.name) << "\",shape=" << shape << ",style=\"" << style << "\"];\n";
 
                 }
 
@@ -76,8 +83,9 @@ namespace upsylon
                 {
                     const Primary     &p  = *primary[i];
                     const Equilibrium &eq = *p;
+                    const char *shape = "rectangle";
 
-                    fp.viz(&eq) << "[label=\"" << string_convert::to_printable(eq.name) << "\",shape=oval];\n";
+                    fp.viz(&eq) << "[label=\"" << string_convert::to_printable(eq.name) << "\",shape=" << shape << "];\n";
 
                     for(const CNode *node=eq.used.head();node;node=node->next)
                     {
@@ -89,7 +97,10 @@ namespace upsylon
                             case Reactant: fp.viz(&sp); Vizible::arrow(fp); fp.viz(&eq);  break;
                             case Product:  fp.viz(&eq); Vizible::arrow(fp); fp.viz(&sp);  break;
                         }
-
+                        if(a.nu>1)
+                        {
+                            fp << "[label=\"" << vformat("%u",unsigned(a.nu)) << "\"]";
+                        }
                         fp << ";\n";
                     }
 
