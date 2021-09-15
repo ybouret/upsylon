@@ -61,7 +61,7 @@ namespace upsylon
                     const natural  &den = q.den; assert(den>0);
                     res = apn::lcm(res,den);
                 }
-                return res;
+                return integer(res);
             }
 
             //! compute for a sequence of denominators
@@ -70,6 +70,7 @@ namespace upsylon
             {
                 return of_denominators( seq.begin(), seq.size() );
             }
+            
 
         };
     }

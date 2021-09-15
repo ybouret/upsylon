@@ -52,7 +52,6 @@ namespace upsylon
             bool           isWorking() const throw(); //!< 0<rating
             bool           isPrimary() const throw(); //!< 1==rating
             bool           isReplica() const throw(); //!< 1<rating
-            const char    *qualify()   const throw(); //!< finite or not
             
             //! output with internal alignement
             template <typename OSTREAM> inline
