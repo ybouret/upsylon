@@ -135,6 +135,9 @@ namespace upsylon
                     throw exception("adding 0*'%s' to <%s>", *sp.name, *name);
                 }
             }
+
+            if( (reac->size()>0) && (prod->size()>0) ) aliasing::_(type) = Bounded;
+
         }
 
 
