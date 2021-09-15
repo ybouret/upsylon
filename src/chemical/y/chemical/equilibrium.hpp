@@ -12,22 +12,45 @@ namespace upsylon
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! flow description
+        //
+        //______________________________________________________________________
         class Flow
         {
         public:
+            //__________________________________________________________________
+            //
+            // types and definitions
+            //__________________________________________________________________
+            //! the different states
             enum State
             {
-                Bounded,
-                Endless
+                Bounded, //!< by a component
+                Endless  //!< usually by solvent
             };
 
-            static const char *StateText(const State) throw(); //!< BOUNDED / ENDLESS
-            const char        *stateText()     const throw(); //!< TypeText(type)
-
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
             explicit Flow(const State) throw(); //!< initialize
             virtual ~Flow()            throw(); //!< cleanup
 
-            const State state;
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
+            static const char *StateText(const State) throw(); //!< BOUNDED / ENDLESS
+            const char        *stateText()     const throw(); //!< TypeText(type)
+
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
+            const State state;                  //!< current state
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Flow);

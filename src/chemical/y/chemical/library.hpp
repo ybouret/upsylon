@@ -76,7 +76,7 @@ namespace upsylon
             //! load multiple ':' separated species, wrapper
             void load(const char *multipleSpecies);
 
-            
+            //! load one or multiple species
             template <typename RX> inline
             Library & operator<<( const RX &rx )
             {

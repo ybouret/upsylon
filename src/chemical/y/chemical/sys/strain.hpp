@@ -10,19 +10,42 @@ namespace upsylon
     namespace Chemical
     {
 
+
+        //______________________________________________________________________
+        //
+        //
         //! species withing a system
+        //
+        //______________________________________________________________________
         class Strain : public Object, public authority<const Species>, public Flow
         {
         public:
-            typedef arc_ptr<const Strain>     Pointer;
-            typedef vector<Pointer,Allocator> Array;
+            //__________________________________________________________________
+            //
+            // Types and definitions
+            //__________________________________________________________________
+            typedef arc_ptr<const Strain>     Pointer; //!< alias
+            typedef vector<Pointer,Allocator> Array;   //!< alias
 
+            //__________________________________________________________________
+            //
+            // C++
+            //__________________________________________________________________
+            virtual ~Strain() throw();          //!< cleanup
+            explicit Strain(const Species &);   //!< setup with memory
 
-            virtual ~Strain() throw();
-            explicit Strain(const Species &);
+            //__________________________________________________________________
+            //
+            // methods
+            //__________________________________________________________________
 
+            //! link and updated flow state
             void  link(const Primary::Pointer &) throw();
 
+            //__________________________________________________________________
+            //
+            // members
+            //__________________________________________________________________
             const Primary::Array primary; //!< equilibria involved
 
 
