@@ -29,7 +29,7 @@ namespace upsylon
             }
         }
 
-            
+
         size_t Equilibria:: rawStrings(Strings &raw) const
         {
             size_t w = 0;
@@ -125,9 +125,9 @@ namespace upsylon
             throw exception("%s%s invalid first char '%c' in constant string for <%s>",CLID,fn,ch,*name);
         }
         
-        Equilibrium & Equilibria:: load(const string &info,
-                                        Library      &lib,
-                                        Lua::VM      &vm)
+        Equilibrium & Equilibria:: guess(const string &info,
+                                         Library      &lib,
+                                         Lua::VM      &vm)
         {
             // analyze info
             Strings words(8,as_capacity);
@@ -146,12 +146,12 @@ namespace upsylon
             return eq;
         }
         
-        Equilibrium & Equilibria:: load(const char  *info,
-                                        Library      &lib,
-                                        Lua::VM      &vm)
+        Equilibrium & Equilibria:: guess(const char  *info,
+                                         Library      &lib,
+                                         Lua::VM      &vm)
         {
             const string _(info);
-            return load(_,lib,vm);
+            return guess(_,lib,vm);
         }
         
     }

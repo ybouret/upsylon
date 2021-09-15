@@ -32,9 +32,9 @@ namespace upsylon
             //
             // types and definition
             //__________________________________________________________________
-            static const char CLID[];        //!< "Chemical::Library"
-            static const int  CMinPow = -14; //!< for randomC
-            static const int  CMaxPow =   1; //!< for randomC
+            static const char        CLID[];         //!< "Chemical::Library"
+            static const int         CMinPow = -14;  //!< for randomC
+            static const int         CMaxPow =   1;  //!< for randomC
             
             //! a radom concentration
             static double     RandomC(randomized::bits &) throw();

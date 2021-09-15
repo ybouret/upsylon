@@ -45,8 +45,6 @@ namespace upsylon
         Equilibrium:: ~Equilibrium() throw() {}
         
 
-
-
         
         string Equilibrium:: Kstr(const double t) const
         {

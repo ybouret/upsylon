@@ -1,5 +1,6 @@
 
 #include "y/chemical/system.hpp"
+#include "y/chemical/lua/eqs.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/tao.hpp"
 
@@ -10,13 +11,13 @@ using namespace mkl;
 Y_UTEST(sys)
 {
 
-    Library          lib;
-    Equilibria       eqs;
-    Lua::VM          vm = new Lua::State();
+    Library        lib;
+    Lua::VM        lvm = new Lua::State;
+    LuaEquilibria  eqs(lib,lvm);
 
     for(int i=1;i<argc;++i)
     {
-        eqs(argv[i],lib,vm);
+        eqs << argv[i];
     }
 
     
@@ -24,10 +25,10 @@ Y_UTEST(sys)
     if(false)
     {
         lib << "A" << "B" << "C" << "D" << "E" << "F" << "G" << "H";
-        eqs.load("dum1:-2A:B:2C:3Q:=1",lib,vm);
-        eqs.load("dum2:-D:E:3C:Q:=2",lib,vm);
-        eqs.load("dum3:-F:G:4C:Q:=3",lib,vm);
-        eqs.load("dum4:-C:H:=4",lib,vm);
+        eqs<<"+dum1:-2A:B:2C:3Q:=1";
+        eqs<<"+dum2:-D:E:3C:Q:=2";
+        eqs<<"+dum3:-F:G:4C:Q:=3";
+        eqs<<"+dum4:-C:-D:3H:=4";
     }
 
     //eqs.load("dummy:-A:-B:2C:3D:=1",lib,vm);

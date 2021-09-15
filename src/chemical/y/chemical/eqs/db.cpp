@@ -93,9 +93,9 @@ namespace upsylon {
             return count;
         }
         
-        void Equilibria:: operator()(const string &rx,
-                                     Library      &lib,
-                                     Lua::VM      &vm)
+        void Equilibria:: query(const string &rx,
+                                Library      &lib,
+                                Lua::VM      &vm)
         {
             static const EqDB &db     =  EqDB::instance();
             Strings            name(db.size(),as_capacity);
@@ -106,16 +106,43 @@ namespace upsylon {
             for(size_t i=1;i<=count;++i)
             {
                 if(edb.search(name[i])) continue;
-                load(info[i],lib,vm);
+                (void) guess(info[i],lib,vm);
             }
         }
         
-        void Equilibria:: operator()(const char  *rx,
-                                     Library      &lib,
-                                     Lua::VM      &vm)
+        void Equilibria:: query(const char  *rx,
+                                Library      &lib,
+                                Lua::VM      &vm)
         {
-            const string _(rx);
-            return (*this)(_,lib,vm);
+            const  string _(rx);
+            return query(_,lib,vm);
+        }
+
+        void Equilibria:: load(const string &any,
+                               Library      &lib,
+                               Lua::VM      &vm)
+        {
+            static const char fn[] = "::load ";
+            if(any.size()<=0)
+            {
+                throw exception("%s%s empty string",CLID,fn);
+            }
+            
+            switch(any[0])
+            {
+                case '@': query(&any[1],lib,vm); break;
+                case '+': guess(&any[1],lib,vm); break;
+                default : lib << any; break;
+            }
+
+        }
+
+        void Equilibria:: load(const char   *any,
+                               Library      &lib,
+                               Lua::VM      &vm)
+        {
+            const string _(any);
+            load(_,lib,vm);
         }
         
     }

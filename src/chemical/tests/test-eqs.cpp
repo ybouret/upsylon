@@ -17,7 +17,7 @@ Y_UTEST(eqs)
     
     for(int i=1;i<argc;++i)
     {
-        eqs(argv[i],lib,vm);
+        eqs.query(argv[i],lib,vm);
     }
     
     std::cerr << lib << std::endl;

@@ -68,28 +68,46 @@ namespace upsylon
             Equilibrium &create(const string &name,
                                 const string &kstr,
                                 Lua::VM      &vm);
-            
+
+
+
             //! simple parsing
-            Equilibrium & load(const string &info,
-                               Library      &lib,
-                               Lua::VM      &vm);
+            Equilibrium & guess(const string &info,
+                                Library      &lib,
+                                Lua::VM      &vm);
             
             //! simple parsing, wrapper
-            Equilibrium & load(const char  *info,
-                               Library      &lib,
-                               Lua::VM      &vm);
+            Equilibrium & guess(const char  *info,
+                                Library      &lib,
+                                Lua::VM      &vm);
             
             //! using db
-            void operator()(const string &rx,
-                            Library      &lib,
-                            Lua::VM      &vm);
+            void query(const string &rx,
+                       Library      &lib,
+                       Lua::VM      &vm);
             
             //! using db, wrapper
-            void operator()(const char   *rx,
-                            Library      &lib,
-                            Lua::VM      &vm);
+            void query(const char   *rx,
+                       Library      &lib,
+                       Lua::VM      &vm);
             
-            
+
+            //! starting with
+            /**
+             - '@' => query
+             - '+' => guess
+             - default => species for lib
+             */
+            void load(const string &any,
+                      Library      &lib,
+                      Lua::VM      &vm);
+
+            //! load wrapper
+            void load(const char *any,
+                      Library    &lib,
+                      Lua::VM    &vm);
+
+
             //! verify all with flags
             void verify(const unsigned flags) const;
             

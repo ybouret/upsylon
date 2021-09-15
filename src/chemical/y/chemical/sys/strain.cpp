@@ -55,6 +55,14 @@ namespace upsylon
             }
         }
 
+        bool Strain:: isIntake() const throw()
+        {
+            return   (1==(**this).rating) && (consumers.size>0);
+        }
+        bool Strain:: isOutput() const throw()
+        {
+            return   (1==(**this).rating) && (producers.size>0);
+        }
 
     }
 

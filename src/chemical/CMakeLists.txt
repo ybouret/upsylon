@@ -15,6 +15,11 @@ SET(eqs_srcs ${eqs_decl} ${eqs_code})
 SOURCE_GROUP( chemical/eqs FILES ${eqs_srcs} )
 INSTALL( FILES ${eqs_decl} DESTINATION include/y/chemical/eqs )
 
+FILE(GLOB lua_decl y/chemical/lua/*.hpp)
+FILE(GLOB lua_code y/chemical/lua/*.cpp)
+SET(lua_srcs ${lua_decl} ${lua_code})
+SOURCE_GROUP( chemical/lua FILES ${lua_srcs} )
+INSTALL( FILES ${lua_decl} DESTINATION include/y/chemical/lua )
 
 FILE(GLOB sys_decl y/chemical/sys/*.hpp)
 FILE(GLOB sys_code y/chemical/sys/*.cpp)
@@ -25,6 +30,7 @@ INSTALL( FILES ${sys_decl} DESTINATION include/y/chemical/sys )
 ADD_LIBRARY(y-chemical STATIC 
 ${main_srcs}
 ${eqs_srcs}
+${lua_srcs}
 ${sys_srcs}
 )
 INSTALL( TARGETS y-chemical ARCHIVE DESTINATION lib )

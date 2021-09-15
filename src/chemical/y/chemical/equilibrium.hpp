@@ -134,7 +134,7 @@ namespace upsylon
             size_t        countPrimaryReac()             const throw(); //!< with unit rating
             size_t        countPrimaryProd()             const throw(); //!< with unit rating
             unit_t        stoichiometry(const Species &) const throw(); //!< probe used compound
-
+            
             //! fill topology
             template <typename T> inline
             void fill(addressable<T> &Nu) const throw()

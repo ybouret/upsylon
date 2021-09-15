@@ -66,12 +66,19 @@ namespace upsylon
                 {
                     const Strain  &s  = *strain[j];
                     const Species &sp = *s;
-                    const char *shape = "egg";
+                    string      shape = "egg";
                     string      style = "bold";
                     if(sp.rating==1)
                     {
                         style += ",filled";
-                        shape="egg";
+                        if(s.isIntake()) shape="house";
+                        if(s.isOutput()) shape="invhouse";
+                    }
+
+                    if(sp.rating==0)
+                    {
+                        shape = "oval";
+                        style += ",dotted";
                     }
 
                     if(Flow::Endless==s.state)
