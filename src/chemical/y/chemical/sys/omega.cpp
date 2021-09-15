@@ -67,12 +67,19 @@ namespace upsylon
                     const Strain  &s  = *strain[j];
                     const Species &sp = *s;
                     const char *shape = "egg";
-                    const char *style = "bold";
+                    string      style = "bold";
                     if(sp.rating==1)
                     {
-                        style="bold,filled";
+                        style += ",filled";
                         shape="egg";
                     }
+
+                    if(Flow::Endless==s.state)
+                    {
+                        style += ",dashed";
+                    }
+
+
 
                     fp.viz(&sp) << "[label=\"" << string_convert::to_printable(sp.name) << "\",shape=" << shape << ",style=\"" << style << "\"];\n";
 
