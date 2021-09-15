@@ -46,6 +46,7 @@ namespace upsylon
 
         void System::buildOmega()
         {
+#if 0
             Y_CHEMICAL_PRINTLN("  <Omega>");
             if(M>N)
             {
@@ -290,7 +291,7 @@ namespace upsylon
 
             }
             Y_CHEMICAL_PRINTLN("  <Omega/>");
-
+#endif
         }
     }
 

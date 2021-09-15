@@ -30,13 +30,19 @@ namespace upsylon
             typedef hash_set<string,Pointer>     Set;            //!< database alias
             static const unsigned                Default = 0x00; //!< check charge conservation
             static const unsigned                Minimal = 0x01; //!< check coprimality
-            
+
+            enum Type
+            {
+                Bounded,
+                Endless
+            };
+            static const char *TypeText(const Type) throw();
+
             //__________________________________________________________________
             //
             // C++
             //__________________________________________________________________
             virtual ~Equilibrium() throw();     //!< cleanup
-            bool     isBounded() const throw(); //!< has reactant(s) AND product(s)
 
         protected:
             //! setup
@@ -45,22 +51,29 @@ namespace upsylon
             Labeled(id),
             reac(),
             prod(),
-            used()
+            used(),
+            type(Endless)
             {
             }
             
         public:
             //__________________________________________________________________
             //
-            // methods
+            // virtual interface
             //__________________________________________________________________
            
             //! get constant value
             virtual double K(double) const = 0;
-           
+
+            //__________________________________________________________________
+            //
+            // setup methods
+            //__________________________________________________________________
+
             //! add an actor
             void operator()(const unit_t nu, const Species &sp);
-            
+
+
             //! with parsing
             template <typename RX> inline
             void operator()(const RX &rx, Library &lib)
@@ -71,38 +84,19 @@ namespace upsylon
                 (*this)(nu,*ps);
             }
             
-            //! aligned output
-            template <typename OSTREAM> inline
-            friend OSTREAM & operator<<(OSTREAM &os, const Equilibrium &eq)
-            {
-                return eq.pad(os << '<' << eq.name << '>');
-            }
-            
-            //! full display
-            template <typename OSTREAM> inline
-            OSTREAM & display_raw(OSTREAM &os) const
-            {
-                return os << (*this)  << " : " << reac << " <=> " << prod;
-            }
-            
-            //! convert raw to sring
-            string toRawString() const;
-            
-            //! full display
-            template <typename OSTREAM> inline
-            OSTREAM & display(OSTREAM &os, const double t=0) const
-            {
-                 return display_raw(os) << " (" << Kstr(t) << ")";
-            }
-            
-            //! charge creation
-            unit_t deltaCharge() const throw();
-            
-            //! key for set
-            const string &key() const throw();
-          
-            //! get constant as string
-            string Kstr(const double t) const;
+            //__________________________________________________________________
+            //
+            // query methods
+            //__________________________________________________________________
+
+            unit_t        deltaCharge()                  const throw(); //!< charge creation query
+            const string &key()                          const throw(); //!< key for set
+            string        Kstr(const double t)           const;         //!< get constant as string
+            void          verify(const unsigned flags)   const;         //!< verify with given flags
+            size_t        countPrimaryReac()             const throw(); //!< with unit rating
+            size_t        countPrimaryProd()             const throw(); //!< with unit rating
+            unit_t        stoichiometry(const Species &) const throw(); //!< probe used compound
+            const char   *typeText()                     const throw(); //!< TypeText(type)
 
             //! fill topology
             template <typename T> inline
@@ -113,30 +107,53 @@ namespace upsylon
                     const Actor &a = **node;
                     Nu[a.sp.indx] = static_cast<T>(-a.snu);
                 }
-                
+
                 for(const ANode *node=prod->head();node;node=node->next)
                 {
                     const Actor &a = **node;
                     Nu[a.sp.indx] = static_cast<T>(a.snu);
                 }
-                
-            }
-            
 
-            void   verify(const unsigned flags) const;           //!< verify with given flags
-            size_t countPrimaryReac()   const throw();           //!< with unit rating
-            size_t countPrimaryProd()   const throw();           //!< with unit rating
-            size_t grabAllPrimaries()   const throw();           //!< all with unit ratin
-            unit_t stoichiometry(const Species &) const throw(); //!< probe used compound
+            }
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
-            const Actors         reac; //!< reactant
-            const Actors         prod; //!< product
-            const Compound::Map  used; //!< all of'em
-            
+            const Actors         reac;    //!< reactant
+            const Actors         prod;    //!< product
+            const Compound::Map  used;    //!< all of'em
+            const Type           type;    //!< default to endless
+
+            //__________________________________________________________________
+            //
+            // output methods
+            //__________________________________________________________________
+
+            //! aligned output
+            template <typename OSTREAM> inline
+            friend OSTREAM & operator<<(OSTREAM &os, const Equilibrium &eq)
+            {
+                return eq.pad(os << '<' << eq.name << '>');
+            }
+
+            //! full display
+            template <typename OSTREAM> inline
+            OSTREAM & display_raw(OSTREAM &os) const
+            {
+                return os << (*this)  << " : " << reac << " <=> " << prod;
+            }
+
+            //! convert raw to sring
+            string toRawString() const;
+
+            //! full display
+            template <typename OSTREAM> inline
+            OSTREAM & display(OSTREAM &os, const double t=0) const
+            {
+                return display_raw(os) << " (" << Kstr(t) << ")";
+            }
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             static size_t CountPrimary(const Actors &) throw();

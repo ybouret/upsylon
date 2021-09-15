@@ -110,8 +110,7 @@ namespace upsylon
             //__________________________________________________________________
             size_t             count()           const throw(); //!< reac.size() + prod.size()
             const char *       kindText()        const throw(); //!< to add after "limited by "
-            static const char *BoundedText(const bool) throw(); //!< "bounded" / "endless"
-            const char *       boundedText()     const throw(); //!< BoundedText(bounded)
+
 
 
             //! search regularizing extent
@@ -139,8 +138,7 @@ namespace upsylon
             const LimitingReac  reac;    //!< primary reactant(s)
             const LimitingProd  prod;    //!< primary product(s)
             const Kind          kind;    //!< from reac/prod count
-            const bool          bounded; //!< conserving some matter or not
-
+            
             //__________________________________________________________________
             //
             // helpers
@@ -182,7 +180,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
-                Library::Indent(os,indent) << "|_" << **this << " is " << boundedText() << " and is limited by " << kindText();
+                Library::Indent(os,indent) << "|_" << **this << " is " << (**this).typeText() << " and is limited by " << kindText();
                 if(LimitedByNone!=kind)
                 {
                     os << " {";

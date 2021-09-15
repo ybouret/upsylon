@@ -54,7 +54,6 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N, as_capacity),
-        lineage(M,as_capacity),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
@@ -119,6 +118,7 @@ namespace upsylon
 
             }
 
+#if 0
             {
                 //--------------------------------------------------------------
                 //
@@ -146,7 +146,7 @@ namespace upsylon
 
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
-            
+#endif
            // buildOmega();
 
 

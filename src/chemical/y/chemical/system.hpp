@@ -2,7 +2,7 @@
 #ifndef Y_CHEMICAL_SYSTEM_INCLUDED
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
-#include "y/chemical/sys/lineage.hpp"
+#include "y/chemical/sys/primary.hpp"
 
 
 namespace upsylon
@@ -72,7 +72,6 @@ namespace upsylon
             const iMatrix        Nu;         //!< [NxM] topology
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]
-            const Lineage::Array lineage;    //!< [M] per species with depending primaries(=equilibria)
             Vector               xi;         //!< [N] helper to move
             Flags                ok;         //!< [N] primary status
             Actor::Array         who;        //!< [0..N], at most one per equilibria

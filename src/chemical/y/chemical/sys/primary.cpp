@@ -146,8 +146,7 @@ namespace upsylon
         NuT(topo),
         reac( (**this).countPrimaryReac() ),
         prod( (**this).countPrimaryProd() ),
-        kind(LimitedByNone),
-        bounded(eq.isBounded())
+        kind(LimitedByNone)
         {
 
             loadPrimary(aliasing::_(reac),eq.reac);
@@ -224,17 +223,7 @@ namespace upsylon
             return "???";
         }
 
-        const char * Primary:: BoundedText(const bool flag) throw()
-        {
-            return flag ?
-            "BOUNDED" :
-            "ENDLESS";
-        }
-
-        const char * Primary:: boundedText() const throw()
-        {
-            return BoundedText(bounded);
-        }
+       
 
         static inline void makePositive(double &c) throw()
         {

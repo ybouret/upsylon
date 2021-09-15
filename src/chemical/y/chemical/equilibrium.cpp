@@ -11,12 +11,22 @@ namespace upsylon
         
         Equilibrium:: ~Equilibrium() throw() {}
         
-        
-        bool Equilibrium:: isBounded() const throw()
+
+        const char   * Equilibrium:: TypeText(const Type t)   throw()
         {
-            return (reac->size()>0) && (prod->size()>0);
+            switch(t)
+            {
+                case Bounded: return "BOUNDED";
+                case Endless: return "ENDLESS";
+            }
+            return "???";
         }
-        
+
+        const char * Equilibrium:: typeText() const throw()
+        {
+            return TypeText(type);
+        }
+
         
         string Equilibrium:: Kstr(const double t) const
         {
@@ -44,18 +54,14 @@ namespace upsylon
             return CountPrimary(prod);
         }
 
-        size_t Equilibrium:: grabAllPrimaries()   const throw()
-        {
-            return countPrimaryProd()+countPrimaryReac();
-        }
-        
+
         size_t Equilibrium:: CountPrimary(const Actors &actors) throw()
         {
             size_t ans = 0;
             for(const ANode *node=actors->head();node;node=node->next)
             {
                 const Actor &a = **node;
-                if(1==a.sp.isPrimary()) ++ans;
+                if(a.sp.isPrimary()) ++ans;
             }
             return ans;
         }
