@@ -10,11 +10,17 @@ namespace upsylon
     namespace Chemical
     {
 
+        //______________________________________________________________________
+        //
+        //
+        //! appliance to transform strain
+        //
+        //______________________________________________________________________
         class Appliance : public Object, public authority<const Primary>, public dnode<Appliance>
         {
         public:
-            explicit Appliance(const unit_t, const Primary&) throw();
-            virtual ~Appliance() throw();
+            explicit Appliance(const unit_t, const Primary&) throw(); //!< setup
+            virtual ~Appliance() throw(); //!< cleanup
 
             const unit_t   nu; //!< nu!=0
 
@@ -69,6 +75,7 @@ namespace upsylon
             // display
             //__________________________________________________________________
 
+            //! display
             template <typename OSTREAM>
             inline friend OSTREAM &operator<<(OSTREAM &os, const Strain &S)
             {
@@ -81,7 +88,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os) const
             {
-                os << **this << " :";
+                os << **this << " : " << stateText();
                 if(consumers.size)
                 {
                     os << " ->{";
@@ -96,6 +103,7 @@ namespace upsylon
                 }
                 return os;
             }
+
             template <typename OSTREAM> static inline
             void dispApps(OSTREAM &os, const Appliances &apps)
             {
