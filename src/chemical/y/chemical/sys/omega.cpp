@@ -10,6 +10,10 @@
 #include "y/mkl/kernel/apk.hpp"
 #include "y/yap/lcm.hpp"
 #include "y/core/dnode.hpp"
+#include "y/ios/tools/vizible.hpp"
+#include "y/ios/tools/graphviz.hpp"
+#include "y/ios/ocstream.hpp"
+#include "y/string/convert.hpp"
 
 namespace upsylon
 {
@@ -47,10 +51,57 @@ namespace upsylon
         }
 #endif
 
+        typedef ios::vizible Vizible;
 
         void System::buildOmega()
         {
-            
+            const string filename = "omega.dot";
+            {
+                ios::ocstream fp( filename );
+
+                Vizible::enterDigraph(fp,"omega");
+
+                // write species
+                for(size_t j=1;j<=M;++j)
+                {
+                    const Strain  &s  = *strain[j];
+                    const Species &sp = *s;
+
+                    fp.viz(&sp) << "[label=\"" << string_convert::to_printable(sp.name) << "\",shape=rectangle];\n";
+
+                }
+
+                // write equilibria
+                for(size_t i=1;i<=N;++i)
+                {
+                    const Primary     &p  = *primary[i];
+                    const Equilibrium &eq = *p;
+
+                    fp.viz(&eq) << "[label=\"" << string_convert::to_printable(eq.name) << "\",shape=oval];\n";
+
+                    for(const CNode *node=eq.used.head();node;node=node->next)
+                    {
+                        const Compound &comp = ***node;
+                        const Actor    &a    = *comp;
+                        const Species  &sp   = a.sp;
+                        switch(comp.tier)
+                        {
+                            case Reactant: fp.viz(&sp); Vizible::arrow(fp); fp.viz(&eq);  break;
+                            case Product:  fp.viz(&eq); Vizible::arrow(fp); fp.viz(&sp);  break;
+                        }
+
+                        fp << ";\n";
+                    }
+
+                }
+
+
+
+
+                Vizible::leaveDigraph(fp);
+            }
+
+            ios::GraphViz::Render(filename);
         }
     }
 

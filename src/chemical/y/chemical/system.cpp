@@ -162,7 +162,7 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  <Strains/>");
             }
             
-           // buildOmega();
+            buildOmega();
 
 
             Y_CHEMICAL_PRINTLN("<System/>");
