@@ -180,7 +180,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             void prolog(OSTREAM &os, const size_t indent) const
             {
-                Library::Indent(os,indent) << "|_" << **this << " is " << (**this).typeText() << " and is limited by " << kindText();
+                Library::Indent(os,indent) << "|_" << **this << " is " << (**this).stateText() << " and is limited by " << kindText();
                 if(LimitedByNone!=kind)
                 {
                     os << " {";

@@ -4,15 +4,22 @@
 #include "y/ios/osstream.hpp"
 
 
+
 namespace upsylon
 {
     namespace Chemical
     {
-        
-        Equilibrium:: ~Equilibrium() throw() {}
+
+        Flow:: Flow(const State s) throw() : state(s)
+        {
+        }
+
+        Flow:: ~Flow() throw()
+        {
+        }
         
 
-        const char   * Equilibrium:: TypeText(const Type t)   throw()
+        const char   * Flow:: StateText(const State t)   throw()
         {
             switch(t)
             {
@@ -22,10 +29,23 @@ namespace upsylon
             return "???";
         }
 
-        const char * Equilibrium:: typeText() const throw()
+        const char * Flow:: stateText() const throw()
         {
-            return TypeText(type);
+            return StateText(state);
         }
+    }
+
+}
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+        
+        Equilibrium:: ~Equilibrium() throw() {}
+        
+
+
 
         
         string Equilibrium:: Kstr(const double t) const
@@ -136,7 +156,7 @@ namespace upsylon
                 }
             }
 
-            if( (reac->size()>0) && (prod->size()>0) ) aliasing::_(type) = Bounded;
+            if( (reac->size()>0) && (prod->size()>0) ) aliasing::_(state) = Bounded;
 
         }
 

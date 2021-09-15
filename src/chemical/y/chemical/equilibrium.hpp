@@ -12,6 +12,26 @@ namespace upsylon
     namespace Chemical
     {
 
+        class Flow
+        {
+        public:
+            enum State
+            {
+                Bounded,
+                Endless
+            };
+
+            static const char *StateText(const State) throw(); //!< BOUNDED / ENDLESS
+            const char        *stateText()     const throw(); //!< TypeText(type)
+
+            explicit Flow(const State) throw(); //!< initialize
+            virtual ~Flow()            throw(); //!< cleanup
+
+            const State state;
+
+        private:
+            Y_DISABLE_COPY_AND_ASSIGN(Flow);
+        };
         
         //______________________________________________________________________
         //
@@ -19,7 +39,7 @@ namespace upsylon
         //! a simple Equilibrium description
         //
         //______________________________________________________________________
-        class Equilibrium : public Labeled
+        class Equilibrium : public Labeled, public Flow
         {
         public:
             //__________________________________________________________________
@@ -31,12 +51,7 @@ namespace upsylon
             static const unsigned                Default = 0x00; //!< check charge conservation
             static const unsigned                Minimal = 0x01; //!< check coprimality
 
-            enum Type
-            {
-                Bounded,
-                Endless
-            };
-            static const char *TypeText(const Type) throw();
+
 
             //__________________________________________________________________
             //
@@ -49,10 +64,10 @@ namespace upsylon
             template <typename NAME> inline
             explicit Equilibrium(const NAME &id) :
             Labeled(id),
+            Flow(Endless),
             reac(),
             prod(),
-            used(),
-            type(Endless)
+            used()
             {
             }
             
@@ -96,7 +111,6 @@ namespace upsylon
             size_t        countPrimaryReac()             const throw(); //!< with unit rating
             size_t        countPrimaryProd()             const throw(); //!< with unit rating
             unit_t        stoichiometry(const Species &) const throw(); //!< probe used compound
-            const char   *typeText()                     const throw(); //!< TypeText(type)
 
             //! fill topology
             template <typename T> inline
@@ -123,8 +137,7 @@ namespace upsylon
             const Actors         reac;    //!< reactant
             const Actors         prod;    //!< product
             const Compound::Map  used;    //!< all of'em
-            const Type           type;    //!< default to endless
-
+            
             //__________________________________________________________________
             //
             // output methods

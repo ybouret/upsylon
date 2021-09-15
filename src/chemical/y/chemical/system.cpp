@@ -53,7 +53,8 @@ namespace upsylon
         MS( lib.spectators()    ),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
-        primary(N, as_capacity),
+        primary(N,as_capacity),
+        strain(M, as_capacity),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
@@ -112,10 +113,37 @@ namespace upsylon
                 }
                 Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
 
-                
+            }
 
+            {
+                //--------------------------------------------------------------
+                //
+                // building strains
+                //
+                //--------------------------------------------------------------
+                Y_CHEMICAL_PRINTLN("  <Strains>");
+                for(const SNode *node=lib->head();node;node=node->next)
+                {
+                    const Species         &s = ***node;
+                    Strain                *S = new Strain(s);
+                    { const Strain::Pointer  tmp(S); aliasing::_(strain).push_back_(tmp); }
+                    const size_t           j = s.indx;
 
+                    if(Verbosity) std::cerr << "    " << s << " #" << std::setw(3) << s.rating << " :";
 
+                    for(size_t i=1;i<=N;++i)
+                    {
+                        if(NuT[j][i]!=0)
+                        {
+                            S->link(primary[i]);
+                            if(Verbosity) std::cerr << ' ' << (**primary[i]).name;
+                        }
+                    }
+                    if(Verbosity) std::cerr << " => " << S->stateText() << std::endl;
+
+                }
+
+                Y_CHEMICAL_PRINTLN("  <Strains/>");
             }
 
 #if 0
