@@ -28,6 +28,11 @@ Y_UTEST(lua)
 
     eqs.append(sys);
 
+
+    std::cerr << "lib=" << lib << std::endl;
+    std::cerr << "eqs=" << eqs << std::endl;
+
+
     System cs(lib,eqs,Equilibrium::Utterly);
 
 

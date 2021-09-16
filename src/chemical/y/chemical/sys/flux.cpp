@@ -66,6 +66,49 @@ namespace upsylon
             primary = &P;
         }
 
+        const string & Flux::Vertex:: name() const throw()
+        {
+            switch(genus)
+            {
+                case IsStrain:  return (**strain).name;
+                case IsPrimary: return (**primary).name;
+            }
+            
+        }
+
+
+        bool Flux::Vertex:: hasOutgoing(const Edge &edge) const throw()
+        {
+            for(const Edge::Node *node=outgoing.head;node;node=node->next)
+            {
+                const Edge &self = **node;
+                if( &self == &edge ) return true;
+            }
+            return false;
+        }
+
+        void Flux::Vertex:: Display(const Edge::List &edges, const bool flag)
+        {
+            std::cerr << edges.size;
+            if(edges.size) {
+                std::cerr<< " {";
+                for(const Edge::Node *node=edges.head;node;node=node->next)
+                {
+                    const Edge &E = **node;
+                    std::cerr << ' ' << (flag?E.target.name():E.source.name());
+                }
+                std::cerr <<" }";
+            }
+        }
+
+        void Flux:: Vertex:: display() const
+        {
+            std::cerr << "      " << name() << " :";
+            std::cerr << " #out="; Display(outgoing,true);
+            std::cerr << " | #in="; Display(incoming,false);
+            std::cerr << std::endl;
+        }
+
         void Flux::Vertex:: viz(ios::ostream &fp) const
         {
             fp.viz(this);
@@ -92,12 +135,11 @@ namespace upsylon
                     const Strain  &S = *strain;
                     const Species &s = *S;
                     shape = "oval";
-                    style = "bold";
+                    style = "bold,filled";
 
                     switch(S.linkage)
                     {
                         case Single:
-
                             style += ",dotted";
                             break;
 
@@ -106,22 +148,20 @@ namespace upsylon
 
                         case Intake:
                             shape = "house";
-                            style += ",filled";
                             break;
 
                         case Output:
                             shape = "invhouse";
-                            style += ",filled";
                             break;
 
                         case Siphon:
                             shape  = "trapezium";
-                            style += ",dashed,filled";
+                            style += ",dashed";
                             break;
 
                         case Source:
                             shape = "invtrapezium";
-                            style += ",dashed,filled";
+                            style += ",dashed";
                             break;
 
                         default:
@@ -231,8 +271,40 @@ namespace upsylon
                         aliasing::_(s->outgoing).push_back( new Edge::Node(edge) );
                     }
                 }
+            }
+
+            // build incoming
+            for(const Edge::Iter *node=edges.head();node;node=node->next)
+            {
+                const Edge   &edge   = ***node;
+
+                assert(edge.source.hasOutgoing(edge));
+                aliasing::_(edge.target.incoming).push_back( new Edge::Node(edge) );
+            }
+
+            if(Verbosity)
+            {
+                std::cerr << "  <Graph>" << std::endl;
+
+                std::cerr << "    <Species>" << std::endl;
+                for(size_t i=1;i<=svtx.size();++i)
+                {
+                    svtx[i]->display();
+                }
+                std::cerr << "    <Species/>" << std::endl;
+
+
+                std::cerr << "    <Equilibria>" << std::endl;
+                for(size_t i=1;i<=pvtx.size();++i)
+                {
+                    pvtx[i]->display();
+                }
+                std::cerr << "    <Equilibria/>" << std::endl;
+
+                std::cerr << "  <Graph/>" << std::endl;
 
             }
+
 
         }
 

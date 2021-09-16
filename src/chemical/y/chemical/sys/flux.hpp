@@ -117,7 +117,9 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                void viz(ios::ostream &) const; //!< standalone graphViz code
+                void          viz(ios::ostream &) const; //!< standalone graphViz code
+                const string &name()      const throw(); //!< genus depending
+                void          display()           const; //!< info
 
                 //______________________________________________________________
                 //
@@ -129,9 +131,13 @@ namespace upsylon
                     const Primary *primary;  //!< in case of primary
                 };
                 const Edge::List   outgoing; //!< edges from this
+                const Edge::List   incoming; //!< edges to   this
+
+                bool hasOutgoing(const Edge &) const throw();
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+                static void Display(const Edge::List &, const bool);
             };
 
 
@@ -161,7 +167,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 void graphViz(const string &) const; //!< save/render
-
+                
                 //______________________________________________________________
                 //
                 // members

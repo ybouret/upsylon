@@ -31,9 +31,7 @@ Y_UTEST(sys)
         eqs<<"+dum4:-C:-D:3H:=4";
     }
 
-    //eqs.load("dummy:-A:-B:2C:3D:=1",lib,vm);
-    //lib << "Na+:Cl-" << "K+";
-
+    
 
     std::cerr << "lib=" << lib << std::endl;
     std::cerr << "eqs=" << eqs << std::endl;
