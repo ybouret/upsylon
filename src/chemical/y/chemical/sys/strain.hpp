@@ -36,6 +36,18 @@ namespace upsylon
         //______________________________________________________________________
         typedef core::list_of_cpp<Appliance> Appliances;
 
+        enum Linkage
+        {
+            Single, //!< bounded, no apps (->spectator)
+            Intake, //!< bounded, consumed only
+            Inside, //!< bounded, consumed and produced
+            Output, //!< bounded, produced only
+            Source, //!< endless, produded only
+            Siphon  //!< endless, consumed only
+        };
+
+        const char * LinkageText(const Linkage) throw();
+
         //______________________________________________________________________
         //
         //
@@ -67,15 +79,16 @@ namespace upsylon
             //__________________________________________________________________
 
 
-            void  link(const unit_t, const Primary &); //!< link and update flow state
-            bool  isIntake() const throw();            //!< rating=1 and consumed
-            bool  isOutput() const throw();            //!< rating=1 and produced
+            void        link(const unit_t, const Primary &); //!< link and UPDATE flow state
+            void        finalize()           throw();        //!< set linkage
+            const char *linkageState() const throw();        //!< textual value for linkage
 
 
             //__________________________________________________________________
             //
             // members
             //__________________________________________________________________
+            const Linkage    linkage;   //!< once finalized, default is vacant
             const Appliances consumers; //!< strain is consumed by these equilibria
             const Appliances producers; //!< strain is produced by this equilibria
 
@@ -97,7 +110,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os) const
             {
-                os << **this << " : " << stateText();
+                os << **this << " : " << stateText() << " and " << linkageState();
                 if(consumers.size)
                 {
                     os << " ->{";

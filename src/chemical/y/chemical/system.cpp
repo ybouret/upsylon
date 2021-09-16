@@ -143,8 +143,8 @@ namespace upsylon
                             if(Verbosity) std::cerr << ' ' << p->name;
                         }
                     }
-                    if(Verbosity) std::cerr << " => " << S->stateText() << std::endl;
-
+                    S->finalize();
+                    if(Verbosity) std::cerr << " => " << S->stateText() << "/" << S->linkageState() << std::endl;
                 }
                 Y_CHEMICAL_PRINTLN("    <Building/>");
 

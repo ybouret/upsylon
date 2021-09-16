@@ -66,24 +66,40 @@ namespace upsylon
                 {
                     const Strain  &s  = *strain[j];
                     const Species &sp = *s;
-                    string      shape = "egg";
-                    string      style = "bold";
-                    if(sp.rating==1)
-                    {
-                        style += ",filled";
-                        if(s.isIntake()) shape="house";
-                        if(s.isOutput()) shape="invhouse";
-                    }
+                    string         shape = "oval";
+                    string         style = "bold";
 
-                    if(sp.rating==0)
+                    switch(s.linkage)
                     {
-                        shape = "oval";
-                        style += ",dotted";
-                    }
+                        case Single:
+                            style += ",dotted";
+                            break;
 
-                    if(Flow::Endless==s.state)
-                    {
-                        style += ",dashed";
+                        case Inside:
+                            break;
+
+                        case Intake:
+                            shape = "house";
+                            style += ",filled";
+                            break;
+
+                        case Output:
+                            shape = "invhouse";
+                            style += ",filled";
+                            break;
+
+                        case Siphon:
+                            shape  = "trapezium";
+                            style += ",filled";
+                            break;
+
+                        case Source:
+                            shape = "invtrapezium";
+                            style += ",filled";
+                            break;
+
+                        default:
+                            break;
                     }
 
 

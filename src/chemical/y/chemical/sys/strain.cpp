@@ -19,6 +19,24 @@ namespace upsylon
         }
 
 
+#define Y_LINKAGE(TYPE) case TYPE : return #TYPE
+
+        const char * LinkageText(const Linkage l) throw()
+        {
+            switch(l)
+            {
+                    Y_LINKAGE(Single);
+                    Y_LINKAGE(Intake);
+                    Y_LINKAGE(Inside);
+                    Y_LINKAGE(Output);
+                    Y_LINKAGE(Source);
+                    Y_LINKAGE(Siphon);
+            }
+            return unknown_text;
+        }
+
+
+
         Strain:: ~Strain() throw()
         {
 
@@ -28,6 +46,7 @@ namespace upsylon
         Object(),
         authority<const Species>(sp),
         Flow(Bounded),
+        linkage(Single),
         consumers(),
         producers()
         {
@@ -54,15 +73,49 @@ namespace upsylon
                 aliasing::_(state) = Endless;
             }
         }
-
-        bool Strain:: isIntake() const throw()
-        {
-            return   (Bounded==state) && (1==(**this).rating) && (consumers.size>0);
-        }
         
-        bool Strain:: isOutput() const throw()
+
+        void  Strain:: finalize() throw()
         {
-            return   (Bounded==state) && (1==(**this).rating) && (producers.size>0);
+            Linkage & _ = aliasing::_(linkage);
+            switch(state)
+            {
+                case Bounded:
+                    if(consumers.size>0)
+                    {
+                        if(producers.size>0)
+                            _ = Inside;
+                        else
+                            _ = Intake;
+                    }
+                    else
+                    {
+                        assert(0==consumers.size);
+                        if(producers.size>0)
+                            _ = Output;
+                        else
+                            _ = Single;
+
+                    }
+                    break;
+
+                case Endless:
+                    if(consumers.size>0)
+                    {
+                        _ = Siphon;
+                    }
+                    else
+                    {
+                        assert(producers.size>0);
+                        _ = Source;
+                    }
+                    break;
+            };
+        }
+
+        const char * Strain:: linkageState() const throw()
+        {
+            return LinkageText(linkage);
         }
 
     }
