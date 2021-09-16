@@ -52,7 +52,6 @@ namespace upsylon {
         
     private:
         Y_DISABLE_ASSIGN(be_key);
-        //void checkValidAddress(const void *) const;
     };
     
 }

@@ -6,6 +6,8 @@
 #include "y/chemical/sys/strain.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/core/rnode.hpp"
+#include "y/container/key-address.hpp"
+#include "y/associative/suffix/set.hpp"
 
 namespace upsylon
 {
@@ -17,14 +19,36 @@ namespace upsylon
         {
             class Vertex;
 
-            class Edge
+
+            class Edge : public Object
             {
             public:
                 typedef ref_dnode<const Edge>   Node;
                 typedef core::list_of_cpp<Node> List;
+                typedef key_address<2>          Key;
+                typedef intr_ptr<Key,Edge>      Pointer;
+                typedef suffix_set<Key,Pointer> Set;
+                typedef Set::data_node          Iter;
+
                 const Vertex *source;
                 const Vertex *target;
                 const unit_t  weight;
+                const Key     vkey;
+
+                virtual ~Edge() throw() {}
+                explicit Edge(const Vertex &ini,
+                              const Vertex &end,
+                              const unit_t  cof) throw() :
+                source(&ini),
+                target(&end),
+                weight(cof),
+                vkey(ini,end)
+                {
+                }
+
+                const Key & key() const throw() { return vkey; }
+
+                void viz(ios::ostream&) const;
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Edge);
@@ -32,11 +56,12 @@ namespace upsylon
 
 
 
-            class Vertex : public Object, public Vizible
+            class Vertex : public Object
             {
             public:
                 typedef arc_ptr<const Vertex>     Pointer;
                 typedef vector<Pointer,Allocator> Array;
+                
                 enum Genus
                 {
                     IsStrain,
@@ -47,27 +72,26 @@ namespace upsylon
                 union {
                     const Strain  *strain;
                     const Primary *primary; };
-                const Edge::List   incoming;
-                const Edge::List   outgoing;
+                const Edge::List   edges;
 
                 virtual ~Vertex() throw() {}
 
                 explicit Vertex(const Strain &S) throw() :
-                genus(IsStrain), incoming(), outgoing()
+                genus(IsStrain), edges()
                 {
                     strain = &S;
                 }
 
                 explicit Vertex(const Primary &P) throw() :
-                genus(IsPrimary),  incoming(), outgoing()
+                genus(IsPrimary),  edges()
                 {
                     primary = &P;
                 }
 
-
+                void graphViz(ios::ostream &) const;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
-                virtual void vizCore(ios::ostream &) const;
             };
 
             class Graph
@@ -76,6 +100,7 @@ namespace upsylon
 
                 const Vertex::Array svtx;
                 const Vertex::Array pvtx;
+                const Edge::Set     edges;
 
                 explicit Graph(const Strain::Array  &strain,
                                const Primary::Array &primary) :
@@ -84,15 +109,19 @@ namespace upsylon
                 {
                     Build( aliasing::_(svtx), strain);
                     Build( aliasing::_(pvtx), primary);
+                    connect(strain);
                 }
-
 
 
                 void graphViz(const string &fileName) const;
 
+                const Vertex *query(const Primary &) const throw();
+                const Edge   &query(const Vertex *ini, const Vertex *end, const unit_t cof);
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
+                void connect(const Strain::Array &);
+
                 template <typename SOURCE> static inline
                 void Build(Vertex::Array &target, const SOURCE &source)
                 {
@@ -104,14 +133,7 @@ namespace upsylon
                     }
                 }
 
-                static void Save(ios::ostream &fp, const Vertex::Array &arr)
-                {
-                    const size_t n = arr.size();
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        arr[i]->vizSave(fp);
-                    }
-                }
+                static void Save(ios::ostream &fp, const Vertex::Array &arr);
 
             };
 
