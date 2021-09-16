@@ -18,31 +18,10 @@ namespace upsylon
 
             typedef ref_dnode<const Strain>  sNode;
             typedef ref_dnode<const Primary> pNode;
+            typedef core::list_of_cpp<sNode> sList;
+            typedef core::list_of_cpp<pNode> pList;
 
-            class Node : public Object, public dnode<Node>, public Vizible
-            {
-            public:
-                enum Genus
-                {
-                    IsStrain,
-                    IsPrimary
-                };
-
-                virtual ~Node() throw();
-
-                const Genus genus;
-                union
-                {
-                    const Strain  *strain;
-                    const Primary *primary;
-                };
-
-                explicit Node(const Strain &s);
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Node);
-            };
+            
 
         };
 

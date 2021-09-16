@@ -20,8 +20,8 @@ namespace upsylon {
             // virtual interface
             //
             //------------------------------------------------------------------
-            virtual     ~vizible() throw();            //!< cleanup
-            virtual void vizCore(ostream &) const = 0; //!< effective GraphViz representation
+            virtual     ~vizible() throw();                 //!< cleanup
+            virtual void vizCore(ios::ostream &) const = 0; //!< effective GraphViz representation
 
             //------------------------------------------------------------------
             //
