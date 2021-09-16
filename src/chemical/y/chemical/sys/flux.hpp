@@ -128,7 +128,7 @@ namespace upsylon
                     const Strain  *strain;   //!< in case of strain
                     const Primary *primary;  //!< in case of primary
                 };
-                const Edge::List   edges;    //!< edges
+                const Edge::List   outgoing; //!< edges from this
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);

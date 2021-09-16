@@ -52,14 +52,16 @@ namespace upsylon
         {
         }
 
+#define Y_CHEM_FLUX_CTOR(FLAG) genus(FLAG), outgoing()
+
         Flux:: Vertex:: Vertex(const Strain &S) throw() :
-        genus(IsStrain), edges()
+        Y_CHEM_FLUX_CTOR(IsStrain)
         {
             strain = &S;
         }
 
         Flux:: Vertex:: Vertex(const Primary &P) throw() :
-        genus(IsPrimary),  edges()
+        Y_CHEM_FLUX_CTOR(IsPrimary)
         {
             primary = &P;
         }
@@ -201,34 +203,37 @@ namespace upsylon
 
         void Flux::Graph:: connect(const Strain::Array &strain)
         {
-            const size_t n = strain.size();
-            for(size_t i=1;i<=n;++i)
+            // build outgoing
             {
-                const Strain &S = *strain[i];
-                const Vertex *s = & *svtx[i]; assert(s->strain==&S);
-
-                // producer -> species
-                for(const Appliance *app=S.producers.head;app;app=app->next)
+                const size_t n = strain.size();
+                for(size_t i=1;i<=n;++i)
                 {
-                    const Primary &P  = **app;
-                    const Vertex  *p  = & *pvtx[P->indx]; assert(p->primary==&P);
-                    const unit_t   nu = app->nu; assert(nu!=0);
-                    const Edge    &edge = query(p,s,abs_of(nu));
-                    aliasing::_(p->edges).push_back( new Edge::Node(edge) );
-                }
+                    const Strain &S = *strain[i];
+                    const Vertex *s = & *svtx[i]; assert(s->strain==&S);
 
-                // species -> consumer
-                for(const Appliance *app=S.consumers.head;app;app=app->next)
-                {
-                    const Primary &P  = **app;
-                    const Vertex  *p  = & *pvtx[P->indx]; assert(p->primary==&P);
-                    const unit_t   nu = app->nu; assert(nu!=0);
-                    const Edge    &edge = query(s,p,abs_of(nu));
-                    aliasing::_(s->edges).push_back( new Edge::Node(edge) );
-                }
+                    // producer -> species
+                    for(const Appliance *app=S.producers.head;app;app=app->next)
+                    {
+                        const Primary &P    = **app;
+                        const Vertex  *p    = & *pvtx[P->indx]; assert(p->primary==&P);
+                        const unit_t   nu   = app->nu; assert(nu!=0);
+                        const Edge    &edge = query(p,s,abs_of(nu));
+                        aliasing::_(p->outgoing).push_back( new Edge::Node(edge) );
+                    }
 
+                    // species -> consumer
+                    for(const Appliance *app=S.consumers.head;app;app=app->next)
+                    {
+                        const Primary &P  = **app;
+                        const Vertex  *p  = & *pvtx[P->indx]; assert(p->primary==&P);
+                        const unit_t   nu = app->nu; assert(nu!=0);
+                        const Edge    &edge = query(s,p,abs_of(nu));
+                        aliasing::_(s->outgoing).push_back( new Edge::Node(edge) );
+                    }
+                }
 
             }
+
         }
 
 
