@@ -56,7 +56,7 @@ namespace upsylon
 
         void critical_error( int err, const char when[] ) throw()
         {
-            const char *msg = when ? when : "?";
+            const char *msg = when ? when : unknown_text;
             char buffer[256];
             format_error(buffer, sizeof(buffer), err);
             std::cerr << "** Libc CRITICAL ERROR @: " << msg  << std::endl;

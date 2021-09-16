@@ -26,7 +26,7 @@ namespace upsylon
                 case Bounded: return "BOUNDED";
                 case Endless: return "ENDLESS";
             }
-            return "???";
+            return unknown_text;
         }
 
         const char * Flow:: stateText() const throw()

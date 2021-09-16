@@ -56,7 +56,7 @@ namespace upsylon
             case run_time_warning: return "warning";
             case run_time_error:   return "*error*";
         }
-        return "???";
+        return unknown_text;
     }
 
     

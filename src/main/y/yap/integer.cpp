@@ -17,7 +17,7 @@ namespace upsylon
 
         void integer:: cast_overflow(const char *which)
         {
-            if(!which) which = "???";
+            if(!which) which = unknown_text;
             throw exception("integer cast overflow for '%s'",which);
         }
         

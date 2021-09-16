@@ -3,6 +3,9 @@
 
 namespace upsylon
 {
+
+    const char unknown_text[4] = "???";
+
     const as_capacity_t  as_capacity = {};
 
     uint32_t crc32(const void *buffer,const size_t buflen) throw()

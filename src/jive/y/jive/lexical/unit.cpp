@@ -41,7 +41,7 @@ namespace upsylon
                     case Core: return "core";
                     case Done: return "done";
                 }
-                return "???";
+                return unknown_text;
             }
 
 

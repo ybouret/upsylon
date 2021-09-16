@@ -8,7 +8,7 @@ namespace upsylon {
             case computed_block_size: return "constant_block_size";
             case flexible_block_size: return "flexible_block_size";
         }
-        return "?";
+        return unknown_text;
     }
     
     const char * comms:: infrastructure_id(const infrastructure m) throw()
@@ -17,7 +17,7 @@ namespace upsylon {
             case homogeneous: return "homogeneous";
             case distributed: return "distributed";
         }
-        return "?";
+        return unknown_text;
     }
     
     

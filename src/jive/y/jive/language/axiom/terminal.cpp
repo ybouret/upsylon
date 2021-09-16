@@ -19,7 +19,7 @@ namespace upsylon
                     case Univocal: return "univocal";
                     case Division: return "division";
                 }
-                return "???";
+                return unknown_text;
             }
 
             const char * Terminal:: typeText() const throw()

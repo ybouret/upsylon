@@ -20,7 +20,7 @@ namespace upsylon {
 
 #define Y_CNX_CASE_TEXT(ID) case ID : return #ID
         
-        static const char Unknown[] = "???";
+        static const char * const Unknown = unknown_text;
         
         const char * Connect:: ModeText(const Mode m) throw()
         {

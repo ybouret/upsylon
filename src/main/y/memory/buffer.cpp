@@ -25,7 +25,7 @@ namespace upsylon
                 case Lowercase: return hexadecimal::lowercase[ byte_at(i) ];
                 case Uppercase: return hexadecimal::uppercase[ byte_at(i) ];
             }
-            return "??";
+            return "!?";
         }
         
         bool ro_buffer:: is_zeroed() const throw()

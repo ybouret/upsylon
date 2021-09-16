@@ -58,6 +58,9 @@ namespace upsylon
     //! built-in integer hash
     uint32_t ih32(uint32_t a) throw();
 
+    //! "???"
+    extern const char unknown_text[];
+
 }
 
 #endif

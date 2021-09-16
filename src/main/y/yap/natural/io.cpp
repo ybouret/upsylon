@@ -12,7 +12,7 @@ namespace upsylon
 
         void natural:: cast_overflow(const char *which)
         {
-            if(!which) which = "???";
+            if(!which) which = unknown_text;
             throw exception("natural cast overflow for '%s'",which);
         }
 

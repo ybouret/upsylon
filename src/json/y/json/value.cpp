@@ -20,7 +20,7 @@ namespace upsylon
                     Y_JSON_VALUE(Array);
                     Y_JSON_VALUE(Object);
             }
-            return "???";
+            return unknown_text;
         }
         
         

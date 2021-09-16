@@ -135,7 +135,7 @@ on_init();        \
                 case sd_both:
                     return "BOTH";
             }
-            return "????";
+            return unknown_text;
         }
 
         void bsd_socket:: shutdown(const shutdown_type how) throw()
