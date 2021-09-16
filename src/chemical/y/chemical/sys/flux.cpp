@@ -160,7 +160,8 @@ namespace upsylon
         Flux::Graph::Graph(const Strain::Array  &strain,
                            const Primary::Array &primary) :
         svtx(strain.size(), as_capacity),
-        pvtx(primary.size(),as_capacity)
+        pvtx(primary.size(),as_capacity),
+        edges()
         {
             Build( aliasing::_(svtx), strain);
             Build( aliasing::_(pvtx), primary);
