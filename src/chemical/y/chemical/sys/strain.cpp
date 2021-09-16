@@ -59,6 +59,7 @@ namespace upsylon
         {
             return   (1==(**this).rating) && (consumers.size>0);
         }
+        
         bool Strain:: isOutput() const throw()
         {
             return   (1==(**this).rating) && (producers.size>0);

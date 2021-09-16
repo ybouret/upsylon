@@ -1,9 +1,10 @@
 PROJECT(test-chemical)
 INCLUDE_DIRECTORIES(../../main/tests)
 FILE(GLOB srcs test-*.cpp)
+FILE(GLOB data *.lua)
 
-ADD_EXECUTABLE(test-chemical main.cpp ${srcs})
-TARGET_LINK_Y(test-chemical chemical mkl lua++ jive)
+ADD_EXECUTABLE(test-chemical main.cpp ${srcs} ${data})
+TARGET_LINK_Y(test-chemical chemical)
 
 SET( HERE ${CMAKE_CURRENT_SOURCE_DIR} )
 ENABLE_TESTING()
@@ -12,6 +13,7 @@ ADD_TEST(lib     test-chemical lib)
 ADD_TEST(actors  test-chemical actors)
 ADD_TEST(eqs     test-chemical eqs)
 ADD_TEST(sys     test-chemical sys)
+ADD_TEST(lua     test-chemical lua)
 
 
 ADD_CUSTOM_TARGET(utest-chemical
