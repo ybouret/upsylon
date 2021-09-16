@@ -96,7 +96,7 @@ namespace upsylon
         string Library:: getName(Jive::Source &source) const
         {
             Jive::Token token;
-            if(!jN->accept(token,source)) throw exception("%s no species name",CLID);
+            if(!jN->accept(token,source)) throw exception("%s got no species name",CLID);
             return token.toString();
         }
         

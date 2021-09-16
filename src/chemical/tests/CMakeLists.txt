@@ -13,7 +13,8 @@ ADD_TEST(lib     test-chemical lib)
 ADD_TEST(actors  test-chemical actors)
 ADD_TEST(eqs     test-chemical eqs)
 ADD_TEST(sys     test-chemical sys)
-ADD_TEST(lua     test-chemical lua ${HERE}/simple.lua)
+ADD_TEST(simple  test-chemical lua ${HERE}/simple.lua)
+ADD_TEST(hairy   test-chemical lua ${HERE}/hairy.lua)
 
 
 ADD_CUSTOM_TARGET(utest-chemical

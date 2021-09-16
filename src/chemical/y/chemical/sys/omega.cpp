@@ -14,6 +14,7 @@
 #include "y/ios/tools/graphviz.hpp"
 #include "y/ios/ocstream.hpp"
 #include "y/string/convert.hpp"
+#include "y/chemical/sys/flux.hpp"
 
 namespace upsylon
 {
@@ -143,6 +144,10 @@ namespace upsylon
             }
 
             ios::GraphViz::Render(filename);
+
+            Flux::Graph G(strain,primary);
+            G.graphViz("flux.dot");
+            
         }
     }
 
