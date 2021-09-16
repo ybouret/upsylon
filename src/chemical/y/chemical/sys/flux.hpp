@@ -118,7 +118,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 void          viz(ios::ostream &) const; //!< standalone graphViz code
-                const string &name()      const throw(); //!< genus depending
+                const char   *name()      const throw(); //!< genus depending
                 void          display()           const; //!< info
 
                 //______________________________________________________________

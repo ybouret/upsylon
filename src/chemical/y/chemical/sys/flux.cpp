@@ -52,7 +52,7 @@ namespace upsylon
         {
         }
 
-#define Y_CHEM_FLUX_CTOR(FLAG) genus(FLAG), outgoing()
+#define Y_CHEM_FLUX_CTOR(FLAG) genus(FLAG), outgoing(), incoming()
 
         Flux:: Vertex:: Vertex(const Strain &S) throw() :
         Y_CHEM_FLUX_CTOR(IsStrain)
@@ -66,14 +66,14 @@ namespace upsylon
             primary = &P;
         }
 
-        const string & Flux::Vertex:: name() const throw()
+        const char * Flux::Vertex:: name() const throw()
         {
             switch(genus)
             {
-                case IsStrain:  return (**strain).name;
-                case IsPrimary: return (**primary).name;
+                case IsStrain:  return *((**strain) .name);
+                case IsPrimary: return *((**primary).name);
             }
-            
+            return unknown_text;
         }
 
 
