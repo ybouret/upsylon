@@ -13,7 +13,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! primary constraint definition
+        //! primary constraint definition per equilibrium
         //
         //______________________________________________________________________
         class Primary : public Object, public authority<const Equilibrium>
