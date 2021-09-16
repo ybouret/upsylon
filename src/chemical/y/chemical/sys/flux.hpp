@@ -13,127 +13,173 @@ namespace upsylon
 {
     namespace Chemical
     {
+        //! alias
         typedef ios::vizible Vizible;
 
+        //______________________________________________________________________
+        //
+        //
+        //! Matter Flux API
+        //
+        //______________________________________________________________________
         struct Flux
         {
-            class Vertex;
+            class Vertex; //!< forward declaration
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! an Edge connect two vertices
+            //
+            //__________________________________________________________________
             class Edge : public Object
             {
             public:
-                typedef ref_dnode<const Edge>   Node;
-                typedef core::list_of_cpp<Node> List;
-                typedef key_address<2>          Key;
-                typedef intr_ptr<Key,Edge>      Pointer;
-                typedef suffix_set<Key,Pointer> Set;
-                typedef Set::data_node          Iter;
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
+                typedef ref_dnode<const Edge>   Node;     //!< for vertex edges
+                typedef core::list_of_cpp<Node> List;     //!< for vertex edges
+                typedef key_address<2>          Key;      //!< UUID from 2 vertices
+                typedef intr_ptr<Key,Edge>      Pointer;  //!< alias for Set
+                typedef suffix_set<Key,Pointer> Set;      //!< database of edges
+                typedef Set::data_node          Iter;     //!< iterator on database
 
-                const Vertex *source;
-                const Vertex *target;
-                const unit_t  weight;
-                const Key     vkey;
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
 
-                virtual ~Edge() throw() {}
-                explicit Edge(const Vertex &ini,
-                              const Vertex &end,
-                              const unit_t  cof) throw() :
-                source(&ini),
-                target(&end),
-                weight(cof),
-                vkey(ini,end)
-                {
-                }
+                //! cleanup
+                virtual ~Edge() throw();
 
-                const Key & key() const throw() { return vkey; }
+                //! setup
+                explicit Edge(const Vertex &ini, const Vertex &end, const unit_t  cof) throw() ;
 
-                void viz(ios::ostream&) const;
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                const Key & key()      const throw(); //!< UUID
+                void        viz(ios::ostream&) const; //!< standalone graphViz code
+
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Vertex &source; //!< source Vertex
+                const Vertex &target; //!< target Vertex
+                const unit_t  weight; //!< stoichiometry (>0 here!)
+
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Edge);
+                const Key     vkey;
             };
 
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! a vertex hold a Strain/Species or a Primary/Equilibrium
+            //
+            //__________________________________________________________________
             class Vertex : public Object
             {
             public:
-                typedef arc_ptr<const Vertex>     Pointer;
-                typedef vector<Pointer,Allocator> Array;
-                
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
+                typedef arc_ptr<const Vertex>     Pointer; //!< alias
+                typedef vector<Pointer,Allocator> Array;   //!< alias
+
+                //! genus of this vertux
                 enum Genus
                 {
-                    IsStrain,
-                    IsPrimary
+                    IsStrain, //!< species
+                    IsPrimary //!< equilibrium
                 };
 
-                const Genus        genus;
+
+
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~Vertex() throw();                 //!< cleanup
+                explicit Vertex(const Strain  &) throw();  //!< setup as Strain
+                explicit Vertex(const Primary &) throw();  //!< setup as Primary
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void viz(ios::ostream &) const; //!< standalone graphViz code
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Genus        genus;    //!< identifier
                 union {
-                    const Strain  *strain;
-                    const Primary *primary; };
-                const Edge::List   edges;
+                    const Strain  *strain;   //!< in case of strain
+                    const Primary *primary;  //!< in case of primary
+                };
+                const Edge::List   edges;    //!< edges
 
-                virtual ~Vertex() throw() {}
-
-                explicit Vertex(const Strain &S) throw() :
-                genus(IsStrain), edges()
-                {
-                    strain = &S;
-                }
-
-                explicit Vertex(const Primary &P) throw() :
-                genus(IsPrimary),  edges()
-                {
-                    primary = &P;
-                }
-
-                void graphViz(ios::ostream &) const;
-                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
             };
 
+
+            //__________________________________________________________________
+            //
+            //
+            //! Build a graph from all strains and primary
+            //
+            //__________________________________________________________________
             class Graph
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
 
-                const Vertex::Array svtx;
-                const Vertex::Array pvtx;
-                const Edge::Set     edges;
-
+                //! setup
                 explicit Graph(const Strain::Array  &strain,
-                               const Primary::Array &primary) :
-                svtx(strain.size(), as_capacity),
-                pvtx(primary.size(),as_capacity)
-                {
-                    Build( aliasing::_(svtx), strain);
-                    Build( aliasing::_(pvtx), primary);
-                    connect(strain);
-                }
+                               const Primary::Array &primary);
 
+                //! cleanup
+                virtual ~Graph() throw();
 
-                void graphViz(const string &fileName) const;
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void graphViz(const string &) const; //!< save/render
 
-                const Vertex *query(const Primary &) const throw();
-                const Edge   &query(const Vertex *ini, const Vertex *end, const unit_t cof);
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Vertex::Array svtx;   //!< all unique strains/species
+                const Vertex::Array pvtx;   //!< all unique primaries/equilibria
+                const Edge::Set     edges;  //!< all unique connecting edges
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
-                void connect(const Strain::Array &);
-
-                template <typename SOURCE> static inline
-                void Build(Vertex::Array &target, const SOURCE &source)
-                {
-                    const size_t n = source.size(); assert(target.capacity()>=n);
-                    for(size_t i=1;i<=n;++i)
-                    {
-                        const Vertex::Pointer V =   new Vertex( *source[i] );
-                        target.push_back_(V);
-                    }
-                }
-
+                void        connect(const Strain::Array &);
+                const Edge &query(const Vertex *ini, const Vertex *end, const unit_t cof);
                 static void Save(ios::ostream &fp, const Vertex::Array &arr);
+                void        join(ios::ostream &fp) const;
+
+
+
+
 
             };
 
