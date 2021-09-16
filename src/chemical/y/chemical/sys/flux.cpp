@@ -273,15 +273,18 @@ namespace upsylon
                 }
             }
 
+            
+
             // build incoming
             for(const Edge::Iter *node=edges.head();node;node=node->next)
             {
                 const Edge   &edge   = ***node;
-
                 assert(edge.source.hasOutgoing(edge));
                 aliasing::_(edge.target.incoming).push_back( new Edge::Node(edge) );
             }
 
+
+            // result
             if(Verbosity)
             {
                 std::cerr << "  <Graph>" << std::endl;

@@ -1,13 +1,10 @@
 #include "y/container/key-address.hpp"
+
 #include "y/counting/perm.hpp"
 #include "y/utest/run.hpp"
 
 using namespace upsylon;
 
-namespace {
-
-
-}
 
 Y_UTEST(key_address)
 {
@@ -52,8 +49,22 @@ Y_UTEST(key_address)
 
 
 
-
-    
 }
 Y_UTEST_DONE()
 
+
+#include "y/associative/be-keys.hpp"
+
+Y_UTEST(be_keys)
+{
+    int      a = 10;
+    unsigned b = 11;
+
+    be_keys<1> ka(a); std::cerr << "@" << (void*)&a << " => "; ka.print_to(std::cerr) << std::endl;
+    be_keys<1> kb(b); std::cerr << "@" << (void*)&b << " => "; kb.print_to(std::cerr) << std::endl;
+
+    be_keys<2> ab(a,b); ab.print_to(std::cerr) << std::endl;
+
+
+}
+Y_UTEST_DONE()

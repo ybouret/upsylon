@@ -6,7 +6,7 @@
 #include "y/chemical/sys/strain.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/core/rnode.hpp"
-#include "y/container/key-address.hpp"
+#include "y/associative/be-keys.hpp"
 #include "y/associative/suffix/set.hpp"
 
 namespace upsylon
@@ -41,7 +41,7 @@ namespace upsylon
                 //______________________________________________________________
                 typedef ref_dnode<const Edge>   Node;     //!< for vertex edges
                 typedef core::list_of_cpp<Node> List;     //!< for vertex edges
-                typedef key_address<2>          Key;      //!< UUID from 2 vertices
+                typedef be_keys<2>              Key;      //!< UUID from 2 vertices
                 typedef intr_ptr<Key,Edge>      Pointer;  //!< alias for Set
                 typedef suffix_set<Key,Pointer> Set;      //!< database of edges
                 typedef Set::data_node          Iter;     //!< iterator on database
@@ -133,7 +133,7 @@ namespace upsylon
                 const Edge::List   outgoing; //!< edges from this
                 const Edge::List   incoming; //!< edges to   this
 
-                bool hasOutgoing(const Edge &) const throw();
+                bool hasOutgoing(const Edge &) const throw(); //!< test to debug
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);

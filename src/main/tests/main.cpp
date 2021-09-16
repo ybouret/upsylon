@@ -113,6 +113,7 @@ Y_UTEST_INIT(256)
     Y_UTEST(arrays);
     Y_UTEST(endian);
     Y_UTEST(key_address);
+    Y_UTEST(be_keys);
     Y_UTEST(addressable);
     Y_UTEST(factory);
     Y_UTEST(addresses);
