@@ -71,9 +71,9 @@ namespace upsylon
             //__________________________________________________________________
             typedef intr_ptr<string,Equilibrium> Pointer;        //!< alias
             typedef hash_set<string,Pointer>     Set;            //!< database alias
-            static const unsigned                Default = 0x00; //!< check charge conservation
+            static const unsigned                Default = 0x00; //!< check not empty and charge conservation
             static const unsigned                Minimal = 0x01; //!< check coprimality
-
+            static const unsigned                Utterly = 0xFFFFFFFF; //!< all flags
 
 
             //__________________________________________________________________

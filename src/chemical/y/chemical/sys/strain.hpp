@@ -67,7 +67,7 @@ namespace upsylon
             //__________________________________________________________________
 
 
-            void  link(const unit_t, const Primary &); //! link and update flow state
+            void  link(const unit_t, const Primary &); //!< link and update flow state
             bool  isIntake() const throw();            //!< rating=1 and consumed
             bool  isOutput() const throw();            //!< rating=1 and produced
 

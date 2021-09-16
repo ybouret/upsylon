@@ -25,7 +25,12 @@ Y_UTEST(lua)
     const string sys = "sys";
     if(!lvm->exists(sys))
         return 0;
-    
+
+    eqs.append(sys);
+
+    System cs(lib,eqs,Equilibrium::Utterly);
+
+
 
 }
 Y_UTEST_DONE()
