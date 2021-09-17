@@ -3,6 +3,8 @@
 #include "y/chemical/system.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/string/tokenizer.hpp"
+#include "y/string/convert.hpp"
 
 using namespace upsylon;
 using namespace Chemical;
@@ -10,13 +12,44 @@ using namespace mkl;
 
 Y_UTEST(torture)
 {
+    size_t N = 3;
+    size_t M = 4;
 
+    for(int i=1;i<argc;++i)
+    {
+        string arg = argv[i];
+        char  *sep = strchr(*arg,'=');
+        if(sep)
+        {
+            *sep = 0;
+            string label = *arg;
+            string value = sep+1;
+            label.clean_with(" \t");
+            value.clean_with(" \t");
+
+            std::cerr << "label=<" << label << ">" << std::endl;
+            std::cerr << "value=<" << value << ">" << std::endl;
+
+            if("N"==label)
+            {
+                N = string_convert::to<size_t>(value,*label);
+                continue;
+            }
+
+            if("M"==label)
+            {
+                M = string_convert::to<size_t>(value,*label);
+                continue;
+            }
+
+            throw exception("unknow label '%s'", *label);
+        }
+    }
     Library        lib;
-    Lua::VM        lvm = new Lua::State;
+    Lua::VM        lvm = new Lua::State();
     Equilibria     eqs;
 
-    const size_t M = 4;
-    const size_t N = 3;
+
 
     std::cerr << "Building Library" << std::endl;
     Strings names(M,as_capacity);

@@ -124,21 +124,22 @@ namespace upsylon
 
         //! automatic splitting of a line
         static inline
-        size_t split_with(sequence< core::string<T> > &words,
-                          const core::string<T>       &input,
-                          const T                     *buffer,
-                          const size_t                 buflen)
+        size_t split_with(const T                     *buffer,
+                          const size_t                 buflen,
+                          sequence< core::string<T> > &words,
+                          const core::string<T>       &input
+                          )
         {
             const str2sep is_sep = { buffer, buflen };
-            tokenizer tkn(input);
+            tokenizer     tkn(input);
             return tkn.split_all(words,is_sep);
         }
 
         //! automatic splitting of a line
         static inline
-        size_t split_with(sequence< core::string<T> > &words,
-                          const core::string<T>       &input,
-                          const T                     *buffer)
+        size_t split_with(const T                     *buffer,
+                          sequence< core::string<T> > &words,
+                          const core::string<T>       &input)
         {
             const str2sep is_sep = { buffer, length_of(buffer) };
             tokenizer tkn(input);
@@ -152,7 +153,7 @@ namespace upsylon
                           const core::string<T>       &input,
                           const T                      sep)
         {
-            return split_with(words,input,&sep,1);
+            return split_with(&sep,1,words,input);
         }
 
 
@@ -166,10 +167,7 @@ namespace upsylon
             return tkn.split_all(words,is_sep);
         }
 
-
-
-
-
+        
         //! one pass count
         template<typename FUNC> static inline
         size_t count_for( const core::string<T> &input, FUNC &is_sep ) throw()

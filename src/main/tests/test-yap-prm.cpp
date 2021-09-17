@@ -31,7 +31,7 @@ Y_UTEST(yap_prm)
             while(fp.gets(line))
             {
                 words.free();
-                const size_t np = tokenizer<char>::split_with(words,line, " \t\r\n");
+                const size_t np = tokenizer<char>::split_with(" \t\r\n",words,line);
                 for(size_t i=1;i<=np;++i)
                 {
                     const apn n = natural::parse(words[i]);

@@ -62,11 +62,10 @@ Y_UTEST(named)
             {
                 line.clean_with(" \t");
                 if(line.size()<=0) continue;
-                tokenizer<char>::split_with(words,line," \t");
+                tokenizer<char>::split_with(" \t",words,line);
                 if(words.size()<4) continue;
                 while(words.size()>4) words.pop_back();
-                //std::cerr << words << std::endl;
-
+                
                 string     id = "Y_" + words[1];
                 string_convert::make_upper(id);
                 rgb           C;
