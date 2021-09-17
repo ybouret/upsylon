@@ -171,6 +171,12 @@ namespace upsylon
             static const char complete_ortho_fn[]; //!< "complete_ortho"
 
             //! complete U with an orthogonal generator V
+            /**
+             - compute the projection matrix P on U
+             - compute the projection matrix Q on U_ortho : Q=I-P
+             - the rows of V are some rows of Q': try the different combination
+             with smallest vectors first
+             */
             static void complete_ortho_(const matrix<apz> &U, matrix<apz> &V);
 
             //! wrapper for integer types
