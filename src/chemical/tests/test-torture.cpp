@@ -78,8 +78,9 @@ Y_UTEST(torture)
         if(M>N)
         {
             const size_t Nc = M-N;
-            matrix<apz>  Om(Nc,M);
+            iMatrix      Om(Nc,M);
             apk::complete_ortho(Nu,Om);
+            std::cerr  << "Om=" << Om << std::endl;
         }
 
         return 0;

@@ -168,16 +168,19 @@ namespace upsylon
                 }
             }
 
-            static const char complete_ortho_fn[];
+            static const char complete_ortho_fn[]; //!< "complete_ortho"
+
+            //! complete U with an orthogonal generator V
             static void complete_ortho_(const matrix<apz> &U, matrix<apz> &V);
 
+            //! wrapper for integer types
             template <typename X, typename Y> static inline
             void complete_ortho(const matrix<X> &A, matrix<Y> &B)
             {
                 matrix<apz> U(A.rows,A.cols); U.assign(A);
                 matrix<apz> V(B.rows,B.cols);
                 complete_ortho_(U,V);
-                //convert(B,V,complete_ortho_fn);
+                convert(B,V,complete_ortho_fn);
             }
 
 

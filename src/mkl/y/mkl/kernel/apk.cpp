@@ -167,6 +167,9 @@ namespace upsylon
 
 #include "y/exceptions.hpp"
 #include "y/yap/gcd.hpp"
+#include "y/sequence/vector.hpp"
+#include "y/memory/allocator/dyadic.hpp"
+#include "y/sort/index.hpp"
 #include <cerrno>
 
 namespace upsylon
@@ -191,35 +194,48 @@ namespace upsylon
 
             // projection on U_ortho
             matrix<apz> QT(dim,dim);
-
             {
-                matrix<apz> P(dim,dim);
-                matrix<apz> aU2(primary,primary);
-                matrix<apz> U2(primary,primary); tao::gram(U2,U);
-                apz         dP = apk::determinant(U2); if(0==dP) throw libc::exception(EDOM,"%s with singular primary space",fn);
-                apk::adjoint(aU2,U2);
-                apk::simplify(aU2,dP,NULL);
-                std::cerr << "U  =" << U  << std::endl;
-                std::cerr << "U2 =" << U2 << std::endl;
-                std::cerr << "aU2=" << aU2 << "/" << dP << std::endl;
-                matrix<apz> aU3(primary,dim);
-                tao::mmul(aU3,aU2,U);
-                tao::mmul_ltrn(P,U,aU3);
-                apk::simplify(P,dP,NULL);
-                std::cerr << "P=" << P << "/" << dP << std::endl;
-                const apz zero = 0;
                 matrix<apz> Q(dim,dim);
-                Q.diag(dP,zero);
-                tao::msub(Q,P);
+                {
+                    matrix<apz> P(dim,dim);
+                    apz         dP = 0;
+                    {
+                        matrix<apz> aU2(primary,primary);
+                        {
+                            matrix<apz> U2(primary,primary);
+                            tao::gram(U2,U);
+                            dP = apk::determinant(U2); if(0==dP) throw libc::exception(EDOM,"%s with singular primary space",fn);
+                            apk::adjoint(aU2,U2);
+                        }
+                        apk::simplify(aU2,dP,NULL);
+                        matrix<apz> aU3(primary,dim);
+                        tao::mmul(aU3,aU2,U);
+                        tao::mmul_ltrn(P,U,aU3);
+                    }
+                    apk::simplify(P,dP,NULL);
+                    const apz zero = 0;
+                    Q.diag(dP,zero);
+                    tao::msub(Q,P);
+                }
                 QT.assign_transpose(Q);
 
             }
-            std::cerr << "QT0=" << QT << std::endl;
+
+            vector<apn,memory::dyadic>    Qn(dim,0);
+            vector<size_t,memory::dyadic> iQ(dim,0);
+
             for(size_t i=dim;i>0;--i)
             {
-                yap::compute_gcd::simplify(QT[i]);
+                addressable<apz> &Qi = QT[i];
+                yap::compute_gcd::simplify(Qi);
+                apn qn = 0;
+                for(size_t j=dim;j>0;--j) qn += Qi[j].n;
+                Qn[i].xch(qn);
             }
-            std::cerr << "QT=" << QT << std::endl;
+            indexing::make(iQ,apn::compare,Qn);
+            //std::cerr << "QT=" << QT << std::endl;
+            //std::cerr << "Qn=" << Qn << std::endl;
+            //std::cerr << "iQ=" << iQ << std::endl;
 
             // find a subspace
             bool        foundV = false;
@@ -227,9 +243,10 @@ namespace upsylon
 
             for(comb.boot();comb.good();comb.next())
             {
+                //std::cerr << "Try " << (counting &)comb << std::endl;
                 for(size_t i=replica;i>0;--i)
                 {
-                    tao::set(V[i],QT[ comb[i] ]);
+                    tao::set(V[i],QT[ iQ[comb[i]] ]);
                 }
                 if(has_maximal_rank(V))
                 {
@@ -239,7 +256,6 @@ namespace upsylon
             }
 
             if(!foundV) throw libc::exception(EDOM,"%s with singular replica space",fn);
-            std::cerr << "V=" << V << std::endl;
         }
 
     }

@@ -5,7 +5,7 @@
 #define YAP_GCD_INCLUDED 1
 
 #include "y/yap/integer.hpp"
-#include "y/sequence/addressable.hpp"
+#include "y/sequence/list.hpp"
 
 namespace upsylon
 {
@@ -30,28 +30,26 @@ namespace upsylon
             T of(const accessible<T> &arr)
             {
                 const  T one(1);
-                size_t   n = arr.size();
-                switch(n)
+                list<T>  todo;
+                for(size_t i=arr.size();i>0;--i)
                 {
-                    case 1:
-                    {
-                        const T &x = arr[1];
-                        if(0!=x) return x;
-                    } // FALLTHRU
-                    case 0: return one;
+                    const T a = mkl::fabs_of(arr[i]);
+                    if(a>0) todo.push_back(a);
+                }
 
-                    default:
-                        break;
-                }
-                assert(n>1);
-                T res = from(arr[1],arr[n]);
-                if(one==res) return one;
-                for(--n;n>1;--n)
+                if(todo.size())
                 {
-                    res = from(res,arr[n]);
+                    T res = todo.back(); todo.pop_back();
                     if(one==res) return one;
+                    while(todo.size())
+                    {
+                        res = from(res,todo.back()); todo.pop_back();
+                        if(one==res) return one;
+                    }
+                    return res;
                 }
-                return res;
+                else
+                    return one;
             };
 
 
