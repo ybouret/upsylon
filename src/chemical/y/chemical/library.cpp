@@ -238,6 +238,16 @@ namespace upsylon
             return NR;
         }
 
-        
+        const Species & Library:: operator[](const string &id) const
+        {
+            const Species::Pointer *pps = sdb.search(id);
+            if(!pps) throw exception("no %s['%s']",CLID,*id);
+            return **pps;
+        }
+
+        const Species & Library:: operator[](const char *id) const
+        {
+            const string _(id); return (*this)[_];
+        }
     }
 }

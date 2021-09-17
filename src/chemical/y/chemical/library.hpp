@@ -128,14 +128,17 @@ namespace upsylon
                 return os;
             }
             
-            //! draw a random concentration
-            void   drawC(Addressable &,randomized::bits &) const throw();
+
+            void   drawC(Addressable &,randomized::bits &) const throw(); //!< draw a random concentration
             size_t spectators()   const throw(); //!< count spectators
             size_t countWorking() const throw(); //!< count working species
             size_t countPrimary() const throw(); //!< count primary species
             size_t countReplica() const throw(); //!< count replica species
 
-            
+
+            const Species & operator[](const string &id) const; //!< get by name
+            const Species & operator[](const char   *id) const; //!< get by name, wrapper
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw();
