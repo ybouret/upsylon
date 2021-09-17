@@ -5,10 +5,31 @@
 #ifndef Y_MKL_TAO_V3_INCLUDED
 #define Y_MKL_TAO_V3_INCLUDED
 
+//! load a matrix with same valus
 template <typename T> static inline
 void ldm(matrix<T> &M, typename type_traits<T>::parameter_type value )
 {
     M.ld(value);
+}
+
+//! M = LHS-RHS
+template <typename T,typename U,typename V> static inline
+void msub( matrix<T> &M, const matrix<U> &LHS, const matrix<V> &RHS)
+{
+    assert(M.same_size_than(LHS));
+    assert(M.same_size_than(RHS));
+
+    for(size_t i=M.rows;i>0;--i)
+    {
+        tao::sub(M[i],LHS[i],RHS[i]);
+    }
+}
+
+//! M -= RHS
+template <typename T,typename U> static inline
+void msub(matrix<T> &M, const matrix<U> &RHS)
+{
+    msub(M,M,RHS);
 }
 
 

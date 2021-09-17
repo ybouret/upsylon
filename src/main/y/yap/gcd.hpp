@@ -1,11 +1,11 @@
 
 //! \file
 
-#ifndef YAP_LCM_INCLUDED
-#define YAP_LCM_INCLUDED 1
+#ifndef YAP_GCD_INCLUDED
+#define YAP_GCD_INCLUDED 1
 
 #include "y/yap/integer.hpp"
-#include "y/sequence/accessible.hpp"
+#include "y/sequence/addressable.hpp"
 
 namespace upsylon
 {
@@ -53,6 +53,19 @@ namespace upsylon
                 }
                 return res;
             };
+
+
+            //! for apn/apz
+            template <typename T> static inline
+            T simplify(addressable<T> &arr)
+            {
+                const T fac = of<T>(arr);
+                for(size_t i=arr.size();i>0;--i)
+                {
+                    arr[i] /= fac;
+                }
+                return fac;
+            }
 
 
 

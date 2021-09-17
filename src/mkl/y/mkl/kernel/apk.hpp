@@ -134,6 +134,18 @@ namespace upsylon
 
             }
 
+            //! check if rows of source are linearly independant
+            template <typename T> static inline
+            bool has_maximal_rank(const matrix<T> &source)
+            {
+                const size_t r = source.rows;
+                matrix<apq>  G(r,r);
+                tao::gram(G,source);
+                return LU::build(G);
+            }
+
+            
+
             //! compute the rank of source rows
             static size_t gram_rank_of(const matrix<apz> &source);
 
@@ -155,6 +167,19 @@ namespace upsylon
                     return gram_rank_of(source);
                 }
             }
+
+            static const char complete_ortho_fn[];
+            static void complete_ortho_(const matrix<apz> &U, matrix<apz> &V);
+
+            template <typename X, typename Y> static inline
+            void complete_ortho(const matrix<X> &A, matrix<Y> &B)
+            {
+                matrix<apz> U(A.rows,A.cols); U.assign(A);
+                matrix<apz> V(B.rows,B.cols);
+                complete_ortho_(U,V);
+                //convert(B,V,complete_ortho_fn);
+            }
+
 
         };
         

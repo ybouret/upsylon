@@ -150,14 +150,98 @@ namespace upsylon
                         }
                     }
 
+                    if( LU::build(G) ) return n;
+#if 0
                     const apq d = __determinant(G);
                     assert(d.den.is(1));
                     if(d!=0) return n;
+#endif
 
                 }
             }
             return 0;
         }
+
+    }
+}
+
+#include "y/exceptions.hpp"
+#include "y/yap/gcd.hpp"
+#include <cerrno>
+
+namespace upsylon
+{
+    namespace mkl
+    {
+        const char apk:: complete_ortho_fn[] = "apk::complete_ortho";
+
+        void apk:: complete_ortho_(const matrix<apz> &U,
+                                   matrix<apz>       &V)
+        {
+            static const char * const fn = complete_ortho_fn;
+
+            assert(U.cols==V.cols);
+            assert(U.rows+V.rows==U.cols);
+
+            const size_t primary = U.rows;
+            const size_t replica = V.rows;
+            const size_t dim     = U.cols;
+
+            // special cases
+
+            // projection on U_ortho
+            matrix<apz> QT(dim,dim);
+
+            {
+                matrix<apz> P(dim,dim);
+                matrix<apz> aU2(primary,primary);
+                matrix<apz> U2(primary,primary); tao::gram(U2,U);
+                apz         dP = apk::determinant(U2); if(0==dP) throw libc::exception(EDOM,"%s with singular primary space",fn);
+                apk::adjoint(aU2,U2);
+                apk::simplify(aU2,dP,NULL);
+                std::cerr << "U  =" << U  << std::endl;
+                std::cerr << "U2 =" << U2 << std::endl;
+                std::cerr << "aU2=" << aU2 << "/" << dP << std::endl;
+                matrix<apz> aU3(primary,dim);
+                tao::mmul(aU3,aU2,U);
+                tao::mmul_ltrn(P,U,aU3);
+                apk::simplify(P,dP,NULL);
+                std::cerr << "P=" << P << "/" << dP << std::endl;
+                const apz zero = 0;
+                matrix<apz> Q(dim,dim);
+                Q.diag(dP,zero);
+                tao::msub(Q,P);
+                QT.assign_transpose(Q);
+
+            }
+            std::cerr << "QT0=" << QT << std::endl;
+            for(size_t i=dim;i>0;--i)
+            {
+                yap::compute_gcd::simplify(QT[i]);
+            }
+            std::cerr << "QT=" << QT << std::endl;
+
+            // find a subspace
+            bool        foundV = false;
+            combination comb(dim,replica);
+
+            for(comb.boot();comb.good();comb.next())
+            {
+                for(size_t i=replica;i>0;--i)
+                {
+                    tao::set(V[i],QT[ comb[i] ]);
+                }
+                if(has_maximal_rank(V))
+                {
+                    foundV = true;
+                    break;
+                }
+            }
+
+            if(!foundV) throw libc::exception(EDOM,"%s with singular replica space",fn);
+            std::cerr << "V=" << V << std::endl;
+        }
+
     }
 
 }
