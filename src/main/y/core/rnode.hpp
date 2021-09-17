@@ -21,12 +21,21 @@ namespace upsylon {
         typedef dnode< ref_dnode<T> > node_type; //!< base class alias
 
         //! setup with persistent args
-        inline explicit  ref_dnode(const_type &args) throw() :
+        inline explicit ref_dnode(const_type &args) throw() :
         object(),
         node_type(),
         data( aliasing::_(args) )
         {
         }
+
+        //! copy
+        inline ref_dnode(const ref_dnode &other) throw() :
+        object(),
+        node_type(),
+        data( aliasing::_(other.data) )
+        {
+        }
+
 
         //! cleanup
         inline virtual ~ref_dnode() throw() {}
@@ -39,7 +48,7 @@ namespace upsylon {
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(ref_dnode);
+        Y_DISABLE_ASSIGN(ref_dnode);
         mutable_type &data;
     };
 
@@ -60,6 +69,14 @@ namespace upsylon {
         {
         }
 
+        //! copy
+        inline ref_snode(const ref_snode &other) throw() :
+        object(),
+        node_type(),
+        data( aliasing::_(other.data) )
+        {
+        }
+
         //! cleanup
         inline virtual ~ref_snode() throw() {}
 
@@ -71,7 +88,7 @@ namespace upsylon {
 
 
     private:
-        Y_DISABLE_COPY_AND_ASSIGN(ref_snode);
+        Y_DISABLE_ASSIGN(ref_snode);
         mutable_type &data;
     };
 

@@ -83,10 +83,9 @@ Y_UTEST(torture)
             std::cerr  << "Om=" << Om << std::endl;
         }
 
-        
 
 
-        continue;
+
 
         std::cerr << "Building Library" << std::endl;
         Strings names(M,as_capacity);
@@ -97,7 +96,6 @@ Y_UTEST(torture)
             names << ID;
         }
 
-        std::cerr << "lib=" << lib << std::endl;
 
 
         std::cerr << "Building Equilbria" << std::endl;
@@ -116,12 +114,14 @@ Y_UTEST(torture)
                 }
             }
         }
-
+        
+        std::cerr << "lib=" << lib << std::endl;
         std::cerr << "eqs=" << eqs << std::endl;
 
         std::cerr << "Building System" << std::endl;
         System sys(lib,eqs,Equilibrium::Default);
 
+        break;
     }
 
 }

@@ -5,7 +5,7 @@
 
 #include "y/chemical/sys/strain.hpp"
 #include "y/ios/tools/vizible.hpp"
-#include "y/core/rnode.hpp"
+#include "y/core/rlinked.hpp"
 #include "y/associative/be-keys.hpp"
 #include "y/associative/suffix/set.hpp"
 
@@ -40,7 +40,7 @@ namespace upsylon
                 // types and definition
                 //______________________________________________________________
                 typedef ref_dnode<const Edge>   Node;     //!< for vertex edges
-                typedef core::list_of_cpp<Node> List;     //!< for vertex edges
+                typedef ref_list<const Edge>    List;     //!< for vertex edges
                 typedef be_keys<2>              Key;      //!< UUID from 2 vertices
                 typedef intr_ptr<Key,Edge>      Pointer;  //!< alias for Set
                 typedef suffix_set<Key,Pointer> Set;      //!< database of edges
@@ -140,6 +140,35 @@ namespace upsylon
                 static void Display(const Edge::List &, const bool);
             };
 
+
+            typedef ref_dnode<const Strain>  sNode;
+            typedef ref_list<const Strain>   sList;
+
+            class Path : public Object, public dnode<Path>
+            {
+            public:
+                explicit Path(const Edge &edge) throw() : Object(), dnode<Path>(), edges(), slist()
+                {
+                    setup(edge);
+                }
+
+                virtual ~Path() throw() {}
+
+                Path(const Path &path) : Object(), dnode<Path>(), edges(path.edges), slist(path.slist)
+                {
+                }
+
+
+                const Edge::List edges;
+                const sList      slist;
+
+
+            private:
+                Y_DISABLE_ASSIGN(Path);
+                void setup(const Edge &edge);
+                void push(const Edge   &);
+                void push(const Strain *);
+            };
 
             //__________________________________________________________________
             //

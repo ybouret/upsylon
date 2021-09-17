@@ -4,6 +4,7 @@
 #include "y/ios/tools/graphviz.hpp"
 #include "y/type/utils.hpp"
 
+//! EDGE
 namespace upsylon
 {
     namespace Chemical
@@ -43,6 +44,7 @@ namespace upsylon
 
 }
 
+// VERTEX
 
 namespace upsylon
 {
@@ -180,7 +182,42 @@ namespace upsylon
 
 }
 
+namespace upsylon
+{
+    namespace Chemical
+    {
 
+        void Flux::Path:: push(const Edge &edge)
+        {
+            aliasing::_(edges).append(edge);
+        }
+
+        void Flux::Path:: push(const Strain *strain)
+        {
+            assert(strain);
+            aliasing::_(slist).append(*strain);
+
+        }
+
+        void Flux::Path:: setup(const Edge &edge)
+        {
+            assert(edge.source.genus==Vertex::IsStrain);
+            push(edge);
+            try
+            {
+                push(edge.source.strain);
+            }
+            catch(...)
+            {
+                delete aliasing::_(edges).pop_back();
+                throw;
+            }
+        }
+
+    }
+}
+
+// GRAPH
 namespace upsylon
 {
     namespace Chemical
