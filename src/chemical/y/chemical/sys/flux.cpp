@@ -18,15 +18,15 @@ namespace upsylon
         vkey(source,target)
         {
         }
-
+        
         Flux:: Edge:: ~Edge() throw()
         {
         }
-
+        
         const Flux::Edge::Key &  Flux::Edge::key() const throw() { return vkey; }
-
-
-
+        
+        
+        
         void Flux::Edge:: viz(ios::ostream &fp) const
         {
             fp.viz(&source);
@@ -38,10 +38,10 @@ namespace upsylon
             }
             Vizible::endl(fp);
         }
-
+        
     }
-
-
+    
+    
 }
 
 // VERTEX
@@ -53,21 +53,21 @@ namespace upsylon
         Flux:: Vertex:: ~Vertex() throw()
         {
         }
-
+        
 #define Y_CHEM_FLUX_CTOR(FLAG) genus(FLAG), outgoing(), incoming()
-
+        
         Flux:: Vertex:: Vertex(const Strain &S) throw() :
         Y_CHEM_FLUX_CTOR(IsStrain)
         {
             strain = &S;
         }
-
+        
         Flux:: Vertex:: Vertex(const Primary &P) throw() :
         Y_CHEM_FLUX_CTOR(IsPrimary)
         {
             primary = &P;
         }
-
+        
         const char * Flux::Vertex:: name() const throw()
         {
             switch(genus)
@@ -77,8 +77,8 @@ namespace upsylon
             }
             return unknown_text;
         }
-
-
+        
+        
         bool Flux::Vertex:: hasOutgoing(const Edge &edge) const throw()
         {
             for(const Edge::Node *node=outgoing.head;node;node=node->next)
@@ -88,7 +88,7 @@ namespace upsylon
             }
             return false;
         }
-
+        
         void Flux::Vertex:: Display(const Edge::List &edges, const bool flag)
         {
             std::cerr << edges.size;
@@ -102,7 +102,7 @@ namespace upsylon
                 std::cerr <<" }";
             }
         }
-
+        
         void Flux:: Vertex:: display() const
         {
             std::cerr << "      " << name() << " :";
@@ -110,7 +110,7 @@ namespace upsylon
             std::cerr << " | #in="; Display(incoming,false);
             std::cerr << std::endl;
         }
-
+        
         void Flux::Vertex:: viz(ios::ostream &fp) const
         {
             fp.viz(this);
@@ -128,77 +128,77 @@ namespace upsylon
                     {
                         style += ",dashed";
                     }
-
+                    
                     label = string_convert::to_printable(eq.name);
-
+                    
                 } break;
-
+                    
                 case IsStrain: {
                     const Strain  &S = *strain;
                     const Species &s = *S;
                     shape = "oval";
                     style = "bold,filled";
-
+                    
                     switch(S.linkage)
                     {
                         case Single:
                             style += ",dotted";
                             break;
-
+                            
                         case Inside:
                             break;
-
+                            
                         case Intake:
                             shape = "house";
                             break;
-
+                            
                         case Output:
                             shape = "invhouse";
                             break;
-
+                            
                         case Siphon:
                             shape  = "trapezium";
                             style += ",dashed";
                             break;
-
+                            
                         case Source:
                             shape = "invtrapezium";
                             style += ",dashed";
                             break;
-
+                            
                         default:
                             break;
                     }
-
+                    
                     label = string_convert::to_printable(s.name);
-
+                    
                 } break;
             }
-
+            
             fp << "[label=\"" << label << "\",shape=\"" << shape << "\",style=\"" << style << "\"]";
             Vizible::endl(fp);
         }
     }
-
+    
 }
 
 namespace upsylon
 {
     namespace Chemical
     {
-
+        
         void Flux::Path:: push(const Edge &edge)
         {
             aliasing::_(edges).append(edge);
         }
-
+        
         void Flux::Path:: push(const Strain *strain)
         {
             assert(strain);
             aliasing::_(slist).append(*strain);
-
+            
         }
-
+        
         void Flux::Path:: setup(const Edge &edge)
         {
             assert(edge.source.genus==Vertex::IsStrain);
@@ -213,7 +213,7 @@ namespace upsylon
                 throw;
             }
         }
-
+        
     }
 }
 
@@ -222,9 +222,9 @@ namespace upsylon
 {
     namespace Chemical
     {
-
+        
         Flux::Graph:: ~Graph() throw() {}
-
+        
         template <typename SOURCE> static inline
         void Build(Flux::Vertex::Array &target, const SOURCE &source)
         {
@@ -235,12 +235,12 @@ namespace upsylon
                 target.push_back_(V);
             }
         }
-
+        
         Flux::Graph::Graph(const Strain::Array  &strain,
                            const Primary::Array &primary) :
         svtx(strain.size(), as_capacity),
         pvtx(primary.size(),as_capacity),
-        edges()
+        forward()
         {
             Build( aliasing::_(svtx), strain);
             Build( aliasing::_(pvtx), primary);
@@ -254,16 +254,16 @@ namespace upsylon
                 arr[i]->viz(fp);
             }
         }
-
-
+        
+        
         const Flux::Edge   & Flux::Graph:: query(const Vertex *ini, const Vertex *end, const unit_t cof)
         {
             assert(ini);
             assert(end);
             assert(cof>0);
-
+            
             const Edge::Key      key(*ini,*end);
-            const Edge::Pointer *ppE = edges.search(key);
+            const Edge::Pointer *ppE = forward.search(key);
             if(ppE)
             {
                 if(cof != (**ppE).weight ) throw exception("existing edge weight mismatch");
@@ -273,11 +273,11 @@ namespace upsylon
             {
                 Edge *pE = new Edge(*ini,*end,cof);
                 const Edge::Pointer tmp(pE);
-                if( !aliasing::_(edges).insert(tmp)) throw exception("unexpected new edge insertion failure");
+                if( !aliasing::_(forward).insert(tmp)) throw exception("unexpected new edge insertion failure");
                 return *pE;
             }
         }
-
+        
         void Flux::Graph:: connect(const Strain::Array &strain)
         {
             // build outgoing
@@ -287,7 +287,7 @@ namespace upsylon
                 {
                     const Strain &S = *strain[i];
                     const Vertex *s = & *svtx[i]; assert(s->strain==&S);
-
+                    
                     // producer -> species
                     for(const Appliance *app=S.producers.head;app;app=app->next)
                     {
@@ -297,7 +297,7 @@ namespace upsylon
                         const Edge    &edge = query(p,s,abs_of(nu));
                         aliasing::_(p->outgoing).push_back( new Edge::Node(edge) );
                     }
-
+                    
                     // species -> consumer
                     for(const Appliance *app=S.consumers.head;app;app=app->next)
                     {
@@ -309,60 +309,60 @@ namespace upsylon
                     }
                 }
             }
-
             
-
+            
+            
             // build incoming
-            for(const Edge::Iter *node=edges.head();node;node=node->next)
+            for(const Edge::Iter *node=forward.head();node;node=node->next)
             {
                 const Edge   &edge   = ***node;
                 assert(edge.source.hasOutgoing(edge));
                 aliasing::_(edge.target.incoming).push_back( new Edge::Node(edge) );
             }
-
-
+            
+            
             // result
             if(Verbosity)
             {
                 std::cerr << "  <Graph>" << std::endl;
-
+                
                 std::cerr << "    <Species>" << std::endl;
                 for(size_t i=1;i<=svtx.size();++i)
                 {
                     svtx[i]->display();
                 }
                 std::cerr << "    <Species/>" << std::endl;
-
-
+                
+                
                 std::cerr << "    <Equilibria>" << std::endl;
                 for(size_t i=1;i<=pvtx.size();++i)
                 {
                     pvtx[i]->display();
                 }
                 std::cerr << "    <Equilibria/>" << std::endl;
-
+                
                 std::cerr << "  <Graph/>" << std::endl;
-
+                
             }
-
-
+            
+            
         }
-
-
         
-
+        
+        
+        
         void     Flux:: Graph::   join(ios::ostream &fp) const
         {
-
-            for(const Edge::Iter *node=edges.head();node;node=node->next)
+            
+            for(const Edge::Iter *node=forward.head();node;node=node->next)
             {
                 const Edge &edge = ***node;
                 edge.viz(fp);
             }
-
+            
         }
-
-
+        
+        
         void Flux:: Graph:: graphViz(const string &fileName) const
         {
             {
@@ -374,7 +374,7 @@ namespace upsylon
                 Vizible::leaveDigraph(fp);   }  // done digraph
             ios::GraphViz::Render(fileName);    // and render
         }
-
+        
     }
-
+    
 }

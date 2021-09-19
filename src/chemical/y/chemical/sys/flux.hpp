@@ -201,9 +201,9 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Vertex::Array svtx;   //!< all unique strains/species
-                const Vertex::Array pvtx;   //!< all unique primaries/equilibria
-                const Edge::Set     edges;  //!< all unique connecting edges
+                const Vertex::Array svtx;     //!< all unique strains/species
+                const Vertex::Array pvtx;     //!< all unique primaries/equilibria
+                const Edge::Set     forward;  //!< all unique connecting edges
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
