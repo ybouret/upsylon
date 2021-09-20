@@ -444,7 +444,58 @@ namespace upsylon
                 Vizible::leaveDigraph(fp);   }  // done digraph
             ios::GraphViz::Render(fileName);    // and render
         }
-        
+
     }
     
+}
+
+
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+
+        void Flux::Graph:: run(Path::Stack &paths) const
+        {
+            paths.release();
+
+            Y_CHEMICAL_PRINTLN("    <Paths>");
+            for(const Edge::Iter *node=edges.head();node;node=node->next)
+            {
+                const Edge &edge = ***node;
+                if(edge.source.genus==Vertex::IsStrain)
+                {
+                    const Strain &S = *edge.source.strain;
+                    switch(S.linkage)
+                    {
+                        case Intake:
+                            std::cerr << "      try forward " << *S << std::endl;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    assert(edge.target.genus==Vertex::IsStrain);
+                    const Strain &S = *edge.target.strain;
+                    switch(S.linkage)
+                    {
+                        case Output:
+                            std::cerr << "      try reverse " << *S << std::endl;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+            Y_CHEMICAL_PRINTLN("    <Paths/>");
+
+        }
+
+    }
+
 }

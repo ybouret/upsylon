@@ -12,10 +12,17 @@ namespace upsylon
 
         void System::buildOmega()
         {
+
+
+
+            Y_CHEMICAL_PRINTLN("  <Omega>");
+
             Flux::Graph G(strain,primary);
             G.graphViz("flux.dot");
 
-            Y_CHEMICAL_PRINTLN("  <Omega>");
+            Flux::Path::Stack paths;
+            G.run(paths);
+
             if(Nc>0)
             {
                 iMatrix &Om      = aliasing::_(Omega);

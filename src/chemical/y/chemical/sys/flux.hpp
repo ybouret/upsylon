@@ -163,7 +163,7 @@ namespace upsylon
             class Path : public Object, public dnode<Path>
             {
             public:
-                typedef core::pool_of<Path> Stack;
+                typedef core::pool_of_cpp<Path> Stack;
                 //______________________________________________________________
                 //
                 // C++
@@ -219,7 +219,9 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 void graphViz(const string &) const; //!< save/render
-                
+
+                void run(Path::Stack &paths) const;
+
                 //______________________________________________________________
                 //
                 // members
