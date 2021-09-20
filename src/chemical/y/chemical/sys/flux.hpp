@@ -141,26 +141,37 @@ namespace upsylon
             };
 
 
-            typedef ref_dnode<const Strain>  sNode;
-            typedef ref_list<const Strain>   sList;
+            typedef ref_dnode<const Strain>  sNode; //!< alias
+            typedef ref_list<const Strain>   sList; //!< alias
 
+            //__________________________________________________________________
+            //
+            //
+            //! path in the graph
+            //
+            //__________________________________________________________________
             class Path : public Object, public dnode<Path>
             {
             public:
-                explicit Path(const Edge &edge) throw() : Object(), dnode<Path>(), edges(), slist()
-                {
-                    setup(edge);
-                }
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                Path(const Edge &) throw(); //!< setup with first edge
+                Path(const Path &);         //!< full duplication
+                virtual ~Path()    throw(); //!< cleanup
+                
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
 
-                virtual ~Path() throw() {}
-
-                Path(const Path &path) : Object(), dnode<Path>(), edges(path.edges), slist(path.slist)
-                {
-                }
-
-
-                const Edge::List edges;
-                const sList      slist;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Edge::List edges; //!< travelled edges
+                const sList      slist; //!< met species
 
 
             private:

@@ -56,6 +56,7 @@ namespace upsylon
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
         strain(M, as_capacity),
+        replica(MR,as_capacity),
         Z(M,0),
         charged(false),
         Omega(Nc,Nc>0?M:0),
@@ -106,7 +107,7 @@ namespace upsylon
                 // building primary
                 //
                 //--------------------------------------------------------------
-                Y_CHEMICAL_PRINTLN("  " << PrimaryEnter);;
+                Y_CHEMICAL_PRINTLN("  " << PrimaryEnter);
                 for(const ENode *node=eqs->head();node;node=node->next)
                 {
                     const Equilibrium     &eq = ***node;
@@ -115,7 +116,28 @@ namespace upsylon
                     if(Verbosity) pp->display(std::cerr,4);
 
                 }
-                Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);;
+                Y_CHEMICAL_PRINTLN("  " << PrimaryLeave);
+
+
+                //--------------------------------------------------------------
+                //
+                // building replica
+                //
+                //--------------------------------------------------------------
+                Y_CHEMICAL_PRINTLN("  " << ReplicaEnter);
+                for(const SNode *node=lib->head();node;node=node->next)
+                {
+                    const Species &sp = ***node;
+                    if(!sp.isReplica()) continue;
+                    const ENode           *en = eqs->head();
+                    const iAccessible         &nu = NuT[sp.indx];
+                    while(!nu[ (***en).indx] ) en = en->next;
+                    const Replica::Pointer     rp = new Replica(sp,nu,en);
+                    aliasing::_(replica).push_back_(rp);
+                    rp->display(std::cerr,4);
+                    
+                }
+                Y_CHEMICAL_PRINTLN("  " << ReplicaLeave);
 
             }
 

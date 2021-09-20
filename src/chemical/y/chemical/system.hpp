@@ -3,6 +3,7 @@
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
 #include "y/chemical/sys/strain.hpp"
+#include "y/chemical/sys/replica.hpp"
 
 namespace upsylon
 {
@@ -72,6 +73,7 @@ namespace upsylon
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]
             const Strain::Array  strain;     //!< [M]
+            const Replica::Array replica;    //!< [MR]
             const iVector        Z;          //!< [M] vector of charges
             const bool           charged;    //!< |Z| != 0
             const iMatrix        Omega;      //!< [...xM]
@@ -87,7 +89,7 @@ namespace upsylon
             //__________________________________________________________________
 
             //! display numerical primary constraints
-            template <typename OSTREAM>
+            template <typename OSTREAM> inline
             void showPrimary(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
                 Library::Indent(os,indent) << PrimaryEnter << std::endl;
@@ -98,7 +100,20 @@ namespace upsylon
                 }
                 Library::Indent(os,indent) << PrimaryLeave << std::endl;
             }
-            
+
+            //! display numerical primary constraints
+            template <typename OSTREAM> inline 
+            void showReplica(OSTREAM &os, const Accessible &C, const size_t indent) const
+            {
+                Library::Indent(os,indent) << ReplicaEnter << std::endl;
+                const size_t sub = indent+2;
+                for(size_t i=1;i<=MR;++i)
+                {
+                    replica[i]->display(os,C,sub);
+                }
+                Library::Indent(os,indent) << ReplicaLeave << std::endl;
+            }
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);

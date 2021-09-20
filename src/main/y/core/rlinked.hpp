@@ -8,22 +8,43 @@
 
 namespace upsylon {
 
+    //__________________________________________________________________________
+    //
+    //
+    //! base class for a list of references
+    //
+    //__________________________________________________________________________
     template <typename T>
     class ref_list : public core::list_of_cpp< ref_dnode<T> >
     {
     public:
-        typedef ref_dnode<T>                 node_type;
-        typedef core::list_of_cpp<node_type> list_type;
+        //______________________________________________________________________
+        //
+        // types
+        //______________________________________________________________________
+        typedef ref_dnode<T>                 node_type; //!< alias
+        typedef core::list_of_cpp<node_type> list_type; //!< alias
 
-        inline explicit ref_list() throw() : list_type() {}
-        inline virtual ~ref_list() throw() {}
-        inline          ref_list(const ref_list &other) : list_type(other) {}
+        //______________________________________________________________________
+        //
+        // C++
+        //______________________________________________________________________
+        inline explicit ref_list() throw() : list_type() {}            //!< setup
+        inline virtual ~ref_list() throw() {}                          //!< cleanup
+        inline          ref_list(const ref_list &_) : list_type(_) {}  //!< C++ copy
 
+        //______________________________________________________________________
+        //
+        // methods
+        //______________________________________________________________________
+
+        //! wrapper for push_back
         inline void append( typename node_type::param_type args)
         {
             this->push_back( new node_type(args) );
         }
 
+        //! wrapper for push_front
         inline void prepend( typename node_type::param_type args)
         {
             this->push_front( new node_type(args) );

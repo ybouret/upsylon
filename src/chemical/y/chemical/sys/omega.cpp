@@ -1,4 +1,3 @@
-
 #include "y/chemical/system.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/chemical/sys/flux.hpp"
@@ -10,8 +9,6 @@ namespace upsylon
 
     namespace Chemical
     {
-
-
 
         void System::buildOmega()
         {

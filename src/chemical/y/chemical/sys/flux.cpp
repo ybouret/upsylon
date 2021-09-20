@@ -217,6 +217,28 @@ namespace upsylon
     }
 }
 
+
+// PATH
+namespace upsylon
+{
+    namespace Chemical
+    {
+        Flux:: Path:: Path(const Edge &edge) throw() : Object(), dnode<Path>(), edges(), slist()
+        {
+            setup(edge);
+        }
+        
+        Flux:: Path:: Path(const Path &path) : Object(), dnode<Path>(), edges(path.edges), slist(path.slist) {}
+
+
+        Flux:: Path:: ~Path() throw()
+        {
+        }
+    }
+
+}
+
+
 // GRAPH
 namespace upsylon
 {
