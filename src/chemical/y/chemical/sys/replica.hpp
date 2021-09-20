@@ -65,6 +65,7 @@ namespace upsylon
                 static const ios::scribe & _ = ios::scribe::query<Accessible::type>();
                 prolog(os,indent);
                 const string value = _.write( &C[ (**this).indx] );
+                os << " = " << value;
                 os << '\n';
             }
             
