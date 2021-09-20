@@ -101,7 +101,7 @@ namespace upsylon
             };
         }
 
-        const char * Strain:: linkageState() const throw()
+        const char * Strain:: linkageText() const throw()
         {
             return LinkageText(linkage);
         }

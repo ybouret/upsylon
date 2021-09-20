@@ -67,7 +67,7 @@ namespace upsylon
 
             void        link(const unit_t, const Primary &); //!< link and UPDATE flow state
             void        finalize()           throw();        //!< set linkage
-            const char *linkageState() const throw();        //!< textual value for linkage
+            const char *linkageText()  const throw();        //!< textual value for linkage
 
 
             //__________________________________________________________________
@@ -96,7 +96,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os) const
             {
-                os << **this << " : " << stateText() << " and " << linkageState();
+                os << **this << " : " << stateText() << " and " << linkageText();
                 if(consumers.size)
                 {
                     os << " ->{";

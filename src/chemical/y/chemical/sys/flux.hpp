@@ -178,7 +178,7 @@ namespace upsylon
                 //______________________________________________________________
                 const char  * routeText() const throw(); //!< for info
                 bool          owns(const Strain *) const throw();
-                List        & grow(List &stack);
+                void          grow(List &stack);
                 
                 //______________________________________________________________
                 //
@@ -187,13 +187,16 @@ namespace upsylon
                 const Route      route; //!< travelling route
                 const Edge::List edges; //!< travelled edges
                 const sList      slist; //!< met species along the way
-                const bool       valid; //!< until a source/siphon or cycle is met...
+                const bool       valid; //!< remain fals if  a source/siphon or cycle is met...
 
             private:
                 Y_DISABLE_ASSIGN(Path);
                 void setup(const Edge &edge);
                 void push(const Edge   &);
-                void push(const Strain *);
+                void push(const Strain &);
+
+                void push(const Edge &edge, const Strain &);
+
                 void runForward(List &stack);
                 void tryForward(const Edge &edge, List &stack);
 

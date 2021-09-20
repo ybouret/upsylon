@@ -174,7 +174,7 @@ namespace upsylon
                         }
                     }
                     S->finalize();
-                    if(Verbosity) std::cerr << " => " << S->stateText() << "/" << S->linkageState() << std::endl;
+                    if(Verbosity) std::cerr << " => " << S->stateText() << "/" << S->linkageText() << std::endl;
                 }
                 Y_CHEMICAL_PRINTLN("     Z = " << Z << " #charged=" << textual::boolean(charged) );
                 Y_CHEMICAL_PRINTLN("    <Building/>");

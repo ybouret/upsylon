@@ -192,35 +192,57 @@ namespace upsylon
 {
     namespace Chemical
     {
-        
+        static inline int sNodeCompare(const Flux::sNode *lhs,
+                                       const Flux::sNode *rhs,
+                                       void *) throw()
+        {
+            const Species &L = ***lhs;
+            const Species &R = ***rhs;
+            return comparison::increasing_addresses(&L,&R);
+        }
+
+        static inline void sListUpdate(Flux::sList &slist)
+        {
+            merge_list_of<Flux::sNode>::sort(slist,sNodeCompare,0);
+        }
+
+
         void Flux::Path:: push(const Edge &edge)
         {
             aliasing::_(edges).append(edge);
         }
         
-        void Flux::Path:: push(const Strain *strain)
+        void Flux::Path:: push(const Strain &strain)
         {
-            assert(strain);
-            aliasing::_(slist).append(*strain);
-            assert(owns(strain));
+            aliasing::_(slist).append(strain);
+            assert(owns(&strain));
         }
-        
-        void Flux::Path:: setup(const Edge &edge)
+
+        void Flux::Path:: push(const Edge &edge, const Strain &strain)
         {
             push(edge);
-            try
-            {
-                switch(route)
-                {
-                    case Forward: push(edge.source.strain); break;
-                    case Reverse: push(edge.target.strain); break;
-                }
+            try {
+                push(strain);
+                sListUpdate( aliasing::_(slist) );
             }
             catch(...)
             {
                 delete aliasing::_(edges).pop_back();
                 throw;
             }
+        }
+
+
+
+        void Flux::Path:: setup(const Edge &edge)
+        {
+
+            switch(route)
+            {
+                case Forward: push(edge,*edge.source.strain); break;
+                case Reverse: push(edge,*edge.target.strain); break;
+            }
+
 
         }
         
@@ -265,7 +287,7 @@ namespace upsylon
         route( Edge2Route(edge) ),
         edges(),
         slist(),
-        valid(true)
+        valid(false)
         {
             setup(edge);
         }
@@ -291,19 +313,6 @@ namespace upsylon
             return RouteText(route);
         }
 
-        static inline int sNodeCompare(const Flux::sNode *lhs,
-                                       const Flux::sNode *rhs,
-                                       void *) throw()
-        {
-            const Species &L = ***lhs;
-            const Species &R = ***rhs;
-            return comparison::increasing_addresses(&L,&R);
-        }
-
-        static inline void sListUpdate(Flux::sList &slist)
-        {
-            merge_list_of<Flux::sNode>::sort(slist,sNodeCompare,0);
-        }
 
         bool Flux:: Path:: owns(const Strain *strain) const throw()
         {
@@ -317,7 +326,7 @@ namespace upsylon
             return false;
         }
 
-        Flux::Path::List & Flux::Path:: grow(List &stack)
+       void Flux::Path:: grow(List &stack)
         {
             Y_CHEMICAL_PRINTLN("      Try " << routeText() << " Path from " << ***slist.head);
 
@@ -329,49 +338,27 @@ namespace upsylon
                 }
             }
 
-
-            return stack;
         }
 
         void Flux::Path:: runForward(List &stack)
         {
-            Path             &self = *this;
-            const Edge       &curr = **edges.tail;   assert(curr.target.genus==Vertex::IsPrimary);
-            const Vertex     &vhub = curr.target;
-            const Edge::List &dest = vhub.outgoing;
-            assert(dest.size>0);
-            for(const Edge::Node *node=dest.tail;node!=dest.head;node=node->prev)
-            {
-                stack.push_back( new Path(self) )->tryForward(**node,stack);
-            }
-            self.tryForward(**dest.head,stack);
         }
 
         void Flux::Path:: tryForward(const Edge &edge, List &stack)
         {
-            assert(edge.target.genus==Vertex::IsStrain);
+
         }
 
 
         void Flux::Path:: runReverse(List &stack)
         {
-            Path             &self = *this;
-            const Edge       &curr = **edges.tail;   assert(curr.source.genus==Vertex::IsPrimary);
-            const Vertex     &vhub = curr.source;
-            const Edge::List &from = vhub.incoming;
-            assert(from.size>0);
-            for(const Edge::Node *node=from.tail;node!=from.head;node=node->prev)
-            {
-                stack.push_back( new Path(self) )->tryReverse(**node,stack);
-            }
-            self.tryReverse(**from.head,stack);
+
         }
 
 
         void Flux::Path:: tryReverse(const Edge &edge, List &stack)
         {
-            assert(edge.source.genus==Vertex::IsStrain);
-
+            
         }
 
 
@@ -554,14 +541,15 @@ namespace upsylon
 
         void    Flux::Graph::   buildPathFrom(const Edge &edge)
         {
+            Path::List &ways = aliasing::_(paths);
             Path::List  temp;
-            aliasing::_(paths).push_back( new Path(edge) )->grow(temp);
-
+            ways.push_back( new Path(edge) )->grow(temp);
+            temp.merge_front(ways);
+            ways.swap_with(temp);
         }
 
         void Flux::Graph:: run( )
         {
-
 
             Y_CHEMICAL_PRINTLN("    <Paths>");
             for(const Edge::Iter *node=edges.head();node;node=node->next)
@@ -580,6 +568,7 @@ namespace upsylon
                         buildPathFrom(edge);
                 }
             }
+            std::cerr << "#paths=" << paths.size << std::endl;
             Y_CHEMICAL_PRINTLN("    <Paths/>");
 
         }
