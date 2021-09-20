@@ -76,7 +76,7 @@ namespace upsylon
             Y_CHEMICAL_PRINTLN("  MR  = " << std::setw(3) << MR << " # replica species");
             Y_CHEMICAL_PRINTLN("  MS  = " << std::setw(3) << MS << " # spectators");
 
-            assert(N+Nc==MW);
+            assert(N+Nc==M);
             assert(MP+MR==MW);
             assert(MW+MS==M);
 
