@@ -187,13 +187,19 @@ namespace upsylon
                 const Route      route; //!< travelling route
                 const Edge::List edges; //!< travelled edges
                 const sList      slist; //!< met species along the way
-                const bool       cycle; //!< if a cycle is met
+                const bool       valid; //!< until a source/siphon or cycle is met...
 
             private:
                 Y_DISABLE_ASSIGN(Path);
                 void setup(const Edge &edge);
                 void push(const Edge   &);
                 void push(const Strain *);
+                void runForward(List &stack);
+                void tryForward(const Edge &edge, List &stack);
+
+                void runReverse(List &stack);
+                void tryReverse(const Edge &edge, List &stack);
+
             };
 
             //__________________________________________________________________

@@ -265,7 +265,7 @@ namespace upsylon
         route( Edge2Route(edge) ),
         edges(),
         slist(),
-        cycle(false)
+        valid(true)
         {
             setup(edge);
         }
@@ -275,8 +275,10 @@ namespace upsylon
         route(path.route),
         edges(path.edges),
         slist(path.slist),
-        cycle(path.cycle)
-        {}
+        valid(path.valid)
+        {
+
+        }
 
 
         Flux:: Path:: ~Path() throw()
@@ -317,11 +319,61 @@ namespace upsylon
 
         Flux::Path::List & Flux::Path:: grow(List &stack)
         {
-            Y_CHEMICAL_PRINTLN("      try " << routeText() << " path from " << ***slist.head);
-            
+            Y_CHEMICAL_PRINTLN("      Try " << routeText() << " Path from " << ***slist.head);
+
+            {
+                switch(route)
+                {
+                    case Forward: runForward(stack); break;
+                    case Reverse: runReverse(stack); break;
+                }
+            }
+
 
             return stack;
         }
+
+        void Flux::Path:: runForward(List &stack)
+        {
+            Path             &self = *this;
+            const Edge       &curr = **edges.tail;   assert(curr.target.genus==Vertex::IsPrimary);
+            const Vertex     &vhub = curr.target;
+            const Edge::List &dest = vhub.outgoing;
+            assert(dest.size>0);
+            for(const Edge::Node *node=dest.tail;node!=dest.head;node=node->prev)
+            {
+                stack.push_back( new Path(self) )->tryForward(**node,stack);
+            }
+            self.tryForward(**dest.head,stack);
+        }
+
+        void Flux::Path:: tryForward(const Edge &edge, List &stack)
+        {
+            assert(edge.target.genus==Vertex::IsStrain);
+        }
+
+
+        void Flux::Path:: runReverse(List &stack)
+        {
+            Path             &self = *this;
+            const Edge       &curr = **edges.tail;   assert(curr.source.genus==Vertex::IsPrimary);
+            const Vertex     &vhub = curr.source;
+            const Edge::List &from = vhub.incoming;
+            assert(from.size>0);
+            for(const Edge::Node *node=from.tail;node!=from.head;node=node->prev)
+            {
+                stack.push_back( new Path(self) )->tryReverse(**node,stack);
+            }
+            self.tryReverse(**from.head,stack);
+        }
+
+
+        void Flux::Path:: tryReverse(const Edge &edge, List &stack)
+        {
+            assert(edge.source.genus==Vertex::IsStrain);
+
+        }
+
 
     }
 

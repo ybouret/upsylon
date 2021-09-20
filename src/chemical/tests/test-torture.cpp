@@ -53,7 +53,7 @@ Y_UTEST(torture)
 
     if(M<N) throw exception("M<N");
 
-    for(size_t iter=0;iter<4;++iter)
+    for(size_t iter=0;iter<1;++iter)
     {
         Library        lib;
         Lua::VM        lvm = new Lua::State();
@@ -121,7 +121,6 @@ Y_UTEST(torture)
         std::cerr << "Building System" << std::endl;
         System sys(lib,eqs,Equilibrium::Default);
 
-        break;
     }
 
 }
