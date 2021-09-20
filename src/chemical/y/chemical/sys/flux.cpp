@@ -240,7 +240,7 @@ namespace upsylon
                            const Primary::Array &primary) :
         svtx(strain.size(), as_capacity),
         pvtx(primary.size(),as_capacity),
-        forward()
+        edges()
         {
             Build( aliasing::_(svtx), strain);
             Build( aliasing::_(pvtx), primary);
@@ -263,7 +263,7 @@ namespace upsylon
             assert(cof>0);
             
             const Edge::Key      key(*ini,*end);
-            const Edge::Pointer *ppE = forward.search(key);
+            const Edge::Pointer *ppE = edges.search(key);
             if(ppE)
             {
                 if(cof != (**ppE).weight ) throw exception("existing edge weight mismatch");
@@ -273,7 +273,7 @@ namespace upsylon
             {
                 Edge *pE = new Edge(*ini,*end,cof);
                 const Edge::Pointer tmp(pE);
-                if( !aliasing::_(forward).insert(tmp)) throw exception("unexpected new edge insertion failure");
+                if( !aliasing::_(edges).insert(tmp)) throw exception("unexpected new edge insertion failure");
                 return *pE;
             }
         }
@@ -313,7 +313,7 @@ namespace upsylon
             
             
             // build incoming
-            for(const Edge::Iter *node=forward.head();node;node=node->next)
+            for(const Edge::Iter *node=edges.head();node;node=node->next)
             {
                 const Edge   &edge   = ***node;
                 assert(edge.source.hasOutgoing(edge));
@@ -354,7 +354,7 @@ namespace upsylon
         void     Flux:: Graph::   join(ios::ostream &fp) const
         {
             
-            for(const Edge::Iter *node=forward.head();node;node=node->next)
+            for(const Edge::Iter *node=edges.head();node;node=node->next)
             {
                 const Edge &edge = ***node;
                 edge.viz(fp);
