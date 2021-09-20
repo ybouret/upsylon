@@ -234,10 +234,13 @@ namespace upsylon
         {
             if(edge.source.genus==Flux::Vertex::IsStrain)
             {
+                assert(edge.source.strain->linkage==Intake);
                 return Flux::Forward;
             }
             else
             {
+                assert(edge.target.genus==Flux::Vertex::IsStrain);
+                assert(edge.target.strain->linkage==Output);
                 return Flux::Reverse;
             }
         }
@@ -471,6 +474,7 @@ namespace upsylon
                     {
                         case Intake:
                             std::cerr << "      try forward " << *S << std::endl;
+                            paths.store( new Path(edge) );
                             break;
 
                         default:
@@ -485,6 +489,7 @@ namespace upsylon
                     {
                         case Output:
                             std::cerr << "      try reverse " << *S << std::endl;
+                            paths.store( new Path(edge) );
                             break;
 
                         default:
