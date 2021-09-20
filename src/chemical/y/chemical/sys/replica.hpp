@@ -83,7 +83,12 @@ namespace upsylon
                 displayFirstNu(os,nu[(***en).indx]) << '@' << ***en;
                 for(const ENode *node=en->next;node;node=node->next)
                 {
-                    displayOtherNu(os << ' ',nu[(***node).indx]) << '@' << ***node;
+                    const Equilibrium &mine = ***node;
+                    const unit_t       coef = nu[mine.indx];
+                    if(coef)
+                    {
+                        displayOtherNu(os << ' ',coef) << '@' << mine;
+                    }
                 }
                 os << " >= -" << **this;
                 return os;
@@ -116,7 +121,7 @@ namespace upsylon
                 {
                     if(nu>1)
                     {
-                        os << vformat("%d", int(nu));
+                        os << vformat("+%d", int(nu));
                     }
                     else
                     {
