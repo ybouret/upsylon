@@ -16,3 +16,4 @@ clean:
 	rm -f fvm.pdf
 	rm -f formula.pdf
 	rm -f alchemy.pdf
+	rm -f ortho.pdf
