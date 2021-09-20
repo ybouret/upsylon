@@ -144,6 +144,16 @@ namespace upsylon
             typedef ref_dnode<const Strain>  sNode; //!< alias
             typedef ref_list<const Strain>   sList; //!< alias
 
+            //! Route for path
+            enum Route
+            {
+                Forward, //!< reac->prod
+                Reverse  //!< prod->reac
+            };
+
+            //! human readable route
+            static const char *RouteText(const Route) throw();
+
             //__________________________________________________________________
             //
             //
@@ -153,6 +163,7 @@ namespace upsylon
             class Path : public Object, public dnode<Path>
             {
             public:
+                typedef core::pool_of<Path> Stack;
                 //______________________________________________________________
                 //
                 // C++
@@ -160,19 +171,20 @@ namespace upsylon
                 Path(const Edge &) throw(); //!< setup with first edge
                 Path(const Path &);         //!< full duplication
                 virtual ~Path()    throw(); //!< cleanup
-                
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
+                const char  *routeText() const throw(); //!< for info
 
                 //______________________________________________________________
                 //
                 // members
                 //______________________________________________________________
+                const Route      route; //!< travelling route
                 const Edge::List edges; //!< travelled edges
-                const sList      slist; //!< met species
-
+                const sList      slist; //!< met species along the way
+                const bool       cycle; //!< if a cycle is met
 
             private:
                 Y_DISABLE_ASSIGN(Path);

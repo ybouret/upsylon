@@ -201,7 +201,6 @@ namespace upsylon
         
         void Flux::Path:: setup(const Edge &edge)
         {
-            assert(edge.source.genus==Vertex::IsStrain);
             push(edge);
             try
             {
@@ -212,6 +211,7 @@ namespace upsylon
                 delete aliasing::_(edges).pop_back();
                 throw;
             }
+
         }
         
     }
@@ -223,17 +223,59 @@ namespace upsylon
 {
     namespace Chemical
     {
-        Flux:: Path:: Path(const Edge &edge) throw() : Object(), dnode<Path>(), edges(), slist()
+
+        static inline Flux::Route Edge2Route(const Flux::Edge &edge)
+        {
+            if(edge.source.genus==Flux::Vertex::IsStrain)
+            {
+                return Flux::Forward;
+            }
+            else
+            {
+                return Flux::Reverse;
+            }
+        }
+
+        const char * Flux:: RouteText(const Route route) throw()
+        {
+            switch(route)
+            {
+                case Forward: return "Forward";
+                case Reverse: return "Reverse";
+            }
+            return unknown_text;
+        }
+
+        Flux:: Path:: Path(const Edge &edge) throw() :
+        Object(), dnode<Path>(),
+        route( Edge2Route(edge) ),
+        edges(),
+        slist(),
+        cycle(false)
         {
             setup(edge);
         }
         
-        Flux:: Path:: Path(const Path &path) : Object(), dnode<Path>(), edges(path.edges), slist(path.slist) {}
+        Flux:: Path:: Path(const Path &path) :
+        Object(), dnode<Path>(),
+        route(path.route),
+        edges(path.edges),
+        slist(path.slist),
+        cycle(path.cycle)
+        {}
 
 
         Flux:: Path:: ~Path() throw()
         {
         }
+
+
+        const char  * Flux::Path:: routeText() const throw()
+        {
+            return RouteText(route);
+        }
+
+
     }
 
 }

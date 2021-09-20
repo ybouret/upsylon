@@ -80,14 +80,14 @@ namespace upsylon
             {
                 Library::Indent(os,indent);
 
-                displayFirstNu(os,nu[(***en).indx]) << '@' << ***en;
+                displayFirstNu(os,nu[(***en).indx]) << '@' << (***en).name;
                 for(const ENode *node=en->next;node;node=node->next)
                 {
                     const Equilibrium &mine = ***node;
                     const unit_t       coef = nu[mine.indx];
                     if(coef)
                     {
-                        displayOtherNu(os << ' ',coef) << '@' << mine;
+                        displayOtherNu(os << ' ',coef) << '@' << mine.name;
                     }
                 }
                 os << " >= -" << **this;
@@ -102,7 +102,7 @@ namespace upsylon
                 {
                     if(nu>1)
                     {
-                        os << vformat("%d ", int(nu));
+                        os << vformat("%d", int(nu));
                     }
                     else
                     {
