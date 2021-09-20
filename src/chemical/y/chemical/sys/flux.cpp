@@ -105,9 +105,15 @@ namespace upsylon
         
         void Flux:: Vertex:: display() const
         {
-            std::cerr << "      " << name() << " :";
-            std::cerr << " #out="; Display(outgoing,true);
-            std::cerr << " | #in="; Display(incoming,false);
+            std::cerr << "      " << name();
+            if(outgoing.size)
+            {
+                std::cerr << " | #out=";  Display(outgoing,true);
+            }
+            if(incoming.size)
+            {
+                std::cerr << " | #in ="; Display(incoming,false);
+            }
             std::cerr << std::endl;
         }
         
