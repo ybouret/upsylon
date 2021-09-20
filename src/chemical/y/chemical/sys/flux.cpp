@@ -210,7 +210,11 @@ namespace upsylon
             push(edge);
             try
             {
-                push(edge.source.strain);
+                switch(route)
+                {
+                    case Forward: push(edge.source.strain); break;
+                    case Reverse: push(edge.target.strain); break;
+                }
             }
             catch(...)
             {
@@ -263,6 +267,7 @@ namespace upsylon
         cycle(false)
         {
             setup(edge);
+            Y_CHEMICAL_PRINTLN("      try " << routeText() << " path from " << ***slist.head);
         }
         
         Flux:: Path:: Path(const Path &path) :
@@ -318,7 +323,9 @@ namespace upsylon
             Build( aliasing::_(svtx), strain);
             Build( aliasing::_(pvtx), primary);
             connect(strain);
+            run();
         }
+        
         void Flux::Graph:: Save(ios::ostream &fp, const Vertex::Array &arr)
         {
             const size_t n = arr.size();
@@ -459,42 +466,25 @@ namespace upsylon
     namespace Chemical
     {
 
-        void Flux::Graph:: run(Path::Stack &paths) const
+        void Flux::Graph:: run( )
         {
-            paths.release();
+            Path::List &ways  = aliasing::_(paths);
+            Path::Pool  temp;
 
             Y_CHEMICAL_PRINTLN("    <Paths>");
             for(const Edge::Iter *node=edges.head();node;node=node->next)
             {
                 const Edge &edge = ***node;
-                if(edge.source.genus==Vertex::IsStrain)
+                if(Vertex::IsStrain==edge.source.genus)
                 {
-                    const Strain &S = *edge.source.strain;
-                    switch(S.linkage)
-                    {
-                        case Intake:
-                            std::cerr << "      try forward " << *S << std::endl;
-                            paths.store( new Path(edge) );
-                            break;
-
-                        default:
-                            break;
-                    }
+                    if(Intake == edge.source.strain->linkage)
+                        ways.push_back( new Path(edge) );
                 }
                 else
                 {
                     assert(edge.target.genus==Vertex::IsStrain);
-                    const Strain &S = *edge.target.strain;
-                    switch(S.linkage)
-                    {
-                        case Output:
-                            std::cerr << "      try reverse " << *S << std::endl;
-                            paths.store( new Path(edge) );
-                            break;
-
-                        default:
-                            break;
-                    }
+                    if(Output == edge.target.strain->linkage)
+                        ways.push_back( new Path(edge) );
                 }
             }
             Y_CHEMICAL_PRINTLN("    <Paths/>");

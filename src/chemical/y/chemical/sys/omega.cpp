@@ -20,9 +20,7 @@ namespace upsylon
             Flux::Graph G(strain,primary);
             G.graphViz("flux.dot");
 
-            Flux::Path::Stack paths;
-            G.run(paths);
-
+            
             if(Nc>0)
             {
                 iMatrix &Om      = aliasing::_(Omega);

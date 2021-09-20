@@ -163,7 +163,9 @@ namespace upsylon
             class Path : public Object, public dnode<Path>
             {
             public:
-                typedef core::pool_of_cpp<Path> Stack;
+                typedef core::pool_of_cpp<Path> Pool;
+                typedef core::list_of_cpp<Path> List;
+
                 //______________________________________________________________
                 //
                 // C++
@@ -176,7 +178,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 const char  *routeText() const throw(); //!< for info
-
+                
                 //______________________________________________________________
                 //
                 // members
@@ -220,7 +222,6 @@ namespace upsylon
                 //______________________________________________________________
                 void graphViz(const string &) const; //!< save/render
 
-                void run(Path::Stack &paths) const;
 
                 //______________________________________________________________
                 //
@@ -229,6 +230,7 @@ namespace upsylon
                 const Vertex::Array svtx;   //!< all unique strains/species
                 const Vertex::Array pvtx;   //!< all unique primaries/equilibria
                 const Edge::Set     edges;  //!< all unique connecting edges
+                const Path::List    paths;  //!< all paths
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
@@ -236,10 +238,7 @@ namespace upsylon
                 const Edge &query(const Vertex *ini, const Vertex *end, const unit_t cof);
                 static void Save(ios::ostream &fp, const Vertex::Array &arr);
                 void        join(ios::ostream &fp) const;
-
-
-
-
+                void        run();
 
             };
 
