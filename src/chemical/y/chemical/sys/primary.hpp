@@ -158,7 +158,7 @@ namespace upsylon
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os, const Accessible &C, const size_t indent) const
             {
-                prolog(os,indent);
+                //prolog(os,indent);
                 display(os,C,reac,indent);
                 display(os,C,prod,indent);
                 return os;
