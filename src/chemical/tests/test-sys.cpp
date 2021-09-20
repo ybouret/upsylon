@@ -41,14 +41,6 @@ Y_UTEST(sys)
     //Verbosity = false;
     System cs(lib,eqs,Equilibrium::Minimal);
 
-    if(cs.M>cs.N)
-    {
-        iMatrix Om(cs.M-cs.N,cs.M);
-        apk::complete_ortho(cs.Nu,Om);
-        std::cerr << "Nu=" << cs.Nu << std::endl;
-        std::cerr << "Om=" << Om << std::endl;
-    }
-
     return 0;
     
     Vector C(cs.M,0);

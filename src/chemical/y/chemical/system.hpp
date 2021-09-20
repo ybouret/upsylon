@@ -72,6 +72,9 @@ namespace upsylon
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]
             const Strain::Array  strain;     //!< [M]
+            const iVector        Z;          //!< [M] vector of charges
+            const bool           charged;    //!< |Z| != 0
+            const iMatrix        Omega;      //!< [...xM]
             Vector               xi;         //!< [N] helper to move
             Flags                ok;         //!< [N] primary status
             Actor::Array         who;        //!< [0..N], at most one per equilibria

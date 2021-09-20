@@ -1,6 +1,7 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/code/textual.hpp"
 #include <iomanip>
 
 
@@ -33,10 +34,10 @@ namespace upsylon
 
 
         static inline
-        size_t checkValidity(const size_t MW, const size_t N)
+        size_t checkSizes(const size_t M, const size_t MW, const size_t N)
         {
             if(N>MW) throw exception("%s has too many equilibria/working species",System::CLID);
-            return MW-N;
+            return M-N;
         }
 
         System:: System(const Library    &usrLib,
@@ -47,7 +48,7 @@ namespace upsylon
         N(  eqs->size() ),
         M(  lib->size() ),
         MW( lib.countWorking()  ),
-        Nc( checkValidity(MW,N) ),
+        Nc( checkSizes(M,MW,N)  ),
         MP( lib.countPrimary()  ),
         MR( lib.countReplica()  ),
         MS( lib.spectators()    ),
@@ -55,6 +56,9 @@ namespace upsylon
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
         strain(M, as_capacity),
+        Z(M,0),
+        charged(false),
+        Omega(Nc,Nc>0?M:0),
         xi(N,0),
         ok(N,false),
         who(N,as_capacity),
@@ -130,6 +134,10 @@ namespace upsylon
                     Strain                *S = new Strain(s);
                     { const Strain::Pointer  tmp(S); aliasing::_(strain).push_back_(tmp); }
                     const size_t           j = s.indx;
+                    if(0!=(aliasing::_(Z[j]) = s.charge))
+                    {
+                        aliasing::_(charged) = true;
+                    }
 
                     if(Verbosity) std::cerr << "      " << s << " #" << std::setw(3) << s.rating << " :";
 
@@ -146,6 +154,7 @@ namespace upsylon
                     S->finalize();
                     if(Verbosity) std::cerr << " => " << S->stateText() << "/" << S->linkageState() << std::endl;
                 }
+                Y_CHEMICAL_PRINTLN("     Z = " << Z << " #charged=" << textual::boolean(charged) );
                 Y_CHEMICAL_PRINTLN("    <Building/>");
 
                 Y_CHEMICAL_PRINTLN("    <Compiled>");

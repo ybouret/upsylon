@@ -16,17 +16,19 @@ namespace upsylon
         //
         // global types
         //______________________________________________________________________
-        extern bool                       Verbosity;   //!< to debug
-        typedef memory::dyadic            Allocator;   //!< default allocator
-        typedef matrix<double>            Matrix;      //!< default matrix
-        typedef vector<double,Allocator>  Vector;      //!< default vector
-        typedef vector<string,Allocator>  Strings;     //!< default sequence of strings
-        typedef addressable<double>       Addressable; //!< default addressable
-        typedef accessible<double>        Accessible;  //!< default addressable
-        typedef matrix<unit_t>            iMatrix;     //!< default matrix of integers
-        typedef accessible<unit_t>        iAccessible; //!< default accessible integers
-        typedef vector<bool,Allocator>    Flags;       //!< default vector of booleans
-        typedef vector<size_t,Allocator>  Indices;     //!< default vector of indices
+        extern bool                       Verbosity;    //!< to debug
+        typedef memory::dyadic            Allocator;    //!< default allocator
+        typedef matrix<double>            Matrix;       //!< default matrix
+        typedef vector<double,Allocator>  Vector;       //!< default vector
+        typedef vector<string,Allocator>  Strings;      //!< default sequence of strings
+        typedef vector<unit_t,Allocator>  iVector;      //!< default sequence of strings
+        typedef addressable<double>       Addressable;  //!< default addressable
+        typedef accessible<double>        Accessible;   //!< default addressable
+        typedef matrix<unit_t>            iMatrix;      //!< default matrix of integers
+        typedef accessible<unit_t>        iAccessible;  //!< default accessible integers
+        typedef addressable<unit_t>       iAddressable; //!< default accessible integers
+        typedef vector<bool,Allocator>    Flags;        //!< default vector of booleans
+        typedef vector<size_t,Allocator>  Indices;      //!< default vector of indices
 
         //! output a debug message
 #define Y_CHEMICAL_PRINTLN(MSG) do { if(Verbosity) { std::cerr << MSG << std::endl; } } while(false)
