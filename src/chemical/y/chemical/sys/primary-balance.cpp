@@ -69,9 +69,11 @@ namespace upsylon
                     std::cerr << std::endl;
                 }
                 Library::Indent(std::cerr,next) << "vanishing = {";
-                for(size_t j=1;j<=who.size();++j)
+                const size_t nwho = who.size();
+                for(size_t j=1;j<=nwho;++j)
                 {
-                    std::cerr << ' ' << *who[j];
+                    std::cerr << ' ' << (*who[j]).sp;
+
                 }
                 std::cerr << " }" << std::endl;
             }
