@@ -163,7 +163,6 @@ namespace upsylon
             class Path : public Object, public dnode<Path>
             {
             public:
-                typedef core::pool_of_cpp<Path> Pool;
                 typedef core::list_of_cpp<Path> List;
 
                 //______________________________________________________________
@@ -177,7 +176,9 @@ namespace upsylon
                 //
                 // methods
                 //______________________________________________________________
-                const char  *routeText() const throw(); //!< for info
+                const char  * routeText() const throw(); //!< for info
+                bool          owns(const Strain *) const throw();
+                List        & grow(List &stack);
                 
                 //______________________________________________________________
                 //
@@ -239,6 +240,7 @@ namespace upsylon
                 static void Save(ios::ostream &fp, const Vertex::Array &arr);
                 void        join(ios::ostream &fp) const;
                 void        run();
+                void        buildPathFrom(const Edge &edge);
 
             };
 

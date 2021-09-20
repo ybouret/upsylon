@@ -202,7 +202,7 @@ namespace upsylon
         {
             assert(strain);
             aliasing::_(slist).append(*strain);
-            
+            assert(owns(strain));
         }
         
         void Flux::Path:: setup(const Edge &edge)
@@ -227,6 +227,7 @@ namespace upsylon
     }
 }
 
+#include "y/sort/merge-list.hpp"
 
 // PATH
 namespace upsylon
@@ -267,7 +268,6 @@ namespace upsylon
         cycle(false)
         {
             setup(edge);
-            Y_CHEMICAL_PRINTLN("      try " << routeText() << " path from " << ***slist.head);
         }
         
         Flux:: Path:: Path(const Path &path) :
@@ -289,6 +289,39 @@ namespace upsylon
             return RouteText(route);
         }
 
+        static inline int sNodeCompare(const Flux::sNode *lhs,
+                                       const Flux::sNode *rhs,
+                                       void *) throw()
+        {
+            const Species &L = ***lhs;
+            const Species &R = ***rhs;
+            return comparison::increasing_addresses(&L,&R);
+        }
+
+        static inline void sListUpdate(Flux::sList &slist)
+        {
+            merge_list_of<Flux::sNode>::sort(slist,sNodeCompare,0);
+        }
+
+        bool Flux:: Path:: owns(const Strain *strain) const throw()
+        {
+            assert(strain);
+            const Species   &spec   = **strain;
+            for(const sNode *node = slist.head;node;node=node->next)
+            {
+                const Species &temp = ***node;
+                if(&temp == &spec) return true;
+            }
+            return false;
+        }
+
+        Flux::Path::List & Flux::Path:: grow(List &stack)
+        {
+            Y_CHEMICAL_PRINTLN("      try " << routeText() << " path from " << ***slist.head);
+            
+
+            return stack;
+        }
 
     }
 
@@ -466,10 +499,17 @@ namespace upsylon
     namespace Chemical
     {
 
+
+        void    Flux::Graph::   buildPathFrom(const Edge &edge)
+        {
+            Path::List  temp;
+            aliasing::_(paths).push_back( new Path(edge) )->grow(temp);
+
+        }
+
         void Flux::Graph:: run( )
         {
-            Path::List &ways  = aliasing::_(paths);
-            Path::Pool  temp;
+
 
             Y_CHEMICAL_PRINTLN("    <Paths>");
             for(const Edge::Iter *node=edges.head();node;node=node->next)
@@ -478,13 +518,14 @@ namespace upsylon
                 if(Vertex::IsStrain==edge.source.genus)
                 {
                     if(Intake == edge.source.strain->linkage)
-                        ways.push_back( new Path(edge) );
+                        buildPathFrom(edge);
+
                 }
                 else
                 {
                     assert(edge.target.genus==Vertex::IsStrain);
                     if(Output == edge.target.strain->linkage)
-                        ways.push_back( new Path(edge) );
+                        buildPathFrom(edge);
                 }
             }
             Y_CHEMICAL_PRINTLN("    <Paths/>");
