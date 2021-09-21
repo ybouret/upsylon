@@ -22,8 +22,20 @@ namespace upsylon
             //__________________________________________________________________
             typedef ios::vizible Viz;            //!< alias
             class   Edge;                        //!< forward definition
-            typedef ref_dnode<const Edge> eNode; //!< ref node for Edge
-            typedef ref_list<const Edge>  eList; //!< list of eNode
+            typedef ref_dnode<const Edge> Link;  //!< link to an Edge
+            typedef ref_list<const Edge>  Links; //!< References
+
+            class DualLinks
+            {
+            public:
+                DualLinks() throw();
+                ~DualLinks() throw();
+
+                const Links incoming;
+                const Links outgoing;
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(DualLinks);
+            };
 
             //__________________________________________________________________
             //
@@ -69,6 +81,11 @@ namespace upsylon
                     const Lineage *const lineage; //!< lightweight lineage
                     const Primary *const primary; //!< lightweight primary
                 };
+
+                const DualLinks forward;
+                const DualLinks reverse;
+
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
             };
@@ -178,6 +195,8 @@ namespace upsylon
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(DualEdges);
             };
+
+            
 
             //__________________________________________________________________
             //

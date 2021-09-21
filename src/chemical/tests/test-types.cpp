@@ -23,6 +23,8 @@ Y_UTEST(types)
     Y_UTEST_SIZEOF(Chemical::Equilibria);
 
     Y_UTEST_SIZEOF(Chemical::Primary);
+    Y_UTEST_SIZEOF(Chemical::Replica);
+    Y_UTEST_SIZEOF(Chemical::Lineage);
     Y_UTEST_SIZEOF(Chemical::System);
 
 }

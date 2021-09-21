@@ -2,6 +2,35 @@
 #include "y/chemical/sys/stream.hpp"
 
 
+
+//==============================================================================
+//
+//
+// Links
+//
+//
+//==============================================================================
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+        namespace Stream
+        {
+            DualLinks:: DualLinks() throw() : incoming(), outgoing()
+            {
+            }
+
+            DualLinks:: ~DualLinks() throw()
+            {
+            }
+
+        }
+
+    }
+
+}
+
 //==============================================================================
 //
 //
@@ -219,17 +248,16 @@ namespace upsylon
                             if(nu>0)
                             {
                                 // species is a product
-                                aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
-                                aliasing::_(reverse.lineageToPrimary).push_back( new Edge(Reverse,LineageToPrimary,*l,*p,nu) );
+                                Edge &fwd = *aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
+                                Edge &rev = *aliasing::_(reverse.lineageToPrimary).push_back( new Edge(Reverse,LineageToPrimary,*l,*p,nu) );
 
                             }
                             else
                             {
                                 assert(nu<0);
                                 // species is a reactant
-                                aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
-                                aliasing::_(reverse.primaryToLineage).push_back( new Edge(Reverse,PrimaryToLineage,*p,*l,-nu) );
-
+                                Edge &fwd = *aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
+                                Edge &rev = *aliasing::_(reverse.primaryToLineage).push_back( new Edge(Reverse,PrimaryToLineage,*p,*l,-nu) );
                             }
                         }
                     }
