@@ -224,6 +224,7 @@ namespace upsylon
     {
         namespace Stream
         {
+            const char Path:: CLID[] = "Stream::Path";
 
             Path:: ~Path() throw()
             {
@@ -236,11 +237,18 @@ namespace upsylon
             members()
             {
                 assert(edge.source.genus==IsLineage);
+                assert(edge.target.genus==IsPrimary);
+
                 Y_CHEMICAL_PRINTLN("        try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
 
                 // initialize fist member
                 aliasing::_(members).append(*edge.source.lineage);
                 assert(owns(edge.source.lineage));
+
+
+                // try to grow
+                grow(edge.target,temp);
+
             }
 
             Path:: Path(const Path &other) :
@@ -261,8 +269,20 @@ namespace upsylon
                 return false;
             }
 
-            void Path:: grow(const Primary &primary, List &temp)
+            void Path:: grow(const Vertex &vhub,
+                             List         &temp)
             {
+                std::cerr << "    hub@" << vhub.name() << std::endl;
+                assert(vhub.genus==IsPrimary);
+                const Links *links = 0;
+                switch(course)
+                {
+                    case Forward: links = &vhub.forward; break;
+                    case Reverse: links = &vhub.reverse; break;
+                }
+
+                if(links->size<=0) throw exception("%s detected a corrupted linkage!",CLID);
+                
 
             }
 
@@ -445,6 +465,7 @@ namespace upsylon
                     writeGV(lvtx,fp);
                     writeGV(pvtx,fp);
                     writeGV(forward,fp);
+                    Viz::endl(fp << "edge [colorscheme=spectral11]");
                     Viz::leaveDigraph(fp);
                 }
                 ios::GraphViz::Render(fileName);

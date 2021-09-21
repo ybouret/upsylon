@@ -248,6 +248,8 @@ namespace upsylon
             {
             public:
                 typedef core::list_of_cpp<Path> List;
+                static  const char              CLID[];
+
                 //______________________________________________________________
                 //
                 // C++
@@ -271,7 +273,7 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Path);
-                void grow(const Primary &primary, List &temp);
+                void grow(const Vertex &hub, List &temp);
             };
 
 
