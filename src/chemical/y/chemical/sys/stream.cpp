@@ -278,7 +278,8 @@ namespace upsylon
             Oriented(edge),
             dnode<Path>(),
             isValid(false),
-            members()
+            members(),
+            roadmap()
             {
                 assert(edge.source.genus==IsLineage);
                 assert(edge.target.genus==IsPrimary);
@@ -292,6 +293,8 @@ namespace upsylon
                 aliasing::_(members).append(*edge.source.lineage);
                 assert(owns(edge.source.lineage));
 
+                // initialize first road
+                aliasing::_(roadmap).append(edge);
 
                 // try to grow
                 conn(edge.target,temp);
@@ -302,8 +305,8 @@ namespace upsylon
             Oriented(other),
             dnode<Path>(),
             isValid(other.isValid),
-            //trigger(other.trigger),
-            members(other.members)
+            members(other.members),
+            roadmap(other.roadmap)
             {
             }
 
@@ -439,7 +442,15 @@ namespace upsylon
 
             void Path:: viz(ios::ostream &fp, const unsigned c) const
             {
-                
+                for(const Link *link=roadmap.head;link;link=link->next)
+                {
+                    fp.viz( & ((**link).source) );
+                    Viz::arrow(fp);
+                    fp.viz( & ((**link).target) );
+                    fp("[color=%u]",c);
+                    Viz::endl(fp);
+                }
+
             }
 
         }
@@ -621,6 +632,14 @@ namespace upsylon
                     writeGV(pvtx,fp);
                     writeGV(forward,fp);
                     Viz::endl(fp << "edge [colorscheme=spectral11]");
+                    {
+                        size_t i = 0;
+                        for(const Path *path=paths.head;path;path=path->next,++i)
+                        {
+                            path->viz(fp, unsigned( 1+(i%11) ) );
+                        }
+                    }
+
                     Viz::leaveDigraph(fp);
                 }
                 ios::GraphViz::Render(fileName);
@@ -671,7 +690,7 @@ namespace upsylon
                 assert(0==temp.size);
                 while(ways.size)
                 {
-                    if(ways.head->members.size<=2)
+                    if(ways.head->members.size<2)
                     {
                         throw exception("%s %s is too small!!!", ways.head->courseText(), Path::CLID);
                     }

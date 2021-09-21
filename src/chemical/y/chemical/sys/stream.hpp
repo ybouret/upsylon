@@ -275,6 +275,7 @@ namespace upsylon
                 //______________________________________________________________
                 const bool    isValid; //!< initially false
                 const Members members; //!< met along the way
+                const Links   roadmap; //!< from start to finish
 
             private:
                 Y_DISABLE_ASSIGN(Path);
