@@ -229,7 +229,7 @@ namespace upsylon
             {
             }
 
-            Path:: Path(const Edge &edge) :
+            Path:: Path(const Edge &edge, List &temp) :
             Oriented(edge),
             dnode<Path>(),
             isValid(false),
@@ -238,7 +238,9 @@ namespace upsylon
                 assert(edge.source.genus==IsLineage);
                 Y_CHEMICAL_PRINTLN("        try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
 
+                // initialize fist member
                 aliasing::_(members).append(*edge.source.lineage);
+                assert(owns(edge.source.lineage));
             }
 
             Path:: Path(const Path &other) :
@@ -249,6 +251,20 @@ namespace upsylon
             {
             }
 
+            bool Path:: owns(const Lineage *lineage) const throw()
+            {
+                for(const Member *member=members.head;member;member=member->next)
+                {
+                    const Lineage &mine = **member;
+                    if(&mine==lineage) return true;
+                }
+                return false;
+            }
+
+            void Path:: grow(const Primary &primary, List &temp)
+            {
+
+            }
 
 
         }
@@ -469,9 +485,9 @@ namespace upsylon
 
             void Graph:: tryPathFrom(const Edge &edge)
             {
-                Paths &ways = aliasing::_(paths);
-                Paths temp;
-                ways.push_back( new Path(edge) );
+                Path::List &ways = aliasing::_(paths);
+                Path::List temp;
+                ways.push_back( new Path(edge,temp) );
                 
             }
 

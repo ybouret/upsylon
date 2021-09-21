@@ -247,11 +247,12 @@ namespace upsylon
             class Path : public Oriented, public dnode<Path>
             {
             public:
+                typedef core::list_of_cpp<Path> List;
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
-                explicit Path(const Edge &edge); //!< setup from initial edge
+                explicit Path(const Edge &edge, List &temp); //!< setup from initial edge
                 explicit Path(const Path &);     //!< copy
                 virtual ~Path() throw();         //!< cleanup
 
@@ -270,15 +271,9 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Path);
+                void grow(const Primary &primary, List &temp);
             };
 
-            //__________________________________________________________________
-            //
-            //
-            //! alias for list of paths
-            //
-            //__________________________________________________________________
-            typedef core::list_of_cpp<Path> Paths;
 
 
             //__________________________________________________________________
@@ -308,17 +303,18 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Vertices  lvtx;    //!< lineage vertices
-                const Vertices  pvtx;    //!< primary vertices
-                const DualEdges forward; //!< all forward connectivity
-                const DualEdges reverse; //!< all reverse connectivity
-                const Paths     paths;   //!< all paths
+                const Vertices   lvtx;    //!< lineage vertices
+                const Vertices   pvtx;    //!< primary vertices
+                const DualEdges  forward; //!< all forward connectivity
+                const DualEdges  reverse; //!< all reverse connectivity
+                const Path::List paths;   //!< all paths
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
                 bool checkConnectivity()      const throw(); //!< check
                 void buildPaths(); //!< building all paths
                 void tryPathFrom(const Edge &edge);
+
             };
 
 
