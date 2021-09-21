@@ -42,11 +42,12 @@ namespace upsylon
             // static helpers
             //
             //------------------------------------------------------------------
-            static void     endl(ostream &);                             //!< append ";\n"
+            static ostream &endl(ostream &);                             //!< append ";\n"
             static void     enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
             static void     enterDigraph(ostream &fp, const char   *id); //!< wrapper
             static void     leaveDigraph(ostream &fp);                   //!< "}\n"
             static ostream &outputLabel(ostream &fp, const string &);    //!< label=\" printable(...) \"
+            static ostream &outputLabel(ostream &fp, const char   *);    //!< outputLabel wrapper
             static ostream &appendShape(ostream &fp, const string &);    //!< ,shape=\" ... \"
             static ostream &appendStyle(ostream &fp, const string &);    //!< ,style=\" ... \"
             static ostream &arrow(ostream &fp);                          //!< " -> "

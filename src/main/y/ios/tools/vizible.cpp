@@ -23,9 +23,9 @@ namespace upsylon {
             return p->vizName(fp);
         }
 
-        void vizible:: endl(ostream &fp)
+        ostream & vizible:: endl(ostream &fp)
         {
-            fp << ';' << '\n';
+            return (fp << ';' << '\n');
         }
 
         ostream & vizible:: arrow(ostream &fp)
@@ -95,6 +95,13 @@ namespace upsylon {
             const string _ = string_convert::to_printable(s);
             fp << "label=\"" << _ << "\"";
             return fp;
+        }
+
+
+        ostream & vizible:: outputLabel(ostream &fp, const char *s)
+        {
+            const string _ = s;
+            return outputLabel(fp,_);
         }
 
         ostream & vizible:: appendShape(ostream &fp, const string &s)
