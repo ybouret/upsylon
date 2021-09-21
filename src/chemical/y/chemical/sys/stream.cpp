@@ -2,35 +2,6 @@
 #include "y/chemical/sys/stream.hpp"
 
 
-
-//==============================================================================
-//
-//
-// Links
-//
-//
-//==============================================================================
-
-namespace upsylon
-{
-    namespace Chemical
-    {
-        namespace Stream
-        {
-            DualLinks:: DualLinks() throw() : incoming(), outgoing()
-            {
-            }
-
-            DualLinks:: ~DualLinks() throw()
-            {
-            }
-
-        }
-
-    }
-
-}
-
 //==============================================================================
 //
 //
@@ -214,6 +185,17 @@ namespace upsylon
     {
         namespace Stream
         {
+
+
+
+            static inline void displayVertices(const Vertices &vtx, const size_t indent)
+            {
+                for(const Vertex *v=vtx.head;v;v=v->next)
+                {
+                    v->display(std::cerr,indent);
+                }
+            }
+
             template <typename ARRAY> static inline
             void registerVertices( Vertices &vtx, const ARRAY &arr)
             {
@@ -231,6 +213,9 @@ namespace upsylon
             forward(),
             reverse()
             {
+
+                Y_CHEMICAL_PRINTLN("    <Stream::Graph>");
+
                 // register all vertices
                 registerVertices(aliasing::_(lvtx),lineage);
                 registerVertices(aliasing::_(pvtx),primary);
@@ -251,6 +236,9 @@ namespace upsylon
                                 Edge &fwd = *aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
                                 Edge &rev = *aliasing::_(reverse.lineageToPrimary).push_back( new Edge(Reverse,LineageToPrimary,*l,*p,nu) );
 
+                                aliasing::_(p->forward).append(fwd);
+                                aliasing::_(l->reverse).append(rev);
+
                             }
                             else
                             {
@@ -258,6 +246,9 @@ namespace upsylon
                                 // species is a reactant
                                 Edge &fwd = *aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
                                 Edge &rev = *aliasing::_(reverse.primaryToLineage).push_back( new Edge(Reverse,PrimaryToLineage,*p,*l,-nu) );
+
+                                aliasing::_(l->forward).append(fwd);
+                                aliasing::_(p->reverse).append(rev);
                             }
                         }
                     }
@@ -265,8 +256,21 @@ namespace upsylon
 
                 assert(checkConnectivity());
 
+
+                if(Verbosity)
+                {
+                    std::cerr << "      <Stream::Lineage>"  << std::endl;
+                    displayVertices(lvtx,8);
+                    std::cerr << "      <Stream::Lineage/>" << std::endl;
+                    std::cerr << "      <Stream::Primary>"  << std::endl;
+                    displayVertices(pvtx,8);
+                    std::cerr << "      <Stream::Primary/>" << std::endl;
+                }
+
                 // probe all paths
                 buildPaths();
+
+                Y_CHEMICAL_PRINTLN("    <Stream::Graph/>");
 
             }
 
@@ -329,6 +333,8 @@ namespace upsylon
 
             void Graph:: buildPaths()
             {
+                Y_CHEMICAL_PRINTLN("      <Stream::Paths>");
+
                 for(const Edge *edge=forward.lineageToPrimary.head;edge;edge=edge->next)
                 {
                     assert(edge->course==Forward);
@@ -336,7 +342,7 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Intake==edge->source.lineage->linkage)
                     {
-                        std::cerr << "possible forward path starting from " << edge->source.name() << " to " << edge->target.name() << std::endl;
+                        std::cerr << "possible forward path starting from " << edge->source.name() << " -> " << edge->target.name() << "..." << std::endl;
                     }
                 }
 
@@ -347,9 +353,12 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Output==edge->source.lineage->linkage)
                     {
-                        std::cerr << "possible reverse path starting from " << edge->source.name() << " to " << edge->target.name() << std::endl;
+                        std::cerr << "possible reverse path starting from " << edge->source.name() << " -> " << edge->target.name() << "..." << std::endl;
                     }
                 }
+
+                Y_CHEMICAL_PRINTLN("      <Stream::Paths/>");
+
 
             }
 

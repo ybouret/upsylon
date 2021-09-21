@@ -20,76 +20,9 @@ namespace upsylon
             // aliases and definitions
             //
             //__________________________________________________________________
-            typedef ios::vizible Viz;            //!< alias
-            class   Edge;                        //!< forward definition
-            typedef ref_dnode<const Edge> Link;  //!< link to an Edge
-            typedef ref_list<const Edge>  Links; //!< References
-
-            class DualLinks
-            {
-            public:
-                DualLinks() throw();
-                ~DualLinks() throw();
-
-                const Links incoming;
-                const Links outgoing;
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(DualLinks);
-            };
-
-            //__________________________________________________________________
-            //
-            //! identifier for Vertex
-            //__________________________________________________________________
-            enum Genus
-            {
-                IsLineage, //!< for lineage/species
-                IsPrimary, //!< for primary/equilibrium
-            };
-
-
-            //__________________________________________________________________
-            //
-            //
-            //! a variant vertex in the graph
-            //
-            //__________________________________________________________________
-            class Vertex : public Object, public dnode<Vertex>
-            {
-            public:
-                //______________________________________________________________
-                //
-                // C++
-                //______________________________________________________________
-                explicit     Vertex(const Lineage &) throw(); //!< define as lineage
-                explicit     Vertex(const Primary &) throw(); //!< define as primart
-                virtual     ~Vertex() throw();                //!< cleanup
-
-                //______________________________________________________________
-                //
-                // methods
-                //______________________________________________________________
-                const char   * name()      const throw(); //!< genus depending name
-                ios::ostream & viz(ios::ostream &) const; //!< encode as graphviz
-
-                //______________________________________________________________
-                //
-                // members
-                //______________________________________________________________
-                const Genus genus; //!< identifier
-                union {
-                    const Lineage *const lineage; //!< lightweight lineage
-                    const Primary *const primary; //!< lightweight primary
-                };
-
-                const DualLinks forward;
-                const DualLinks reverse;
-
-
-            private:
-                Y_DISABLE_COPY_AND_ASSIGN(Vertex);
-            };
-
+            typedef ios::vizible Viz;     //!< alias
+            class                Vertex;  //!< forward declaration
+            
             //__________________________________________________________________
             //
             //! alias for list of vertices
@@ -164,11 +97,12 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            //! alias for list of Edges
+            // multiple
             //__________________________________________________________________
-            typedef core::list_of_cpp<Edge> Edges;
-
-
+            typedef core::list_of_cpp<Edge> Edges;  //!< alias for list of Edges
+            typedef ref_dnode<const Edge>   Link;  //!< link to an Edge
+            typedef ref_list<const Edge>    Links; //!< References
+            //!
             //__________________________________________________________________
             //
             //
@@ -196,7 +130,83 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(DualEdges);
             };
 
-            
+            //__________________________________________________________________
+            //
+            //! identifier for Vertex
+            //__________________________________________________________________
+            enum Genus
+            {
+                IsLineage, //!< for lineage/species
+                IsPrimary, //!< for primary/equilibrium
+            };
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! a variant vertex in the graph
+            //
+            //__________________________________________________________________
+            class Vertex : public Object, public dnode<Vertex>
+            {
+            public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit     Vertex(const Lineage &) throw(); //!< define as lineage
+                explicit     Vertex(const Primary &) throw(); //!< define as primart
+                virtual     ~Vertex() throw();                //!< cleanup
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                const char   * name()      const throw(); //!< genus depending name
+                ios::ostream & viz(ios::ostream &) const; //!< encode as graphviz
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Genus genus; //!< identifier
+                union {
+                    const Lineage *const lineage; //!< lightweight lineage
+                    const Primary *const primary; //!< lightweight primary
+                };
+
+                const Links forward; //!< where I go to
+                const Links reverse; //!< where I come from
+
+                template <typename OSTREAM> inline
+                OSTREAM & display(OSTREAM &os, const size_t indent) const
+                {
+                    Library::Indent(os,indent) << name();
+                    DisplayLinks(os,reverse,"<");
+                    DisplayLinks(os,forward,">");
+                    os << '\n';
+                    return os;
+                }
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Vertex);
+
+                template <typename OSTREAM> static inline
+                void DisplayLinks(OSTREAM &os, const Links &links, const char *symb)
+                {
+                    if(links.size)
+                    {
+                        os << ' ' << symb << " #" << vformat("%u ",unsigned(links.size));
+                        os << '{';
+                        for(const Link *link=links.head;link;link=link->next)
+                        {
+                            os << ' ' << (**link).target.name();
+                        }
+                        os << ' ' << '}';
+                    }
+                }
+
+            };
 
             //__________________________________________________________________
             //
