@@ -237,6 +237,8 @@ namespace upsylon
             {
                 assert(edge.source.genus==IsLineage);
                 Y_CHEMICAL_PRINTLN("        try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
+
+                aliasing::_(members).append(*edge.source.lineage);
             }
 
             Path:: Path(const Path &other) :
