@@ -217,6 +217,7 @@ namespace upsylon
 //
 //
 //==============================================================================
+#include "y/sort/merge-list.hpp"
 
 namespace upsylon
 {
@@ -237,23 +238,46 @@ namespace upsylon
             {
             }
 
-#if 0
-            static inline Linkage CourseToTrigger(const Course course) throw()
+            static inline int compareMembers(const Member *lhs,
+                                             const Member *rhs,
+                                             void *) throw()
             {
-                switch(course)
+                const Species &L = ***lhs;
+                const Species &R = ***rhs;
+                return comparison::increasing(L.indx,R.indx);
+            }
+
+            void Path:: reshape()
+            {
+                merge_list_of<Member>::sort(aliasing::_(members),compareMembers,0);
+            }
+
+            bool Path:: AreAnalog(const Path &lhs, const Path &rhs) throw()
+            {
+                if(lhs.members.size==rhs.members.size)
                 {
-                    case Forward: return Output;
-                    case Reverse: return Intake;
+                    for(const Member
+                        *l=lhs.members.head,
+                        *r=rhs.members.head;l;l=l->next,r=r->next)
+                    {
+                        const Species &L = ***l;
+                        const Species &R = ***r;
+                        if(L.indx!=R.indx) return false;
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
-#endif
+
             
             Path:: Path(const Edge &edge,
                         List       &temp) :
             Oriented(edge),
             dnode<Path>(),
             isValid(false),
-            //trigger(CourseToTrigger(course)),
             members()
             {
                 assert(edge.source.genus==IsLineage);
@@ -261,7 +285,7 @@ namespace upsylon
 
                 if(Verbosity)
                 {
-                   indent(std::cerr) << '[' << edge.source.name() << ']' << "/" << courseText() << std::endl;
+                    indent(std::cerr) << '[' << edge.source.name() << ']' << "/" << courseText() << std::endl;
                 }
 
                 // initialize fist member
@@ -309,7 +333,7 @@ namespace upsylon
                     case Reverse: links = &vhub.reverse; break;
                 }
 
-                if(links->size<=0) throw exception("%s detected a corrupted linkage!",CLID);
+                if(links->size<=0) throw exception("%s %s detected a corrupted linkage!",courseText(), CLID);
 
                 const Link     *head=links->head;
                 for(const Link *link=links->tail;link!=head;link=link->prev)
@@ -356,7 +380,7 @@ namespace upsylon
                                 case Reverse:
                                     aliasing::_(isValid)=true;
                                     aliasing::_(members).append(*lineage);
-                                    if(Verbosity) { indent(std::cerr) << "|_[[" << lineage->stateText() << "]]" << std::endl; }
+                                    if(Verbosity) { indent(std::cerr) << "|_**" << lineage->stateText() << "**" << std::endl; }
                                     return;           // valid
                                 case Forward: break;  // corrupted
                             }
@@ -369,7 +393,7 @@ namespace upsylon
                                 case Forward:
                                     aliasing::_(isValid)=true;
                                     aliasing::_(members).append(*lineage);
-                                    if(Verbosity) { indent(std::cerr) << "|_[[" << lineage->stateText() << "]]" << std::endl; }
+                                    if(Verbosity) { indent(std::cerr) << "|_**" << lineage->stateText() << "**" << std::endl; }
                                     return;           // valid
                                 case Reverse: break;  // corrupted
                             }
@@ -388,14 +412,35 @@ namespace upsylon
                     }
                     throw exception("*** %s %s found %s species [%s] on its way",courseText(),CLID,LinkageText(linkage),spName);
 
-                    HUB:
-                    ;
+                HUB:;
+                    const Links *links = 0;
+                    switch(course)
+                    {
+                        case Forward: links = &lvertex.forward; break;
+                        case Reverse: links = &lvertex.reverse; break;
+                    }
+                    assert(links);
+                    assert(links->size>0);
+
+                    const Link     *head=links->head;
+                    for(const Link *link=links->tail;link!=head;link=link->prev)
+                    {
+                        assert((**link).target.genus==IsPrimary);
+                        Path *path = temp.push_back( new Path(*this) );
+                        path->conn((**link).target,temp);
+                    }
+
+                    assert((**head).target.genus==IsPrimary);
+                    this->conn( (**head).target,temp);
 
                 }
 
             }
 
-
+            void Path:: viz(ios::ostream &fp, const unsigned c) const
+            {
+                
+            }
 
         }
 
@@ -594,7 +639,7 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Intake==edge->source.lineage->linkage)
                     {
-                        tryPathFrom(*edge);
+                        expandPath(*edge);
                     }
                 }
 
@@ -605,22 +650,89 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Output==edge->source.lineage->linkage)
                     {
-                        tryPathFrom(*edge);
+                        expandPath(*edge);
                     }
                 }
 
+                zapAnalogs();
+
+                Y_CHEMICAL_PRINTLN("      #Path = " << paths.size);
                 Y_CHEMICAL_PRINTLN("      <Stream::Paths/>");
 
 
             }
 
-            void Graph:: tryPathFrom(const Edge &edge)
+            void Graph:: expandPath(const Edge &edge)
             {
                 Path::List &ways = aliasing::_(paths);
                 Path::List temp;
                 ways.push_back( new Path(edge,temp) );
                 ways.merge_back(temp);
-                
+                assert(0==temp.size);
+                while(ways.size)
+                {
+                    if(ways.head->members.size<=2)
+                    {
+                        throw exception("%s %s is too small!!!", ways.head->courseText(), Path::CLID);
+                    }
+                    Path *path = ways.pop_back();
+                    if(path->isValid)
+                    {
+                        temp.push_back(path)->reshape();
+                    }
+                    else
+                    {
+                        delete path;
+                    }
+                }
+                ways.swap_with(temp);
+            }
+
+            void Graph:: zapAnalogs() throw()
+            {
+
+                Path::List &ways = aliasing::_(paths);
+                Path::List temp;
+                while(ways.size)
+                {
+                    Path *lhs         = ways.pop_front();
+                    Path *rhs         = ways.head;
+                    bool  foundAnalog = false;
+                    for(;rhs;rhs=rhs->next)
+                    {
+                        if( Path::AreAnalog(*lhs,*rhs) )
+                        {
+                            foundAnalog = true;
+                            break;
+                        }
+                    }
+                    if(foundAnalog)
+                    {
+                        assert(lhs);
+                        assert(rhs);
+                        assert(lhs!=rhs);
+                        rhs = ways.unlink(rhs);
+                        assert(lhs->course!=rhs->course);
+                        if(lhs->course==Forward)
+                        {
+                            delete rhs;
+                            temp.push_back(lhs);
+                        }
+                        else
+                        {
+                            assert(rhs->course==Forward);
+                            delete lhs;
+                            temp.push_back(rhs);
+                        }
+
+                    }
+                    else
+                    {
+                        temp.push_back(lhs);
+                    }
+                }
+                temp.swap_with(ways);
+
             }
 
         }

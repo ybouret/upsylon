@@ -247,24 +247,27 @@ namespace upsylon
             class Path : public Oriented, public dnode<Path>
             {
             public:
-                typedef core::list_of_cpp<Path> List;
-                static  const char              CLID[];
-                static  const size_t            BaseIndent;
+                typedef core::list_of_cpp<Path> List;       //!< alias
+                static  const char              CLID[];     //!< "Stream::Path"
+                static  const size_t            BaseIndent; //!< for verbosity
                 
                 //______________________________________________________________
                 //
                 // C++
                 //______________________________________________________________
                 explicit Path(const Edge &edge, List &temp); //!< setup from initial edge
-                explicit Path(const Path &);     //!< copy
-                virtual ~Path() throw();         //!< cleanup
+                explicit Path(const Path &);                 //!< copy
+                virtual ~Path() throw();                     //!< cleanup
 
                 //______________________________________________________________
                 //
                 // methods
                 //______________________________________________________________
-                bool owns(const Lineage *lineage) const throw();
-                std::ostream & indent(std::ostream &) const;
+                bool           owns(const Lineage *lineage) const throw();    //!< test ownership
+                std::ostream & indent(std::ostream &) const;                  //!< verbosity helper
+                void           reshape();                                     //!< re-order members by increasing species index
+                static bool    AreAnalog(const Path &, const Path &) throw(); //!< check same species, AFTER reshape of both paths
+                void           viz(ios::ostream &, const unsigned c) const;   //!< color rendering
 
                 //______________________________________________________________
                 //
@@ -275,8 +278,8 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Path);
-                void conn(const Vertex &vhub, List &temp);
-                void grow(const Edge   &edge, List &temp);
+                void conn(const Vertex &vhub, List &temp); // first level recursion
+                void grow(const Edge   &edge, List &temp); // second level recursion
 
             };
 
@@ -319,8 +322,8 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
                 bool checkConnectivity()      const throw(); //!< check
                 void buildPaths(); //!< building all paths
-                void tryPathFrom(const Edge &edge);
-
+                void zapAnalogs() throw();
+                void expandPath(const Edge &edge);
             };
 
 

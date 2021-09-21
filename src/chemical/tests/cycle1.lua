@@ -28,4 +28,4 @@ sys6 = {
     "+e6:F:-C:=6"
 }
 
-sys = sys4
+sys = sys6
