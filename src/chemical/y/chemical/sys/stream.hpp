@@ -41,6 +41,33 @@ namespace upsylon
 
             //__________________________________________________________________
             //
+            //! human readible course
+            //__________________________________________________________________
+            const char *CourseText(const Course) throw();
+
+            //__________________________________________________________________
+            //
+            //
+            //! base class for oriented objects
+            //
+            //__________________________________________________________________
+            class Oriented : public Object
+            {
+            public:
+                virtual      ~Oriented() throw();          //!< cleanup
+                const char   *courseText() const throw();  //!< info
+                const Course  course;                      //!< the value
+                //!
+            protected:
+                explicit Oriented(const Course)     throw(); //!< setup
+                explicit Oriented(const Oriented &) throw(); //!< copy
+
+            private:
+                Y_DISABLE_ASSIGN(Oriented);
+            };
+
+            //__________________________________________________________________
+            //
             //! Family for an Edge
             //__________________________________________________________________
             enum Family
@@ -56,7 +83,7 @@ namespace upsylon
             //! a variant edge in the graph
             //
             //__________________________________________________________________
-            class Edge : public Object, public dnode<Edge>
+            class Edge : public Oriented, public dnode<Edge>
             {
             public:
                 //______________________________________________________________
@@ -85,7 +112,6 @@ namespace upsylon
                 //
                 // members
                 //______________________________________________________________
-                const Course  course; //!< course
                 const Family  family; //!< family
                 const Vertex &source; //!< source
                 const Vertex &target; //!< target
@@ -178,6 +204,7 @@ namespace upsylon
                 const Links forward; //!< where I go to
                 const Links reverse; //!< where I come from
 
+                //! display information
                 template <typename OSTREAM> inline
                 OSTREAM & display(OSTREAM &os, const size_t indent) const
                 {
@@ -214,8 +241,36 @@ namespace upsylon
             //! Path
             //
             //__________________________________________________________________
+            class Path : public Oriented, public dnode<Path>
+            {
+            public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                explicit Path(const Edge &edge); //!< setup from initial edge
+                explicit Path(const Path &);     //!< copy
+                virtual ~Path() throw();         //!< cleanup
 
-            class Path;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const bool   chains; //!< initially false
+                
+
+            private:
+                Y_DISABLE_ASSIGN(Path);
+            };
+
+            //__________________________________________________________________
+            //
+            //
+            //! alias for list of paths
+            //
+            //__________________________________________________________________
+            typedef core::list_of_cpp<Path> Paths;
+
 
             //__________________________________________________________________
             //
@@ -239,7 +294,6 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 void graphViz(const string &fileName) const; //!< save and render
-                void buildPaths(); //!< building all paths
 
                 //______________________________________________________________
                 //
@@ -249,10 +303,13 @@ namespace upsylon
                 const Vertices  pvtx;    //!< primary vertices
                 const DualEdges forward; //!< all forward connectivity
                 const DualEdges reverse; //!< all reverse connectivity
+                const Paths     paths;   //!< all paths
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
                 bool checkConnectivity()      const throw(); //!< check
+                void buildPaths(); //!< building all paths
+                void tryPathFrom(const Edge &edge);
             };
 
 

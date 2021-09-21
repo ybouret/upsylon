@@ -111,6 +111,34 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    namespace Chemical
+    {
+        namespace Stream
+        {
+            Oriented:: ~Oriented() throw()
+            {
+            }
+
+            Oriented:: Oriented(const Course c) throw() :
+            Object(), course(c) {}
+
+            Oriented:: Oriented(const Oriented &other) throw() :
+            Object(), course(other.course)
+            {
+            }
+
+            const char *Oriented:: courseText() const throw()
+            {
+                return CourseText(course);
+            }
+        }
+
+    }
+
+}
+
 //==============================================================================
 //
 //
@@ -118,13 +146,23 @@ namespace upsylon
 //
 //
 //==============================================================================
-#include "y/type/utils.hpp"
 namespace upsylon
 {
     namespace Chemical
     {
         namespace Stream
         {
+
+            const char *CourseText(const Course course) throw()
+            {
+                switch(course)
+                {
+                    case Forward: return "Forward";
+                    case Reverse: return "Reverse";
+                }
+                return unknown_text;
+            }
+
 
             Edge:: ~Edge() throw() {}
 
@@ -133,7 +171,7 @@ namespace upsylon
                         const Vertex &ini,
                         const Vertex &end,
                         const unit_t  cof) throw() :
-            course(way),
+            Oriented(way),
             family(how),
             source(ini),
             target(end),
@@ -164,6 +202,41 @@ namespace upsylon
             {
             }
 
+
+
+        }
+
+    }
+
+}
+
+//==============================================================================
+//
+//
+// PATH
+//
+//
+//==============================================================================
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+        namespace Stream
+        {
+
+            Path:: ~Path() throw()
+            {
+            }
+
+            Path:: Path(const Edge &edge) :
+            Oriented(edge),
+            dnode<Path>(),
+            chains(false)
+            {
+                assert(edge.source.genus==IsLineage);
+                Y_CHEMICAL_PRINTLN("      try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
+            }
 
 
         }
@@ -215,16 +288,23 @@ namespace upsylon
             lvtx(),
             pvtx(),
             forward(),
-            reverse()
+            reverse(),
+            paths()
             {
 
                 Y_CHEMICAL_PRINTLN("    <Stream::Graph>");
 
+                //______________________________________________________________
+                //
                 // register all vertices
+                //______________________________________________________________
                 registerVertices(aliasing::_(lvtx),lineage);
                 registerVertices(aliasing::_(pvtx),primary);
 
-                // check connectivity
+                //______________________________________________________________
+                //
+                // create all possible edges
+                //______________________________________________________________
                 for(const Vertex *p=pvtx.head;p;p=p->next)
                 {
                     const Equilibrium &eq = **(p->primary);
@@ -236,7 +316,10 @@ namespace upsylon
                         {
                             if(nu>0)
                             {
+                                //______________________________________________
+                                //
                                 // species is a product
+                                //______________________________________________
                                 Edge &fwd = *aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
                                 Edge &rev = *aliasing::_(reverse.lineageToPrimary).push_back( new Edge(Reverse,LineageToPrimary,*l,*p,nu) );
 
@@ -247,7 +330,10 @@ namespace upsylon
                             else
                             {
                                 assert(nu<0);
+                                //______________________________________________
+                                //
                                 // species is a reactant
+                                //______________________________________________
                                 Edge &fwd = *aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
                                 Edge &rev = *aliasing::_(reverse.primaryToLineage).push_back( new Edge(Reverse,PrimaryToLineage,*p,*l,-nu) );
 
@@ -271,7 +357,10 @@ namespace upsylon
                     std::cerr << "      <Stream::Primary/>" << std::endl;
                 }
 
+                //______________________________________________________________
+                //
                 // probe all paths
+                //______________________________________________________________
                 buildPaths();
 
                 Y_CHEMICAL_PRINTLN("    <Stream::Graph/>");
@@ -346,7 +435,7 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Intake==edge->source.lineage->linkage)
                     {
-                        std::cerr << "possible forward path starting from " << edge->source.name() << " -> " << edge->target.name() << "..." << std::endl;
+                        tryPathFrom(*edge);
                     }
                 }
 
@@ -357,7 +446,7 @@ namespace upsylon
                     assert(edge->source.genus==IsLineage);
                     if(Output==edge->source.lineage->linkage)
                     {
-                        std::cerr << "possible reverse path starting from " << edge->source.name() << " -> " << edge->target.name() << "..." << std::endl;
+                        tryPathFrom(*edge);
                     }
                 }
 
@@ -366,6 +455,13 @@ namespace upsylon
 
             }
 
+            void Graph:: tryPathFrom(const Edge &edge)
+            {
+                Paths &ways = aliasing::_(paths);
+                Paths temp;
+                ways.push_back( new Path(edge) );
+                
+            }
 
         }
     }
