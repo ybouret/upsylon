@@ -23,7 +23,9 @@ namespace upsylon
             Vertex:: Vertex(const Lineage &args) throw() :
             Object(),
             dnode<Vertex>(),
-            genus(IsLineage)
+            genus(IsLineage),
+            forward(),
+            reverse()
             {
                 aliasing::_(lineage) = &args;
             }
@@ -32,7 +34,9 @@ namespace upsylon
             Vertex:: Vertex(const Primary &args) throw() :
             Object(),
             dnode<Vertex>(),
-            genus(IsPrimary)
+            genus(IsPrimary),
+            forward(),
+            reverse()
             {
                 aliasing::_(primary) = &args;
             }
