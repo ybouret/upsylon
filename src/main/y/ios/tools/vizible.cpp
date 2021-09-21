@@ -54,10 +54,12 @@ namespace upsylon {
 
 
 
+
     }
 }
 
-#include "y/string.hpp"
+#include "y/string/convert.hpp"
+
 namespace upsylon {
 
     namespace ios {
@@ -88,7 +90,24 @@ namespace upsylon {
             fp.output(gvDGLeave,sizeof(gvDGLeave)-1);
         }
 
+        ostream & vizible:: outputLabel(ostream &fp, const string &s)
+        {
+            const string _ = string_convert::to_printable(s);
+            fp << "label=\"" << _ << "\"";
+            return fp;
+        }
 
+        ostream & vizible:: appendShape(ostream &fp, const string &s)
+        {
+            fp << ",shape=\"" << s << "\"";
+            return fp;
+        }
+
+        ostream & vizible:: appendStyle(ostream &fp, const string &s)
+        {
+            fp << ",style=\"" << s << "\"";
+            return fp;
+        }
 
     }
 

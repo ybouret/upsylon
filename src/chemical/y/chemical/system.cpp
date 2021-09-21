@@ -55,7 +55,7 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
-        strain(M, as_capacity),
+        lineage(M,as_capacity),
         replica(MR,as_capacity),
         Z(M,0),
         charged(false),
@@ -153,8 +153,8 @@ namespace upsylon
                 for(const SNode *node=lib->head();node;node=node->next)
                 {
                     const Species         &s = ***node;
-                    Strain                *S = new Strain(s);
-                    { const Strain::Pointer  tmp(S); aliasing::_(strain).push_back_(tmp); }
+                    Lineage               *S = new Lineage(s);
+                    { const Lineage::Pointer  tmp(S); aliasing::_(lineage).push_back_(tmp); }
                     const size_t           j = s.indx;
                     if(0!=(aliasing::_(Z[j]) = s.charge))
                     {
@@ -184,7 +184,7 @@ namespace upsylon
                 {
                     for(size_t i=1;i<=M;++i)
                     {
-                        std::cerr << "      " << *strain[i] << std::endl;
+                        std::cerr << "      " << *lineage[i] << std::endl;
                     }
                 }
                 Y_CHEMICAL_PRINTLN("    <Compiled/>");

@@ -2,7 +2,7 @@
 #ifndef Y_CHEMICAL_SYSTEM_INCLUDED
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
-#include "y/chemical/sys/strain.hpp"
+#include "y/chemical/sys/lineage.hpp"
 #include "y/chemical/sys/replica.hpp"
 
 namespace upsylon
@@ -72,7 +72,7 @@ namespace upsylon
             const iMatrix        Nu;         //!< [NxM] topology
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]
-            const Strain::Array  strain;     //!< [M]
+            const Lineage::Array lineage;     //!< [M]
             const Replica::Array replica;    //!< [MR]
             const iVector        Z;          //!< [M] vector of charges
             const bool           charged;    //!< |Z| != 0

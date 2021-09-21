@@ -4,6 +4,7 @@
 #include "y/ios/tools/graphviz.hpp"
 #include "y/type/utils.hpp"
 
+#if 0
 //! EDGE
 namespace upsylon
 {
@@ -326,7 +327,7 @@ namespace upsylon
             return false;
         }
 
-       void Flux::Path:: grow(List &stack)
+       void Flux::Path:: grow(List & )
         {
             Y_CHEMICAL_PRINTLN("      Try " << routeText() << " Path from " << ***slist.head);
 
@@ -549,3 +550,5 @@ namespace upsylon
     }
 
 }
+
+#endif

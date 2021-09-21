@@ -3,6 +3,7 @@
 #ifndef Y_CHEMICAL_FLUX_INCLUDED
 #define Y_CHEMICAL_FLUX_INCLUDED 1
 
+#if 0
 #include "y/chemical/sys/strain.hpp"
 #include "y/ios/tools/vizible.hpp"
 #include "y/core/rlinked.hpp"
@@ -256,5 +257,6 @@ namespace upsylon
     }
 
 }
+#endif
 
 #endif

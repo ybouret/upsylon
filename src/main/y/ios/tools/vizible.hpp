@@ -6,9 +6,11 @@
 #include "y/ios/iosfwd.hpp"
 #include "y/strfwd.hpp"
 
-namespace upsylon {
+namespace upsylon
+{
 
-    namespace ios {
+    namespace ios
+    {
         
         //! GraphViz class helper for a tree-like structure
         class vizible
@@ -44,6 +46,9 @@ namespace upsylon {
             static void     enterDigraph(ostream &fp, const string &id); //!< "digraph id {\n"
             static void     enterDigraph(ostream &fp, const char   *id); //!< wrapper
             static void     leaveDigraph(ostream &fp);                   //!< "}\n"
+            static ostream &outputLabel(ostream &fp, const string &);    //!< label=\" printable(...) \"
+            static ostream &appendShape(ostream &fp, const string &);    //!< ,shape=\" ... \"
+            static ostream &appendStyle(ostream &fp, const string &);    //!< ,style=\" ... \"
             static ostream &arrow(ostream &fp);                          //!< " -> "
             
         protected:

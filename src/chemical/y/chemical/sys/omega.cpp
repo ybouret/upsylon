@@ -17,9 +17,10 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
+#if 0
             Flux::Graph G(strain,primary);
             G.graphViz("flux.dot");
-
+#endif
             
             if(Nc>0)
             {

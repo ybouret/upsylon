@@ -1,5 +1,5 @@
 
-#include "y/chemical/sys/strain.hpp"
+#include "y/chemical/sys/lineage.hpp"
 
 namespace upsylon
 {
@@ -25,12 +25,12 @@ namespace upsylon
 
 
 
-        Strain:: ~Strain() throw()
+        Lineage:: ~Lineage() throw()
         {
 
         }
 
-        Strain:: Strain(const Species &sp) throw() :
+        Lineage:: Lineage(const Species &sp) throw() :
         Object(),
         authority<const Species>(sp),
         Flow(Bounded),
@@ -41,7 +41,7 @@ namespace upsylon
             
         }
 
-        void  Strain:: link(const unit_t nu, const Primary &p)
+        void  Lineage:: link(const unit_t nu, const Primary &p)
         {
             assert(nu!=0);
             assert(nu==p->stoichiometry(**this));
@@ -63,7 +63,7 @@ namespace upsylon
         }
         
 
-        void  Strain:: finalize() throw()
+        void  Lineage:: finalize() throw()
         {
             Linkage & _ = aliasing::_(linkage);
             switch(state)
@@ -101,7 +101,7 @@ namespace upsylon
             };
         }
 
-        const char * Strain:: linkageText() const throw()
+        const char * Lineage:: linkageText() const throw()
         {
             return LinkageText(linkage);
         }

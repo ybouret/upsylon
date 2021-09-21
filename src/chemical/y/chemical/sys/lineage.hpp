@@ -1,7 +1,7 @@
 
 //! \file
-#ifndef Y_CHEMICAL_STRAIN_INCLUDED
-#define Y_CHEMICAL_STRAIN_INCLUDED 1
+#ifndef Y_CHEMICAL_LINEAGE_INCLUDED
+#define Y_CHEMICAL_LINEAGE_INCLUDED 1
 
 #include "y/chemical/sys/appliance.hpp"
 
@@ -40,14 +40,14 @@ namespace upsylon
         //! species withing a system
         //
         //______________________________________________________________________
-        class Strain : public Object, public authority<const Species>, public Flow
+        class Lineage : public Object, public authority<const Species>, public Flow
         {
         public:
             //__________________________________________________________________
             //
             // Types and definitions
             //__________________________________________________________________
-            typedef arc_ptr<const Strain>     Pointer; //!< alias
+            typedef arc_ptr<const Lineage>    Pointer; //!< alias
             typedef vector<Pointer,Allocator> Array;   //!< alias
 
 
@@ -56,8 +56,8 @@ namespace upsylon
             //
             // C++
             //__________________________________________________________________
-            virtual ~Strain() throw();                //!< cleanup
-            explicit Strain(const Species &) throw(); //!< setup with no memory
+            virtual ~Lineage() throw();                //!< cleanup
+            explicit Lineage(const Species &) throw(); //!< setup with no memory
 
             //__________________________________________________________________
             //
@@ -85,14 +85,14 @@ namespace upsylon
 
             //! display
             template <typename OSTREAM>
-            inline friend OSTREAM &operator<<(OSTREAM &os, const Strain &S)
+            inline friend OSTREAM &operator<<(OSTREAM &os, const Lineage &S)
             {
                 return S.display(os);
             }
 
 
         private:
-            Y_DISABLE_COPY_AND_ASSIGN(Strain);
+            Y_DISABLE_COPY_AND_ASSIGN(Lineage);
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os) const
             {
