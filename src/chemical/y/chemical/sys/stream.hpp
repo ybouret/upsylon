@@ -48,7 +48,8 @@ namespace upsylon
                                const Primary::Array &primary);
                 virtual ~Graph() throw();
 
-                const Vertices vertices;
+                const Vertices lvtx;
+                const Vertices pvtx;
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
