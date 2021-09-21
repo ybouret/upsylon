@@ -114,7 +114,7 @@ namespace upsylon
 //
 //
 //==============================================================================
-
+#include "y/type/utils.hpp"
 namespace upsylon
 {
     namespace Chemical
@@ -141,12 +141,18 @@ namespace upsylon
             void Edge:: viz(ios::ostream &fp) const
             {
                 fp.viz(&source); Viz::arrow(fp); fp.viz(&target);
-
+                if(weight>1)
+                {
+                    fp << '[';
+                    const string s = vformat("%d",int(weight));
+                    Viz::outputLabel(fp,s);
+                    fp << ']';
+                }
                 Viz::endl(fp);
             }
 
 
-            DualEdges:: DualEdges() throw()
+            DualEdges:: DualEdges() throw() : lineageToPrimary(), primaryToLineage()
             {
             }
 
@@ -192,11 +198,15 @@ namespace upsylon
             Graph:: Graph(const Lineage::Array &lineage,
                           const Primary::Array &primary) :
             lvtx(),
-            pvtx()
+            pvtx(),
+            forward(),
+            reverse()
             {
+                // register all vertices
                 registerVertices(aliasing::_(lvtx),lineage);
                 registerVertices(aliasing::_(pvtx),primary);
 
+                // check connectivity
                 for(const Vertex *p=pvtx.head;p;p=p->next)
                 {
                     const Equilibrium &eq = **(p->primary);
@@ -210,6 +220,7 @@ namespace upsylon
                             {
                                 // species is a product
                                 aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
+                                aliasing::_(reverse.lineageToPrimary).push_back( new Edge(Reverse,LineageToPrimary,*l,*p,nu) );
 
                             }
                             else
@@ -217,12 +228,29 @@ namespace upsylon
                                 assert(nu<0);
                                 // species is a reactant
                                 aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
+                                aliasing::_(reverse.primaryToLineage).push_back( new Edge(Reverse,PrimaryToLineage,*p,*l,-nu) );
 
                             }
                         }
                     }
                 }
 
+                assert(checkConnectivity());
+
+                // probe all paths
+                buildPaths();
+
+            }
+
+            static const char FailureMSG[] = "FAILURE: ";
+
+#define Y_CHECK(CONDITION) do { if(!(CONDITION)) { std::cerr << FailureMSG << #CONDITION << std::endl; return false; } } while(false)
+
+            bool Graph:: checkConnectivity() const throw()
+            {
+                Y_CHECK(forward.lineageToPrimary.size==reverse.primaryToLineage.size);
+                Y_CHECK(reverse.lineageToPrimary.size==forward.primaryToLineage.size);
+                return true;
             }
 
             Graph:: ~Graph() throw()
@@ -269,6 +297,34 @@ namespace upsylon
                 ios::GraphViz::Render(fileName);
 
             }
+
+
+            void Graph:: buildPaths()
+            {
+                for(const Edge *edge=forward.lineageToPrimary.head;edge;edge=edge->next)
+                {
+                    assert(edge->course==Forward);
+                    assert(edge->family==LineageToPrimary);
+                    assert(edge->source.genus==IsLineage);
+                    if(Intake==edge->source.lineage->linkage)
+                    {
+                        std::cerr << "possible forward path starting from " << edge->source.name() << " to " << edge->target.name() << std::endl;
+                    }
+                }
+
+                for(const Edge *edge=reverse.lineageToPrimary.head;edge;edge=edge->next)
+                {
+                    assert(edge->course==Reverse);
+                    assert(edge->family==LineageToPrimary);
+                    assert(edge->source.genus==IsLineage);
+                    if(Output==edge->source.lineage->linkage)
+                    {
+                        std::cerr << "possible reverse path starting from " << edge->source.name() << " to " << edge->target.name() << std::endl;
+                    }
+                }
+
+            }
+
 
         }
     }

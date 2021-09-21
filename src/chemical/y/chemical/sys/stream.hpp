@@ -5,6 +5,7 @@
 
 #include "y/chemical/sys/lineage.hpp"
 #include "y/ios/tools/vizible.hpp"
+#include "y/core/rlinked.hpp"
 
 namespace upsylon
 {
@@ -19,7 +20,10 @@ namespace upsylon
             // aliases and definitions
             //
             //__________________________________________________________________
-            typedef ios::vizible Viz; //!< alias
+            typedef ios::vizible Viz;            //!< alias
+            class   Edge;                        //!< forward definition
+            typedef ref_dnode<const Edge> eNode; //!< ref node for Edge
+            typedef ref_list<const Edge>  eList; //!< list of eNode
 
             //__________________________________________________________________
             //
@@ -30,6 +34,7 @@ namespace upsylon
                 IsLineage, //!< for lineage/species
                 IsPrimary, //!< for primary/equilibrium
             };
+
 
             //__________________________________________________________________
             //
@@ -74,17 +79,24 @@ namespace upsylon
             //__________________________________________________________________
             typedef core::list_of_cpp<Vertex> Vertices;
 
-
+            //__________________________________________________________________
+            //
+            //! Course for an Edge
+            //__________________________________________________________________
             enum Course
             {
-                Forward, //!< reac -> equilibrium
-                Reverse  //!< equilibrium -> prod
+                Forward, //!< reac->eq or eq->prod
+                Reverse  //!< prod->eq or eq->reac
             };
 
+            //__________________________________________________________________
+            //
+            //! Family for an Edge
+            //__________________________________________________________________
             enum Family
             {
-                LineageToPrimary,
-                PrimaryToLineage
+                LineageToPrimary, //!< species -> equilibrium
+                PrimaryToLineage  //!< equilibrium -> species
             };
 
 
@@ -167,8 +179,12 @@ namespace upsylon
                 Y_DISABLE_COPY_AND_ASSIGN(DualEdges);
             };
 
-
-            //! graph
+            //__________________________________________________________________
+            //
+            //
+            //! Graph of all vertices and edges (forward AND reverse)
+            //
+            //__________________________________________________________________
             class Graph
             {
             public:
@@ -185,6 +201,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 void graphViz(const string &fileName) const; //!< save and render
+                void buildPaths(); //!< building all paths
 
                 //______________________________________________________________
                 //
@@ -192,11 +209,12 @@ namespace upsylon
                 //______________________________________________________________
                 const Vertices  lvtx;    //!< lineage vertices
                 const Vertices  pvtx;    //!< primary vertices
-                const DualEdges forward; //!< dual forward
-                const DualEdges reverse; //!< dual reverse
-                
+                const DualEdges forward; //!< all forward connectivity
+                const DualEdges reverse; //!< all reverse connectivity
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
+                bool checkConnectivity()      const throw(); //!< check
             };
 
 
