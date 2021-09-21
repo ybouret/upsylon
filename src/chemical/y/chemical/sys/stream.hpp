@@ -282,6 +282,8 @@ namespace upsylon
                 void conn(const Vertex &vhub, List &temp); // first level recursion
                 void grow(const Edge   &edge, List &temp); // second level recursion
 
+                void store(const Lineage &);
+                void store(const Edge    &);
             };
 
 

@@ -272,6 +272,17 @@ namespace upsylon
                 }
             }
 
+
+            void Path:: store(const Lineage &l)
+            {
+                aliasing::_(members).append(l);
+            }
+
+            void Path:: store(const Edge    &e)
+            {
+                aliasing::_(roadmap).append(e);
+            }
+
             
             Path:: Path(const Edge &edge,
                         List       &temp) :
@@ -290,11 +301,11 @@ namespace upsylon
                 }
 
                 // initialize fist member
-                aliasing::_(members).append(*edge.source.lineage);
+                store(*edge.source.lineage);
                 assert(owns(edge.source.lineage));
 
                 // initialize first road
-                aliasing::_(roadmap).append(edge);
+                store(edge);
 
                 // try to grow
                 conn(edge.target,temp);
@@ -382,7 +393,7 @@ namespace upsylon
                             {
                                 case Reverse:
                                     aliasing::_(isValid)=true;
-                                    aliasing::_(members).append(*lineage);
+                                    store(*lineage);
                                     if(Verbosity) { indent(std::cerr) << "|_**" << lineage->stateText() << "**" << std::endl; }
                                     return;           // valid
                                 case Forward: break;  // corrupted
@@ -395,7 +406,7 @@ namespace upsylon
                             {
                                 case Forward:
                                     aliasing::_(isValid)=true;
-                                    aliasing::_(members).append(*lineage);
+                                    store(*lineage);
                                     if(Verbosity) { indent(std::cerr) << "|_**" << lineage->stateText() << "**" << std::endl; }
                                     return;           // valid
                                 case Reverse: break;  // corrupted
@@ -408,7 +419,7 @@ namespace upsylon
                             return; // stop, not conservative
 
                         case Inside: // recursive
-                            aliasing::_(members).append(*lineage);
+                            store(*lineage);
                             goto HUB;
 
 
@@ -690,19 +701,21 @@ namespace upsylon
                 assert(0==temp.size);
                 while(ways.size)
                 {
-                    if(ways.head->members.size<2)
-                    {
-                        throw exception("%s %s is too small!!!", ways.head->courseText(), Path::CLID);
-                    }
+
                     Path *path = ways.pop_back();
                     if(path->isValid)
                     {
                         temp.push_back(path)->reshape();
+                        if(path->members.size<=1)
+                        {
+                            throw exception("%s %s is too small!!!", ways.head->courseText(), Path::CLID);
+                        }
                     }
                     else
                     {
                         delete path;
                     }
+
                 }
                 ways.swap_with(temp);
             }
