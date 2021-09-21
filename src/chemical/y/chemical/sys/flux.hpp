@@ -194,14 +194,8 @@ namespace upsylon
                 void setup(const Edge &edge);
                 void push(const Edge   &);
                 void push(const Strain &);
-
                 void push(const Edge &edge, const Strain &);
 
-                void runForward(List &stack);
-                void tryForward(const Edge &edge, List &stack);
-
-                void runReverse(List &stack);
-                void tryReverse(const Edge &edge, List &stack);
 
             };
 

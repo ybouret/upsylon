@@ -330,36 +330,9 @@ namespace upsylon
         {
             Y_CHEMICAL_PRINTLN("      Try " << routeText() << " Path from " << ***slist.head);
 
-            {
-                switch(route)
-                {
-                    case Forward: runForward(stack); break;
-                    case Reverse: runReverse(stack); break;
-                }
-            }
-
         }
 
-        void Flux::Path:: runForward(List &stack)
-        {
-        }
-
-        void Flux::Path:: tryForward(const Edge &edge, List &stack)
-        {
-
-        }
-
-
-        void Flux::Path:: runReverse(List &stack)
-        {
-
-        }
-
-
-        void Flux::Path:: tryReverse(const Edge &edge, List &stack)
-        {
-            
-        }
+        
 
 
     }
