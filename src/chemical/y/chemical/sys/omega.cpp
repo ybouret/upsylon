@@ -1,6 +1,7 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/chemical/sys/stream.hpp"
+#include "y/mkl/kernel/gram-schmidt.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -72,7 +73,9 @@ namespace upsylon
                     apk::complete_ortho(Nu,Om);
                 }
 
-
+               // Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
+               // GramSchmidt::iOrtho(Om);
+                
             }
 
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);

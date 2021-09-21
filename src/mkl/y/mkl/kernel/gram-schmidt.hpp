@@ -91,6 +91,7 @@ namespace upsylon {
                     }
                 }
                 if(!OrthoSimple(q)) return false;
+                
                 for(size_t i=rows;i>0;--i)
                 {
                     for(size_t j=cols;j>0;--j)
