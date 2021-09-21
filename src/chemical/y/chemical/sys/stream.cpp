@@ -224,22 +224,45 @@ namespace upsylon
     {
         namespace Stream
         {
-            const char Path:: CLID[] = "Stream::Path";
+            const char   Path:: CLID[]     = "Stream::Path";
+            const size_t Path:: BaseIndent = 8;
+
+            std::ostream & Path:: indent(std::ostream &os) const
+            {
+                return Library::Indent(os,BaseIndent+members.size*2);
+            }
+
 
             Path:: ~Path() throw()
             {
             }
 
-            Path:: Path(const Edge &edge, List &temp) :
+#if 0
+            static inline Linkage CourseToTrigger(const Course course) throw()
+            {
+                switch(course)
+                {
+                    case Forward: return Output;
+                    case Reverse: return Intake;
+                }
+            }
+#endif
+            
+            Path:: Path(const Edge &edge,
+                        List       &temp) :
             Oriented(edge),
             dnode<Path>(),
             isValid(false),
+            //trigger(CourseToTrigger(course)),
             members()
             {
                 assert(edge.source.genus==IsLineage);
                 assert(edge.target.genus==IsPrimary);
 
-                Y_CHEMICAL_PRINTLN("        try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
+                if(Verbosity)
+                {
+                   indent(std::cerr) << '[' << edge.source.name() << ']' << "/" << courseText() << std::endl;
+                }
 
                 // initialize fist member
                 aliasing::_(members).append(*edge.source.lineage);
@@ -247,7 +270,7 @@ namespace upsylon
 
 
                 // try to grow
-                grow(edge.target,temp);
+                conn(edge.target,temp);
 
             }
 
@@ -255,6 +278,7 @@ namespace upsylon
             Oriented(other),
             dnode<Path>(),
             isValid(other.isValid),
+            //trigger(other.trigger),
             members(other.members)
             {
             }
@@ -269,10 +293,14 @@ namespace upsylon
                 return false;
             }
 
-            void Path:: grow(const Vertex &vhub,
+            void Path:: conn(const Vertex &vhub,
                              List         &temp)
             {
-                std::cerr << "    hub@" << vhub.name() << std::endl;
+                if(Verbosity)
+                {
+                    indent(std::cerr) << "|_<" << vhub.name() << ">" << std::endl;
+                }
+
                 assert(vhub.genus==IsPrimary);
                 const Links *links = 0;
                 switch(course)
@@ -282,9 +310,91 @@ namespace upsylon
                 }
 
                 if(links->size<=0) throw exception("%s detected a corrupted linkage!",CLID);
-                
+
+                const Link     *head=links->head;
+                for(const Link *link=links->tail;link!=head;link=link->prev)
+                {
+                    Path *path = temp.push_back( new Path(*this) );
+                    path->grow(**link,temp);
+                }
+
+                this->grow(**head,temp);
+
 
             }
+
+            void Path:: grow(const Edge &edge, List &temp)
+            {
+                assert(edge.source.genus==IsPrimary);
+                assert(edge.target.genus==IsLineage);
+
+                const char * const spName = edge.target.name();
+                if(Verbosity)
+                {
+                    indent(std::cerr) << "|_[" << spName << "]" << std::endl;
+                }
+                const Vertex  &lvertex = edge.target;
+                const Lineage *lineage = lvertex.lineage;
+
+                if(owns(lineage))
+                {
+
+                    // detected cycle
+                    if(Verbosity) { indent(std::cerr) << "|_[[cycle]]" << std::endl; }
+                }
+                else
+                {
+                    const Linkage linkage = lineage->linkage;
+                    switch(linkage)
+                    {
+                        case Single: break;
+
+                        case Intake:
+                        {
+                            switch(course)
+                            {
+                                case Reverse:
+                                    aliasing::_(isValid)=true;
+                                    aliasing::_(members).append(*lineage);
+                                    if(Verbosity) { indent(std::cerr) << "|_[[" << lineage->stateText() << "]]" << std::endl; }
+                                    return;           // valid
+                                case Forward: break;  // corrupted
+                            }
+                        } break;
+
+                        case Output:
+                        {
+                            switch(course)
+                            {
+                                case Forward:
+                                    aliasing::_(isValid)=true;
+                                    aliasing::_(members).append(*lineage);
+                                    if(Verbosity) { indent(std::cerr) << "|_[[" << lineage->stateText() << "]]" << std::endl; }
+                                    return;           // valid
+                                case Reverse: break;  // corrupted
+                            }
+                        } break;
+
+                        case Source:
+                        case Siphon:
+                            if(Verbosity) { indent(std::cerr) << "|_[[" << lineage->stateText() << "]]" << std::endl; }
+                            return; // stop, not conservative
+
+                        case Inside: // recursive
+                            aliasing::_(members).append(*lineage);
+                            goto HUB;
+
+
+                    }
+                    throw exception("*** %s %s found %s species [%s] on its way",courseText(),CLID,LinkageText(linkage),spName);
+
+                    HUB:
+                    ;
+
+                }
+
+            }
+
 
 
         }
@@ -509,6 +619,7 @@ namespace upsylon
                 Path::List &ways = aliasing::_(paths);
                 Path::List temp;
                 ways.push_back( new Path(edge,temp) );
+                ways.merge_back(temp);
                 
             }
 

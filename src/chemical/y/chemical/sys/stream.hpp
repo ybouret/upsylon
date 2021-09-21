@@ -249,7 +249,8 @@ namespace upsylon
             public:
                 typedef core::list_of_cpp<Path> List;
                 static  const char              CLID[];
-
+                static  const size_t            BaseIndent;
+                
                 //______________________________________________________________
                 //
                 // C++
@@ -263,6 +264,7 @@ namespace upsylon
                 // methods
                 //______________________________________________________________
                 bool owns(const Lineage *lineage) const throw();
+                std::ostream & indent(std::ostream &) const;
 
                 //______________________________________________________________
                 //
@@ -273,7 +275,9 @@ namespace upsylon
 
             private:
                 Y_DISABLE_ASSIGN(Path);
-                void grow(const Vertex &hub, List &temp);
+                void conn(const Vertex &vhub, List &temp);
+                void grow(const Edge   &edge, List &temp);
+
             };
 
 
