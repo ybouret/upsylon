@@ -232,11 +232,21 @@ namespace upsylon
             Path:: Path(const Edge &edge) :
             Oriented(edge),
             dnode<Path>(),
-            chains(false)
+            isValid(false),
+            members()
             {
                 assert(edge.source.genus==IsLineage);
-                Y_CHEMICAL_PRINTLN("      try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
+                Y_CHEMICAL_PRINTLN("        try " << courseText() << " path from " << edge.source.name() << " towards " << edge.target.name() );
             }
+
+            Path:: Path(const Path &other) :
+            Oriented(other),
+            dnode<Path>(),
+            isValid(other.isValid),
+            members(other.members)
+            {
+            }
+
 
 
         }

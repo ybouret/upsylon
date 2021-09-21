@@ -235,6 +235,9 @@ namespace upsylon
 
             };
 
+            typedef ref_dnode<const Lineage> Member;
+            typedef ref_list<const Lineage>  Members;
+
             //__________________________________________________________________
             //
             //
@@ -254,10 +257,16 @@ namespace upsylon
 
                 //______________________________________________________________
                 //
+                // methods
+                //______________________________________________________________
+                bool owns(const Lineage *lineage) const throw();
+
+                //______________________________________________________________
+                //
                 // members
                 //______________________________________________________________
-                const bool   chains; //!< initially false
-                
+                const bool    isValid; //!< initially false
+                const Members members; //!< met along the way
 
             private:
                 Y_DISABLE_ASSIGN(Path);
