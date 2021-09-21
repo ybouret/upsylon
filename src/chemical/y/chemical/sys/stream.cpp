@@ -209,13 +209,15 @@ namespace upsylon
                             if(nu>0)
                             {
                                 // species is a product
-                                
+                                aliasing::_(forward.primaryToLineage).push_back( new Edge(Forward,PrimaryToLineage,*p,*l,nu) );
+
                             }
                             else
                             {
                                 assert(nu<0);
                                 // species is a reactant
                                 aliasing::_(forward.lineageToPrimary).push_back( new Edge(Forward,LineageToPrimary,*l,*p,-nu) );
+
                             }
                         }
                     }
