@@ -19,12 +19,21 @@ namespace upsylon
             //
             //
             // types and definitions
+            // Incoming: Species/Lineage to Equilibrium/Primary
+            // Outgoing: from Equilibrium/Primary to Species/Lineag
+            // Foward: from reactants to product
+            // Reverse: from products to reactant
             //
             //__________________________________________________________________
-            class ForwardIncoming; //!< forward lineage to primary
-            class ForwardOutgoing; //!< forward primary to lineage
-            class ReverseIncoming; //!< reverse lineage to primary
-            class ReverseOutgoing; //!< reverse primary to lineage
+#define Y_CHEM_STREAM_DECL(NAME) \
+class NAME;\
+typedef ref_dnode<const NAME> NAME##Link;\
+typedef ref_dlist<const NAME> NAME##Links;
+
+            Y_CHEM_STREAM_DECL(ForwardIncoming);
+            Y_CHEM_STREAM_DECL(ForwardOutgoing);
+            Y_CHEM_STREAM_DECL(ReverseIncoming);
+            Y_CHEM_STREAM_DECL(ReverseOutgoing);
 
 
 
@@ -163,16 +172,18 @@ namespace upsylon
             };
 
 
-#define Y_CHEMICAL_ARROW(NAME,COURSE,SOURCE,TARGET) \
-class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME> \
-/**/  {\
-/**/   public:\
-/**/    inline explicit NAME(const SOURCE &s, const unit_t w, const TARGET t) throw() :\
-/**/    Arrow<COURSE,SOURCE,TARGET>(s,w,t) {}\
-/**/    inline virtual ~NAME() throw() {}\
-/**/   private:\
-/**/    Y_DISABLE_COPY_AND_ASSIGN(NAME);\
-/**/  }
+#define Y_CHEMICAL_ARROW(NAME,COURSE,SOURCE,TARGET)                                     \
+class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>                     \
+/**/  {                                                                                 \
+/**/   public:                                                                          \
+/**/    typedef core::list_of_cpp<NAME> List;                                           \
+/**/    inline explicit NAME(const SOURCE &s, const unit_t w, const TARGET &t) throw(): \
+/**/    Arrow<COURSE,SOURCE,TARGET>(s,w,t) {}                                           \
+/**/    inline virtual ~NAME() throw() {}                                               \
+/**/   private:                                                                         \
+/**/    Y_DISABLE_COPY_AND_ASSIGN(NAME);                                                \
+/**/  };\
+/**/  typedef NAME::List NAME##Edges
 
 
             Y_CHEMICAL_ARROW(ForwardIncoming,Edge::Forward,LineageVertex,PrimaryVertex);
@@ -194,9 +205,13 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME> \
                 void graphViz(const string &fileName) const;
 
 
-                const LineageVertices lineageVertices;
-                const PrimaryVertices primaryVertices;
-
+                const LineageVertices      lineageVertices;
+                const PrimaryVertices      primaryVertices;
+                const ForwardIncomingEdges forwardIncomingEdges;
+                const ForwardOutgoingEdges forwardOutgoingEdges;
+                const ReverseIncomingEdges reverseIncomingEdges;
+                const ReverseOutgoingEdges reverseOutgoingEdges;
+                
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
             };

@@ -15,7 +15,7 @@ namespace upsylon {
     //
     //__________________________________________________________________________
     template <typename T>
-    class ref_list : public core::list_of_cpp< ref_dnode<T> >
+    class ref_dlist : public core::list_of_cpp< ref_dnode<T> >
     {
     public:
         //______________________________________________________________________
@@ -29,9 +29,9 @@ namespace upsylon {
         //
         // C++
         //______________________________________________________________________
-        inline explicit ref_list() throw() : list_type() {}            //!< setup
-        inline virtual ~ref_list() throw() {}                          //!< cleanup
-        inline          ref_list(const ref_list &_) : list_type(_) {}  //!< C++ copy
+        inline explicit ref_dlist() throw() : list_type() {}            //!< setup
+        inline virtual ~ref_dlist() throw() {}                          //!< cleanup
+        inline          ref_dlist(const ref_dlist &_) : list_type(_) {}  //!< C++ copy
 
         //______________________________________________________________________
         //
@@ -52,7 +52,7 @@ namespace upsylon {
 
 
     private:
-        Y_DISABLE_ASSIGN(ref_list);
+        Y_DISABLE_ASSIGN(ref_dlist);
     };
 
 }

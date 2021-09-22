@@ -127,7 +127,7 @@ namespace upsylon
             //__________________________________________________________________
             typedef core::list_of_cpp<Edge> Edges;  //!< alias for list of Edges
             typedef ref_dnode<const Edge>   Link;  //!< link to an Edge
-            typedef ref_list<const Edge>    Links; //!< References
+            typedef ref_dlist<const Edge>   Links; //!< References
             //!
             //__________________________________________________________________
             //
@@ -236,7 +236,7 @@ namespace upsylon
             };
 
             typedef ref_dnode<const Lineage> Member;
-            typedef ref_list<const Lineage>  Members;
+            typedef ref_dlist<const Lineage> Members;
 
             //__________________________________________________________________
             //
