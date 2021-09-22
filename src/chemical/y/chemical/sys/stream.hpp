@@ -321,8 +321,7 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 //______________________________________________________________
                 static const Course CourseType = COURSE; //!< alias
                 typedef Route<COURSE,INCOMING,OUTGOING>   RouteType;    //!< alias
-                typedef dnode<RouteType>                  Node;         //!< alias
-                typedef core::list_of<Node>               List;         //!< alias
+                typedef core::list_of_cpp<Route>          List;         //!< alias
                 typedef typename INCOMING::node_type      IncomingLink; //!< retrieve link
                 typedef typename OUTGOING::node_type      OutgoingLink; //!< retrieve link
                 typedef typename IncomingLink::const_type IncomingEdge; //!< retrieve const Edge
@@ -341,7 +340,7 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 inline explicit Route(IncomingEdge &entry,
                                       List         &extra) :
                 Path(COURSE),
-                Node(),
+                dnode<RouteType>(),
                 incoming(),
                 outgoing()
                 {
@@ -354,13 +353,14 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                     if(Verbosity) {
                         indent(std::cerr) << ***(visited.tail) << " starts " << courseText() << " to " << entry.target.name() << std::endl;
                     }
+                    moveTo(entry.target,extra);
                 }
 
 
                 //! full copy
                 inline explicit Route(const Route &route) :
                 Path(route),
-                Node(),
+                dnode<RouteType>(),
                 incoming(route.incoming),
                 outgoing(route.outgoing)
                 {
@@ -375,6 +375,133 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
 
             private:
                 Y_DISABLE_ASSIGN(Route);
+
+                //! sent from a species, this is the next eq to check
+                inline void moveTo(const PrimaryVertex &primaryVertex, List &extra )
+                {
+                    if(Verbosity)
+                    {
+                        indent(std::cerr) << "\\_<" << primaryVertex.name() << ">" << std::endl;
+                    }
+                    const OUTGOING &ways = getOutgoing(primaryVertex,int2type<COURSE>());
+                    if(ways.size<=0)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        const     OutgoingLink *head=ways.head;
+
+                        // recursivity on other links
+                        for(const OutgoingLink *link=head->next;link;link=link->next)
+                        {
+                            Route *route = extra.push_back( new Route(*this)  );
+                            moveTo(aliasing::_(route->outgoing).append(**link).target,extra);
+                        }
+
+                        // self go on on first links
+                        moveTo(aliasing::_(outgoing).append(**head).target,extra);
+
+                    }
+                }
+
+                //! sent from an equilibrium, check is can go on
+                inline void moveTo(const LineageVertex &lineageVertex, List &extra)
+                {
+                    const Lineage &lineage = *lineageVertex;
+                    const string  &name    = lineage->name;
+                    if(owns(lineage))
+                    {
+                        if(Verbosity)
+                        {
+                            indent(std::cerr) << "\\_[CYCLE@" << name << "]" << std::endl;
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        visit(lineage);
+                        if(Verbosity)
+                        {
+                            indent(std::cerr) << "\\_["<< name << "]" << std::endl;
+                        }
+                        const Linkage linkage = lineage.linkage;
+                        switch(linkage)
+                        {
+                            case Single:
+                                break;
+
+                            case Source:
+                            case Siphon:
+                                if(Verbosity)
+                                {
+                                    indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
+                                }
+                                return;  // stop, no possible conservation
+
+                            case Output:
+                                switch(COURSE)
+                                {
+                                    case Forward:
+                                        validate();
+                                        if(Verbosity)
+                                        {
+                                            indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
+                                        }
+                                        return;
+                                    case Reverse: break; // => error
+                                }
+                                break;
+
+                            case Intake:
+                                switch(COURSE)
+                                {
+                                    case Reverse:
+                                        validate();
+                                        if(Verbosity)
+                                        {
+                                            indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
+                                        }
+                                        return;
+                                    case Forward: break; // => error
+                                }
+                                break;
+
+                            case Inside: goto PROBE;
+                            default: break;
+                        }
+                        throw exception("unexpected %s '%s' in %s route!!", LinkageText(linkage), *name, courseText() );
+
+                    PROBE:
+                        std::cerr << "Need To Probe!!" << std::endl;
+                        const INCOMING &ways = getIncoming(lineageVertex,int2type<COURSE>());
+                        
+
+                    }
+                }
+
+
+                static const INCOMING & getIncoming(const LineageVertex &lineage, int2type<Forward> ) throw()
+                {
+                    return lineage.forward;
+                }
+
+                static const INCOMING & getIncoming(const LineageVertex &lineage, int2type<Reverse> ) throw()
+                {
+                    return lineage.reverse;
+                }
+
+
+                static const OUTGOING & getOutgoing(const PrimaryVertex &primary, int2type<Forward> ) throw()
+                {
+                    return primary.forward;
+                }
+
+                static const OUTGOING & getOutgoing(const PrimaryVertex &primary, int2type<Reverse> ) throw()
+                {
+                    return primary.reverse;
+                }
+
             };
 
             typedef Route<Forward,ForwardIncomingLinks,ForwardOutgoingLinks> ForwardRoute;  //!< alias

@@ -98,7 +98,7 @@ namespace upsylon
 
             std::ostream & Path:: indent(std::ostream&os) const
             {
-                return Library::Indent(os,8+2*visited.size);
+                return Library::Indent(os,6+visited.size);
             }
 
 

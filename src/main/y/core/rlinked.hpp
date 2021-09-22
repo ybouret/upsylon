@@ -39,15 +39,15 @@ namespace upsylon {
         //______________________________________________________________________
 
         //! wrapper for push_back
-        inline void append( typename node_type::param_type args)
+        inline typename node_type::type &append(typename node_type::type &args)
         {
-            this->push_back( new node_type(args) );
+            return **(this->push_back( new node_type(args) ));
         }
 
         //! wrapper for push_front
-        inline void prepend( typename node_type::param_type args)
+        inline typename node_type::type &prepend(typename node_type::type &args)
         {
-            this->push_front( new node_type(args) );
+            return **(this->push_front( new node_type(args) ));
         }
 
 
