@@ -246,7 +246,22 @@ namespace upsylon
 
         void Primary:: vizCore(ios::ostream &fp) const
         {
+            fp << '[';
+            outputLabel(fp,(**this).name);
+            appendShape(fp,"rectangle");
+            switch((**this).state)
+            {
+                case Flow::Endless:
+                    appendStyle(fp,"bold,dashed");
+                    break;
 
+                case Flow::Bounded:
+                    appendStyle(fp,"bold");
+                    break;
+            }
+
+            fp << ']';
+            endl(fp);
         }
 
     }

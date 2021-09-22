@@ -103,6 +103,8 @@ namespace upsylon
 
                 virtual ~Graph() throw();
 
+                void graphViz(const string &fileName) const;
+
 
                 const LineageVertices lineageVertices;
                 const PrimaryVertices primaryVertices;

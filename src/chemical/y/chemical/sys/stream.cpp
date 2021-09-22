@@ -16,8 +16,16 @@ namespace upsylon
 
 }
 
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//
+//
 // GRAPH
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#include "y/ios/ocstream.hpp"
+#include "y/ios/tools/graphviz.hpp"
 
 namespace upsylon
 {
@@ -31,19 +39,45 @@ namespace upsylon
             {
             }
 
+            template <typename LIST, typename ARRAY> static inline
+            void buildList(LIST &L, const ARRAY &A)
+            {
+                for(size_t i=A.size();i>0;--i)
+                {
+                    aliasing::_(L).push_front( new typename LIST::node_type( *A[i] ) );
+                }
+            }
+
+
             Graph:: Graph(const Lineage::Array &lineage,
                           const Primary::Array &primary)
             {
-                for(size_t i=lineage.size();i>0;--i)
+                buildList(lineageVertices,lineage);
+                buildList(primaryVertices,primary);
+            }
+
+            template <typename LIST>
+            static inline void graphVizList(ios::ostream &fp, const LIST &L)
+            {
+                for(const typename LIST::node_type *v=L.head;v;v=v->next)
                 {
-                    aliasing::_(lineageVertices).push_front( new LineageVertex( *lineage[i]) );
+                    (*v)->vizSave(fp);
+                }
+            }
+
+            void Graph:: graphViz(const string &fileName) const
+            {
+                {
+                    ios::ocstream fp(fileName);
+
+                    Vizible::enterDigraph(fp,"G");
+                    graphVizList(fp,lineageVertices);
+                    graphVizList(fp,primaryVertices);
+                    Vizible::leaveDigraph(fp);
+
                 }
 
-                for(size_t i=primary.size();i>0;--i)
-                {
-                    aliasing::_(primaryVertices).push_front( new PrimaryVertex( *primary[i]) );
-                }
-
+                ios::GraphViz::Render(fileName);
 
             }
 

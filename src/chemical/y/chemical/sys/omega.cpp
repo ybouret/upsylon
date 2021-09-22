@@ -1,6 +1,5 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/kernel/apk.hpp"
-#include "y/chemical/sys/flux.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include "y/chemical/sys/stream.hpp"
 
@@ -20,9 +19,10 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
-            Flux::Graph G(lineage,primary);
-            G.graphViz("stream.dot");
-            
+
+            Stream::Graph S(lineage,primary);
+            S.graphViz("stream.dot");
+
             if(Nc>0)
             {
                 iMatrix &Om      = aliasing::_(Omega);

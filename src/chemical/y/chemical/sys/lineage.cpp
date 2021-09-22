@@ -109,6 +109,43 @@ namespace upsylon
         void Lineage:: vizCore(ios::ostream &fp) const
         {
 
+            fp << '[';
+            outputLabel(fp,(**this).name);
+            switch(linkage)
+            {
+                case Single:
+                    appendShape(fp,"oval");
+                    appendStyle(fp,"bold,dotted,filled");
+                    break;
+
+                case Inside:
+                    appendShape(fp,"oval");
+                    appendStyle(fp,"bold,filled");
+                    break;
+
+                case Intake:
+                    appendShape(fp,"invhouse");
+                    appendStyle(fp,"bold,filled");
+                    break;
+
+                case Output:
+                    appendShape(fp,"house");
+                    appendStyle(fp,"bold,filled");
+                    break;
+
+                case Source:
+                    appendShape(fp,"trapezium");
+                    appendStyle(fp,"bold,filled,dashed");
+                    break;
+
+                case Siphon:
+                    appendShape(fp,"invtrapezium");
+                    appendStyle(fp,"bold,filled,dashed");
+                    break;
+            }
+
+            fp << ']';
+            endl(fp);
         }
     }
 
