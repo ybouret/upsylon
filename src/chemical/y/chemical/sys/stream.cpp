@@ -158,7 +158,7 @@ namespace upsylon
                 aliasing::_(isValid) = true;
             }
 
-            bool Path:: areAnalog(const Path &lhs, const Path &rhs) throw()
+            bool Path:: AreAnalog(const Path &lhs, const Path &rhs) throw()
             {
                 if(lhs.visited.size==rhs.visited.size)
                 {
@@ -333,6 +333,28 @@ namespace upsylon
             }
 
 
+            template <typename ROUTES, typename EDGE> static inline
+            void growRoutes(ROUTES &routes, const EDGE &edge)
+            {
+                typedef typename ROUTES::node_type ROUTE;
+                ROUTES extra;
+                routes.push_back( new ROUTE(edge,extra) );
+                routes.merge_back(extra);
+                while(routes.size)
+                {
+                    ROUTE *route = routes.pop_front();
+                    if(route->isValid)
+                    {
+                        extra.push_back(route);
+                    }
+                    else
+                    {
+                        delete route;
+                    }
+                }
+                routes.swap_with(extra);
+            }
+
             void Graph:: buildRoutes()
             {
                 // forward
@@ -342,12 +364,13 @@ namespace upsylon
                     const Lineage &L = *(edge->source);
                     if(L.linkage==Intake)
                     {
-                        ForwardRoutes extra;
-                        ForwardRoute  route(*edge,extra);
+                        growRoutes(aliasing::_(forwardRoutes),*edge);
+                        //ForwardRoutes extra;
+                        //ForwardRoute  route(*edge,extra);
                     }
                 }
+                Y_CHEMICAL_PRINTLN("    #ForwardPaths = " << forwardRoutes.size);
                 Y_CHEMICAL_PRINTLN("    <ForwardPaths/>");
-
 
                 // reverse
                 Y_CHEMICAL_PRINTLN("    <ReversePaths>");
@@ -356,11 +379,66 @@ namespace upsylon
                     const Lineage &L = *(edge->source);
                     if(L.linkage==Output)
                     {
-                        ReverseRoutes extra;
-                        ReverseRoute  route(*edge,extra);
+                        growRoutes(aliasing::_(reverseRoutes),*edge);
                     }
                 }
+                Y_CHEMICAL_PRINTLN("    #ReversePaths = " << reverseRoutes.size);
                 Y_CHEMICAL_PRINTLN("    <ReversePaths/>");
+
+                Y_CHEMICAL_PRINTLN("    <CompactPaths>");
+                cleanRoutes();
+                Y_CHEMICAL_PRINTLN("    #ForwardPaths = " << forwardRoutes.size);
+                Y_CHEMICAL_PRINTLN("    #ReversePaths = " << reverseRoutes.size);
+                Y_CHEMICAL_PRINTLN("    <CompactPaths/>");
+
+            }
+
+            template <typename ROUTES>
+            static inline void reshape(ROUTES &routes)
+            {
+                typedef typename ROUTES::node_type ROUTE;
+                for(ROUTE *path=routes.head;path;path=path->next)
+                {
+                    assert(path->isValid);
+                    path->reshape();
+                    if(Verbosity)
+                    {
+                        std::cerr << path->courseText() << " {";
+                        for(const Member *m=path->visited.head;m;m=m->next)
+                        {
+                            std::cerr << ' ' << (***m).name;
+                        }
+                        std::cerr << " }";
+                        std::cerr << " #incoming: " << path->incoming.size;
+                        std::cerr << " #outgoing: " << path->outgoing.size << std::endl;
+                    }
+                }
+            }
+
+
+
+            static inline
+            void compactPaths(const ForwardRoutes &forward,
+                              ReverseRoutes       &reverse) throw()
+            {
+                for(const ForwardRoute *fwd=forward.head;fwd;fwd=fwd->next)
+                {
+                    for(ReverseRoute *rev=reverse.head;rev;rev=rev->next)
+                    {
+                        if( Path::AreAnalog(*fwd,*rev) )
+                        {
+                            delete reverse.unlink(rev);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            void Graph:: cleanRoutes()
+            {
+                reshape( aliasing::_(forwardRoutes) );
+                reshape( aliasing::_(reverseRoutes) );
+                compactPaths(forwardRoutes,aliasing::_(reverseRoutes));
             }
 
         }
