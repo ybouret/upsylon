@@ -4,6 +4,7 @@
 #define Y_CHEMICAL_PRIMARY_INCLUDED 1
 
 #include "y/chemical/equilibria.hpp"
+#include "y/chemical/sys/gv-object.hpp"
 
 namespace upsylon
 {
@@ -16,7 +17,7 @@ namespace upsylon
         //! primary constraint definition per equilibrium
         //
         //______________________________________________________________________
-        class Primary : public Object, public authority<const Equilibrium>
+        class Primary : public gvObject, public authority<const Equilibrium>
         {
         public:
             //__________________________________________________________________
@@ -129,6 +130,12 @@ namespace upsylon
 
             //! best effort move
             bool        xmove(Addressable &C, const double x, Addressable &xi) const throw();
+
+            //__________________________________________________________________
+            //
+            // gvObject
+            //__________________________________________________________________
+            virtual const char * label() const throw();
 
             //__________________________________________________________________
             //

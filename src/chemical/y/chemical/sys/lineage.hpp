@@ -4,6 +4,7 @@
 #define Y_CHEMICAL_LINEAGE_INCLUDED 1
 
 #include "y/chemical/sys/appliance.hpp"
+#include "y/chemical/sys/gv-object.hpp"
 
 namespace upsylon
 {
@@ -40,7 +41,7 @@ namespace upsylon
         //! species withing a system
         //
         //______________________________________________________________________
-        class Lineage : public Object, public authority<const Species>, public Flow
+        class Lineage : public gvObject, public authority<const Species>, public Flow
         {
         public:
             //__________________________________________________________________
@@ -63,13 +64,16 @@ namespace upsylon
             //
             // methods
             //__________________________________________________________________
-
-
             void        link(const unit_t, const Primary &); //!< link and UPDATE flow state
             void        finalize()           throw();        //!< set linkage
             const char *linkageText()  const throw();        //!< textual value for linkage
 
-
+            //__________________________________________________________________
+            //
+            // gvObject
+            //__________________________________________________________________
+            virtual const char *label() const throw();
+            
             //__________________________________________________________________
             //
             // members

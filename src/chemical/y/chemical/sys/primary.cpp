@@ -116,7 +116,12 @@ namespace upsylon
 {
     namespace Chemical
     {
-        
+
+        const char *Primary:: label() const throw()
+        {
+            return *( (**this).name );
+        }
+
         Primary:: ~Primary() throw()
         {
         }
@@ -142,6 +147,7 @@ namespace upsylon
 
 
         Primary:: Primary(const Equilibrium &eq, const iMatrix &topo) :
+        gvObject(),
         authority<const Equilibrium>(eq),
         NuT(topo),
         reac( (**this).countPrimaryReac() ),
