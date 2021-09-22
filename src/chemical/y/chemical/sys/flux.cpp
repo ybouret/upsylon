@@ -1,5 +1,5 @@
 
-#include "y/chemical/sys/stream.hpp"
+#include "y/chemical/sys/flux.hpp"
 
 
 //==============================================================================
@@ -14,7 +14,7 @@ namespace upsylon
 {
     namespace Chemical
     {
-        namespace Stream
+        namespace Flux
         {
             Vertex:: ~Vertex() throw()
             {
@@ -115,7 +115,7 @@ namespace upsylon
 {
     namespace Chemical
     {
-        namespace Stream
+        namespace Flux
         {
             Oriented:: ~Oriented() throw()
             {
@@ -150,7 +150,7 @@ namespace upsylon
 {
     namespace Chemical
     {
-        namespace Stream
+        namespace Flux
         {
 
             const char *CourseText(const Course course) throw()
@@ -223,9 +223,9 @@ namespace upsylon
 {
     namespace Chemical
     {
-        namespace Stream
+        namespace Flux
         {
-            const char   Path:: CLID[]     = "Stream::Path";
+            const char   Path:: CLID[]     = "Flux::Path";
             const size_t Path:: BaseIndent = 8;
 
             std::ostream & Path:: indent(std::ostream &os) const
@@ -485,7 +485,7 @@ namespace upsylon
 {
     namespace Chemical
     {
-        namespace Stream
+        namespace Flux
         {
 
 

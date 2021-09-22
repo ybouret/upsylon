@@ -1,6 +1,6 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/kernel/apk.hpp"
-#include "y/chemical/sys/stream.hpp"
+#include "y/chemical/sys/flux.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
 #include <iomanip>
 
@@ -18,13 +18,8 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
-            Stream::Graph G(lineage,primary);
+            Flux::Graph G(lineage,primary);
             G.graphViz("stream.dot");
-
-#if 0
-            Flux::Graph G(strain,primary);
-            G.graphViz("flux.dot");
-#endif
             
             if(Nc>0)
             {
