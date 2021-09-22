@@ -66,7 +66,11 @@ namespace upsylon
             Graph:: Graph(const Lineage::Array &lineage,
                           const Primary::Array &primary) :
             lineageVertices(),
-            primaryVertices()
+            primaryVertices(),
+            forwardIncomingEdges(),
+            forwardOutgoingEdges(),
+            reverseIncomingEdges(),
+            reverseOutgoingEdges()
             {
                 // register all species and equilibrium
                 buildList(lineageVertices,lineage);

@@ -25,15 +25,17 @@ namespace upsylon
             // Reverse: from products to reactant
             //
             //__________________________________________________________________
+
+            //! references nodes and list
 #define Y_CHEM_STREAM_DECL(NAME) \
 class NAME;\
 typedef ref_dnode<const NAME> NAME##Link;\
 typedef ref_dlist<const NAME> NAME##Links;
 
-            Y_CHEM_STREAM_DECL(ForwardIncoming);
-            Y_CHEM_STREAM_DECL(ForwardOutgoing);
-            Y_CHEM_STREAM_DECL(ReverseIncoming);
-            Y_CHEM_STREAM_DECL(ReverseOutgoing);
+            Y_CHEM_STREAM_DECL(ForwardIncoming); //!< Forward Incoming Link(s)
+            Y_CHEM_STREAM_DECL(ForwardOutgoing); //!< Forward Outgoing Link(s)
+            Y_CHEM_STREAM_DECL(ReverseIncoming); //!< Reverse Incoming Link(s)
+            Y_CHEM_STREAM_DECL(ReverseOutgoing); //!< Reverse Outgoing Link(s)
 
 
 
@@ -54,7 +56,7 @@ typedef ref_dlist<const NAME> NAME##Links;
                 //
                 // types and definitions
                 //______________________________________________________________
-                typedef core::list_of_cpp<Vertex> List;
+                typedef core::list_of_cpp<Vertex> List; //!< alias
 
                 //______________________________________________________________
                 //
@@ -63,7 +65,8 @@ typedef ref_dlist<const NAME> NAME##Links;
 
                 //! setup
                 inline explicit Vertex(const CLASS &args) throw() :
-                Object(), authority<const CLASS>(args), next(0), prev(0)
+                Object(), authority<const CLASS>(args), next(0), prev(0),
+                forward(), reverse()
                 {
                 }
 
@@ -162,8 +165,14 @@ typedef ref_dlist<const NAME> NAME##Links;
             class Arrow : public Edge
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                //! cleanup
                 inline virtual ~Arrow() throw() {}
 
+                //! setup
                 inline explicit Arrow(const SOURCE &s,
                                       const unit_t  w,
                                       const TARGET &t) throw() :
@@ -173,6 +182,10 @@ typedef ref_dlist<const NAME> NAME##Links;
                 {
                 }
 
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
                 const SOURCE &source; //!< a vertex
                 const TARGET &target; //!< a vertex
 
@@ -180,7 +193,12 @@ typedef ref_dlist<const NAME> NAME##Links;
                 Y_DISABLE_COPY_AND_ASSIGN(Arrow);
             };
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! implement the specialized arrows
+            //
+            //__________________________________________________________________
 #define Y_CHEMICAL_ARROW(NAME,COURSE,SOURCE,TARGET)                                     \
 class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>                     \
 /**/  {                                                                                 \
@@ -195,31 +213,49 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
 /**/  typedef NAME::List NAME##Edges
 
 
-            Y_CHEMICAL_ARROW(ForwardIncoming,Edge::Forward,LineageVertex,PrimaryVertex);
-            Y_CHEMICAL_ARROW(ForwardOutgoing,Edge::Forward,PrimaryVertex,LineageVertex);
-            Y_CHEMICAL_ARROW(ReverseIncoming,Edge::Reverse,LineageVertex,PrimaryVertex);
-            Y_CHEMICAL_ARROW(ReverseOutgoing,Edge::Reverse,PrimaryVertex,LineageVertex);
+            Y_CHEMICAL_ARROW(ForwardIncoming,Edge::Forward,LineageVertex,PrimaryVertex); //!< Forward Incoming Edge(s)
+            Y_CHEMICAL_ARROW(ForwardOutgoing,Edge::Forward,PrimaryVertex,LineageVertex); //!< Forward Outgoing Edge(s)
+            Y_CHEMICAL_ARROW(ReverseIncoming,Edge::Reverse,LineageVertex,PrimaryVertex); //!< Reverse Incoming Edge(s)
+            Y_CHEMICAL_ARROW(ReverseOutgoing,Edge::Reverse,PrimaryVertex,LineageVertex); //!< Reverse Outgoing Edge(s)
 
 
-
+            //__________________________________________________________________
+            //
+            //
+            //! Full bidirectional Graph
+            //
+            //__________________________________________________________________
             class Graph : public Object
             {
             public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
 
+                //! build all
                 explicit Graph(const Lineage::Array &lineage,
                                const Primary::Array &primary);
 
+                //! cleanup
                 virtual ~Graph() throw();
 
-                void graphViz(const string &fileName) const;
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void graphViz(const string &fileName) const; //!< encode/render
 
-
-                const LineageVertices      lineageVertices;
-                const PrimaryVertices      primaryVertices;
-                const ForwardIncomingEdges forwardIncomingEdges;
-                const ForwardOutgoingEdges forwardOutgoingEdges;
-                const ReverseIncomingEdges reverseIncomingEdges;
-                const ReverseOutgoingEdges reverseOutgoingEdges;
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const LineageVertices      lineageVertices;      //!< all species
+                const PrimaryVertices      primaryVertices;      //!< all equilibria
+                const ForwardIncomingEdges forwardIncomingEdges; //!< forward incoming
+                const ForwardOutgoingEdges forwardOutgoingEdges; //!< forward outgoing
+                const ReverseIncomingEdges reverseIncomingEdges; //!< reverse incoming
+                const ReverseOutgoingEdges reverseOutgoingEdges; //!< reverse outgoing
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);

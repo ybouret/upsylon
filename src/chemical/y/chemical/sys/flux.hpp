@@ -235,8 +235,8 @@ namespace upsylon
 
             };
 
-            typedef ref_dnode<const Lineage> Member;
-            typedef ref_dlist<const Lineage> Members;
+            typedef ref_dnode<const Lineage> Member; //!< ...
+            typedef ref_dlist<const Lineage> Members; //!< ...
 
             //__________________________________________________________________
             //
