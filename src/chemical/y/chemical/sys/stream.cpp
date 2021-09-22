@@ -147,6 +147,7 @@ namespace upsylon
 
             void Path:: visit(const Lineage &l)
             {
+                assert( !owns(l) );
                 aliasing::_(visited).append(l);
             }
 

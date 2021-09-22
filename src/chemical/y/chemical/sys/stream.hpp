@@ -345,12 +345,14 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 incoming(),
                 outgoing()
                 {
-                    // initialize
+                    //__________________________________________________________
+                    //
+                    // initialize first edge and first visited
+                    //__________________________________________________________
                     aliasing::_(incoming).append(entry);
                     visit(*entry.source);
-                    if(Verbosity)
-                    {
-                        indent(std::cerr) << ***(visited.tail) << " starts " << courseText() << std::endl;
+                    if(Verbosity) {
+                        indent(std::cerr) << ***(visited.tail) << " starts " << courseText() << " to " << entry.target.name() << std::endl;
                     }
                 }
 
