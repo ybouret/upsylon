@@ -155,6 +155,27 @@ namespace upsylon
                 aliasing::_(isValid) = true;
             }
 
+            bool Path:: areAnalog(const Path &lhs, const Path &rhs) throw()
+            {
+                if(lhs.visited.size==rhs.visited.size)
+                {
+                    for(const Member
+                        *l=lhs.visited.head,
+                        *r=rhs.visited.head;
+                        l;l=l->next,r=r->next)
+                    {
+                        const Lineage &L = **l;
+                        const Lineage &R = **r;
+                        if(&L != &R) return false;
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
         }
     }
 

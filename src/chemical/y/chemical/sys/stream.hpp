@@ -279,9 +279,10 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 //
                 // methods
                 //______________________________________________________________
-                void           reshape(); //!< re-order visited
-                std::ostream & indent(std::ostream&) const;         //!< helper to indent
-                bool           owns(const Lineage &) const throw(); //!< test ownership
+                void           reshape();                                     //!< re-order visited
+                std::ostream & indent(std::ostream&)                   const; //!< helper to indent
+                bool           owns(const Lineage &)           const throw(); //!< test ownership
+                static bool    areAnalog(const Path &, const Path &) throw(); //!< both paths must be reshaped
 
                 //______________________________________________________________
                 //
