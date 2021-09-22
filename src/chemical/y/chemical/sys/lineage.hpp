@@ -4,7 +4,6 @@
 #define Y_CHEMICAL_LINEAGE_INCLUDED 1
 
 #include "y/chemical/sys/appliance.hpp"
-#include "y/chemical/sys/gv-object.hpp"
 
 namespace upsylon
 {
@@ -41,7 +40,7 @@ namespace upsylon
         //! species withing a system
         //
         //______________________________________________________________________
-        class Lineage : public gvObject, public authority<const Species>, public Flow
+        class Lineage : public gvObject,public authority<const Species>, public Flow
         {
         public:
             //__________________________________________________________________
@@ -51,8 +50,7 @@ namespace upsylon
             typedef arc_ptr<const Lineage>    Pointer; //!< alias
             typedef vector<Pointer,Allocator> Array;   //!< alias
 
-
-
+            
             //__________________________________________________________________
             //
             // C++
@@ -68,12 +66,7 @@ namespace upsylon
             void        finalize()           throw();        //!< set linkage
             const char *linkageText()  const throw();        //!< textual value for linkage
 
-            //__________________________________________________________________
-            //
-            // gvObject
-            //__________________________________________________________________
-            virtual const char *label() const throw();
-            
+
             //__________________________________________________________________
             //
             // members
@@ -97,6 +90,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Lineage);
+            virtual void vizCore(ios::ostream &) const;
+
             template <typename OSTREAM> inline
             OSTREAM & display(OSTREAM &os) const
             {

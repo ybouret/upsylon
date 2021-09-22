@@ -48,8 +48,14 @@ namespace upsylon
             static void     leaveDigraph(ostream &fp);                   //!< "}\n"
             static ostream &outputLabel(ostream &fp, const string &);    //!< label=\" printable(...) \"
             static ostream &outputLabel(ostream &fp, const char   *);    //!< outputLabel wrapper
+
             static ostream &appendShape(ostream &fp, const string &);    //!< ,shape=\" ... \"
+            static ostream &appendShape(ostream &fp, const char   *);    //!< appendShapewrapper
+
+
             static ostream &appendStyle(ostream &fp, const string &);    //!< ,style=\" ... \"
+            static ostream &appendStyle(ostream &fp, const char   *);    //!< appendStyle wrapper
+            //!
             static ostream &arrow(ostream &fp);                          //!< " -> "
             
         protected:

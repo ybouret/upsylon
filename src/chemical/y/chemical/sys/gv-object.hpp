@@ -1,5 +1,4 @@
 
-
 //! \file
 
 #ifndef Y_CHEMICAL_GVOBJ_INCLUDED
@@ -12,15 +11,16 @@ namespace upsylon
 {
     namespace Chemical
     {
-        class gvObject : public Object
+        typedef ios::vizible Vizible;      //!< to encode as GraphViz
+
+        class gvObject : public Object, public Vizible
         {
         public:
             virtual ~gvObject() throw();
-            virtual const char * label() const throw() = 0;
-            
-            
+
         protected:
             explicit gvObject() throw();
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(gvObject);
         };
@@ -29,4 +29,3 @@ namespace upsylon
 }
 
 #endif
-

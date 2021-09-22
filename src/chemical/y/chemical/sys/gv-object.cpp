@@ -5,17 +5,12 @@ namespace upsylon
 {
     namespace Chemical
     {
-        gvObject:: ~gvObject() throw()
+
+        gvObject:: ~gvObject() throw() {}
+
+        gvObject:: gvObject() throw() : Vizible()
         {
         }
-
-        gvObject:: gvObject() throw() : Object()
-        {
-        }
-
-        
-
-
     }
 
 }

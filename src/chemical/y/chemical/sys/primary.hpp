@@ -11,13 +11,14 @@ namespace upsylon
     namespace Chemical
     {
 
+
         //______________________________________________________________________
         //
         //
         //! primary constraint definition per equilibrium
         //
         //______________________________________________________________________
-        class Primary : public gvObject, public authority<const Equilibrium>
+        class Primary : public gvObject,  public authority<const Equilibrium>
         {
         public:
             //__________________________________________________________________
@@ -131,11 +132,6 @@ namespace upsylon
             //! best effort move
             bool        xmove(Addressable &C, const double x, Addressable &xi) const throw();
 
-            //__________________________________________________________________
-            //
-            // gvObject
-            //__________________________________________________________________
-            virtual const char * label() const throw();
 
             //__________________________________________________________________
             //
@@ -174,6 +170,8 @@ namespace upsylon
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Primary);
+            virtual void vizCore(ios::ostream &) const;
+
 
             bool update(Addressable &C, const double x, const Actor &a, Addressable &xi) const throw(); //!< move truncated, return false
             bool modify(Addressable &C, const double x, Addressable &xi) const throw();                 //!< move full, return true

@@ -5,7 +5,6 @@
 #define Y_CHEMICAL_STREAM_INCLUDED 1
 
 #include "y/chemical/sys/lineage.hpp"
-#include "y/ios/tools/vizible.hpp"
 #include "y/core/rlinked.hpp"
 
 namespace upsylon
@@ -15,8 +14,7 @@ namespace upsylon
 
         namespace Stream
         {
-
-
+            
             template <typename CLASS>
             class Vertex  : public Object, public authority<const CLASS>
             {
@@ -33,12 +31,19 @@ namespace upsylon
 
                 inline virtual ~Vertex() throw() {}
 
+                inline const string & name() const throw()
+                {
+                    return (***this).name;
+                }
+
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
             };
 
-            typedef Vertex<Lineage> LineageVertex;
-            typedef Vertex<Primary> PrimaryVertex;
+            typedef Vertex<Lineage>     LineageVertex;
+            typedef Vertex<Primary>     PrimaryVertex;
+            typedef LineageVertex::List LineageVertices;
+            typedef PrimaryVertex::List PrimaryVertices;
 
 
             class Edge : public Object
@@ -89,7 +94,22 @@ namespace upsylon
             };
 
 
+            class Graph : public Object
+            {
+            public:
 
+                explicit Graph(const Lineage::Array &lineage,
+                               const Primary::Array &primary);
+
+                virtual ~Graph() throw();
+
+
+                const LineageVertices lineageVertices;
+                const PrimaryVertices primaryVertices;
+
+            private:
+                Y_DISABLE_COPY_AND_ASSIGN(Graph);
+            };
 
 
         }

@@ -31,7 +31,6 @@ namespace upsylon
         }
 
         Lineage:: Lineage(const Species &sp) throw() :
-        gvObject(),
         authority<const Species>(sp),
         Flow(Bounded),
         linkage(Single),
@@ -106,9 +105,10 @@ namespace upsylon
             return LinkageText(linkage);
         }
 
-        const char * Lineage:: label() const throw()
+
+        void Lineage:: vizCore(ios::ostream &fp) const
         {
-            return * ( (**this).name );
+
         }
     }
 

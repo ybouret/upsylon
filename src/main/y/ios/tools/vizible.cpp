@@ -110,12 +110,25 @@ namespace upsylon {
             return fp;
         }
 
+        ostream & vizible:: appendShape(ostream &fp, const char *s)
+        {
+            const string _(s);
+            return appendShape(fp,_);
+        }
+
+
         ostream & vizible:: appendStyle(ostream &fp, const string &s)
         {
             fp << ",style=\"" << s << "\"";
             return fp;
         }
 
+
+        ostream & vizible:: appendStyle(ostream &fp, const char *s)
+        {
+            const string _(s);
+            return appendStyle(fp,_);
+        }
     }
 
 }

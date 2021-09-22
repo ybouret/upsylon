@@ -6,6 +6,7 @@
 #include "y/memory/allocator/dyadic.hpp"
 #include "y/container/matrix.hpp"
 #include "y/sequence/vector.hpp"
+#include "y/ios/tools/vizible.hpp"
 #include "y/string.hpp"
 
 namespace upsylon
