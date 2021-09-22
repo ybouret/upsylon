@@ -5,6 +5,53 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 //
+// ORIENTED
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+namespace upsylon
+{
+    namespace Chemical
+    {
+        namespace Stream
+        {
+
+            const char *CourseText(const Course course) throw()
+            {
+                switch(course)
+                {
+                    case Forward: return "Forward";
+                    case Reverse: return "Reverse";
+                }
+                return unknown_text;
+            }
+
+
+            Oriented:: ~Oriented() throw()
+            {
+            }
+
+            Oriented:: Oriented(const Course c) throw() :
+            Object(), course(c) {}
+
+            Oriented:: Oriented(const Oriented &other) throw() :
+            Object(), course(other.course)
+            {
+            }
+
+            const char *Oriented:: courseText() const throw()
+            {
+                return CourseText(course);
+            }
+        }
+
+    }
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
 // EDGE
 //
 //
@@ -19,7 +66,7 @@ namespace upsylon
             Edge:: ~Edge() throw() {}
 
             Edge:: Edge(const Course c, const unit_t n) throw() :
-            course(c),
+            Oriented(c),
             weight(n)
             {
             }
@@ -29,6 +76,78 @@ namespace upsylon
     }
 
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+// Path
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+#include "y/sort/merge-list.hpp"
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+
+        namespace Stream
+        {
+
+            std::ostream & Path:: indent(std::ostream&os) const
+            {
+                return Library::Indent(os,8+2*visited.size);
+            }
+
+
+            Path:: ~Path() throw()
+            {
+            }
+
+            Path:: Path(const Course c) throw() :
+            Oriented(c),
+            visited()
+            {
+
+            }
+
+            Path:: Path(const Path &path) :
+            Oriented(path),
+            visited(path.visited)
+            {
+            }
+
+            static int compareMembers(const Member *lhs, const Member *rhs, void *) throw()
+            {
+                assert(lhs);
+                assert(rhs);
+                const Species &L = ***lhs;
+                const Species &R = ***rhs;
+                return comparison::increasing(L.indx,R.indx);
+            }
+
+            void Path:: reshape()
+            {
+                merge_list_of<Member>::sort(aliasing::_(visited),compareMembers,0);
+            }
+
+            bool  Path:: owns(const Lineage &lineage) const throw()
+            {
+                for(const Member *m=visited.head;m;m=m->next)
+                {
+                    const Lineage &mine = **m;
+                    if( &mine == &lineage ) return true;
+                }
+                return false;
+            }
+
+        }
+    }
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -155,13 +274,15 @@ namespace upsylon
                     graphVizVertices(fp,primaryVertices);
 
 
-                    graphVizEdges(fp,forwardOutgoingEdges,"normal",true);
-                    graphVizEdges(fp,forwardIncomingEdges,"vee",true);
+                    {
+                        graphVizEdges(fp,forwardOutgoingEdges,"normal",true);
+                        graphVizEdges(fp,forwardIncomingEdges,"diamond",true);
+                    }
 
                     if(false)
                     {
                         graphVizEdges(fp,reverseOutgoingEdges,"onormal",false);
-                        graphVizEdges(fp,reverseIncomingEdges,"ovee",false);
+                        graphVizEdges(fp,reverseIncomingEdges,"odiamond",false);
                     }
                     
 

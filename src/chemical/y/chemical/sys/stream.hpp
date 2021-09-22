@@ -108,6 +108,43 @@ typedef ref_dlist<const NAME> NAME##Links;
             typedef LineageVertex::List LineageVertices; //!< alias
             typedef PrimaryVertex::List PrimaryVertices; //!< alias
 
+            //__________________________________________________________________
+            //
+            //! Course for an Oirented object
+            //__________________________________________________________________
+            enum Course
+            {
+                Forward, //!< reac->eq or eq->prod
+                Reverse  //!< prod->eq or eq->reac
+            };
+
+            //__________________________________________________________________
+            //
+            //! human readable course
+            //__________________________________________________________________
+            const char *CourseText(const Course) throw();
+
+            //__________________________________________________________________
+            //
+            //
+            //! base class for oriented objects
+            //
+            //__________________________________________________________________
+            class Oriented : public Object
+            {
+            public:
+                virtual      ~Oriented() throw();          //!< cleanup
+                const char   *courseText() const throw();  //!< info
+                const Course  course;                      //!< the value
+
+            protected:
+                explicit Oriented(const Course)     throw(); //!< setup
+                explicit Oriented(const Oriented &) throw(); //!< copy
+
+            private:
+                Y_DISABLE_ASSIGN(Oriented);
+            };
+
 
             //__________________________________________________________________
             //
@@ -115,20 +152,9 @@ typedef ref_dlist<const NAME> NAME##Links;
             //! base class for an edge
             //
             //__________________________________________________________________
-            class Edge : public Object
+            class Edge : public Oriented
             {
             public:
-                //______________________________________________________________
-                //
-                // C++
-                //______________________________________________________________
-
-                //! course
-                enum Course
-                {
-                    Forward, //!< reac->prod
-                    Reverse  //!< prod->reac
-                };
                 //______________________________________________________________
                 //
                 // C++
@@ -139,7 +165,6 @@ typedef ref_dlist<const NAME> NAME##Links;
                 //
                 // members
                 //______________________________________________________________
-                const Course course; //!< current course
                 const unit_t weight; //!< posivite coefficient
 
             protected:
@@ -158,7 +183,7 @@ typedef ref_dlist<const NAME> NAME##Links;
             //
             //__________________________________________________________________
             template <
-            Edge::Course COURSE,
+            Course       COURSE,
             typename     SOURCE,
             typename     TARGET
             >
@@ -169,6 +194,7 @@ typedef ref_dlist<const NAME> NAME##Links;
                 //
                 // C++
                 //______________________________________________________________
+
                 //! cleanup
                 inline virtual ~Arrow() throw() {}
 
@@ -213,10 +239,59 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
 /**/  typedef NAME::List NAME##Edges
 
 
-            Y_CHEMICAL_ARROW(ForwardIncoming,Edge::Forward,LineageVertex,PrimaryVertex); //!< Forward Incoming Edge(s)
-            Y_CHEMICAL_ARROW(ForwardOutgoing,Edge::Forward,PrimaryVertex,LineageVertex); //!< Forward Outgoing Edge(s)
-            Y_CHEMICAL_ARROW(ReverseIncoming,Edge::Reverse,LineageVertex,PrimaryVertex); //!< Reverse Incoming Edge(s)
-            Y_CHEMICAL_ARROW(ReverseOutgoing,Edge::Reverse,PrimaryVertex,LineageVertex); //!< Reverse Outgoing Edge(s)
+            Y_CHEMICAL_ARROW(ForwardIncoming,Forward,LineageVertex,PrimaryVertex); //!< Forward Incoming Edge(s)
+            Y_CHEMICAL_ARROW(ForwardOutgoing,Forward,PrimaryVertex,LineageVertex); //!< Forward Outgoing Edge(s)
+            Y_CHEMICAL_ARROW(ReverseIncoming,Reverse,LineageVertex,PrimaryVertex); //!< Reverse Incoming Edge(s)
+            Y_CHEMICAL_ARROW(ReverseOutgoing,Reverse,PrimaryVertex,LineageVertex); //!< Reverse Outgoing Edge(s)
+
+
+            //__________________________________________________________________
+            //
+            //
+            // aliases for references to species/lineage
+            //
+            //__________________________________________________________________
+            typedef ref_dnode<const Lineage> Member;  //!< alias
+            typedef ref_dlist<const Lineage> Members; //!< alias
+
+
+            //__________________________________________________________________
+            //
+            //
+            //! Path base class : list of visited species
+            //
+            //__________________________________________________________________
+            class Path : public Oriented
+            {
+            public:
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+                virtual ~Path() throw();
+
+                //______________________________________________________________
+                //
+                // methods
+                //______________________________________________________________
+                void           reshape(); //!< re-order visited
+                std::ostream & indent(std::ostream&) const;         //!< helper to indent
+                bool           owns(const Lineage &) const throw(); //!< test ownership
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const Members visited;
+
+            protected:
+                explicit Path(const Course) throw();
+                explicit Path(const Path &);
+
+            private:
+                Y_DISABLE_ASSIGN(Path);
+            };
+
 
 
             //__________________________________________________________________
