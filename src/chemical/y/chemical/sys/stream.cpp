@@ -119,6 +119,8 @@ namespace upsylon
             visited(path.visited),
             isValid(path.isValid)
             {
+                assert(visited.size==path.visited.size);
+                assert(false==isValid);
             }
 
             static int compareMembers(const Member *lhs, const Member *rhs, void *) throw()

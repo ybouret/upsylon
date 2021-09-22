@@ -290,13 +290,23 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 //______________________________________________________________
                 const Members visited; //!< keep track of visited
                 const bool    isValid; //!< initially false
-                
+
+                void display() const
+                {
+                    std::cerr << "{";
+                    for(const Member *m=visited.head;m;m=m->next)
+                    {
+                        std::cerr << ' ' << ***m;
+                    }
+                    std::cerr << " }" << std::endl;
+                }
+
             protected:
                 explicit Path(const Course) throw(); //!< setup
                 explicit Path(const Path &);         //!< full copy
                 void     visit(const Lineage &l);    //!< append reference
                 void     validate() throw();         //!< isValid = true
-                //!
+
             private:
                 Y_DISABLE_ASSIGN(Path);
             };
@@ -350,10 +360,13 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                     //__________________________________________________________
                     aliasing::_(incoming).append(entry);
                     visit(*entry.source);
+
                     if(Verbosity) {
-                        indent(std::cerr) << ***(visited.tail) << " starts " << courseText() << " to " << entry.target.name() << std::endl;
+                        display();
                     }
-                    moveTo(entry.target,extra);
+
+
+                    walk(entry.target,extra);
                 }
 
 
@@ -364,6 +377,9 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 incoming(route.incoming),
                 outgoing(route.outgoing)
                 {
+                    assert(incoming.size==route.incoming.size);
+                    assert(outgoing.size==route.outgoing.size);
+
                 }
 
                 //______________________________________________________________
@@ -376,55 +392,50 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
             private:
                 Y_DISABLE_ASSIGN(Route);
 
-                //! sent from a species, this is the next eq to check
-                inline void moveTo(const PrimaryVertex &primaryVertex, List &extra )
+                //! sent from a species, this is the next equilibrium to check
+                inline void walk(const PrimaryVertex &primaryVertex, List &extra )
                 {
-                    if(Verbosity)
-                    {
-                        indent(std::cerr) << "\\_<" << primaryVertex.name() << ">" << std::endl;
-                    }
+                    std::cerr << "Now at " << primaryVertex.name() << std::endl;
                     const OUTGOING &ways = getOutgoing(primaryVertex,int2type<COURSE>());
                     if(ways.size<=0)
                     {
-                        return;
+                        return; // shouldn't happen
                     }
                     else
                     {
+                        // one or more species are reached
                         const     OutgoingLink *head=ways.head;
 
                         // recursivity on other links
                         for(const OutgoingLink *link=head->next;link;link=link->next)
                         {
                             Route *route = extra.push_back( new Route(*this)  );
-                            moveTo(aliasing::_(route->outgoing).append(**link).target,extra);
+                            walk(aliasing::_(route->outgoing).append(**link).target,extra);
                         }
 
                         // self go on on first links
-                        moveTo(aliasing::_(outgoing).append(**head).target,extra);
+                        walk(aliasing::_(this->outgoing).append(**head).target,extra);
 
                     }
                 }
 
                 //! sent from an equilibrium, check is can go on
-                inline void moveTo(const LineageVertex &lineageVertex, List &extra)
+                inline void walk(const LineageVertex &lineageVertex, List &extra)
                 {
                     const Lineage &lineage = *lineageVertex;
                     const string  &name    = lineage->name;
+                    std::cerr << "checking " << name << std::endl;
                     if(owns(lineage))
                     {
-                        if(Verbosity)
-                        {
-                            indent(std::cerr) << "\\_[CYCLE@" << name << "]" << std::endl;
-                        }
+                        std::cerr << "  already in path" << std::endl;
+                        assert(!isValid);
                         return;
                     }
                     else
                     {
                         visit(lineage);
-                        if(Verbosity)
-                        {
-                            indent(std::cerr) << "\\_["<< name << "]" << std::endl;
-                        }
+                        display();
+
                         const Linkage linkage = lineage.linkage;
                         switch(linkage)
                         {
@@ -433,10 +444,8 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
 
                             case Source:
                             case Siphon:
-                                if(Verbosity)
-                                {
-                                    indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
-                                }
+                                std::cerr << "met endless state..." << std::endl;
+                                assert(!isValid);
                                 return;  // stop, no possible conservation
 
                             case Output:
@@ -444,10 +453,7 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                                 {
                                     case Forward:
                                         validate();
-                                        if(Verbosity)
-                                        {
-                                            indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
-                                        }
+                                        std::cerr << "found forward valid path!" << std::endl;
                                         return;
                                     case Reverse: break; // => error
                                 }
@@ -458,10 +464,7 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                                 {
                                     case Reverse:
                                         validate();
-                                        if(Verbosity)
-                                        {
-                                            indent(std::cerr) << " |_["<< lineage.stateText() << "]" << std::endl;
-                                        }
+                                        std::cerr << "found valid reverse path!" << std::endl;
                                         return;
                                     case Forward: break; // => error
                                 }
@@ -473,9 +476,25 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                         throw exception("unexpected %s '%s' in %s route!!", LinkageText(linkage), *name, courseText() );
 
                     PROBE:
-                        std::cerr << "Need To Probe!!" << std::endl;
                         const INCOMING &ways = getIncoming(lineageVertex,int2type<COURSE>());
-                        
+                        if(ways.size<=0)
+                        {
+                            return; //shouldn't happen
+                        }
+                        else
+                        {
+                            const     IncomingLink *head=ways.head;
+
+                            // recursivity on other links
+                            for(const IncomingLink *link=head->next;link;link=link->next)
+                            {
+                                Route *route = extra.push_back( new Route(*this)  );
+                                walk(aliasing::_(route->incoming).append(**link).target,extra);
+                            }
+
+                            // follow this path
+                            walk(aliasing::_(this->incoming).append(**head).target,extra);
+                        }
 
                     }
                 }
