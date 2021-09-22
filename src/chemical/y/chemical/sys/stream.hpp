@@ -192,9 +192,14 @@ typedef ref_dlist<const NAME> NAME##Links;
             public:
                 //______________________________________________________________
                 //
+                // definitions
+                //______________________________________________________________
+                static const Course CourseType = COURSE; //!< alias
+
+                //______________________________________________________________
+                //
                 // C++
                 //______________________________________________________________
-
                 //! cleanup
                 inline virtual ~Arrow() throw() {}
 
@@ -282,17 +287,97 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 //
                 // members
                 //______________________________________________________________
-                const Members visited;
-
+                const Members visited; //!< keep track of visited
+                const bool    isValid; //!< initially false
+                
             protected:
-                explicit Path(const Course) throw();
-                explicit Path(const Path &);
-
+                explicit Path(const Course) throw(); //!< setup
+                explicit Path(const Path &);         //!< full copy
+                void     visit(const Lineage &l);    //!< append reference
+                void     validate() throw();         //!< isValid = true
+                //!
             private:
                 Y_DISABLE_ASSIGN(Path);
             };
 
+            //__________________________________________________________________
+            //
+            //
+            //! Parametric Route
+            //
+            //__________________________________________________________________
+            template <
+            Course   COURSE,
+            typename INCOMING,
+            typename OUTGOING
+            >
+            class Route : public Path, public dnode< Route<COURSE,INCOMING,OUTGOING> >
+            {
+            public:
+                //______________________________________________________________
+                //
+                // types and definition
+                //______________________________________________________________
+                static const Course CourseType = COURSE; //!< alias
+                typedef Route<COURSE,INCOMING,OUTGOING>   RouteType;    //!< alias
+                typedef dnode<RouteType>                  Node;         //!< alias
+                typedef core::list_of<Node>               List;         //!< alias
+                typedef typename INCOMING::node_type      IncomingLink; //!< retrieve link
+                typedef typename OUTGOING::node_type      OutgoingLink; //!< retrieve link
+                typedef typename IncomingLink::const_type IncomingEdge; //!< retrieve const Edge
+                typedef typename OutgoingLink::const_type OutgoingEdge; //!< retrieve const Edge
 
+                //______________________________________________________________
+                //
+                // C++
+                //______________________________________________________________
+
+                //! cleanup
+                inline virtual ~Route() throw() {}
+
+
+                //! initialize and probe
+                inline explicit Route(IncomingEdge &entry,
+                                      List         &extra) :
+                Path(COURSE),
+                Node(),
+                incoming(),
+                outgoing()
+                {
+                    // initialize
+                    aliasing::_(incoming).append(entry);
+                    visit(*entry.source);
+                    if(Verbosity)
+                    {
+                        indent(std::cerr) << ***(visited.tail) << " starts " << courseText() << std::endl;
+                    }
+                }
+
+
+                //! full copy
+                inline explicit Route(const Route &route) :
+                Path(route),
+                Node(),
+                incoming(route.incoming),
+                outgoing(route.outgoing)
+                {
+                }
+
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                const INCOMING incoming; //!< links to incoming edges
+                const OUTGOING outgoing; //!< links to outgoing edges
+
+            private:
+                Y_DISABLE_ASSIGN(Route);
+            };
+
+            typedef Route<Forward,ForwardIncomingLinks,ForwardOutgoingLinks> ForwardRoute;  //!< alias
+            typedef ForwardRoute::List                                       ForwardRoutes; //!< alias
+            typedef Route<Reverse,ReverseIncomingLinks,ReverseOutgoingLinks> ReverseRoute;  //!< alias
+            typedef ReverseRoute::List                                       ReverseRoutes; //!< alias
 
             //__________________________________________________________________
             //
@@ -334,6 +419,7 @@ class NAME : public Arrow<COURSE,SOURCE,TARGET>, public dnode<NAME>             
                 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Graph);
+                void buildRoutes();
             };
 
 

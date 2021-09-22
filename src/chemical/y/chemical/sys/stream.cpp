@@ -108,14 +108,16 @@ namespace upsylon
 
             Path:: Path(const Course c) throw() :
             Oriented(c),
-            visited()
+            visited(),
+            isValid(false)
             {
 
             }
 
             Path:: Path(const Path &path) :
             Oriented(path),
-            visited(path.visited)
+            visited(path.visited),
+            isValid(path.isValid)
             {
             }
 
@@ -141,6 +143,16 @@ namespace upsylon
                     if( &mine == &lineage ) return true;
                 }
                 return false;
+            }
+
+            void Path:: visit(const Lineage &l)
+            {
+                aliasing::_(visited).append(l);
+            }
+
+            void Path:: validate() throw()
+            {
+                aliasing::_(isValid) = true;
             }
 
         }
@@ -227,6 +239,8 @@ namespace upsylon
                     }
                 }
 
+                // build routes
+                buildRoutes();
             }
 
             template <typename LIST>
@@ -292,6 +306,37 @@ namespace upsylon
 
                 ios::GraphViz::Render(fileName);
 
+            }
+
+
+            void Graph:: buildRoutes()
+            {
+                // forward
+                Y_CHEMICAL_PRINTLN("    <ForwardPaths>");
+                for(const ForwardIncoming *edge=forwardIncomingEdges.head;edge;edge=edge->next)
+                {
+                    const Lineage &L = *(edge->source);
+                    if(L.linkage==Intake)
+                    {
+                        ForwardRoutes extra;
+                        ForwardRoute  route(*edge,extra);
+                    }
+                }
+                Y_CHEMICAL_PRINTLN("    <ForwardPaths/>");
+
+
+                // reverse
+                Y_CHEMICAL_PRINTLN("    <ReversePaths>");
+                for(const ReverseIncoming *edge=reverseIncomingEdges.head;edge;edge=edge->next)
+                {
+                    const Lineage &L = *(edge->source);
+                    if(L.linkage==Output)
+                    {
+                        ReverseRoutes extra;
+                        ReverseRoute  route(*edge,extra);
+                    }
+                }
+                Y_CHEMICAL_PRINTLN("    <ReversePaths/>");
             }
 
         }
