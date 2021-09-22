@@ -19,10 +19,11 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
-
+#if 0
             Stream::Graph S(lineage,primary);
             S.graphViz("stream.dot");
-
+#endif
+            
             if(Nc>0)
             {
                 iMatrix &Om      = aliasing::_(Omega);

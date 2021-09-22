@@ -40,7 +40,7 @@ namespace upsylon
         //! species withing a system
         //
         //______________________________________________________________________
-        class Lineage : public gvObject,public authority<const Species>, public Flow
+        class Lineage : public gvObject, public authority<const Species>, public Flow
         {
         public:
             //__________________________________________________________________
@@ -72,8 +72,8 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const Linkage    linkage;   //!< once finalized, default is vacant
-            const Appliances consumers; //!< strain is consumed by these equilibria
-            const Appliances producers; //!< strain is produced by this equilibria
+            const Appliances consumers; //!<  is consumed by these equilibria
+            const Appliances producers; //!<  is produced by this equilibria
 
             //__________________________________________________________________
             //
