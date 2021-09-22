@@ -85,16 +85,20 @@ namespace upsylon
                         if(nu<0)
                         {
                             // reactant  : forward incoming and reverse outgoing
-                            aliasing::_(forwardIncomingEdges).push_back( new ForwardIncoming(L,-nu,P) );
-                            aliasing::_(reverseOutgoingEdges).push_back( new ReverseOutgoing(P,-nu,L) );
+                            ForwardIncoming &fwd = *aliasing::_(forwardIncomingEdges).push_back( new ForwardIncoming(L,-nu,P) );
+                            ReverseOutgoing &rev = *aliasing::_(reverseOutgoingEdges).push_back( new ReverseOutgoing(P,-nu,L) );
+                            aliasing::_(L.forward).append(fwd);
+                            aliasing::_(P.reverse).append(rev);
                         }
                         else
                         {
                             if(nu>0)
                             {
                                 // product : forward outgoing and reverse incoming
-                                aliasing::_(forwardOutgoingEdges).push_back( new ForwardOutgoing(P,nu,L) );
-                                aliasing::_(reverseIncomingEdges).push_back( new ReverseIncoming(L,nu,P) );
+                                ForwardOutgoing &fwd = *aliasing::_(forwardOutgoingEdges).push_back( new ForwardOutgoing(P,nu,L) );
+                                ReverseIncoming &rev = *aliasing::_(reverseIncomingEdges).push_back( new ReverseIncoming(L,nu,P) );
+                                aliasing::_(P.forward).append(fwd);
+                                aliasing::_(L.reverse).append(rev);
                             }
                         }
                     }

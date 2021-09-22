@@ -43,7 +43,10 @@ typedef ref_dlist<const NAME> NAME##Links;
             //! a vertex for the graph
             //
             //__________________________________________________________________
-            template <typename CLASS>
+            template <
+            typename CLASS,
+            typename FORWARD,
+            typename REVERSE>
             class Vertex  : public Object, public authority<const CLASS>
             {
             public:
@@ -78,8 +81,14 @@ typedef ref_dlist<const NAME> NAME##Links;
                     return (***this).name;
                 }
 
-                Vertex *next; //!< for list
-                Vertex *prev; //!< for list
+                //______________________________________________________________
+                //
+                // members
+                //______________________________________________________________
+                Vertex       *next;    //!< for list
+                Vertex       *prev;    //!< for list
+                const FORWARD forward; //!< forward links
+                const REVERSE reverse; //!< reverse links
 
             private:
                 Y_DISABLE_COPY_AND_ASSIGN(Vertex);
@@ -91,8 +100,8 @@ typedef ref_dlist<const NAME> NAME##Links;
             // aliases for vertices
             //
             //__________________________________________________________________
-            typedef Vertex<Lineage>     LineageVertex;   //!< alias
-            typedef Vertex<Primary>     PrimaryVertex;   //!< alias
+            typedef Vertex<Lineage,ForwardIncomingLinks,ReverseIncomingLinks>  LineageVertex;   //!< alias
+            typedef Vertex<Primary,ForwardOutgoingLinks,ReverseOutgoingLinks>  PrimaryVertex;   //!< alias
             typedef LineageVertex::List LineageVertices; //!< alias
             typedef PrimaryVertex::List PrimaryVertices; //!< alias
 
