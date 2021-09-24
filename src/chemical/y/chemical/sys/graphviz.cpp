@@ -11,15 +11,7 @@ namespace upsylon
     namespace Chemical
     {
 
-        template <typename ARR>
-        static inline void saveNodes(ios::ostream &fp,
-                                     const ARR    &arr)
-        {
-            for(size_t i=arr.size();i>0;--i)
-            {
-                arr[i]->vizSave(fp);
-            }
-        }
+
 
 
         static inline
@@ -32,8 +24,11 @@ namespace upsylon
         static inline
         void saveLinks(ios::ostream     &fp,
                        const Lineage    &l,
-                       const APPLIANCES &apps)
+                       const APPLIANCES &apps,
+                       const bool        boundedOnly)
         {
+            if(boundedOnly&&Flow::Endless==l.state) return;
+            
             for(const typename APPLIANCES::node_type *app=apps.head;app;app=app->next)
             {
                 const unit_t   nu = app->nu;
@@ -53,20 +48,50 @@ namespace upsylon
         }
 
 
-        void System:: graphViz(const string &fileName) const
+        void System:: graphViz(const string &fileName, const bool boundedOnly) const
         {
 
             {
                 ios::ocstream fp(fileName);
                 Vizible::enterDigraph(fp,"G");
-                saveNodes(fp,primary);
-                saveNodes(fp,lineage);
+                for(size_t i=1;i<=N;++i)
+                {
+                    const Primary &p = *primary[i];
+                    if(boundedOnly)
+                    {
+                        if(Flow::Bounded==p->state)
+                        {
+                            p.vizSave(fp);
+                        }
+                    }
+                    else
+                    {
+                        p.vizSave(fp);
+                    }
+                }
+
+                for(size_t j=1;j<=M;++j)
+                {
+                    const Lineage &l = *lineage[j];
+                    if(boundedOnly)
+                    {
+                        if(Flow::Bounded==l.state)
+                        {
+                            l.vizSave(fp);
+                        }
+                    }
+                    else
+                    {
+                        l.vizSave(fp);
+                    }
+                }
+
 
                 for(size_t j=M;j>0;--j)
                 {
                     const Lineage      &l  = *lineage[j];
-                    saveLinks(fp,l,l.consumers);
-                    saveLinks(fp,l,l.producers);
+                    saveLinks(fp,l,l.consumers,boundedOnly);
+                    saveLinks(fp,l,l.producers,boundedOnly);
                 }
                 
 

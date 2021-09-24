@@ -116,7 +116,7 @@ namespace upsylon
                 Library::Indent(os,indent) << ReplicaLeave << std::endl;
             }
 
-            void graphViz(const string &fileName) const;
+            void graphViz(const string &fileName,const bool boundedOnly=false) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
