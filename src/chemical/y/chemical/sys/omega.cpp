@@ -1,7 +1,6 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/kernel/apk.hpp"
 #include "y/mkl/kernel/gram-schmidt.hpp"
-#include "y/chemical/sys/stream.hpp"
 
 #include <iomanip>
 

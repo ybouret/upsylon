@@ -4,6 +4,7 @@
 
 #include "y/chemical/sys/lineage.hpp"
 #include "y/chemical/sys/replica.hpp"
+#include "y/core/rlinked.hpp"
 
 namespace upsylon
 {
@@ -11,6 +12,7 @@ namespace upsylon
     {
 
 
+        
         //______________________________________________________________________
         //
         //
