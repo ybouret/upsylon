@@ -89,7 +89,7 @@ namespace upsylon
             //__________________________________________________________________
             const Controls controls; //!< associated equilibria
             const size_t   involved; //!< associated species
-            void compile() const;
+            void compile(const Lineage::Array &lineage) const;
 
 
             //__________________________________________________________________

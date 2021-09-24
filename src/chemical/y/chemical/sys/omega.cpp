@@ -65,7 +65,7 @@ namespace upsylon
 
             for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
             {
-                cluster->compile();
+                cluster->compile(lineage);
             }
 
 

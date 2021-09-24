@@ -61,6 +61,7 @@ namespace upsylon
         lineage(M,as_capacity),
         replica(MR,as_capacity),
         NuB(Nu.rows,Nu.cols),
+        clusters(),
         Z(M,0),
         charged(false),
         Omega(Nc,Nc>0?M:0),
@@ -133,7 +134,7 @@ namespace upsylon
                 {
                     const Species &sp = ***node;
                     if(!sp.isReplica()) continue;
-                    const ENode           *en = eqs->head();
+                    const ENode               *en = eqs->head();
                     const iAccessible         &nu = NuT[sp.indx];
                     while(!nu[ (***en).indx] ) en = en->next;
                     const Replica::Pointer     rp = new Replica(sp,nu,en);
