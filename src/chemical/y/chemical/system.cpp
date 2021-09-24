@@ -207,7 +207,7 @@ namespace upsylon
 
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
-
+            
             graphViz("endless.dot",false);
             graphViz("bounded.dot",true);
             buildOmega();

@@ -118,6 +118,7 @@ namespace upsylon
                 Library::Indent(os,indent) << ReplicaLeave << std::endl;
             }
 
+            //! output a graphiz representation, with or without endless
             void graphViz(const string &fileName,const bool boundedOnly=false) const;
 
         private:

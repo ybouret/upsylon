@@ -18,6 +18,43 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
+#if 0
+            {
+                size_t boundedCount = 0;
+                for(size_t j=1;j<=M;++j)
+                {
+                    const Lineage &S = *lineage[j];
+                    const Species &s = *S;
+                    bool           process = false;
+                    switch(S.linkage)
+                    {
+                        case Intake:
+                        case Output:
+                        case Inside:
+                            assert(Flow::Bounded==S.state);
+                            process=true;
+                            break;
+
+                        case Single:
+                            assert(Flow::Bounded==S.state);
+                            break;
+
+                        case Siphon:
+                        case Source:
+                            assert(Flow::Endless==S.state);
+                            break;
+                    }
+                    if(!process) continue;
+                    ++boundedCount;
+                    std::cerr << "    d_t " << s << " = ";
+
+                    std::cerr << std::endl;
+
+                }
+                assert(MB==boundedCount);
+            }
+#endif
+
             if(Nc>0)
             {
                 iMatrix &Om      = aliasing::_(Omega);
@@ -65,11 +102,11 @@ namespace upsylon
                     apk::complete_ortho(Nu,Om);
                 }
 
-               // Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
-               // GramSchmidt::iOrtho(Om);
-                
+                // Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
+                // GramSchmidt::iOrtho(Om);
+
             }
-            
+
 
 
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
