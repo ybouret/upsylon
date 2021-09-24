@@ -64,13 +64,15 @@ namespace upsylon
             //__________________________________________________________________
             const Library       &lib;        //!< (frozen) library
             const Equilibria    &eqs;        //!< (frozen) equilibria
-            const size_t         N;          //!< eqs size
-            const size_t         M;          //!< lib size
+            const size_t         N;          //!< number of equilibria
+            const size_t         M;          //!< number of species
             const size_t         MW;         //!< working species [0..M]
             const size_t         Nc;         //!< complementary constraints
             const size_t         MP;         //!< primary species [0..M]
             const size_t         MR;         //!< replica species [0..M]
             const size_t         MS;         //!< spectators      [0..M]
+            const size_t         ME;         //!< endless working species
+            const size_t         MB;         //!< bounded working species
             const iMatrix        Nu;         //!< [NxM] topology
             const iMatrix        NuT;        //!< [MxN] Nu'
             const Primary::Array primary;    //!< [N]

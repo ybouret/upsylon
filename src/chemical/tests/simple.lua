@@ -1,3 +1,3 @@
 
-sys = { "@water", "@ethanoic", "@ammoniac" }
+sys = { "@water", "@ethanoic", "@ammoniac", "K+" }
 

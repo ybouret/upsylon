@@ -52,6 +52,8 @@ namespace upsylon
         MP( lib.countPrimary()  ),
         MR( lib.countReplica()  ),
         MS( lib.spectators()    ),
+        ME( 0 ),
+        MB( 0 ),
         Nu(N,N>0?M:0),
         NuT(Nu.cols,Nu.rows),
         primary(N,as_capacity),
@@ -144,10 +146,10 @@ namespace upsylon
             {
                 //--------------------------------------------------------------
                 //
-                // building strains
+                // building lineage
                 //
                 //--------------------------------------------------------------
-                Y_CHEMICAL_PRINTLN("  <Strains>");
+                Y_CHEMICAL_PRINTLN("  <Lineage>");
 
                 Y_CHEMICAL_PRINTLN("    <Building>");
                 for(const SNode *node=lib->head();node;node=node->next)
@@ -156,10 +158,7 @@ namespace upsylon
                     Lineage               *S = new Lineage(s);
                     { const Lineage::Pointer  tmp(S); aliasing::_(lineage).push_back_(tmp); }
                     const size_t           j = s.indx;
-                    if(0!=(aliasing::_(Z[j]) = s.charge))
-                    {
-                        aliasing::_(charged) = true;
-                    }
+
 
                     if(Verbosity) std::cerr << "      " << s << " #" << std::setw(3) << s.rating << " :";
 
@@ -174,9 +173,25 @@ namespace upsylon
                         }
                     }
                     S->finalize();
+                    if(s.rating>0)
+                    {
+                        if(0!=(aliasing::_(Z[j]) = s.charge))
+                        {
+                            aliasing::_(charged) = true;
+                        }
+                        switch(S->state)
+                        {
+                            case Flow::Endless: aliasing::incr(ME); break;
+                            case Flow::Bounded: aliasing::incr(MB); break;
+                        }
+                    }
                     if(Verbosity) std::cerr << " => " << S->stateText() << "/" << S->linkageText() << std::endl;
                 }
                 Y_CHEMICAL_PRINTLN("     Z = " << Z << " #charged=" << textual::boolean(charged) );
+                Y_CHEMICAL_PRINTLN("     ENDLESS = " << ME);
+                Y_CHEMICAL_PRINTLN("     BOUNDED = " << MB);
+                Y_CHEMICAL_PRINTLN("     SINGLE  = " << MS);
+                assert(MW==ME+MB);
                 Y_CHEMICAL_PRINTLN("    <Building/>");
 
                 Y_CHEMICAL_PRINTLN("    <Compiled>");
@@ -190,7 +205,7 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("    <Compiled/>");
 
 
-                Y_CHEMICAL_PRINTLN("  <Strains/>");
+                Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
 
             graphViz("endless.dot",false);
