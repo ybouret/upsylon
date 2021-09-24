@@ -18,6 +18,16 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
+            iMatrix NuB(Nu);
+            for(size_t j=M;j>0;--j)
+            {
+                if(lineage[j]->state==Flow::Endless)
+                {
+                    NuB.ld_col(j,0);
+                }
+            }
+
+
             {
                 size_t boundedCount = 0;
                 for(size_t j=1;j<=M;++j)
@@ -135,13 +145,14 @@ namespace upsylon
                     apk::complete_ortho(Nu,Om);
                 }
 
-                // Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
-                // GramSchmidt::iOrtho(Om);
+                //Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
+                //GramSchmidt::iOrtho(Om);
 
             }
 
             Y_CHEMICAL_PRINTLN("   Nu    = " << Nu);
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
+            Y_CHEMICAL_PRINTLN("   NuB   = " << NuB);
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
         }

@@ -17,7 +17,18 @@ namespace upsylon
         static inline
         void saveNu(ios::ostream &fp, const unit_t nu)
         {
-            fp("[label=\"%d\"\n]", int(nu));
+            fp(",label=\"%d\"\n", int(nu));
+        }
+
+        static inline void arrowProlog(ios::ostream &fp)
+        {
+            fp << '[';
+            fp<< "dir=both,arrowhead=normal,arrowtail=onormal";
+        }
+
+        static inline void arrowEpilog(ios::ostream &fp)
+        {
+            fp << ']';
         }
 
         template <typename APPLIANCES>
@@ -33,16 +44,20 @@ namespace upsylon
             {
                 const unit_t   nu = app->nu;
                 const Primary &p  = **app;
+
                 if(nu<0)
                 {
                     l.vizJoin(fp,&p);
+                    arrowProlog(fp);
                     if(nu< -1) saveNu(fp,-nu);
                 }
                 else
                 {
                     p.vizJoin(fp,&l);
+                    arrowProlog(fp);
                     if(nu>1) saveNu(fp,nu);
                 }
+                arrowEpilog(fp);
                 l.endl(fp);
             }
         }
@@ -75,10 +90,17 @@ namespace upsylon
                     const Lineage &l = *lineage[j];
                     if(boundedOnly)
                     {
-                        if(Flow::Bounded==l.state)
+                        switch(l.linkage)
                         {
-                            l.vizSave(fp);
+                            case Inside:
+                            case Intake:
+                            case Output:
+                                l.vizSave(fp);
+                                break;
+                            default:
+                                break;
                         }
+                        
                     }
                     else
                     {

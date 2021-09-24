@@ -1,6 +1,7 @@
 #include "y/chemical/system.hpp"
 #include "y/mkl/tao.hpp"
 #include "y/mkl/kernel/lu.hpp"
+#include "y/mkl/kernel/apk.hpp"
 #include "y/code/textual.hpp"
 #include <iomanip>
 
@@ -96,11 +97,11 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  NuT = " << NuT);
 
                 {
-                    Matrix Nu2(N,N);
-                    tao::gram(Nu2,Nu);
-                    if(!LU::build(Nu2))
+                    const size_t rankNu = apk::rank(Nu);
+                    Y_CHEMICAL_PRINTLN("  rankNu  = " << rankNu);
+                    if(rankNu<N)
                     {
-                        throw exception("%s has singular equilibria",CLID);
+                        throw exception("%s has singular equilibria (rank=%u/%u)",CLID, unsigned(rankNu), unsigned(N) );
                     }
                 }
 
