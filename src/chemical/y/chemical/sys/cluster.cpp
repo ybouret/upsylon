@@ -7,11 +7,11 @@ namespace upsylon
     using namespace mkl;
     namespace Chemical
     {
-        Cluster:: Component:: ~Component() throw()
+        Cluster:: Control:: ~Control() throw()
         {
         }
 
-        Cluster:: Component:: Component(const Primary &P, const iAccessible &NU) throw() :
+        Cluster:: Control:: Control(const Primary &P, const iAccessible &NU) throw() :
         Object(), authority<const Primary>(P),
         nu(NU), next(0), prev(0)
         {
@@ -20,7 +20,7 @@ namespace upsylon
 
         bool Cluster:: overlaps(const iAccessible &nu) const throw()
         {
-            for(const Component *comp=components.head;comp;comp=comp->next)
+            for(const Control *comp=controls.head;comp;comp=comp->next)
             {
                 if( tao::dot<unit_t>::of(nu,comp->nu) != 0 ) return true;
             }
@@ -33,6 +33,9 @@ namespace upsylon
 
 }
 
+#include "y/mkl/tao.hpp"
+#include "y/mkl/kernel/apk.hpp"
+
 namespace upsylon
 {
     namespace Chemical
@@ -41,13 +44,43 @@ namespace upsylon
         {
         }
 
-        Cluster:: Cluster() throw() : components() {}
+        Cluster:: Cluster() throw() :
+        controls(),
+        involved(0)
+        {}
         
         void Cluster:: grow(const Primary &p, const iAccessible &nu)
         {
-            aliasing::_(components).push_back( new Component(p,nu) );
+            aliasing::_(controls).push_back( new Control(p,nu) );
         }
 
+
+        void Cluster:: compile() const
+        {
+            assert(controls.size>0);
+            assert(0==involved);
+
+            const size_t N = controls.size;
+            const size_t M = controls.head->nu.size();
+
+            iMatrix Nu(N,M);
+            {
+                size_t i=1;
+                for(const Control *ctrl=controls.head;ctrl;ctrl=ctrl->next,++i)
+                {
+                    tao::set(Nu[i],ctrl->nu);
+                }
+            }
+            for(size_t j=M;j>0;--j)
+            {
+                for(size_t i=N;i>0;--i)
+                {
+                    if(Nu[i][j]) aliasing::incr(involved);
+                }
+            }
+            std::cerr << "localNu  = " << Nu << std::endl;
+            std::cerr << "involved = " << involved << std::endl;
+        }
     }
 }
 
@@ -65,7 +98,7 @@ namespace upsylon
         }
 
 
-        Cluster * Clusters:: init(const Primary &p, const iAccessible &nu)
+        Cluster * Clusters:: start(const Primary &p, const iAccessible &nu)
         {
             Cluster *cls = push_back( new Cluster() );
             cls->grow(p,nu);

@@ -14,8 +14,6 @@ namespace upsylon
 
         void System:: buildClusters()
         {
-            Y_CHEMICAL_PRINTLN("  <Clusters>");
-
             {
                 iMatrix &NuB_ = aliasing::_(NuB);
                 NuB_.assign(Nu);
@@ -36,7 +34,7 @@ namespace upsylon
             {
                 if( tao::mod2<unit_t>::of(NuB[i])>0)
                 {
-                    c = C.init(*primary[i],NuB[i]);
+                    c = C.start(*primary[i],NuB[i]);
                     break;
                 }
             }
@@ -54,15 +52,23 @@ namespace upsylon
                     }
                     else
                     {
-                        c = C.init(*primary[i],nu);
+                        c = C.start(*primary[i],nu);
                     }
                 }
             }
 
-
-
             Y_CHEMICAL_PRINTLN("    NuB  = " << NuB);
-            Y_CHEMICAL_PRINTLN("  <Clusters/>");
+            if(Verbosity)
+            {
+                clusters.display(std::cerr,2);
+            }
+
+            for(const Cluster *cluster=clusters.head;cluster;cluster=cluster->next)
+            {
+                cluster->compile();
+            }
+
+
 
         }
 
@@ -73,7 +79,7 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
-
+#if 0
             {
                 size_t boundedCount = 0;
                 for(size_t j=1;j<=M;++j)
@@ -143,6 +149,7 @@ namespace upsylon
                 }
                 assert(MB==boundedCount);
             }
+#endif
 
             if(Nc>0)
             {
@@ -194,14 +201,10 @@ namespace upsylon
                 //Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
                 //GramSchmidt::iOrtho(Om);
 
-
-
-
-
-
             }
 
             Y_CHEMICAL_PRINTLN("   Nu    = " << Nu);
+            Y_CHEMICAL_PRINTLN("   NuB   = " << NuB);
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
             Y_CHEMICAL_PRINTLN("  <Omega>");
 

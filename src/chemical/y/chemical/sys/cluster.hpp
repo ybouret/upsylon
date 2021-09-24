@@ -27,35 +27,47 @@ namespace upsylon
 
             //__________________________________________________________________
             //
-            //! a component is a primary with its topology
+            //! a control is a primary with its topology
             //__________________________________________________________________
-            class Component : public Object, public authority<const Primary>
+            class Control : public Object, public authority<const Primary>
             {
             public:
                 //______________________________________________________________
                 //
                 //  C++
                 //______________________________________________________________
-                explicit Component(const Primary &, const iAccessible &) throw(); //!< setup
-                virtual ~Component() throw();                                     //!< cleanup
+                explicit Control(const Primary &, const iAccessible &) throw(); //!< setup
+                virtual ~Control() throw();                                     //!< cleanup
 
                 //______________________________________________________________
                 //
                 //  members
                 //______________________________________________________________
                 const iAccessible &nu;    //!< bounded topology
-                Component         *next;  //!< for list
-                Component         *prev;  //!< for list
+                Control           *next;  //!< for list
+                Control           *prev;  //!< for list
+
+
+                //______________________________________________________________
+                //
+                //!  display
+                //______________________________________________________________
+                template <typename OSTREAM> inline
+                void display(OSTREAM &os, const size_t indent) const
+                {
+                    const Equilibrium &eq = ***this;
+                    Library::Indent(os,indent) << eq << " : " << nu << '\n';
+                }
 
             private:
-                Y_DISABLE_COPY_AND_ASSIGN(Component);
+                Y_DISABLE_COPY_AND_ASSIGN(Control);
             };
 
             //__________________________________________________________________
             //
             //! alias
             //__________________________________________________________________
-            typedef core::list_of_cpp<Component> Components;
+            typedef core::list_of_cpp<Control> Controls;
 
             //__________________________________________________________________
             //
@@ -75,9 +87,26 @@ namespace upsylon
             //
             // members
             //__________________________________________________________________
-            const Components components; //!< associated components
+            const Controls controls; //!< associated equilibria
+            const size_t   involved; //!< associated species
+            void compile() const;
 
 
+            //__________________________________________________________________
+            //
+            //!  display
+            //__________________________________________________________________
+            template <typename OSTREAM> inline
+            void display(OSTREAM &os, const size_t indent) const
+            {
+                Library::Indent(os,indent) << "<Cluster controls=" << controls.size << ">\n";
+                const size_t sub = indent+2;
+                for(const Control *ctrl=controls.head;ctrl;ctrl=ctrl->next)
+                {
+                    ctrl->display(os,sub);
+                }
+                Library::Indent(os,indent) << "<Cluster/>\n";
+            }
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Cluster);
@@ -117,7 +146,20 @@ namespace upsylon
             //! start a new cluster
             Cluster *start(const Primary &p, const iAccessible &nu);
 
+            //! display
+            template <typename OSTREAM> inline
+            void display(OSTREAM &os, const size_t indent) const
+            {
+                Library::Indent(os,indent) << "<Clusters count=" << size << ">\n";
 
+                const size_t sub = indent+2;
+                for(const Cluster *c=head;c;c=c->next)
+                {
+                    c->display(os,sub);
+                }
+
+                Library::Indent(os,indent) << "<Clusters/>\n";
+            }
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Clusters);
         };
