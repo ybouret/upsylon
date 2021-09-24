@@ -11,21 +11,67 @@ namespace upsylon
     namespace Chemical
     {
 
+
+        void System:: buildClusters()
+        {
+            Y_CHEMICAL_PRINTLN("  <Clusters>");
+
+            {
+                iMatrix &NuB_ = aliasing::_(NuB);
+                NuB_.assign(Nu);
+                for(size_t j=M;j>0;--j)
+                {
+                    if(lineage[j]->state==Flow::Endless)
+                    {
+                        NuB_.ld_col(j,0);
+                    }
+                }
+            }
+
+            Clusters  &C = aliasing::_(clusters);
+            size_t     i = 1;
+            Cluster   *c = NULL;
+
+            for(;i<=N;++i)
+            {
+                if( tao::mod2<unit_t>::of(NuB[i])>0)
+                {
+                    c = C.init(*primary[i],NuB[i]);
+                    break;
+                }
+            }
+
+            if(c)
+            {
+                for(++i;i<=N;++i)
+                {
+                    const iAccessible &nu = NuB[i];
+                    if(tao::mod2<unit_t>::of(nu)<=0) continue;
+
+                    if(c->overlaps(nu))
+                    {
+                        c->grow(*primary[i],nu);
+                    }
+                    else
+                    {
+                        c = C.init(*primary[i],nu);
+                    }
+                }
+            }
+
+
+
+            Y_CHEMICAL_PRINTLN("    NuB  = " << NuB);
+            Y_CHEMICAL_PRINTLN("  <Clusters/>");
+
+        }
+
         void System::buildOmega()
         {
 
 
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
-
-            iMatrix NuB(Nu);
-            for(size_t j=M;j>0;--j)
-            {
-                if(lineage[j]->state==Flow::Endless)
-                {
-                    NuB.ld_col(j,0);
-                }
-            }
 
 
             {
@@ -148,11 +194,15 @@ namespace upsylon
                 //Y_CHEMICAL_PRINTLN("   Omega0 = " << Omega);
                 //GramSchmidt::iOrtho(Om);
 
+
+
+
+
+
             }
 
             Y_CHEMICAL_PRINTLN("   Nu    = " << Nu);
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
-            Y_CHEMICAL_PRINTLN("   NuB   = " << NuB);
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
         }
