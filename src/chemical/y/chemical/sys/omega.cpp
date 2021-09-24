@@ -18,13 +18,12 @@ namespace upsylon
 
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
-#if 0
             {
                 size_t boundedCount = 0;
                 for(size_t j=1;j<=M;++j)
                 {
-                    const Lineage &S = *lineage[j];
-                    const Species &s = *S;
+                    const Lineage &S       = *lineage[j];
+                    const Species &s       = *S;
                     bool           process = false;
                     switch(S.linkage)
                     {
@@ -46,14 +45,48 @@ namespace upsylon
                     }
                     if(!process) continue;
                     ++boundedCount;
-                    std::cerr << "    d_t " << s << " = ";
+                    std::cerr << "    " << s << " = ";
+
+                    std::cerr << std::endl;
+                    for(const Consumer *app=S.consumers.head;app;app=app->next)
+                    {
+                        const unit_t       nu = app->nu;
+                        const Equilibrium &eq = ***app;
+                        std::cerr << "     |_consumed by " << eq << " @" << nu << std::endl;
+
+                        // look for each equilibria product
+                        for(const ANode *node = eq.prod->head();node;node=node->next)
+                        {
+                            const Actor   &prod = **node;
+                            const Lineage &from = *lineage[prod.sp.indx];
+                            if(from.state==Flow::Endless) continue;
+                            std::cerr << "       \\_producing " << prod << std::endl;
+                        }
+
+                    }
+
+                    for(const Producer *app=S.producers.head;app;app=app->next)
+                    {
+                        const unit_t       nu = app->nu;
+                        const Equilibrium &eq = ***app;
+                        std::cerr << "     |_produced by " << eq << " @" << nu << std::endl;
+
+                        // look for each equilibria reactant
+                        for(const ANode *node = eq.reac->head();node;node=node->next)
+                        {
+                            const Actor   &reac = **node;
+                            const Lineage &from = *lineage[reac.sp.indx];
+                            if(from.state==Flow::Endless) continue;
+                            std::cerr << "       \\_consuming " << reac << std::endl;
+                        }
+                    }
+
 
                     std::cerr << std::endl;
 
                 }
                 assert(MB==boundedCount);
             }
-#endif
 
             if(Nc>0)
             {
@@ -107,8 +140,7 @@ namespace upsylon
 
             }
 
-
-
+            Y_CHEMICAL_PRINTLN("   Nu    = " << Nu);
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
