@@ -45,14 +45,13 @@ namespace upsylon
             assert(nu!=0);
             assert(nu==p->stoichiometry(**this));
 
-            Appliance *app = new Appliance(nu,p);
             if(nu<0)
             {
-                aliasing::_(consumers).push_back(app);
+                aliasing::_(consumers).push_back( new Consumer(nu,p) );
             }
             else
             {
-                aliasing::_(producers).push_back(app);
+                aliasing::_(producers).push_back( new Producer(nu,p) );
             }
 
             if( p->state == Endless )

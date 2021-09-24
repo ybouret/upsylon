@@ -72,8 +72,8 @@ namespace upsylon
             // members
             //__________________________________________________________________
             const Linkage    linkage;   //!< once finalized, default is vacant
-            const Appliances consumers; //!<  is consumed by these equilibria
-            const Appliances producers; //!<  is produced by this equilibria
+            const Consumers  consumers; //!<  is consumed by these equilibria
+            const Producers  producers; //!<  is produced by these equilibria
 
             //__________________________________________________________________
             //
@@ -111,10 +111,10 @@ namespace upsylon
                 return os;
             }
 
-            template <typename OSTREAM> static inline
-            void dispApps(OSTREAM &os, const Appliances &apps)
+            template <typename OSTREAM, typename APPLIANCES> static inline
+            void dispApps(OSTREAM &os, const APPLIANCES &apps)
             {
-                for(const Appliance *app=apps.head;app;app=app->next)
+                for(const typename APPLIANCES::node_type *app=apps.head;app;app=app->next)
                 {
                     os << ' ' << vformat("(%d)",int(app->nu));
                     os << ***app;

@@ -114,6 +114,7 @@ namespace upsylon
                 Library::Indent(os,indent) << ReplicaLeave << std::endl;
             }
 
+            void graphViz(const string &fileName) const;
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(System);
@@ -122,7 +123,8 @@ namespace upsylon
             const Freezable::Latch eqsLatch;
 
             void buildOmega();
-            
+
+
 
         };
     }

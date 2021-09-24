@@ -17,7 +17,7 @@ namespace upsylon
         //______________________________________________________________________
         //
         //
-        //! Vizible object
+        //! Vizible based on Object
         //
         //______________________________________________________________________
         class gvObject : public Object, public Vizible

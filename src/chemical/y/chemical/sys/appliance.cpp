@@ -13,7 +13,6 @@ namespace upsylon
         Appliance:: Appliance(const unit_t coef, const Primary &self) throw() :
         Object(),
         authority<const Primary>(self),
-        dnode<Appliance>(),
         nu(coef)
         {
         }
@@ -21,3 +20,36 @@ namespace upsylon
     }
 }
 
+namespace upsylon
+{
+    namespace Chemical
+    {
+
+        Consumer:: ~Consumer() throw()
+        {
+        }
+
+        Consumer:: Consumer(const unit_t coef, const Primary &self) throw() :
+        Appliance(coef,self)
+        {
+        }
+
+    }
+}
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+
+        Producer:: ~Producer() throw()
+        {
+        }
+
+        Producer:: Producer(const unit_t coef, const Primary &self) throw() :
+        Appliance(coef,self)
+        {
+        }
+
+    }
+}

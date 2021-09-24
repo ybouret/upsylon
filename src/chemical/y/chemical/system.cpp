@@ -192,8 +192,11 @@ namespace upsylon
 
                 Y_CHEMICAL_PRINTLN("  <Strains/>");
             }
-            
+
+            graphViz("system.dot");
+
             buildOmega();
+
 
 
             Y_CHEMICAL_PRINTLN("<System/>");
