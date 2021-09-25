@@ -178,6 +178,11 @@ namespace upsylon
     {
         const char apk:: complete_ortho_fn[] = "apk::complete_ortho";
 
+        void apk:: reduce(addressable<apz> &arr)
+        {
+            (void)yap::compute_gcd::simplify(arr);
+        }
+        
         void apk:: complete_ortho_(const matrix<apz> &U,
                                    matrix<apz>       &V)
         {

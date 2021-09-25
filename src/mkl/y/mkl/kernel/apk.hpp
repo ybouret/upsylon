@@ -168,8 +168,46 @@ namespace upsylon
                 }
             }
 
+            
             static const char complete_ortho_fn[]; //!< "complete_ortho"
-
+            
+            static  void reduce(addressable<apz> &arr);
+            
+            template <typename T> static inline
+            bool compute_ortho_family(matrix<T>       &Q,
+                                      const matrix<T> &U)
+            {
+                const size_t dof = U.rows;
+                const size_t dim = U.cols;
+                matrix<apz>  P(dim,dim);
+                matrix<apz>  aU2(dof,dof);
+                const apz    dU2 = adjoint_gram(aU2,U);
+                if(0==dU2) return false;
+                {
+                    matrix<apz> aU3(dof,dim);
+                    tao::mmul(aU3,aU2,U);
+                    tao::mmul_ltrn(P,U,aU3);
+                }
+                for(size_t i=dim;i>0;--i)
+                {
+                    addressable<apz> &P_i = P[i];
+                    for(size_t j=dim;j>i;--j)
+                    {
+                        P_i[j]=-P_i[j];
+                    }
+                    P_i[i] = dU2 - P_i[i];
+                    for(size_t j=i-1;j>0;--j)
+                    {
+                        P_i[j]=-P_i[j];
+                    }
+                    reduce(P_i);
+                }
+                
+                convert(Q,P,"compute_ortho_family");
+                return true;
+            }
+            
+            
             //! complete U with an orthogonal generator V
             /**
              - compute the projection matrix P on U
