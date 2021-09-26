@@ -76,7 +76,6 @@ namespace upsylon
         {
 
 
-
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
 #if 0
