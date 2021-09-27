@@ -33,7 +33,13 @@ namespace upsylon
             // assuming balance primary is true
             if(MR>0)
             {
-                
+                iMatrix V(MR,N);
+                iMatrix U(N,MR);
+                for(size_t i=MR;i>0;--i) replica[i]->fill(V[i]);
+                U.assign_transpose(V);
+                std::cerr << "U=" << U << std::endl;
+                std::cerr << "V=" << V << std::endl;
+
             }
 
             if(Verbosity)
