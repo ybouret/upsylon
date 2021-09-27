@@ -57,7 +57,7 @@ namespace upsylon
             {
                 for(size_t i=1;i<=N;++i)
                 {
-                    Library::Indent(std::cerr,next) << **primary[i] << " : ";
+                    Library::Indent(std::cerr,next) << '@' << **primary[i] << " : ";
                     if(ok[i])
                     {
                         std::cerr << xi[i];

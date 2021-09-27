@@ -64,7 +64,8 @@ namespace upsylon
             {
                 static const ios::scribe & _ = ios::scribe::query<Accessible::type>();
                 prolog(os,indent);
-                const string value = _.write( &C[ (**this).indx] );
+                const double conc  = -C[ (**this).indx];
+                const string value = _.write( &conc );
                 os << " = " << value;
                 os << '\n';
             }

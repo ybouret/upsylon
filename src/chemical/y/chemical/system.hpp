@@ -78,7 +78,6 @@ namespace upsylon
             const Primary::Array primary;    //!< [N]
             const Lineage::Array lineage;    //!< [M]
             const Replica::Array replica;    //!< [MR]
-            const iMatrix        NuB;        //!< [NxM] bounded coefficients
             const iVector        Z;          //!< [M] vector of charges
             const bool           charged;    //!< |Z| != 0
             const iMatrix        Omega;      //!< [...xM]

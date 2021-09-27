@@ -120,7 +120,7 @@ namespace upsylon
                                const Actor *    &pA,
                                const Accessible &C) const throw();
 
-            //! ensure positivity of primary species after a valid shift
+            //! ensure positivity of primary species after a VALID shift
             void         ensurePositive(Addressable &C) const throw();
 
             //! can equilibrium accept a positive extent ?

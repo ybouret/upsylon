@@ -60,7 +60,6 @@ namespace upsylon
         primary(N,as_capacity),
         lineage(M,as_capacity),
         replica(MR,as_capacity),
-        NuB(Nu.rows,Nu.cols),
         Z(M,0),
         charged(false),
         Omega(Nc,Nc>0?M:0),

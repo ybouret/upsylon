@@ -41,7 +41,6 @@ Y_UTEST(sys)
     //Verbosity = false;
     System cs(lib,eqs,Equilibrium::Minimal);
 
-    return 0;
     Vector C(cs.M,0);
 
     for(size_t iter=0;iter<1;++iter)

@@ -72,7 +72,6 @@ namespace upsylon
             }
 
             Y_CHEMICAL_PRINTLN("   Nu    = " << Nu);
-            Y_CHEMICAL_PRINTLN("   NuB   = " << NuB);
             Y_CHEMICAL_PRINTLN("   Omega = " << Omega);
             Y_CHEMICAL_PRINTLN("  <Omega>");
 
