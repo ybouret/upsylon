@@ -61,6 +61,7 @@ Y_UTEST(sys)
             cs.showPrimary(std::cerr,C,2);
             cs.showReplica(std::cerr,C,2);
 
+            cs.balanceReplica(C);
 
         }
         else

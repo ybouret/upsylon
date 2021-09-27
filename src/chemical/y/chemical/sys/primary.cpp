@@ -117,6 +117,8 @@ namespace upsylon
     namespace Chemical
     {
 
+        
+
 
         Primary:: ~Primary() throw()
         {

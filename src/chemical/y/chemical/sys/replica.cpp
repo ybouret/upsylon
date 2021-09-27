@@ -21,7 +21,17 @@ namespace upsylon
         {
             assert(en_);
         }
-        
+
+        void Replica:: fill( iAddressable &v ) const throw()
+        {
+            for(const ENode *node=en;node;node=node->next)
+            {
+                const Equilibrium &E = ***node;
+                const size_t       i = E.indx;
+                v[i] = nu[i];
+            }
+        }
+
 
     }
 

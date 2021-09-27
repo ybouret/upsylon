@@ -208,14 +208,44 @@ namespace upsylon
 
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
-            
-            graphViz("endless.dot",false);
-            graphViz("bounded.dot",true);
 
+            if(false)
+            {
+                graphViz("endless.dot",false);
+                graphViz("bounded.dot",true);
+            }
+            
             //buildClusters();
             buildOmega();
 
+            {
+                iMatrix Nu1(Nu.rows,Nu.cols), Nu2(Nu.rows,Nu.cols);
 
+                for(const SNode *S = lib->head(); S; S=S->next)
+                {
+                    const Species &sp = ***S;
+                    const size_t   j  = sp.indx;
+                    for(const ENode *E = eqs->head(); E; E=E->next)
+                    {
+                        const Equilibrium &eq = ***E;
+                        const size_t       i  = eq.indx;
+                        if(Nu[i][j]!=0)
+                        {
+                            if(sp.rating>1)
+                            {
+                                Nu2[i][j] = Nu[i][j];
+                            }
+                            else
+                            {
+                                Nu1[i][j] = Nu[i][j];
+                            }
+                        }
+                    }
+                }
+                Y_CHEMICAL_PRINTLN("  Nu   = " << Nu);
+                Y_CHEMICAL_PRINTLN("  Nu1  = " << Nu1);
+                Y_CHEMICAL_PRINTLN("  Nu2  = " << Nu2);
+            }
 
             Y_CHEMICAL_PRINTLN("<System/>");
 
