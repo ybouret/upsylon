@@ -57,6 +57,7 @@ namespace upsylon
             //! balance primary constraints
             bool balancePrimary(Addressable &C) throw();
 
+            //! balance replica constraints
             bool balanceReplica(Addressable &C) throw();
 
             //__________________________________________________________________

@@ -6,7 +6,8 @@
 #include "y/code/textual.hpp"
 #include <iomanip>
 
-
+#include "y/counting/comb.hpp"
+#include "y/sort/sorted-sum.hpp"
 
 
 namespace upsylon
@@ -32,11 +33,7 @@ namespace upsylon
             // assuming balance primary is true
             if(MR>0)
             {
-                iMatrix V(MR,N);
-                Flags   go(N,false);
-                V.ld(0);
-                for(size_t j=MR;j>0;--j) replica[j]->fill(V[j]);
-                std::cerr << "V=" << V << std::endl;
+                
             }
 
             if(Verbosity)

@@ -171,9 +171,10 @@ namespace upsylon
             
             static const char compute_ortho_family_fn[]; //!< "compute_ortho_family"
 
-
+            //! simplify to integers
             static  void reduce(addressable<apz> &arr);
-            
+
+            //! compute a generating orthogonal family
             template <typename T> static inline
             bool compute_ortho_family(matrix<T>       &Q,
                                       const matrix<T> &U)
