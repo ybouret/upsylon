@@ -2,7 +2,7 @@
 #ifndef Y_CHEMICAL_SYSTEM_INCLUDED
 #define Y_CHEMICAL_SYSTEM_INCLUDED 1
 
-#include "y/chemical/sys/cluster.hpp"
+#include "y/chemical/sys/lineage.hpp"
 #include "y/chemical/sys/replica.hpp"
 #include "y/core/rlinked.hpp"
 
@@ -79,7 +79,6 @@ namespace upsylon
             const Lineage::Array lineage;    //!< [M]
             const Replica::Array replica;    //!< [MR]
             const iMatrix        NuB;        //!< [NxM] bounded coefficients
-            const Clusters       clusters;   //!< among NuB
             const iVector        Z;          //!< [M] vector of charges
             const bool           charged;    //!< |Z| != 0
             const iMatrix        Omega;      //!< [...xM]
