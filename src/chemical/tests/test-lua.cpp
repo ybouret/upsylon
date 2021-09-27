@@ -35,7 +35,7 @@ Y_UTEST(lua)
 
     System cs(lib,eqs,Equilibrium::Utterly);
 
-    return 0;
+    //return 0;
     
     Vector C(cs.M,0);
 
