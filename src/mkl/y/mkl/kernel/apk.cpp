@@ -176,13 +176,17 @@ namespace upsylon
 {
     namespace mkl
     {
-        const char apk:: complete_ortho_fn[] = "apk::complete_ortho";
 
+        const char apk:: compute_ortho_family_fn[] = "apk::compute_ortho_family";
+        
         void apk:: reduce(addressable<apz> &arr)
         {
             (void)yap::compute_gcd::simplify(arr);
         }
-        
+
+
+        const char apk:: complete_ortho_fn[] = "apk::complete_ortho";
+
         void apk:: complete_ortho_(const matrix<apz> &U,
                                    matrix<apz>       &V)
         {

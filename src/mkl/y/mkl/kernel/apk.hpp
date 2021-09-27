@@ -169,8 +169,9 @@ namespace upsylon
             }
 
             
-            static const char complete_ortho_fn[]; //!< "complete_ortho"
-            
+            static const char compute_ortho_family_fn[]; //!< "compute_ortho_family"
+
+
             static  void reduce(addressable<apz> &arr);
             
             template <typename T> static inline
@@ -180,14 +181,17 @@ namespace upsylon
                 const size_t dof = U.rows;
                 const size_t dim = U.cols;
                 matrix<apz>  P(dim,dim);
-                matrix<apz>  aU2(dof,dof);
-                const apz    dU2 = adjoint_gram(aU2,U);
-                if(0==dU2) return false;
+                apz          dU2 = 0;
                 {
                     matrix<apz> aU3(dof,dim);
-                    tao::mmul(aU3,aU2,U);
+                    {
+                        matrix<apz>  aU2(dof,dof);
+                        dU2 = adjoint_gram(aU2,U);
+                        tao::mmul(aU3,aU2,U);
+                    }
                     tao::mmul_ltrn(P,U,aU3);
                 }
+
                 for(size_t i=dim;i>0;--i)
                 {
                     addressable<apz> &P_i = P[i];
@@ -202,11 +206,15 @@ namespace upsylon
                     }
                     reduce(P_i);
                 }
-                
-                convert(Q,P,"compute_ortho_family");
+
+                convert(Q,P,compute_ortho_family_fn);
                 return true;
+
             }
-            
+
+
+            static const char complete_ortho_fn[]; //!< "complete_ortho"
+
             
             //! complete U with an orthogonal generator V
             /**
