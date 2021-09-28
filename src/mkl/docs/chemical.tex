@@ -91,17 +91,42 @@ Time constants are inverse of the eigenvalues of the matrix before $\vec{\xi}$.
 
 \section{Balancing}
 
-\subsection{Conditions}
 
- \begin{itemize}
-\item All species that are used only once in the system are \textbf{primary} species which offers single limiting extent for the equilibrium in which they
+\begin{itemize}
+\item All species that are used only once in the system are $M_P$ \textbf{primary} species which offers single limiting extent for the equilibrium in which they
 are involved.\\
 Solving such a constraint is achieved by carefully moving (a.k.a taking care of vanishing species of) each equilibrium corresponding to the primary constraint.
 
 \item All species that area used more than once in the system are \textbf{replica} species.
 \end{itemize}
 
-\subsection{Solving Replica}
+Algebraically, we can define:
+\begin{equation}
+\left\lbrace
+\begin{array}{rccl}
+	\bm{P_\ast} & \in & \mathcal{M}_{M_P,M}, & \text{the projection matrix on } \mathbb{R}^{M_P}\\
+	\bm{R_\ast} & \in & \mathcal{M}_{M_R,M}, & \text{the projection matrix on } \mathbb{R}^{M_R}\\
+\end{array}
+\right.
+\end{equation}
+And we obtain a set of inequations that must be solved together:
+\begin{equation}
+\left\lbrace
+\begin{array}{rcll}
+	(\bm{P_\ast}\vec{A}) + \underbrace{(\bm{P_\ast}\bm{\nu}^t)}_{\bm{\nu_P}^t \in \mathcal{M}_{M_P,N} } \vec{\xi} & \geq & \vec{0} & \in \mathbb{R}^{M_P}\\
+	\\
+	(\bm{R_\ast}\vec{A}) + \underbrace{(\bm{R_\ast}\bm{\nu}^t)}_{\bm{\nu_R}^t \in \mathcal{M}_{M_R,N}} \vec{\xi} & \geq & \vec{0} & \in \mathbb{R}^{M_R}\\
+	
+\end{array}
+\right.
+\end{equation}
+
+For the primary part:
+\begin{itemize}
+\item $M_P\geq N$: the number of primaries species is always greater or equal to the number of equilibria,
+\item we can solve the primary species chemically, using the limiting species per involved equilibrium
+%\item $\left(\bm{\nu_P} \bm{\nu_P}^t\right) \in \mathcal{M}_{M_P,M_P}$, is diagonal an invertible. 
+\end{itemize}
 
 
    
