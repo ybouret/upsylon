@@ -214,7 +214,9 @@ namespace upsylon
                 graphViz("endless.dot",false);
                 graphViz("bounded.dot",true);
             }
-            
+
+            graphViz("system.dot",false);
+
             //buildClusters();
             buildOmega();
 
