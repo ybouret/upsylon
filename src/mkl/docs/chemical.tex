@@ -91,55 +91,13 @@ Time constants are inverse of the eigenvalues of the matrix before $\vec{\xi}$.
 
 \section{Balancing}
 
-\subsection{Algebraic}
+ \begin{itemize}
+\item All species that are used only once in the system are \textbf{primary} species which offers single limiting extent for the equilibrium in which they
+are involved.\\
+Solving such a constraint is achieved by carefully moving (a.k.a taking care of vanishing species of) each equilibrium corresponding to the primary constraint.
 
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\vec{C} & = & \vec{A} +\bm{\nu}^t \vec{\xi} + \bm{\Omega}^t\vec{\lambda}\\
-	\bm{\nu}    & \in & \mathcal{M}_{N,M} \\
-	\bm{\Omega} & \in & \mathcal{M}_{M-N,M}\\
-	\bm{\nu}    & \perp & \bm{\Omega} \\
-\end{array}
-\right.
-\end{equation}
+\item All species that area used more than once in the system are \textbf{replica} species.
+\end{itemize}
 
-Let $\phi(C)$ be a positivity indicator function:
-\begin{equation}
-\left\lbrace
-\begin{array}{rcl}
-	\phi(C\leq0) & > & 0\\
-	\phi(C>0)    & = & 0\\
-\end{array}
-\right.
-\text{ and }
-\left\lbrace
-\begin{array}{rcl}
-	\phi'(C\leq0) & < & 0\\
-	\phi'(C>0)    & = & 0\\
-\end{array}
-\right.
-\end{equation}
-
-
-Since $C_j = A_j + \vec{v}_j \cdot \vec{\xi}$, we want:
-\begin{equation}
-	\forall j, \;\; \phi\left(A_j+\vec{v}_j \cdot \vec{\xi}\right) = 0
-\end{equation}
-We want to minimize:
-\begin{equation}
-	\Phi\left(\vec{\xi}\right) = \sum_{j} w_j \phi\left(A_j+\vec{v}_j \cdot \vec{\xi}\right)
-\end{equation}
-
-\begin{equation}
-\partial_{\vec{\xi}}\,\Phi =  \sum_{j} w_j \phi'(A_j) \vec{v}_j = 
-\bm{\nu}
-\begin{bmatrix}
-	w_1 \phi'(A_1)  \\
-    \vdots & \\
-   w_M \phi'(A_M)  \\
-\end{bmatrix}
-\end{equation}
-
-  
+   
 \end{document}
