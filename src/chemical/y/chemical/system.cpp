@@ -230,22 +230,25 @@ namespace upsylon
 
                 for(size_t j=1,jp=0,jr=0;j<=M;++j)
                 {
-
-#if 1
                     switch( (**lineage[j]).rating )
                     {
                         case 0: break;
                         case 1:  aliasing::_(Pproj[++jp][j]) = 1; break;
                         default: aliasing::_(Rproj[++jr][j]) = 1; break;
                     }
-#endif
                 }
 
-                tao::mmul( aliasing::_(NuPT),Pproj,NuT);
-                aliasing::_(NuP).assign_transpose(NuPT);
+                if(MP)
+                {
+                    tao::mmul( aliasing::_(NuPT),Pproj,NuT);
+                    aliasing::_(NuP).assign_transpose(NuPT);
+                }
 
-                tao::mmul( aliasing::_(NuRT),Rproj,NuT);
-                aliasing::_(NuR).assign_transpose(NuRT);
+                if(MR)
+                {
+                    tao::mmul( aliasing::_(NuRT),Rproj,NuT);
+                    aliasing::_(NuR).assign_transpose(NuRT);
+                }
 
                 Y_CHEMICAL_PRINTLN("    Nu    = " << Nu);
                 Y_CHEMICAL_PRINTLN("    NuT   = " << NuT);
@@ -255,7 +258,7 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("    NuPT  = " << NuPT);
                 Y_CHEMICAL_PRINTLN("    NuR   = " << NuR);
                 Y_CHEMICAL_PRINTLN("    NuRT  = " << NuRT);
-
+                
 
                 Y_CHEMICAL_PRINTLN("  <Projection/>");
 
