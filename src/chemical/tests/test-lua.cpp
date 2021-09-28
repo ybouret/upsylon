@@ -53,10 +53,6 @@ Y_UTEST(lua)
         if(cs.balancePrimary(C))
         {
             lib.display(std::cerr << "success = ",C) << std::endl;
-
-            cs.showPrimary(std::cerr,C,2);
-            cs.showReplica(std::cerr,C,2);
-
             cs.balanceReplica(C);
 
         }
