@@ -56,10 +56,16 @@ namespace upsylon
         ME( 0 ),
         MB( 0 ),
         Nu(N,N>0?M:0),
-        NuT(Nu.cols,Nu.rows),
+        NuT(Nu,matrix_transpose),
         primary(N,as_capacity),
         lineage(M,as_capacity),
         replica(MR,as_capacity),
+        Pproj(MP,MP>0?M:0),
+        Rproj(MR,MR>0?M:0),
+        NuP(MP>0?N:0,MP),
+        NuPT(NuP,matrix_transpose),
+        NuR(MR>0?N:0,MR),
+        NuRT(NuR,matrix_transpose),
         Z(M,0),
         charged(false),
         Omega(Nc,Nc>0?M:0),
@@ -105,6 +111,8 @@ namespace upsylon
                     }
                 }
 
+
+
                 //--------------------------------------------------------------
                 //
                 // building primary
@@ -144,6 +152,7 @@ namespace upsylon
 
             }
 
+            if(true)
             {
                 //--------------------------------------------------------------
                 //
@@ -209,6 +218,49 @@ namespace upsylon
                 Y_CHEMICAL_PRINTLN("  <Lineage/>");
             }
 
+
+            if(true)
+            {
+                //--------------------------------------------------------------
+                //
+                // building projection
+                //
+                //--------------------------------------------------------------
+                Y_CHEMICAL_PRINTLN("  <Projection>");
+
+                for(size_t j=1,jp=0,jr=0;j<=M;++j)
+                {
+
+#if 1
+                    switch( (**lineage[j]).rating )
+                    {
+                        case 0: break;
+                        case 1:  aliasing::_(Pproj[++jp][j]) = 1; break;
+                        default: aliasing::_(Rproj[++jr][j]) = 1; break;
+                    }
+#endif
+                }
+
+                tao::mmul( aliasing::_(NuPT),Pproj,NuT);
+                aliasing::_(NuP).assign_transpose(NuPT);
+
+                tao::mmul( aliasing::_(NuRT),Rproj,NuT);
+                aliasing::_(NuR).assign_transpose(NuRT);
+
+                Y_CHEMICAL_PRINTLN("    Nu    = " << Nu);
+                Y_CHEMICAL_PRINTLN("    NuT   = " << NuT);
+                Y_CHEMICAL_PRINTLN("    Pproj = " << Pproj);
+                Y_CHEMICAL_PRINTLN("    Rproj = " << Rproj);
+                Y_CHEMICAL_PRINTLN("    NuP   = " << NuP);
+                Y_CHEMICAL_PRINTLN("    NuPT  = " << NuPT);
+                Y_CHEMICAL_PRINTLN("    NuR   = " << NuR);
+                Y_CHEMICAL_PRINTLN("    NuRT  = " << NuRT);
+
+
+                Y_CHEMICAL_PRINTLN("  <Projection/>");
+
+            }
+
             if(false)
             {
                 graphViz("endless.dot",false);
@@ -219,35 +271,7 @@ namespace upsylon
 
             //buildClusters();
             buildOmega();
-
-            {
-                iMatrix Nu1(Nu.rows,Nu.cols), Nu2(Nu.rows,Nu.cols);
-
-                for(const SNode *S = lib->head(); S; S=S->next)
-                {
-                    const Species &sp = ***S;
-                    const size_t   j  = sp.indx;
-                    for(const ENode *E = eqs->head(); E; E=E->next)
-                    {
-                        const Equilibrium &eq = ***E;
-                        const size_t       i  = eq.indx;
-                        if(Nu[i][j]!=0)
-                        {
-                            if(sp.rating>1)
-                            {
-                                Nu2[i][j] = Nu[i][j];
-                            }
-                            else
-                            {
-                                Nu1[i][j] = Nu[i][j];
-                            }
-                        }
-                    }
-                }
-                Y_CHEMICAL_PRINTLN("  Nu   = " << Nu);
-                Y_CHEMICAL_PRINTLN("  Nu1  = " << Nu1);
-                Y_CHEMICAL_PRINTLN("  Nu2  = " << Nu2);
-            }
+            
 
             Y_CHEMICAL_PRINTLN("<System/>");
 
