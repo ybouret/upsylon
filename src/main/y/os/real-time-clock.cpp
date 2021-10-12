@@ -31,7 +31,7 @@ namespace upsylon
         Y_GIANT_LOCK();
         mach_timebase_info_data_t timebase;
         const kern_return_t err = mach_timebase_info(&timebase);
-        if(err != KERN_SUCCESS)
+        if(KERN_SUCCESS!=err)
         {
             throw imported::exception("mach_timebase_info","%s",mach_error_string(err));
         }
