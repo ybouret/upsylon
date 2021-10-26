@@ -185,6 +185,8 @@ namespace upsylon
 
         natural natural:: mod_exp( const natural &B, const natural &E, const natural &N )
         {
+            static const uint8_t bits_table[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+
             if(N.bytes<=0)
                 throw libc::exception( EDOM, "natural::mod_exp %% 0");
 
@@ -198,7 +200,7 @@ namespace upsylon
                 for(size_t i=0; i<nbit; ++i)
                 {
 
-                    if( E.get(i>>3) & bits_table::value[ (i&0x7) ] )
+                    if( E.get(i>>3) & bits_table[ (i&0x7) ] )
                     {
                         //______________________________________________________
                         //
@@ -222,7 +224,7 @@ namespace upsylon
                 //
                 //-- most significant bit !
                 //__________________________________________________________
-                assert( (E.get(nbit>>3) & bits_table::value[ (nbit&7) ]) != 0 );
+                assert( (E.get(nbit>>3) & bits_table[ (nbit&7) ]) != 0 );
 
                 //__________________________________________________________
                 //
