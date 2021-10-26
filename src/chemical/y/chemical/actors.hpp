@@ -71,8 +71,12 @@ namespace upsylon
             size_t tellLeading() const throw();                //!< count leading here
             void   fillLeading(sequence<const Actor> &) const; //!< append leading
 
-            //! Prod(C[j]^nu[j])
+            //! Prod_j C[j]^nu[j]
             double massAction(double res, const Accessible &C) const throw();
+
+            //!
+            void massActionJ(const double ini,Addressable &J, const Accessible &C) const throw();
+
 
 
         private:

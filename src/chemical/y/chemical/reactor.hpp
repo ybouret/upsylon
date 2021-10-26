@@ -31,8 +31,16 @@ namespace upsylon
             const iMatrix        Nu;         //!< [NxM] topology
             const iMatrix        NuT;        //!< [MxN] Nu'
             const iVector        Z;          //!< [M] vector of charges
+            Vector               K;          //!< [N]
+            Vector               Gamma;      //!< [N] equilibria
+            Matrix               J;          //!< [NxM] jacobian of Gamma
             const bool           charged;    //!< |Z| != 0
-            
+
+
+            void loadK(const double t);
+            void computeGamma(const Accessible &C) throw();
+            void computeGammaAndJ(const Accessible &C) throw();
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Reactor);
             const Freezable::Latch libLatch;

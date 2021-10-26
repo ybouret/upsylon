@@ -151,6 +151,10 @@ namespace upsylon
             //! compute Gamma = Kvalue * reac.massAction - prod.massAction
             double Gamma(const Accessible &C, const double Kvalue) const throw();
 
+            //! compute dGamma/dC
+            void dGamma(Addressable &J, const Accessible &C, const double Kvalue) const throw();
+
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);

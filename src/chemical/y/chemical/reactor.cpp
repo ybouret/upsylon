@@ -34,12 +34,15 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu,matrix_transpose),
         Z(M,0),
+        K(N,0),
+        Gamma(N,0),
+        J(Nu.rows,Nu.cols),
         charged(false),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
         {
             
-            Y_CHEMICAL_PRINTLN("<System>");
+            Y_CHEMICAL_PRINTLN("<Reactor>");
             Y_CHEMICAL_PRINTLN("  N   = " << std::setw(3) << N  << " # equilibria");
             Y_CHEMICAL_PRINTLN("  M   = " << std::setw(3) << M  << " # species");
             Y_CHEMICAL_PRINTLN("  MW  = " << std::setw(3) << MW << " # working species");
@@ -72,9 +75,48 @@ namespace upsylon
                 }
                 
             }
-            
+
+
+            Y_CHEMICAL_PRINTLN("<Reactor/>");
+
         }
-        
+
+
+        void Reactor:: loadK(const double t)
+        {
+            for(const ENode *en = eqs->head();en;en=en->next)
+            {
+                const Equilibrium &eq = ***en;
+                const size_t       i  = eq.indx;
+                K[i] = eq.K(t);
+            }
+        }
+
+        void Reactor:: computeGamma(const Accessible &C) throw()
+        {
+            for(const ENode *en = eqs->head();en;en=en->next)
+            {
+                const Equilibrium &eq = ***en;
+                const size_t       i  = eq.indx;
+                Gamma[i] = eq.Gamma(C,K[i]);
+            }
+        }
+
+        void Reactor:: computeGammaAndJ(const Accessible &C) throw()
+        {
+            J.ld(0);
+            for(const ENode *en = eqs->head();en;en=en->next)
+            {
+                const Equilibrium &eq = ***en;
+                const size_t       i  = eq.indx;
+                const double       Ki = K[i];
+                Gamma[i] = eq.Gamma(C,Ki);
+                eq.dGamma(J[i],C,Ki);
+            }
+        }
+
+
+
     }
     
 }

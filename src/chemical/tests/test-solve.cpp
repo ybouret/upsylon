@@ -1,6 +1,5 @@
 
-#include "y/utest/run.hpp"
-#include "y/chemical/system.hpp"
+#include "y/chemical/reactor.hpp"
 #include "y/chemical/lua/eqs.hpp"
 #include "y/utest/run.hpp"
 #include "y/mkl/tao.hpp"
@@ -20,10 +19,23 @@ Y_UTEST(solve)
     }
 
     
-    System cs(lib,eqs,Equilibrium::Utterly);
-    
-    
-    
+    Reactor cs(lib,eqs,Equilibrium::Utterly);
+    Vector  C(cs.M,0);
+
+    lib.drawC(C,alea);
+
+    lib.display(std::cerr,C);
+
+
+    cs.loadK(0.0);
+    cs.computeGamma(C);
+    std::cerr << "K="     << cs.K << std::endl;
+    std::cerr << "Gamma=" << cs.Gamma << std::endl;
+    cs.computeGammaAndJ(C);
+    std::cerr << "Gamma=" << cs.Gamma << std::endl;
+    std::cerr << "J=" << cs.J << std::endl;
+
+
     
     
 }

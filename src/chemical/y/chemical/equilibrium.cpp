@@ -152,6 +152,11 @@ namespace upsylon
             return reac.massAction(Kvalue,C) - prod.massAction(1.0,C);
         }
 
+        void Equilibrium:: dGamma(Addressable &J, const Accessible &C, const double Kvalue) const throw()
+        {
+            reac.massActionJ(Kvalue,J,C);
+            prod.massActionJ(-1.0,J,C);
+        }
 
     }
     

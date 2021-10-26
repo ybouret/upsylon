@@ -1,4 +1,5 @@
 #include "y/chemical/actors.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {
@@ -76,6 +77,29 @@ namespace upsylon
             }
             return res;
         }
+
+        void Actors:: massActionJ(const double ini, Addressable &J, const Accessible &C) const throw()
+        {
+
+            for(const ANode *node=adb.head();node;node=node->next)
+            {
+                const Actor &a    = **node;
+                const size_t j    = a.sp.indx;
+                double       res  = ini * a.nu * ipower<double>(C[j],a.nu1);
+                for(const ANode *other=node->prev;other;other=other->prev)
+                {
+                    res *= (**other).massAction(C);
+                }
+                for(const ANode *other=node->next;other;other=other->next)
+                {
+                    res *= (**other).massAction(C);
+                }
+                J[j] = res;
+            }
+
+
+        }
+
 
     }
     
