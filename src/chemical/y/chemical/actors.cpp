@@ -67,7 +67,16 @@ namespace upsylon
             }
         }
 
-        
+        double Actors:: massAction(double res, const Accessible &C) const throw()
+        {
+            for(const ANode *node=adb.head();node;node=node->next)
+            {
+                const Actor &a = **node;
+                res *= a.massAction(C);
+            }
+            return res;
+        }
+
     }
     
 }

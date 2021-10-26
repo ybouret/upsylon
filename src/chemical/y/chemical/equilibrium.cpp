@@ -147,6 +147,12 @@ namespace upsylon
         }
 
 
+        double Equilibrium:: Gamma(const Accessible &C, const double Kvalue) const throw()
+        {
+            return reac.massAction(Kvalue,C) - prod.massAction(1.0,C);
+        }
+
+
     }
     
 }

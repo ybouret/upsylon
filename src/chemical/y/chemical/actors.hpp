@@ -68,9 +68,12 @@ namespace upsylon
                 }
             }
             
-
             size_t tellLeading() const throw();                //!< count leading here
             void   fillLeading(sequence<const Actor> &) const; //!< append leading
+
+            //! Prod(C[j]^nu[j])
+            double massAction(double res, const Accessible &C) const throw();
+
 
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Actors);

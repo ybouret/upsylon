@@ -1,5 +1,6 @@
 
 #include "y/chemical/actor.hpp"
+#include "y/core/ipower.hpp"
 
 namespace upsylon
 {
@@ -41,6 +42,11 @@ namespace upsylon
                 return string(' ');
             }
 
+        }
+
+        double Actor:: massAction(const Accessible &C) const throw()
+        {
+            return ipower<double>(C[sp.indx],nu);
         }
 
     }

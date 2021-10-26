@@ -56,7 +56,7 @@ namespace upsylon
 
             //! nu or empty
             string nuString() const;
-
+            double massAction(const Accessible &C) const throw();
 
             //__________________________________________________________________
             //
@@ -66,8 +66,8 @@ namespace upsylon
             const size_t   nu;   //!< coefficient > 0
             const size_t   nu1;  //!< nu-1
             const unit_t   snu;  //!< signed nu >0
-            
-            
+
+
             
         private:
             Y_DISABLE_ASSIGN(Actor);

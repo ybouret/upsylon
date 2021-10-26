@@ -148,6 +148,9 @@ namespace upsylon
                 return display_raw(os) << " (" << Kstr(t) << ")";
             }
 
+            double Gamma(const Accessible &C, const double Kvalue) const throw();
+
+
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibrium);
             static size_t CountPrimary(const Actors &) throw();
