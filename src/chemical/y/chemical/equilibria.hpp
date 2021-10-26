@@ -138,6 +138,10 @@ namespace upsylon
             }
             
             
+            void fillGamma(Addressable &Gamma, const Accessible &K, const Accessible &C);
+            
+            
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Equilibria);
             virtual const_type& bulk() const throw();

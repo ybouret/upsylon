@@ -156,3 +156,21 @@ namespace upsylon
         
     }
 }
+
+namespace upsylon
+{
+    namespace Chemical
+    {
+        void Equilibria:: fillGamma(Addressable &Gamma, const Accessible &K, const Accessible &C)
+        {
+            for(const ENode *node=edb.head();node;node=node->next)
+            {
+                const Equilibrium &eq = ***node;
+                const size_t       ei = eq.indx;
+                Gamma[ei] = eq.Gamma(C,K[ei]);
+            }
+        }
+
+    }
+}
+

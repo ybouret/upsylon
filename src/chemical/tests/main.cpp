@@ -10,5 +10,6 @@ Y_UTEST_INIT(16)
     Y_UTEST(sys);
     Y_UTEST(lua);
     Y_UTEST(torture);
+    Y_UTEST(solve);
 }
 Y_UTEST_EXEC()

@@ -148,6 +148,7 @@ namespace upsylon
                 return display_raw(os) << " (" << Kstr(t) << ")";
             }
 
+            //! compute Gamma = Kvalue * reac.massAction - prod.massAction
             double Gamma(const Accessible &C, const double Kvalue) const throw();
 
 

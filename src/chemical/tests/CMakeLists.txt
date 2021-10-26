@@ -16,7 +16,7 @@ ADD_TEST(sys     test-chemical sys)
 ADD_TEST(simple  test-chemical lua ${HERE}/simple.lua)
 ADD_TEST(hairy   test-chemical lua ${HERE}/hairy.lua)
 ADD_TEST(replica test-chemical lua ${HERE}/replica.lua)
-
+ADD_TEST(solve   test-chemical solve)
 
 ADD_CUSTOM_TARGET(utest-chemical
 COMMAND ${CMAKE_CTEST_COMMAND} -C $<CONFIG>
