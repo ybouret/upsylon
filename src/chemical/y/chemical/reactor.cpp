@@ -119,6 +119,18 @@ namespace upsylon
             }
         }
 
+        void Reactor:: computeJ(const Accessible &C) throw()
+        {
+            J.ld(0);
+            for(const ENode *en = eqs->head();en;en=en->next)
+            {
+                const Equilibrium &eq = ***en;
+                const size_t       i  = eq.indx;
+                const double       Ki = K[i];
+                eq.dGamma(J[i],C,Ki);
+            }
+        }
+
         void Reactor:: computeGammaAndJ(const Accessible &C) throw()
         {
             J.ld(0);
@@ -136,18 +148,17 @@ namespace upsylon
         {
             computeGammaAndJ(C);
             tao::mmul(JNuT,J,NuT);
-            std::cerr << "JNuT=" << JNuT << std::endl;
             return LU::build(JNuT);
         }
 
         bool Reactor:: computeFullStep() throw()
         {
-
             if(computeImpulse(startC))
             {
                 tao::neg(xi,Gamma);
                 LU::solve(JNuT,xi);
                 std::cerr << "Gamma=" << Gamma << std::endl;
+                std::cerr << "J=" << J << std::endl;
                 std::cerr << "xi=" << xi << std::endl;
                 tao::mul(deltaC,NuT,xi);
                 std::cerr << "dC=" << deltaC << std::endl;
@@ -164,6 +175,8 @@ namespace upsylon
 
         bool Reactor:: solve(Addressable &C)
         {
+            if(MW<=0) return true;
+
             // C -> startC
             for(size_t j=M;j>0;--j)
             {
@@ -239,13 +252,19 @@ namespace upsylon
 
         bool Reactor:: damp(Addressable &rate, const Addressable &C)
         {
-            if(!computeImpulse(C))
+            computeJ(C);
+            std::cerr << "J=" << J << std::endl;
+            tao::mmul(JNuT,J,NuT);
+            if(!LU::build(JNuT))
             {
                 return false;
             }
             else
             {
-
+                tao::mul(xi,J,rate);
+                LU::solve(JNuT,xi);
+                tao::mul(deltaC,NuT,xi);
+                tao::sub(rate,deltaC);
                 return true;
             }
 

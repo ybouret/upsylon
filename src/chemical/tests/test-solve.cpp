@@ -36,9 +36,20 @@ Y_UTEST(solve)
     std::cerr << "Gamma=" << cs.Gamma << std::endl;
     std::cerr << "J=" << cs.J << std::endl;
 
-    cs.solve(C);
+    if(!cs.solve(C))
+    {
+        std::cerr << "singular system" << std::endl;
+    }
 
-    
+    Vector rate(cs.M,0);
+    lib.drawC(rate,alea);
+
+    std::cerr << "rate = " << rate << std::endl;
+    cs.damp(rate,C);
+    std::cerr << "damp = " << rate << std::endl;
+
+    mkl::tao::mul(cs.xi,cs.J,rate);
+    std::cerr << "residual=" << cs.xi << std::endl;
     
     
 }

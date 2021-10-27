@@ -45,6 +45,7 @@ namespace upsylon
 
             void loadK(const double t);                         //!< load constants at time t
             void computeGamma(const Accessible &C) throw();     //!< compute Gamma for pre-computed K
+            void computeJ(const Accessible &C)     throw();     //!< compute J for pre-computed K
             void computeGammaAndJ(const Accessible &C) throw(); //!< compute Gamma and J for pre-computed K
             bool computeImpulse(const Accessible &C) throw();   //!< compute LU decomp of (J*NuT) for pre-computed K
             bool computeFullStep() throw(); //! @startC
