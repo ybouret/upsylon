@@ -36,7 +36,9 @@ Y_UTEST(solve)
     std::cerr << "Gamma=" << cs.Gamma << std::endl;
     std::cerr << "J=" << cs.J << std::endl;
 
+    cs.solve(C);
 
+    
     
     
 }

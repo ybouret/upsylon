@@ -1,6 +1,7 @@
 
 #include "y/chemical/reactor.hpp"
 #include "y/mkl/kernel/apk.hpp"
+#include "y/mkl/kernel/lu.hpp"
 #include <iomanip>
 
 namespace upsylon
@@ -34,9 +35,15 @@ namespace upsylon
         Nu(N,N>0?M:0),
         NuT(Nu,matrix_transpose),
         Z(M,0),
+        active(M,false),
         K(N,0),
         Gamma(N,0),
         J(Nu.rows,Nu.cols),
+        JNuT(N,N),
+        xi(N,0),
+        startC(M,0),
+        deltaC(M,0),
+        trialC(M,0),
         charged(false),
         libLatch( aliasing::_(lib) ),
         eqsLatch( aliasing::_(eqs) )
@@ -73,7 +80,17 @@ namespace upsylon
                         throw exception("%s has singular equilibria (rank=%u/%u)",CLID, unsigned(rankNu), unsigned(N) );
                     }
                 }
-                
+
+
+            }
+
+            for(const SNode *node=lib->head();node;node=node->next )
+            {
+                const Species &sp = ***node;
+                if(sp.rating>0)
+                {
+                    aliasing::_(active[sp.indx]) = true;
+                }
             }
 
 
@@ -115,7 +132,125 @@ namespace upsylon
             }
         }
 
+        bool Reactor:: computeImpulse(const Accessible &C) throw()
+        {
+            computeGammaAndJ(C);
+            tao::mmul(JNuT,J,NuT);
+            std::cerr << "JNuT=" << JNuT << std::endl;
+            return LU::build(JNuT);
+        }
 
+        bool Reactor:: computeFullStep() throw()
+        {
+
+            if(computeImpulse(startC))
+            {
+                tao::neg(xi,Gamma);
+                LU::solve(JNuT,xi);
+                std::cerr << "Gamma=" << Gamma << std::endl;
+                std::cerr << "xi=" << xi << std::endl;
+                tao::mul(deltaC,NuT,xi);
+                std::cerr << "dC=" << deltaC << std::endl;
+                std::cerr << "C =" << startC << std::endl;
+                return true;
+            }
+            else
+            {
+                std::cerr << "singular C=" << startC << std::endl;
+                return true;
+            }
+        }
+
+
+        bool Reactor:: solve(Addressable &C)
+        {
+            // C -> startC
+            for(size_t j=M;j>0;--j)
+            {
+                startC[j] = C[j]; assert( !(active[j] && C[j]<=0) );
+            }
+
+        STEP:
+            if(!computeFullStep())
+            {
+                // singular composition
+                return false;
+            }
+            else
+            {
+                if( tao::mod2<double>::of(deltaC) <= 0)
+                {
+                    // success!
+                    std::cerr << "null step :)" << std::endl;
+                    return true;
+                }
+                // first step found
+                double factor = 1.0;
+
+            EVAL:
+                std::cerr << "factor=" << factor << std::endl;
+                {
+                    double stp2 = 0;
+                    for(size_t j=M;j>0;--j)
+                    {
+                        const double stp = factor * deltaC[j];
+                        stp2 += stp*stp;
+                        trialC[j] = startC[j] + stp;
+                    }
+
+                    if(stp2<=0)
+                    {
+                        std::cerr << "stuck" << std::endl;
+                        return false;
+                    }
+
+                    for(size_t j=M;j>0;--j)
+                    {
+                        if(active[j] && trialC[j]<0)
+                        {
+                            factor *= 0.5;
+                            goto EVAL;
+                        }
+                    }
+                }
+
+
+                bool converged = true;
+                for(size_t j=M;j>0;--j)
+                {
+                    if(active[j])
+                    {
+                        const double dC = fabs(trialC[j]-startC[j]);
+                        if( dC > fabs(startC[j]) * numeric<double>::sqrt_ftol )
+                        {
+                            converged = false;
+                        }
+                        startC[j] = trialC[j];
+                    }
+                }
+
+                if(!converged)
+                    goto STEP;
+
+                std::cerr << "converged" << std::endl;
+                return true;
+            }
+        }
+
+        bool Reactor:: damp(Addressable &rate, const Addressable &C)
+        {
+            if(!computeImpulse(C))
+            {
+                return false;
+            }
+            else
+            {
+
+                return true;
+            }
+
+
+        }
 
     }
     
