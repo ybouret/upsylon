@@ -18,13 +18,14 @@ Y_UTEST(solve)
         eqs << argv[i];
     }
 
-    
+    std::cerr << lib << std::endl;
+    std::cerr << eqs << std::endl;
+
     Reactor cs(lib,eqs,Equilibrium::Utterly);
     Vector  C(cs.M,0);
 
     lib.drawC(C,alea);
-
-    lib.display(std::cerr,C);
+    lib.display(std::cerr,C) << std::endl;
 
 
     cs.loadK(0.0);
