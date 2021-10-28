@@ -52,7 +52,7 @@ namespace upsylon
             //__________________________________________________________________
 
             Library &lib; //!< linked library
-            Lua::VM &lvm; //!< linked lua_State
+            Lua::VM  lvm; //!< linked lua_State
             
         private:
             Y_DISABLE_COPY_AND_ASSIGN(LuaEquilibria);
