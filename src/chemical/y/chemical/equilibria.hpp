@@ -139,7 +139,9 @@ namespace upsylon
             
             
             void fillGamma(Addressable &Gamma, const Accessible &K, const Accessible &C);
-            
+
+            Equilibrium & operator[](const string &id);
+
             
             
         private:

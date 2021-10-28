@@ -71,6 +71,13 @@ namespace upsylon
             return *p;
         }
 
+
+        Equilibrium & Equilibria:: operator[](const string &id)
+        {
+            Equilibrium::Pointer *ppEq = edb.search(id);
+            if(!ppEq) throw exception("No <%s> in %s", *id, CLID);
+            return **ppEq;
+        }
     }
 }
 
