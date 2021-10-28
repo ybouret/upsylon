@@ -53,7 +53,7 @@ namespace upsylon
             bool solve(Addressable &C); //!< solve for precomputed K
 
 
-            bool damp(Addressable &rate, const Addressable &C);
+            bool damp(Addressable &rate, const Accessible &C);
 
 
 

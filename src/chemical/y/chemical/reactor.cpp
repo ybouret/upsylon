@@ -250,7 +250,7 @@ namespace upsylon
             }
         }
 
-        bool Reactor:: damp(Addressable &rate, const Addressable &C)
+        bool Reactor:: damp(Addressable &rate, const Accessible &C)
         {
             computeJ(C);
             std::cerr << "J=" << J << std::endl;
