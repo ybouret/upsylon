@@ -157,12 +157,12 @@ namespace upsylon
             {
                 tao::neg(xi,Gamma);
                 LU::solve(JNuT,xi);
-                std::cerr << "Gamma=" << Gamma << std::endl;
-                std::cerr << "J=" << J << std::endl;
-                std::cerr << "xi=" << xi << std::endl;
+                //std::cerr << "Gamma=" << Gamma << std::endl;
+                //std::cerr << "J=" << J << std::endl;
+                //std::cerr << "xi=" << xi << std::endl;
                 tao::mul(deltaC,NuT,xi);
-                std::cerr << "dC=" << deltaC << std::endl;
-                std::cerr << "C =" << startC << std::endl;
+                //std::cerr << "dC=" << deltaC << std::endl;
+                //std::cerr << "C =" << startC << std::endl;
                 return true;
             }
             else
@@ -194,14 +194,14 @@ namespace upsylon
                 if( tao::mod2<double>::of(deltaC) <= 0)
                 {
                     // success!
-                    std::cerr << "null step :)" << std::endl;
+                    //std::cerr << "null step :)" << std::endl;
                     return true;
                 }
                 // first step found
                 double factor = 1.0;
 
             EVAL:
-                std::cerr << "factor=" << factor << std::endl;
+                //std::cerr << "factor=" << factor << std::endl;
                 {
                     double stp2 = 0;
                     for(size_t j=M;j>0;--j)
@@ -245,7 +245,7 @@ namespace upsylon
                 if(!converged)
                     goto STEP;
 
-                std::cerr << "converged" << std::endl;
+                //std::cerr << "converged" << std::endl;
                 return true;
             }
         }
@@ -253,7 +253,7 @@ namespace upsylon
         bool Reactor:: damp(Addressable &rate, const Accessible &C)
         {
             computeJ(C);
-            std::cerr << "J=" << J << std::endl;
+            //std::cerr << "J=" << J << std::endl;
             tao::mmul(JNuT,J,NuT);
             if(!LU::build(JNuT))
             {
