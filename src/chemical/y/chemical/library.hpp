@@ -9,6 +9,7 @@
 #include "y/type/gateway.hpp"
 #include "y/jive/pattern.hpp"
 #include "y/ios/scribe.hpp"
+#include <cmath>
 
 namespace upsylon
 {
@@ -139,6 +140,11 @@ namespace upsylon
             const Species & operator[](const string &id) const; //!< get by name
             const Species & operator[](const char   *id) const; //!< get by name, wrapper
 
+            double pH(const Accessible &C) const
+            {
+                return -log10( C[(*this)["H+"].indx] );
+            }
+            
         private:
             Y_DISABLE_COPY_AND_ASSIGN(Library);
             virtual const_type &bulk() const throw();

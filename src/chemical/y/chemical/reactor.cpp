@@ -180,7 +180,7 @@ namespace upsylon
             // C -> startC
             for(size_t j=M;j>0;--j)
             {
-                startC[j] = C[j]; assert( !(active[j] && C[j]<=0) );
+                startC[j] = C[j]; assert( !(active[j] && C[j]<0) );
             }
 
         STEP:
@@ -245,7 +245,8 @@ namespace upsylon
                 if(!converged)
                     goto STEP;
 
-                //std::cerr << "converged" << std::endl;
+            //CONVERGED:
+                for(size_t j=M;j>0;--j) C[j] = startC[j];
                 return true;
             }
         }
