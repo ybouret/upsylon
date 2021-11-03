@@ -180,7 +180,7 @@ namespace upsylon
             // C -> startC
             for(size_t j=M;j>0;--j)
             {
-                startC[j] = C[j]; assert( !(active[j] && C[j]<0) );
+                startC[j] = C[j]; //assert( !(active[j] && C[j]<0) );
             }
 
         STEP:
@@ -214,6 +214,18 @@ namespace upsylon
                     if(stp2<=0)
                     {
                         std::cerr << "stuck" << std::endl;
+
+                        for(size_t j=M;j>0;--j)
+                        {
+                            if(active[j])
+                            {
+                                C[j] = max_of(startC[j],0.0);
+                            }
+                            else
+                            {
+                                C[j] = startC[j];
+                            }
+                        }
                         return false;
                     }
 
@@ -245,7 +257,6 @@ namespace upsylon
                 if(!converged)
                     goto STEP;
 
-            //CONVERGED:
                 for(size_t j=M;j>0;--j) C[j] = startC[j];
                 return true;
             }
