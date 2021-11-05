@@ -29,9 +29,9 @@ namespace upsylon
 
             "sulfuric:2H+:-H2SO4:SO4--:=10^(1.1)",
 
-            "iwater:-H+:-HO-:=1e14"
+            "iwater:-H+:-HO-:=1e14",
 
-
+            "benzoic:H+:-PhiCOOH:PhiCOO-:=10^(-4.2)"
         };
         
         
