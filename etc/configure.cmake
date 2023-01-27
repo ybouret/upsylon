@@ -18,7 +18,9 @@ MESSAGE( STATUS "Detecting configuration parameters" )
 ##
 ##
 ########################################################################
-MESSAGE( STATUS "Detecting BUILD_TYPE..." )
+MESSAGE( STATUS "Detecting BUILD_TYPE...'${BUILD_TYPE}'" )
+#MESSAGE( FATAL_ERROR "stop" )
+
 SET(KNOW_BUILD_TYPE OFF)
 
 #default
