@@ -7,3 +7,6 @@ Universal, Parallel, Simple Yann's Libraries, Object and Necessities
 	cmake -DGENERATOR=Xcode -P etc/configure.cmake
 - then
 	open forge/Xcode/upsylon.xcodeproj
+
+- see more possibilities in etc/configure.cmake
+
